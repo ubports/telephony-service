@@ -2,11 +2,14 @@ import QtQuick 1.0
 import "fontUtils.js" as Font
 
 Rectangle {
+    id: liveCall
     color: "#ebebeb"
 
     property variant callStarted: null
+    property variant contact: null
 
-    function startCall() {
+    function startCall(contact) {
+        liveCall.contact = contact
         callStarted = new Date();
         callTicker.start();
     }
@@ -16,7 +19,7 @@ Rectangle {
         callStarted = null;
     }
 
-    Component.onCompleted: startCall()
+    Component.onCompleted: startCall(contacts.get(3))
 
     Image {
         id: picture
@@ -24,7 +27,7 @@ Rectangle {
         anchors.topMargin: 22
         anchors.top: parent.top
 
-        source: "assets/picture_anna.png"
+        source: contact ? "dummydata/" + contact.photo : ""
         height: 142
         width: 142
         fillMode: Image.PreserveAspectFit
@@ -35,7 +38,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 26
         anchors.top: picture.bottom
-        text: "Anna Olson"
+        text: contact ? contact.displayName : ""
         fontSize: "xx-large"
     }
 
@@ -44,7 +47,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 8
         anchors.top: name.bottom
-        text: "+23 453-245-2321"
+        text: contact ? contact.phone : ""
         fontSize: "x-large"
     }
 
@@ -53,7 +56,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 8
         anchors.top: number.bottom
-        text: "London"
+        text: contact ? contact.location : ""
         fontSize: "x-large"
     }
 
