@@ -1,6 +1,6 @@
 import QtQuick 1.1
 
-AbstractButton {
+ColoredButton {
     property alias icon: icon.source
 
     property int verticalMargin: 1;

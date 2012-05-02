@@ -1,6 +1,6 @@
 import QtQuick 1.1
 
-AbstractButton {
+ColoredButton {
     id: textButton
     property alias text: label.text
 
