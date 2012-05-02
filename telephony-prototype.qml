@@ -1,10 +1,34 @@
 import QtQuick 1.1
 
 Rectangle {
-    width: height * 0.8
-    height: 800
+    width: 800
+    height: 600
 
-    LiveCall {
-        anchors.fill: parent
+    Item {
+        id: leftPane
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        Tabs {
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+        }
+
+        width: 250
+    }
+
+    Item {
+        id: rightPane
+        anchors.left: leftPane.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#ebebeb"
+        }
     }
 }
