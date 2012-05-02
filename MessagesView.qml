@@ -1,12 +1,10 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 
-Rectangle {
+Item {
     id: view
     width: 575
-    height: 800
-
-    color: "gray"
+    height: 800   
 
     Column {
 

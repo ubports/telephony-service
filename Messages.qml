@@ -1,11 +1,10 @@
 // import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 
-Rectangle {
+Item {
     id: messages
     width: 600
     height: 100
-    color: "lightGray"
 
     Component {
         id: sectionDelegate
