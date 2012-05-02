@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function fontSizeToPixels(size) {
+function sizeToPixels(size) {
     switch (size) {
         case "small": return 13
         case "medium": return 15
