@@ -79,10 +79,42 @@ Rectangle {
         columns: 2
         rows: 2
         spacing: 1
-        IconButton { icon: "assets/icon_keypad_white.png" }
-        IconButton { icon: "assets/icon_speaker_white.png" }
-        IconButton { icon: "assets/icon_pause_white.png" }
-        IconButton { icon: "assets/icon_mute_white.png" }
+
+        IconButton {
+            width: 90
+            height: 45
+            color: "#797979"
+            verticalMargin: 10
+            radius: 0
+            icon: "assets/icon_keypad_white.png"
+        }
+
+        IconButton {
+            width: 90
+            height: 45
+            color: "#797979"
+            verticalMargin: 10
+            radius: 0
+            icon: "assets/icon_speaker_white.png"
+        }
+
+        IconButton {
+            width: 90
+            height: 45
+            color: "#797979"
+            verticalMargin: 10
+            radius: 0
+            icon: "assets/icon_pause_white.png"
+        }
+
+        IconButton {
+            width: 90
+            height: 45
+            color: "#797979"
+            verticalMargin: 10
+            radius: 0
+            icon: "assets/icon_mute_white.png"
+        }
     }
 
     IconButton {
@@ -90,14 +122,14 @@ Rectangle {
         anchors.topMargin: 12
         anchors.top: mainButtons.bottom
         anchors.left: mainButtons.left
-        radius: 4
+        verticalMargin: 10
 
         icon: "assets/icon_hangup_white.png"
         width: 117
         height: 38
         color: "#ef7575"
-        border.color: "#f40000"
-        border.width: 2
+        borderColor: "#f40000"
+        borderWidth: 2
     }
 
     IconButton {
@@ -105,15 +137,13 @@ Rectangle {
         anchors.topMargin: 12
         anchors.top: mainButtons.bottom
         anchors.right: mainButtons.right
-        radius: 4
+        verticalMargin: 10
 
         icon: "assets/icon_add_call.png"
         width: 57
         height: 38
-        border.color: "white"
-        border.width: 2
+        color: "#797979"
+        borderColor: "white"
+        borderWidth: 2
     }
-
-//    anchors.bottomMargin: 24
-
 }
