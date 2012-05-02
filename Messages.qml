@@ -1,5 +1,5 @@
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
+import "fontUtils.js" as Font
 
 Item {
     id: messages
@@ -15,6 +15,7 @@ Item {
                 id: sectionText
                 text: section
                 anchors.bottom: line.top
+                font.pixelSize: Font.sizeToPixels("medium")
             }
 
             Rectangle {
@@ -49,10 +50,10 @@ Item {
                 id: messageText
                 width: parent.width
                 text: message
-                wrapMode: Text.WordWrap
-                font.pixelSize: 20
+                wrapMode: Text.WordWrap                
                 x: 10
                 y: 10
+                font.pixelSize: Font.sizeToPixels("large")
             }
 
             Text {
@@ -62,13 +63,17 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: 5
                 color: "gray"
+                font.pixelSize: Font.sizeToPixels("small")
             }
         }
     }
 
     ListView {
         id: flickable
-        anchors.fill: parent        
+        anchors {
+            fill: parent
+            topMargin: 10
+        }
         contentWidth: parent.width;
         contentHeight: messages.height
         clip: true

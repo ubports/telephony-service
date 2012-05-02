@@ -1,5 +1,5 @@
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
+import "fontUtils.js" as Font
 
 Item {
     width: 575
@@ -13,7 +13,7 @@ Item {
         }
         color: "black"
         text: "Anna Olsson"
-        font.pixelSize: 25
+        font.pixelSize: Font.sizeToPixels("x-large")
 
     }
 
@@ -34,7 +34,7 @@ Item {
             }
             color: "darkGray"
             text: "+44 794 323 439"
-            font.pixelSize: 15
+            font.pixelSize: Font.sizeToPixels("medium")
         }
         Text {
             anchors {
@@ -43,7 +43,7 @@ Item {
             }
             color: "darkGray"
             text: "Mobile"
-            font.pixelSize: 15
+            font.pixelSize: Font.sizeToPixels("medium")
         }
     }
 
