@@ -18,7 +18,7 @@ Item {
 	id: mouseArea
 	anchors.fill: parent
 	onClicked: {
-	    abstractButton.onClicked();
+	    abstractButton.clicked();
 	} // onClicked
     } // mouseArea
 } // abstractButton
