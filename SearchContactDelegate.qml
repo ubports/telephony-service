@@ -25,7 +25,7 @@ Item {
 
     Text {
         id: contactName
-        text: name
+        text: displayName
         font.bold: true
         color: fontColor
         anchors.left: parent.left
@@ -42,7 +42,7 @@ Item {
     }
 
     Text {
-        text: phoneNumber
+        text: phone
         color: fontColor
         anchors.left: parent.left
         anchors.top: contactName.bottom

@@ -3,7 +3,7 @@ import QtQuick 1.1
 
 DropDownSearch {
     id: search
-    model: ContactsModel { }
+    model: contacts
     delegate: SearchContactDelegate {
         filter: search.searchQuery
     }
