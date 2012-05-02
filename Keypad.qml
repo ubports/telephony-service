@@ -1,8 +1,8 @@
 import QtQuick 1.1
 
 Item {
-    width: 188
-    height: 62
+    width: childrenRect.width
+    height: childrenRect.height
 
     Grid {
         rows: 4
