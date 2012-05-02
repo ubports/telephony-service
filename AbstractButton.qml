@@ -22,10 +22,9 @@ FocusScope {
     property bool enabled: true
 
     property alias color: background.color
-    //property alias borderColor: background.border.color
-    //property alias borderWidth: background.border.width
-    property color borderColor;
-    property int borderWidth;
+    property color borderColor
+    property int borderWidth
+    property real radius: 3.0
 
     /* Use to manually set the "pressed" state of the button. This is not
        necessary in the normal use case, but is useful when a child item eats
@@ -42,7 +41,7 @@ FocusScope {
 
     Rectangle {
         id: background
-        radius: 10.0
+        radius: parent.radius
         width: parent.width
         height: parent.height
         border.color: parent.borderColor

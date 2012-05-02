@@ -27,6 +27,7 @@ Rectangle {
             onClicked: print("don't do that again!")
             borderColor: "black"
             borderWidth: 2
+            radius: 10
         }
 
         IconButton {
