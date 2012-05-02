@@ -4,6 +4,20 @@ import "fontUtils.js" as Font
 Rectangle {
     color: "#ebebeb"
 
+    property variant callStarted: null
+
+    function startCall() {
+        callStarted = new Date();
+        callTicker.start();
+    }
+
+    function endCall() {
+        callTicker.stop();
+        callStarted = null;
+    }
+
+    Component.onCompleted: startCall()
+
     Image {
         id: picture
         anchors.horizontalCenter: parent.horizontalCenter
@@ -16,36 +30,42 @@ Rectangle {
         fillMode: Image.PreserveAspectFit
     }
 
-    Text {
+    TextCustom {
         id: name
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 26
         anchors.top: picture.bottom
         text: "Anna Olson"
-        font.pixelSize: Font.sizeToPixels("xx-large")
+        fontSize: "xx-large"
     }
 
-    Text {
+    TextCustom {
         id: number
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 8
         anchors.top: name.bottom
         text: "+23 453-245-2321"
-        font.pixelSize: Font.sizeToPixels("x-large")
+        fontSize: "x-large"
     }
 
-    Text {
+    TextCustom {
         id: location
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 8
         anchors.top: number.bottom
         text: "London"
-        font.pixelSize: Font.sizeToPixels("x-large")
+        fontSize: "x-large"
+    }
+
+    Timer {
+        id: callTicker
+        interval: 1000
+        repeat: true
+        onTriggered: if (callStarted != null) { callDuration.time = (new Date() - callStarted) / 1000 }
     }
 
     StopWatch {
-        id: time
-        time: "00:54"
+        id: callDuration
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 12
         anchors.top: location.bottom
@@ -55,7 +75,7 @@ Rectangle {
         id: mainButtons
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 12
-        anchors.top: time.bottom
+        anchors.top: callDuration.bottom
         columns: 2
         rows: 2
         spacing: 1
