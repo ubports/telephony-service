@@ -21,7 +21,7 @@ import "fontUtils.js" as FontUtils
 
 /* Custom Text factorising the font style. */
 Text {
-    color: "#ffffff"
+    color: "black"
 //    font.family: "UbuntuBeta"
     property string fontSize: "medium"
     font.pixelSize: FontUtils.sizeToPixels(fontSize)
