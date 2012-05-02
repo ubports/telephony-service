@@ -28,14 +28,14 @@ ListModel {
          outgoing: false
     }
      ListElement {
-         section: "Monday, May 02, 2012"
+         section: "Wednesday, May 02, 2012"
          message: "tes t3lkjsdflj salkflkj sldjfsj dflkjsalkfjl sjdfljsaldjfl sadjflsj dfjsljflsajfdljsalfjl tes t3lkjsdflj salkflkj sldjfsj dflkjsalkfjl sjdfljsaldjfl sadjflsj dfjsljflsajfdljsalfjl"
          timeStamp: "10:15 AM"
          outgoing: true
 
      }
      ListElement {
-         section: "Monday, May 02, 2012"
+         section: "Wednesday, May 02, 2012"
         message: "tes t3lkjsdflj salkflkj sldjfsj"
         timeStamp: "11:21 AM"
         outgoing: true

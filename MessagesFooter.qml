@@ -6,4 +6,16 @@ Rectangle {
     height: 100
 
     color: "lightGray"
+
+    SearchEntry {
+        id: search
+        anchors {
+            left: parent.left
+            leftMargin: 20
+            right: parent.right
+            rightMargin: 20
+            verticalCenter: parent.verticalCenter
+        }
+        height: 40
+    }
 }
