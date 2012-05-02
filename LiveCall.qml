@@ -19,7 +19,7 @@ Rectangle {
         callStarted = null;
     }
 
-    Component.onCompleted: startCall(contacts.get(3))
+    Component.onCompleted: startCall(contacts.get(5))
 
     Image {
         id: picture
@@ -133,6 +133,8 @@ Rectangle {
         color: "#ef7575"
         borderColor: "#f40000"
         borderWidth: 2
+
+        onClicked: endCall()
     }
 
     IconButton {
