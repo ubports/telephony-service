@@ -7,6 +7,6 @@ AbstractButton {
     Text {
         id: label
         anchors.centerIn: parent
-        font.pointSize: 24;
+        font.pointSize: 18;
     } // label
 } // button
