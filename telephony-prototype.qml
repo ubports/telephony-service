@@ -55,7 +55,7 @@ Rectangle {
             source: {
                 switch (tabs.currentTab) {
                 case 0:
-                    ""
+                    "CallPanel.qml"
                     break;
                 case 1:
                     "MessagesPanel.qml"
