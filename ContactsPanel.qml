@@ -19,7 +19,7 @@ Rectangle {
             height: 30
             width: 250
 
-            leftIconSource: text ? "artwork/cross.png" : "artwork/search_icon.png"
+            leftIconSource: text ? "assets/cross.png" : "assets/search_icon.png"
             rightIconSource: "assets/call_icon.png"
             rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
 
