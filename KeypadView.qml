@@ -5,14 +5,14 @@ Item {
     height: childrenRect.height
 
     anchors.centerIn: parent
-    
+
     KeypadEntry {
         id: keypadEntry
         
         anchors.left: parent.left
         anchors.right: parent.right
     }
-    
+
     Keypad {
         id: keypad
         
@@ -21,7 +21,7 @@ Item {
         
         onKeyPressed: keypadEntry.value += label
     }
-    
+
     CallButton {
         anchors.top: keypad.bottom
         anchors.topMargin: 21
