@@ -2,12 +2,16 @@ import QtQuick 1.1
 
 Item {
     id: view
+
+    property variant contact
+
     width: 575
-    height: 800   
+    height: 800
 
     Column {
         MessagesHeader {
             id: header
+            contact: view.contact
             width: view.width
             height: 100
         }

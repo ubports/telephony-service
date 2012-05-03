@@ -7,13 +7,17 @@ Item {
 
     Column {
         anchors.fill: parent
+        anchors.margins: 5
+        spacing: 5
 
-        MessagesSearchEntry {
+        SearchEntry {
             id: search
-
-            height: 40
+            height: 30
             anchors.left: parent.left
             anchors.right: parent.right
+
+            leftIconSource: text ? "assets/cross.png" : "assets/search_icon.png"
+            onLeftIconClicked: text = ""
         }
 
         NewMessageButton {
@@ -25,7 +29,7 @@ Item {
         }
 
         MessagesList {
-            height: parent.height - search.height - newMessage.height // FIXME: make that filling in the available space generic
+            height: parent.height - search.height - newMessage.height - 10 // FIXME: make that filling in the available space generic
             anchors.left: parent.left
             anchors.right: parent.right
             model: messageList.model

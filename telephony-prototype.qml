@@ -21,6 +21,11 @@ Rectangle {
         rightPaneContent.item.startCall()
     }
 
+    function startChat(contact) {
+        rightPaneContent.source = "MessagesView.qml"
+        rightPaneContent.item.contact = contact
+    }
+
     function endCall() {
         // TODO: should load one of the big icon panels instead of leaving blank
         rightPaneContent.source = ""

@@ -33,7 +33,7 @@ Item {
         anchors.top: entry.bottom
         anchors.left: entry.left
         anchors.right: entry.right
-        height:  visible ? (contentHeight > 400 ? 400 : contentHeight) : 0
+        height: visible ? (contentHeight > 400 ? 400 : contentHeight) : 0
 
         MouseArea {
             anchors.fill: parent
