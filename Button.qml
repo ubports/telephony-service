@@ -1,47 +1,56 @@
 import QtQuick 1.1
 
 ColoredButton {
+    id: button
     property alias icon: icon.source
     property alias text: label.text
-
-    property int verticalMargin: 1
+    property alias iconWidth: icon.width;
+    property alias iconHeight: icon.height;
 
     /**
      * The location of the text relative to the icon.
      * top, bottom, left or right.
      */
-    property string textLocation: "top"
-/*
-    Image {
-        anchors.centerIn: parent
-        id: icon
-        height: parent.height-(2*verticalMargin)
-        fillMode: Image.PreserveAspectFit
-    } // icon
-
-    Text {
-        id: label
-        anchors.centerIn: parent
-        font.pointSize: 18;
-    } // label
-*/
+    property string iconLocation: "left"
 
     Image {
-        anchors.left: parent.left
-        anchors.verticalCenter: parent.verticalCenter
         id: icon
-        height: parent.height-(2*verticalMargin)
         fillMode: Image.PreserveAspectFit
-        anchors.leftMargin: 10
+        anchors.margins: 10
     }
 
     Text {
         id: label
-        anchors.leftMargin: 10
-        anchors.left: icon.right
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.margins: 10
         font.pointSize: 18;
     }
 
+    function alignIconText() {
+        if (iconLocation=="top") {
+            icon.anchors.top = button.top;
+            icon.anchors.horizontalCenter = button.horizontalCenter;
+            label.anchors.top = icon.bottom;
+            label.anchors.horizontalCenter = button.horizontalCenter;
+        } else if (iconLocation=="bottom") {
+            icon.anchors.bottom = button.bottom;
+            icon.anchors.horizontalCenter = button.horizontalCenter;
+            label.anchors.bottom = icon.top;
+            label.anchors.horizontalCenter = button.horizontalCenter;
+        } else if (iconLocation=="right") {
+            icon.height = button.height - 10;
+            icon.anchors.right = button.right;
+            icon.anchors.verticalCenter = button.verticalCenter;
+            label.anchors.right = icon.left;
+            label.anchors.verticalCenter = button.verticalCenter;
+        } else if (iconLocation=="left") {
+            icon.height = button.height - 10;
+            icon.anchors.left = button.left;
+            icon.anchors.verticalCenter = button.verticalCenter;
+            label.anchors.left = icon.right;
+            label.anchors.verticalCenter = button.verticalCenter;
+        } // if textlocation
+    } // alignIconText
+
+    Component.onCompleted: alignIconText();
 }
 
