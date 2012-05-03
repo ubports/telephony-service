@@ -20,6 +20,7 @@ Rectangle {
     }
 
     ListView {
+        id: contactListView
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.left: parent.left
