@@ -20,11 +20,11 @@ Item {
     }
 
     ListView.onRemove: SequentialAnimation {
-                PropertyAction { target: contactDetailsItem; property: "ListView.delayRemove"; value: true }
-                NumberAnimation { target: contactDetailsItem; property: "opacity"; to: 0; duration: 250 }
-                NumberAnimation { target: contactDetailsItem; property: "height"; to: 0; duration: 250 }
-                PropertyAction { target: contactDetailsItem; property: "ListView.delayRemove"; value: false }
-            }
+        PropertyAction { target: contactDetailsItem; property: "ListView.delayRemove"; value: true }
+        NumberAnimation { target: contactDetailsItem; property: "opacity"; to: 0; duration: 250 }
+        NumberAnimation { target: contactDetailsItem; property: "height"; to: 0; duration: 250 }
+        PropertyAction { target: contactDetailsItem; property: "ListView.delayRemove"; value: false }
+    }
 
     ListView.onAdd: SequentialAnimation {
         NumberAnimation { target: contactDetailsItem; property: "opacity"; from: 0; duration: 250 }
