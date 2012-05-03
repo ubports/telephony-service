@@ -6,6 +6,7 @@ Rectangle {
     id: favouriteContactList
     width: 320
     height: contactListView.height
+    signal contactClicked(variant contact)
 
     function calculateHeight() {
         var totalHeight = 0
@@ -47,6 +48,7 @@ Rectangle {
         delegate: ContactDelegate {
             visible: favourite
             height: visible ? 64 : 0
+            onClicked: favouriteContactList.contactClicked(contacts.get(index))
         }
     }
 }

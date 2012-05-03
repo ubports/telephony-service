@@ -7,6 +7,7 @@ Rectangle {
     width: 320
     // FIXME - calculate headers + body size automatically
     height: 600
+    signal contactClicked(variant contact)
 
     Component {
         id: sectionHeading
@@ -33,7 +34,9 @@ Rectangle {
         anchors.fill: parent
         interactive: false
         model: contacts
-        delegate: ContactDelegate {}
+        delegate: ContactDelegate {
+            onClicked: contactList.contactClicked(contacts.get(index))
+        }
         section.property: "displayName"
         section.criteria: ViewSection.FirstCharacter
         section.delegate: sectionHeading

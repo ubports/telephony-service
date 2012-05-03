@@ -1,7 +1,10 @@
 import QtQuick 1.1
 
 Rectangle {
+    id: contactsPanel
     anchors.fill: parent
+    signal contactClicked(variant contact)
+    onContactClicked: telephony.showContactDetails(contact)
 
     Rectangle {
         id: searchArea
@@ -33,12 +36,14 @@ Rectangle {
             id: favouriteContactList
             clip: true
             anchors.top: parent.top
+            onContactClicked: contactsPanel.contactClicked(contact)
         }
 
         ContactList {
             id: contactList
             anchors.top: favouriteContactList.bottom
             clip: true
+            onContactClicked: contactsPanel.contactClicked(contact)
         }
     }
 }

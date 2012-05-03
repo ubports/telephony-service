@@ -17,6 +17,11 @@ Rectangle {
         rightPaneContent.source = ""
     }
 
+    function showContactDetails(contact) {
+        rightPaneContent.source = "ContactDetails.qml"
+        rightPaneContent.item.contact = contact
+    }
+
     Item {
         id: leftPane
         anchors.left: parent.left
@@ -31,7 +36,7 @@ Rectangle {
         }
 
         width: 250
- 
+
         Loader {
             id: leftPaneContent
             anchors.top: tabs.bottom

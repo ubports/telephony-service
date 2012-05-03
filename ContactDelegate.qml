@@ -5,6 +5,7 @@ import "fontUtils.js" as Font
 Rectangle {
     height: 64
     width: parent.width
+    signal clicked
     Rectangle {
         height: 1
         anchors.left: parent.left
@@ -47,5 +48,9 @@ Rectangle {
         anchors.leftMargin: 2
         font.pixelSize: Font.sizeToPixels("small")
         text: phone
+    }
+    MouseArea {
+        anchors.fill: parent
+        onClicked: parent.clicked()
     }
 }
