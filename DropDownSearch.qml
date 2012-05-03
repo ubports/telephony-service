@@ -7,6 +7,7 @@ Item {
     property alias delegate: searchView.delegate
     property alias listHeight: searchView.height
     property int currentIndex: -1
+    signal itemSelected(variant item)
     state: "idle"
 
     SearchEntry {
@@ -27,8 +28,10 @@ Item {
             anchors.fill: parent
             onClicked: {
                 currentIndex = searchView.indexAt(mouse.x, mouse.y)
-                entry.text =  model.get(currentIndex).displayName
+                var currentItem = model.get(currentIndex)
+                entry.text =  currentItem.displayName
                 dropDownSearch.state = "idle"
+                itemSelected(currentItem)
             }
         }
     }

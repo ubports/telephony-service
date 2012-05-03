@@ -38,6 +38,16 @@ Rectangle {
                     break;
                 }
             }
+
+            Connections {
+                target: leftPaneContent.item
+                onCallContactRequested: {
+                    // To keep this simple we rely on the fact that setting source to a
+                    // local file will immadiately make the item availalable.
+                    rightPaneContent.source = "LiveCall.qml"
+                    rightPaneContent.item.startCall(contact)
+                }
+            }
         }
     }
 
@@ -51,6 +61,17 @@ Rectangle {
         Rectangle {
             anchors.fill: parent
             color: "#ebebeb"
+
+            Loader {
+                id: rightPaneContent
+                anchors.fill: parent
+
+                Connections {
+                    target: rightPaneContent.item
+                    ignoreUnknownSignals: true
+                    onCallEnded: rightPaneContent.source = ""
+                }
+            }
         }
     }
 }
