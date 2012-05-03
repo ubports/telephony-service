@@ -4,6 +4,8 @@ import QtQuick 1.1
 Item {
     id: contactDetailsHeader
 
+    property variant contact: null
+
     signal editClicked
     signal saveClicked
 
@@ -15,7 +17,7 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.margins: 10
-        source: "dummydata/allisonreeves.jpg"
+        source: "dummydata/" + contact.photo
     }
 
     Column {
@@ -31,7 +33,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             fontSize: "x-large"
-            text: "Allison Reeves"
+            text: contact.displayName
         }
 
         TextCustom {

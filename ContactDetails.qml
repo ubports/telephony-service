@@ -5,12 +5,18 @@ Item {
     id: contactDetails
 
     property bool editable: false
+    property variant contact: null
 
     width: 400
     height: 600
 
+    Component.onCompleted: {
+        contact = contacts.get(3)
+    }
+
     ContactDetailsHeader {
         id: header
+        contact: contactDetails.contact
 
         onEditClicked: {
             contactDetails.editable = true
@@ -133,7 +139,7 @@ Item {
 
         delegate: contactDetailsDelegate
 
-        model: ContactDetailsModel { }
+        model: contactdetails
 
     }
 }
