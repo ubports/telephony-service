@@ -56,6 +56,25 @@ Item {
             anchors.margins: 1
             height: childrenRect.height
 
+            Connections {
+                target: header
+                onSaveClicked: {
+                    contactDetailsItem.save();
+                }
+            }
+
+            function save() {
+                var newValue
+
+                if (section == "Address") {
+                    newValue = valueTextMulti.text
+                } else {
+                    newValue = valueText.text
+                }
+
+                contactdetails.set(index, { "value": newValue })
+            }
+
             Rectangle {
                 id: contentBox
                 border.color: "black"
@@ -86,7 +105,7 @@ Item {
                     anchors.leftMargin: 5
                     height: paintedHeight
                     text: value
-                    readOnly: !contactDetailsItem.editable
+                    readOnly: !contactDetails.editable
                     visible: (section === "Address")
                 }
 
@@ -140,6 +159,5 @@ Item {
         delegate: contactDetailsDelegate
 
         model: contactdetails
-
     }
 }
