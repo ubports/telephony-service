@@ -3,99 +3,21 @@ import QtQuick 1.1
 
 Item {
     id: contactDetails
+
+    property bool editable: false
+
     width: 400
     height: 600
 
-    states: [
-        State {
-            name: "edit"
-            PropertyChanges {
-                target: editButton
-                text: "Save"
-            }
-        },
-        State {
-            name: "view"
-            PropertyChanges {
-                target: editButton
-                text: "Edit"
-            }
-        }
-    ]
-
-    state: "view"
-
-    Item {
+    ContactDetailsHeader {
         id: header
 
-        width: parent.width
-        height: 100
-
-        Image {
-            id: avatar
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.margins: 10
-            source: "dummydata/allisonreeves.jpg"
+        onEditClicked: {
+            contactDetails.editable = true
         }
 
-        Column {
-            anchors.left: avatar.right
-            anchors.top: parent.top
-            anchors.right: editButton.left
-            anchors.margins: 10
-
-            spacing: 10
-
-            TextCustom {
-                id: contactName
-                anchors.left: parent.left
-                anchors.right: parent.right
-                fontSize: "x-large"
-                text: "Allison Reeves"
-            }
-
-            TextCustom {
-                id: statusUpdate
-                anchors.left: parent.left
-                anchors.right: parent.right
-                text: "A social update will show in here"
-            }
-
-            Row {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                spacing: 5
-
-                Image {
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    fillMode: Image.PreserveAspectFit
-                    source: "assets/icon_availability.png"
-                }
-
-                TextCustom {
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: "Available"
-                }
-            }
-        }
-
-        TextButton {
-            id: editButton
-            anchors.top: parent.top
-            anchors.right: parent.right
-            text: "Edit"
-
-            height: 30
-            width: 100
-
-            onClicked: {
-                if (contactDetails.state == "view")
-                    contactDetails.state = "edit"
-                else
-                    contactDetails.state = "view"
-            }
+        onSaveClicked: {
+            contactDetails.editable = false
         }
     }
 
@@ -120,10 +42,13 @@ Item {
         id: contactDetailsDelegate
 
         Item {
+            id: contactDetailsItem
+
+            property bool editable: false
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: 1
-            height: valueTextMulti.height > 30 ? valueTextMulti.height : 30
+            height: childrenRect.height
 
             Rectangle {
                 id: contentBox
@@ -133,7 +58,7 @@ Item {
                 anchors.left: parent.left
                 anchors.right: actionBox.left
                 anchors.top: parent.top
-                anchors.bottom: parent.bottom
+                height: valueTextMulti.height > 30 ? valueTextMulti.height : 30
 
                 TextInput {
                     id: valueText
@@ -142,7 +67,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 5
                     text: value
-                    readOnly: contactDetails.state == "view"
+                    readOnly: !contactDetails.editable
                     visible: (section !== "Address")
                 }
 
@@ -155,7 +80,7 @@ Item {
                     anchors.leftMargin: 5
                     height: paintedHeight
                     text: value
-                    readOnly: contactDetails.state == "view"
+                    readOnly: !contactDetailsItem.editable
                     visible: (section === "Address")
                 }
 
