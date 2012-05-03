@@ -45,6 +45,8 @@ Item {
         TextInput {
             id: input
 
+            height: font.pixelSize
+            horizontalAlignment: TextInput.AlignRight
             width: parent.width - clearButton.width
             text: "+44 7979"
             font.pixelSize: Font.sizeToPixels("x-large")
