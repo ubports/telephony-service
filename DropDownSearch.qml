@@ -48,10 +48,6 @@ Item {
 
     states: [
         State {
-            name: "number"
-            PropertyChanges { target: searchView; visible: false }
-        },
-        State {
             name: "searching"
             PropertyChanges { target: searchView; visible: true }
         },
