@@ -21,8 +21,6 @@ import QtQuick 1.0
 FocusScope {
     property bool enabled: true
 
-    property alias color: background.color
-
     /* Use to manually set the "pressed" state of the button. This is not
        necessary in the normal use case, but is useful when a child item eats
        the mouse events (e.g. a DragArea).
@@ -35,14 +33,6 @@ FocusScope {
     signal clicked
 
     Accessible.role: Accessible.PushButton
-
-    Rectangle {
-        id: background
-        radius: 10.0
-        width: parent.width
-        height: parent.height
-    } // background
-
 
     MouseArea {
         id: mouse_area

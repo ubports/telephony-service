@@ -1,16 +1,14 @@
 import QtQuick 1.1
 
-Rectangle {
+ColoredButton {
     property alias icon: icon.source
-    color: "#3a3a3a"
-    height: 52
-    width: 94
+
+    property int verticalMargin: 1;
 
     Image {
         anchors.centerIn: parent
         id: icon
-        height: 34
-        width: 45
+        height: parent.height-(2*verticalMargin)
         fillMode: Image.PreserveAspectFit
     }
 }

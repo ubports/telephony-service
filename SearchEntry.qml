@@ -21,6 +21,7 @@ import "fontUtils.js" as FontUtils
 //import "utils.js" as Utils
 
 AbstractButton {
+    property alias text : searchInput.text
     property string searchQuery
     property string placeHolderText: ""
     property bool active: false
@@ -97,7 +98,7 @@ AbstractButton {
             horizontalAlignment: Text.AlignLeft
 
             color: "#ffffff"
-            font.pixelSize: FontUtils.sizeToPixels("xx-large")
+            font.pixelSize: FontUtils.sizeToPixels("large")
             focus: true
             selectByMouse: true
             cursorDelegate: cursor

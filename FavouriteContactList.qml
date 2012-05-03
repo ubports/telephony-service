@@ -3,18 +3,19 @@ import QtQuick 1.1
 import "fontUtils.js" as Font
 
 Rectangle {
-    id: contactList
+    id: favouriteContactList
     width: 320
     height: 600
 
-    Component {
-        id: sectionHeading
-        Item {
-            width: contactList.width
-            height: sectionHeaderText.height
+    ListView {
+        anchors.fill: parent
+        model: contacts
+        header: Item {
+            width: favouriteContactList.width
+            height: headerText.height
             Text {
-                id: sectionHeaderText
-                text: section
+                id: headerText
+                text: "Favourites"
                 font.pixelSize: Font.sizeToPixels("medium")
                 font.bold: true
             }
@@ -26,14 +27,9 @@ Rectangle {
                 color: "black"
             }
         }
-    }
-
-    ListView {
-        anchors.fill: parent
-        model: contacts
-        delegate: ContactDelegate {}
-        section.property: "displayName"
-        section.criteria: ViewSection.FirstCharacter
-        section.delegate: sectionHeading
+        delegate: ContactDelegate {
+            visible: favourite
+            height: visible ? 64 : 0
+        }
     }
 }
