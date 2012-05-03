@@ -46,7 +46,6 @@ Item {
 
     ListView {
         id: contactDetailsView
-
         anchors.top: header.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
@@ -57,9 +56,11 @@ Item {
         clip: true
 
         delegate: ContactDetailsDelegate {
+            id: contactDetailsItem
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: 1
+            editable: contactDetails.editable
 
             Connections {
                 target: header

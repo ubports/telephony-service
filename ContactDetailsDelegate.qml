@@ -97,22 +97,20 @@ Item {
         id: actionBox
         border.color: "black"
         color: "white"
-        // TODO: add the icons
         width: 30
         height: parent.height
         anchors.top: parent.top
         anchors.bottom: contentBox.bottom
         anchors.right: parent.right
 
-        // TODO: replace with IconButton when it is done
-        Image {
+        IconButton {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: 5
+            height: width
 
-            source: actionIcon
-            fillMode: Image.PreserveAspectFit
+            icon: actionIcon
         }
     }
 
