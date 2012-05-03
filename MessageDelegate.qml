@@ -1,6 +1,8 @@
 import QtQuick 1.1
 
 Item {
+    property variant contact: contacts.fromId(contactId)
+
     Rectangle {
         height: 1
         anchors.left: parent.left
@@ -11,7 +13,7 @@ Item {
 
     Image {
         id: contactPhotoItem
-        source: "dummydata/" + contactPhoto
+        source: "dummydata/" + contact.photo
         width: 35
         height: width
         anchors.left: parent.left
@@ -34,7 +36,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             fontSize: "medium"
-            text: contactName
+            text: contact.displayName
         }
 
         TextCustom {
