@@ -25,6 +25,8 @@ Item {
         spacing: 4
 
         AbstractButton {
+            id: clearButton
+
             anchors.top: input.top
             anchors.bottom: input.bottom
             width: childrenRect.width
@@ -43,6 +45,7 @@ Item {
         TextInput {
             id: input
 
+            width: parent.width - clearButton.width
             text: "+44 7979"
             font.pixelSize: Font.sizeToPixels("x-large")
             color: "white"

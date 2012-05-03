@@ -52,5 +52,8 @@ Rectangle {
             anchors.fill: parent
             color: "#ebebeb"
         }
+
+        KeypadView {
+        }
     }
 }
