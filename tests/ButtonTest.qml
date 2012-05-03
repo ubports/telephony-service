@@ -21,18 +21,6 @@ Rectangle {
             onClicked: { print("clicked (whee)"); }
         }
 
-        TextButton {
-            width: 200
-            height: 100
-            color: "red"
-            pressColor: "#ff8888"
-            text: "Don't click me"
-            onClicked: print("don't do that again!")
-            borderColor: "black"
-            borderWidth: 2
-            radius: 10
-        }
-
         IconButton {
             icon: "../assets/call_icon.png"
             verticalMargin: 10
@@ -41,6 +29,17 @@ Rectangle {
             color: "#008800"
             pressColor: "#004400"
             onClicked: print("hello hello?")
+        }
+
+        Button {
+            icon: "../assets/call_icon.png"
+            verticalMargin: 10
+            height: 50
+            width: 200
+            color: "orange"
+            pressColor: "yellow"
+            onClicked: print("pressed the coolest button ever!")
+            text: "aloha"
         }
     } // column
 } // window
