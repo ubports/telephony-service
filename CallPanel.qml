@@ -16,9 +16,17 @@ Item {
 
         ContactsSearchCombo {
             id: contactsSearchBox
-            anchors.fill: parent
-            anchors.margins: 10
-            onItemSelected: telephony.startCall(item)
+            anchors.verticalCenter: parent.verticalCenter
+            height: 30
+            width: 250
+
+            leftIconSource: text ? "assets/cross.png" : "assets/search_icon.png"
+            rightIconSource: "assets/call_icon.png"
+            rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
+
+            onLeftIconClicked: text = ""
+            onRightIconClicked: telephony.startCallToNumber(text)
+            onItemSelected: telephony.startCallToContact(item)
         }
         z: 1
     }
