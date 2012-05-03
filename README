@@ -1,1 +1,6 @@
 This is the repository for prototyping the telephony application
+
+TODO:
+- Think about styles and theming
+- Button, onClick change color
+- Formatting of phone numbers
