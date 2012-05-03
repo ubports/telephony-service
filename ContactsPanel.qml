@@ -19,22 +19,23 @@ Rectangle {
     }
 
     Flickable {
-        contentHeight: fcl.height + cl.height
+        contentHeight: favouriteContactList.height + contactList.height
         flickableDirection: Flickable.VerticalFlick
         anchors.top: searchArea.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         clip: true
+
         FavouriteContactList {
-            id: fcl
+            id: favouriteContactList
             clip: true
             anchors.top: parent.top
         }
 
         ContactList {
-            id: cl
-            anchors.top: fcl.bottom
+            id: contactList
+            anchors.top: favouriteContactList.bottom
             clip: true
         }
     }
