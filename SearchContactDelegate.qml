@@ -10,7 +10,20 @@ Item {
 
     height: visible ? 50 : 0
     width: 200
-    visible: filter ? (contactName.text.toLowerCase().indexOf(filter.toLowerCase()) >= 0) : false
+    visible: {
+        if (!filter) {
+            return false
+        }
+
+        var lowerCaseContactName = contactName.text.toLowerCase()
+        var lowerCaseFilter = filter.toLowerCase()
+        if (lowerCaseContactName.indexOf(lowerCaseFilter) >= 0) {
+            return true
+        } else if (phone.indexOf(lowerCaseFilter) >= 0) {
+                return true
+        }
+        return false
+    }
     anchors.margins: 30
 
     Rectangle {
