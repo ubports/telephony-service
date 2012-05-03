@@ -30,7 +30,6 @@ Rectangle {
             pressColor: "#004400"
             onClicked: print("hello hello?")
         }
-/*
         Button {
             icon: "../assets/call_icon.png"
             verticalMargin: 10
@@ -41,6 +40,5 @@ Rectangle {
             onClicked: print("pressed the coolest button ever!")
             text: "aloha"
         }
-*/
     } // column
 } // window
