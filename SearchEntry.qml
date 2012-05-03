@@ -50,7 +50,7 @@ AbstractButton {
     BorderImage {
         anchors.fill: parent
         anchors.margins: -5
-        source: "artwork/search_background.sci"
+        source: "assets/search_background.sci"
         smooth: false
     }
 
@@ -72,7 +72,6 @@ AbstractButton {
 
             smooth: true
             source: leftIconSource
-
             fillMode: Image.PreserveAspectFit
 
             MouseArea {
