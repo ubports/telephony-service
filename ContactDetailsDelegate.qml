@@ -3,9 +3,13 @@ import QtQuick 1.1
 
 Item {
     id: contactDetailsItem
+    height: childrenRect.height
 
     property bool editable: false
-    height: childrenRect.height
+    signal phoneClicked(string value)
+    signal emailClicked(string value)
+    signal imClicked(string value)
+    signal addressClicked(string value)
 
     function save() {
         var newValue
@@ -49,15 +53,29 @@ Item {
         Behavior on opacity { PropertyAnimation { duration: 125 } }
     }
 
-    Rectangle {
+    ColoredButton {
         id: contentBox
-        border.color: "black"
+        borderColor: "black"
+        borderWidth: 1
         color: "white"
+        radius: 0
 
         anchors.left: removeButton.right
         anchors.right: actionBox.left
         anchors.top: parent.top
         height: valueTextMulti.height > 30 ? valueTextMulti.height : 30
+
+        onClicked: {
+            if (section == "Phone") {
+                contactDetailsItem.phoneClicked(value);
+            } else if (section == "Email") {
+                contactDetailsItem.emailClicked(value);
+            } else if (section == "IM") {
+                contactDetailsItem.imClicked(value);
+            } else if (section == "Address") {
+                contactDetailsItem.addressClicked(value);
+            }
+        }
 
         TextInput {
             id: valueText
@@ -67,7 +85,13 @@ Item {
             anchors.leftMargin: 5
             text: value
             readOnly: !contactDetailsItem.editable
-            visible: (section !== "Address")
+            visible: editable && (section !== "Address")
+        }
+
+        Text {
+            anchors.fill: valueText
+            text: value
+            visible: !valueText.visible
         }
 
         // Used to edit the address
@@ -80,7 +104,13 @@ Item {
             height: paintedHeight
             text: value
             readOnly: !contactDetailsItem.editable
-            visible: (section === "Address")
+            visible: editable && (section === "Address")
+        }
+
+        Text {
+            anchors.fill: valueTextMulti
+            text: value
+            visible: !valueTextMulti.visible
         }
 
         Text {
@@ -111,6 +141,18 @@ Item {
             height: width
 
             icon: actionIcon
+
+            onClicked: {
+                if (section == "Phone") {
+                    // TODO: message the contact
+                } else if (section == "Email") {
+                    // TODO: check what to do
+                } else if (section == "IM") {
+                    // TODO: check what to do
+                } else if (section == "Address") {
+                    // TODO: check what to do
+                }
+            }
         }
     }
 

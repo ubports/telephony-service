@@ -58,6 +58,10 @@ Item {
             anchors.margins: 1
             editable: contactDetails.editable
 
+            onPhoneClicked: {
+                telephony.startCallToContact(contactDetails.contact)
+            }
+
             Connections {
                 target: header
                 onSaveClicked: {
