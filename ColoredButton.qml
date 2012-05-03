@@ -24,23 +24,6 @@ AbstractButton {
             name: "pressed"
             PropertyChanges { target: background; color: pressColor }
         }
-/*
-        State {
-            name: "hovered"
-            PropertyChanges {
-                target: background
-                color: hoverColor
-            }
-        },
-
-        State {
-            name: ""
-            PropertyChanges {
-                target: background
-                color: button.color
-            }
-        }
-*/
     ]
 
 }
