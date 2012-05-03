@@ -44,7 +44,7 @@ Rectangle {
                     ""
                     break;
                 case 1:
-                    ""
+                    "MessagesPanel.qml"
                     break;
                 case 2:
                     "ContactsPanel.qml"
