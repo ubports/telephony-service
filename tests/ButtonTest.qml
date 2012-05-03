@@ -16,6 +16,8 @@ Rectangle {
             height: 100
             color: "blue"
             text: "lick me"
+            hoverColor: "yellow"
+            pressColor: "orange"
             onClicked: { print("clicked (whee)"); }
         }
 
@@ -23,6 +25,7 @@ Rectangle {
             width: 200
             height: 100
             color: "red"
+            pressColor: "#ff8888"
             text: "Don't click me"
             onClicked: print("don't do that again!")
             borderColor: "black"
@@ -35,7 +38,8 @@ Rectangle {
             verticalMargin: 10
             height: 100
             width: 200
-            color: "green"
+            color: "#008800"
+            pressColor: "#004400"
             onClicked: print("hello hello?")
         }
     } // column
