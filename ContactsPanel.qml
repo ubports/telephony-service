@@ -18,7 +18,14 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             height: 30
             width: 250
-            onItemSelected: telephony.startCall(item)
+
+            leftIconSource: text ? "artwork/cross.png" : "artwork/search_icon.png"
+            rightIconSource: "assets/call_icon.png"
+            rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
+
+            onLeftIconClicked: text = ""
+            onRightIconClicked: telephony.startCallToNumber(text)
+            onItemSelected: telephony.startCallToContact(item)
         }
         z: 1
     }

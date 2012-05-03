@@ -28,7 +28,14 @@ AbstractButton {
     property alias forceCursorVisible: searchInput.forceCursorVisible
     property alias anyKeypressGivesFocus: searchInput.anyKeypressGivesFocus
 
+    property string leftIconSource
+    property alias leftIconVisible: leftIcon.visible
+    property string rightIconSource
+    property alias rightIconVisible: rightIcon.visible
+
     signal activateFirstResult
+    signal leftIconClicked
+    signal rightIconClicked
 
     Accessible.name: "Search Entry"
 
@@ -55,7 +62,7 @@ AbstractButton {
         anchors.rightMargin: 16
 
         Image {
-            id: searchIcon
+            id: leftIcon
 
             anchors.left: parent.left
             anchors.leftMargin: -9
@@ -64,22 +71,43 @@ AbstractButton {
             height: sourceSize.height
 
             smooth: true
+            source: leftIconSource
 
-            source: searchInput.text ? "artwork/cross.png" : "artwork/search_icon.png"
             fillMode: Image.PreserveAspectFit
+
+            MouseArea {
+                Accessible.name: "Left Icon"
+                Accessible.role: Accessible.PushButton
+                anchors.fill: parent
+
+                onClicked: {
+                    searchInput.forceActiveFocus()
+                    leftIconClicked()
+                }
+            }
         }
 
-        MouseArea {
-            id: clearButton
+        Image {
+            id: rightIcon
 
-            Accessible.name: "Clear"
-            Accessible.role: Accessible.PushButton
+            anchors.right: parent.right
+            anchors.rightMargin: -9
+            anchors.verticalCenter: parent.verticalCenter
+            width: parent.height
 
-            anchors.fill: searchIcon
+            source: rightIconSource
+            fillMode: Image.PreserveAspectFit
+            smooth: true
 
-            onClicked: {
-                searchInput.forceActiveFocus()
-                searchInput.text = ""
+            MouseArea {
+                Accessible.name: "Right Icon"
+                Accessible.role: Accessible.PushButton
+                anchors.fill: parent
+
+                onClicked: {
+                    searchInput.forceActiveFocus()
+                    rightIconClicked()
+                }
             }
         }
 
@@ -91,9 +119,10 @@ AbstractButton {
             Accessible.name: searchInstructions.text
             Accessible.role: Accessible.EditableText
 
-            anchors.left: searchIcon.right
+            anchors.left: leftIcon.right
             anchors.leftMargin: -5
-            anchors.right: parent.right
+            anchors.right: rightIcon.left
+            anchors.rightMargin: 5
             anchors.verticalCenter: parent.verticalCenter
             horizontalAlignment: Text.AlignLeft
 

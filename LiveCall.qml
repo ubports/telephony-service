@@ -7,9 +7,9 @@ Rectangle {
 
     property variant callStarted: null
     property variant contact: null
+    property string number: ""
 
-    function startCall(contact) {
-        liveCall.contact = contact
+    function startCall() {
         callStarted = new Date();
         callTicker.start();
     }
@@ -28,7 +28,8 @@ Rectangle {
         anchors.topMargin: 22
         anchors.top: parent.top
 
-        source: contact ? "dummydata/" + contact.photo : ""
+
+        source: contact ? "dummydata/" + contact.photo : "assets/icon_address_book.png"
         height: 142
         width: 142
         fillMode: Image.PreserveAspectFit
@@ -39,7 +40,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 26
         anchors.top: picture.bottom
-        text: contact ? contact.displayName : ""
+        text: contact ? contact.displayName : "No Name"
         fontSize: "xx-large"
     }
 
@@ -48,7 +49,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 8
         anchors.top: name.bottom
-        text: contact ? contact.phone : ""
+        text: contact ? contact.phone : liveCall.number
         fontSize: "x-large"
     }
 

@@ -6,16 +6,26 @@ Item {
     property alias model: searchView.model
     property alias delegate: searchView.delegate
     property alias listHeight: searchView.height
+    property alias text: entry.text
     property int currentIndex: -1
+
+    property alias leftIconSource: entry.leftIconSource
+    property alias leftIconVisible: entry.leftIconVisible
+    property alias rightIconSource: entry.rightIconSource
+    property alias rightIconVisible: entry.rightIconVisible
+
+    signal leftIconClicked
+    signal rightIconClicked
+
     signal itemSelected(variant item)
     state: "idle"
 
     SearchEntry {
         id: entry
         anchors.fill: parent
-        onTextChanged: {
-            dropDownSearch.state = "searching"
-        }
+        onTextChanged: dropDownSearch.state = "searching"
+        onLeftIconClicked: parent.leftIconClicked()
+        onRightIconClicked: parent.rightIconClicked()
     }
 
     ListView {
@@ -37,6 +47,10 @@ Item {
     }
 
     states: [
+        State {
+            name: "number"
+            PropertyChanges { target: searchView; visible: false }
+        },
         State {
             name: "searching"
             PropertyChanges { target: searchView; visible: true }

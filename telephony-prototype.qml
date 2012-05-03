@@ -5,11 +5,20 @@ Rectangle {
     width: 800
     height: 600
 
-    function startCall(contact) {
+    function startCallToContact(contact) {
         // To keep this simple we rely on the fact that setting source to a
         // local file will immadiately make the item availalable.
         rightPaneContent.source = "LiveCall.qml"
-        rightPaneContent.item.startCall(contact)
+        rightPaneContent.item.contact = contact
+        rightPaneContent.item.number = ""
+        rightPaneContent.item.startCall()
+    }
+
+    function startCallToNumber(number) {
+        rightPaneContent.source = "LiveCall.qml"
+        rightPaneContent.item.contact = null
+        rightPaneContent.item.number = number
+        rightPaneContent.item.startCall()
     }
 
     function endCall() {
