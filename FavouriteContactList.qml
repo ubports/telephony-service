@@ -27,53 +27,9 @@ Rectangle {
                 color: "black"
             }
         }
-        delegate: Rectangle {
-            height: visible ? 64 : 0
-            width: parent.width
+        delegate: ContactDelegate {
             visible: favourite
-            Rectangle {
-                height: 1
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                color: "black"
-            }
-            Image {
-                id: photoItem
-                source: "dummydata/" + photo
-                width: 56
-                height: width
-                anchors.left: parent.left
-                anchors.leftMargin: 1
-                anchors.verticalCenter: parent.verticalCenter
-            }
-            Text {
-                id: displayNameItem
-                anchors.top: parent.top
-                anchors.topMargin: 1
-                anchors.left: photoItem.right
-                anchors.leftMargin: 2
-                font.pixelSize: Font.sizeToPixels("medium")
-                text: displayName
-            }
-            Text {
-                id: emailItem
-                anchors.top: displayNameItem.bottom
-                anchors.topMargin: 2
-                anchors.left: photoItem.right
-                anchors.leftMargin: 2
-                font.pixelSize: Font.sizeToPixels("small")
-                text: email
-            }
-            Text {
-                id: phoneItem
-                anchors.top: emailItem.bottom
-                anchors.topMargin: 2
-                anchors.left: photoItem.right
-                anchors.leftMargin: 2
-                font.pixelSize: Font.sizeToPixels("small")
-                text: phone
-            }
+            height: visible ? 64 : 0
         }
     }
 }
