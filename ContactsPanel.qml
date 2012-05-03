@@ -9,32 +9,26 @@ Rectangle {
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)
 
-    Rectangle {
-        id: searchArea
-        height: 50
+    SearchEntry {
+        id: contactsSearchBox
+        height: 30
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.margins: 5
 
-        SearchEntry {
-            id: contactsSearchBox
-            anchors.verticalCenter: parent.verticalCenter
-            height: 30
-            width: 250
-
-            leftIconSource: text ? "assets/cross.png" : "assets/search_icon.png"
-            onLeftIconClicked: text = ""
-        }
-        z: 1
+        leftIconSource: text ? "assets/cross.png" : "assets/search_icon.png"
+        onLeftIconClicked: text = ""
     }
 
     Flickable {
         contentHeight: favouriteContactList.height + contactList.height
         flickableDirection: Flickable.VerticalFlick
-        anchors.top: searchArea.bottom
+        anchors.top: contactsSearchBox.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.margins: 5
         clip: true
 
         FavouriteContactList {
