@@ -2,6 +2,9 @@ import QtQuick 1.1
 
 Rectangle {
     id: contactsPanel
+
+    property alias searchQuery : contactsSearchBox.searchQuery
+
     anchors.fill: parent
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)
@@ -13,19 +16,14 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        ContactsSearchCombo {
+        SearchEntry {
             id: contactsSearchBox
             anchors.verticalCenter: parent.verticalCenter
             height: 30
             width: 250
 
             leftIconSource: text ? "assets/cross.png" : "assets/search_icon.png"
-            rightIconSource: "assets/call_icon.png"
-            rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
-
             onLeftIconClicked: text = ""
-            onRightIconClicked: telephony.startCallToNumber(text)
-            onItemSelected: telephony.startCallToContact(item)
         }
         z: 1
     }
@@ -41,6 +39,7 @@ Rectangle {
 
         FavouriteContactList {
             id: favouriteContactList
+            filter: searchQuery
             clip: true
             anchors.top: parent.top
             onContactClicked: contactsPanel.contactClicked(contact)
@@ -48,6 +47,7 @@ Rectangle {
 
         ContactList {
             id: contactList
+            filter: searchQuery
             anchors.top: favouriteContactList.bottom
             clip: true
             onContactClicked: contactsPanel.contactClicked(contact)

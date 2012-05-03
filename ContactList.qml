@@ -4,6 +4,9 @@ import "fontUtils.js" as Font
 
 Rectangle {
     id: contactList
+
+    property alias filter: filterModel.filter
+
     width: 320
     // FIXME - calculate headers + body size automatically
     height: 600
@@ -30,10 +33,16 @@ Rectangle {
         }
     }
 
+    FilterModel {
+        id: filterModel
+        proxyModel: contacts
+        fields: ["displayName", "phone"]
+    }
+
     ListView {
         anchors.fill: parent
         interactive: false
-        model: contacts
+        model: filterModel.model
         delegate: ContactDelegate {
             onClicked: contactList.contactClicked(contacts.get(index))
         }

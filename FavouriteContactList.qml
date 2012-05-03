@@ -4,6 +4,9 @@ import "fontUtils.js" as Font
 
 Rectangle {
     id: favouriteContactList
+
+    property alias filter: filterModel.filter
+
     width: 320
     height: contactListView.height
     signal contactClicked(variant contact)
@@ -20,12 +23,18 @@ Rectangle {
         return totalHeight
     }
 
+    FilterModel {
+        id: filterModel
+        proxyModel: contacts
+        fields: ["displayName", "phone"]
+    }
+
     ListView {
         id: contactListView
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.left: parent.left
-        model: contacts
+        model: filterModel.model
         height: calculateHeight()
         interactive: false
         header: Item {
