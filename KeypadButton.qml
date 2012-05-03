@@ -1,6 +1,6 @@
 import QtQuick 1.1
 
-Item {
+AbstractButton {
     width: 62
     height: 52
 
@@ -13,8 +13,10 @@ Item {
         color: "#8d8d8d"
     }
 
-    Text {
+    TextCustom {
         id: labelItem
         anchors.centerIn: parent
+        fontSize: "x-large"
+        color: "white"
     }
 }
