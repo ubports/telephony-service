@@ -7,7 +7,6 @@ Rectangle {
 
     property variant callStarted: null
     property variant contact: null
-    signal callEnded()
 
     function startCall(contact) {
         liveCall.contact = contact
@@ -18,7 +17,7 @@ Rectangle {
     function endCall() {
         callTicker.stop();
         callStarted = null;
-        callEnded()
+        telephony.endCall();
     }
 
     Component.onCompleted: startCall(contacts.get(5))

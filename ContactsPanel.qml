@@ -3,8 +3,6 @@ import QtQuick 1.1
 Rectangle {
     anchors.fill: parent
 
-    signal callContactRequested(variant contact)
-
     Rectangle {
         id: searchArea
         height: 50
@@ -17,7 +15,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             height: 30
             width: 250
-            onItemSelected: callContactRequested(item)
+            onItemSelected: telephony.startCall(item)
         }
         z: 1
     }

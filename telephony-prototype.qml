@@ -1,8 +1,21 @@
 import QtQuick 1.1
 
 Rectangle {
+    id: telephony
     width: 800
     height: 600
+
+    function startCall(contact) {
+        // To keep this simple we rely on the fact that setting source to a
+        // local file will immadiately make the item availalable.
+        rightPaneContent.source = "LiveCall.qml"
+        rightPaneContent.item.startCall(contact)
+    }
+
+    function endCall() {
+        // TODO: should load one of the big icon panels instead of leaving blank
+        rightPaneContent.source = ""
+    }
 
     Item {
         id: leftPane
@@ -38,16 +51,6 @@ Rectangle {
                     break;
                 }
             }
-
-            Connections {
-                target: leftPaneContent.item
-                onCallContactRequested: {
-                    // To keep this simple we rely on the fact that setting source to a
-                    // local file will immadiately make the item availalable.
-                    rightPaneContent.source = "LiveCall.qml"
-                    rightPaneContent.item.startCall(contact)
-                }
-            }
         }
     }
 
@@ -65,12 +68,6 @@ Rectangle {
             Loader {
                 id: rightPaneContent
                 anchors.fill: parent
-
-                Connections {
-                    target: rightPaneContent.item
-                    ignoreUnknownSignals: true
-                    onCallEnded: rightPaneContent.source = ""
-                }
             }
         }
     }
