@@ -3,15 +3,43 @@ import QtQuick 1.1
 import "fontUtils.js" as Font
 
 Rectangle {
+    id: contactList
     width: 320
     height: 600
+
+    Component {
+        id: sectionHeading
+        Item {
+            width: contactList.width
+            height: childrenRect.height
+            Text {
+                text: section
+                font.pixelSize: Font.sizeToPixels("medium")
+                font.bold: true
+            }
+            Rectangle {
+                height: 1
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                color: "black"
+            }
+        }
+    }
 
     ListView {
         anchors.fill: parent
         model: contacts
         delegate: Rectangle {
-            height: 60
+            height: 64
             width: parent.width
+            Rectangle {
+                height: 1
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                color: "black"
+            }
             Image {
                 id: photoItem
                 source: "dummydata/" + photo
@@ -49,5 +77,8 @@ Rectangle {
                 text: phone
             }
         }
+        section.property: "displayName"
+        section.criteria: ViewSection.FirstCharacter
+        section.delegate: sectionHeading
     }
 }
