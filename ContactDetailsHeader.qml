@@ -17,7 +17,7 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.margins: 10
-        source: "dummydata/" + contact.photo
+        source: (contact) ? "dummydata/" + contact.photo : ""
     }
 
     Column {
@@ -33,7 +33,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             fontSize: "x-large"
-            text: contact.displayName
+            text: (contact) ? contact.displayName : ""
         }
 
         TextCustom {
