@@ -4,6 +4,11 @@ import "fontUtils.js" as Font
 Item {
     width: 575
     height: 100    
+    property variant contact: null
+
+    Component.onCompleted: {
+        contact = contacts.get(3)
+    }
 
     Text {
         anchors {
@@ -12,7 +17,7 @@ Item {
             leftMargin: 20
         }
         color: "black"
-        text: "Anna Olsson"
+        text: contact.displayName
         font.pixelSize: Font.sizeToPixels("x-large")
 
     }
@@ -33,7 +38,7 @@ Item {
                 top: parent.top
             }
             color: "darkGray"
-            text: "+44 794 323 439"
+            text: contact.phone
             font.pixelSize: Font.sizeToPixels("medium")
         }
         Text {
@@ -42,15 +47,16 @@ Item {
                 top: number.bottom
             }
             color: "darkGray"
-            text: "Mobile"
+            text: contact.phoneType
             font.pixelSize: Font.sizeToPixels("medium")
         }
     }
 
 
-    Rectangle {
+    Image {
         id: image
-        color: "gray"
+        //color: "gray"
+        source: "dummydata/" + contact.photo
         width: height
         anchors {
             right: parent.right
