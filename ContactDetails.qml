@@ -10,10 +10,6 @@ Item {
     width: 400
     height: 600
 
-//    Component.onCompleted: {
-//        contact = contacts.get(3)
-//    }
-
     ContactDetailsHeader {
         id: header
         contact: contactDetails.contact
