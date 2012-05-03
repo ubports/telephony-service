@@ -5,11 +5,27 @@ import "fontUtils.js" as Font
 Rectangle {
     id: favouriteContactList
     width: 320
-    height: 600
+    height: contactListView.height
+
+    function calculateHeight() {
+        var totalHeight = 0
+        var i
+        for (i=0; i< contacts.count; i=i+1) {
+            if(contacts.get(i).favourite)
+            totalHeight = totalHeight + 64
+        }
+        // favourite header size
+        totalHeight = totalHeight + Font.sizeToPixels("medium")
+        return totalHeight
+    }
 
     ListView {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.left: parent.left
         model: contacts
+        height: calculateHeight()
+        interactive: false
         header: Item {
             width: favouriteContactList.width
             height: headerText.height

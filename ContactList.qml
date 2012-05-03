@@ -5,6 +5,7 @@ import "fontUtils.js" as Font
 Rectangle {
     id: contactList
     width: 320
+    // FIXME - calculate headers + body size automatically
     height: 600
 
     Component {
@@ -30,6 +31,7 @@ Rectangle {
 
     ListView {
         anchors.fill: parent
+        interactive: false
         model: contacts
         delegate: ContactDelegate {}
         section.property: "displayName"
