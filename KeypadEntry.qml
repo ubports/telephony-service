@@ -36,7 +36,7 @@ Item {
                 anchors.bottom: parent.bottom
                 smooth: true
                 fillMode: Image.PreserveAspectFit
-                source: "assets/keypad_erase.png"
+                source: "assets/icon_backspace.png"
             }
         }
 
