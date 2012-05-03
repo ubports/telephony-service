@@ -1,4 +1,3 @@
-// import QtQuick 1.0 // to target S60 5th Edition or Maemo 5
 import QtQuick 1.1
 
 ListModel {
@@ -38,6 +37,19 @@ ListModel {
          section: "Wednesday, May 02, 2012"
         message: "tes t3lkjsdflj salkflkj sldjfsj"
         timeStamp: "11:21 AM"
+        outgoing: true
+     }
+     ListElement {
+         section: "Thursday, May 03, 2012"
+         message: "tes t3lkjsdflj salkflkj sldjfsj dflkjsalkfjl sjdfljsaldjfl sadjflsj dfjsljflsajfdljsalfjl tes t3lkjsdflj salkflkj sldjfsj dflkjsalkfjl sjdfljsaldjfl sadjflsj dfjsljflsajfdljsalfjl"
+         timeStamp: "10:15 PM"
+         outgoing: false
+
+     }
+     ListElement {
+        section: "Thursday, May 03, 2012"
+        message: "tes t3lkjsdflj salkflkj sldjfsj"
+        timeStamp: "11:21 PM"
         outgoing: true
      }
 

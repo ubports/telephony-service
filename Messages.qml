@@ -5,6 +5,15 @@ Item {
     id: messages
     width: 600
     height: 100
+    property ListModel model: MessagesModel {}
+
+    function addMessage(newMessage) {
+        messages.model.append({"section": "Friday, May 01, 2012",
+                               "message": newMessage,
+                               "timeStamp": "3:35 PM",
+                               "outgoing": true})
+        flickable.contentY = flickable.contentHeight
+    }
 
     Component {
         id: sectionDelegate
@@ -72,17 +81,17 @@ Item {
         id: flickable
         anchors {
             fill: parent
-            topMargin: 10
+            //topMargin: 10
         }
         contentWidth: parent.width;
         contentHeight: messages.height
         clip: true
         spacing: 8
         orientation: ListView.Vertical
-        model: MessagesModel{}
+        model: messages.model
         section.delegate: sectionDelegate
         section.property: "section"
-        delegate: messageDelegate
+        delegate: messageDelegate        
     }
 
     Rectangle {
@@ -94,5 +103,13 @@ Item {
         }
         height: 1
         color: "gray"
+    }
+
+    PropertyAnimation {
+        id: contentAnimation
+        target: flickable
+        properties: "contentY"
+        duration: 300
+        easing.type: Easing.InOutCubic
     }
 }
