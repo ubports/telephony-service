@@ -19,38 +19,33 @@ Item {
         text: "Quick Dial"
     }
 
-    Rectangle {
-        id: searchArea
+    ContactsSearchCombo {
+        id: contactsSearchBox
         height: 30
         anchors.top: hint.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 5
 
-        ContactsSearchCombo {
-            id: contactsSearchBox
-            anchors.fill: parent
+        leftIconSource: text ? "../assets/cross.png" : "../assets/search_icon.png"
+        rightIconSource: "../assets/call_icon.png"
+        rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
 
-            leftIconSource: text ? "../assets/cross.png" : "../assets/search_icon.png"
-            rightIconSource: "../assets/call_icon.png"
-            rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
-
-            onLeftIconClicked: text = ""
-            onRightIconClicked: {
-                telephony.startCallToNumber(text);
-                text = ""
-            }
-            onItemSelected: {
-                telephony.startCallToContact(item)
-                text = ""
-            }
+        onLeftIconClicked: text = ""
+        onRightIconClicked: {
+            telephony.startCallToNumber(text);
+            text = ""
+        }
+        onItemSelected: {
+            telephony.startCallToContact(item)
+            text = ""
         }
         z: 1
     }
 
     Column {
         id: buttonsGroup
-        anchors.top: searchArea.bottom
+        anchors.top: contactsSearchBox.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 5

@@ -5,7 +5,7 @@ Item {
     property alias searchQuery: entry.searchQuery
     property alias model: searchView.model
     property alias delegate: searchView.delegate
-    property alias listHeight: searchView.height
+    property int listHeight: 400
     property alias text: entry.text
     property int currentIndex: -1
 
@@ -19,11 +19,15 @@ Item {
 
     signal itemSelected(variant item)
     state: "idle"
+    height: entrty.height
 
     SearchEntry {
         id: entry
-        anchors.fill: parent
-        onTextChanged: dropDownSearch.state = "searching"
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 30
+        onTextChanged: text != "" ? dropDownSearch.state = "searching"  : dropDownSearch.state = "idle"
         onLeftIconClicked: parent.leftIconClicked()
         onRightIconClicked: parent.rightIconClicked()
     }
@@ -33,16 +37,18 @@ Item {
         anchors.top: entry.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        height: visible ? (contentHeight > 400 ? 400 : contentHeight) : 0
+        height: visible ? (contentHeight >= listHeight ? listHeight : contentHeight) : 0
 
         MouseArea {
             anchors.fill: parent
             onClicked: {
                 currentIndex = searchView.indexAt(mouse.x, mouse.y)
                 var currentItem = model.get(currentIndex)
-                entry.text =  currentItem.displayName
-                dropDownSearch.state = "idle"
-                itemSelected(currentItem)
+                if (currentItem) {
+                    entry.text =  currentItem.displayName
+                    dropDownSearch.state = "idle"
+                    itemSelected(currentItem)
+                }
             }
         }
     }
