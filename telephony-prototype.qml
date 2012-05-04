@@ -14,7 +14,7 @@ Rectangle {
         rightPaneContent.item.startCall()
     }
 
-    function startCallToNumber(number) {
+    function startCallToNudmber(number) {
         rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
         rightPaneContent.item.contact = null
         rightPaneContent.item.number = number
@@ -29,6 +29,7 @@ Rectangle {
     function endCall(duration) {
         rightPaneContent.source = "Panes/CallEndedPane.qml"
         rightPaneContent.item.text = duration;
+        rightPaneContent.item.postText = "";
     }
 
     function showContactDetails(contact) {
@@ -47,6 +48,21 @@ Rectangle {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
+
+            Component.onCompleted: rightPaneContent.source = "Panes/CallEndedPane.qml";
+            onCurrentTabChanged: {
+                switch (tabs.currentTab) {
+                case 0:
+                    rightPaneContent.source = "Panes/CallEndedPane.qml";
+                    break;
+                case 1:
+                    rightPaneContent.source = "Panes/SelectMessagePane.qml";
+                    break;
+                case 2:
+                    rightPaneContent.source = "Panes/SelectContactPane.qml";
+                    break;
+                }
+            }
         }
 
         width: 250
