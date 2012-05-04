@@ -18,7 +18,7 @@ Rectangle {
     function endCall() {
         callTicker.stop();
         callStarted = null;
-        telephony.endCall();
+        telephony.endCall(callDuration.elapsed);
     }
 
     Component.onCompleted: startCall(contacts.get(5))

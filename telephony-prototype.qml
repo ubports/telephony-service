@@ -26,9 +26,9 @@ Rectangle {
         rightPaneContent.item.contact = contact
     }
 
-    function endCall() {
-        // TODO: should load one of the big icon panels instead of leaving blank
-        rightPaneContent.source = ""
+    function endCall(duration) {
+        rightPaneContent.source = "Panes/CallEndedPane.qml"
+        rightPaneContent.item.text = duration;
     }
 
     function showContactDetails(contact) {

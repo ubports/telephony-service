@@ -8,6 +8,8 @@ Rectangle {
     height: count.paintedHeight + 8 * 2
     width: count.paintedWidth + 22 * 2
 
+    property alias elapsed: count.text
+
     function pad(text, length) {
         while (text.length < length) text = '0' + text;
         return text;
