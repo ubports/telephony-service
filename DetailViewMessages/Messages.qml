@@ -6,13 +6,15 @@ Item {
     width: 600
     height: 100
     property ListModel model: messagesModel
+    property int newMessageMinutes: 35
 
     function addMessage(newMessage) {
-        messages.model.append({"section": "Friday, May 01, 2012",
+        messages.model.append({"section": "Friday, May 04, 2012",
                                "message": newMessage,
-                               "timeStamp": "3:35 PM",
+                               "timeStamp": "3:" + newMessageMinutes + " PM",
                                "outgoing": true})
-        flickable.contentY = flickable.contentHeight
+        newMessageMinutes++;
+        flickable.positionViewAtIndex(model.count - 1, ListView.End)
     }
 
     Component {
@@ -91,7 +93,9 @@ Item {
         model: messages.model
         section.delegate: sectionDelegate
         section.property: "section"
-        delegate: messageDelegate        
+        delegate: messageDelegate
+
+        Behavior on contentY {NumberAnimation {}}
     }
 
     Rectangle {
@@ -112,4 +116,6 @@ Item {
         duration: 300
         easing.type: Easing.InOutCubic
     }
+
+
 }
