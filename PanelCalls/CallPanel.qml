@@ -36,8 +36,14 @@ Item {
             rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
 
             onLeftIconClicked: text = ""
-            onRightIconClicked: telephony.startCallToNumber(text)
-            onItemSelected: telephony.startCallToContact(item)
+            onRightIconClicked: {
+                telephony.startCallToNumber(text);
+                text = ""
+            }
+            onItemSelected: {
+                telephony.startCallToContact(item)
+                text = ""
+            }
         }
         z: 1
     }
