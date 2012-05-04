@@ -4,8 +4,8 @@ ColoredButton {
     id: button
     property alias icon: icon.source
     property alias text: label.text
-    property alias iconWidth: icon.width;
-    property alias iconHeight: icon.height;
+    property alias iconWidth: icon.width
+    property alias iconHeight: icon.height
 
     /**
      * The location of the text relative to the icon.
@@ -22,7 +22,7 @@ ColoredButton {
     Text {
         id: label
         anchors.margins: 10
-        font.pointSize: 18;
+        font.pointSize: 18
     }
 
     function alignIconText() {
@@ -51,6 +51,6 @@ ColoredButton {
         } // if textlocation
     } // alignIconText
 
-    Component.onCompleted: alignIconText();
+    Component.onCompleted: alignIconText()
 }
 
