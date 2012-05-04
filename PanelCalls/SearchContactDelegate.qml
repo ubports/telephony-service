@@ -9,7 +9,7 @@ Item {
     property string filter: null
 
     height: visible ? 50 : 0
-    width: 200
+    width: parent.width
     visible: {
         if (!filter) {
             return false
