@@ -7,10 +7,22 @@ Item {
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)
 
+    TextCustom {
+        id: hint
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.left: parent.left
+        anchors.margins: 5
+        anchors.leftMargin: 8
+        height: paintedHeight
+
+        text: "Quick Dial"
+    }
+
     Rectangle {
         id: searchArea
         height: 30
-        anchors.top: parent.top
+        anchors.top: hint.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 5
