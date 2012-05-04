@@ -6,6 +6,7 @@ ColoredButton {
     property alias text: label.text
     property alias iconWidth: icon.width
     property alias iconHeight: icon.height
+    property alias fontSize: label.fontSize
 
     /**
      * The location of the text relative to the icon.
@@ -19,10 +20,9 @@ ColoredButton {
         anchors.margins: 10
     }
 
-    Text {
+    TextCustom {
         id: label
         anchors.margins: 10
-        font.pointSize: 18
     }
 
     function alignIconText() {
