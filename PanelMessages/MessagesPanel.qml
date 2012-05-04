@@ -19,12 +19,15 @@ Item {
             onLeftIconClicked: text = ""
         }
 
-        NewMessageButton {
-            id: newMessage
-
+        Button {
             height: 45
             anchors.left: parent.left
             anchors.right: parent.right
+
+            icon: "../assets/icon_message_grey.png"
+            iconWidth: 35
+            text: "New Message"
+
             onClicked: telephony.startNewMessage()
         }
 

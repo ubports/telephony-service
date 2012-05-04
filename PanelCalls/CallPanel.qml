@@ -48,17 +48,33 @@ Item {
         z: 1
     }
 
-    Item {
+    Column {
         id: buttonsGroup
         anchors.top: searchArea.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 5
-        height: 60
 
-        TextCustom {
-            anchors.centerIn: parent
-            text: "Buttons will show in here"
+        spacing: 5
+
+        Button {
+            height: 45
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            icon: "../assets/icon_keypad.png"
+            iconWidth: 35
+            text: "Dial Pad"
+        }
+
+        Button {
+            height: 45
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            icon: "../assets/icon_voicemail.png"
+            iconWidth: 35
+            text: "Voicemail"
         }
     }
 

@@ -14,6 +14,8 @@ ColoredButton {
      */
     property string iconLocation: "left"
 
+    signal clicked
+
     Image {
         id: icon
         fillMode: Image.PreserveAspectFit
@@ -23,6 +25,11 @@ ColoredButton {
     TextCustom {
         id: label
         anchors.margins: 10
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: button.clicked()
     }
 
     function alignIconText() {
