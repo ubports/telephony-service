@@ -65,6 +65,7 @@ Item {
             icon: "../assets/icon_keypad.png"
             iconWidth: 35
             text: "Dial Pad"
+            onClicked: telephony.showDial();
         }
 
         Button {

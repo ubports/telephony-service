@@ -14,7 +14,7 @@ Rectangle {
         rightPaneContent.item.startCall()
     }
 
-    function startCallToNudmber(number) {
+    function startCallToNumber(number) {
         rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
         rightPaneContent.item.contact = null
         rightPaneContent.item.number = number
@@ -39,6 +39,10 @@ Rectangle {
 
     function startNewMessage() {
         rightPaneContent.source = "DetailViewMessages/NewMessageView.qml"
+    }
+
+    function showDial() {
+        rightPaneContent.source = "DetailViewKeypad/KeypadView.qml"
     }
 
     Item {

@@ -8,5 +8,4 @@ IconButton {
     borderWidth: 3
     borderColor: "#00be4d"
     color: "#3ac974"
-    onClicked: print("calling!")
 }

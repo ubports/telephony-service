@@ -26,5 +26,6 @@ Item {
         anchors.top: keypad.bottom
         anchors.topMargin: 21
         anchors.horizontalCenter: parent.horizontalCenter
+        onClicked: telephony.startCallToNumber(keypadEntry.value)
     }
 }
