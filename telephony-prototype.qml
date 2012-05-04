@@ -37,6 +37,10 @@ Rectangle {
         rightPaneContent.item.contact = contact
     }
 
+    function startNewMessage() {
+        rightPaneContent.source = "DetailViewMessages/NewMessageView.qml"
+    }
+
     Item {
         id: leftPane
         anchors.left: parent.left

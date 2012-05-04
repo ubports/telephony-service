@@ -21,14 +21,14 @@ Item {
             rightMargin: 20
         }
         height: 40
+        smooth: true
 
         TextInput {
             id: textInput
             anchors.fill: parent
             anchors.margins: 8
             font.pixelSize: Font.sizeToPixels("x-large")
-            cursorVisible: true
-            focus: true
+            cursorVisible: focus
         }
 
         Rectangle {
@@ -44,7 +44,7 @@ Item {
             border.width: 1
             border.color: "black"
             width: 80
-
+            smooth: true
             Text {
                 text: "send"
                 color: "black"

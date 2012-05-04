@@ -25,6 +25,7 @@ Item {
             height: 45
             anchors.left: parent.left
             anchors.right: parent.right
+            onClicked: telephony.startNewMessage()
         }
 
         MessagesList {
