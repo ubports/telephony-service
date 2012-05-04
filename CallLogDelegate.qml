@@ -66,16 +66,16 @@ Rectangle {
         source: {
             if(direction == "incoming") {
                 if(missed) {
-                    "assets/icon_call_incoming_missed.png"
+                    "assets/icon_missed_call.png"
                 } else {
-                    "assets/icon_call_incoming.png"
+                    "assets/icon_incoming_call.png"
                 }
             } else {
-                "assets/icon_call_outgoing.png"
+                "assets/icon_outgoing_call.png"
             }
         }
-        width: 56
-        height: 56
+        width: 48
+        height: 48
         anchors.rightMargin: 1
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter

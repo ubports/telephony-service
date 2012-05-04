@@ -35,13 +35,13 @@ ListModel {
         section: "IM"
         type: "Skype"
         value: "someone_using_skype"
-        actionIcon: ""
+        actionIcon: "assets/icon_chevron_right.png"
     }
     ListElement {
         section: "IM"
         type: "Jabber"
         value: "someone@jabber.org"
-        actionIcon: ""
+        actionIcon: "assets/icon_chevron_right.png"
     }
     ListElement {
         section: "Address"

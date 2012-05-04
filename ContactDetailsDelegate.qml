@@ -9,6 +9,7 @@ Item {
     signal emailClicked(string value)
     signal imClicked(string value)
     signal addressClicked(string value)
+    signal messageClicked(string value)
 
     function save() {
         var newValue
@@ -143,7 +144,7 @@ Item {
 
             onClicked: {
                 if (section == "Phone") {
-                    // TODO: message the contact
+                    contactDetailsItem.messageClicked(value);
                 } else if (section == "Email") {
                     // TODO: check what to do
                 } else if (section == "IM") {

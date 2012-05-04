@@ -61,6 +61,10 @@ Item {
                 telephony.startCallToContact(contactDetails.contact)
             }
 
+            onMessageClicked: {
+                telephony.startChat(contactDetails.contact)
+            }
+
             Connections {
                 target: header
                 onSaveClicked: {
