@@ -5,7 +5,7 @@ QtObject {
     property ListModel model: ListModel { }
     property string filter: ""
     property variant fields: null
-
+    property int proxyCount: proxyModel ? proxyModel.count : 0
 
     function checkFilter(element) {
         if (filter.length == 0) {
@@ -34,4 +34,5 @@ QtObject {
 
     onProxyModelChanged: { applyFilter() }
     onFilterChanged: { applyFilter() }
+    onProxyCountChanged: applyFilter()
 }
