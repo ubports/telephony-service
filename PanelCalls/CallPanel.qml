@@ -9,16 +9,15 @@ Item {
 
     Rectangle {
         id: searchArea
-        height: 50
+        height: 30
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.margins: 5
 
         ContactsSearchCombo {
             id: contactsSearchBox
-            anchors.verticalCenter: parent.verticalCenter
-            height: 30
-            width: 250
+            anchors.fill: parent
 
             leftIconSource: text ? "../assets/cross.png" : "../assets/search_icon.png"
             rightIconSource: "../assets/call_icon.png"
@@ -36,6 +35,7 @@ Item {
         anchors.top: searchArea.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.margins: 5
         height: 60
 
         TextCustom {
@@ -49,6 +49,7 @@ Item {
         anchors.top: buttonsGroup.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.margins: 5
         color: "lightGray"
         height: 30
 
@@ -64,6 +65,7 @@ Item {
         anchors.top: callLogHeader.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.margins: 5
     }
 }
 
