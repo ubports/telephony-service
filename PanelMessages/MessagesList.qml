@@ -4,6 +4,7 @@ Item {
     id: messageList
 
     property alias model: listView.model
+    property string filter
 
     ListView {
         id: listView
@@ -12,12 +13,14 @@ Item {
         delegate: Item {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 45
+            height: message.visible ? 45 : 0
             MessageDelegate {
+                id: message
                 anchors.fill: parent
                 anchors.leftMargin: 5
                 anchors.rightMargin: 5
                 onClicked: telephony.startChat(contact)
+                visible: contact.displayName.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ? true : false
             }
         }
     }

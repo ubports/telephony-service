@@ -4,8 +4,6 @@ import "../Widgets"
 Item {
     id: messageList
 
-    property variant model: messages
-
     Column {
         anchors.fill: parent
         anchors.margins: 5
@@ -33,7 +31,8 @@ Item {
             height: parent.height - search.height - newMessage.height - 10 // FIXME: make that filling in the available space generic
             anchors.left: parent.left
             anchors.right: parent.right
-            model: messageList.model
+            model: messages
+            filter: search.searchQuery
         }
     }
 }
