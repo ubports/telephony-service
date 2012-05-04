@@ -2,8 +2,12 @@ import QtQuick 1.1
 import "../fontUtils.js" as Font
 
 Rectangle {
+    id: callItem
     height: 64
     width: parent.width
+
+    signal clicked(int index)
+
     Rectangle {
         height: 1
         anchors.left: parent.left
@@ -79,6 +83,11 @@ Rectangle {
         anchors.rightMargin: 1
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: callItem.clicked(index)
     }
 
 }

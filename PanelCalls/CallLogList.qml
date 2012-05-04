@@ -12,7 +12,9 @@ Rectangle {
         anchors.fill: parent
         interactive: false
         model: calllog
-        delegate: CallLogDelegate {}
+        delegate: CallLogDelegate {
+            onClicked: telephony.showContactDetails(calllog.get(index))
+        }
         section.property: "displayName"
     }
 }
