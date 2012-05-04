@@ -85,14 +85,16 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: 5
             text: value
-            readOnly: !contactDetailsItem.editable
-            visible: editable && (section !== "Address")
+            visible: contactDetailsItem.editable && (section != "Address")
         }
 
         Text {
-            anchors.fill: valueText
+            anchors.left: parent.left
+            anchors.right: typeText.right
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: 5
             text: value
-            visible: !valueText.visible
+            visible: !contactDetailsItem.editable && (section != "Address")
         }
 
         // Used to edit the address
@@ -104,14 +106,17 @@ Item {
             anchors.leftMargin: 5
             height: paintedHeight
             text: value
-            readOnly: !contactDetailsItem.editable
-            visible: editable && (section === "Address")
+            visible: contactDetailsItem.editable && (section === "Address")
         }
 
         Text {
-            anchors.fill: valueTextMulti
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: 5
+            height: paintedHeight
             text: value
-            visible: !valueTextMulti.visible
+            visible: !contactDetailsItem.editable && (section === "Address")
         }
 
         Text {
