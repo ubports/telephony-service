@@ -17,6 +17,7 @@ Item {
                 anchors.fill: parent
                 anchors.leftMargin: 5
                 anchors.rightMargin: 5
+                onClicked: telephony.startChat(contact)
             }
         }
     }

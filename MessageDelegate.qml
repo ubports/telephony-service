@@ -1,6 +1,6 @@
 import QtQuick 1.1
 
-Item {
+AbstractButton {
     property variant contact: contacts.fromId(contactId)
 
     Rectangle {

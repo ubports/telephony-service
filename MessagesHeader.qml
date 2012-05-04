@@ -4,11 +4,7 @@ import "fontUtils.js" as Font
 Item {
     width: 575
     height: 100    
-    property variant contact: null
-
-    Component.onCompleted: {
-        contact = contacts.get(3)
-    }
+    property variant contact
 
     Text {
         anchors {
@@ -17,9 +13,8 @@ Item {
             leftMargin: 20
         }
         color: "black"
-        text: contact.displayName
+        text: contact ? contact.displayName : ""
         font.pixelSize: Font.sizeToPixels("x-large")
-
     }
 
     Item {
@@ -38,7 +33,7 @@ Item {
                 top: parent.top
             }
             color: "darkGray"
-            text: contact.phone
+            text: contact ? contact.phone : ""
             font.pixelSize: Font.sizeToPixels("medium")
         }
         Text {
@@ -47,7 +42,7 @@ Item {
                 top: number.bottom
             }
             color: "darkGray"
-            text: contact.phoneType
+            text: contact ? contact.phoneType : ""
             font.pixelSize: Font.sizeToPixels("medium")
         }
     }
@@ -56,7 +51,7 @@ Item {
     Image {
         id: image
         //color: "gray"
-        source: "dummydata/" + contact.photo
+        source: contact ? "dummydata/" + contact.photo : ""
         width: height
         anchors {
             right: parent.right
