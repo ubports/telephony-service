@@ -8,21 +8,21 @@ Rectangle {
     function startCallToContact(contact) {
         // To keep this simple we rely on the fact that setting source to a
         // local file will immadiately make the item availalable.
-        rightPaneContent.source = "LiveCall.qml"
+        rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
         rightPaneContent.item.contact = contact
         rightPaneContent.item.number = ""
         rightPaneContent.item.startCall()
     }
 
     function startCallToNumber(number) {
-        rightPaneContent.source = "LiveCall.qml"
+        rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
         rightPaneContent.item.contact = null
         rightPaneContent.item.number = number
         rightPaneContent.item.startCall()
     }
 
     function startChat(contact) {
-        rightPaneContent.source = "MessagesView.qml"
+        rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
         rightPaneContent.item.contact = contact
     }
 
@@ -32,7 +32,7 @@ Rectangle {
     }
 
     function showContactDetails(contact) {
-        rightPaneContent.source = "ContactDetails.qml"
+        rightPaneContent.source = "DetailViewContact/ContactDetails.qml"
         rightPaneContent.item.contact = contact
     }
 
@@ -60,13 +60,13 @@ Rectangle {
             source: {
                 switch (tabs.currentTab) {
                 case 0:
-                    "CallPanel.qml"
+                    "PanelCalls/CallPanel.qml"
                     break;
                 case 1:
-                    "MessagesPanel.qml"
+                    "PanelMessages/MessagesPanel.qml"
                     break;
                 case 2:
-                    "ContactsPanel.qml"
+                    "PanelContacts/ContactsPanel.qml"
                     break;
                 }
             }
