@@ -8,6 +8,7 @@ Rectangle {
     height: count.paintedHeight + 8 * 2
     width: count.paintedWidth + 22 * 2
 
+    // FIXME: define all properties in one block
     property alias elapsed: count.text
 
     function pad(text, length) {
@@ -19,6 +20,7 @@ Rectangle {
         id: count
         anchors.centerIn: parent
         color: "white"
+        // FIXME: factor into a named function
         text: {
             var divisor_for_minutes = time % (60 * 60);
             var minutes = String(Math.floor(divisor_for_minutes / 60));

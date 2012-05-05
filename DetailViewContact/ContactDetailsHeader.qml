@@ -78,8 +78,7 @@ Item {
             if (text == "Edit") {
                 text = "Save"
                 contactDetailsHeader.editClicked()
-            }
-            else {
+            } else {
                 text = "Edit"
                 contactDetailsHeader.saveClicked()
             }

@@ -1,11 +1,15 @@
 import QtQuick 1.1
 import "../fontUtils.js" as Font
 
+//FIXME: use TextCustom
+//FIXME: newlines
 Item {
     width: 575
     height: 100    
+
     property variant contact
 
+    //FIXME: add id
     Text {
         anchors {
             verticalCenter: parent.verticalCenter
@@ -47,10 +51,8 @@ Item {
         }
     }
 
-
     Image {
-        id: image
-        //color: "gray"
+        id: image        
         source: contact ? "../dummydata/" + contact.photo : ""
         width: height
         anchors {
@@ -73,6 +75,4 @@ Item {
         height: 1
         color: "gray"
     }
-
-
 }

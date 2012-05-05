@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import "../fontUtils.js" as Font
 
-Rectangle {
+Item {
     height: 64
     width: parent.width
     signal clicked
@@ -14,6 +14,7 @@ Rectangle {
     }
     Image {
         id: photoItem
+        // FIXME: move the dummydata/ prefix to the model
         source: "../dummydata/" + photo
         width: 56
         height: width
@@ -21,6 +22,7 @@ Rectangle {
         anchors.leftMargin: 1
         anchors.verticalCenter: parent.verticalCenter
     }
+    // FIXME: use TextCustom instead of Text
     Text {
         id: displayNameItem
         anchors.top: parent.top

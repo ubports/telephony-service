@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import "../Widgets"
 
+// FIXME: Remove one of those Item
 Item {
     id: search
 

@@ -23,8 +23,10 @@ Item {
         anchors.rightMargin: 9
         anchors.verticalCenter: parent.verticalCenter
         layoutDirection: Qt.RightToLeft
+        // FIXME: too small spacing
         spacing: 4
 
+        // FIXME: replace with IconButton
         AbstractButton {
             id: clearButton
 

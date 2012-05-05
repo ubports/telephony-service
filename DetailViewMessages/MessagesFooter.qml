@@ -8,7 +8,7 @@ Item {
     signal newMessage(string message)
 
     Rectangle {
-        id: searchBox
+        id: searchBox //FIXME:rename
         border.color: "black"
         border.width: 1
         radius: 10
@@ -31,6 +31,7 @@ Item {
             cursorVisible: focus
         }
 
+        //FIXME: use text button
         Rectangle {
             id: sendButton
             anchors {

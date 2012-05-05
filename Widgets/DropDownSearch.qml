@@ -1,11 +1,13 @@
 import QtQuick 1.1
 
+// FIXME: BUG WHEN SEARCHING
+
 Item {
     id: dropDownSearch
     property alias searchQuery: entry.searchQuery
     property alias model: searchView.model
     property alias delegate: searchView.delegate
-    property int listHeight: 400
+    property int listMaximumHeight: 400
     property alias text: entry.text
     property int currentIndex: -1
 
@@ -19,7 +21,7 @@ Item {
 
     signal itemSelected(variant item)
     state: "idle"
-    height: entrty.height
+    height: entry.height
 
     SearchEntry {
         id: entry
@@ -27,7 +29,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 30
-        onTextChanged: text != "" ? dropDownSearch.state = "searching"  : dropDownSearch.state = "idle"
+        onTextChanged: text != "" ? dropDownSearch.state = "searching" : dropDownSearch.state = "idle"
         onLeftIconClicked: parent.leftIconClicked()
         onRightIconClicked: parent.rightIconClicked()
     }
@@ -37,15 +39,16 @@ Item {
         anchors.top: entry.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        height: visible ? (contentHeight >= listHeight ? listHeight : contentHeight) : 0
+        // FIXME: Does not uses contentHeight here
+        height: visible ? (contentHeight >= listMaximumHeight ? listMaximumHeight : contentHeight) : 0
 
         MouseArea {
             anchors.fill: parent
             onClicked: {
                 currentIndex = searchView.indexAt(mouse.x, mouse.y)
                 var currentItem = model.get(currentIndex)
-                if (currentItem) {
-                    entry.text =  currentItem.displayName
+                if (currentItem) {la
+                    entry.text =  currentItem.dispyName
                     dropDownSearch.state = "idle"
                     itemSelected(currentItem)
                 }

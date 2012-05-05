@@ -10,6 +10,8 @@ Item {
 
     height: visible ? 50 : 0
     width: parent.width
+
+    // FIXME: move the code to a function
     visible: {
         if (!filter) {
             return false
@@ -26,6 +28,7 @@ Item {
     }
     anchors.margins: 30
 
+    // Use this as the hole item
     Rectangle {
         anchors.fill: parent
         color: "gray"
@@ -40,6 +43,7 @@ Item {
         height: 1
     }
 
+    // FIXME: Use TextCustom instead of Text element
     Text {
         id: contactName
         text: displayName

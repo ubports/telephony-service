@@ -13,6 +13,7 @@ Item {
         columns: 3
 
         Repeater {
+            // FIXME: create one single model with all the keys
             model: [Qt.Key_1, Qt.Key_2, Qt.Key_3, Qt.Key_4, Qt.Key_5, Qt.Key_6, Qt.Key_7, Qt.Key_8, Qt.Key_9]
             delegate: KeypadButton {
                 label: index + 1

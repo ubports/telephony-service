@@ -8,6 +8,7 @@ Rectangle {
 
     property alias searchQuery : contactsSearchBox.searchQuery
 
+    // FIXME: move anchor and signal handler to instance
     anchors.fill: parent
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)
@@ -67,7 +68,7 @@ Rectangle {
         }
 
         section.property: "sectionName"
-        section.criteria: ViewSection.FullString
+        // FIXME: use TextCustom instead of Text
         section.delegate: Text {
             width: parent.width
             height: paintedHeight

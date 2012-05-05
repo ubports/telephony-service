@@ -1,5 +1,6 @@
 import QtQuick 1.1
 
+//FIXME: remove the whole file
 Item {
     id: view
 

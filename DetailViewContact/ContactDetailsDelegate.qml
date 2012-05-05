@@ -67,6 +67,7 @@ Item {
         height: valueTextMulti.height > 30 ? valueTextMulti.height : 30
 
         onClicked: {
+            // TODO: use a generic clicked signal and pass the section as argument
             if (section == "Phone") {
                 contactDetailsItem.phoneClicked(value);
             } else if (section == "Email") {
@@ -106,7 +107,7 @@ Item {
             anchors.leftMargin: 5
             height: paintedHeight
             text: value
-            visible: contactDetailsItem.editable && (section === "Address")
+            visible: contactDetailsItem.editable && (section == "Address")
         }
 
         Text {
@@ -116,7 +117,7 @@ Item {
             anchors.leftMargin: 5
             height: paintedHeight
             text: value
-            visible: !contactDetailsItem.editable && (section === "Address")
+            visible: !contactDetailsItem.editable && (section == "Address")
         }
 
         Text {
@@ -149,6 +150,7 @@ Item {
             icon: actionIcon
 
             onClicked: {
+                // TODO: use a generic signal for actions
                 if (section == "Phone") {
                     contactDetailsItem.messageClicked(value);
                 } else if (section == "Email") {

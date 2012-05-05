@@ -1,6 +1,8 @@
 import QtQuick 1.1
 import "../fontUtils.js" as Font
 
+// FIXME: remove the toplevel rectangle
+// move the anchoring to the instance
 Rectangle {
     id: callLog
     width: parent.width

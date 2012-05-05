@@ -1,5 +1,6 @@
 import QtQuick 1.1
 
+//FIXME: remove top level item
 Item {
     id: view
 
@@ -15,12 +16,13 @@ Item {
             width: view.width
             height: 100
         }
+
         Messages {
             id: messages
             width: view.width
             height: view.height - footer.height - header.height
-
         }
+
         MessagesFooter {
             id: footer
             width: view.width

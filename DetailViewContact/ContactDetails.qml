@@ -30,6 +30,7 @@ Item {
             anchors.right: parent.right
             height: 40
 
+            // TODO: use TextCustom
             Text {
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom

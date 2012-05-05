@@ -7,6 +7,5 @@ DropDownSearch {
     delegate: SearchContactDelegate {
         filter: search.searchQuery
     }
-    listHeight: 300
-    clip: false
+    listMaximumHeight: 300
 }

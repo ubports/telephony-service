@@ -1,13 +1,17 @@
 import QtQuick 1.0
 import "../Widgets"
+// FIXME: remove useless f*** import
+// FIXME: prevent the StopWatch from resizing
 import "../fontUtils.js" as Font
 
 Rectangle {
     id: liveCall
     color: "#ebebeb"
 
-    property variant callStarted: null
-    property variant contact: null
+    // FIXME: better name that does not sound like a boolean; store it in the StopWatch but also alias it here
+    // FIXME: refactor StopWatch, callStarted, Timer into StopWatch
+    property variant callStarted
+    property variant contact
     property string number: ""
 
     function startCall() {
@@ -17,10 +21,12 @@ Rectangle {
 
     function endCall() {
         callTicker.stop();
+        // FIXME: dont reset callStarted
         callStarted = null;
         telephony.endCall(callDuration.elapsed);
     }
 
+    // FIXME: remove blah code
     Component.onCompleted: startCall(contacts.get(5))
 
     Image {
@@ -63,6 +69,7 @@ Rectangle {
         fontSize: "x-large"
     }
 
+    // FIXME: move inside StopWatch
     Timer {
         id: callTicker
         interval: 1000
@@ -71,6 +78,7 @@ Rectangle {
     }
 
     StopWatch {
+        // FIXME: rename to stopWatch
         id: callDuration
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 12

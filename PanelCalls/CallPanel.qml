@@ -49,7 +49,6 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 5
-
         spacing: 5
 
         Button {

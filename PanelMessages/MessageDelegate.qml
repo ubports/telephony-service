@@ -4,6 +4,7 @@ import "../Widgets"
 AbstractButton {
     property variant contact: contacts.fromId(contactId)
 
+    // FIXME: maybe create a Line component to make the code more readable
     Rectangle {
         height: 1
         anchors.left: parent.left
@@ -14,6 +15,7 @@ AbstractButton {
 
     Image {
         id: contactPhotoItem
+        // FIXME: the dummydata prefix should be in the model
         source: "../dummydata/" + contact.photo
         width: 35
         height: width

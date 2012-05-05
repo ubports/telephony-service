@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import "../fontUtils.js" as Font
 
+//FIXME: remove the whole file
 Item {
     id: messages
 

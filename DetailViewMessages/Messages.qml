@@ -3,10 +3,12 @@ import "../fontUtils.js" as Font
 
 Item {
     id: messages
+
     width: 600
     height: 100
+
     property ListModel model: messagesModel
-    property int newMessageMinutes: 35
+    property int newMessageMinutes: 35 //FIXME: comment
 
     function addMessage(newMessage) {
         messages.model.append({"section": "Friday, May 04, 2012",
@@ -14,6 +16,7 @@ Item {
                                "timeStamp": "3:" + newMessageMinutes + " PM",
                                "outgoing": true})
         newMessageMinutes++;
+        //FIX: try to use list view
         flickable.positionViewAtIndex(model.count - 1, ListView.End)
     }
 
@@ -21,7 +24,7 @@ Item {
         id: sectionDelegate
         Item {
             height: sectionText.height + line.anchors.bottomMargin
-
+            //FIXME;: text custom
             Text {
                 id: sectionText
                 text: section
@@ -57,6 +60,7 @@ Item {
                 rightMargin: outgoing ? 1/3 * messages.width : 10
             }
 
+            //FIXME: use anchors and margins
             Text {
                 id: messageText
                 width: parent.width
@@ -66,7 +70,7 @@ Item {
                 y: 10
                 font.pixelSize: Font.sizeToPixels("large")
             }
-
+            //FIXME: text custom
             Text {
                 id: timeText
                 text: timeStamp
@@ -80,12 +84,10 @@ Item {
     }
 
     ListView {
-        id: flickable
-        anchors {
-            fill: parent
-            //topMargin: 10
-        }
-        contentWidth: parent.width;
+        id: flickable //FIXME: change name
+
+        anchors.fill: parent
+        contentWidth: parent.width
         contentHeight: messages.height
         clip: true
         spacing: 8
@@ -95,9 +97,10 @@ Item {
         section.property: "section"
         delegate: messageDelegate
 
-        Behavior on contentY {NumberAnimation {}}
+        Behavior on contentY { NumberAnimation { } }
     }
 
+    //FIXME: remove
     Rectangle {
         id: line
         anchors {
@@ -109,6 +112,7 @@ Item {
         color: "gray"
     }
 
+    //FIXME: remove
     PropertyAnimation {
         id: contentAnimation
         target: flickable
@@ -116,6 +120,4 @@ Item {
         duration: 300
         easing.type: Easing.InOutCubic
     }
-
-
 }

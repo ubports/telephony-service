@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import "../Widgets"
 
+// FIXME: delete
 AbstractButton {
     id: newMessage
 

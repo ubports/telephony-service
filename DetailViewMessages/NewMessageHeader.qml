@@ -5,8 +5,10 @@ import "../Widgets"
 Item {
     width: 575
     height: 100    
+
     property variant contact
 
+    //FIXME: use maybe ContactSearchCombo
     SearchEntry {
         id: toField
         height: 30
@@ -19,6 +21,7 @@ Item {
         }
     }
 
+    //FIXME: comment
     Rectangle {
         id: image
         color: "white"
@@ -43,6 +46,4 @@ Item {
         height: 1
         color: "gray"
     }
-
-
 }

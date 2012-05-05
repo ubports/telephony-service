@@ -15,8 +15,10 @@ Rectangle {
         anchors.bottom: parent.bottom
         color: "black"
     }
+
     Image {
         id: photoItem
+        // FIXME: move the dummydata to the model
         source: "../dummydata/" + photo
         width: 56
         height: width
@@ -24,6 +26,7 @@ Rectangle {
         anchors.leftMargin: 1
         anchors.verticalCenter: parent.verticalCenter
     }
+    // FIXME: TextCustom
     Text {
         id: displayNameItem
         anchors.top: parent.top
@@ -34,6 +37,7 @@ Rectangle {
         font.pixelSize: Font.sizeToPixels("medium")
         text: displayName
     }
+
     Text {
         id: phoneTypeItem
         anchors.top: displayNameItem.bottom
@@ -43,6 +47,7 @@ Rectangle {
         font.pixelSize: Font.sizeToPixels("small")
         text: phoneType
     }
+
     Text {
         id: phoneItem
         anchors.top: displayNameItem.bottom
