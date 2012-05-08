@@ -42,13 +42,14 @@ Item {
         // FIXME: Does not uses contentHeight here
         height: visible ? (contentHeight >= listMaximumHeight ? listMaximumHeight : contentHeight) : 0
 
+        // TODO: Implement the mouse area in the delegate
         MouseArea {
             anchors.fill: parent
             onClicked: {
                 currentIndex = searchView.indexAt(mouse.x, mouse.y)
                 var currentItem = model.get(currentIndex)
-                if (currentItem) {la
-                    entry.text =  currentItem.dispyName
+                if (currentItem) {
+                    entry.text = currentItem.displayName
                     dropDownSearch.state = "idle"
                     itemSelected(currentItem)
                 }
