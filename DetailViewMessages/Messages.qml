@@ -1,5 +1,5 @@
 import QtQuick 1.1
-import "../fontUtils.js" as Font
+import "../Widgets"
 
 Item {
     id: messages
@@ -8,7 +8,9 @@ Item {
     height: 100
 
     property ListModel model: messagesModel
-    property int newMessageMinutes: 35 //FIXME: comment
+
+    // private data
+    property int newMessageMinutes: 35 // helper for new messages text
 
     function addMessage(newMessage) {
         messages.model.append({"section": "Friday, May 04, 2012",
@@ -16,20 +18,20 @@ Item {
                                "timeStamp": "3:" + newMessageMinutes + " PM",
                                "outgoing": true})
         newMessageMinutes++;
-        //FIX: try to use list view
-        flickable.positionViewAtIndex(model.count - 1, ListView.End)
+        //FIX: try to use list view methods better
+        messagesList.positionViewAtIndex(model.count - 1, ListView.End)
     }
 
     Component {
         id: sectionDelegate
         Item {
             height: sectionText.height + line.anchors.bottomMargin
-            //FIXME;: text custom
-            Text {
+
+            TextCustom {
                 id: sectionText
                 text: section
                 anchors.bottom: line.top
-                font.pixelSize: Font.sizeToPixels("medium")
+                fontSize: "medium"
             }
 
             Rectangle {
@@ -60,31 +62,34 @@ Item {
                 rightMargin: outgoing ? 1/3 * messages.width : 10
             }
 
-            //FIXME: use anchors and margins
-            Text {
+            TextCustom {
                 id: messageText
-                width: parent.width
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    top: parent.top
+                    margins: 5
+                }
+
                 text: message
-                wrapMode: Text.WordWrap                
-                x: 10
-                y: 10
-                font.pixelSize: Font.sizeToPixels("large")
+                wrapMode: Text.WordWrap
+                fontSize: "large"
             }
-            //FIXME: text custom
-            Text {
+
+            TextCustom {
                 id: timeText
                 text: timeStamp
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.rightMargin: 5
                 color: "gray"
-                font.pixelSize: Font.sizeToPixels("small")
+                fontSize: "small"
             }
         }
     }
 
     ListView {
-        id: flickable //FIXME: change name
+        id: messagesList
 
         anchors.fill: parent
         contentWidth: parent.width
@@ -96,28 +101,6 @@ Item {
         section.delegate: sectionDelegate
         section.property: "section"
         delegate: messageDelegate
-
-        Behavior on contentY { NumberAnimation { } }
     }
 
-    //FIXME: remove
-    Rectangle {
-        id: line
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
-        height: 1
-        color: "gray"
-    }
-
-    //FIXME: remove
-    PropertyAnimation {
-        id: contentAnimation
-        target: flickable
-        properties: "contentY"
-        duration: 300
-        easing.type: Easing.InOutCubic
-    }
 }

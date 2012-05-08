@@ -1,16 +1,13 @@
 import QtQuick 1.1
-import "../fontUtils.js" as Font
+import "../Widgets"
 
-//FIXME: use TextCustom
-//FIXME: newlines
 Item {
-    width: 575
-    height: 100    
+    id: header
 
     property variant contact
 
-    //FIXME: add id
-    Text {
+    TextCustom {
+        id: name
         anchors {
             verticalCenter: parent.verticalCenter
             left: parent.left
@@ -18,7 +15,7 @@ Item {
         }
         color: "black"
         text: contact ? contact.displayName : ""
-        font.pixelSize: Font.sizeToPixels("x-large")
+        fontSize: "x-large"
     }
 
     Item {
@@ -30,7 +27,7 @@ Item {
             verticalCenter: image.verticalCenter
         }
 
-        Text {
+        TextCustom {
             id: number
             anchors {
                 right: parent.right
@@ -38,21 +35,21 @@ Item {
             }
             color: "darkGray"
             text: contact ? contact.phone : ""
-            font.pixelSize: Font.sizeToPixels("medium")
+            fontSize: "medium"
         }
-        Text {
+        TextCustom {
             anchors {
                 right: parent.right
                 top: number.bottom
             }
             color: "darkGray"
             text: contact ? contact.phoneType : ""
-            font.pixelSize: Font.sizeToPixels("medium")
+            fontSize: "medium"
         }
     }
 
     Image {
-        id: image        
+        id: image
         source: contact ? "../dummydata/" + contact.photo : ""
         width: height
         anchors {
