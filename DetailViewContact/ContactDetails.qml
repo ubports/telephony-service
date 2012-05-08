@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import "../Widgets"
 
 Item {
     id: contactDetails
@@ -30,8 +31,7 @@ Item {
             anchors.right: parent.right
             height: 40
 
-            // TODO: use TextCustom
-            Text {
+            TextCustom {
                 anchors.left: parent.left
                 anchors.bottom: parent.bottom
                 anchors.bottomMargin: 5
@@ -58,12 +58,25 @@ Item {
             anchors.margins: 1
             editable: contactDetails.editable
 
-            onPhoneClicked: {
-                telephony.startCallToContact(contactDetails.contact)
+            onClicked: {
+                // we only handle clicks in the phone number for now
+                switch (section) {
+                case "Phone":
+                    telephony.startCallToContact(contactDetails.contact)
+                    break;
+                default:
+                    break;
+                }
             }
 
-            onMessageClicked: {
-                telephony.startChat(contactDetails.contact)
+            onActionClicked: {
+                switch (section) {
+                case "Phone":
+                    telephony.startChat(contactDetails.contact)
+                    break;
+                default:
+                    break;
+                }
             }
 
             Connections {

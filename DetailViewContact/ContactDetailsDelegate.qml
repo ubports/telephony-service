@@ -6,11 +6,8 @@ Item {
     height: childrenRect.height
 
     property bool editable: false
-    signal phoneClicked(string value)
-    signal emailClicked(string value)
-    signal imClicked(string value)
-    signal addressClicked(string value)
-    signal messageClicked(string value)
+    signal clicked(string section, string value)
+    signal actionClicked(string section, string value)
 
     function save() {
         var newValue
@@ -66,18 +63,7 @@ Item {
         anchors.top: parent.top
         height: valueTextMulti.height > 30 ? valueTextMulti.height : 30
 
-        onClicked: {
-            // TODO: use a generic clicked signal and pass the section as argument
-            if (section == "Phone") {
-                contactDetailsItem.phoneClicked(value);
-            } else if (section == "Email") {
-                contactDetailsItem.emailClicked(value);
-            } else if (section == "IM") {
-                contactDetailsItem.imClicked(value);
-            } else if (section == "Address") {
-                contactDetailsItem.addressClicked(value);
-            }
-        }
+        onClicked: contactDetailsItem.clicked(section, value);
 
         TextInput {
             id: valueText
@@ -149,18 +135,7 @@ Item {
 
             icon: actionIcon
 
-            onClicked: {
-                // TODO: use a generic signal for actions
-                if (section == "Phone") {
-                    contactDetailsItem.messageClicked(value);
-                } else if (section == "Email") {
-                    // TODO: check what to do
-                } else if (section == "IM") {
-                    // TODO: check what to do
-                } else if (section == "Address") {
-                    // TODO: check what to do
-                }
-            }
+            onClicked: contactDetailsItem.actionClicked(section, value);
         }
     }
 
