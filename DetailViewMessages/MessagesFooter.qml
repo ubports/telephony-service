@@ -1,14 +1,14 @@
 import QtQuick 1.1
+import "../Widgets"
 import "../fontUtils.js" as Font
 
 Item {
-    width: 575
-    height: 100   
 
     signal newMessage(string message)
 
     Rectangle {
-        id: searchBox //FIXME:rename
+        id: newMessageBox
+
         border.color: "black"
         border.width: 1
         radius: 10
@@ -31,36 +31,23 @@ Item {
             cursorVisible: focus
         }
 
-        //FIXME: use text button
-        Rectangle {
+        TextButton {
             id: sendButton
             anchors {
-                right: searchBox.right
+                right: newMessageBox.right
                 rightMargin: 10
                 verticalCenter: parent.verticalCenter
             }
             height: 30
             radius: 10
             color: "darkGray"
-            border.width: 1
-            border.color: "black"
             width: 80
             smooth: true
-            Text {
-                text: "send"
-                color: "black"
-                font.pixelSize: Font.sizeToPixels("large")
-                anchors.centerIn: parent
+            text: "send"
+            onClicked: {
+                footer.newMessage(textInput.text)
+                textInput.text = ""
             }
-
-            MouseArea {
-                anchors.fill: parent
-                onPressed: {
-                    footer.newMessage(textInput.text)
-                    textInput.text = ""
-                }
-            }
-
         }
     }
 }

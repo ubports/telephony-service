@@ -47,19 +47,23 @@ Item {
 
     Component {
         id: messageDelegate
-        Rectangle {
+        Item {
             id: bg
-            color: outgoing ? "white" : "darkGray"
-            height: messageText.paintedHeight + 40
 
-            radius: 0
-            border.color: "black"
-            border.width: 1
+            height: messageText.paintedHeight + 40
             anchors {
                 left: parent.left
                 right: parent.right
                 leftMargin: outgoing ? 10 : 1/3 * messages.width
                 rightMargin: outgoing ? 1/3 * messages.width : 10
+            }
+
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: 1
+                color: outgoing ? "white" : "darkGray"
+                border.color: "black"
+                border.width: 1
             }
 
             TextCustom {
