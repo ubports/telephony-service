@@ -8,9 +8,9 @@ Item {
 
     property variant contact
 
-    //FIXME: use maybe ContactSearchCombo
+
     SearchEntry {
-        id: toField
+        id: contactsSearchEntry
         height: 30
         anchors {
             left: image.right
@@ -18,6 +18,20 @@ Item {
             right: parent.right
             rightMargin: 20
             verticalCenter: parent.verticalCenter
+        }
+        leftIconSource: "../assets/empty.png"
+        onLeftIconClicked: text = ""
+
+        TextCustom {
+            id: toText
+            text: "To:"
+            fontSize: "large"
+            color: "white"
+            anchors {
+                verticalCenter: parent.verticalCenter
+                left: parent.left
+                leftMargin: 10
+            }
         }
     }
 
