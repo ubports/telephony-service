@@ -4,9 +4,6 @@ import "../Widgets"
 Item {
     id: messages
 
-    width: 600
-    height: 100
-
     property ListModel model: messagesModel
 
     // private data
@@ -18,7 +15,7 @@ Item {
                                "timeStamp": "3:" + newMessageMinutes + " PM",
                                "outgoing": true})
         newMessageMinutes++;
-        //FIX: try to use list view methods better
+        //FIXME: try to use list view methods better
         messagesList.positionViewAtIndex(model.count - 1, ListView.End)
     }
 

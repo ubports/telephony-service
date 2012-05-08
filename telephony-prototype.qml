@@ -24,6 +24,7 @@ Rectangle {
     function startChat(contact) {
         rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
         rightPaneContent.item.contact = contact
+        rightPaneContent.item.newMessage = false
     }
 
     function endCall(duration) {
@@ -38,7 +39,8 @@ Rectangle {
     }
 
     function startNewMessage() {
-        rightPaneContent.source = "DetailViewMessages/NewMessageView.qml"
+        rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
+        rightPaneContent.item.newMessage = true
     }
 
     function showDial() {

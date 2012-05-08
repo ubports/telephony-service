@@ -4,7 +4,7 @@ import "../Widgets"
 
 Item {
     width: 575
-    height: 100    
+    height: 100
 
     property variant contact
 
@@ -21,7 +21,7 @@ Item {
         }
     }
 
-    //FIXME: comment
+    // this is a placeholder for image
     Rectangle {
         id: image
         color: "white"
