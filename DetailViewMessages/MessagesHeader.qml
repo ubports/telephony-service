@@ -60,6 +60,11 @@ Item {
             topMargin: 10
             bottomMargin: 10
         }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: telephony.showContactDetails(contact)
+        }
     }
 
     Rectangle {
