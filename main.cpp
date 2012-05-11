@@ -27,10 +27,13 @@
 #include <QtDeclarative/QDeclarativeView>
 #include <QtGui/QApplication>
 
+// local
+#include "config.h"
+
 // inspired by qmlviewer’s QDeclarativeViewer::loadDummyDataFiles(…)
 static void loadDummyDataFiles(QDeclarativeView* view)
 {
-    QDir dir("dummydata", "*.qml");
+    QDir dir(telephonyAppDirectory() + "/dummydata", "*.qml");
     Q_FOREACH(const QString& qmlFile, dir.entryList()) {
         const QString filePath = dir.filePath(qmlFile);
         QDeclarativeComponent comp(view->engine(), filePath);
@@ -54,9 +57,9 @@ int main(int argc, char** argv)
 {
     QApplication application(argc, argv);
     application.setApplicationName("Telephony prototype");
-    QUrl source("telephony-prototype.qml");
     QDeclarativeView view;
     loadDummyDataFiles(&view);
+    QUrl source(telephonyAppDirectory() + "/telephony-prototype.qml");
     view.setSource(source);
     view.show();
     return application.exec();
