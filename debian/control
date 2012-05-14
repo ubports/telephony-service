@@ -1,15 +1,17 @@
 Source: telephony-prototype
-Section: unknown
-Priority: extra
-Maintainer: Tiago Salem Herrmann <tiago.herrmann@canonical.com>
-Build-Depends: debhelper (>= 8.0.0)
-Standards-Version: 3.9.2
-Homepage: <insert the upstream URL, if relevant>
+Section: x11
+Priority: optional
+Maintainer: The Newyork team <newyork@lists.canonical.com>
+XSBC-Original-Maintainer: Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+Build-Depends: debhelper (>= 8.0.0),
+               cmake,
+               libqt4-dev,
+Standards-Version: 3.9.3
 Vcs-Bzr: https://code.launchpad.net/~newyork-team/newyork/telephony-prototype
 
 Package: telephony-prototype
-Architecture: all
-Depends: ${misc:Depends},
-  qt4-qmlviewer
-Description: A prototype for the telephony app
- A prototype for the telephony app
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+Description: A prototype for the telephony application
+ A prototype for the telephony application.
