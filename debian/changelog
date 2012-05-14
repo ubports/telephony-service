@@ -1,3 +1,8 @@
+telephony-app (0.3) UNRELEASED; urgency-low
+
+  * Rename the application from telephony-prototype to telephony-app as it
+    is not just a prototype anymore.
+
 telephony-prototype (0.2) UNRELEASED; urgency=low
 
   * Packaging changes to accomodate the fact that the telephony prototype

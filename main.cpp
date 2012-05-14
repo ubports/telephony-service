@@ -56,10 +56,10 @@ static void loadDummyDataFiles(QDeclarativeView* view)
 int main(int argc, char** argv)
 {
     QApplication application(argc, argv);
-    application.setApplicationName("Telephony prototype");
+    application.setApplicationName("Telephony App");
     QDeclarativeView view;
     loadDummyDataFiles(&view);
-    QUrl source(telephonyAppDirectory() + "/telephony-prototype.qml");
+    QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
     view.setSource(source);
     view.show();
     return application.exec();

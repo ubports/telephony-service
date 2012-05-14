@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=telephony-prototype
-GenericName=telephony-prototype
-Comment=telephony app prototype
-Exec=telephony-prototype
-Terminal=false

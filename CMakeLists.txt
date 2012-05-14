@@ -1,4 +1,4 @@
-project(telephony-prototype)
+project(telephony-app)
 cmake_minimum_required(VERSION 2.8)
 
 # Standard install paths
@@ -15,7 +15,7 @@ include_directories(
     ${QT_INCLUDE_DIR}
     )
 
-set(TELEPHONY_APP telephony-prototype)
+set(TELEPHONY_APP telephony-app)
 
 add_executable(${TELEPHONY_APP} main.cpp)
 
