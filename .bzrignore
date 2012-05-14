@@ -1,0 +1,15 @@
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+install_manifest.txt
+
+config.h
+
+telephony-prototype
+
+obj-*/
+debian/files
+debian/*.debhelper.log
+debian/*.substvars
+

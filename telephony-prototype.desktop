@@ -3,5 +3,5 @@ Type=Application
 Name=telephony-prototype
 GenericName=telephony-prototype
 Comment=telephony app prototype
-Exec=qmlviewer /usr/share/telephony-prototype/telephony-prototype.qml
+Exec=telephony-prototype
 Terminal=false
