@@ -19,6 +19,7 @@ Item {
         text: "Quick Dial"
     }
 
+    // FIXME: port to use the QtMobility contacts model
     ContactsSearchCombo {
         id: contactsSearchBox
         height: 30

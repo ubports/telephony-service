@@ -14,7 +14,7 @@ Item {
             leftMargin: 20
         }
         color: "black"
-        text: contact ? contact.displayName : ""
+        text: contact ? contact.displayLabel : ""
         fontSize: "x-large"
     }
 
@@ -34,7 +34,8 @@ Item {
                 top: parent.top
             }
             color: "darkGray"
-            text: contact ? contact.phone : ""
+            // FIXME: handle the phone number properly
+            text: "" //contact ? contact.phone : ""
             fontSize: "medium"
         }
         TextCustom {
@@ -43,14 +44,15 @@ Item {
                 top: number.bottom
             }
             color: "darkGray"
-            text: contact ? contact.phoneType : ""
+            // FIXME: handle the phone number properly
+            text: "" //contact ? contact.phoneType : ""
             fontSize: "medium"
         }
     }
 
     Image {
         id: image
-        source: contact ? "../dummydata/" + contact.photo : ""
+        source: contact ? contact.avatar.imageUrl : ""
         width: height
         anchors {
             right: parent.right

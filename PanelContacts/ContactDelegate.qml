@@ -1,10 +1,20 @@
 import QtQuick 1.1
-import "../fontUtils.js" as Font
+import "../Widgets"
 
 Item {
     height: 64
     width: parent.width
-    signal clicked
+    signal clicked(variant contact)
+
+    function contactName() {
+        if (display != "")
+            return display;
+        else if (contact.nickname.nickname != "")
+            return contact.nickname.nickname;
+        else if (contact.presence.nickname != "")
+            return contact.presence.nickname;
+    }
+
     Rectangle {
         height: 1
         anchors.left: parent.left
@@ -14,44 +24,46 @@ Item {
     }
     Image {
         id: photoItem
-        // FIXME: move the dummydata/ prefix to the model
-        source: "../dummydata/" + photo
+        source: contact.avatar.imageUrl
         width: 56
         height: width
         anchors.left: parent.left
         anchors.leftMargin: 1
         anchors.verticalCenter: parent.verticalCenter
     }
-    // FIXME: use TextCustom instead of Text
-    Text {
+
+    TextCustom {
         id: displayNameItem
         anchors.top: parent.top
         anchors.topMargin: 1
         anchors.left: photoItem.right
         anchors.leftMargin: 2
-        font.pixelSize: Font.sizeToPixels("medium")
-        text: displayName
+        fontSize: "medium"
+        text: contactName()
     }
-    Text {
+
+    TextCustom {
         id: emailItem
         anchors.top: displayNameItem.bottom
         anchors.topMargin: 2
         anchors.left: photoItem.right
         anchors.leftMargin: 2
-        font.pixelSize: Font.sizeToPixels("small")
-        text: email
+        fontSize: "small"
+        text: contact.emailAddress ? contact.emailAddress.emailAddress : ""
     }
-    Text {
+
+    TextCustom {
         id: phoneItem
         anchors.top: emailItem.bottom
         anchors.topMargin: 2
         anchors.left: photoItem.right
         anchors.leftMargin: 2
-        font.pixelSize: Font.sizeToPixels("small")
-        text: phone
+        fontSize: "small"
+        text: contact.phoneNumber ? contact.phoneNumber.number : ""
     }
+
     MouseArea {
         anchors.fill: parent
-        onClicked: parent.clicked()
+        onClicked: parent.clicked(contact)
     }
 }

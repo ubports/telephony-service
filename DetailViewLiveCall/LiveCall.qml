@@ -36,7 +36,7 @@ Rectangle {
         anchors.top: parent.top
 
 
-        source: contact ? "../dummydata/" + contact.photo : "../assets/icon_address_book.png"
+        source: (contact && contact.avatar.imageUrl != "") ? contact.avatar.imageUrl : "../assets/icon_address_book.png"
         height: 142
         width: 142
         fillMode: Image.PreserveAspectFit
@@ -47,7 +47,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 26
         anchors.top: picture.bottom
-        text: contact ? contact.displayName : "No Name"
+        text: contact ? contact.displayLabel : "No Name"
         fontSize: "xx-large"
     }
 
@@ -56,7 +56,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 8
         anchors.top: name.bottom
-        text: contact ? contact.phone : liveCall.number
+        text: liveCall.number
         fontSize: "x-large"
     }
 
@@ -65,7 +65,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: 8
         anchors.top: number.bottom
-        text: contact ? contact.location : ""
+        text: contact ? contact.geoLocation.label : ""
         fontSize: "x-large"
     }
 

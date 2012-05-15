@@ -5,3 +5,9 @@ TODO:
 - Button, onClick change color
 - Formatting of phone numbers
 - Check how to import/export potfiles from the ts one
+
+CONTACTS TODO:
+- Group by first letter in the contactlist
+- Show favorite contacts
+- Fix the contact search combo
+- Make it possible to edit contact details

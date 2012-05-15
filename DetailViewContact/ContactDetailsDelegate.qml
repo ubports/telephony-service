@@ -5,20 +5,17 @@ Item {
     id: contactDetailsItem
     height: childrenRect.height
 
+    property string actionIcon
+    property string value
+    property string type
+    property bool multiLine: false
     property bool editable: false
-    signal clicked(string section, string value)
-    signal actionClicked(string section, string value)
+
+    signal clicked(string value)
+    signal actionClicked(string value)
 
     function save() {
-        var newValue
-
-        if (section == "Address") {
-            newValue = valueTextMulti.text
-        } else {
-            newValue = valueText.text
-        }
-
-        contactdetails.set(index, { "value": newValue })
+        // FIXME: reimplement
     }
 
     ListView.onRemove: SequentialAnimation {
@@ -63,7 +60,7 @@ Item {
         anchors.top: parent.top
         height: valueTextMulti.height > 30 ? valueTextMulti.height : 30
 
-        onClicked: contactDetailsItem.clicked(section, value);
+        onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
 
         TextInput {
             id: valueText
@@ -80,11 +77,10 @@ Item {
             anchors.right: typeText.right
             anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: 5
-            text: value
-            visible: !contactDetailsItem.editable && (section != "Address")
+            text: contactDetailsItem.value
+            visible: !contactDetailsItem.editable //&& !contactDetailsItem.multiLine
         }
 
-        // Used to edit the address
         TextEdit {
             id: valueTextMulti
             anchors.left: parent.left
@@ -92,18 +88,8 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: 5
             height: paintedHeight
-            text: value
-            visible: contactDetailsItem.editable && (section == "Address")
-        }
-
-        Text {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin: 5
-            height: paintedHeight
-            text: value
-            visible: !contactDetailsItem.editable && (section == "Address")
+            text: contactDetailsItem.value
+            visible: contactDetailsItem.editable && contactDetailsItem.multiLine
         }
 
         Text {
@@ -111,9 +97,8 @@ Item {
             anchors.right: parent.right
             anchors.top: valueTextMulti.top
             anchors.rightMargin: 5
-            text: type
+            text: contactDetailsItem.type
         }
-
     }
 
     Rectangle {
@@ -133,45 +118,9 @@ Item {
             anchors.margins: 5
             height: width
 
-            icon: actionIcon
+            icon: contactDetailsItem.actionIcon
 
-            onClicked: contactDetailsItem.actionClicked(section, value);
-        }
-    }
-
-    Row {
-        id: addItemRow
-
-        property bool shouldShow: contactDetailsItem.editable && contactDetailsItem.ListView.nextSection != section
-        height: shouldShow ? 20 : 0
-        anchors.left: removeButton.left
-        anchors.top: contentBox.bottom
-        anchors.right: actionBox.right
-
-        opacity: shouldShow ? 1 : 0
-
-        Behavior on height { PropertyAnimation { duration: 125 } }
-        Behavior on opacity { PropertyAnimation { duration: 125 } }
-
-        IconButton {
-            id: addButton
-            icon: "../assets/icon_plus.png"
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            width: height
-
-            onClicked: {
-                contactdetails.insert(index+1, { "section": section, "type":"Work", "value":"", "actionIcon":actionIcon });
-            }
-
-        }
-
-        TextCustom {
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.margins: 5
-            text: "Add another entry"
-            visible: addButton.visible
-            height: addItemRow.shouldShow ? paintedHeight : 0
+            onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
         }
     }
 }

@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import QtMobility.contacts 1.1
 import "../Widgets"
 
 Item {
@@ -12,12 +13,58 @@ Item {
     width: parent.width
     height: 100
 
+    // TODO: this function is used in two places, should be moved to one common place
+    function contactName() {
+        if (!contact)
+            return "";
+        if (contact.displayLabel != "")
+            return contact.displayLabel
+        if (contact.nickname.nickname != "")
+            return contact.nickname.nickname;
+        else if (contact.presence.nickname != "")
+            return contact.presence.nickname;
+    }
+
+    function iconForState(state) {
+        switch (state) {
+        case Presence.Unknown:
+        case Presence.Available:
+        case Presence.Hidden:
+        case Presence.Busy:
+        case Presence.Away:
+        case Presence.ExtendedAway:
+        case Presence.Offline:
+        default:
+            return "../assets/icon_availability.png"
+        }
+    }
+
+    function nameForState(state) {
+        // FIXME: translate those strings
+        switch (state) {
+        case Presence.Available:
+            return "Available";
+        case Presence.Hidden:
+            return "Hidden";
+        case Presence.Busy:
+            return "Busy";
+        case Presence.Away:
+        case Presence.ExtendedAway:
+            return "Away";
+        case Presence.Offline:
+            return "Offline";
+        case Presence.Unknown:
+        default:
+            return "Unknown";
+        }
+    }
+
     Image {
         id: avatar
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.margins: 10
-        source: (contact) ? "../dummydata/" + contact.photo : ""
+        source: (contact) ? contact.avatar.imageUrl : ""
     }
 
     Column {
@@ -33,7 +80,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             fontSize: "x-large"
-            text: (contact) ? contact.displayName : ""
+            text: contactDetailsHeader.contactName()
         }
 
         TextCustom {
@@ -52,12 +99,12 @@ Item {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 fillMode: Image.PreserveAspectFit
-                source: "../assets/icon_availability.png"
+                source: (contact) ? contactDetailsHeader.iconForState(contact.presence.state) : ""
             }
 
             TextCustom {
                 anchors.verticalCenter: parent.verticalCenter
-                text: "Available"
+                text: (contact) ? nameForState(contact.presence.state) : ""
             }
         }
     }
@@ -70,9 +117,11 @@ Item {
         text: "Edit"
         color: "gray"
         radius: 5
-
         height: 30
         width: 70
+
+        // FIXME: re-enable this button once contact modification is property implemented
+        visible: false
 
         onClicked: {
             if (text == "Edit") {
