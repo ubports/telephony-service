@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=telephony-app
+GenericName=telephony-app
+Comment=telephony application
+Exec=telephony-app
+Terminal=false
