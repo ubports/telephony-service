@@ -6,7 +6,7 @@ install_manifest.txt
 
 config.h
 
-telephony-prototype
+telephony-app
 
 obj-*/
 debian/files
