@@ -28,6 +28,29 @@ Rectangle {
     ContactModel {
         id: contactsModel
         manager: "folks"
+
+        filter: UnionFilter {
+            DetailFilter {
+                detail: ContactDetail.DisplayLabel
+                field: DisplayLabel.label
+                value: contactsSearchBox.text
+                matchFlags: DetailFilter.MatchContains
+            }
+
+            DetailFilter {
+                detail: ContactDetail.NickName
+                field: Nickname.nickname
+                value: contactsSearchBox.text
+                matchFlags: DetailFilter.MatchContains
+            }
+
+            DetailFilter {
+                detail: ContactDetail.Presence
+                field: Presence.nickname
+                value: contactsSearchBox.text
+                matchFlags: DetailFilter.MatchContains
+            }
+        }
     }
 
     ListView {
