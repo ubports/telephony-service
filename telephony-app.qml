@@ -22,10 +22,10 @@ Rectangle {
         rightPaneContent.item.startCall()
     }
 
-    function startChat(contact) {
-        // FIXME: this should also receive the phone number
+    function startChat(contact, number) {
         rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
         rightPaneContent.item.contact = contact
+        rightPaneContent.item.number = number
         rightPaneContent.item.newMessage = false
     }
 

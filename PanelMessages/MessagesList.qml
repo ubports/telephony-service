@@ -22,7 +22,7 @@ Item {
                 anchors.fill: parent
                 anchors.leftMargin: 5
                 anchors.rightMargin: 5
-                onClicked: telephony.startChat(contact)
+                onClicked: telephony.startChat(contact, contact.phoneNumber)
                 visible: contact.displayName.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ? true : false
             }
         }

@@ -53,7 +53,7 @@ Item {
                     type: modelData.contexts.toString()
 
                     onClicked: telephony.startCallToContact(contact, value);
-                    onActionClicked: telephony.startChat(contact);
+                    onActionClicked: telephony.startChat(contact, number);
                 }
             }
 
