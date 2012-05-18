@@ -37,8 +37,8 @@ Item {
             telephony.startCallToNumber(text);
             text = ""
         }
-        onItemSelected: {
-            telephony.startCallToContact(item)
+        onContactSelected: {
+            telephony.startCallToContact(contact, number)
             text = ""
         }
         z: 1

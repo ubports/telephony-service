@@ -3,13 +3,13 @@ import "../fontUtils.js" as Font
 import "../Widgets"
 
 Item {
+    id: header
     width: 575
     height: 100
 
-    property variant contact
+    signal contactSelected(variant contact, string number)
 
-
-    SearchEntry {
+    ContactsSearchCombo {
         id: contactsSearchEntry
         height: 30
         anchors {
@@ -21,6 +21,10 @@ Item {
         }
         leftIconSource: "../assets/empty.png"
         onLeftIconClicked: text = ""
+
+        onContactSelected: {
+            header.contactSelected(contact, number);
+        }
 
         TextCustom {
             id: toText

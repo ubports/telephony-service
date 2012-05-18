@@ -3,6 +3,7 @@ import QtMobility.contacts 1.1
 import ".."
 import "../Widgets"
 import "../fontUtils.js" as Font
+import "../ContactUtils"
 
 Rectangle {
     id: contactsPanel
@@ -29,28 +30,17 @@ Rectangle {
         id: contactsModel
         manager: "folks"
 
-        filter: UnionFilter {
-            DetailFilter {
-                detail: ContactDetail.DisplayLabel
-                field: DisplayLabel.label
-                value: contactsSearchBox.text
-                matchFlags: DetailFilter.MatchContains
-            }
-
-            DetailFilter {
-                detail: ContactDetail.NickName
-                field: Nickname.nickname
-                value: contactsSearchBox.text
-                matchFlags: DetailFilter.MatchContains
-            }
-
-            DetailFilter {
-                detail: ContactDetail.Presence
-                field: Presence.nickname
-                value: contactsSearchBox.text
-                matchFlags: DetailFilter.MatchContains
-            }
+        filter: ContactFilters {
+            filterText: contactsSearchBox.text
         }
+
+        sortOrders: [
+            SortOrder {
+               detail: ContactDetail.DisplayLabel
+               field: DisplayLabel.label
+               direction:Qt.AscendingOrder
+            }
+        ]
     }
 
     ListView {
@@ -66,8 +56,8 @@ Rectangle {
             onClicked: contactsPanel.contactClicked(contact)
         }
 
-        // FIXME: check how to use sections with the QtMobility models
-        section.property: "sectionName"
+        section.property: "display"
+        section.criteria: ViewSection.FirstCharacter
         section.delegate: TextCustom {
             width: parent.width
             height: paintedHeight
