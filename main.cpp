@@ -21,6 +21,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QUrl>
@@ -81,13 +82,36 @@ static void disableTelepathyFolksBackend(QApplication* application)
     }
 }
 
+static void printUsage(const QStringList& arguments)
+{
+    qDebug() << "usage:"
+             << arguments.at(0).toUtf8().constData()
+             << "[contact://CONTACT_KEY]";
+}
+
 int main(int argc, char** argv)
 {
     QApplication application(argc, argv);
     application.setApplicationName("Telephony App");
+    QString contactKey;
+    QStringList arguments = application.arguments();
+    if (arguments.size() > 2) {
+        printUsage(arguments);
+        return 1;
+    } else if (arguments.size() == 2) {
+        QString contactUri = arguments.at(1);
+        QString contactUriScheme = "contact://";
+        if (!contactUri.startsWith(contactUriScheme)) {
+            printUsage(arguments);
+            return 1;
+        } else {
+            contactKey = contactUri.mid(contactUriScheme.size());
+        }
+    }
     disableTelepathyFolksBackend(&application);
     QDeclarativeView view;
     loadDummyDataFiles(&view);
+    view.rootContext()->setContextProperty("contactKey", contactKey);
     QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
     view.setSource(source);
     view.show();
