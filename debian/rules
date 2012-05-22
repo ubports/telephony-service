@@ -6,7 +6,6 @@
 
 override_dh_install:
 	dh_install --fail-missing
-	dh_installmime
 
 %:
 	dh $@ --parallel
