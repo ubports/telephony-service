@@ -64,7 +64,16 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.margins: 10
-        source: (contact) ? contact.avatar.imageUrl : ""
+        source: {
+            if (contact) {
+                if (contact.avatar.imageUrl) {
+                    if (contact.avatar.imageUrl.length > 0) {
+                        return contact.avatar.imageUrl;
+                    }
+                }
+            }
+            return "../assets/default_avatar.png";
+        }
     }
 
     Column {
