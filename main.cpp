@@ -21,11 +21,18 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QString>
+#include <QtCore/QTemporaryFile>
+#include <QtCore/QTextStream>
 #include <QtCore/QUrl>
 #include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtGui/QApplication>
+
+// libc
+#include <cerrno>
+#include <cstdlib>
+#include <cstring>
 
 // local
 #include "config.h"
@@ -53,10 +60,32 @@ static void loadDummyDataFiles(QDeclarativeView* view)
     }
 }
 
+// Temporarily disable the telepathy folks backend
+// as it doesn’t play well with QtFolks.
+static void disableTelepathyFolksBackend(QApplication* application)
+{
+    QTemporaryFile* temp = new QTemporaryFile(application);
+    if (temp->open()) {
+        QTextStream out(temp);
+        out << "[telepathy]\n";
+        out << "enabled=false\n";
+        temp->close();
+        if (setenv("FOLKS_BACKEND_STORE_KEY_FILE_PATH",
+                   temp->fileName().toUtf8().constData(), 1) != 0) {
+            qWarning() << "Failed to disable Telepathy Folks backend:"
+                       << strerror(errno);
+        }
+    } else {
+        qWarning() << "Failed to disable Telepathy Folks backend:"
+                   << temp->errorString();
+    }
+}
+
 int main(int argc, char** argv)
 {
     QApplication application(argc, argv);
     application.setApplicationName("Telephony App");
+    disableTelepathyFolksBackend(&application);
     QDeclarativeView view;
     loadDummyDataFiles(&view);
     QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
