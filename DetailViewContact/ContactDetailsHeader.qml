@@ -129,7 +129,7 @@ Item {
         height: 30
         width: 70
 
-        // FIXME: re-enable this button once contact modification is property implemented
+        // FIXME: re-enable this button once contact modification is properly implemented
         visible: false
 
         onClicked: {
