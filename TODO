@@ -7,3 +7,6 @@ General items
 Contact integration items:
 - Show favorite contacts
 - Make it possible to edit contact details
+- Fix the section headers to be case-insensitive
+- Fix contact search when names contain accentuated characters
+
