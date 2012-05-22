@@ -23,70 +23,92 @@ Item {
         }
     }
 
-    Component {
-        id: sectionDelegate
-
-        Item {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 40
-
-            TextCustom {
-                anchors.left: parent.left
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
-                text: section
-            }
-        }
-    }
-
-    ListView {
-        id: contactDetailsView
+    Flickable {
         anchors.top: header.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 10
-        section.delegate: sectionDelegate
-        section.property: "section"
+        flickableDirection: Flickable.VerticalFlick
         clip: true
 
-        delegate: ContactDetailsDelegate {
-            id: contactDetailsItem
-            anchors.left: (parent) ? parent.left : undefined
-            anchors.right: (parent) ? parent.right : undefined
+        Column {
+            anchors.left: parent.left
+            anchors.right: parent.right
             anchors.margins: 1
-            editable: contactDetails.editable
 
-            onClicked: {
-                // we only handle clicks in the phone number for now
-                switch (section) {
-                case "Phone":
-                    telephony.startCallToContact(contactDetails.contact)
-                    break;
-                default:
-                    break;
+            // Phone section
+            ContactDetailsSection {
+                id: phoneSection
+                editable: contactDetails.editable
+                anchors.left: parent.left
+                anchors.right: parent.right
+                name: "Phone"
+                model: (contact) ? contact.phoneNumbers : null
+                delegate: ContactDetailsDelegate {
+                    anchors.left: (parent) ? parent.left : undefined
+                    anchors.right: (parent) ? parent.right : undefined
+                    actionIcon: "../assets/icon_message_grey.png"
+                    value: modelData.number
+                    type: modelData.contexts.toString()
+
+                    onClicked: telephony.startCallToContact(contact, value);
+                    onActionClicked: telephony.startChat(contact, number);
                 }
             }
 
-            onActionClicked: {
-                switch (section) {
-                case "Phone":
-                    telephony.startChat(contactDetails.contact)
-                    break;
-                default:
-                    break;
+            // Email section
+            ContactDetailsSection {
+                id: emailSection
+                editable: contactDetails.editable
+                anchors.left: parent.left
+                anchors.right: parent.right
+                name: "Email"
+                model: (contact) ? contact.emails : null
+                delegate: ContactDetailsDelegate {
+                    anchors.left: (parent) ? parent.left : undefined
+                    anchors.right: (parent) ? parent.right : undefined
+                    actionIcon: "../assets/icon_envelope_grey.png"
+                    value: modelData.emailAddress
+                    type: "" // FIXME: there is no e-mail type it seems, but needs double checking in any case
                 }
             }
 
-            Connections {
-                target: header
-                onSaveClicked: {
-                    contactDetailsItem.save();
+            // IM section
+            ContactDetailsSection {
+                id: imSection
+                editable: contactDetails.editable
+                anchors.left: parent.left
+                anchors.right: parent.right
+                name: "IM"
+                model: (contact) ? contact.onlineAccounts : null
+                delegate: ContactDetailsDelegate {
+                    anchors.left: (parent) ? parent.left : undefined
+                    anchors.right: (parent) ? parent.right : undefined
+                    actionIcon: "../assets/icon_chevron_right.png"
+                    value: modelData.accountUri
+                    type: modelData.serviceProvider
                 }
             }
-        }
 
-        model: contactdetails
-    }
+            // Address section
+            ContactDetailsSection {
+                id: addressSection
+                editable: contactDetails.editable
+                anchors.left: parent.left
+                anchors.right: parent.right
+                name: "Address"
+                model: (contact) ? contact.addresses : null
+                delegate: ContactDetailsDelegate {
+                    anchors.left: (parent) ? parent.left : undefined
+                    anchors.right: (parent) ? parent.right : undefined
+                    actionIcon: "../assets/icon_chevron_right.png"
+                    // FIXME: implement a better function to handle address formatting
+                    value: modelData.street + "\n" + modelData.city + "\n" + modelData.state + "\n" + modelData.country
+                    type: "" // FIXME: double check if QContact has an address type field
+                    multiLine: true
+                }
+            } // ContactDetailsSection
+        } // Column
+    } // Flickable
 }

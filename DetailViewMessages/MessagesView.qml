@@ -4,6 +4,7 @@ Item {
     id: view
 
     property variant contact
+    property string number
     property bool newMessage: false
 
     Component {
@@ -12,6 +13,12 @@ Item {
             id: newHeader
             width: view.width
             height: 100
+
+            onContactSelected: {
+                view.contact = contact;
+                view.number = number;
+                view.newMessage = false;
+            }
         }
     }
 
@@ -20,6 +27,7 @@ Item {
         MessagesHeader {
             id: header
             contact: view.contact
+            number: view.number
             width: view.width
             height: 100
         }

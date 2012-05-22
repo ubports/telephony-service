@@ -19,6 +19,7 @@ Item {
         text: "Quick Dial"
     }
 
+    // FIXME: port to use the QtMobility contacts model
     ContactsSearchCombo {
         id: contactsSearchBox
         height: 30
@@ -36,8 +37,8 @@ Item {
             telephony.startCallToNumber(text);
             text = ""
         }
-        onItemSelected: {
-            telephony.startCallToContact(item)
+        onContactSelected: {
+            telephony.startCallToContact(contact, number)
             text = ""
         }
         z: 1

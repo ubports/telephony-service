@@ -1,14 +1,15 @@
 import QtQuick 1.1
+import QtMobility.contacts 1.1
 import ".."
 import "../Widgets"
 import "../fontUtils.js" as Font
+import "../ContactUtils"
 
 Rectangle {
     id: contactsPanel
 
     property alias searchQuery : contactsSearchBox.searchQuery
 
-    // FIXME: move anchor and signal handler to instance
     anchors.fill: parent
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)
@@ -25,6 +26,23 @@ Rectangle {
         onLeftIconClicked: text = ""
     }
 
+    ContactModel {
+        id: contactsModel
+        manager: "folks"
+
+        filter: ContactFilters {
+            filterText: contactsSearchBox.text
+        }
+
+        sortOrders: [
+            SortOrder {
+               detail: ContactDetail.DisplayLabel
+               field: DisplayLabel.label
+               direction:Qt.AscendingOrder
+            }
+        ]
+    }
+
     ListView {
         id: contactsList
         anchors.top: contactsSearchBox.bottom
@@ -33,43 +51,14 @@ Rectangle {
         anchors.right: parent.right
         anchors.margins: 5
         clip: true
-
-        ListModel {
-            id: contactsModel
-            Component.onCompleted: {
-                var contact
-                // favourites
-                for(var i = 0; i < contacts.count; i++) {
-                    contact = contacts.get(i)
-                    if (contact.favourite) {
-                        contact.sectionName = "Favourites"
-                        append(contact)
-                    }
-                }
-                // all contacts
-                for(var i = 0; i < contacts.count; i++) {
-                    contact = contacts.get(i)
-                    contact.sectionName = contact.displayName.substring(0, 1)
-                    append(contact)
-                }
-            }
-        }
-
-        FilterModel {
-            id: filterModel
-            filter: contactsPanel.searchQuery
-            proxyModel: contactsModel
-            fields: ["displayName", "phone"]
-        }
-        model: filterModel.model
-
+        model: contactsModel
         delegate: ContactDelegate {
-            onClicked: contactsPanel.contactClicked(contactsList.model.get(index))
+            onClicked: contactsPanel.contactClicked(contact)
         }
 
-        section.property: "sectionName"
-        // FIXME: use TextCustom instead of Text
-        section.delegate: Text {
+        section.property: "display"
+        section.criteria: ViewSection.FirstCharacter
+        section.delegate: TextCustom {
             width: parent.width
             height: paintedHeight
             text: section

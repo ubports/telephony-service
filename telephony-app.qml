@@ -1,16 +1,17 @@
 import QtQuick 1.1
+import QtMobility.contacts 1.1
 
 Rectangle {
     id: telephony
     width: 800
     height: 600
 
-    function startCallToContact(contact) {
+    function startCallToContact(contact, number) {
         // To keep this simple we rely on the fact that setting source to a
         // local file will immadiately make the item availalable.
         rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
         rightPaneContent.item.contact = contact
-        rightPaneContent.item.number = ""
+        rightPaneContent.item.number = number
         rightPaneContent.item.startCall()
     }
 
@@ -21,9 +22,10 @@ Rectangle {
         rightPaneContent.item.startCall()
     }
 
-    function startChat(contact) {
+    function startChat(contact, number) {
         rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
         rightPaneContent.item.contact = contact
+        rightPaneContent.item.number = number
         rightPaneContent.item.newMessage = false
     }
 
