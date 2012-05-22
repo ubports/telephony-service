@@ -5,3 +5,4 @@ GenericName=telephony-app
 Comment=telephony application
 Exec=telephony-app
 Terminal=false
+MimeType=x-scheme-handler/contact
