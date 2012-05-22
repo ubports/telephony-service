@@ -30,9 +30,9 @@
 #include <QtGui/QApplication>
 
 // libc
-#include <errno.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cerrno>
+#include <cstdlib>
+#include <cstring>
 
 // local
 #include "config.h"
