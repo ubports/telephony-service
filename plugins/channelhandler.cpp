@@ -20,9 +20,10 @@
 #include "channelhandler.h"
 
 #include <TelepathyQt/CallChannel>
+#include <TelepathyQt/ChannelClassSpec>
 
-ChannelHandler::ChannelHandler(const Tp::ChannelClassSpecList &channelFilter)
-    : Tp::AbstractClientHandler(channelFilter)
+ChannelHandler::ChannelHandler()
+    : Tp::AbstractClientHandler(channelFilters())
 {
 }
 
@@ -49,5 +50,22 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
         }
     }
     context->setFinished();
+}
+
+Tp::ChannelClassSpecList ChannelHandler::channelFilters()
+{
+    Tp::ChannelClassSpecList specList;
+    specList << Tp::ChannelClassSpec::audioCall();
+
+    QMap<QString, QDBusVariant> filter;
+    filter.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType"),
+                  QDBusVariant(TP_QT_IFACE_CHANNEL_TYPE_SERVER_AUTHENTICATION));
+    filter.insert(TP_QT_IFACE_CHANNEL_TYPE_SERVER_AUTHENTICATION + QLatin1String(".AuthenticationMethod"),
+                  QDBusVariant(TP_QT_IFACE_CHANNEL_INTERFACE_SASL_AUTHENTICATION));
+    filter.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType"),
+                  QDBusVariant(Tp::HandleTypeNone));
+    specList << Tp::ChannelClassSpec(Tp::ChannelClass(filter));
+
+    return specList;
 }
 

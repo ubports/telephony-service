@@ -17,12 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef CHANNELHANDLER_H
+#define CHANNELHANDLER_H
+
 #include <TelepathyQt/AbstractClientHandler>
 
 class ChannelHandler : public Tp::AbstractClientHandler
 {
 public:
-    ChannelHandler(const Tp::ChannelClassSpecList &channelFilter);
+    ChannelHandler();
     ~ChannelHandler() { }
     bool bypassApproval() const;
     void handleChannels(const Tp::MethodInvocationContextPtr<> &context,
@@ -32,5 +35,7 @@ public:
                         const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
                         const QDateTime &userActionTime,
                         const Tp::AbstractClientHandler::HandlerInfo &handlerInfo);
+    Tp::ChannelClassSpecList channelFilters();
 };
 
+#endif
