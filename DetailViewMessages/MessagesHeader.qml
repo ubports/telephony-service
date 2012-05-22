@@ -5,6 +5,7 @@ Item {
     id: header
 
     property variant contact
+    property string number
 
     TextCustom {
         id: name
@@ -34,8 +35,7 @@ Item {
                 top: parent.top
             }
             color: "darkGray"
-            // FIXME: handle the phone number properly
-            text: "" //contact ? contact.phone : ""
+            text: header.number
             fontSize: "medium"
         }
         TextCustom {

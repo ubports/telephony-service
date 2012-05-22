@@ -27,6 +27,7 @@ Item {
         MessagesHeader {
             id: header
             contact: view.contact
+            number: view.number
             width: view.width
             height: 100
         }
