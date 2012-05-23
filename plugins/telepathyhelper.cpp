@@ -23,6 +23,7 @@
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/PendingReady>
+#include <TelepathyQt/PendingAccount>
 
 TelepathyHelper *TelepathyHelper::mTelepathyHelper = 0;
 
@@ -96,6 +97,24 @@ void TelepathyHelper::registerClients()
     initializeChannelHandler();
 }
 
+void TelepathyHelper::createAccount()
+{
+    QVariantMap props;
+    props["org.freedesktop.Telepathy.Account.Icon"] = "im-ufa";
+    connect(mAccountManager->createAccount("ufa", "ufa", "ufa", QVariantMap(), props),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onAccountCreated(Tp::PendingOperation*)));
+}
+
+void TelepathyHelper::ensureAccountConnected()
+{
+    // if the account is not connected, request it to connect
+    if (!mAccount->connection() || mAccount->connectionStatus() != Tp::ConnectionStatusConnected) {
+        Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", "online");
+        mAccount->setRequestedPresence(presence);
+    }
+}
+
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 {
     Q_UNUSED(op)
@@ -104,15 +123,33 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     Tp::AccountSetPtr accountSet = mAccountManager->accountsByProtocol("ufa");
 
-    // for now the application behavior is unexpected if there are more than just one account.
-    // the same is valid for the case where there is no accounts
-    Q_ASSERT(accountSet->accounts().count() == 1);
-
-    mAccount = accountSet->accounts()[0];
-
-    // if the account is not connected, request it to connect
-    if (!mAccount->connection() || mAccount->connectionStatus() != Tp::ConnectionStatusConnected) {
-        Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", "online");
-        mAccount->setRequestedPresence(presence);
+    // if we have no ufa account, create one
+    if (!accountSet->accounts().count()) {
+        createAccount();
+        return;
     }
+
+    // in case we have two accounts, the first one to show on the list is going to be used
+    mAccount = accountSet->accounts()[0];
+    ensureAccountConnected();
+}
+
+void TelepathyHelper::onAccountCreated(Tp::PendingOperation *op)
+{
+    Tp::PendingAccount *pa = qobject_cast<Tp::PendingAccount*>(op);
+
+    if (!pa)
+        return;
+
+    mAccount = pa->account();
+    mAccount->setConnectsAutomatically(true);
+    connect(mAccount->setEnabled(true),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onAccountEnabled(Tp::PendingOperation*)));
+}
+
+void TelepathyHelper::onAccountEnabled(Tp::PendingOperation *op)
+{
+    // we might need to do more stuff once the account is enabled, but making sure it is connected is a good start
+    ensureAccountConnected();
 }

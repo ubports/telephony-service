@@ -81,11 +81,15 @@ Tp::ChannelClassSpecList ChannelHandler::channelFilters()
 void ChannelHandler::onTextChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
-    Q_ASSERT(pr);
+
+    if (!pr)
+        return;
 
     Tp::ChannelPtr channel = mReadyRequests[pr];
     Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
-    Q_ASSERT(textChannel);
+
+    if(!textChannel)
+        return;
 
 
     mReadyRequests.remove(pr);

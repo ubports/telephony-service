@@ -49,8 +49,14 @@ public Q_SLOTS:
     void initializeChannelHandler();
     void registerClients(void);
 
+protected:
+    void createAccount();
+    void ensureAccountConnected();
+
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);
+    void onAccountCreated(Tp::PendingOperation *op);
+    void onAccountEnabled(Tp::PendingOperation *op);
 
 private:
     static TelepathyHelper *mTelepathyHelper;

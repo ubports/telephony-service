@@ -72,7 +72,9 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
 {
     Tp::PendingContacts *pc = qobject_cast<Tp::PendingContacts*>(op);
-    Q_ASSERT(pc);
+
+    if (!pc)
+        return;
 
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
 
