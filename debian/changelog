@@ -1,3 +1,11 @@
+telephony-app (0.4.1) precise; urgency=low
+
+  * Make it possible to load the contact details by passing a contact id in the
+    command line
+  * Add some missing dependencies
+
+ -- Gustavo Boiko <gustavo.boiko@canonical.com>  Wed, 23 May 2012 16:43:28 -0300
+
 telephony-app (0.4) precise; urgency=low
 
   * Get the contacts from QtMobility
