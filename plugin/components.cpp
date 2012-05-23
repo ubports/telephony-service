@@ -30,6 +30,8 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
 {
     Q_ASSERT(engine);
 
+    Q_UNUSED(uri);
+
     // Initialize telepathy types
     Tp::registerTypes();
     //Tp::enableDebug(true);
