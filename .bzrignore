@@ -10,6 +10,7 @@ telephony-app
 
 obj-*/
 debian/files
+debian/*.debhelper
 debian/*.debhelper.log
 debian/*.substvars
 
