@@ -46,8 +46,6 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
     Q_FOREACH(const Tp::ChannelPtr channel, channels) {
         Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
         if (textChannel) {
-            qDebug() << "ChannelHandler: got text channel";
-
             Tp::PendingReady *pr = textChannel->becomeReady(Tp::Features()
                                                          << Tp::TextChannel::FeatureCore
                                                          << Tp::TextChannel::FeatureChatState
@@ -64,7 +62,6 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (callChannel) {
             // TODO: implement
-            qDebug() << "ChannelHandler: got call channel";
             continue;
         }
 
