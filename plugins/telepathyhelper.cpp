@@ -89,4 +89,10 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
     Q_ASSERT(accountSet->accounts().count() == 1);
 
     mAccount = accountSet->accounts()[0];
+
+    // if the account is not connected, request it to connect
+    if (!mAccount->connection() || mAccount->connectionStatus() != Tp::ConnectionStatusConnected) {
+        Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", "online");
+        mAccount->setRequestedPresence(presence);
+    }
 }
