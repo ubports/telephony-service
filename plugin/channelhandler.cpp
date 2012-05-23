@@ -82,15 +82,18 @@ void ChannelHandler::onTextChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
 
-    if (!pr)
+    if (!pr) {
+        qCritical() << "The pending object is not a Tp::PendingReady";
         return;
+    }
 
     Tp::ChannelPtr channel = mReadyRequests[pr];
     Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
 
-    if(!textChannel)
+    if(!textChannel) {
+        qCritical() << "The saved channel is not a Tp::TextChannel";
         return;
-
+    }
 
     mReadyRequests.remove(pr);
 

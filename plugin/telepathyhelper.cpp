@@ -121,6 +121,10 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
     }
 
     // in case we have two accounts, the first one to show on the list is going to be used
+    if (accountSet->accounts().count() > 1) {
+        qWarning() << "There are more than just one account of type ufa/ufa";
+    }
+
     mAccount = accountSet->accounts()[0];
     ensureAccountConnected();
 }
@@ -129,8 +133,10 @@ void TelepathyHelper::onAccountCreated(Tp::PendingOperation *op)
 {
     Tp::PendingAccount *pa = qobject_cast<Tp::PendingAccount*>(op);
 
-    if (!pa)
+    if (!pa) {
+        qCritical() << "The pending object is not a Tp::PendingAccount";
         return;
+    }
 
     mAccount = pa->account();
     mAccount->setConnectsAutomatically(true);

@@ -73,8 +73,10 @@ void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
 {
     Tp::PendingContacts *pc = qobject_cast<Tp::PendingContacts*>(op);
 
-    if (!pc)
+    if (!pc) {
+        qCritical() << "The pending object is not a Tp::PendingContacts";
         return;
+    }
 
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
 
