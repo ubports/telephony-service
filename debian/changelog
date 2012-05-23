@@ -1,3 +1,10 @@
+telephony-app (0.4) precise; urgency=low
+
+  * Get the contacts from QtMobility
+  * Implement message sending through the telepathy framework
+
+ -- Gustavo Boiko <gustavo.boiko@canonical.com>  Wed, 23 May 2012 14:38:09 -0300
+
 telephony-app (0.3) precise; urgency=low
 
   * Rename the application from telephony-prototype to telephony-app as it
