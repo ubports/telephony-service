@@ -15,7 +15,8 @@ pkg_check_modules(TP_QT4 REQUIRED TelepathyQt4)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${QT_INCLUDE_DIR})
+    ${QT_INCLUDE_DIR}
+    )
 
 set(TELEPHONY_APP telephony-app)
 
@@ -71,4 +72,4 @@ install(FILES ${TELEPHONY_APP}.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
     )
 
-add_subdirectory(plugins)
+add_subdirectory(plugin)
