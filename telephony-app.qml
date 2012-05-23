@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import TelephonyApp 0.1
+import "ContactUtils"
 
 Rectangle {
     id: telephony
@@ -48,6 +49,19 @@ Rectangle {
 
     function showDial() {
         rightPaneContent.source = "DetailViewKeypad/KeypadView.qml"
+    }
+
+    ContactLoader {
+        id: contactLoader
+        contactId: contactKey
+
+        onContactLoaded: {
+            // switch to the contacts tab
+            tabs.currentTab = 2;
+
+            // and load the contact details
+            showContactDetails(contact)
+        }
     }
 
     Item {
