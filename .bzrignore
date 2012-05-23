@@ -8,6 +8,8 @@ config.h
 
 telephony-app
 
+moc_*.cxx
+
 obj-*/
 debian/files
 debian/*.debhelper

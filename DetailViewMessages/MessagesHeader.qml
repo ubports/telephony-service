@@ -15,7 +15,7 @@ Item {
             leftMargin: 20
         }
         color: "black"
-        text: contact ? contact.displayLabel : ""
+        text: contact ? contact.displayLabel : "Unknown Contact"
         fontSize: "x-large"
     }
 

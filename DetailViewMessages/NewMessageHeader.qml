@@ -8,6 +8,7 @@ Item {
     height: 100
 
     signal contactSelected(variant contact, string number)
+    signal numberSelected(string number)
 
     ContactsSearchCombo {
         id: contactsSearchEntry
@@ -21,6 +22,13 @@ Item {
         }
         leftIconSource: "../assets/empty.png"
         onLeftIconClicked: text = ""
+
+        rightIconSource: "../assets/icon_message_grey.png"
+        rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
+
+        onRightIconClicked: {
+            header.numberSelected(text)
+        }
 
         onContactSelected: {
             header.contactSelected(contact, number);
