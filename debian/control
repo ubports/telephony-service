@@ -13,5 +13,7 @@ Package: telephony-app
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
+         libdeclarative-contacts,
+         libqtfolks1,
 Description: An application to execute telephony tasks such as calling and messaging
  An application to execute telephony tasks such as calling and messaging
