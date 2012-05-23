@@ -21,11 +21,15 @@
 #define CHANNELHANDLER_H
 
 #include <TelepathyQt/AbstractClientHandler>
+#include <TelepathyQt/PendingReady>
+#include <TelepathyQt/TextChannel>
 
-class ChannelHandler : public Tp::AbstractClientHandler
+class ChannelHandler : public QObject, public Tp::AbstractClientHandler
 {
+    Q_OBJECT
+
 public:
-    ChannelHandler();
+    ChannelHandler(QObject *parent = 0);
     ~ChannelHandler() { }
     bool bypassApproval() const;
     void handleChannels(const Tp::MethodInvocationContextPtr<> &context,
@@ -36,6 +40,15 @@ public:
                         const QDateTime &userActionTime,
                         const Tp::AbstractClientHandler::HandlerInfo &handlerInfo);
     Tp::ChannelClassSpecList channelFilters();
+
+Q_SIGNALS:
+    void textChannelAvailable(Tp::TextChannelPtr textChannel);
+
+private Q_SLOTS:
+    void onTextChannelReady(Tp::PendingOperation *op);
+
+private:
+    QMap<Tp::PendingReady*, Tp::ChannelPtr> mReadyRequests;
 };
 
 #endif

@@ -20,10 +20,12 @@
 #include "channelhandler.h"
 
 #include <TelepathyQt/CallChannel>
+#include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ChannelClassSpec>
+#include <TelepathyQt/PendingReady>
 
-ChannelHandler::ChannelHandler()
-    : Tp::AbstractClientHandler(channelFilters())
+ChannelHandler::ChannelHandler(QObject *parent)
+    : QObject(parent), Tp::AbstractClientHandler(channelFilters())
 {
 }
 
@@ -40,14 +42,31 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
                                const QDateTime &userActionTime,
                                const Tp::AbstractClientHandler::HandlerInfo &handlerInfo)
 {
-    foreach(const Tp::ChannelPtr &channel, channels) {
-        QVariantMap properties = channel->immutableProperties();
-        if (properties[QString(TP_QT_IFACE_CHANNEL) + ".ChannelType"] ==
-                TP_QT_IFACE_CHANNEL_TYPE_CALL) {
-            if (channel->isRequested()) {
-            } else {
-            }
+    foreach(const Tp::ChannelPtr channel, channels) {
+        Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
+        if (textChannel) {
+            qDebug() << "ChannelHandler: got text channel";
+
+            Tp::PendingReady *pr = textChannel->becomeReady(Tp::Features()
+                                                         << Tp::TextChannel::FeatureCore
+                                                         << Tp::TextChannel::FeatureChatState
+                                                         << Tp::TextChannel::FeatureMessageCapabilities
+                                                         << Tp::TextChannel::FeatureMessageQueue
+                                                         << Tp::TextChannel::FeatureMessageSentSignal);
+
+            connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
+                    SLOT(onTextChannelReady(Tp::PendingOperation*)));
+            mReadyRequests[pr] = textChannel;
+            continue;
         }
+
+        Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
+        if (callChannel) {
+            // TODO: implement
+            qDebug() << "ChannelHandler: got call channel";
+            continue;
+        }
+
     }
     context->setFinished();
 }
@@ -56,16 +75,22 @@ Tp::ChannelClassSpecList ChannelHandler::channelFilters()
 {
     Tp::ChannelClassSpecList specList;
     specList << Tp::ChannelClassSpec::audioCall();
-
-    QMap<QString, QDBusVariant> filter;
-    filter.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType"),
-                  QDBusVariant(TP_QT_IFACE_CHANNEL_TYPE_SERVER_AUTHENTICATION));
-    filter.insert(TP_QT_IFACE_CHANNEL_TYPE_SERVER_AUTHENTICATION + QLatin1String(".AuthenticationMethod"),
-                  QDBusVariant(TP_QT_IFACE_CHANNEL_INTERFACE_SASL_AUTHENTICATION));
-    filter.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType"),
-                  QDBusVariant(Tp::HandleTypeNone));
-    specList << Tp::ChannelClassSpec(Tp::ChannelClass(filter));
+    specList << Tp::ChannelClassSpec::textChat();
 
     return specList;
 }
 
+void ChannelHandler::onTextChannelReady(Tp::PendingOperation *op)
+{
+    Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
+    Q_ASSERT(pr);
+
+    Tp::ChannelPtr channel = mReadyRequests[pr];
+    Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
+    Q_ASSERT(textChannel);
+
+
+    mReadyRequests.remove(pr);
+
+    emit textChannelAvailable(textChannel);
+}

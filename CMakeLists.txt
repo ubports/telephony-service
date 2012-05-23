@@ -15,8 +15,7 @@ pkg_check_modules(TP_QT4 REQUIRED TelepathyQt4)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${QT_INCLUDE_DIR}
-    ${TP_QT4_INCLUDE_DIRS})
+    ${QT_INCLUDE_DIR})
 
 set(TELEPHONY_APP telephony-app)
 
@@ -26,7 +25,6 @@ target_link_libraries(${TELEPHONY_APP}
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
     ${QT_QTDECLARATIVE_LIBRARIES}
-    ${TP_QT4_LIBRARIES}
     )
 
 install(TARGETS ${TELEPHONY_APP}

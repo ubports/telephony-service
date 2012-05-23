@@ -1,18 +1,19 @@
 
-set(plugin_SRCS components.cpp channelhandler.cpp telepathymanager.cpp)
-set(plugin_HDRS components.h channelhandler.h telepathymanager.h)
+set(plugin_SRCS components.cpp channelhandler.cpp chatmanager.cpp telepathyhelper.cpp)
+set(plugin_HDRS components.h channelhandler.h chatmanager.h telepathyhelper.h)
 
 qt4_wrap_cpp(plugin_MOC_SRCS ${plugin_HDRS})
 
-include_directories(${QT_INCLUDE_DIR})
+include_directories(
+    ${QT_INCLUDE_DIR}
+    ${TP_QT4_INCLUDE_DIRS})
 
-add_library(telephony-qml SHARED ${plugin_SRCS} ${plugin_HDRS})
+add_library(telephony-qml SHARED ${plugin_SRCS} ${plugin_HDRS} ${plugin_MOC_SRCS})
 
 target_link_libraries(telephony-qml
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTDECLARATIVE_LIBRARIES}
     ${TP_QT4_LIBRARIES})
-
 
 install(DIRECTORY TelephonyApp DESTINATION ${QT_IMPORTS_DIR})
 install(TARGETS telephony-qml DESTINATION ${QT_IMPORTS_DIR}/TelephonyApp)

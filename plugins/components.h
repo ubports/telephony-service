@@ -1,10 +1,12 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#include "telepathymanager.h"
 #include "channelhandler.h"
+
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeExtensionPlugin>
+
+class ChannelHandler;
 
 class Components : public QDeclarativeExtensionPlugin
 {
@@ -14,11 +16,11 @@ public:
     void initializeEngine(QDeclarativeEngine *engine, const char *uri);
     void registerTypes(const char *uri);
 
+private Q_SLOTS:
+    void onChannelHandlerCreated(ChannelHandler *ch);
+
 private:
     QDeclarativeContext *mRootContext;
-    TelepathyManager *mTpManager;
-    ChannelHandler *mChannelHandler;
-
 };
 
 #endif // COMPONENTS_H
