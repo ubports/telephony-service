@@ -40,6 +40,12 @@ Item {
                 view.number = number;
                 view.newMessage = false;
             }
+
+            onNumberSelected: {
+                view.contact = null;
+                view.number = number;
+                view.newMessage = false;
+            }
         }
     }
 
@@ -79,6 +85,7 @@ Item {
         id: footer
         width: view.width
         height: 100
+        visible: !view.newMessage
         onNewMessage: {
             if (messagesLoader.sourceComponent) {
                 messagesLoader.item.addMessage(message)

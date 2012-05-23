@@ -10,13 +10,11 @@ Item {
     property int newMessageMinutes: 35 // helper for new messages text
 
     function addMessage(newMessage) {
-        messages.model.append({"section": "Friday, May 04, 2012",
+        var currentDate = new Date()
+        messagesList.model.append({"section": Qt.formatDate(currentDate, Qt.DefaultLocaleLongDate),
                                "message": newMessage,
-                               "timeStamp": "3:" + newMessageMinutes + " PM",
+                               "timeStamp": Qt.formatTime(currentDate, Qt.DefaultLocaleLongDate),
                                "outgoing": true})
-        newMessageMinutes++;
-        //FIXME: try to use list view methods better
-        messagesList.positionViewAtIndex(model.count - 1, ListView.End)
     }
 
     Component {
@@ -98,10 +96,12 @@ Item {
         clip: true
         spacing: 8
         orientation: ListView.Vertical
-        model: messages.model
+        model: ListModel { }
         section.delegate: sectionDelegate
         section.property: "section"
         delegate: messageDelegate
+        highlightFollowsCurrentItem: true
+        currentIndex: (count > 0) ? count-1 : 0
     }
 
 }
