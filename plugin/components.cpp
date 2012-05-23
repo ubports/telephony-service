@@ -49,7 +49,7 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
 void Components::registerTypes(const char *uri)
 {
     // @uri TelephonyApp
-    qmlRegisterType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper");
+    qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
 }
 
 void Components::onChannelHandlerCreated(ChannelHandler *ch)

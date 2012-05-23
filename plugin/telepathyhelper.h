@@ -35,7 +35,6 @@ class TelepathyHelper : public QObject
     Q_OBJECT
 
 public:
-    explicit TelepathyHelper(QObject *parent = NULL);
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
@@ -59,8 +58,7 @@ private Q_SLOTS:
     void onAccountEnabled(Tp::PendingOperation *op);
 
 private:
-    static TelepathyHelper *mTelepathyHelper;
-
+    explicit TelepathyHelper(QObject *parent = 0);
     Tp::AccountManagerPtr mAccountManager;
     Tp::Features mAccountManagerFeatures;
     Tp::Features mAccountFeatures;

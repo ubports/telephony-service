@@ -25,16 +25,10 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/PendingAccount>
 
-TelepathyHelper *TelepathyHelper::mTelepathyHelper = 0;
-
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mChannelHandler(0)
 {
-    if (!mTelepathyHelper) {
-        mTelepathyHelper = this;
-    }
-
     mChatManager = new ChatManager(this);
 
     mAccountFeatures << Tp::Account::FeatureCore;
@@ -60,11 +54,8 @@ TelepathyHelper::~TelepathyHelper()
 
 TelepathyHelper *TelepathyHelper::instance()
 {
-    if (!mTelepathyHelper) {
-        mTelepathyHelper = new TelepathyHelper();
-    }
-
-    return mTelepathyHelper;
+    static TelepathyHelper* helper = new TelepathyHelper();
+    return helper;
 }
 
 ChatManager *TelepathyHelper::chatManager() const
