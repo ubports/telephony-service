@@ -6,9 +6,6 @@ Item {
 
     property ListModel model: messagesModel
 
-    // private data
-    property int newMessageMinutes: 35 // helper for new messages text
-
     function addMessage(newMessage) {
         var currentDate = new Date()
         messagesList.model.append({"section": Qt.formatDate(currentDate, Qt.DefaultLocaleLongDate),
