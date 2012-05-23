@@ -77,7 +77,7 @@ void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
 
     // start chatting to the contacts
-    foreach(Tp::ContactPtr contact, pc->contacts()) {
+    Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
         account->ensureTextChat(contact);
 
         // hold the ContactPtr to make sure its refcounting stays bigger than 0

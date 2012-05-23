@@ -43,7 +43,7 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
                                const QDateTime &userActionTime,
                                const Tp::AbstractClientHandler::HandlerInfo &handlerInfo)
 {
-    foreach(const Tp::ChannelPtr channel, channels) {
+    Q_FOREACH(const Tp::ChannelPtr channel, channels) {
         Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
         if (textChannel) {
             qDebug() << "ChannelHandler: got text channel";
