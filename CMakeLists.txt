@@ -21,7 +21,12 @@ include_directories(
 
 set(TELEPHONY_APP telephony-app)
 
-add_executable(${TELEPHONY_APP} main.cpp)
+qt4_wrap_cpp(telephonyapplication_MOC_SRCS telephonyapplication.h)
+add_executable(${TELEPHONY_APP}
+    ${telephonyapplication_MOC_SRCS}
+    telephonyapplication.cpp
+    main.cpp
+    )
 
 target_link_libraries(${TELEPHONY_APP}
     ${QT_QTCORE_LIBRARIES}

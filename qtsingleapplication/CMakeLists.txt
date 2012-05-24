@@ -2,8 +2,6 @@
 
 set(qtsingleapplication_SRCS
     qtlocalpeer.cpp
-    qtlockedfile.cpp
-    qtlockedfile_unix.cpp
     qtsingleapplication.cpp
     qtsinglecoreapplication.cpp
     )
@@ -18,10 +16,11 @@ set(qtsingleapplication_HDRS
 qt4_wrap_cpp(qtsingleapplication_MOC_SRCS ${qtsingleapplication_HDRS})
 
 add_library(qtsingleapplication STATIC
+    ${qtsingleapplication_MOC_SRCS}
     ${qtsingleapplication_SRCS}
-    ${plugin_MOC_SRCS}
     )
 
 target_link_libraries(qtsingleapplication
     ${QT_QTCORE_LIBRARIES}
+    ${QT_QTGUI_LIBRARIES}
     )

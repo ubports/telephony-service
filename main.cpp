@@ -19,15 +19,9 @@
 
 // Qt
 #include <QtCore/QDebug>
-#include <QtCore/QDir>
 #include <QtCore/QString>
-#include <QtCore/QStringList>
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTextStream>
-#include <QtCore/QUrl>
-#include <QtDeclarative/QDeclarativeComponent>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeView>
 #include <QtGui/QApplication>
 
 // libc
@@ -36,30 +30,8 @@
 #include <cstring>
 
 // local
+#include "telephonyapplication.h"
 #include "config.h"
-
-// inspired by qmlviewer’s QDeclarativeViewer::loadDummyDataFiles(…)
-static void loadDummyDataFiles(QDeclarativeView* view)
-{
-    QDir dir(telephonyAppDirectory() + "/dummydata", "*.qml");
-    Q_FOREACH(const QString& qmlFile, dir.entryList()) {
-        const QString filePath = dir.filePath(qmlFile);
-        QDeclarativeComponent comp(view->engine(), filePath);
-        QObject* dummyData = comp.create();
-        if(comp.isError()) {
-            Q_FOREACH(const QDeclarativeError &error, comp.errors()) {
-                qWarning() << error;
-            }
-        }
-        if (dummyData) {
-            qDebug() << "Loaded dummy data:" << filePath;
-            QString propertyName = qmlFile;
-            propertyName.chop(4);
-            view->rootContext()->setContextProperty(propertyName, dummyData);
-            dummyData->setParent(view);
-        }
-    }
-}
 
 // Temporarily disable the telepathy folks backend
 // as it doesn’t play well with QtFolks.
@@ -82,39 +54,17 @@ static void disableTelepathyFolksBackend(QApplication* application)
     }
 }
 
-static void printUsage(const QStringList& arguments)
-{
-    qDebug() << "usage:"
-             << arguments.at(0).toUtf8().constData()
-             << "[contact://CONTACT_KEY]";
-}
-
 int main(int argc, char** argv)
 {
-    QApplication application(argc, argv);
-    application.setApplicationName("Telephony App");
-    QString contactKey;
-    QStringList arguments = application.arguments();
-    if (arguments.size() > 2) {
-        printUsage(arguments);
-        return 1;
-    } else if (arguments.size() == 2) {
-        QString contactUri = arguments.at(1);
-        QString contactUriScheme = "contact://";
-        if (!contactUri.startsWith(contactUriScheme)) {
-            printUsage(arguments);
-            return 1;
-        } else {
-            contactKey = contactUri.mid(contactUriScheme.size());
-        }
-    }
+    QApplication::setApplicationName("Telephony App");
+    TelephonyApplication application(argc, argv);
+
     disableTelepathyFolksBackend(&application);
-    QDeclarativeView view;
-    loadDummyDataFiles(&view);
-    view.rootContext()->setContextProperty("contactKey", contactKey);
-    QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
-    view.setSource(source);
-    view.show();
+
+    if (!application.setup()) {
+        return 0;
+    }
+
     return application.exec();
 }
 

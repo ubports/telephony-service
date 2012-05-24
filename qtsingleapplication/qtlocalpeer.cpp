@@ -42,23 +42,11 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTime>
 
-#if defined(Q_OS_WIN)
-#include <QtCore/QLibrary>
-#include <QtCore/qt_windows.h>
-typedef BOOL(WINAPI*PProcessIdToSessionId)(DWORD,DWORD*);
-static PProcessIdToSessionId pProcessIdToSessionId = 0;
-#endif
-#if defined(Q_OS_UNIX)
 #include <time.h>
-#endif
 
 namespace QtLP_Private {
 #include "qtlockedfile.cpp"
-#if defined(Q_OS_WIN)
-#include "qtlockedfile_win.cpp"
-#else
 #include "qtlockedfile_unix.cpp"
-#endif
 }
 
 const char* QtLocalPeer::ack = "ack";
@@ -69,9 +57,6 @@ QtLocalPeer::QtLocalPeer(QObject* parent, const QString &appId)
     QString prefix = id;
     if (id.isEmpty()) {
         id = QCoreApplication::applicationFilePath();
-#if defined(Q_OS_WIN)
-        id = id.toLower();
-#endif
         prefix = id.section(QLatin1Char('/'), -1);
     }
     prefix.remove(QRegExp("[^a-zA-Z]"));
@@ -81,20 +66,7 @@ QtLocalPeer::QtLocalPeer(QObject* parent, const QString &appId)
     quint16 idNum = qChecksum(idc.constData(), idc.size());
     socketName = QLatin1String("qtsingleapp-") + prefix
                  + QLatin1Char('-') + QString::number(idNum, 16);
-
-#if defined(Q_OS_WIN)
-    if (!pProcessIdToSessionId) {
-        QLibrary lib("kernel32");
-        pProcessIdToSessionId = (PProcessIdToSessionId)lib.resolve("ProcessIdToSessionId");
-    }
-    if (pProcessIdToSessionId) {
-        DWORD sessionId = 0;
-        pProcessIdToSessionId(GetCurrentProcessId(), &sessionId);
-        socketName += QLatin1Char('-') + QString::number(sessionId, 16);
-    }
-#else
     socketName += QLatin1Char('-') + QString::number(::getuid(), 16);
-#endif
 
     server = new QLocalServer(this);
     QString lockName = QDir(QDir::tempPath()).absolutePath()
@@ -143,12 +115,8 @@ bool QtLocalPeer::sendMessage(const QString &message, int timeout)
         if (connOk || i)
             break;
         int ms = 250;
-#if defined(Q_OS_WIN)
-        Sleep(DWORD(ms));
-#else
         struct timespec ts = { ms / 1000, (ms % 1000) * 1000 * 1000 };
         nanosleep(&ts, NULL);
-#endif
     }
     if (!connOk)
         return false;
