@@ -16,6 +16,7 @@ pkg_check_modules(TP_QT4 REQUIRED TelepathyQt4)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${QT_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/qtsingleapplication
     )
 
 set(TELEPHONY_APP telephony-app)
