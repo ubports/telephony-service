@@ -26,6 +26,7 @@ target_link_libraries(${TELEPHONY_APP}
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
     ${QT_QTDECLARATIVE_LIBRARIES}
+    qtsingleapplication
     )
 
 install(TARGETS ${TELEPHONY_APP}
@@ -72,4 +73,5 @@ install(FILES ${TELEPHONY_APP}.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
     )
 
+add_subdirectory(qtsingleapplication)
 add_subdirectory(TelephonyApp)
