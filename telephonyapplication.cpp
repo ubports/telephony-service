@@ -90,7 +90,11 @@ TelephonyApplication::~TelephonyApplication()
 void TelephonyApplication::onMessageReceived(const QString &message)
 {
     if (m_view) {
-        m_view->rootContext()->setContextProperty("contactKey", message);
+        if (message.length()) {
+            // Workaround to propagate a property change even when the contactKey was the same
+            m_view->rootContext()->setContextProperty("contactKey", "");
+            m_view->rootContext()->setContextProperty("contactKey", message);
+        }
         activeWindow();
     }
 }
