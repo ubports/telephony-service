@@ -1,3 +1,11 @@
+telephony-app (0.6) precise; urgency=low
+
+  * Add missing "%u" field code to the Exec key to allow opening a given
+    contact from the contacts lens. (LP: #1003673)
+  * Fix displaying the avatar picture in the details view. (LP: #1003646)
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Thu, 24 May 2012 14:17:19 +0200
+
 telephony-app (0.5) precise; urgency=low
 
   * release of fix for lp:1003646 
