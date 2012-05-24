@@ -10,6 +10,10 @@ UnionFilter {
         field: DisplayLabel.label
         value: filter.filterText
         matchFlags: DetailFilter.MatchContains
+
+        // FIXME: QtMobility contacts plugin is not propagating the filterChanged signal in
+        // UnionFilter and IntersectionFilter, so the proper solution is to get the fix in there
+        onFilterChanged: filter.filterChanged()
     }
 
     DetailFilter {
@@ -17,6 +21,9 @@ UnionFilter {
         field: Nickname.nickname
         value: filter.filterText
         matchFlags: DetailFilter.MatchContains
+
+        // FIXME: this should be fixed in mobility, see above
+        onFilterChanged: filter.filterChanged()
     }
 
     DetailFilter {
@@ -24,6 +31,9 @@ UnionFilter {
         field: Presence.nickname
         value: filter.filterText
         matchFlags: DetailFilter.MatchContains
+
+        // FIXME: this should be fixed in mobility, see above
+        onFilterChanged: filter.filterChanged()
     }
 }
 
