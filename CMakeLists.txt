@@ -72,4 +72,4 @@ install(FILES ${TELEPHONY_APP}.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
     )
 
-add_subdirectory(plugin)
+add_subdirectory(TelephonyApp)
