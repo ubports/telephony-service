@@ -82,7 +82,7 @@ void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
 
     // start chatting to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        account->ensureTextChat(contact);
+        account->ensureTextChat(contact, QDateTime::currentDateTime(), "org.freedesktop.Telepathy.Client.TelephonyApp");
 
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;
