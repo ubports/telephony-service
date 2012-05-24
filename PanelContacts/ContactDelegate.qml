@@ -24,7 +24,7 @@ Item {
     }
     Image {
         id: photoItem
-        source: (contact.avatar.imageUrl && contact.avatar.imageUrl.length > 0)
+        source: (contact.avatar.imageUrl && (contact.avatar.imageUrl.toString().length > 0))
                 ? contact.avatar.imageUrl : "../assets/default_avatar.png"
         width: 56
         height: width
