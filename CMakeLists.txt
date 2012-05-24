@@ -16,16 +16,23 @@ pkg_check_modules(TP_QT4 REQUIRED TelepathyQt4)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${QT_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/qtsingleapplication
     )
 
 set(TELEPHONY_APP telephony-app)
 
-add_executable(${TELEPHONY_APP} main.cpp)
+qt4_wrap_cpp(telephonyapplication_MOC_SRCS telephonyapplication.h)
+add_executable(${TELEPHONY_APP}
+    ${telephonyapplication_MOC_SRCS}
+    telephonyapplication.cpp
+    main.cpp
+    )
 
 target_link_libraries(${TELEPHONY_APP}
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
     ${QT_QTDECLARATIVE_LIBRARIES}
+    qtsingleapplication
     )
 
 install(TARGETS ${TELEPHONY_APP}
@@ -72,4 +79,5 @@ install(FILES ${TELEPHONY_APP}.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
     )
 
+add_subdirectory(qtsingleapplication)
 add_subdirectory(TelephonyApp)
