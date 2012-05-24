@@ -1,3 +1,4 @@
+# QML plugin
 
 set(plugin_SRCS components.cpp channelhandler.cpp chatmanager.cpp telepathyhelper.cpp)
 set(plugin_HDRS components.h channelhandler.h chatmanager.h telepathyhelper.h)
@@ -15,5 +16,7 @@ target_link_libraries(telephony-qml
     ${QT_QTDECLARATIVE_LIBRARIES}
     ${TP_QT4_LIBRARIES})
 
-install(DIRECTORY TelephonyApp DESTINATION ${QT_IMPORTS_DIR})
-install(TARGETS telephony-qml DESTINATION ${QT_IMPORTS_DIR}/TelephonyApp)
+set(PLUGIN_DIR ${QT_IMPORTS_DIR}/TelephonyApp)
+install(TARGETS telephony-qml DESTINATION ${PLUGIN_DIR})
+install(FILES qmldir DESTINATION ${PLUGIN_DIR})
+
