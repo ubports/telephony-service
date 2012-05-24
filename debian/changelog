@@ -1,3 +1,11 @@
+telephony-app (0.7) precise; urgency=low
+
+  * Set the application as the preferred handler for text channels
+  * Make sure the filterChanged() signal gets propagated for the contact 
+    filters
+
+ -- Gustavo Boiko <gustavo.boiko@canonical.com>  Thu, 24 May 2012 13:52:33 -0300
+
 telephony-app (0.6) precise; urgency=low
 
   * Add missing "%u" field code to the Exec key to allow opening a given
