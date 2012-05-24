@@ -67,7 +67,7 @@ Item {
         source: {
             if (contact) {
                 if (contact.avatar.imageUrl) {
-                    if (contact.avatar.imageUrl.length > 0) {
+                    if (contact.avatar.imageUrl.toString().length > 0) {
                         return contact.avatar.imageUrl;
                     }
                 }
