@@ -8,6 +8,7 @@ Rectangle {
     id: liveCall
     color: "#ebebeb"
 
+    property string viewName: "livecall"
     // FIXME: better name that does not sound like a boolean; store it in the StopWatch but also alias it here
     // FIXME: refactor StopWatch, callStarted, Timer into StopWatch
     property variant callStarted

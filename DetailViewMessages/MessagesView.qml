@@ -4,6 +4,7 @@ import TelephonyApp 0.1
 Item {
     id: view
 
+    property string viewName: "messages"
     property variant contact
     property string number
     property bool newMessage: false

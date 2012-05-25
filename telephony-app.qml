@@ -140,7 +140,8 @@ Rectangle {
             startChat("", contactId)
         }
         onMessageReceived: {
-            if (rightPaneContent.item.number != contactId) {
+            if (rightPaneContent.item.viewName != "messages"
+                    || rightPaneContent.item.number != contactId) {
                 rightPaneContent.source = ""
                 startChat("", contactId)
             }
