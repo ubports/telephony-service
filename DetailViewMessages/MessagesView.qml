@@ -4,11 +4,16 @@ import TelephonyApp 0.1
 Item {
     id: view
 
+    property string viewName: "messages"
     property variant contact
     property string number
     property bool newMessage: false
 
     property string pendingMessage
+
+    function addMessage(message) {
+        messagesLoader.item.addMessage(message, false)
+    }
 
     Connections {
         target: chatManager
@@ -88,7 +93,7 @@ Item {
         visible: !view.newMessage
         onNewMessage: {
             if (messagesLoader.sourceComponent) {
-                messagesLoader.item.addMessage(message)
+                messagesLoader.item.addMessage(message, true)
             }
 
             if (chatManager.isChattingToContact(number)) {

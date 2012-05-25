@@ -4,6 +4,7 @@ import "../Widgets"
 Item {
     id: contactDetails
 
+    property string viewName: "contacts"
     property bool editable: false
     property variant contact: null
 

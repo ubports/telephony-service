@@ -1,6 +1,8 @@
 import QtQuick 1.1
 
 Item {
+
+    property string viewName: "keypad"
     width: keypad.width
     height: childrenRect.height
 

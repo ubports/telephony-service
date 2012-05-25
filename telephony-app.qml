@@ -133,4 +133,23 @@ Rectangle {
             }
         }
     }
+
+    Connections {
+        target: chatManager
+        onChatReady: {
+            if (rightPaneContent.item.viewName != "messages"
+                    || rightPaneContent.item.number != contactId) {
+                rightPaneContent.source = ""
+                startChat("", contactId)
+            }
+        }
+        onMessageReceived: {
+            if (rightPaneContent.item.viewName != "messages"
+                    || rightPaneContent.item.number != contactId) {
+                rightPaneContent.source = ""
+                startChat("", contactId)
+            }
+            rightPaneContent.item.addMessage(message, false)
+        }
+    }
 }

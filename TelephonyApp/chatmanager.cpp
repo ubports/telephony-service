@@ -69,6 +69,11 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
     emit chatReady(channel->targetContact()->id());
 }
 
+void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
+{
+    emit messageReceived(message.sender()->id(), message.text());
+}
+
 void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
 {
     Tp::PendingContacts *pc = qobject_cast<Tp::PendingContacts*>(op);
