@@ -79,5 +79,9 @@ install(FILES ${TELEPHONY_APP}.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
     )
 
+install(FILES ${TELEPHONY_APP}.png
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons
+    )
+
 add_subdirectory(qtsingleapplication)
 add_subdirectory(TelephonyApp)
