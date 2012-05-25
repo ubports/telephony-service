@@ -137,7 +137,11 @@ Rectangle {
     Connections {
         target: chatManager
         onChatReady: {
-            startChat("", contactId)
+            if (rightPaneContent.item.viewName != "messages"
+                    || rightPaneContent.item.number != contactId) {
+                rightPaneContent.source = ""
+                startChat("", contactId)
+            }
         }
         onMessageReceived: {
             if (rightPaneContent.item.viewName != "messages"
