@@ -6,12 +6,12 @@ Item {
 
     property ListModel model: messagesModel
 
-    function addMessage(newMessage) {
+    function addMessage(newMessage, outgoing) {
         var currentDate = new Date()
         messagesList.model.append({"section": Qt.formatDate(currentDate, Qt.DefaultLocaleLongDate),
                                "message": newMessage,
                                "timeStamp": Qt.formatTime(currentDate, Qt.DefaultLocaleLongDate),
-                               "outgoing": true})
+                               "outgoing": outgoing})
     }
 
     Component {

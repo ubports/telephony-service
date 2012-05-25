@@ -23,7 +23,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QMap>
 #include <TelepathyQt/TextChannel>
-#include <TelepathyQt/Contact>
+#include <TelepathyQt/ReceivedMessage>
 
 class ChatManager : public QObject
 {
@@ -39,10 +39,12 @@ public:
 
 signals:
     void chatReady(const QString &contactId);
+    void messageReceived(const QString &contactId, const QString &message);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onContactsAvailable(Tp::PendingOperation *op);
+    void onMessageReceived(const Tp::ReceivedMessage &message);
 
 
 private:
