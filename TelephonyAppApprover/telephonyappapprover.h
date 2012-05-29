@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TELEPATHYAPPAPPROVER_H
-#define TELEPATHYAPPAPPROVER_H
+#ifndef TELEPHONYAPPAPPROVER_H
+#define TELEPHONYAPPAPPROVER_H
 
 #include <QMap>
 #include <TelepathyQt4/AbstractClientApprover>
@@ -40,4 +40,4 @@ private:
     QMap<Tp::PendingReady*,Tp::ChannelPtr> mChannels;
 };
 
-#endif // TELEPATHYAPPAPPROVER_H
+#endif // TELEPHONYAPPAPPROVER_H
