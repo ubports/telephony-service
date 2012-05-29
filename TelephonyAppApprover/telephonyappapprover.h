@@ -27,14 +27,17 @@
 class TelephonyAppApprover : public QObject, public Tp::AbstractClientApprover
 {
     Q_OBJECT
+
 public:
     TelephonyAppApprover();
     ~TelephonyAppApprover();
 
     void addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                               const Tp::ChannelDispatchOperationPtr &dispatchOperation);
+
 private Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
+
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
     QMap<Tp::PendingReady*,Tp::ChannelPtr> mChannels;
