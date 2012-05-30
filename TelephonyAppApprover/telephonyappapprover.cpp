@@ -108,7 +108,7 @@ void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
     Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[op]);
     if (callChannel) {
-        Tp::PendingOperation *hangupop = callChannel->hangup(Tp::CallStateChangeReasonUserRequested, QString(), QString());
+        Tp::PendingOperation *hangupop = callChannel->hangup(Tp::CallStateChangeReasonUserRequested, TP_QT_ERROR_REJECTED, QString());
         mChannels[hangupop] = callChannel;
         connect(hangupop, SIGNAL(finished(Tp::PendingOperation*)),
                 this, SLOT(onHangupFinished(Tp::PendingOperation*)));
