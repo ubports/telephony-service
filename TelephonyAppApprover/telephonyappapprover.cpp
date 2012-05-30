@@ -106,6 +106,11 @@ void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
         return;
     }
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
+    Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[op]);
+    if (callChannel) {
+        callChannel->hangup(Tp::CallStateChangeReasonUserRequested, QString(), QString());
+    }
+
     if (channel) {
         channel->requestClose();
     }
