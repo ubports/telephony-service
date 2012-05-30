@@ -20,10 +20,10 @@
 #include "telephonyappapprover.h"
 #include <QMessageBox>
 
-#include <TelepathyQt4/PendingReady>
-#include <TelepathyQt4/ChannelClassSpec>
-#include <TelepathyQt4/ClientRegistrar>
-#include <TelepathyQt4/CallChannel>
+#include <TelepathyQt/PendingReady>
+#include <TelepathyQt/ChannelClassSpec>
+#include <TelepathyQt/ClientRegistrar>
+#include <TelepathyQt/CallChannel>
 
 TelephonyAppApprover::TelephonyAppApprover()
 : Tp::AbstractClientApprover(Tp::ChannelClassSpec::audioCall())

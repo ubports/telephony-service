@@ -21,9 +21,9 @@
 #define TELEPHONYAPPAPPROVER_H
 
 #include <QMap>
-#include <TelepathyQt4/AbstractClientApprover>
-#include <TelepathyQt4/PendingReady>
-#include <TelepathyQt4/ChannelDispatchOperation>
+#include <TelepathyQt/AbstractClientApprover>
+#include <TelepathyQt/PendingReady>
+#include <TelepathyQt/ChannelDispatchOperation>
 
 class TelephonyAppApprover : public QObject, public Tp::AbstractClientApprover
 {
