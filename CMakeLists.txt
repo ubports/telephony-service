@@ -85,3 +85,4 @@ install(FILES ${TELEPHONY_APP}.png
 
 add_subdirectory(qtsingleapplication)
 add_subdirectory(TelephonyApp)
+add_subdirectory(TelephonyAppApprover)
