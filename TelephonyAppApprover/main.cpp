@@ -31,6 +31,6 @@ int main(int argc, char **argv)
     Tp::ClientRegistrarPtr registrar = Tp::ClientRegistrar::create();
     Tp::AbstractClientPtr approver = Tp::AbstractClientPtr::dynamicCast(
           Tp::SharedPtr<TelephonyAppApprover>(new TelephonyAppApprover()));
-    registrar->registerClient(approver, "TelephonyAppApprover");
+    registrar->registerClient(approver, "TelephonyAppApprover", true);
     return app.exec();
 }
