@@ -23,6 +23,7 @@
 #include <QMap>
 #include <TelepathyQt4/AbstractClientApprover>
 #include <TelepathyQt4/PendingReady>
+#include <TelepathyQt4/ChannelDispatchOperation>
 
 class TelephonyAppApprover : public QObject, public Tp::AbstractClientApprover
 {
@@ -34,13 +35,15 @@ public:
 
     void addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                               const Tp::ChannelDispatchOperationPtr &dispatchOperation);
+    Tp::ChannelDispatchOperationPtr dispatchOperation(Tp::PendingOperation *op);
 
 private Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
+    void onClaimFinished(Tp::PendingOperation* op);
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
-    QMap<Tp::PendingReady*,Tp::ChannelPtr> mChannels;
+    QMap<Tp::PendingOperation*,Tp::ChannelPtr> mChannels;
 };
 
 #endif // TELEPHONYAPPAPPROVER_H

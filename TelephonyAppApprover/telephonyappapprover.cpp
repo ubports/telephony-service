@@ -23,7 +23,6 @@
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/ChannelClassSpec>
 #include <TelepathyQt4/ClientRegistrar>
-#include <TelepathyQt4/ChannelDispatchOperation>
 #include <TelepathyQt4/CallChannel>
 
 TelephonyAppApprover::TelephonyAppApprover()
@@ -35,6 +34,18 @@ TelephonyAppApprover::~TelephonyAppApprover()
 {
 }
 
+Tp::ChannelDispatchOperationPtr TelephonyAppApprover::dispatchOperation(Tp::PendingOperation *op)
+{
+    Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
+    QString accountId = channel->property("accountId").toString();
+    foreach (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
+        if (dispatchOperation->account()->uniqueIdentifier() == accountId) {
+            return dispatchOperation;
+        }
+    }
+    return Tp::ChannelDispatchOperationPtr();
+}
+
 void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                                         const Tp::ChannelDispatchOperationPtr &dispatchOperation)
 {
@@ -42,10 +53,11 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
     foreach (Tp::ChannelPtr channel, channels) {
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (!callChannel.isNull()) {
-            mChannels[callChannel->becomeReady()] = callChannel;
-            callChannel->setProperty("accountId", QVariant(dispatchOperation->account()->uniqueIdentifier()));
-            connect(callChannel->becomeReady(), SIGNAL(finished(Tp::PendingOperation*)),
+            Tp::PendingReady *pr = callChannel->becomeReady();
+            mChannels[pr] = callChannel;
+            connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onChannelReady(Tp::PendingOperation*)));
+            callChannel->setProperty("accountId", QVariant(dispatchOperation->account()->uniqueIdentifier()));
             mDispatchOps.append(dispatchOperation);
             continue;
         }
@@ -56,20 +68,47 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
 void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
-    Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[pr]);
-    QString accountId = callChannel->property("accountId").toString();
-    Tp::ContactPtr contact = callChannel->initiatorContact();
-    foreach (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
-        if (dispatchOperation->account()->uniqueIdentifier() != accountId || callChannel->isRequested()) {
-            continue;
-        }
-        int ret = QMessageBox::question(NULL, "Incoming call",
-                        QString("Incoming call from %1\nAnswer?").arg(contact->id()),
-                        QMessageBox::Yes | QMessageBox::No);
-        if (ret == QMessageBox::Yes) {
-            dispatchOperation->handleWith(TP_QT_IFACE_CLIENT + ".TelephonyApp");
-        }
-        mDispatchOps.removeAll(dispatchOperation);
+    Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[pr]);
+    QString accountId = channel->property("accountId").toString();
+
+    if (channel->isRequested()) {
+        return;
     }
-    mChannels.remove(pr);
+
+    Tp::ContactPtr contact = channel->initiatorContact();
+    Tp::ChannelDispatchOperationPtr dispatchOp = dispatchOperation(op);
+    
+    if (!dispatchOp) {
+        return;
+    }
+
+    int ret = QMessageBox::question(NULL, "Incoming call",
+                    QString("Incoming call from %1\nAnswer?").arg(contact->id()),
+                    QMessageBox::Yes | QMessageBox::No);
+    if (ret == QMessageBox::Yes) {
+        dispatchOp->handleWith(TP_QT_IFACE_CLIENT + ".TelephonyApp");
+        mDispatchOps.removeAll(dispatchOp);
+        mChannels.remove(pr);
+        return;
+    } else {
+        Tp::PendingOperation *claimop = dispatchOp->claim();
+        mChannels[claimop] = channel;
+        connect(claimop, SIGNAL(finished(Tp::PendingOperation*)),
+                this, SLOT(onClaimFinished(Tp::PendingOperation*)));
+    }
+}
+
+void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
+{
+    if(!op || op->isError()) {
+        qDebug() << "onClaimFinished() error";
+        // TODO do something
+        return;
+    }
+    Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
+    if (channel) {
+        channel->requestClose();
+    }
+    mDispatchOps.removeAll(dispatchOperation(op));
+    mChannels.remove(op);
 }
