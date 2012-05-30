@@ -108,9 +108,28 @@ void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
     Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[op]);
     if (callChannel) {
-        callChannel->hangup(Tp::CallStateChangeReasonUserRequested, QString(), QString());
+        Tp::PendingOperation *hangupop = callChannel->hangup(Tp::CallStateChangeReasonUserRequested, QString(), QString());
+        mChannels[hangupop] = callChannel;
+        connect(hangupop, SIGNAL(finished(Tp::PendingOperation*)),
+                this, SLOT(onHangupFinished(Tp::PendingOperation*)));
+        return;
     }
 
+    if (channel) {
+        channel->requestClose();
+    }
+    mDispatchOps.removeAll(dispatchOperation(op));
+    mChannels.remove(op);
+}
+
+void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
+{
+    if(!op || op->isError()) {
+        qDebug() << "onHangupFinished() error";
+        // TODO do something
+        return;
+    }
+    Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
     if (channel) {
         channel->requestClose();
     }
