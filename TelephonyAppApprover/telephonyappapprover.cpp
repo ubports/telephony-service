@@ -58,6 +58,7 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
             connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onChannelReady(Tp::PendingOperation*)));
             callChannel->setProperty("accountId", QVariant(dispatchOperation->account()->uniqueIdentifier()));
+            callChannel->setRinging();
             mDispatchOps.append(dispatchOperation);
             continue;
         }
