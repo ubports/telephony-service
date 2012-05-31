@@ -58,7 +58,6 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
             connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onChannelReady(Tp::PendingOperation*)));
             callChannel->setProperty("accountId", QVariant(dispatchOperation->account()->uniqueIdentifier()));
-            callChannel->setRinging();
             mDispatchOps.append(dispatchOperation);
             continue;
         }
@@ -81,6 +80,11 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     
     if (!dispatchOp) {
         return;
+    }
+
+    Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[pr]);
+    if (callChannel) {
+        callChannel->setRinging();
     }
 
     int ret = QMessageBox::question(NULL, "Incoming call",
