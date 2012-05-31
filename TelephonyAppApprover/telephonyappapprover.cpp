@@ -82,6 +82,11 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         return;
     }
 
+    Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[pr]);
+    if (callChannel) {
+        callChannel->setRinging();
+    }
+
     int ret = QMessageBox::question(NULL, "Incoming call",
                     QString("Incoming call from %1\nAnswer?").arg(contact->id()),
                     QMessageBox::Yes | QMessageBox::No);
