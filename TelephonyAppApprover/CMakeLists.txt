@@ -16,6 +16,7 @@ add_executable(telephony-app-approver ${approver_SRCS} ${approver_HDRS} ${qt_moc
 target_link_libraries(telephony-app-approver
     ${QT_QTCORE_LIBRARIES}
     ${QT_QTGUI_LIBRARIES}
+    ${QT_QTDBUS_LIBRARIES}    
     ${TP_QT4_LIBRARIES})
 
 install(TARGETS telephony-app-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
