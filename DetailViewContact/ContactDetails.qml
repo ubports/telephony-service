@@ -11,17 +11,20 @@ Item {
     width: 400
     height: 600
 
+    onEditableChanged: {
+        // If editable has just changed to false it means we just finished
+        // editing and it's time to save (if anything was changed)
+        if (!editable && contact.modified) {
+            contact.save()
+        }
+    }
+
     ContactDetailsHeader {
         id: header
         contact: contactDetails.contact
+        editable: contactDetails.editable
 
-        onEditClicked: {
-            contactDetails.editable = true
-        }
-
-        onSaveClicked: {
-            contactDetails.editable = false
-        }
+        onEditClicked: contactDetails.editable = !contactDetails.editable
     }
 
     Flickable {
@@ -41,7 +44,6 @@ Item {
             // Phone section
             ContactDetailsSection {
                 id: phoneSection
-                editable: contactDetails.editable
                 anchors.left: parent.left
                 anchors.right: parent.right
                 name: "Phone"
@@ -52,16 +54,17 @@ Item {
                     actionIcon: "../assets/icon_message_grey.png"
                     value: modelData.number
                     type: modelData.contexts.toString()
+                    editable: contactDetails.editable
 
                     onClicked: telephony.startCallToContact(contact, value);
                     onActionClicked: telephony.startChat(contact, number);
+                    onFieldValueChanged: modelData.number = newValue;
                 }
             }
 
             // Email section
             ContactDetailsSection {
                 id: emailSection
-                editable: contactDetails.editable
                 anchors.left: parent.left
                 anchors.right: parent.right
                 name: "Email"
@@ -72,13 +75,14 @@ Item {
                     actionIcon: "../assets/icon_envelope_grey.png"
                     value: modelData.emailAddress
                     type: "" // FIXME: there is no e-mail type it seems, but needs double checking in any case
+                    editable: contactDetails.editable
+                    onFieldValueChanged: modelData.emailAddress = newValue;
                 }
             }
 
             // IM section
             ContactDetailsSection {
                 id: imSection
-                editable: contactDetails.editable
                 anchors.left: parent.left
                 anchors.right: parent.right
                 name: "IM"
@@ -89,13 +93,15 @@ Item {
                     actionIcon: "../assets/icon_chevron_right.png"
                     value: modelData.accountUri
                     type: modelData.serviceProvider
+                    editable: contactDetails.editable
+                    onFieldValueChanged: modelData.accountUri = newValue;
                 }
             }
+
 
             // Address section
             ContactDetailsSection {
                 id: addressSection
-                editable: contactDetails.editable
                 anchors.left: parent.left
                 anchors.right: parent.right
                 name: "Address"
@@ -104,10 +110,21 @@ Item {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
                     actionIcon: "../assets/icon_chevron_right.png"
-                    // FIXME: implement a better function to handle address formatting
-                    value: modelData.street + "\n" + modelData.city + "\n" + modelData.state + "\n" + modelData.country
+
+                    // Format in the same way as Android's default address book
+                    function nonEmpty(item) { return item && item.length > 0 }
+                    value: [
+                      modelData.street,
+                      [ [modelData.locality, modelData.region].filter(nonEmpty).join(", "),
+                        modelData.postcode
+                      ].filter(nonEmpty).join(" "),
+                      modelData.country
+                    ].filter(nonEmpty).join("\n");
+
                     type: "" // FIXME: double check if QContact has an address type field
                     multiLine: true
+                    editable: contactDetails.editable
+                    // TODO: this has probably to be edited as multiple fields
                 }
             } // ContactDetailsSection
         } // Column

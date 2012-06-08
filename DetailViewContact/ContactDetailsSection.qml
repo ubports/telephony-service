@@ -8,7 +8,6 @@ Column {
     property string name
     property alias model: details.model
     property alias delegate: details.delegate
-    property bool editable: false
 
     Item {
         anchors.left: parent.left

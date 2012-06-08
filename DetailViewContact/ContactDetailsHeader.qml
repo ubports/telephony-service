@@ -6,9 +6,9 @@ Item {
     id: contactDetailsHeader
 
     property variant contact: null
+    property variant editable: false
 
     signal editClicked
-    signal saveClicked
 
     width: parent.width
     height: 100
@@ -123,23 +123,11 @@ Item {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.margins: 10
-        text: "Edit"
+        text: (editable) ? "Save" : "Edit"
         color: "gray"
         radius: 5
         height: 30
         width: 70
-
-        // FIXME: re-enable this button once contact modification is properly implemented
-        visible: false
-
-        onClicked: {
-            if (text == "Edit") {
-                text = "Save"
-                contactDetailsHeader.editClicked()
-            } else {
-                text = "Edit"
-                contactDetailsHeader.saveClicked()
-            }
-        }
+        onClicked: editClicked()
     }
 }

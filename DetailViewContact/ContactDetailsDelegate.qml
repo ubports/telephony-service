@@ -13,10 +13,7 @@ Item {
 
     signal clicked(string value)
     signal actionClicked(string value)
-
-    function save() {
-        // FIXME: reimplement
-    }
+    signal fieldValueChanged(string newValue)
 
     ListView.onRemove: SequentialAnimation {
         PropertyAction { target: contactDetailsItem; property: "ListView.delayRemove"; value: true }
@@ -62,6 +59,15 @@ Item {
 
         onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
 
+        Text {
+            anchors.left: parent.left
+            anchors.right: typeText.right
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.leftMargin: 5
+            text: contactDetailsItem.value
+            visible: !contactDetailsItem.editable
+        }
+
         TextInput {
             id: valueText
             anchors.left: parent.left
@@ -69,16 +75,8 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: 5
             text: value
-            visible: contactDetailsItem.editable && (section != "Address")
-        }
-
-        Text {
-            anchors.left: parent.left
-            anchors.right: typeText.right
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin: 5
-            text: contactDetailsItem.value
-            visible: !contactDetailsItem.editable //&& !contactDetailsItem.multiLine
+            visible: contactDetailsItem.editable && !contactDetailsItem.multiLine
+            onTextChanged: contactDetailsItem.fieldValueChanged(text)
         }
 
         TextEdit {
