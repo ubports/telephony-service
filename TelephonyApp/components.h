@@ -27,6 +27,7 @@
 #include <QtDeclarative/QDeclarativeExtensionPlugin>
 
 class ChannelHandler;
+class CallLogModel;
 
 class Components : public QDeclarativeExtensionPlugin
 {
@@ -38,9 +39,11 @@ public:
 
 private Q_SLOTS:
     void onChannelHandlerCreated(ChannelHandler *ch);
+    void onAccountReady();
 
 private:
     QDeclarativeContext *mRootContext;
+    CallLogModel *mCallLogModel;
 };
 
 #endif // COMPONENTS_H

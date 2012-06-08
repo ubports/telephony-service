@@ -1,12 +1,12 @@
 import QtQuick 1.1
-import "../fontUtils.js" as Font
+import "../Widgets"
 
 Rectangle {
     id: callItem
     height: 64
     width: parent.width
 
-    signal clicked(int index)
+    signal clicked(string contactId)
 
     Rectangle {
         height: 1
@@ -18,62 +18,61 @@ Rectangle {
 
     Image {
         id: photoItem
-        // FIXME: move the dummydata to the model
-        source: "../dummydata/" + photo
+        source: avatar
         width: 56
         height: width
         anchors.left: parent.left
         anchors.leftMargin: 1
         anchors.verticalCenter: parent.verticalCenter
     }
-    // FIXME: TextCustom
-    Text {
+
+    TextCustom {
         id: displayNameItem
         anchors.top: parent.top
         anchors.topMargin: 1
         anchors.left: photoItem.right
         anchors.right: directionItem.left
         anchors.leftMargin: 2
-        font.pixelSize: Font.sizeToPixels("medium")
-        text: displayName
+        fontSize: "medium"
+        text: contactAlias
     }
 
-    Text {
+    TextCustom {
         id: phoneTypeItem
         anchors.top: displayNameItem.bottom
         anchors.topMargin: 2
         anchors.left: photoItem.right
         anchors.leftMargin: 2
-        font.pixelSize: Font.sizeToPixels("small")
+        fontSize: "small"
         text: phoneType
     }
 
-    Text {
+    TextCustom {
         id: phoneItem
         anchors.top: displayNameItem.bottom
         anchors.topMargin: 2
         anchors.left: phoneTypeItem.right
         anchors.leftMargin: 4
-        //anchors.right: directionItem.left
-        font.pixelSize: Font.sizeToPixels("small")
-        text: phone
+        fontSize: "small"
+        text: phoneNumber
         transformOrigin: Item.Center
     }
-    Text {
+
+    TextCustom {
         id: dateItem
         anchors.top: phoneTypeItem.bottom
         anchors.topMargin: 2
         anchors.left: photoItem.right
         anchors.leftMargin: 2
         anchors.right: directionItem.left
-        font.pixelSize: Font.sizeToPixels("small")
-        text: date
+        fontSize: "small"
+        text: timestamp
     }
 
     Image {
         id: directionItem
         source: {
-            if(direction == "incoming") {
+            if(incoming) {
                 if(missed) {
                     "../assets/icon_missed_call.png"
                 } else {
@@ -92,7 +91,6 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: callItem.clicked(index)
+        onClicked: callItem.clicked(contactId)
     }
-
 }

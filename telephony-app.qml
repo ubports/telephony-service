@@ -51,6 +51,10 @@ Rectangle {
         rightPaneContent.source = "DetailViewKeypad/KeypadView.qml"
     }
 
+    function showCallLog() {
+        rightPaneContent.source = "DetailViewCallLog/CallLog.qml"
+    }
+
     ContactLoader {
         id: contactLoader
         contactId: contactKey
