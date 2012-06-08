@@ -1,5 +1,6 @@
 project(telephony-app)
 cmake_minimum_required(VERSION 2.8)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
 # Standard install paths
 include(GNUInstallDirs)
@@ -10,8 +11,10 @@ configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
 find_package(Qt4 REQUIRED)
 find_package(PkgConfig REQUIRED)
+find_package(QtMobility COMPONENTS Contacts REQUIRED)
 
 pkg_check_modules(TP_QT4 REQUIRED TelepathyQt4)
+pkg_check_modules(TPL_QT4 REQUIRED TelepathyLoggerQt4)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
