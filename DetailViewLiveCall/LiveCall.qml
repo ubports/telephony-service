@@ -25,10 +25,11 @@ Rectangle {
         // FIXME: dont reset callStarted
         callStarted = null;
         telephony.endCall(callDuration.elapsed);
+        callManager.endCall(liveCall.number);
     }
 
     // FIXME: remove blah code
-    Component.onCompleted: startCall(contacts.get(5))
+    //Component.onCompleted: startCall(contacts.get(5))
 
     Image {
         id: picture

@@ -39,6 +39,8 @@ install(TARGETS ${TELEPHONY_APP}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
+install(FILES org.freedesktop.Telepathy.Client.TelephonyApp.service DESTINATION share/dbus-1/services)
+install(FILES TelephonyApp.client DESTINATION share/telepathy/clients)
 file(GLOB QML_JS_FILES *.qml *.js)
 
 install(FILES ${QML_JS_FILES}
