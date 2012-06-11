@@ -24,6 +24,13 @@ Rectangle {
         rightPaneContent.item.startCall()
     }
 
+    function callNumber(number) {
+        rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
+        rightPaneContent.item.contact = null
+        rightPaneContent.item.number = number
+        callManager.startCall(number);
+    }
+
     function startChat(contact, number) {
         rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
         rightPaneContent.item.contact = contact
@@ -159,6 +166,13 @@ Rectangle {
                 startChat("", contactId)
             }
             rightPaneContent.item.addMessage(message, false)
+        }
+    }
+
+    Connections {
+        target: callManager
+        onCallReady: {
+            startCallToNumber(contactId)
         }
     }
 }

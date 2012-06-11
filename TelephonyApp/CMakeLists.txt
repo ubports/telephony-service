@@ -1,7 +1,7 @@
 # QML plugin
 
-set(plugin_SRCS calllogmodel.cpp components.cpp channelhandler.cpp chatmanager.cpp telepathyhelper.cpp)
-set(plugin_HDRS calllogmodel.h components.h channelhandler.h chatmanager.h telepathyhelper.h)
+set(plugin_SRCS calllogmodel.cpp components.cpp channelhandler.cpp chatmanager.cpp callmanager.cpp telepathyhelper.cpp)
+set(plugin_HDRS calllogmodel.h components.h channelhandler.h chatmanager.h callmanager.h telepathyhelper.h)
 
 qt4_wrap_cpp(plugin_MOC_SRCS ${plugin_HDRS})
 

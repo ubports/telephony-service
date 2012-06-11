@@ -65,7 +65,12 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
 
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (callChannel) {
-            // TODO: implement
+            Tp::PendingReady *pr = callChannel->becomeReady(Tp::Features()
+                                             << Tp::CallChannel::FeatureCore
+                                             << Tp::CallChannel::FeatureContents);
+            connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
+                    SLOT(onCallChannelReady(Tp::PendingOperation*)));
+            mReadyRequests[pr] = callChannel;
             continue;
         }
 
@@ -102,4 +107,26 @@ void ChannelHandler::onTextChannelReady(Tp::PendingOperation *op)
     mReadyRequests.remove(pr);
 
     emit textChannelAvailable(textChannel);
+}
+
+void ChannelHandler::onCallChannelReady(Tp::PendingOperation *op)
+{
+    Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
+
+    if (!pr) {
+        qCritical() << "The pending object is not a Tp::PendingReady";
+        return;
+    }
+
+    Tp::ChannelPtr channel = mReadyRequests[pr];
+    Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
+
+    if(!callChannel) {
+        qCritical() << "The saved channel is not a Tp::CallChannel";
+        return;
+    }
+
+    mReadyRequests.remove(pr);
+
+    emit callChannelAvailable(callChannel);
 }
