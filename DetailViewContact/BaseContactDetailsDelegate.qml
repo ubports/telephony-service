@@ -11,9 +11,13 @@ Item {
     property bool multiLine: false
     property bool editable: false
 
+    property variant contactModelItem
+
     signal clicked(string value)
     signal actionClicked(string value)
     signal fieldValueChanged(string newValue)
+
+    property variant readOnlyContentBox: readOnlyContentBox
 
     ListView.onRemove: SequentialAnimation {
         PropertyAction { target: contactDetailsItem; property: "ListView.delayRemove"; value: true }
@@ -55,46 +59,75 @@ Item {
         anchors.left: removeButton.right
         anchors.right: actionBox.left
         anchors.top: parent.top
-        height: valueTextMulti.height > 30 ? valueTextMulti.height : 30
+        height: Math.max(childrenRect.height, 30)
 
         onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
 
-        Text {
+//        Loader {
+//            id: editorItem
+//            anchors.left: parent.left
+//            anchors.right: typeText.right
+//            anchors.verticalCenter: parent.verticalCenter
+//            anchors.leftMargin: 5
+////            text: value
+//            visible: contactDetailsItem.editable // && !contactDetailsItem.multiLine
+////            sourceComponent: editor
+////            onTextChanged: contactDetailsItem.fieldValueChanged(text)
+//        }
+
+        Item {
+            id: readOnlyContentBox
+
             anchors.left: parent.left
-            anchors.right: typeText.right
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: typeText.left
+            anchors.top: parent.top
+            anchors.topMargin: 5
             anchors.leftMargin: 5
-            text: contactDetailsItem.value
-            visible: !contactDetailsItem.editable
+            anchors.rightMargin: 5
+            height: readOnlyContentBox.childrenRect.height + 5
+
+            opacity: editable ? 0.0 : 1.0
         }
 
-        TextInput {
-            id: valueText
-            anchors.left: parent.left
-            anchors.right: typeText.right
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin: 5
-            text: value
-            visible: contactDetailsItem.editable && !contactDetailsItem.multiLine
-            onTextChanged: contactDetailsItem.fieldValueChanged(text)
-        }
+//        Item {
+//            id: editableContentBox
 
-        TextEdit {
-            id: valueTextMulti
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin: 5
-            height: paintedHeight
-            text: contactDetailsItem.value
-            visible: contactDetailsItem.editable && contactDetailsItem.multiLine
-        }
+//            anchors.top: parent.top
+//            anchors.left: parent.left
+//            anchors.right: typeText.left
+//            height: childrenRect.height
+
+//            opacity: editable ? 1.0 : 0.0
+//        }
+
+//        TextInput {
+//            id: valueText
+//            anchors.left: parent.left
+//            anchors.right: typeText.right
+//            anchors.verticalCenter: parent.verticalCenter
+//            anchors.leftMargin: 5
+//            text: value
+//            visible: contactDetailsItem.editable && !contactDetailsItem.multiLine
+//            onTextChanged: contactDetailsItem.fieldValueChanged(text)
+//        }
+
+//        TextEdit {
+//            id: valueTextMulti
+//            anchors.left: parent.left
+//            anchors.right: parent.right
+//            anchors.verticalCenter: parent.verticalCenter
+//            anchors.leftMargin: 5
+//            height: paintedHeight
+//            text: contactDetailsItem.value
+//            visible: contactDetailsItem.editable && contactDetailsItem.multiLine
+//        }
 
         Text {
             id: typeText
             anchors.right: parent.right
-            anchors.top: valueTextMulti.top
+            anchors.top: parent.top
             anchors.rightMargin: 5
+            anchors.topMargin: 5
             text: contactDetailsItem.type
         }
     }

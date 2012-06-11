@@ -124,11 +124,12 @@ Item {
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.margins: 10
-        text: (editable) ? "Save" : "Edit"
+        text: "Edit"
         color: "gray"
         radius: 5
         height: 30
         width: 70
+        opacity: (editable) ? 0.0 : 1.0
         onClicked: editClicked()
     }
 }
