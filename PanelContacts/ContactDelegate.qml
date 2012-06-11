@@ -7,14 +7,15 @@ Item {
     signal clicked(variant contact)
 
     function contactName() {
-        if (display && display != "")
+        if (display)
             return display;
         else if (contact) {
-            if (contact.nickname.nickname != "")
+            if (contact.nickname && contact.nickname.nickname)
                 return contact.nickname.nickname;
-            else if (contact.presence.nickname != "")
+            else if (contact.presence && contact.presence.nickname)
                 return contact.presence.nickname;
-        } else return "";
+        }
+        return "";
     }
 
     Rectangle {
