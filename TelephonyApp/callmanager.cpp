@@ -29,7 +29,7 @@ CallManager::CallManager(QObject *parent)
 {
 }
 
-bool CallManager::isChattingToContact(const QString &contactId)
+bool CallManager::isTalkingToContact(const QString &contactId)
 {
     return mChannels.contains(contactId);
 }

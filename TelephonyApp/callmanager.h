@@ -32,7 +32,7 @@ class CallManager : public QObject
 public:
     explicit CallManager(QObject *parent = 0);
     
-    Q_INVOKABLE bool isChattingToContact(const QString &contactId);
+    Q_INVOKABLE bool isTalkingToContact(const QString &contactId);
     Q_INVOKABLE void startCall(const QString &contactId);
     Q_INVOKABLE void endCall(const QString &contactId);
 
