@@ -9,10 +9,9 @@ Item {
         height: count * 64
         anchors.fill: parent
         anchors.margins: 5
-        interactive: false
         model: callLogModel
         delegate: CallLogDelegate {
-            //onClicked: telephony.showContactDetails(calllog.get(index))
+            onClicked: telephony.showContactDetailsFromId(contactId)
         }
     }
 }

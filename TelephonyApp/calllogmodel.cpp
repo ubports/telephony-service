@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2012 Canonical, Ltd.
+ *
+ * Authors:
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "calllogmodel.h"
 #include "telepathyhelper.h"
 #include <TelepathyLoggerQt4/LogManager>
@@ -10,13 +29,12 @@
 #include <QContactManager>
 #include <QContactDetailFilter>
 #include <QContactAvatar>
-#include <QContactUrl>
+#include <QContactGuid>
+#include <QContactPhoneNumber>
 
 CallLogModel::CallLogModel(QObject *parent) :
     QAbstractListModel(parent)
 {
-    qDebug() << "Call log model created";
-    mContactManager = new QtMobility::QContactManager("folks", QMap<QString,QString>(), this);
     // set the role names
     QHash<int, QByteArray> roles;
     roles[ContactId] = "contactId";
@@ -28,6 +46,18 @@ CallLogModel::CallLogModel(QObject *parent) :
     roles[Missed] = "missed";
     roles[Incoming] = "incoming";
     setRoleNames(roles);
+
+    mContactManager = new QContactManager("folks", QMap<QString,QString>(), this);
+    connect(mContactManager,
+            SIGNAL(contactsAdded(QList<QContactLocalId>)),
+            SLOT(onContactsAdded(QList<QContactLocalId>)));
+    connect(mContactManager,
+            SIGNAL(contactsChanged(QList<QContactLocalId>)),
+            SLOT(onContactsChanged(QList<QContactLocalId>)));
+    connect(mContactManager,
+            SIGNAL(contactsRemoved(QList<QContactLocalId>)),
+            SLOT(onContactsRemoved(QList<QContactLocalId>)));
+    // FIXME: check if we need to listen to the QContactManager::dataChanged() signal
 
     fetchCallLog();
 }
@@ -87,6 +117,22 @@ void CallLogModel::fetchCallLog()
             SLOT(onPendingEntitiesFinished(Tpl::PendingOperation*)));
 }
 
+void CallLogModel::fillContactInfo(CallEntry &entry, const QContact &contact)
+{
+    QContactGuid guid = contact.detail<QContactGuid>();
+    QContactAvatar avatar = contact.detail<QContactAvatar>();
+    entry.contactId = guid.guid();
+    entry.avatar = avatar.imageUrl();
+    entry.localId = contact.localId();
+}
+
+void CallLogModel::clearContactInfo(CallEntry &entry)
+{
+    entry.avatar = "";
+    entry.contactId = "";
+    entry.localId = QContactLocalId();
+}
+
 void CallLogModel::onPendingEntitiesFinished(Tpl::PendingOperation *op)
 {
     Tpl::PendingEntities *pe = qobject_cast<Tpl::PendingEntities*>(op);
@@ -134,10 +180,6 @@ void CallLogModel::onPendingEventsFinished(Tpl::PendingOperation *op)
     }
 
     Tpl::EventPtrList events = pe->events();
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-
-    QtMobility::QContactDetailFilter filter;
-    filter.setDetailDefinitionName("PhoneNumber", "phoneNumber");
 
     // add the events to the list
     foreach(Tpl::EventPtr event, events) {
@@ -153,19 +195,72 @@ void CallLogModel::onPendingEventsFinished(Tpl::PendingOperation *op)
             entry.phoneNumber = remoteEntity->identifier();
 
             // fetch the QContact object
+            QContactDetailFilter filter;
+            filter.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
             filter.setValue(remoteEntity->identifier());
-            QList<QtMobility::QContact> contacts = mContactManager->contacts(filter);
+            filter.setMatchFlags(QContactFilter::MatchPhoneNumber);
+
+            QList<QContact> contacts = mContactManager->contacts(filter);
             if (contacts.count() > 0) {
                 // if more than one contact matches, use the first one
-                QtMobility::QContactUrl url = contacts[0].detail<QtMobility::QContactUrl>();
-                QtMobility::QContactAvatar avatar = contacts[0].detail<QtMobility::QContactAvatar>();
-                entry.contactId = url.url();
-                entry.avatar = avatar.imageUrl();
+                fillContactInfo(entry, contacts[0]);
             }
 
             beginInsertRows(QModelIndex(), mCallEntries.count(), mCallEntries.count());
             mCallEntries.append(entry);
             endInsertRows();
+        }
+    }
+}
+
+void CallLogModel::onContactsAdded(const QList<QContactLocalId> &contactIds)
+{
+    QList<QContact> contacts = mContactManager->contacts(contactIds);
+
+    // now we need to iterate over the events to look for contacts matching
+    int count = mCallEntries.count();
+    for (int i = 0; i < count; ++i) {
+        QString phoneNumber = mCallEntries[i].phoneNumber;
+
+        // and for each event, we check if it matches
+        foreach (const QContact &contact, contacts) {
+            bool foundMatch = false;
+            QList<QContactPhoneNumber> phoneNumbers = contact.details<QContactPhoneNumber>();
+            foreach (const QContactPhoneNumber &number, phoneNumbers) {
+                if (phoneNumber == number.number()) {
+                    fillContactInfo(mCallEntries[i], contact);
+                    emit dataChanged(index(i,0), index(i,0));
+                    foundMatch = true;
+                    break;
+                }
+            }
+            if (foundMatch) {
+                break;
+            }
+        }
+    }
+}
+
+void CallLogModel::onContactsChanged(const QList<QContactLocalId> &contactIds)
+{
+    int count = mCallEntries.count();
+    for (int i = 0; i < count; ++i) {
+        int position = contactIds.indexOf(mCallEntries[i].localId);
+        if (position >= 0) {
+            fillContactInfo(mCallEntries[i], mContactManager->contact(contactIds[position]));
+            emit dataChanged(index(i, 0), index(i, 0));
+        }
+    }
+}
+
+void CallLogModel::onContactsRemoved(const QList<QContactLocalId> &contactIds)
+{
+    int count = mCallEntries.count();
+    for (int i = 0; i < count; ++i) {
+        CallEntry &entry = mCallEntries[i];
+        if (contactIds.indexOf(entry.localId) >=0) {
+            clearContactInfo(entry);
+            emit dataChanged(index(i,0), index(i,0));
         }
     }
 }

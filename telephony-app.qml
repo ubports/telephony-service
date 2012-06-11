@@ -42,6 +42,11 @@ Rectangle {
         rightPaneContent.item.contact = contact
     }
 
+    function showContactDetailsFromId(contactId) {
+        contactLoader.contactId = contactId;
+        // the contact details will be loaded once the contact loads
+    }
+
     function startNewMessage() {
         rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
         rightPaneContent.item.newMessage = true
