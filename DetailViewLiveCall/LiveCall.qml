@@ -28,9 +28,6 @@ Rectangle {
         callManager.endCall(liveCall.number);
     }
 
-    // FIXME: remove blah code
-    //Component.onCompleted: startCall(contacts.get(5))
-
     Image {
         id: picture
         anchors.horizontalCenter: parent.horizontalCenter
