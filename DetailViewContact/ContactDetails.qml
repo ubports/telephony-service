@@ -28,6 +28,7 @@ Item {
         clip: true
 
         Column {
+            id: detailsList
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: 1
@@ -104,7 +105,7 @@ Item {
                 delegate: AddressContactDetailsDelegate {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
-                    actionIcon: "../assets/icon_chevron_right.png"
+                    actionIcon: "../assets/icon_address.png"
 
                     contactModelItem: modelData
 
@@ -147,10 +148,7 @@ Item {
             height: 30
             width: 70
             opacity: (editable) ? 1.0 : 0.0
-            onClicked: {
-                // TODO: Actually cancel the editing, resetting the fields
-                editable = false;
-            }
+            onClicked: editable = false
        }
 
         TextButton {
@@ -166,7 +164,24 @@ Item {
             onClicked: {
                 if (!editable) editable = true;
                 else {
-                    // TODO: actually save
+                    /* We ask each detail delegate to save all edits to the underlying
+                       model object. The other way to do it would be to change editable
+                       to false and catch onEditableChanged in the delegates and save there.
+                       However that other way doesn't work since we can't guarantee that all
+                       delegates have received the signal before we call contact.save() here.
+                    */
+                    for (var i = 0; i < detailsList.children.length; i++) {
+                        var saver = detailsList.children[i].save;
+                        if (saver && saver instanceof Function) saver();
+                    }
+
+                    console.log("Modified ?: " + contact.modified);
+                    console.log("Phone numbers:");
+                    for (i = 0; i < contact.phoneNumbers.length; i++) {
+                        console.log(contact.phoneNumbers[i].number);
+                    }
+
+                    if (contact.modified) contact.save();
                     editable = false;
                 }
             }

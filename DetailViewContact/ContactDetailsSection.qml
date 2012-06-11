@@ -9,6 +9,13 @@ Column {
     property alias model: details.model
     property alias delegate: details.delegate
 
+    function save() {
+        for (var i = 0; i < children.length; i++) {
+            var saver = children[i].save;
+            if (saver && saver instanceof Function) saver();
+        }
+    }
+
     Item {
         anchors.left: parent.left
         anchors.right: parent.right
@@ -18,6 +25,7 @@ Column {
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
             text: name
+            fontSize: "small"
         }
     }
 

@@ -59,7 +59,7 @@ Item {
         anchors.left: removeButton.right
         anchors.right: actionBox.left
         anchors.top: parent.top
-        height: Math.max(childrenRect.height, 30)
+        height: Math.max(childrenRect.height, 36)
 
         onClicked: if (!editable) contactDetailsItem.clicked(contactDetailsItem.value);
 
@@ -69,10 +69,10 @@ Item {
             anchors.left: parent.left
             anchors.right: typeText.left
             anchors.top: parent.top
-            anchors.topMargin: 5
-            anchors.leftMargin: 5
-            anchors.rightMargin: 5
-            height: childrenRect.height + 5
+            anchors.topMargin: 8
+            anchors.leftMargin: 8
+            anchors.rightMargin: 8
+            height: childrenRect.height + 8
 
             opacity: editable ? 0.0 : 1.0
         }
@@ -80,32 +80,26 @@ Item {
         Item {
             id: editableContentBox
 
-            anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: typeText.left
-            height: childrenRect.height + 5
+            anchors.top: parent.top
+            anchors.topMargin: 8
+            anchors.leftMargin: 8
+            anchors.rightMargin: 8
+            height: childrenRect.height + 8
 
             opacity: editable ? 1.0 : 0.0
         }
 
-//        TextEdit {
-//            id: valueTextMulti
-//            anchors.left: parent.left
-//            anchors.right: parent.right
-//            anchors.verticalCenter: parent.verticalCenter
-//            anchors.leftMargin: 5
-//            height: paintedHeight
-//            text: contactDetailsItem.value
-//            visible: contactDetailsItem.editable && contactDetailsItem.multiLine
-//        }
-
-        Text {
+        TextCustom {
             id: typeText
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.rightMargin: 5
-            anchors.topMargin: 5
+            anchors.rightMargin: 8
+            anchors.topMargin: 8
             text: contactDetailsItem.type
+            fontSize: "large"
+            color: "lightgrey"
         }
     }
 
@@ -113,7 +107,7 @@ Item {
         id: actionBox
         border.color: "black"
         color: "white"
-        width: 30
+        width: 60
         height: parent.height
         anchors.top: parent.top
         anchors.bottom: contentBox.bottom
@@ -124,7 +118,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: 5
-            height: width
+            height: 32
 
             icon: contactDetailsItem.actionIcon
 
