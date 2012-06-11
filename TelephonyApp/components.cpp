@@ -42,6 +42,7 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
 
     mRootContext->setContextProperty("telepathyManager", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", TelepathyHelper::instance()->chatManager());
+    mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
 
     connect(TelepathyHelper::instance(),
             SIGNAL(channelHandlerCreated(ChannelHandler*)),
