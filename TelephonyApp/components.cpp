@@ -22,17 +22,23 @@
 #include "telepathyhelper.h"
 #include "channelhandler.h"
 #include "calllogmodel.h"
+#include "calllogproxymodel.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/qdeclarative.h>
 #include <TelepathyQt/Debug>
 #include <TelepathyLoggerQt4/Init>
 
+#include <glib-object.h>
+
 void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
 {
     Q_ASSERT(engine);
 
     Q_UNUSED(uri);
+
+    // needed for tp-logger
+    g_type_init();
 
     // Initialize telepathy types
     Tp::registerTypes();
@@ -72,8 +78,11 @@ void Components::onChannelHandlerCreated(ChannelHandler *ch)
 void Components::onAccountReady()
 {
     // create the call log model just when the telepathy helper signals the account is ready
-    mCallLogModel = new CallLogModel();
-    mRootContext->setContextProperty("callLogModel", mCallLogModel);
+    mCallLogModel = new CallLogModel(this);
+    mCallLogProxyModel = new CallLogProxyModel(this);
+    mCallLogProxyModel->setSourceModel(mCallLogModel);
+
+    mRootContext->setContextProperty("callLogModel", mCallLogProxyModel);
 }
 
 Q_EXPORT_PLUGIN2(components, Components)

@@ -28,6 +28,7 @@
 
 class ChannelHandler;
 class CallLogModel;
+class CallLogProxyModel;
 
 class Components : public QDeclarativeExtensionPlugin
 {
@@ -44,6 +45,7 @@ private Q_SLOTS:
 private:
     QDeclarativeContext *mRootContext;
     CallLogModel *mCallLogModel;
+    CallLogProxyModel *mCallLogProxyModel;
 };
 
 #endif // COMPONENTS_H
