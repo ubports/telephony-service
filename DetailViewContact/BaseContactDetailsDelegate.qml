@@ -6,9 +6,7 @@ Item {
     height: childrenRect.height
 
     property string actionIcon
-    property string value
     property string type
-    property bool multiLine: false
     property bool editable: false
 
     property variant contactModelItem
@@ -17,7 +15,9 @@ Item {
     signal actionClicked(string value)
     signal fieldValueChanged(string newValue)
 
+    /* Internal properties, use by derived components */
     property variant readOnlyContentBox: readOnlyContentBox
+    property variant editableContentBox: editableContentBox
 
     ListView.onRemove: SequentialAnimation {
         PropertyAction { target: contactDetailsItem; property: "ListView.delayRemove"; value: true }
@@ -61,19 +61,7 @@ Item {
         anchors.top: parent.top
         height: Math.max(childrenRect.height, 30)
 
-        onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
-
-//        Loader {
-//            id: editorItem
-//            anchors.left: parent.left
-//            anchors.right: typeText.right
-//            anchors.verticalCenter: parent.verticalCenter
-//            anchors.leftMargin: 5
-////            text: value
-//            visible: contactDetailsItem.editable // && !contactDetailsItem.multiLine
-////            sourceComponent: editor
-////            onTextChanged: contactDetailsItem.fieldValueChanged(text)
-//        }
+        onClicked: if (!editable) contactDetailsItem.clicked(contactDetailsItem.value);
 
         Item {
             id: readOnlyContentBox
@@ -84,32 +72,21 @@ Item {
             anchors.topMargin: 5
             anchors.leftMargin: 5
             anchors.rightMargin: 5
-            height: readOnlyContentBox.childrenRect.height + 5
+            height: childrenRect.height + 5
 
             opacity: editable ? 0.0 : 1.0
         }
 
-//        Item {
-//            id: editableContentBox
+        Item {
+            id: editableContentBox
 
-//            anchors.top: parent.top
-//            anchors.left: parent.left
-//            anchors.right: typeText.left
-//            height: childrenRect.height
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: typeText.left
+            height: childrenRect.height + 5
 
-//            opacity: editable ? 1.0 : 0.0
-//        }
-
-//        TextInput {
-//            id: valueText
-//            anchors.left: parent.left
-//            anchors.right: typeText.right
-//            anchors.verticalCenter: parent.verticalCenter
-//            anchors.leftMargin: 5
-//            text: value
-//            visible: contactDetailsItem.editable && !contactDetailsItem.multiLine
-//            onTextChanged: contactDetailsItem.fieldValueChanged(text)
-//        }
+            opacity: editable ? 1.0 : 0.0
+        }
 
 //        TextEdit {
 //            id: valueTextMulti

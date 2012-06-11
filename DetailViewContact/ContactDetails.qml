@@ -15,13 +15,12 @@ Item {
         id: header
         contact: contactDetails.contact
         editable: contactDetails.editable
-
-        onEditClicked: contactDetails.editable = !contactDetails.editable
     }
 
     Flickable {
         anchors.top: header.bottom
-        anchors.bottom: editFooter.top
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: editFooter.height
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 10
@@ -116,39 +115,59 @@ Item {
         } // Column
     } // Flickable
 
-    Item {
+    Rectangle {
         id: editFooter
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         height: 50
-        opacity: editable ? 1.0 : 0.0
+        color: "grey"
+
+        TextButton {
+            id: deleteButton
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.margins: 10
+            text: "Delete"
+            color: "white"
+            radius: 5
+            height: 30
+            width: 70
+            opacity: (editable) ? 1.0 : 0.0
+        }
 
         TextButton {
             id: cancelButton
             anchors.top: parent.top
-            anchors.right: saveButton.left
+            anchors.right: editSaveButton.left
             anchors.margins: 10
             text: "Cancel"
-            color: "gray"
+            color: "white"
             radius: 5
             height: 30
             width: 70
-            onClicked: cancelClicked()
-        }
+            opacity: (editable) ? 1.0 : 0.0
+            onClicked: {
+                // TODO: Actually cancel the editing, resetting the fields
+                editable = false;
+            }
+       }
+
         TextButton {
-            id: saveButton
+            id: editSaveButton
             anchors.top: parent.top
             anchors.right: parent.right
             anchors.margins: 10
-            text: "Save"
-            color: "gray"
+            text: (editable) ? "Save" : "Edit"
+            color: "white"
             radius: 5
             height: 30
             width: 70
             onClicked: {
-                if (!editable && contact.modified) {
-                    contact.save()
+                if (!editable) editable = true;
+                else {
+                    // TODO: actually save
+                    editable = false;
                 }
             }
         }

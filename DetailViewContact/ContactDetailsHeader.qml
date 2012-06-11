@@ -8,8 +8,6 @@ Item {
     property variant contact: null
     property variant editable: false
 
-    signal editClicked
-
     width: parent.width
     height: 100
 
@@ -80,7 +78,7 @@ Item {
     Column {
         anchors.left: avatar.right
         anchors.top: parent.top
-        anchors.right: editButton.left
+        anchors.right: parent.right
         anchors.margins: 10
 
         spacing: 10
@@ -117,19 +115,5 @@ Item {
                 text: (contact) ? nameForState(contact.presence.state) : ""
             }
         }
-    }
-
-    TextButton {
-        id: editButton
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.margins: 10
-        text: "Edit"
-        color: "gray"
-        radius: 5
-        height: 30
-        width: 70
-        opacity: (editable) ? 0.0 : 1.0
-        onClicked: editClicked()
     }
 }
