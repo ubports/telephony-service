@@ -5,8 +5,11 @@ Rectangle {
     id: callItem
     height: 64
     width: parent.width
+    border.color: "black"
+    border.width: 1
 
     signal clicked(string contactId)
+    signal actionClicked(string contactId, string phoneNumber)
 
     Rectangle {
         height: 1
@@ -64,9 +67,8 @@ Rectangle {
         anchors.topMargin: 2
         anchors.left: photoItem.right
         anchors.leftMargin: 2
-        anchors.right: directionItem.left
         fontSize: "small"
-        text: timestamp
+        text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleLongDate)
     }
 
     Image {
@@ -82,15 +84,41 @@ Rectangle {
                 "../assets/icon_outgoing_call.png"
             }
         }
-        width: 48
-        height: 48
-        anchors.rightMargin: 1
+        width: height
+        height: dateItem.height
+        anchors.leftMargin: 1
+        anchors.left: dateItem.right
+        anchors.verticalCenter: dateItem.verticalCenter
+    }
+
+    Rectangle {
+        id: actionBox
+        border.color: "black"
+        width: height
+        height: parent.height
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
+
+        IconButton {
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 5
+            height: width
+
+            icon: "../assets/call_icon.png"
+
+            onClicked: callItem.actionClicked(contactId, phoneNumber)
+        }
     }
 
     MouseArea {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.right: actionBox.left
+
         onClicked: callItem.clicked(contactId)
     }
 }

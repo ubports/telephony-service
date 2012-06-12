@@ -13,6 +13,7 @@ Item {
         model: callLogModel
         delegate: CallLogDelegate {
             onClicked: telephony.showContactDetailsFromId(contactId)
+            onActionClicked: telephony.callNumber(phoneNumber)
         }
     }
 }
