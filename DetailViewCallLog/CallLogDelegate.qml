@@ -4,7 +4,6 @@ import "../Widgets"
 Rectangle {
     id: callItem
     height: 64
-    width: parent.width
     border.color: "black"
     border.width: 1
 

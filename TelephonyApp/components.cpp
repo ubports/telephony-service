@@ -66,6 +66,7 @@ void Components::registerTypes(const char *uri)
 {
     // @uri TelephonyApp
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
+    qmlRegisterType<CallLogProxyModel>(uri, 0, 1, "CallLogProxyModel");
 }
 
 void Components::onChannelHandlerCreated(ChannelHandler *ch)
@@ -79,10 +80,7 @@ void Components::onAccountReady()
 {
     // create the call log model just when the telepathy helper signals the account is ready
     mCallLogModel = new CallLogModel(this);
-    mCallLogProxyModel = new CallLogProxyModel(this);
-    mCallLogProxyModel->setSourceModel(mCallLogModel);
-
-    mRootContext->setContextProperty("callLogModel", mCallLogProxyModel);
+    mRootContext->setContextProperty("callLogModel", mCallLogModel);
 }
 
 Q_EXPORT_PLUGIN2(components, Components)
