@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import QtMobility.contacts 1.1
 import "../Widgets"
 
 Item {
@@ -33,97 +34,63 @@ Item {
             anchors.margins: 1
             spacing: 16
 
-            // Phone section
-            ContactDetailsSection {
-                id: phoneSection
-                anchors.left: parent.left
-                anchors.right: parent.right
-                name: "Phone"
-                addText: "Add a phone number"
-                editable: contactDetails.editable
-                model: (contact) ? contact.phoneNumbers : null
-                delegate: TextContactDetailsDelegate {
+            Repeater {
+                id: detailsCreator
+                model: (contact) ? [
+                   { name: "Phone",
+                     items: contact.phoneNumbers, addText: "Add a phone number",
+                     actionIcon: "../assets/icon_message_grey.png", displayField: "number" },
+                   { name: "Email",
+                     items: contact.emails, addText: "Add an email address",
+                     actionIcon: "../assets/icon_envelope_grey.png", displayField: "emailAddress" },
+                   { name: "Address",
+                     items: contact.addresses, addText: "Add a postal address",
+                     actionIcon: "../assets/icon_address.png" },
+                   { name: "IM",
+                     items: contact.onlineAccounts, addText: "Add an online account",
+                     displayField: "accountUri" }
+                ] : []
+
+                delegate: ContactDetailsSection {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
-                    actionIcon: "../assets/icon_message_grey.png"
-                    onActionClicked: telephony.startChat(contact, number);
-                    onClicked: telephony.startCallToContact(contact, value);
-                    onDeleteClicked: contact.removeDetail(detail)
-                    type: modelData.contexts.toString()
 
-                    detail: modelData
+                    name: modelData.name
+                    addText: modelData.addText
                     editable: contactDetails.editable
-                    contactModelProperty: "number"
+
+                    property variant parentModel: modelData
+                    model: modelData.items
+                    delegate: Loader {
+                        anchors.left: (parent) ? parent.left : undefined
+                        anchors.right: (parent) ? parent.right : undefined
+
+                        source: {
+                            // For now the address is the only type that doesn't use the generic text delegate
+                            if (modelData.type == ContactDetail.Address) return "AddressContactDetailsDelegate.qml";
+                            else return "TextContactDetailsDelegate.qml"
+                        }
+
+                        Binding { target: item; property: "detail"; value: modelData }
+                        Binding { target: item; property: "type"; value: modelData.contexts.toString() }
+                        Binding { target: item; property: "editable"; value: contactDetails.editable }
+
+                        Binding { target: item; property: "contactModelProperty"; value: parentModel.displayField }
+                        Binding { target: item; property: "actionIcon"; value: parentModel.actionIcon }
+
+                        Connections {
+                            target: item
+                            ignoreUnknownSignals: true
+
+                            onDeleteClicked: contact.removeDetail(detail)
+                            onActionClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startChat(contact, number);
+                            onClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startCallToContact(contact, value);
+                        }
+                    }
                 }
             }
-
-            // Email section
-            ContactDetailsSection {
-                id: emailSection
-                anchors.left: parent.left
-                anchors.right: parent.right
-                name: "Email"
-                addText: "Add an email"
-                editable: contactDetails.editable
-                model: (contact) ? contact.emails : null
-                delegate: TextContactDetailsDelegate {
-                    anchors.left: (parent) ? parent.left : undefined
-                    anchors.right: (parent) ? parent.right : undefined
-                    actionIcon: "../assets/icon_envelope_grey.png"
-                    onDeleteClicked: contact.removeDetail(detail)
-                    type: "" // FIXME: there is no e-mail type it seems, but needs double checking in any case
-
-                    detail: modelData
-                    editable: contactDetails.editable
-                    contactModelProperty: "emailAddress"
-                }
-            }
-
-            // IM section
-            ContactDetailsSection {
-                id: imSection
-                anchors.left: parent.left
-                anchors.right: parent.right
-                name: "IM"
-                addText: "Add an IM account"
-                editable: contactDetails.editable
-                model: (contact) ? contact.onlineAccounts : null
-                delegate: TextContactDetailsDelegate {
-                    anchors.left: (parent) ? parent.left : undefined
-                    anchors.right: (parent) ? parent.right : undefined
-                    actionIcon: "../assets/icon_chevron_right.png"
-                    onDeleteClicked: contact.removeDetail(detail)
-                    type: modelData.serviceProvider
-
-                    detail: modelData
-                    editable: contactDetails.editable
-                    contactModelProperty: "accountUri"
-                }
-            }
-
-
-            // Address section
-            ContactDetailsSection {
-                id: addressSection
-                anchors.left: parent.left
-                anchors.right: parent.right
-                name: "Address"
-                addText: "Add an address"
-                editable: contactDetails.editable
-                model: (contact) ? contact.addresses : null
-                delegate: AddressContactDetailsDelegate {
-                    anchors.left: (parent) ? parent.left : undefined
-                    anchors.right: (parent) ? parent.right : undefined
-                    actionIcon: "../assets/icon_address.png"
-                    onDeleteClicked: contact.removeDetail(detail)
-                    type: "" // FIXME: double check if QContact has an address type field
-
-                    detail: modelData
-                    editable: contactDetails.editable
-                }
-            } // ContactDetailsSection
-        } // Column
-    } // Flickable
+        }
+    }
 
     Rectangle {
         id: editFooter
