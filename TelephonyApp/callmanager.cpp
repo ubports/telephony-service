@@ -59,9 +59,31 @@ void CallManager::endCall(const QString &contactId)
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
     mChannels[channel->targetContact()->id()] = channel;
+    connect(channel.data(), SIGNAL(callStateChanged(Tp::CallState)),
+                     this, SLOT(onCallStateChanged(Tp::CallState)));
 
     channel->accept();
     emit callReady(channel->targetContact()->id());
+}
+
+void CallManager::onCallStateChanged(Tp::CallState state)
+{
+    QString contactId;
+    Tp::CallChannel *channel =  qobject_cast<Tp::CallChannel*>(sender());
+    QMapIterator<QString, Tp::CallChannelPtr> i(mChannels);
+    while (i.hasNext()) {
+        i.next();
+        if (i.value().data() == sender()) {
+            contactId = i.key();
+        }
+    }
+
+    if(!contactId.isNull()) {
+        if (state == Tp::CallStateEnded) {
+            endCall(contactId);
+            emit callEnded(contactId);
+        }
+    }
 }
 
 void CallManager::onContactsAvailable(Tp::PendingOperation *op)
