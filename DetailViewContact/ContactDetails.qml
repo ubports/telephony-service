@@ -32,6 +32,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: 1
+            spacing: 16
 
             // Phone section
             ContactDetailsSection {
@@ -39,19 +40,20 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 name: "Phone"
+                addText: "Add a phone number"
+                editable: contactDetails.editable
                 model: (contact) ? contact.phoneNumbers : null
                 delegate: TextContactDetailsDelegate {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
                     actionIcon: "../assets/icon_message_grey.png"
-                    type: modelData.contexts.toString()
-                    editable: contactDetails.editable
-                    contactModelItem: modelData
-                    contactModelProperty: "number"
-
-                    onClicked: telephony.startCallToContact(contact, value);
                     onActionClicked: telephony.startChat(contact, number);
-                    onFieldValueChanged: modelData.number = newValue;
+                    onClicked: telephony.startCallToContact(contact, value);
+                    type: modelData.contexts.toString()
+
+                    detail: modelData
+                    editable: contactDetails.editable
+                    contactModelProperty: "number"
                 }
             }
 
@@ -61,17 +63,18 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 name: "Email"
+                addText: "Add an email"
+                editable: contactDetails.editable
                 model: (contact) ? contact.emails : null
                 delegate: TextContactDetailsDelegate {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
                     actionIcon: "../assets/icon_envelope_grey.png"
-                    contactModelItem: modelData
-                    contactModelProperty: "emailAddress"
-
                     type: "" // FIXME: there is no e-mail type it seems, but needs double checking in any case
+
+                    detail: modelData
                     editable: contactDetails.editable
-                    onFieldValueChanged: modelData.emailAddress = newValue;
+                    contactModelProperty: "emailAddress"
                 }
             }
 
@@ -81,16 +84,18 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 name: "IM"
+                addText: "Add an IM account"
+                editable: contactDetails.editable
                 model: (contact) ? contact.onlineAccounts : null
                 delegate: TextContactDetailsDelegate {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
                     actionIcon: "../assets/icon_chevron_right.png"
                     type: modelData.serviceProvider
-                    contactModelItem: modelData
-                    contactModelProperty: "accountUri"
+
+                    detail: modelData
                     editable: contactDetails.editable
-                    onFieldValueChanged: modelData.accountUri = newValue;
+                    contactModelProperty: "accountUri"
                 }
             }
 
@@ -101,15 +106,16 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 name: "Address"
+                addText: "Add an address"
+                editable: contactDetails.editable
                 model: (contact) ? contact.addresses : null
                 delegate: AddressContactDetailsDelegate {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
                     actionIcon: "../assets/icon_address.png"
-
-                    contactModelItem: modelData
-
                     type: "" // FIXME: double check if QContact has an address type field
+
+                    detail: modelData
                     editable: contactDetails.editable
                 }
             } // ContactDetailsSection
@@ -176,12 +182,8 @@ Item {
                     }
 
                     console.log("Modified ?: " + contact.modified);
-                    console.log("Phone numbers:");
-                    for (i = 0; i < contact.phoneNumbers.length; i++) {
-                        console.log(contact.phoneNumbers[i].number);
-                    }
 
-                    if (contact.modified) contact.save();
+                    //if (contact.modified) contact.save();
                     editable = false;
                 }
             }
