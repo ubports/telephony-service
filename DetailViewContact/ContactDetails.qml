@@ -19,8 +19,7 @@ Item {
 
     Flickable {
         anchors.top: header.bottom
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: editFooter.height
+        anchors.bottom: editFooter.top
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 10
@@ -49,6 +48,7 @@ Item {
                     actionIcon: "../assets/icon_message_grey.png"
                     onActionClicked: telephony.startChat(contact, number);
                     onClicked: telephony.startCallToContact(contact, value);
+                    onDeleteClicked: contact.removeDetail(detail)
                     type: modelData.contexts.toString()
 
                     detail: modelData
@@ -70,6 +70,7 @@ Item {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
                     actionIcon: "../assets/icon_envelope_grey.png"
+                    onDeleteClicked: contact.removeDetail(detail)
                     type: "" // FIXME: there is no e-mail type it seems, but needs double checking in any case
 
                     detail: modelData
@@ -91,6 +92,7 @@ Item {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
                     actionIcon: "../assets/icon_chevron_right.png"
+                    onDeleteClicked: contact.removeDetail(detail)
                     type: modelData.serviceProvider
 
                     detail: modelData
@@ -113,6 +115,7 @@ Item {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
                     actionIcon: "../assets/icon_address.png"
+                    onDeleteClicked: contact.removeDetail(detail)
                     type: "" // FIXME: double check if QContact has an address type field
 
                     detail: modelData

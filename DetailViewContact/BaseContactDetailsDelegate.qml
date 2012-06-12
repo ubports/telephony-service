@@ -12,6 +12,7 @@ Item {
 
     signal clicked(string value)
     signal actionClicked(string value)
+    signal deleteClicked()
 
     /* Internal properties, use by derived components */
     property variant readOnlyContentBox: readOnlyContentBox
@@ -127,9 +128,7 @@ Item {
                 height: width
                 icon: "../assets/icon_minus.png"
 
-                onClicked: {
-                    contactdetails.remove(index)
-                }
+                onClicked: deleteClicked()
             }
 
             Item {
