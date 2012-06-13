@@ -30,6 +30,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
       mChannelHandler(0)
 {
     mChatManager = new ChatManager(this);
+    mCallManager = new CallManager(this);
 
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
@@ -63,6 +64,11 @@ ChatManager *TelepathyHelper::chatManager() const
     return mChatManager;
 }
 
+CallManager *TelepathyHelper::callManager() const
+{
+    return mCallManager;
+}
+
 Tp::AccountPtr TelepathyHelper::account() const
 {
     return mAccount;
@@ -76,6 +82,9 @@ void TelepathyHelper::initializeChannelHandler()
 
     connect(mChannelHandler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
             mChatManager, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+    connect(mChannelHandler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+            mCallManager, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+
 
     channelHandlerCreated(mChannelHandler);
 }
@@ -135,6 +144,11 @@ void TelepathyHelper::onAccountCreated(Tp::PendingOperation *op)
 
     if (!pa) {
         qCritical() << "The pending object is not a Tp::PendingAccount";
+        return;
+    }
+
+    if (pa->isError()) {
+        qCritical() << "Error creating an ufa account";
         return;
     }
 

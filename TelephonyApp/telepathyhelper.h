@@ -29,6 +29,7 @@
 #include <TelepathyQt/Types>
 #include "channelhandler.h"
 #include "chatmanager.h"
+#include "callmanager.h"
 
 class TelepathyHelper : public QObject
 {
@@ -39,6 +40,7 @@ public:
 
     static TelepathyHelper *instance();
     ChatManager *chatManager() const;
+    CallManager *callManager() const;
     Tp::AccountPtr account() const;
 
 Q_SIGNALS:
@@ -68,6 +70,7 @@ private:
     Tp::AccountPtr mAccount;
     ChannelHandler *mChannelHandler;
     ChatManager *mChatManager;
+    CallManager *mCallManager;
 };
 
 #endif // TELEPATHYHELPER_H

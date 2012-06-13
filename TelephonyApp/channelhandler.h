@@ -24,6 +24,7 @@
 #include <TelepathyQt/AbstractClientHandler>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/TextChannel>
+#include <TelepathyQt/CallChannel>
 
 class ChannelHandler : public QObject, public Tp::AbstractClientHandler
 {
@@ -44,9 +45,11 @@ public:
 
 Q_SIGNALS:
     void textChannelAvailable(Tp::TextChannelPtr textChannel);
+    void callChannelAvailable(Tp::CallChannelPtr callChannel);
 
 private Q_SLOTS:
     void onTextChannelReady(Tp::PendingOperation *op);
+    void onCallChannelReady(Tp::PendingOperation *op);
 
 private:
     QMap<Tp::PendingReady*, Tp::ChannelPtr> mReadyRequests;
