@@ -3,10 +3,10 @@ import QtMobility.contacts 1.1
 import TelephonyApp 0.1
 import "ContactUtils"
 
-Rectangle {
+Item {
     id: telephony
-    width: 800
-    height: 600
+    width: 570
+    height: 487
 
     function startCallToContact(contact, number) {
         // To keep this simple we rely on the fact that setting source to a
