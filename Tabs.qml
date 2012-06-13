@@ -1,72 +1,53 @@
 import QtQuick 1.1
+import "Widgets"
 
-Rectangle {
+Item {
     id: tabs
 
     width: 320
-    height: width / 3
-
-    color: "black"
+    height: 36
 
     property int currentTab
-    property real imageSize: height / 2
 
-    Image {
-        id: arrow
-        source: "assets/tab_icon_arrow.png"
-        width: 24
-        height: 12
+    Row {
+        anchors.top: parent.top
         anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 5
 
-        anchors.horizontalCenter: {
-            if (tabs.currentTab == 0) return phoneTab.horizontalCenter
-            else if (tabs.currentTab == 1) return messagesTab.horizontalCenter
-            else if (tabs.currentTab == 2) return addressbookTab.horizontalCenter
+        Button {
+            id: phoneTab
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: height
+            onClicked: tabs.currentTab = 0
+            iconSource: tabs.currentTab == 0 ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
+        }
+
+        Button {
+            id: messagesTab
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: height
+            onClicked: tabs.currentTab = 1
+            iconSource: tabs.currentTab == 1 ? "assets/tab_icon_messaging_active.png" : "assets/tab_icon_messaging_inactive.png"
+        }
+
+        Button {
+            id: addressbookTab
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: height
+            onClicked: tabs.currentTab = 2
+            iconSource: tabs.currentTab == 2 ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
         }
     }
 
-    MouseArea {
-        id: phoneTab
+    Rectangle {
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: height
-        onClicked: tabs.currentTab = 0
-        Image {
-            source: "assets/tab_icon_phone.png"
-            width: tabs.imageSize
-            height: tabs.imageSize
-            anchors.centerIn: parent
-        }
-    }
-
-    MouseArea {
-        id: messagesTab
-        anchors.left: phoneTab.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: height
-        onClicked: tabs.currentTab = 1
-        Image {
-            source: "assets/tab_icon_messages.png"
-            width: tabs.imageSize
-            height: tabs.imageSize
-            anchors.centerIn: parent
-        }
-    }
-
-    MouseArea {
-        id: addressbookTab
-        anchors.left: messagesTab.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: height
-        onClicked: tabs.currentTab = 2
-        Image {
-            source: "assets/tab_icon_address_book.png"
-            width: tabs.imageSize
-            height: tabs.imageSize
-            anchors.centerIn: parent
-        }
+        anchors.right: parent.right
+        height: 1
+        color: "white"
     }
 }
