@@ -147,6 +147,11 @@ void TelepathyHelper::onAccountCreated(Tp::PendingOperation *op)
         return;
     }
 
+    if (pa->isError()) {
+        qCritical() << "Error creating an ufa account";
+        return;
+    }
+
     mAccount = pa->account();
     mAccount->setConnectsAutomatically(true);
     connect(mAccount->setEnabled(true),
