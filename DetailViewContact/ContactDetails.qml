@@ -72,9 +72,9 @@ Item {
                             target: item
                             ignoreUnknownSignals: true
 
-                            onDeleteClicked: contact.removeDetail(detail)
-                            onActionClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startChat(contact, number);
-                            onClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startCallToContact(contact, value);
+                            onDeleteClicked: contact.removeDetail(modelData)
+                            onActionClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startChat(contact, modelData.number);
+                            onClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startCallToContact(contact, modelData.number);
                         }
                     }
                 }
