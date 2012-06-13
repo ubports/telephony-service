@@ -4,8 +4,6 @@ import "../Widgets"
 Item {
     id: messages
 
-    property ListModel model: messagesModel
-
     function addMessage(newMessage, outgoing) {
         var currentDate = new Date()
         messagesList.model.append({"section": Qt.formatDate(currentDate, Qt.DefaultLocaleLongDate),
@@ -93,7 +91,9 @@ Item {
         clip: true
         spacing: 8
         orientation: ListView.Vertical
-        model: ListModel { }
+        ListModel { id: messagesModel }
+        // FIXME: references to runtime and fake model need to be removed before final release
+        model: runtime ? fakeMessagesModel : messagesModel
         section.delegate: sectionDelegate
         section.property: "section"
         delegate: messageDelegate

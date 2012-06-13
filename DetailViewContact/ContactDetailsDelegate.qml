@@ -40,10 +40,6 @@ Item {
         icon: "../assets/icon_minus.png"
         opacity: contactDetailsItem.editable ? 1 : 0
 
-        onClicked: {
-            contactdetails.remove(index)
-        }
-
         Behavior on width { PropertyAnimation { duration: 125 } }
         Behavior on opacity { PropertyAnimation { duration: 125 } }
     }
