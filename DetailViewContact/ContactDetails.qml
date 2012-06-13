@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import "../Widgets"
+import "DetailTypeUtilities.js" as DetailTypes
 
 Item {
     id: contactDetails
@@ -36,20 +37,7 @@ Item {
             spacing: 16
 
             Repeater {
-                model: (contact) ? [
-                   { name: "Phone", delegateSource: "TextContactDetailsDelegate.qml",
-                     items: contact.phoneNumbers, newItemText: "Add a phone number", newItemType: "PhoneNumber",
-                     actionIcon: "../assets/icon_message_grey.png", displayField: "number" },
-                   { name: "Email", delegateSource: "TextContactDetailsDelegate.qml",
-                     items: contact.emails, newItemText: "Add an email address",  newItemType: "EmailAddress",
-                     actionIcon: "../assets/icon_envelope_grey.png", displayField: "emailAddress" },
-                   { name: "Address", delegateSource: "TextContactDetailsDelegate.qml",
-                     items: contact.addresses, newItemText: "Add a postal address",  newItemType: "Address",
-                     actionIcon: "../assets/icon_address.png", delegateSource: "AddressContactDetailsDelegate.qml" },
-                   { name: "IM", delegateSource: "TextContactDetailsDelegate.qml",
-                     items: contact.onlineAccounts, newItemText: "Add an online account",
-                     displayField: "accountUri", newItemType: "OnlineAccount" }
-                ] : []
+                model: (contact) ? DetailTypes.supportedTypes : []
 
                 delegate: ContactDetailsSection {
                     anchors.left: (parent) ? parent.left : undefined
@@ -58,7 +46,7 @@ Item {
                     detailTypeInfo: modelData
                     editable: contactDetails.editable
 
-                    model: modelData.items
+                    model: contact[modelData.items]
                     delegate: Loader {
                         anchors.left: (parent) ? parent.left : undefined
                         anchors.right: (parent) ? parent.right : undefined
@@ -107,7 +95,7 @@ Item {
                 text: "Add another field"
             }
 
-            onClicked: console.log("New item")
+            onClicked: console.log(DetailTypes.stuff)
         }
     }
 
