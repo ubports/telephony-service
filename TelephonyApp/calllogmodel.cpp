@@ -145,7 +145,7 @@ void CallLogModel::onPendingEntitiesFinished(Tpl::PendingOperation *op)
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
 
     foreach(Tpl::EntityPtr entity, entities) {
-        Tpl::PendingDates *pendingDates = manager->queryDates(account, entity, Tpl::EventTypeMaskAny);
+        Tpl::PendingDates *pendingDates = manager->queryDates(account, entity, Tpl::EventTypeMaskCall);
 
         connect(pendingDates,
                 SIGNAL(finished(Tpl::PendingOperation*)),
