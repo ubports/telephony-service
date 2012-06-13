@@ -15,6 +15,7 @@ DropDownSearch {
             filterText: search.searchQuery
         }
     }
+    // FIXME: references to runtime and fake model need to be removed before final release
     model: runtime ? fakeContacts : contacts
 
     delegate: ContactsSearchDelegate {

@@ -92,6 +92,7 @@ Item {
         spacing: 8
         orientation: ListView.Vertical
         ListModel { id: messagesModel }
+        // FIXME: references to runtime and fake model need to be removed before final release
         model: runtime ? fakeMessagesModel : messagesModel
         section.delegate: sectionDelegate
         section.property: "section"

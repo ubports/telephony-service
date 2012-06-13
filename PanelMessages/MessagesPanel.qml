@@ -38,6 +38,7 @@ Item {
             height: parent.height - search.height - newMessage.height - 10
             anchors.left: parent.left
             anchors.right: parent.right
+            // FIXME: reference to fake model needs to be removed before final release
             model: fakeMessages
             filter: search.searchQuery
         }
