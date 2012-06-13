@@ -57,8 +57,8 @@ Item {
                     value: modelData.number
                     type: modelData.contexts.toString()
 
-                    onClicked: telephony.startCallToContact(contact, value);
-                    onActionClicked: telephony.startChat(contact, number);
+                    onClicked: telephony.startCallToContact(contact, modelData.number);
+                    onActionClicked: telephony.startChat(contact, modelData.number);
                 }
             }
 
