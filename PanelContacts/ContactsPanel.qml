@@ -5,7 +5,7 @@ import "../Widgets"
 import "../fontUtils.js" as Font
 import "../ContactUtils"
 
-Rectangle {
+Item {
     id: contactsPanel
 
     property alias searchQuery : contactsSearchBox.searchQuery
@@ -16,13 +16,16 @@ Rectangle {
 
     SearchEntry {
         id: contactsSearchBox
-        height: 30
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 5
 
-        leftIconSource: text ? "../assets/cross.png" : "../assets/search_icon.png"
+        anchors.top: parent.top
+        anchors.topMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+
+        leftIconSource: text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
+//        hint: "Search contacts"
         onLeftIconClicked: text = ""
     }
 
@@ -46,10 +49,10 @@ Rectangle {
     ListView {
         id: contactsList
         anchors.top: contactsSearchBox.bottom
+        anchors.topMargin: 10
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 5
         clip: true
         // FIXME: references to runtime and fake model need to be removed before final release
         model: runtime ? fakeContacts : contactsModel

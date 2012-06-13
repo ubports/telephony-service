@@ -1,6 +1,6 @@
 import QtQuick 1.1
 import "../Widgets"
-// FIXME: the Column can be the top item
+
 Item {
     id: messageList
 
