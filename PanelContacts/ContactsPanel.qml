@@ -51,7 +51,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.margins: 5
         clip: true
-        model: contactsModel
+        model: runtime ? fakeContacts : contactsModel
         delegate: ContactDelegate {
             onClicked: contactsPanel.contactClicked(contact)
         }

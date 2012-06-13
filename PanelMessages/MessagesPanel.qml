@@ -38,7 +38,7 @@ Item {
             height: parent.height - search.height - newMessage.height - 10
             anchors.left: parent.left
             anchors.right: parent.right
-            model: messages
+            model: fakeMessages
             filter: search.searchQuery
         }
     }

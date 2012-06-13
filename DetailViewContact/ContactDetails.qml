@@ -122,10 +122,13 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 name: "Call Log"
-                model: CallLogProxyModel {
+
+                CallLogProxyModel {
+                    id: proxyModel
                     logModel: callLogModel
                     contactId: (contact) ? contact.guid.guid : "some string that won't match"
                 }
+                model: runtime ? fakeCallLog : proxyModel
                 delegate: CallLogDelegate {
                     id: delegate
                     anchors.left: (parent) ? parent.left : undefined

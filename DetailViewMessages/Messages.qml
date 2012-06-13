@@ -91,7 +91,8 @@ Item {
         clip: true
         spacing: 8
         orientation: ListView.Vertical
-        model: ListModel { }
+        ListModel { id: messagesModel }
+        model: runtime ? fakeMessagesModel : messagesModel
         section.delegate: sectionDelegate
         section.property: "section"
         delegate: messageDelegate

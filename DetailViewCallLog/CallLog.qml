@@ -48,6 +48,12 @@ Item {
         }
     }
 
+    CallLogProxyModel {
+        id: proxyModel
+        logModel: callLogModel
+        onlyMissedCalls: false
+    }
+
     ListView {
         id: callLogView
         anchors.top: buttonGroup.bottom
@@ -55,11 +61,7 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 5
-        model: CallLogProxyModel {
-            id: proxyModel
-            logModel: callLogModel
-            onlyMissedCalls: false
-        }
+        model: runtime ? fakeCallLog : proxyModel
 
         delegate: CallLogDelegate {
             width: parent.width
