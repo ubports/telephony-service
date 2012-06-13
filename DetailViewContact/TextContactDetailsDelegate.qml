@@ -4,10 +4,10 @@ import "../Widgets"
 BaseContactDetailsDelegate {
     id: delegate
 
-    property string contactModelProperty
-
     function save() {
-        if (detail && contactModelProperty) detail[contactModelProperty] = editor.text
+        console.log("SAVING " + detail + " " + detailTypeInfo.displayField + " > " + editor.text)
+        if (detail && detailTypeInfo.displayField)
+            detail[detailTypeInfo.displayField] = (editor.text) ? editor.text : ""
     }
 
     onEditableChanged: editor.text = value.text
@@ -20,7 +20,7 @@ BaseContactDetailsDelegate {
         anchors.right: parent.right
         fontSize: "x-large"
 
-        text: (detail && contactModelProperty) ? detail[contactModelProperty] : ""
+        text: (detail && detailTypeInfo.displayField) ? detail[detailTypeInfo.displayField] : ""
     }
 
     TextContactDetailsEditor {

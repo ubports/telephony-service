@@ -35,48 +35,38 @@ Item {
             spacing: 16
 
             Repeater {
-                id: detailsCreator
                 model: (contact) ? [
-                   { name: "Phone",
-                     items: contact.phoneNumbers, addText: "Add a phone number",
+                   { name: "Phone", delegateSource: "TextContactDetailsDelegate.qml",
+                     items: contact.phoneNumbers, newItemText: "Add a phone number", newItemType: "PhoneNumber",
                      actionIcon: "../assets/icon_message_grey.png", displayField: "number" },
-                   { name: "Email",
-                     items: contact.emails, addText: "Add an email address",
+                   { name: "Email", delegateSource: "TextContactDetailsDelegate.qml",
+                     items: contact.emails, newItemText: "Add an email address",  newItemType: "EmailAddress",
                      actionIcon: "../assets/icon_envelope_grey.png", displayField: "emailAddress" },
-                   { name: "Address",
-                     items: contact.addresses, addText: "Add a postal address",
-                     actionIcon: "../assets/icon_address.png" },
-                   { name: "IM",
-                     items: contact.onlineAccounts, addText: "Add an online account",
-                     displayField: "accountUri" }
+                   { name: "Address", delegateSource: "TextContactDetailsDelegate.qml",
+                     items: contact.addresses, newItemText: "Add a postal address",  newItemType: "Address",
+                     actionIcon: "../assets/icon_address.png", delegateSource: "AddressContactDetailsDelegate.qml" },
+                   { name: "IM", delegateSource: "TextContactDetailsDelegate.qml",
+                     items: contact.onlineAccounts, newItemText: "Add an online account",
+                     displayField: "accountUri", newItemType: "OnlineAccount" }
                 ] : []
 
                 delegate: ContactDetailsSection {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
 
-                    name: modelData.name
-                    addText: modelData.addText
+                    detailTypeInfo: modelData
                     editable: contactDetails.editable
 
-                    property variant parentModel: modelData
                     model: modelData.items
                     delegate: Loader {
                         anchors.left: (parent) ? parent.left : undefined
                         anchors.right: (parent) ? parent.right : undefined
 
-                        source: {
-                            // For now the address is the only type that doesn't use the generic text delegate
-                            if (modelData.type == ContactDetail.Address) return "AddressContactDetailsDelegate.qml";
-                            else return "TextContactDetailsDelegate.qml"
-                        }
+                        source: detailTypeInfo.delegateSource
 
                         Binding { target: item; property: "detail"; value: modelData }
-                        Binding { target: item; property: "type"; value: modelData.contexts.toString() }
+                        Binding { target: item; property: "detailTypeInfo"; value: detailTypeInfo }
                         Binding { target: item; property: "editable"; value: contactDetails.editable }
-
-                        Binding { target: item; property: "contactModelProperty"; value: parentModel.displayField }
-                        Binding { target: item; property: "actionIcon"; value: parentModel.actionIcon }
 
                         Connections {
                             target: item
@@ -146,14 +136,23 @@ Item {
                        However that other way doesn't work since we can't guarantee that all
                        delegates have received the signal before we call contact.save() here.
                     */
+                    var addedDetails = [];
                     for (var i = 0; i < detailsList.children.length; i++) {
                         var saver = detailsList.children[i].save;
-                        if (saver && saver instanceof Function) saver();
+                        if (saver && saver instanceof Function) {
+                            var newDetails = saver();
+                            for (var k = 0; k < newDetails.length; k++)
+                                addedDetails.push(newDetails[k]);
+                        }
+                    }
+
+                    for (i = 0; i < addedDetails.length; i++) {
+                        console.log("Add detail: " + contact.addDetail(addedDetails[i]));
                     }
 
                     console.log("Modified ?: " + contact.modified);
 
-                    //if (contact.modified) contact.save();
+                    if (contact.modified) contact.save();
                     editable = false;
                 }
             }

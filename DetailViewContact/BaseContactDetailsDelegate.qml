@@ -5,10 +5,11 @@ Item {
     id: contactDetailsItem
     height: childrenRect.height
 
-    property string actionIcon
-    property string type
-    property bool editable: false
     property variant detail
+    property variant detailTypeInfo
+
+    property bool editable: false
+    property bool added: false
 
     signal clicked(string value)
     signal actionClicked(string value)
@@ -69,7 +70,7 @@ Item {
                 anchors.top: parent.top
                 anchors.rightMargin: 8
                 anchors.topMargin: 8
-                text: contactDetailsItem.type
+                text: detail.contexts.toString()
                 fontSize: "large"
                 color: "lightgrey"
             }
@@ -92,7 +93,7 @@ Item {
                 anchors.margins: 5
                 height: 32
 
-                icon: contactDetailsItem.actionIcon
+                icon: detailTypeInfo.actionIcon
 
                 onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
             }
@@ -151,7 +152,7 @@ Item {
                 anchors.top: parent.top
                 anchors.rightMargin: 8
                 anchors.topMargin: 8
-                text: contactDetailsItem.type
+                text: typeText.text
                 fontSize: "large"
                 color: "lightgrey"
             }

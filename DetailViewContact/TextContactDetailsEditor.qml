@@ -7,6 +7,4 @@ TextInput {
     anchors.left: parent.left
     anchors.right: parent.right
     font.pixelSize: 20
-
-    text: value.text
 }
