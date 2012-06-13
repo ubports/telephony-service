@@ -4,8 +4,6 @@ import "../Widgets"
 Item {
     id: messages
 
-    property ListModel model: messagesModel
-
     function addMessage(newMessage, outgoing) {
         var currentDate = new Date()
         messagesList.model.append({"section": Qt.formatDate(currentDate, Qt.DefaultLocaleLongDate),
