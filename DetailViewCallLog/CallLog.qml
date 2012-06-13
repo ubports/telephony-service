@@ -20,12 +20,11 @@ Item {
             spacing: 1
 
             // FIXME: use a proper component here once we get the visual designs
-            TextButton {
+            Button {
                 id: allButton
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 text: "All"
-                color: "gray"
                 width: 70
 
                 onClicked: {
@@ -33,12 +32,11 @@ Item {
                 }
             }
 
-            TextButton {
+            Button {
                 id: missedButton
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 text: "Missed"
-                color: "gray"
                 width: 70
 
                 onClicked: {

@@ -30,26 +30,22 @@ Item {
         NumberAnimation { target: contactDetailsItem; property: "height"; from: 0; duration: 250 }
     }
 
-    IconButton {
+    Button {
         id: removeButton
 
         anchors.left: parent.left
         anchors.verticalCenter: contentBox.verticalCenter
         width: contactDetailsItem.editable ? 20 : 0
         height: width
-        icon: "../assets/icon_minus.png"
+        iconSource: "../assets/icon_minus.png"
         opacity: contactDetailsItem.editable ? 1 : 0
 
         Behavior on width { PropertyAnimation { duration: 125 } }
         Behavior on opacity { PropertyAnimation { duration: 125 } }
     }
 
-    ColoredButton {
+    AbstractButton {
         id: contentBox
-        borderColor: "black"
-        borderWidth: 1
-        color: "white"
-        radius: 0
 
         anchors.left: removeButton.right
         anchors.right: actionBox.left
@@ -107,14 +103,14 @@ Item {
         anchors.bottom: contentBox.bottom
         anchors.right: parent.right
 
-        IconButton {
+        Button {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: 5
             height: width
 
-            icon: contactDetailsItem.actionIcon
+            iconSource: contactDetailsItem.actionIcon
 
             onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
         }

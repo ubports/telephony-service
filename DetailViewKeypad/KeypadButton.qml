@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import "../Widgets"
 
-// FIXME: use a TextButton/Button
+// FIXME: use a ButtonWithForeground
 AbstractButton {
     width: 62
     height: 52

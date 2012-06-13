@@ -118,14 +118,13 @@ Item {
         }
     }
 
-    TextButton {
+    Button {
         id: editButton
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.margins: 10
         text: "Edit"
         color: "gray"
-        radius: 5
         height: 30
         width: 70
 

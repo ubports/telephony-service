@@ -26,8 +26,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            icon: "../assets/icon_message_grey.png"
-            iconWidth: 35
+            iconSource: "../assets/icon_message_grey.png"
             text: "New Message"
             // FIXME: maybe use a signal and handle in the instance
             onClicked: telephony.startNewMessage()
