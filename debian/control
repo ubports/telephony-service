@@ -8,7 +8,7 @@ Build-Depends: debhelper (>= 8.0.0),
                libqt4-dev,
                libtelepathy-qt4-dev,
                qtmobility-dev,
-               libtelepathy-logger-qt4,
+               libtelepathy-logger-qt4-dev,
                pkg-config,
 Standards-Version: 3.9.3
 Vcs-Bzr: https://code.launchpad.net/~newyork-team/newyork/telephony-app
