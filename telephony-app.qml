@@ -174,5 +174,12 @@ Rectangle {
         onCallReady: {
             startCallToNumber(contactId)
         }
+        onCallEnded: {
+            if (rightPaneContent.item.viewName == "livecall" &&
+                rightPaneContent.item.number == contactId) {
+                rightPaneContent.item.endCall()
+            }
+        }
+
     }
 }
