@@ -10,6 +10,8 @@ Item {
     property bool editable: false
     property variant contact: null
 
+    onContactChanged: editable = false
+
     width: 400
     height: 600
 
@@ -27,7 +29,7 @@ Item {
         anchors.margins: 10
         flickableDirection: Flickable.VerticalFlick
         clip: true
-        contentHeight: detailsList.height + 32 + newDetailButton.height + 10
+        contentHeight: detailsList.height + 32 + newDetailChooser.height + 10
 
         Column {
             id: detailsList
@@ -70,13 +72,8 @@ Item {
             }
         }
 
-        ColoredButton {
-            id: newDetailButton
-            color: "transparent"
-            borderColor: "black"
-            borderWidth: 1
-            radius: 0
-            height: newDetailButtonText.paintedHeight + newDetailButtonText.anchors.margins * 2
+        ContactDetailTypeChooser {
+            id: newDetailChooser
 
             anchors.left: parent.left
             anchors.right: parent.right
@@ -85,17 +82,8 @@ Item {
             anchors.leftMargin: 1
             anchors.rightMargin: 1
 
-            TextCustom {
-                id: newDetailButtonText
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                anchors.right:  parent.right
-                anchors.margins: 5
-                fontSize: "x-large"
-                text: "Add another field"
-            }
-
-            onClicked: console.log(DetailTypes.stuff)
+            opacity: (editable) ? 1.0 : 0.0
+            contact: (editable) ? contactDetails.contact : null
         }
     }
 

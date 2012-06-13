@@ -37,5 +37,15 @@ var supportedTypes = [
             }
         ];
 
-
+function getTypesWithNoItems(contact) {
+    var result = [];
+    for (var i = 0; i < supportedTypes.length; i++) {
+        var currentType = supportedTypes[i];
+        var detailsList = contact[currentType.items];
+        if (detailsList && detailsList.length == 0) {
+            result.push(currentType);
+        }
+    }
+    return result;
+}
 
