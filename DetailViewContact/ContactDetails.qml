@@ -84,6 +84,16 @@ Item {
 
             opacity: (editable) ? 1.0 : 0.0
             contact: (editable) ? contactDetails.contact : null
+
+            onSelected: {
+                for (var i = 0; i < detailsList.children.length; i++) {
+                    var child = detailsList.children[i];
+                    if (child.detailTypeInfo.name == detailType.name) {
+                        child.appendNewItem();
+                        return;
+                    }
+                }
+            }
         }
     }
 

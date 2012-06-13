@@ -4,7 +4,7 @@ import "../Widgets"
 
 Column {
     id: contactDetailsSection
-    visible: details.count > 0
+    visible: details.count + newItems.count > 0
 
     property alias model: details.model
     property alias delegate: details.delegate
@@ -12,8 +12,6 @@ Column {
     property variant detailTypeInfo
     property bool editable
     onEditableChanged: if (editable) newItems.model.clear()
-
-    EmailAddress {}
 
     function save() {
         var added = [];
@@ -27,6 +25,10 @@ Column {
             }
         }
         return added;
+    }
+
+    function appendNewItem() {
+        newItems.model.append({})
     }
 
     Item {
@@ -81,7 +83,7 @@ Column {
             height: width
             icon: "../assets/icon_plus.png"
 
-            onClicked: newItems.model.append({})
+            onClicked: appendNewItem()
         }
 
         TextCustom {

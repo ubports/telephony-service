@@ -4,6 +4,7 @@ import "DetailTypeUtilities.js" as DetailTypes
 
 ColoredButton {
     property variant contact
+    signal selected(variant detailType)
 
     id: chooser
     color: "transparent"
@@ -44,6 +45,11 @@ ColoredButton {
                 borderColor: "black"
                 borderWidth: 1
                 height: optionText.paintedHeight + 20
+
+                onClicked: {
+                    selected(modelData)
+                    optionsList.model = null
+                }
 
                 TextCustom {
                     id: optionText
