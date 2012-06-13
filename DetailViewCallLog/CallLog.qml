@@ -48,7 +48,6 @@ Item {
         }
     }
 
-    // FIXME: add the All/Missed buttons
     ListView {
         id: callLogView
         anchors.top: buttonGroup.bottom
