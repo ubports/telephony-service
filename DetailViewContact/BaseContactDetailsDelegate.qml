@@ -3,7 +3,7 @@ import "../Widgets"
 
 Item {
     id: contactDetailsItem
-    height: childrenRect.height
+    height: editable ? editableGroup.height : readOnlyGroup.height
 
     property variant detail
     property variant detailTypeInfo
@@ -32,6 +32,7 @@ Item {
     }
 
     Item {
+        id: readOnlyGroup
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -101,6 +102,7 @@ Item {
     }
 
     Item {
+        id: editableGroup
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top

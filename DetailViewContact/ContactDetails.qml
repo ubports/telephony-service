@@ -26,6 +26,7 @@ Item {
         anchors.margins: 10
         flickableDirection: Flickable.VerticalFlick
         clip: true
+        contentHeight: detailsList.height + 32 + newDetailButton.height + 10
 
         Column {
             id: detailsList
@@ -79,6 +80,34 @@ Item {
                     }
                 }
             }
+        }
+
+        ColoredButton {
+            id: newDetailButton
+            color: "transparent"
+            borderColor: "black"
+            borderWidth: 1
+            radius: 0
+            height: newDetailButtonText.paintedHeight + newDetailButtonText.anchors.margins * 2
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: detailsList.bottom
+            anchors.topMargin: 32
+            anchors.leftMargin: 1
+            anchors.rightMargin: 1
+
+            TextCustom {
+                id: newDetailButtonText
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.right:  parent.right
+                anchors.margins: 5
+                fontSize: "x-large"
+                text: "Add another field"
+            }
+
+            onClicked: console.log("New item")
         }
     }
 
