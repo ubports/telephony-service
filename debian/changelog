@@ -1,8 +1,15 @@
-telephony-app (0.11) UNRELEASED; urgency=low
+telephony-app (0.11) precise; urgency=low
 
+  [ Gustavo Pichorim Boiko ]
   * Add support for fetching the call log using telepathy-logger
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 13 Jun 2012 10:44:11 -0300
+  [ Tiago Salem Herrmann ]
+  * Add telepathy approver
+  * Add initial call support
+  * Add qtmobility-dev as build-dep
+  * Add libtelepathy-logger-qt4 as build-dep
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 13 Jun 2012 10:55:05 -0300
 
 telephony-app (0.10) precise; urgency=low
 
