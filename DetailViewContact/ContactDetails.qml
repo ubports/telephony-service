@@ -1,5 +1,9 @@
 import QtQuick 1.1
+import TelephonyApp 0.1
 import "../Widgets"
+// FIXME: write a different delegate for the call log shown in the contact
+// details once we get wireframes or visual designs for that
+import "../DetailViewCallLog"
 
 Item {
     id: contactDetails
@@ -108,6 +112,27 @@ Item {
                     value: modelData.street + "\n" + modelData.city + "\n" + modelData.state + "\n" + modelData.country
                     type: "" // FIXME: double check if QContact has an address type field
                     multiLine: true
+                }
+            } // ContactDetailsSection
+
+            // Call Log section
+            ContactDetailsSection {
+                id: callLogSection
+                editable: false
+                anchors.left: parent.left
+                anchors.right: parent.right
+                name: "Call Log"
+                model: CallLogProxyModel {
+                    logModel: callLogModel
+                    contactId: (contact) ? contact.guid.guid : "some string that won't match"
+                }
+                delegate: CallLogDelegate {
+                    id: delegate
+                    anchors.left: (parent) ? parent.left : undefined
+                    anchors.right: (parent) ? parent.right : undefined
+
+                    onClicked: telephony.showContactDetailsFromId(contactId)
+                    onActionClicked: telephony.callNumber(phoneNumber)
                 }
             } // ContactDetailsSection
         } // Column

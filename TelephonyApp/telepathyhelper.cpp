@@ -113,6 +113,7 @@ void TelepathyHelper::ensureAccountConnected()
         Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", "online");
         mAccount->setRequestedPresence(presence);
     }
+    emit accountReady();
 }
 
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)

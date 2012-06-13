@@ -72,30 +72,18 @@ Item {
             iconWidth: 35
             text: "Voicemail"
         }
-    }
 
-    Rectangle {
-        id: callLogHeader
-        anchors.top: buttonsGroup.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 5
-        color: "lightGray"
-        height: 30
-
-        TextCustom {
-            text: "Call Log"
-            anchors.verticalCenter: parent.verticalCenter
+        Button {
+            height: 45
             anchors.left: parent.left
-            anchors.margins: 5
-        }
-    }
+            anchors.right: parent.right
 
-    CallLogList {
-        anchors.top: callLogHeader.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 5
+            // FIXME: use a real icon for call log
+            icon: "../assets/icon_voicemail.png"
+            iconWidth: 35
+            text: "Call Log"
+            onClicked: telephony.showCallLog();
+        }
     }
 }
 
