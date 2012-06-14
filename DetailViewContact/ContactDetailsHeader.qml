@@ -58,6 +58,13 @@ Item {
         }
     }
 
+    function save() {
+        // FIXME: can't save the name for now because the displaylabel can't
+        // be edited and the proper fields to edit are all these associated with
+        // the Name detail. But the design doesn't specify how to display these
+        // during editing, so this is on hold for now.
+    }
+
     Image {
         id: avatar
         anchors.left: parent.left
@@ -89,6 +96,29 @@ Item {
             anchors.right: parent.right
             fontSize: "x-large"
             text: contactDetailsHeader.contactName()
+
+            opacity: !editable ? 1.0 : 0.0
+        }
+
+        Rectangle {
+            id: editorArea
+            border.color: "black"
+            border.width: 1
+            color: "white"
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: contactNameEditor.height + 20
+            opacity: editable ? 1.0 : 0.0
+
+            TextContactDetailsEditor {
+                id: contactNameEditor
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.margins: 10
+                text: contactDetailsHeader.contactName()
+            }
         }
 
         TextCustom {
@@ -96,12 +126,15 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             text: "A social update will show in here"
+
+            opacity: !editable ? 1.0 : 0.0
         }
 
         Row {
             anchors.left: parent.left
             anchors.right: parent.right
             spacing: 5
+            opacity: !editable ? 1.0 : 0.0
 
             Image {
                 anchors.top: parent.top

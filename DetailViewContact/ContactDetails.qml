@@ -191,6 +191,8 @@ Item {
                        However that other way doesn't work since we can't guarantee that all
                        delegates have received the signal before we call contact.save() here.
                     */
+                    header.save();
+
                     var addedDetails = [];
                     for (var i = 0; i < detailsList.children.length; i++) {
                         var saver = detailsList.children[i].save;
