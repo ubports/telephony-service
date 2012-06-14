@@ -71,7 +71,15 @@ Item {
                 anchors.top: parent.top
                 anchors.rightMargin: 8
                 anchors.topMargin: 8
-                text: detail.contexts.toString()
+                text: {
+                    // The backend supports multiple types but we can just handle one,
+                    // so let's pick just the first
+                    var parts = detail.contexts.toString().split(",")
+                    for (var i = 0; i < parts.length; i++) {
+                        if (parts[i].indexOf("type=") == 0) return parts[i].substring(5)
+                    }
+                    return "";
+                }
                 fontSize: "large"
                 color: "lightgrey"
             }
