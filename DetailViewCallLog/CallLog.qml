@@ -62,7 +62,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.margins: 5
         // FIXME: references to runtime and fake model need to be removed before final release
-        model: runtime ? fakeCallLog : proxyModel
+        model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel
 
         delegate: CallLogDelegate {
             width: parent.width
