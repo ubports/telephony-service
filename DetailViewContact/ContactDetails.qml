@@ -206,11 +206,8 @@ Item {
                     }
 
                     console.log("Modified ?: " + contact.modified + " id " + contact.contactId);
-
-                    if (contactDetails.added) contact.parent.saveContact(contact);
-                    console.log("Modified ?: " + contact.modified + " id " + contact.contactId);
                     if (contact.modified) contact.save();
-                    console.log("Modified ?: " + contact.modified + " id " + contact.contactId);
+
                     editable = false;
                 }
             }
