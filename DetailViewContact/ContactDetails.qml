@@ -93,10 +93,13 @@ Item {
 
                 detailTypeInfo: { return { name: "Call Log" } }
 
-                model: CallLogProxyModel {
+                CallLogProxyModel {
+                    id: proxyModel
                     logModel: callLogModel
                     contactId: (contact) ? contact.guid.guid : "some string that won't match"
                 }
+                // FIXME: references to runtime and fake model need to be removed before final release
+                model: runtime ? fakeCallLog : proxyModel
 
                 delegate: CallLogDelegate {
                     id: delegate

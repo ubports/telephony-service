@@ -48,6 +48,12 @@ Item {
         }
     }
 
+    CallLogProxyModel {
+        id: proxyModel
+        logModel: callLogModel
+        onlyMissedCalls: false
+    }
+
     ListView {
         id: callLogView
         anchors.top: buttonGroup.bottom
@@ -55,11 +61,8 @@ Item {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 5
-        model: CallLogProxyModel {
-            id: proxyModel
-            logModel: callLogModel
-            onlyMissedCalls: false
-        }
+        // FIXME: references to runtime and fake model need to be removed before final release
+        model: runtime ? fakeCallLog : proxyModel
 
         delegate: CallLogDelegate {
             width: parent.width

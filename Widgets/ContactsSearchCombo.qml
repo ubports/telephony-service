@@ -8,12 +8,16 @@ DropDownSearch {
 
     signal contactSelected(variant contact, string number)
 
-    model: ContactModel {
+    ContactModel {
+        id: contacts
         manager: "folks"
         filter: ContactFilters {
             filterText: search.searchQuery
         }
     }
+    // FIXME: references to runtime and fake model need to be removed before final release
+    model: runtime ? fakeContacts : contacts
+
     delegate: ContactsSearchDelegate {
         anchors.left: parent ? parent.left : undefined
         anchors.right: parent ? parent.right : undefined

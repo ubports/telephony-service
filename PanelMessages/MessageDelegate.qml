@@ -2,7 +2,8 @@ import QtQuick 1.1
 import "../Widgets"
 
 AbstractButton {
-    property variant contact: contacts.fromId(contactId)
+    // FIXME: reference to fake model needs to be removed before final release
+    property variant contact: fakeContacts.fromId(contactId)
 
     // FIXME: maybe create a Line component to make the code more readable
     Rectangle {
