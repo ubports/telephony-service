@@ -11,7 +11,7 @@ Column {
 
     property variant detailTypeInfo
     property bool editable
-    onEditableChanged: if (editable) newItems.model.clear()
+    onEditableChanged: if (!editable) newItems.model.clear()
 
     function save() {
         var added = [];
