@@ -1,0 +1,70 @@
+import QtQuick 1.1
+import TelephonyApp 0.1
+import "../Widgets"
+
+Item {
+    property string viewName: "callLog"
+
+    Item {
+        id: buttonGroup
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 5
+        height: childrenRect.height
+
+        Row {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: parent.top
+            height: 30
+            spacing: 1
+
+            // FIXME: use a proper component here once we get the visual designs
+            TextButton {
+                id: allButton
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                text: "All"
+                color: "gray"
+                width: 70
+
+                onClicked: {
+                    proxyModel.onlyMissedCalls = false;
+                }
+            }
+
+            TextButton {
+                id: missedButton
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                text: "Missed"
+                color: "gray"
+                width: 70
+
+                onClicked: {
+                    proxyModel.onlyMissedCalls = true;
+                }
+            }
+        }
+    }
+
+    ListView {
+        id: callLogView
+        anchors.top: buttonGroup.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 5
+        model: CallLogProxyModel {
+            id: proxyModel
+            logModel: callLogModel
+            onlyMissedCalls: false
+        }
+
+        delegate: CallLogDelegate {
+            width: parent.width
+            onClicked: telephony.showContactDetailsFromId(contactId)
+            onActionClicked: telephony.callNumber(phoneNumber)
+        }
+    }
+}

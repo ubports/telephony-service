@@ -1,7 +1,11 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
+import TelephonyApp 0.1
 import "../Widgets"
 import "DetailTypeUtilities.js" as DetailTypes
+// FIXME: write a different delegate for the call log shown in the contact
+// details once we get wireframes or visual designs for that
+import "../DetailViewCallLog"
 
 Item {
     id: contactDetails
@@ -76,6 +80,31 @@ Item {
                             onClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startCallToContact(contact, modelData.number);
                         }
                     }
+                }
+            }
+
+
+            // Call Log section
+            ContactDetailsSection {
+                id: callLogSection
+                editable: false
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                detailTypeInfo: { return { name: "Call Log" } }
+
+                model: CallLogProxyModel {
+                    logModel: callLogModel
+                    contactId: (contact) ? contact.guid.guid : "some string that won't match"
+                }
+
+                delegate: CallLogDelegate {
+                    id: delegate
+                    anchors.left: (parent) ? parent.left : undefined
+                    anchors.right: (parent) ? parent.right : undefined
+
+                    onClicked: telephony.showContactDetailsFromId(contactId)
+                    onActionClicked: telephony.callNumber(phoneNumber)
                 }
             }
         }

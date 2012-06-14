@@ -1,12 +1,14 @@
 import QtQuick 1.1
-import "../fontUtils.js" as Font
+import "../Widgets"
 
 Rectangle {
     id: callItem
     height: 64
-    width: parent.width
+    border.color: "black"
+    border.width: 1
 
-    signal clicked(int index)
+    signal clicked(string contactId)
+    signal actionClicked(string contactId, string phoneNumber)
 
     Rectangle {
         height: 1
@@ -18,62 +20,60 @@ Rectangle {
 
     Image {
         id: photoItem
-        // FIXME: move the dummydata to the model
-        source: "../dummydata/" + photo
+        source: avatar
         width: 56
         height: width
         anchors.left: parent.left
         anchors.leftMargin: 1
         anchors.verticalCenter: parent.verticalCenter
     }
-    // FIXME: TextCustom
-    Text {
+
+    TextCustom {
         id: displayNameItem
         anchors.top: parent.top
         anchors.topMargin: 1
         anchors.left: photoItem.right
         anchors.right: directionItem.left
         anchors.leftMargin: 2
-        font.pixelSize: Font.sizeToPixels("medium")
-        text: displayName
+        fontSize: "medium"
+        text: contactAlias
     }
 
-    Text {
+    TextCustom {
         id: phoneTypeItem
         anchors.top: displayNameItem.bottom
         anchors.topMargin: 2
         anchors.left: photoItem.right
         anchors.leftMargin: 2
-        font.pixelSize: Font.sizeToPixels("small")
+        fontSize: "small"
         text: phoneType
     }
 
-    Text {
+    TextCustom {
         id: phoneItem
         anchors.top: displayNameItem.bottom
         anchors.topMargin: 2
         anchors.left: phoneTypeItem.right
         anchors.leftMargin: 4
-        //anchors.right: directionItem.left
-        font.pixelSize: Font.sizeToPixels("small")
-        text: phone
+        fontSize: "small"
+        text: phoneNumber
         transformOrigin: Item.Center
     }
-    Text {
+
+    TextCustom {
         id: dateItem
         anchors.top: phoneTypeItem.bottom
         anchors.topMargin: 2
         anchors.left: photoItem.right
         anchors.leftMargin: 2
-        anchors.right: directionItem.left
-        font.pixelSize: Font.sizeToPixels("small")
-        text: date
+        fontSize: "small"
+        text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleLongDate)
     }
 
     Image {
         id: directionItem
         source: {
-            if(direction == "incoming") {
+            if(incoming) {
                 if(missed) {
                     "../assets/icon_missed_call.png"
                 } else {
@@ -83,16 +83,41 @@ Rectangle {
                 "../assets/icon_outgoing_call.png"
             }
         }
-        width: 48
-        height: 48
-        anchors.rightMargin: 1
+        width: height
+        height: dateItem.height
+        anchors.leftMargin: 1
+        anchors.left: dateItem.right
+        anchors.verticalCenter: dateItem.verticalCenter
+    }
+
+    Rectangle {
+        id: actionBox
+        border.color: "black"
+        width: height
+        height: parent.height
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
+
+        IconButton {
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 5
+            height: width
+
+            icon: "../assets/call_icon.png"
+
+            onClicked: callItem.actionClicked(contactId, phoneNumber)
+        }
     }
 
     MouseArea {
-        anchors.fill: parent
-        onClicked: callItem.clicked(index)
-    }
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.bottom: parent.bottom
+        anchors.right: actionBox.left
 
+        onClicked: callItem.clicked(contactId)
+    }
 }

@@ -49,6 +49,11 @@ Rectangle {
         rightPaneContent.item.contact = contact
     }
 
+    function showContactDetailsFromId(contactId) {
+        contactLoader.contactId = contactId;
+        // the contact details will be loaded once the contact loads
+    }
+
     function createNewContact(contacts) {
         rightPaneContent.source = "DetailViewContact/ContactDetails.qml"
         rightPaneContent.item.createNewContact(contacts)
@@ -61,6 +66,10 @@ Rectangle {
 
     function showDial() {
         rightPaneContent.source = "DetailViewKeypad/KeypadView.qml"
+    }
+
+    function showCallLog() {
+        rightPaneContent.source = "DetailViewCallLog/CallLog.qml"
     }
 
     ContactLoader {

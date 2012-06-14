@@ -45,6 +45,7 @@ public:
 
 Q_SIGNALS:
     void channelHandlerCreated(ChannelHandler *ch);
+    void accountReady();
 
 public Q_SLOTS:
     void initializeChannelHandler();
