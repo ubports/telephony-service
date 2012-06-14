@@ -1,3 +1,28 @@
+telephony-app (0.13) precise; urgency=low
+
+  * add libqtgstreamer-dev as build-dep
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 13 Jun 2012 15:56:47 -0300
+
+telephony-app (0.12) precise; urgency=low
+
+  * Fix wrong build-dep name
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 13 Jun 2012 10:43:37 -0700
+
+telephony-app (0.11) precise; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Add support for fetching the call log using telepathy-logger
+
+  [ Tiago Salem Herrmann ]
+  * Add telepathy approver
+  * Add initial call support
+  * Add qtmobility-dev as build-dep
+  * Add libtelepathy-logger-qt4 as build-dep
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 13 Jun 2012 10:55:05 -0300
+
 telephony-app (0.10) precise; urgency=low
 
   * add sms receiving support

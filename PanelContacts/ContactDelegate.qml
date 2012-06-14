@@ -6,16 +6,16 @@ Item {
     width: parent.width
     signal clicked(variant contact)
 
+    // FIXME: this function is used in two places, should be moved to one common place
     function contactName() {
-        if (display)
-            return display;
-        else if (contact) {
-            if (contact.nickname && contact.nickname.nickname)
-                return contact.nickname.nickname;
-            else if (contact.presence && contact.presence.nickname)
-                return contact.presence.nickname;
-        }
-        return "";
+        if (!contact)
+            return "";
+        if (contact.displayLabel != "")
+            return contact.displayLabel
+        else if (contact.nickname.nickname != "")
+            return contact.nickname.nickname;
+        else if (contact.presence.nickname != "")
+            return contact.presence.nickname;
     }
 
     Rectangle {

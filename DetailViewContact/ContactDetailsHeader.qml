@@ -11,7 +11,7 @@ Item {
     width: parent.width
     height: 100
 
-    // TODO: this function is used in two places, should be moved to one common place
+    // FIXME: this function is used in two places, should be moved to one common place
     function contactName() {
         if (!contact)
             return "";
