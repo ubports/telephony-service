@@ -82,8 +82,6 @@ Column {
             width: 20
             height: width
             icon: "../assets/icon_plus.png"
-
-            onClicked: appendNewItem()
         }
 
         TextCustom {
@@ -93,6 +91,11 @@ Column {
             color: "green"
             text: detailTypeInfo.newItemText
             fontSize: "x-large"
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: appendNewItem()
         }
     }
 }
