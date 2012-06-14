@@ -90,6 +90,7 @@ Item {
                 editable: false
                 anchors.left: parent.left
                 anchors.right: parent.right
+                opacity: (contactDetails.editable) ? 0.0 : 1.0
 
                 detailTypeInfo: { return { name: "Call Log" } }
 
