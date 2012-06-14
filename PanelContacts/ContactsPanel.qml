@@ -26,6 +26,19 @@ Rectangle {
         onLeftIconClicked: text = ""
     }
 
+    Button {
+        id: newContact
+        height: 45
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: contactsSearchBox.bottom
+
+        icon: "../assets/icon_plus.png"
+        iconWidth: 35
+        text: "Add a new contact"
+        onClicked: telephony.createNewContact(contactsModel)
+    }
+
     ContactModel {
         id: contactsModel
         manager: "folks"
@@ -45,7 +58,7 @@ Rectangle {
 
     ListView {
         id: contactsList
-        anchors.top: contactsSearchBox.bottom
+        anchors.top: newContact.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right

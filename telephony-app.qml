@@ -49,6 +49,11 @@ Rectangle {
         rightPaneContent.item.contact = contact
     }
 
+    function createNewContact(contacts) {
+        rightPaneContent.source = "DetailViewContact/ContactDetails.qml"
+        rightPaneContent.item.createNewContact(contacts)
+    }
+
     function startNewMessage() {
         rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
         rightPaneContent.item.newMessage = true

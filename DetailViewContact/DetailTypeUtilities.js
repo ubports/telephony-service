@@ -17,7 +17,8 @@ var supportedTypes = [
                 newItemText: "Add an email address",
                 newItemType: "EmailAddress",
                 actionIcon: "../assets/icon_envelope_grey.png",
-                displayField: "emailAddress" },
+                displayField: "emailAddress"
+            },
             {
                 name: "Address",
                 delegateSource: "TextContactDetailsDelegate.qml",
@@ -42,7 +43,9 @@ function getTypesWithNoItems(contact) {
     for (var i = 0; i < supportedTypes.length; i++) {
         var currentType = supportedTypes[i];
         var detailsList = contact[currentType.items];
-        if (detailsList && detailsList.length == 0) {
+        /* In newly created contacts the "plural" detail properties (such as "emails")
+           do not seem to exist, so allow adding new details for the type in that case. */
+        if (detailsList === undefined || detailsList.length == 0) {
             result.push(currentType);
         }
     }

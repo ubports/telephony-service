@@ -2,29 +2,43 @@ import QtQuick 1.1
 import "../Widgets"
 import "DetailTypeUtilities.js" as DetailTypes
 
-ColoredButton {
+Item {
+    id: chooser
+
     property variant contact
     signal selected(variant detailType)
 
-    id: chooser
-    color: "transparent"
-    borderColor: "black"
-    borderWidth: 1
-    radius: 0
-
-    height: createText.paintedHeight + createText.anchors.margins * 2
-
-    onClicked: optionsList.model = DetailTypes.getTypesWithNoItems(contact)
     onContactChanged: optionsList.model = null
+    height: options.height + newButton.height
 
-    TextCustom {
-        id: createText
-        anchors.verticalCenter: parent.verticalCenter
+    ColoredButton {
+        id: newButton
+        color: "transparent"
+        borderColor: "black"
+        borderWidth: 1
+        radius: 0
         anchors.left: parent.left
-        anchors.right:  parent.right
-        anchors.margins: 5
-        fontSize: "x-large"
-        text: "Add another field"
+        anchors.right: parent.right
+        anchors.top: parent.top
+
+
+        height: createText.paintedHeight + createText.anchors.margins * 2
+
+        onClicked: {
+            console.log("Selected:  " + contact);
+            optionsList.model = DetailTypes.getTypesWithNoItems(contact)
+            console.log("Selected:  " + optionsList.model);
+        }
+
+        TextCustom {
+            id: createText
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.right:  parent.right
+            anchors.margins: 5
+            fontSize: "x-large"
+            text: "Add another field"
+        }
     }
 
     Column {
@@ -32,9 +46,10 @@ ColoredButton {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 15
-        anchors.bottom: parent.top
-        anchors.bottomMargin: -15
+        anchors.top: newButton.bottom
+        anchors.topMargin: -10
         opacity: (optionsList.model && optionsList.model.length > 0) ? 1.0 : 0.0
+        height: childrenRect.height
 
         Repeater {
             id: optionsList

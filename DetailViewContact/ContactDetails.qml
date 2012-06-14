@@ -9,11 +9,18 @@ Item {
     property string viewName: "contacts"
     property bool editable: false
     property variant contact: null
+    property variant added: false
 
     onContactChanged: editable = false
 
     width: 400
     height: 600
+
+    function createNewContact(contactsModel) {
+        contact = Qt.createQmlObject("import QtMobility.contacts 1.1; Contact {}", contactsModel);
+        editable = true;
+        added = true;
+    }
 
     ContactDetailsHeader {
         id: header
@@ -22,6 +29,7 @@ Item {
     }
 
     Flickable {
+        id: scrollArea
         anchors.top: header.bottom
         anchors.bottom: editFooter.top
         anchors.left: parent.left
@@ -165,9 +173,12 @@ Item {
                         console.log("Add detail: " + contact.addDetail(addedDetails[i]));
                     }
 
-                    console.log("Modified ?: " + contact.modified);
+                    console.log("Modified ?: " + contact.modified + " id " + contact.contactId);
 
+                    if (contactDetails.added) contact.parent.saveContact(contact);
+                    console.log("Modified ?: " + contact.modified + " id " + contact.contactId);
                     if (contact.modified) contact.save();
+                    console.log("Modified ?: " + contact.modified + " id " + contact.contactId);
                     editable = false;
                 }
             }
