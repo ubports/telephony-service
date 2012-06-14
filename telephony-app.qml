@@ -120,20 +120,22 @@ Rectangle {
 
             Component.onCompleted: rightPaneContent.source = tabs.model[tabs.currentTab].pane
             onCurrentTabChanged: rightPaneContent.source = tabs.model[tabs.currentTab].pane
+        }
 
-            Rectangle {
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: -1
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: 1
-                color: "white"
-            }
+        Rectangle {
+            id: separator
+
+            anchors.top: tabs.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 1
+            color: "white"
         }
 
         Loader {
             id: leftPaneContent
-            anchors.top: tabs.bottom
+
+            anchors.top: separator.bottom
             anchors.bottom: leftPane.bottom
             anchors.left: parent.left
             anchors.right: parent.right
