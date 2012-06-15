@@ -47,6 +47,8 @@ AbstractButton {
 
     opacity: ( state == "selected" || state == "hovered" ) ? 1.0 : 0.7
 
+    height: 30
+
     BorderImage {
         anchors.fill: parent
         anchors.margins: -5
