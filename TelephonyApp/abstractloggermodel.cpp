@@ -25,7 +25,6 @@
 #include <TelepathyLoggerQt4/PendingEvents>
 #include <TelepathyLoggerQt4/Entity>
 #include <TelepathyLoggerQt4/Event>
-#include <TelepathyLoggerQt4/CallEvent>
 #include <QContactManager>
 #include <QContactDetailFilter>
 #include <QContactAvatar>
@@ -57,8 +56,8 @@ QVariant LogEntry::data(int role) const
     }
 }
 
-AbstractLoggerModel::AbstractLoggerModel(QObject *parent) :
-    QAbstractListModel(parent), mType(Tpl::EventTypeMaskAny)
+AbstractLoggerModel::AbstractLoggerModel(QContactManager *manager, QObject *parent) :
+    QAbstractListModel(parent), mType(Tpl::EventTypeMaskAny), mContactManager(manager)
 {
     // set the role names
     QHash<int, QByteArray> roles;
@@ -71,7 +70,6 @@ AbstractLoggerModel::AbstractLoggerModel(QObject *parent) :
     roles[Incoming] = "incoming";
     setRoleNames(roles);
 
-    mContactManager = new QContactManager("folks", QMap<QString,QString>(), this);
     connect(mContactManager,
             SIGNAL(contactsAdded(QList<QContactLocalId>)),
             SLOT(onContactsAdded(QList<QContactLocalId>)));
@@ -103,7 +101,7 @@ QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
     return mLogEntries[index.row()]->data(role);
 }
 
-void AbstractLoggerModel::fetchCallLog(Tpl::EventTypeMask type)
+void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type)
 {
     Tpl::LogManagerPtr manager = Tpl::LogManager::instance();
     Tpl::PendingEntities *pendingEntities = manager->queryEntities(TelepathyHelper::instance()->account());
@@ -127,7 +125,7 @@ void AbstractLoggerModel::requestDatesForEntities(const Tpl::EntityPtrList &enti
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
 
     foreach(Tpl::EntityPtr entity, entities) {
-        Tpl::PendingDates *pendingDates = manager->queryDates(account, entity, Tpl::EventTypeMaskCall);
+        Tpl::PendingDates *pendingDates = manager->queryDates(account, entity, mType);
 
         connect(pendingDates,
                 SIGNAL(finished(Tpl::PendingOperation*)),
@@ -155,6 +153,10 @@ void AbstractLoggerModel::fillContactInfo(LogEntry *entry, const QContact &conta
     entry->contactId = guid.guid();
     entry->avatar = avatar.imageUrl();
     entry->localId = contact.localId();
+
+    if (entry->contactAlias.isEmpty()) {
+        entry->contactAlias = contact.displayLabel();
+    }
 }
 
 void AbstractLoggerModel::clearContactInfo(LogEntry *entry)
@@ -162,6 +164,7 @@ void AbstractLoggerModel::clearContactInfo(LogEntry *entry)
     entry->avatar = "";
     entry->contactId = "";
     entry->localId = QContactLocalId();
+    entry->contactAlias = "";
 }
 
 void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)

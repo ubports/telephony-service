@@ -28,7 +28,11 @@
 
 class ChannelHandler;
 class CallLogModel;
-class CallLogProxyModel;
+class ConversationLogModel;
+
+namespace QtMobility {
+    class QContactManager;
+}
 
 class Components : public QDeclarativeExtensionPlugin
 {
@@ -45,7 +49,8 @@ private Q_SLOTS:
 private:
     QDeclarativeContext *mRootContext;
     CallLogModel *mCallLogModel;
-    CallLogProxyModel *mCallLogProxyModel;
+    ConversationLogModel *mConversationLogModel;
+    QtMobility::QContactManager *mContactManager;
 };
 
 #endif // COMPONENTS_H

@@ -36,10 +36,12 @@ public:
         Text = AbstractLoggerModel::LastLogRole
     };
 
-    explicit ConversationLogModel(QObject *parent = 0);
+    explicit ConversationLogModel(QContactManager *manager, QObject *parent = 0);
     
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
+    void handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
+    void handleEvents(const Tpl::EventPtrList &events);
 };
 
 #endif // CONVERSATIONLOGMODEL_H

@@ -2,9 +2,6 @@ import QtQuick 1.1
 import "../Widgets"
 
 AbstractButton {
-    // FIXME: reference to fake model needs to be removed before final release
-    property variant contact: fakeContacts.fromId(contactId)
-
     // FIXME: maybe create a Line component to make the code more readable
     Rectangle {
         height: 1
@@ -16,8 +13,7 @@ AbstractButton {
 
     Image {
         id: contactPhotoItem
-        // FIXME: the dummydata prefix should be in the model
-        source: "../dummydata/" + contact.photo
+        source: avatar != "" ? avatar : "../assets/default_avatar.png"
         width: 35
         height: width
         anchors.left: parent.left
@@ -40,7 +36,7 @@ AbstractButton {
             anchors.left: parent.left
             anchors.right: parent.right
             fontSize: "medium"
-            text: contact.displayName
+            text: contactAlias
         }
 
         TextCustom {
@@ -48,7 +44,7 @@ AbstractButton {
             anchors.right: parent.right
             color: "#828282"
             fontSize: "small"
-            text: lastMessageDate
+            text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
         }
 
         TextCustom {
@@ -59,7 +55,7 @@ AbstractButton {
             anchors.rightMargin: 15
             fontSize: "small"
             height: 30
-            text: lastMessageContent
+            text: text
             elide: Text.ElideRight
         }
     }

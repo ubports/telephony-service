@@ -39,7 +39,7 @@ public:
         Missed
     };
 
-    explicit CallLogModel(QObject *parent = 0);
+    explicit CallLogModel(QtMobility::QContactManager *manager, QObject *parent = 0);
     
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);

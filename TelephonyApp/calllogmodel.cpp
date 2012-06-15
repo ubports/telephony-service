@@ -33,8 +33,8 @@ QVariant CallLogEntry::data(int role) const
     }
 }
 
-CallLogModel::CallLogModel(QObject *parent) :
-    AbstractLoggerModel(parent)
+CallLogModel::CallLogModel(QContactManager *manager, QObject *parent) :
+    AbstractLoggerModel(manager, parent)
 {
     // set the role names
     QHash<int, QByteArray> roles = roleNames();
@@ -42,7 +42,7 @@ CallLogModel::CallLogModel(QObject *parent) :
     roles[Missed] = "missed";
     setRoleNames(roles);
 
-    fetchCallLog(Tpl::EventTypeMaskCall);
+    fetchLog(Tpl::EventTypeMaskCall);
 }
 
 LogEntry *CallLogModel::createEntry(const Tpl::EventPtr &event)

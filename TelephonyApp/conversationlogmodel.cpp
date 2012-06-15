@@ -20,6 +20,7 @@
 #include "conversationlogmodel.h"
 #include <TelepathyLoggerQt4/Event>
 #include <TelepathyLoggerQt4/TextEvent>
+#include <TelepathyLoggerQt4/Entity>
 
 QVariant ConversationLogEntry::data(int role) const
 {
@@ -31,15 +32,15 @@ QVariant ConversationLogEntry::data(int role) const
     }
 }
 
-ConversationLogModel::ConversationLogModel(QObject *parent) :
-    AbstractLoggerModel(parent)
+ConversationLogModel::ConversationLogModel(QContactManager *manager, QObject *parent) :
+    AbstractLoggerModel(manager, parent)
 {
     // set the role names
     QHash<int, QByteArray> roles = roleNames();
     roles[Text] = "text";
     setRoleNames(roles);
 
-    fetchCallLog(Tpl::EventTypeMaskText);
+    fetchLog(Tpl::EventTypeMaskText);
 }
 
 LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
@@ -55,3 +56,37 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
     return entry;
 }
 
+void ConversationLogModel::handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates)
+{
+    if (!dates.count()) {
+        return;
+    }
+    QDate newestDate = dates.first();
+
+    // search for the newest available date
+    Q_FOREACH(const QDate &date, dates) {
+        if (date > newestDate) {
+            newestDate = date;
+        }
+    }
+
+    requestEventsForDates(entity, Tpl::QDateList() << newestDate);
+}
+
+void ConversationLogModel::handleEvents(const Tpl::EventPtrList &events)
+{
+    if (!events.count()) {
+        return;
+    }
+
+    Tpl::EventPtr newestEvent = events.first();
+
+    // search for the newest message
+    Q_FOREACH(const Tpl::EventPtr &event, events) {
+        if (event->timestamp() > newestEvent->timestamp()) {
+            newestEvent = event;
+        }
+    }
+
+    appendEvents(Tpl::EventPtrList() << newestEvent);
+}

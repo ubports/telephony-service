@@ -29,6 +29,7 @@
 #include <QUrl>
 #include <QContact>
 #include <QContactId>
+#include <QContactManager>
 
 using namespace QtMobility;
 
@@ -47,10 +48,6 @@ public:
     bool incoming;
 };
 
-namespace QtMobility {
-    class QContactManager;
-}
-
 class AbstractLoggerModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -66,13 +63,13 @@ public:
         LastLogRole
     };
 
-    explicit AbstractLoggerModel(QObject *parent = 0);
+    explicit AbstractLoggerModel(QtMobility::QContactManager *manager, QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     
 protected:
-    void fetchCallLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny);
+    void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny);
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
     void requestEventsForDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     void fillContactInfo(LogEntry *entry, const QContact &contact);
@@ -96,7 +93,7 @@ protected slots:
 
 private:
     QList<LogEntry*> mLogEntries;
-    QContactManager *mContactManager;
+    QtMobility::QContactManager *mContactManager;
     Tpl::EventTypeMask mType;
 };
 

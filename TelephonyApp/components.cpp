@@ -23,9 +23,11 @@
 #include "channelhandler.h"
 #include "calllogmodel.h"
 #include "calllogproxymodel.h"
+#include "conversationlogmodel.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/qdeclarative.h>
+#include <QContactManager>
 #include <TelepathyQt/Debug>
 #include <TelepathyLoggerQt4/Init>
 
@@ -53,6 +55,8 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
             SIGNAL(accountReady()),
             SLOT(onAccountReady()));
 
+    mContactManager = new QtMobility::QContactManager("folks", QMap<QString,QString>(), this);
+    mRootContext->setContextProperty("contactManager", mContactManager);
     mRootContext->setContextProperty("telepathyManager", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", TelepathyHelper::instance()->chatManager());
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
@@ -78,9 +82,11 @@ void Components::onChannelHandlerCreated(ChannelHandler *ch)
 
 void Components::onAccountReady()
 {
-    // create the call log model just when the telepathy helper signals the account is ready
-    mCallLogModel = new CallLogModel(this);
+    // create the log models just when the telepathy helper signals the account is ready
+    mCallLogModel = new CallLogModel(mContactManager, this);
     mRootContext->setContextProperty("callLogModel", mCallLogModel);
+    mConversationLogModel = new ConversationLogModel(mContactManager, this);
+    mRootContext->setContextProperty("conversationLogModel", mConversationLogModel);
 }
 
 Q_EXPORT_PLUGIN2(components, Components)
