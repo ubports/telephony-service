@@ -54,6 +54,11 @@ Item {
         // the contact details will be loaded once the contact loads
     }
 
+    function createNewContact(contacts) {
+        rightPaneContent.source = "DetailViewContact/ContactDetails.qml"
+        rightPaneContent.item.createNewContact(contacts)
+    }
+
     function startNewMessage() {
         rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
         rightPaneContent.item.newMessage = true

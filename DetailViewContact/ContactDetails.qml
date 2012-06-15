@@ -1,6 +1,8 @@
 import QtQuick 1.1
+import QtMobility.contacts 1.1
 import TelephonyApp 0.1
 import "../Widgets"
+import "DetailTypeUtilities.js" as DetailTypes
 // FIXME: write a different delegate for the call log shown in the contact
 // details once we get wireframes or visual designs for that
 import "../DetailViewCallLog"
@@ -11,109 +13,76 @@ Item {
     property string viewName: "contacts"
     property bool editable: false
     property variant contact: null
+    property variant added: false
+
+    onContactChanged: editable = false
 
     width: 400
     height: 600
 
+    function createNewContact(contactsModel) {
+        contact = Qt.createQmlObject("import QtMobility.contacts 1.1; Contact {}", contactsModel);
+        editable = true;
+        added = true;
+    }
+
     ContactDetailsHeader {
         id: header
         contact: contactDetails.contact
-
-        onEditClicked: {
-            contactDetails.editable = true
-        }
-
-        onSaveClicked: {
-            contactDetails.editable = false
-        }
+        editable: contactDetails.editable
     }
 
     Flickable {
+        id: scrollArea
         anchors.top: header.bottom
-        anchors.bottom: parent.bottom
+        anchors.bottom: editFooter.top
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 10
         flickableDirection: Flickable.VerticalFlick
         clip: true
+        contentHeight: detailsList.height + 32 + newDetailChooser.height + 10
 
         Column {
+            id: detailsList
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: 1
+            spacing: 16
 
-            // Phone section
-            ContactDetailsSection {
-                id: phoneSection
-                editable: contactDetails.editable
-                anchors.left: parent.left
-                anchors.right: parent.right
-                name: "Phone"
-                model: (contact) ? contact.phoneNumbers : null
-                delegate: ContactDetailsDelegate {
+            Repeater {
+                model: (contact) ? DetailTypes.supportedTypes : []
+
+                delegate: ContactDetailsSection {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
-                    actionIcon: "../assets/icon_message_grey.png"
-                    value: modelData.number
-                    type: modelData.contexts.toString()
 
-                    onClicked: telephony.startCallToContact(contact, modelData.number);
-                    onActionClicked: telephony.startChat(contact, modelData.number);
+                    detailTypeInfo: modelData
+                    editable: contactDetails.editable
+
+                    model: contact[modelData.items]
+                    delegate: Loader {
+                        anchors.left: (parent) ? parent.left : undefined
+                        anchors.right: (parent) ? parent.right : undefined
+
+                        source: detailTypeInfo.delegateSource
+
+                        Binding { target: item; property: "detail"; value: modelData }
+                        Binding { target: item; property: "detailTypeInfo"; value: detailTypeInfo }
+                        Binding { target: item; property: "editable"; value: contactDetails.editable }
+
+                        Connections {
+                            target: item
+                            ignoreUnknownSignals: true
+
+                            onDeleteClicked: contact.removeDetail(modelData)
+                            onActionClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startChat(contact, modelData.number);
+                            onClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startCallToContact(contact, modelData.number);
+                        }
+                    }
                 }
             }
 
-            // Email section
-            ContactDetailsSection {
-                id: emailSection
-                editable: contactDetails.editable
-                anchors.left: parent.left
-                anchors.right: parent.right
-                name: "Email"
-                model: (contact) ? contact.emails : null
-                delegate: ContactDetailsDelegate {
-                    anchors.left: (parent) ? parent.left : undefined
-                    anchors.right: (parent) ? parent.right : undefined
-                    actionIcon: "../assets/icon_envelope_grey.png"
-                    value: modelData.emailAddress
-                    type: "" // FIXME: there is no e-mail type it seems, but needs double checking in any case
-                }
-            }
-
-            // IM section
-            ContactDetailsSection {
-                id: imSection
-                editable: contactDetails.editable
-                anchors.left: parent.left
-                anchors.right: parent.right
-                name: "IM"
-                model: (contact) ? contact.onlineAccounts : null
-                delegate: ContactDetailsDelegate {
-                    anchors.left: (parent) ? parent.left : undefined
-                    anchors.right: (parent) ? parent.right : undefined
-                    actionIcon: "../assets/icon_chevron_right.png"
-                    value: modelData.accountUri
-                    type: modelData.serviceProvider
-                }
-            }
-
-            // Address section
-            ContactDetailsSection {
-                id: addressSection
-                editable: contactDetails.editable
-                anchors.left: parent.left
-                anchors.right: parent.right
-                name: "Address"
-                model: (contact) ? contact.addresses : null
-                delegate: ContactDetailsDelegate {
-                    anchors.left: (parent) ? parent.left : undefined
-                    anchors.right: (parent) ? parent.right : undefined
-                    actionIcon: "../assets/icon_chevron_right.png"
-                    // FIXME: implement a better function to handle address formatting
-                    value: modelData.street + "\n" + modelData.city + "\n" + modelData.state + "\n" + modelData.country
-                    type: "" // FIXME: double check if QContact has an address type field
-                    multiLine: true
-                }
-            } // ContactDetailsSection
 
             // Call Log section
             ContactDetailsSection {
@@ -121,7 +90,9 @@ Item {
                 editable: false
                 anchors.left: parent.left
                 anchors.right: parent.right
-                name: "Call Log"
+                opacity: (contactDetails.editable) ? 0.0 : 1.0
+
+                detailTypeInfo: { return { name: "Call Log" } }
 
                 CallLogProxyModel {
                     id: proxyModel
@@ -130,6 +101,7 @@ Item {
                 }
                 // FIXME: references to runtime and fake model need to be removed before final release
                 model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel
+
                 delegate: CallLogDelegate {
                     id: delegate
                     anchors.left: (parent) ? parent.left : undefined
@@ -138,7 +110,110 @@ Item {
                     onClicked: telephony.showContactDetailsFromId(contactId)
                     onActionClicked: telephony.callNumber(phoneNumber)
                 }
-            } // ContactDetailsSection
-        } // Column
-    } // Flickable
+            }
+        }
+
+        ContactDetailTypeChooser {
+            id: newDetailChooser
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: detailsList.bottom
+            anchors.topMargin: 32
+            anchors.leftMargin: 1
+            anchors.rightMargin: 1
+
+            opacity: (editable) ? 1.0 : 0.0
+            contact: (editable) ? contactDetails.contact : null
+
+            onSelected: {
+                for (var i = 0; i < detailsList.children.length; i++) {
+                    var child = detailsList.children[i];
+                    if (child.detailTypeInfo.name == detailType.name) {
+                        child.appendNewItem();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    Rectangle {
+        id: editFooter
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 50
+        color: "grey"
+
+        TextButton {
+            id: deleteButton
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.margins: 10
+            text: "Delete"
+            color: "white"
+            radius: 5
+            height: 30
+            width: 70
+            opacity: (editable) ? 1.0 : 0.0
+        }
+
+        TextButton {
+            id: cancelButton
+            anchors.top: parent.top
+            anchors.right: editSaveButton.left
+            anchors.margins: 10
+            text: "Cancel"
+            color: "white"
+            radius: 5
+            height: 30
+            width: 70
+            opacity: (editable) ? 1.0 : 0.0
+            onClicked: editable = false
+       }
+
+        TextButton {
+            id: editSaveButton
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.margins: 10
+            text: (editable) ? "Save" : "Edit"
+            color: "white"
+            radius: 5
+            height: 30
+            width: 70
+            onClicked: {
+                if (!editable) editable = true;
+                else {
+                    /* We ask each detail delegate to save all edits to the underlying
+                       model object. The other way to do it would be to change editable
+                       to false and catch onEditableChanged in the delegates and save there.
+                       However that other way doesn't work since we can't guarantee that all
+                       delegates have received the signal before we call contact.save() here.
+                    */
+                    header.save();
+
+                    var addedDetails = [];
+                    for (var i = 0; i < detailsList.children.length; i++) {
+                        var saver = detailsList.children[i].save;
+                        if (saver && saver instanceof Function) {
+                            var newDetails = saver();
+                            for (var k = 0; k < newDetails.length; k++)
+                                addedDetails.push(newDetails[k]);
+                        }
+                    }
+
+                    for (i = 0; i < addedDetails.length; i++) {
+                        console.log("Add detail: " + contact.addDetail(addedDetails[i]));
+                    }
+
+                    console.log("Modified ?: " + contact.modified + " id " + contact.contactId);
+                    if (contact.modified) contact.save();
+
+                    editable = false;
+                }
+            }
+        }
+    }
 }
