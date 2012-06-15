@@ -89,10 +89,8 @@ Item {
             }
         }
 
-        Rectangle {
+        Item {
             id: actionBox
-            border.color: "black"
-            color: "white"
             width: 60
             height: parent.height
             anchors.top: parent.top
@@ -100,7 +98,9 @@ Item {
             anchors.right: parent.right
 
             Button {
-                anchors.fill: parent
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
 
                 iconSource: (detailTypeInfo.actionIcon) ? detailTypeInfo.actionIcon : "../assets/icon_chevron_right.png"
                 onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
