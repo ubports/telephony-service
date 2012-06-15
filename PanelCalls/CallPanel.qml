@@ -66,8 +66,7 @@ Item {
 
             isLast: true
             isIcon: true
-            // FIXME: use a real icon for call log
-            iconSource: "../assets/call_icon_voicemail_inactive.png"
+            iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
             text: "Call Log"
             onClicked: telephony.showCallLog();
         }
