@@ -17,44 +17,41 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "calllogmodel.h"
+#include "conversationlogmodel.h"
 #include <TelepathyLoggerQt4/Event>
-#include <TelepathyLoggerQt4/CallEvent>
+#include <TelepathyLoggerQt4/TextEvent>
 
-QVariant CallLogEntry::data(int role) const
+QVariant ConversationLogEntry::data(int role) const
 {
-    switch(role) {
-    case CallLogModel::Duration:
-        return duration;
-    case CallLogModel::Missed:
-        return missed;
+    switch (role) {
+    case ConversationLogModel::Text:
+        return text;
     default:
         return LogEntry::data(role);
     }
 }
 
-CallLogModel::CallLogModel(QObject *parent) :
+ConversationLogModel::ConversationLogModel(QObject *parent) :
     AbstractLoggerModel(parent)
 {
     // set the role names
     QHash<int, QByteArray> roles = roleNames();
-    roles[Duration] = "duration";
-    roles[Missed] = "missed";
+    roles[Text] = "text";
     setRoleNames(roles);
 
-    fetchCallLog(Tpl::EventTypeMaskCall);
+    fetchCallLog(Tpl::EventTypeMaskText);
 }
 
-LogEntry *CallLogModel::createEntry(const Tpl::EventPtr &event)
+LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
 {
-    CallLogEntry *entry = new CallLogEntry();
-    Tpl::CallEventPtr callEvent = event.dynamicCast<Tpl::CallEvent>();
+    ConversationLogEntry *entry = new ConversationLogEntry();
+    Tpl::TextEventPtr textEvent = event.dynamicCast<Tpl::TextEvent>();
 
-    if (callEvent.isNull()) {
-        qWarning() << "The event" << event << "is not a Tpl::CallEvent!";
+    if (!textEvent) {
+        qWarning() << "The event" << event << "is not a Tpl::TextEvent!";
     }
 
-    entry->missed = (callEvent->endReason() == Tp::CallStateChangeReasonNoAnswer);
-    entry->duration = callEvent->duration();
+    entry->text = textEvent->message();
     return entry;
 }
+

@@ -1,22 +1,26 @@
 # QML plugin
 
 set(plugin_SRCS
+    abstractloggermodel.cpp
     calllogmodel.cpp
     calllogproxymodel.cpp
     components.cpp
     channelhandler.cpp
     chatmanager.cpp
     callmanager.cpp
+    conversationlogmodel.cpp
     telepathyhelper.cpp
     )
 
 set(plugin_HDRS
+    abstractloggermodel.h
     calllogmodel.h
     calllogproxymodel.h
     components.h
     channelhandler.h
     chatmanager.h
     callmanager.h
+    conversationlogmodel.h
     telepathyhelper.h
     )
 

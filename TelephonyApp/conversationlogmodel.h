@@ -17,32 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CALLLOGMODEL_H
-#define CALLLOGMODEL_H
+#ifndef CONVERSATIONLOGMODEL_H
+#define CONVERSATIONLOGMODEL_H
 
 #include "abstractloggermodel.h"
-#include <QTime>
 
-class CallLogEntry : public LogEntry {
+class ConversationLogEntry : public LogEntry {
 public:
     QVariant data(int role) const;
-    QTime duration;
-    bool missed;
+    QString text;
 };
 
-class CallLogModel : public AbstractLoggerModel
+class ConversationLogModel : public AbstractLoggerModel
 {
     Q_OBJECT
 public:
-    enum CallLogRoles {
-        Duration = AbstractLoggerModel::LastLogRole,
-        Missed
+    enum ConversationLogRoles {
+        Text = AbstractLoggerModel::LastLogRole
     };
 
-    explicit CallLogModel(QObject *parent = 0);
+    explicit ConversationLogModel(QObject *parent = 0);
     
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
 };
 
-#endif // CALLLOGMODEL_H
+#endif // CONVERSATIONLOGMODEL_H
