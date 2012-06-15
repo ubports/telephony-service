@@ -10,7 +10,6 @@ AbstractButton {
     property alias iconSource: icon.source // FIXME: think of a way to have the selected state done automatically
     property alias text: label.text
     property alias subtext: sublabel.text
-    property alias sussubtext: subsublabel.text
     property bool selected: false
     property bool topSeparator: false
     property bool bottomSeparator: true
@@ -116,22 +115,6 @@ AbstractButton {
         anchors.rightMargin: listDelegate.__padding
         fontSize: "medium"
         elide: Text.ElideRight
-
-        color: listDelegate.__textColor
-        style: Text.Raised
-        styleColor: "white"
-        opacity: listDelegate.enabled ? 1.0 : 0.5
-    }
-
-    TextCustom {
-        id: subsublabel
-
-        anchors.baseline: parent.bottom
-        anchors.baselineOffset: -listDelegate.__padding + 2
-        anchors.right: parent.right
-        anchors.rightMargin: listDelegate.__padding
-        horizontalAlignment: Text.AlignRight
-        fontSize: "small"
 
         color: listDelegate.__textColor
         style: Text.Raised
