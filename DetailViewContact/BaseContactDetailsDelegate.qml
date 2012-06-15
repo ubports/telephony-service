@@ -3,13 +3,21 @@ import "../Widgets"
 
 Item {
     id: contactDetailsItem
-    height: editable ? editableGroup.height : readOnlyGroup.height
+
+    /* For deleted items it's not enough to hide them, they will still take space in
+       the layout. We also need to set the height to zero to make them completely go away */
+    height: (deleted) ? 0 : ((editable) ? editableGroup.height : readOnlyGroup.height)
+    opacity: (deleted) ? 0.0 : 1.0
 
     property variant detail
     property variant detailTypeInfo
 
     property bool editable: false
     property bool added: false
+    /* We need to keep track of the deleted state of a detail because it will be
+       actually deleted from the model only when we save the contact, even if we
+       have already called contact.removeDetail() on it. */
+    property bool deleted: false
 
     signal clicked(string value)
     signal actionClicked(string value)
@@ -139,7 +147,10 @@ Item {
                 height: width
                 icon: "../assets/icon_minus.png"
 
-                onClicked: deleteClicked()
+                onClicked: {
+                    deleted = true;
+                    deleteClicked();
+                }
             }
 
             Item {

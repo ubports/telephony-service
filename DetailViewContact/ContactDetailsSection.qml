@@ -17,7 +17,8 @@ Column {
         var added = [];
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
-            if (child && child.item && child.item.save && child.item.save instanceof Function) {
+            if (child && child.item && child.item.save && child.item.save instanceof Function &&
+               !child.item.deleted) {
                 child.item.save();
                 if (child.item.added) {
                     added.push(child.item.detail);
