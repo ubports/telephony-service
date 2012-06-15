@@ -54,6 +54,11 @@ Item {
         // the contact details will be loaded once the contact loads
     }
 
+    function createNewContact(contacts) {
+        rightPaneContent.source = "DetailViewContact/ContactDetails.qml"
+        rightPaneContent.item.createNewContact(contacts)
+    }
+
     function startNewMessage() {
         rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
         rightPaneContent.item.newMessage = true
@@ -85,6 +90,15 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+
+        Image {
+            id: background
+
+            anchors.fill: parent
+            source: "assets/noise_tile.png"
+            fillMode: Image.Tile
+            cache: false
+        }
 
         Tabs {
             id: tabs
@@ -129,6 +143,17 @@ Item {
                     break;
                 }
             }
+        }
+
+        Rectangle {
+            id: border
+
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            width: 1
+            color: "white"
+            opacity: 0.25
         }
     }
 

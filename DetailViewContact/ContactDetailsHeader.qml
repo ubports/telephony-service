@@ -6,9 +6,7 @@ Item {
     id: contactDetailsHeader
 
     property variant contact: null
-
-    signal editClicked
-    signal saveClicked
+    property variant editable: false
 
     width: parent.width
     height: 100
@@ -17,12 +15,13 @@ Item {
     function contactName() {
         if (!contact)
             return "";
-        if (contact.displayLabel != "")
+        if (contact.displayLabel)
             return contact.displayLabel
-        if (contact.nickname.nickname != "")
+        if (contact.nickname && contact.nickname.nickname)
             return contact.nickname.nickname;
-        else if (contact.presence.nickname != "")
+        else if (contact.presence && contact.presence.nickname)
             return contact.presence.nickname;
+        else return "";
     }
 
     function iconForState(state) {
@@ -59,6 +58,13 @@ Item {
         }
     }
 
+    function save() {
+        // FIXME: can't save the name for now because the displaylabel can't
+        // be edited and the proper fields to edit are all these associated with
+        // the Name detail. But the design doesn't specify how to display these
+        // during editing, so this is on hold for now.
+    }
+
     Image {
         id: avatar
         anchors.left: parent.left
@@ -79,7 +85,7 @@ Item {
     Column {
         anchors.left: avatar.right
         anchors.top: parent.top
-        anchors.right: editButton.left
+        anchors.right: parent.right
         anchors.margins: 10
 
         spacing: 10
@@ -90,6 +96,29 @@ Item {
             anchors.right: parent.right
             fontSize: "x-large"
             text: contactDetailsHeader.contactName()
+
+            opacity: !editable ? 1.0 : 0.0
+        }
+
+        Rectangle {
+            id: editorArea
+            border.color: "black"
+            border.width: 1
+            color: "white"
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: contactNameEditor.height + 20
+            opacity: editable ? 1.0 : 0.0
+
+            TextContactDetailsEditor {
+                id: contactNameEditor
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.margins: 10
+                text: contactDetailsHeader.contactName()
+            }
         }
 
         TextCustom {
@@ -97,12 +126,15 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             text: "A social update will show in here"
+
+            opacity: !editable ? 1.0 : 0.0
         }
 
         Row {
             anchors.left: parent.left
             anchors.right: parent.right
             spacing: 5
+            opacity: !editable ? 1.0 : 0.0
 
             Image {
                 anchors.top: parent.top
@@ -114,31 +146,6 @@ Item {
             TextCustom {
                 anchors.verticalCenter: parent.verticalCenter
                 text: (contact) ? nameForState(contact.presence.state) : ""
-            }
-        }
-    }
-
-    TextButton {
-        id: editButton
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.margins: 10
-        text: "Edit"
-        color: "gray"
-        radius: 5
-        height: 30
-        width: 70
-
-        // FIXME: re-enable this button once contact modification is properly implemented
-        visible: false
-
-        onClicked: {
-            if (text == "Edit") {
-                text = "Save"
-                contactDetailsHeader.editClicked()
-            } else {
-                text = "Edit"
-                contactDetailsHeader.saveClicked()
             }
         }
     }

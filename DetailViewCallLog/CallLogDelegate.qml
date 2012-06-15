@@ -99,14 +99,14 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
 
-        IconButton {
+        Button {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.margins: 5
             height: width
 
-            icon: "../assets/call_icon.png"
+            iconSource: "../assets/call_icon.png"
 
             onClicked: callItem.actionClicked(contactId, phoneNumber)
         }

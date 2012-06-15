@@ -31,19 +31,17 @@ Item {
             cursorVisible: focus
         }
 
-        TextButton {
+        Button {
             id: sendButton
             anchors {
                 right: newMessageBox.right
                 rightMargin: 10
                 verticalCenter: parent.verticalCenter
             }
-            height: 30
-            radius: 10
-            color: "darkGray"
-            width: 80
-            smooth: true
-            text: "send"
+            height: 25
+            color: "#37b301"
+            width: 62
+            text: "Send"
             onClicked: {
                 footer.newMessage(textInput.text)
                 textInput.text = ""

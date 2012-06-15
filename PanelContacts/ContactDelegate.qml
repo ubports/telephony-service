@@ -17,6 +17,6 @@ ListItem {
     }
 
     text: contactName()
-    iconSource: (contact.avatar.imageUrl && (contact.avatar.imageUrl.toString().length > 0))
+    iconSource: (contact && contact.avatar.imageUrl && (contact.avatar.imageUrl.toString().length > 0))
                 ? contact.avatar.imageUrl : "../assets/default_avatar.png"
 }
