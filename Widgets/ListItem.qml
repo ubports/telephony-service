@@ -1,7 +1,7 @@
 import QtQuick 1.1
 
 AbstractButton {
-    id: listDelegate
+    id: listItem
 
     width: 250
     height: (isIcon && !__hasSubLabel ? 30 : 54) + topSeparatorLine.height + bottomSeparatorLine.height
@@ -21,7 +21,7 @@ AbstractButton {
     Rectangle {
         id: background
 
-        visible: listDelegate.selected
+        visible: listItem.selected
         anchors.fill: body
         color: "white"
         opacity: 0.7
@@ -35,7 +35,7 @@ AbstractButton {
         anchors.right: parent.right
         height: visible ? 2 : 0
         source: "artwork/ListItemSeparator.png"
-        visible: listDelegate.topSeparator
+        visible: listItem.topSeparator
     }
 
     Image {
@@ -46,7 +46,7 @@ AbstractButton {
         anchors.right: parent.right
         height: visible ? 2 : 0
         source: "artwork/ListItemSeparator.png"
-        visible: listDelegate.bottomSeparator
+        visible: listItem.bottomSeparator
     }
 
     Item {
@@ -70,17 +70,17 @@ AbstractButton {
 
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: 1
-                width: listDelegate.isIcon ? 16 : 36
+                width: listItem.isIcon ? 16 : 36
                 height: width
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
-                opacity: listDelegate.enabled ? 1.0 : 0.5
+                opacity: listItem.enabled ? 1.0 : 0.5
             }
 
             BorderImage {
                 id: frame
 
-                visible: !listDelegate.isIcon
+                visible: !listItem.isIcon
                 source: "artwork/ListItemFrame.png"
                 anchors.fill: icon
                 anchors.bottomMargin: -1
@@ -96,22 +96,22 @@ AbstractButton {
         TextCustom {
             id: label
 
-            property bool centered: !listDelegate.__hasSubLabel
+            property bool centered: !listItem.__hasSubLabel
 
             anchors.top: !centered ? parent.top : undefined
-            anchors.topMargin: !centered ? listDelegate.__padding - 3 : 0
+            anchors.topMargin: !centered ? listItem.__padding - 3 : 0
             anchors.left: iconContainer.right
             anchors.leftMargin: 1
             anchors.right: parent.right
-            anchors.rightMargin: listDelegate.__padding
+            anchors.rightMargin: listItem.__padding
             anchors.verticalCenter: centered ? parent.verticalCenter : undefined
             fontSize: "large"
             elide: Text.ElideRight
 
-            color: listDelegate.__textColor
+            color: listItem.__textColor
             style: Text.Raised
             styleColor: "white"
-            opacity: listDelegate.enabled ? 1.0 : 0.5
+            opacity: listItem.enabled ? 1.0 : 0.5
         }
 
         TextCustom {
@@ -122,14 +122,14 @@ AbstractButton {
             anchors.top: label.bottom
             anchors.topMargin: 1
             anchors.right: parent.right
-            anchors.rightMargin: listDelegate.__padding
+            anchors.rightMargin: listItem.__padding
             fontSize: "medium"
             elide: Text.ElideRight
 
-            color: listDelegate.__textColor
+            color: listItem.__textColor
             style: Text.Raised
             styleColor: "white"
-            opacity: listDelegate.enabled ? 1.0 : 0.5
+            opacity: listItem.enabled ? 1.0 : 0.5
         }
     }
 }
