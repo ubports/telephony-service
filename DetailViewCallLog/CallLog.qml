@@ -6,44 +6,54 @@ Item {
     property string viewName: "callLog"
 
     Item {
+        id: background
+
+        anchors.fill: parent
+
+        Image {
+            anchors.fill: parent
+            source: "../assets/noise_tile.png"
+            fillMode: Image.Tile
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "black"
+            opacity: 0.05
+        }
+    }
+
+    Tabs {
         id: buttonGroup
+
         anchors.top: parent.top
+        anchors.topMargin: 7
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+
+        model: [
+            {
+                "text": "All"
+            },
+            {
+                "text": "Missed"
+            }
+        ]
+        buttonsExpanded: false
+        onCurrentTabChanged: proxyModel.onlyMissedCalls = (model[currentTab]["text"] == "Missed")
+    }
+
+    Rectangle {
+        id: separator
+
+        anchors.top: buttonGroup.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 5
-        height: childrenRect.height
-
-        Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: parent.top
-            height: 30
-            spacing: 1
-
-            // FIXME: use a proper component here once we get the visual designs
-            Button {
-                id: allButton
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                text: "All"
-                width: 70
-
-                onClicked: {
-                    proxyModel.onlyMissedCalls = false;
-                }
-            }
-
-            Button {
-                id: missedButton
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                text: "Missed"
-                width: 70
-
-                onClicked: {
-                    proxyModel.onlyMissedCalls = true;
-                }
-            }
-        }
+        height: 1
+        color: "white"
+        opacity: 0.65
     }
 
     CallLogProxyModel {
@@ -52,13 +62,32 @@ Item {
         onlyMissedCalls: false
     }
 
-    ListView {
-        id: callLogView
-        anchors.top: buttonGroup.bottom
+    Item {
+        id: logBackground
+
+        anchors.top: separator.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.margins: 5
+
+        Image {
+            anchors.fill: parent
+            source: "../assets/right_pane_pattern.png"
+            fillMode: Image.Tile
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "white"
+            opacity: 0.3
+        }
+    }
+
+    ListView {
+        id: callLogView
+
+        clip: true
+        anchors.fill: logBackground
         // FIXME: references to runtime and fake model need to be removed before final release
         model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel
 
