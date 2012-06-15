@@ -45,6 +45,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
 
+            topSeparator: true
             isIcon: true
             iconSource: selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
             text: "Keypad"
@@ -64,7 +65,6 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            isLast: true
             isIcon: true
             iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
             text: "Call Log"

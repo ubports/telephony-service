@@ -4,7 +4,7 @@ AbstractButton {
     id: listDelegate
 
     width: 250
-    height: isIcon && !__hasSubLabel ? 32 : 56
+    height: (isIcon && !__hasSubLabel ? 30 : 54) + (topSeparator ? 2 : 0) + (bottomSeparator ? 2 : 0)
 
     property bool isIcon: false // FIXME: not nice
     property alias iconSource: icon.source // FIXME: think of a way to have the selected state done automatically
@@ -12,7 +12,8 @@ AbstractButton {
     property alias subtext: sublabel.text
     property alias sussubtext: subsublabel.text
     property bool selected: false
-    property bool isLast: false // FIXME: should be computed automatically
+    property bool topSeparator: false
+    property bool bottomSeparator: true
 
     property int __padding: 10
     property bool __hasSubLabel: subtext != ""
@@ -35,6 +36,7 @@ AbstractButton {
         anchors.right: parent.right
         height: 2
         source: "artwork/ListItemSeparator.png"
+        visible: listDelegate.topSeparator
     }
 
     Image {
@@ -43,14 +45,13 @@ AbstractButton {
         anchors.right: parent.right
         height: 2
         source: "artwork/ListItemSeparator.png"
-        visible: listDelegate.isLast
+        visible: listDelegate.bottomSeparator
     }
 
     Item {
         id: iconContainer
 
         anchors.top: parent.top
-        anchors.topMargin: 1
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         width: 54
@@ -59,7 +60,7 @@ AbstractButton {
             id: icon
 
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: 2
+            anchors.verticalCenterOffset: (topSeparator ? 1 : 0) + (bottomSeparator ? 0 : 1)
             width: listDelegate.isIcon ? 16 : 36
             height: width
             sourceSize.width: width
@@ -95,7 +96,7 @@ AbstractButton {
         anchors.right: parent.right
         anchors.rightMargin: listDelegate.__padding
         anchors.verticalCenter: centered ? parent.verticalCenter : undefined
-        anchors.verticalCenterOffset: centered ? 1 : 0
+        anchors.verticalCenterOffset: centered ? (topSeparator ? 0 : -1) + (bottomSeparator ? 0 : 1) : 0
         fontSize: "large"
         elide: Text.ElideRight
 

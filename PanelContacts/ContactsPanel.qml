@@ -37,6 +37,7 @@ Item {
         anchors.top: contactsSearchBox.bottom
         anchors.topMargin: 10
 
+        topSeparator: true
         isIcon: true
         iconSource: "../assets/icon_plus.png"
         text: "Add a new contact"

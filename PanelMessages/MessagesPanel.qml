@@ -27,6 +27,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
+        topSeparator: true
         isIcon: true
         iconSource: "../assets/icon_message_grey.png"
         text: "New Message"
