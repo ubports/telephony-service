@@ -49,6 +49,15 @@ AbstractButton {
         visible: listItem.bottomSeparator
     }
 
+    Image {
+        visible: listItem.selected
+        anchors.top: body.top
+        anchors.topMargin: 2
+        anchors.right: body.right
+        anchors.rightMargin: 2
+        source: "../assets/list_item_selected_triangle.png"
+    }
+
     Item {
         id: body
 
