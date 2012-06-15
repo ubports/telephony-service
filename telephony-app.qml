@@ -3,10 +3,10 @@ import QtMobility.contacts 1.1
 import TelephonyApp 0.1
 import "ContactUtils"
 
-Rectangle {
+Item {
     id: telephony
-    width: 800
-    height: 600
+    width: 570
+    height: 487
 
     function startCallToContact(contact, number) {
         // To keep this simple we rely on the fact that setting source to a
@@ -54,6 +54,11 @@ Rectangle {
         // the contact details will be loaded once the contact loads
     }
 
+    function createNewContact(contacts) {
+        rightPaneContent.source = "DetailViewContact/ContactDetails.qml"
+        rightPaneContent.item.createNewContact(contacts)
+    }
+
     function startNewMessage() {
         rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
         rightPaneContent.item.newMessage = true
@@ -85,6 +90,15 @@ Rectangle {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+
+        Image {
+            id: background
+
+            anchors.fill: parent
+            source: "assets/noise_tile.png"
+            fillMode: Image.Tile
+            cache: false
+        }
 
         Tabs {
             id: tabs
@@ -129,6 +143,17 @@ Rectangle {
                     break;
                 }
             }
+        }
+
+        Rectangle {
+            id: border
+
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            width: 1
+            color: "white"
+            opacity: 0.25
         }
     }
 

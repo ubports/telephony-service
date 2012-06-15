@@ -16,7 +16,7 @@ DropDownSearch {
         }
     }
     // FIXME: references to runtime and fake model need to be removed before final release
-    model: runtime ? fakeContacts : contacts
+    model: typeof(runtime) != "undefined" ? fakeContacts : contacts
 
     delegate: ContactsSearchDelegate {
         anchors.left: parent ? parent.left : undefined
