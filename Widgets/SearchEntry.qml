@@ -50,8 +50,6 @@ AbstractButton {
     height: 25
     width: 100
 
-    height: 30
-
     BorderImage {
         anchors.fill: parent
         source: "../assets/input_field_background.sci"
