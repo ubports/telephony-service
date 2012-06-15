@@ -99,7 +99,6 @@ Item {
             anchors.fill: parent
             source: "assets/noise_tile.png"
             fillMode: Image.Tile
-            cache: false
         }
 
         Tabs {
@@ -164,7 +163,7 @@ Item {
             anchors.right: parent.right
             width: 1
             color: "white"
-            opacity: 0.25
+            opacity: 0.3
         }
     }
 
@@ -183,6 +182,15 @@ Item {
                 id: rightPaneContent
                 anchors.fill: parent
             }
+        }
+
+        Image {
+            id: rightPaneBorder
+
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            source: "assets/detailview_left_border.png"
         }
     }
 
