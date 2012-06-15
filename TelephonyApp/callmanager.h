@@ -43,13 +43,17 @@ public:
 signals:
     void callReady(const QString &contactId);
     void callEnded(const QString &contactId);
+    void onHoldChanged(const QString &contactId, bool hold);
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
     void onContactsAvailable(Tp::PendingOperation *op);
     void onCallStateChanged(Tp::CallState state);
+    void onCallFlagsChanged(Tp::CallFlags flags);
 
 private:
+    QString callChannelToContactId(Tp::CallChannel *channel);
+
     QMap<QString, Tp::CallChannelPtr> mChannels;
     QMap<QString, Tp::ContactPtr> mContacts;
 };
