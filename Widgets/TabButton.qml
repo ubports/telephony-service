@@ -21,13 +21,17 @@ AbstractButton {
 
     property int count
     property alias iconSource: icon.source
+    property alias text: label.text
+    property alias textSize: label.fontSize
+    property alias textColor: label.color
     property bool selected
     property bool isFirst
     property bool isLast
+    property int contentWidth: text != "" ? invisibleLabel.paintedWidth : icon.paintedWidth
+    property int horizontalPadding
 
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-    width: tabs.width / count + (isLast ? 0 : 1) // FIXME: reference to tabs
 
     BorderImage {
         id: background
@@ -51,9 +55,37 @@ AbstractButton {
     Image {
         id: icon
 
-        anchors.centerIn: parent
-        anchors.horizontalCenterOffset: isLast ? 0 : isFirst ? 2 : -1
-        anchors.verticalCenterOffset: 2
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.topMargin: 6
+        anchors.bottomMargin: 4
+
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenterOffset: isFirst ? 2 : 0
+        fillMode: Image.PreserveAspectFit
         source: selected ? modelData.iconSelected : modelData.iconUnselected
+    }
+
+    TextCustom {
+        id: label
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: tabButton.horizontalPadding
+        horizontalAlignment: Text.AlignHCenter
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: -1
+        fontSize: "large"
+        text: modelData.text ? modelData.text : ""
+        elide: Text.ElideRight
+    }
+
+    /* Invisible label that is used for width computations */
+    TextCustom {
+        id: invisibleLabel
+
+        visible: false
+        text: label.text
+        fontSize: label.fontSize
     }
 }
