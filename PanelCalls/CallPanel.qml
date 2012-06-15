@@ -20,7 +20,7 @@ Item {
 
         rightIconSource: "../assets/call_icon.png"
         rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
-//        hint: "Quick dial"
+        hint: "Quick dial"
 
         onLeftIconClicked: text = ""
         onRightIconClicked: {

@@ -15,7 +15,7 @@ Item {
         anchors.rightMargin: 10
 
         leftIconSource: text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
-//        hint: "Search messages"
+        hint: "Search messages"
         onLeftIconClicked: text = ""
     }
 
