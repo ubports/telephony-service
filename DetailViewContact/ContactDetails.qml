@@ -14,6 +14,7 @@ Item {
     property bool editable: false
     property variant contact: null
     property variant added: false
+    property variant contactsModel
 
     onContactChanged: editable = false
 
@@ -21,6 +22,7 @@ Item {
     height: 600
 
     function createNewContact(contactsModel) {
+        contactDetails.contactsModel = contactsModel;
         contact = Qt.createQmlObject("import QtMobility.contacts 1.1; Contact {}", contactsModel);
         editable = true;
         added = true;
@@ -196,8 +198,8 @@ Item {
                         console.log("Add detail: " + contact.addDetail(addedDetails[i]));
                     }
 
-                    console.log("Modified ?: " + contact.modified + " id " + contact.contactId);
                     if (contact.modified) contact.save();
+                    if (contact.added) contactsModel.saveContact(contact);
 
                     editable = false;
                 }

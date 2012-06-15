@@ -17,7 +17,8 @@ Column {
         var added = [];
         for (var i = 0; i < children.length; i++) {
             var child = children[i];
-            if (child && child.item && child.item.save && child.item.save instanceof Function) {
+            if (child && child.item && child.item.save && child.item.save instanceof Function &&
+               !child.item.deleted) {
                 child.item.save();
                 if (child.item.added) {
                     added.push(child.item.detail);
@@ -71,7 +72,7 @@ Column {
     Item {
         anchors.left: parent.left
         anchors.right: parent.right
-        height: childrenRect.height + 16
+        height: Math.max(addText.paintedHeight, addButton.height) + 16
         opacity: editable ? 1.0 : 0.0
 
         ButtonWithForeground {
@@ -84,11 +85,12 @@ Column {
         }
 
         TextCustom {
+            id: addText
             anchors.left: addButton.right
             anchors.leftMargin: 8
             anchors.verticalCenter: addButton.verticalCenter
             color: "green"
-            text: detailTypeInfo.newItemText
+            text: (detailTypeInfo.newItemText) ? detailTypeInfo.newItemText : ""
             fontSize: "x-large"
         }
 
