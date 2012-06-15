@@ -15,6 +15,10 @@ Rectangle {
     property variant callStarted
     property variant contact
     property string number: ""
+    property bool onHold: false
+    property bool isSpeaker: false
+    property bool isMuted: false
+    property bool isDtmf: false
 
     function startCall() {
         callStarted = new Date();
@@ -110,7 +114,16 @@ Rectangle {
             height: 45
             color: "#797979"
             iconSource: "../assets/icon_keypad_white.png"
-            onClicked: keypad.visible = !keypad.visible
+            onClicked: {
+                if(liveCall.isDtmf) {
+                    color = "#797979"
+                } else {
+                    /* TODO: set to a proper color */
+                    color = "#000000"
+                }
+                liveCall.isDtmf = !liveCall.isDtmf
+                keypad.visible = liveCall.isDtmf
+            }
         }
 
         Button {
@@ -118,6 +131,16 @@ Rectangle {
             height: 45
             color: "#797979"
             iconSource: "../assets/icon_speaker_white.png"
+            onClicked: {
+                if(liveCall.isSpeaker) {
+                    color = "#797979"
+                } else {
+                    /* TODO: set to a proper color */
+                    color = "#000000"
+                }
+                liveCall.isSpeaker = !liveCall.isSpeaker
+                callManager.setSpeaker(liveCall.number, liveCall.isSpeaker)
+            }
         }
 
         Button {
@@ -125,6 +148,16 @@ Rectangle {
             height: 45
             color: "#797979"
             iconSource: "../assets/icon_pause_white.png"
+            onClicked: {
+                if(liveCall.onHold) {
+                    color = "#797979"
+                } else {
+                    /* TODO: set to a proper color */
+                    color = "#000000"
+                }
+                liveCall.onHold = !liveCall.onHold
+                callManager.setHold(liveCall.number, liveCall.onHold)
+            }
         }
 
         Button {
@@ -132,6 +165,16 @@ Rectangle {
             height: 45
             color: "#797979"
             iconSource: "../assets/icon_mute_white.png"
+            onClicked: {
+                if(liveCall.isMuted) {
+                    color = "#797979"
+                } else {
+                    /* TODO: set to a proper color */
+                    color = "#000000"
+                }
+                liveCall.isMuted = !liveCall.isMuted
+                callManager.setMute(liveCall.number, liveCall.isMuted)
+            }
         }
     }
 

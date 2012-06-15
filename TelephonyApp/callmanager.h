@@ -36,6 +36,9 @@ public:
     Q_INVOKABLE void startCall(const QString &contactId);
     Q_INVOKABLE void endCall(const QString &contactId);
     Q_INVOKABLE void sendDTMF(const QString &contactId, const QString &key);
+    Q_INVOKABLE void setHold(const QString &contactId, bool hold);
+    Q_INVOKABLE void setSpeaker(const QString &contactId, bool speaker);
+    Q_INVOKABLE void setMute(const QString &contactId, bool mute);
 
 signals:
     void callReady(const QString &contactId);

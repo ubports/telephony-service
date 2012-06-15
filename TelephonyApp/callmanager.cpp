@@ -24,6 +24,13 @@
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 
+#define ANDROID_DBUS_ADDRESS "com.canonical.Android"
+#define ANDROID_TELEPHONY_DBUS_PATH "/com/canonical/android/telephony/Telephony"
+#define ANDROID_TELEPHONY_DBUS_IFACE "com.canonical.android.telephony.Telephony"
+
+#define TP_UFA_DBUS_ADDRESS "org.freedesktop.Telepathy.Connection.ufa.ufa.ufa"
+#define TP_UFA_DBUS_MUTE_FACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
+
 CallManager::CallManager(QObject *parent)
 : QObject(parent)
 {
@@ -78,6 +85,43 @@ void CallManager::sendDTMF(const QString &contactId, const QString &key)
             content->startDTMFTone(event);
         }
     }
+}
+
+void CallManager::setHold(const QString &contactId, bool hold)
+{
+    if (!mChannels.contains(contactId))
+        return;
+
+    mChannels[contactId]->requestHold(hold);
+}
+
+void CallManager::setSpeaker(const QString &contactId, bool speaker)
+{
+    if (!mChannels.contains(contactId))
+        return;
+
+    QDBusInterface androidIf(ANDROID_DBUS_ADDRESS, 
+                             ANDROID_TELEPHONY_DBUS_PATH, 
+                             ANDROID_TELEPHONY_DBUS_IFACE);
+    if (speaker) {
+        androidIf.call("turnOnSpeaker", speaker, true);
+    } else {
+        androidIf.call("restoreSpeakerMode");
+    }
+}
+
+void CallManager::setMute(const QString &contactId, bool mute)
+{
+    Tp::ChannelPtr channel = mChannels[contactId];
+    if (!channel)
+        return;
+
+    // Replace this by a Mute interface method call when it
+    // becomes available in telepathy-qt
+    QDBusInterface callChannelIf(TP_UFA_DBUS_ADDRESS, 
+                                 channel->objectPath(), 
+                                 TP_UFA_DBUS_MUTE_FACE);
+    callChannelIf.call("RequestMuted", mute);
 }
 
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
