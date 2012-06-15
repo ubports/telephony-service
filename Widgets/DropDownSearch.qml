@@ -10,6 +10,7 @@ Item {
     property int listMaximumHeight: 400
     property alias text: entry.text
     property int currentIndex: -1
+    property alias hint: entry.hint
 
     property alias leftIconSource: entry.leftIconSource
     property alias leftIconVisible: entry.leftIconVisible
@@ -25,10 +26,8 @@ Item {
 
     SearchEntry {
         id: entry
-        anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 30
         onTextChanged: text != "" ? dropDownSearch.state = "searching" : dropDownSearch.state = "idle"
         onLeftIconClicked: parent.leftIconClicked()
         onRightIconClicked: parent.rightIconClicked()
