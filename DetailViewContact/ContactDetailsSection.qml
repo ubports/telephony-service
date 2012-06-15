@@ -74,14 +74,13 @@ Column {
         height: childrenRect.height + 16
         opacity: editable ? 1.0 : 0.0
 
-        IconButton {
+        ButtonWithForeground {
             id: addButton
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.topMargin: 8
             width: 20
-            height: width
-            icon: "../assets/icon_plus.png"
+            iconSource: "../assets/icon_plus.png"
         }
 
         TextCustom {

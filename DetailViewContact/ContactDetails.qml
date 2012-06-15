@@ -146,43 +146,31 @@ Item {
         height: 50
         color: "grey"
 
-        TextButton {
+        Button {
             id: deleteButton
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.margins: 10
             text: "Delete"
-            color: "white"
-            radius: 5
-            height: 30
-            width: 70
             opacity: (editable) ? 1.0 : 0.0
         }
 
-        TextButton {
+        Button {
             id: cancelButton
             anchors.top: parent.top
             anchors.right: editSaveButton.left
             anchors.margins: 10
             text: "Cancel"
-            color: "white"
-            radius: 5
-            height: 30
-            width: 70
             opacity: (editable) ? 1.0 : 0.0
             onClicked: editable = false
        }
 
-        TextButton {
+        Button {
             id: editSaveButton
             anchors.top: parent.top
             anchors.right: parent.right
             anchors.margins: 10
             text: (editable) ? "Save" : "Edit"
-            color: "white"
-            radius: 5
-            height: 30
-            width: 70
             onClicked: {
                 if (!editable) editable = true;
                 else {

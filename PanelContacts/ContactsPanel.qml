@@ -28,13 +28,11 @@ Rectangle {
 
     Button {
         id: newContact
-        height: 45
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: contactsSearchBox.bottom
 
-        icon: "../assets/icon_plus.png"
-        iconWidth: 35
+        iconSource: "../assets/icon_plus.png"
         text: "Add a new contact"
         onClicked: telephony.createNewContact(contactsModel)
     }

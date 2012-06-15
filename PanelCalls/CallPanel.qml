@@ -57,8 +57,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            icon: "../assets/icon_keypad.png"
-            iconWidth: 35
+            iconSource: "../assets/icon_keypad.png"
             text: "Dial Pad"
             onClicked: telephony.showDial();
         }
@@ -68,8 +67,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            icon: "../assets/icon_voicemail.png"
-            iconWidth: 35
+            iconSource: "../assets/icon_voicemail.png"
             text: "Voicemail"
         }
 
@@ -79,8 +77,7 @@ Item {
             anchors.right: parent.right
 
             // FIXME: use a real icon for call log
-            icon: "../assets/icon_voicemail.png"
-            iconWidth: 35
+            iconSource: "../assets/icon_voicemail.png"
             text: "Call Log"
             onClicked: telephony.showCallLog();
         }
