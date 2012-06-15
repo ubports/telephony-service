@@ -21,9 +21,11 @@ import "../fontUtils.js" as FontUtils
 //import "utils.js" as Utils
 
 AbstractButton {
+    id: searchEntry
+
     property alias text : searchInput.text
     property string searchQuery
-    property string placeHolderText: ""
+    property string hint: ""
     property bool active: false
     property alias forceCursorVisible: searchInput.forceCursorVisible
     property alias anyKeypressGivesFocus: searchInput.anyKeypressGivesFocus
@@ -45,32 +47,32 @@ AbstractButton {
     /* Keys forwarded to the search entry are forwarded to the text input. */
     Keys.forwardTo: [searchInput]
 
-    opacity: ( state == "selected" || state == "hovered" ) ? 1.0 : 0.7
+    height: 25
+    width: 100
 
     height: 30
 
     BorderImage {
         anchors.fill: parent
-        anchors.margins: -5
-        source: "../assets/search_background.sci"
+        source: "../assets/input_field_background.sci"
         smooth: false
     }
 
     Item {
         anchors.fill: parent
-        anchors.topMargin: 6
-        anchors.bottomMargin: 6
-        anchors.leftMargin: 6
-        anchors.rightMargin: 16
+        anchors.leftMargin: 5
+        anchors.rightMargin: 5
+        anchors.topMargin: 5
+        anchors.bottomMargin: 5
 
         Image {
             id: leftIcon
 
             anchors.left: parent.left
-            anchors.leftMargin: -9
-            anchors.verticalCenter: parent.verticalCenter
-            width: sourceSize.width
-            height: sourceSize.height
+            anchors.leftMargin: 5
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            sourceSize.height: height
 
             smooth: true
             source: leftIconSource
@@ -92,9 +94,10 @@ AbstractButton {
             id: rightIcon
 
             anchors.right: parent.right
-            anchors.rightMargin: -9
-            anchors.verticalCenter: parent.verticalCenter
-            width: parent.height
+            anchors.rightMargin: 5
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            sourceSize.height: height
 
             source: rightIconSource
             fillMode: Image.PreserveAspectFit
@@ -120,15 +123,15 @@ AbstractButton {
             Accessible.name: searchInstructions.text
             Accessible.role: Accessible.EditableText
 
-            anchors.left: leftIcon.right
-            anchors.leftMargin: -5
-            anchors.right: rightIcon.left
+            anchors.left: leftIcon.source != "" ? leftIcon.right : parent.left
+            anchors.leftMargin: 5
+            anchors.right: rightIcon.source != "" ? rightIcon.left : parent.right
             anchors.rightMargin: 5
             anchors.verticalCenter: parent.verticalCenter
             horizontalAlignment: Text.AlignLeft
 
-            color: "#ffffff"
-            font.pixelSize: FontUtils.sizeToPixels("large")
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            font.pixelSize: FontUtils.sizeToPixels("medium")
             focus: true
             selectByMouse: true
             cursorDelegate: cursor
@@ -165,7 +168,7 @@ AbstractButton {
                     property bool timerShowCursor: true
 
                     id: customCursor
-                    color: "white"
+                    color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
                     anchors.topMargin: 2
@@ -192,15 +195,14 @@ AbstractButton {
                 LayoutMirroring.enabled: false
                 //horizontalAlignment: Utils.isRightToLeft() ? Text.AlignRight : Text.AlignLeft
 
-                color: "white"
-                opacity: 0.5
-                fontSize: "x-large"
+                color: Qt.rgba(0.7, 0.7, 0.7, 1.0)
+                fontSize: "medium"
                 font.italic: true
                 text: {
                     if(searchInput.text || searchInput.inputMethodComposing)
                         return ""
                     else
-                        return placeHolderText
+                        return searchEntry.hint
                 }
             }
         }

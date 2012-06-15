@@ -22,5 +22,6 @@ Depends: ${shlibs:Depends},
          libqtfolks1,
          telepathy-mission-control-5,
          telepathy-ufa,
+         libqt4-declarative-shaders,
 Description: An application to execute telephony tasks such as calling and messaging
  An application to execute telephony tasks such as calling and messaging
