@@ -1,123 +1,86 @@
 import QtQuick 1.1
 import "../Widgets"
 
-Rectangle {
+Item {
     id: callItem
-    height: 64
-    border.color: "black"
-    border.width: 1
 
     signal clicked(string contactId)
     signal actionClicked(string contactId, string phoneNumber)
 
-    Rectangle {
-        height: 1
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        color: "black"
-    }
+    height: childrenRect.height
 
-    Image {
-        id: photoItem
-        source: avatar
-        width: 56
-        height: width
-        anchors.left: parent.left
-        anchors.leftMargin: 1
-        anchors.verticalCenter: parent.verticalCenter
-    }
+    ListItem {
+        id: infoBox
 
-    TextCustom {
-        id: displayNameItem
-        anchors.top: parent.top
-        anchors.topMargin: 1
-        anchors.left: photoItem.right
-        anchors.right: directionItem.left
-        anchors.leftMargin: 2
-        fontSize: "medium"
+        anchors.left: parent.left
+        anchors.right: separator.left
+        iconSource: avatar
         text: contactAlias
+        subtext: phoneNumber
+        onClicked: callItem.clicked(contactId)
     }
 
     TextCustom {
-        id: phoneTypeItem
-        anchors.top: displayNameItem.bottom
-        anchors.topMargin: 2
-        anchors.left: photoItem.right
-        anchors.leftMargin: 2
-        fontSize: "small"
-        text: phoneType
+        id: timeLabel
+
+        anchors.right: separator.left
+        anchors.rightMargin: 8
+        anchors.bottom: infoBox.bottom
+        anchors.bottomMargin: 5
+        fontSize: "medium"
+        width: 45
+        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+        style: Text.Raised
+        styleColor: "white"
+        text: timestamp
     }
 
-    TextCustom {
-        id: phoneItem
-        anchors.top: displayNameItem.bottom
-        anchors.topMargin: 2
-        anchors.left: phoneTypeItem.right
-        anchors.leftMargin: 4
-        fontSize: "small"
-        text: phoneNumber
-        transformOrigin: Item.Center
-    }
+    Row {
+        id: indicators
 
-    TextCustom {
-        id: dateItem
-        anchors.top: phoneTypeItem.bottom
-        anchors.topMargin: 2
-        anchors.left: photoItem.right
-        anchors.leftMargin: 2
-        fontSize: "small"
-        text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleLongDate)
-    }
+        anchors.left: timeLabel.left
+        anchors.right: timeLabel.right
+        anchors.bottom: timeLabel.top
+        anchors.bottomMargin: 2
 
-    Image {
-        id: directionItem
-        source: {
-            if(incoming) {
-                if(missed) {
-                    "../assets/icon_missed_call.png"
+        Image {
+            source: {
+                if(incoming) {
+                    if(missed) {
+                        "../assets/missed_call.png"
+                    } else {
+                        "../assets/received_call.png"
+                    }
                 } else {
-                    "../assets/icon_incoming_call.png"
+                    "../assets/outgoing_call.png"
                 }
-            } else {
-                "../assets/icon_outgoing_call.png"
             }
         }
-        width: height
-        height: dateItem.height
-        anchors.leftMargin: 1
-        anchors.left: dateItem.right
-        anchors.verticalCenter: dateItem.verticalCenter
     }
 
     Rectangle {
+        id: separator
+
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: actionBox.left
+        width: 1
+        color: "black"
+        opacity: 0.1
+    }
+
+    ListItem {
         id: actionBox
-        border.color: "black"
-        width: height
-        height: parent.height
+
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
+        width: height
 
-        Button {
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.margins: 5
-            height: width
-
-            iconSource: "../assets/call_icon.png"
-
-            onClicked: callItem.actionClicked(contactId, phoneNumber)
-        }
-    }
-
-    MouseArea {
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.bottom: parent.bottom
-        anchors.right: actionBox.left
-
-        onClicked: callItem.clicked(contactId)
+        iconSource: "../assets/tab_icon_call_inactive.png"
+        isIcon: true
+        topSeparator: infoBox.topSeparator
+        bottomSeparator: infoBox.bottomSeparator
+        onClicked: callItem.actionClicked(contactId, phoneNumber)
     }
 }
