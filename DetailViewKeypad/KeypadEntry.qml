@@ -26,7 +26,7 @@ Item {
         // FIXME: too small spacing
         spacing: 4
 
-        // FIXME: replace with IconButton
+        // FIXME: replace with ButtonWithForeground
         AbstractButton {
             id: clearButton
 

@@ -11,12 +11,8 @@ Item {
     onContactChanged: optionsList.model = null
     height: options.height + newButton.height
 
-    ColoredButton {
+    Button {
         id: newButton
-        color: "transparent"
-        borderColor: "black"
-        borderWidth: 1
-        radius: 0
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -53,12 +49,9 @@ Item {
 
         Repeater {
             id: optionsList
-            delegate: ColoredButton {
+            delegate: Button {
                 anchors.left: (parent) ? parent.left : undefined
                 anchors.right: (parent) ? parent.right : undefined
-                color: "white"
-                borderColor: "black"
-                borderWidth: 1
                 height: optionText.paintedHeight + 20
 
                 onClicked: {

@@ -105,73 +105,59 @@ Rectangle {
         rows: 2
         spacing: 1
 
-        IconButton {
+        Button {
             width: 90
             height: 45
             color: "#797979"
-            verticalMargin: 10
-            radius: 0
-            icon: "../assets/icon_keypad_white.png"
+            iconSource: "../assets/icon_keypad_white.png"
             onClicked: keypad.visible = !keypad.visible
         }
 
-        IconButton {
+        Button {
             width: 90
             height: 45
             color: "#797979"
-            verticalMargin: 10
-            radius: 0
-            icon: "../assets/icon_speaker_white.png"
+            iconSource: "../assets/icon_speaker_white.png"
         }
 
-        IconButton {
+        Button {
             width: 90
             height: 45
             color: "#797979"
-            verticalMargin: 10
-            radius: 0
-            icon: "../assets/icon_pause_white.png"
+            iconSource: "../assets/icon_pause_white.png"
         }
 
-        IconButton {
+        Button {
             width: 90
             height: 45
             color: "#797979"
-            verticalMargin: 10
-            radius: 0
-            icon: "../assets/icon_mute_white.png"
+            iconSource: "../assets/icon_mute_white.png"
         }
     }
 
-    IconButton {
+    Button {
         id: hangupButton
         anchors.topMargin: 12
         anchors.top: mainButtons.bottom
         anchors.left: mainButtons.left
-        verticalMargin: 10
 
-        icon: "../assets/icon_hangup_white.png"
+        iconSource: "../assets/icon_hangup_white.png"
         width: 117
         height: 38
         color: "#ef7575"
-        borderColor: "#f40000"
-        borderWidth: 2
 
         onClicked: endCall()
     }
 
-    IconButton {
+    Button {
         id: addToContactsButton
         anchors.topMargin: 12
         anchors.top: mainButtons.bottom
         anchors.right: mainButtons.right
-        verticalMargin: 10
 
-        icon: "../assets/icon_add_call.png"
+        iconSource: "../assets/icon_add_call.png"
         width: 57
         height: 38
         color: "#797979"
-        borderColor: "white"
-        borderWidth: 2
     }
 }

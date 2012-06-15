@@ -91,6 +91,15 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
+        Image {
+            id: background
+
+            anchors.fill: parent
+            source: "assets/noise_tile.png"
+            fillMode: Image.Tile
+            cache: false
+        }
+
         Tabs {
             id: tabs
             anchors.top: parent.top
@@ -134,6 +143,17 @@ Item {
                     break;
                 }
             }
+        }
+
+        Rectangle {
+            id: border
+
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            width: 1
+            color: "white"
+            opacity: 0.25
         }
     }
 

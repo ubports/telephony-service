@@ -47,12 +47,8 @@ Item {
         height: childrenRect.height
         visible: !editable
 
-        ColoredButton {
+        AbstractButton {
             id: contentBox
-            borderColor: "black"
-            borderWidth: 1
-            color: "white"
-            radius: 0
 
             anchors.left: parent.left
             anchors.right: actionBox.left
@@ -103,15 +99,10 @@ Item {
             anchors.bottom: contentBox.bottom
             anchors.right: parent.right
 
-            IconButton {
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: 5
-                height: 32
+            Button {
+                anchors.fill: parent
 
-                icon: (detailTypeInfo.actionIcon) ? detailTypeInfo.actionIcon : "../assets/icon_chevron_right.png"
-
+                iconSource: (detailTypeInfo.actionIcon) ? detailTypeInfo.actionIcon : "../assets/icon_chevron_right.png"
                 onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
             }
         }
@@ -137,15 +128,14 @@ Item {
             anchors.leftMargin: 10
             height: Math.max(editableContentBox.height, typeEditor.paintedHeight)
 
-            IconButton {
+            ButtonWithForeground {
                 id: removeButton
 
                 anchors.left: parent.left
                 anchors.leftMargin: -10
                 anchors.verticalCenter: parent.verticalCenter
                 width: 20
-                height: width
-                icon: "../assets/icon_minus.png"
+                iconSource: "../assets/icon_minus.png"
 
                 onClicked: {
                     deleted = true;
