@@ -49,7 +49,8 @@ Item {
             isIcon: true
             iconSource: selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
             text: "Keypad"
-            onClicked: telephony.showDial();
+            onClicked: telephony.showKeypad();
+            selected: telephony.keypad.loaded
         }
 
         ListItem {
@@ -69,6 +70,7 @@ Item {
             iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
             text: "Call Log"
             onClicked: telephony.showCallLog();
+            selected: telephony.callLog.loaded
         }
     }
 }

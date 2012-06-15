@@ -42,6 +42,7 @@ Item {
         iconSource: "../assets/icon_plus.png"
         text: "Add a new contact"
         onClicked: telephony.createNewContact(contactsModel)
+        selected: telephony.contactDetails.loaded && telephony.view.added
     }
 
     ContactModel {
@@ -73,6 +74,7 @@ Item {
 
         delegate: ContactDelegate {
             onClicked: contactsPanel.contactClicked(contact)
+            selected: telephony.contactDetails.loaded && telephony.view.contact == contact
         }
 
         section.property: "display"
