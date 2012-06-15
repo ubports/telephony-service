@@ -11,11 +11,11 @@ Item {
         anchors.rightMargin: 5
 
         SearchEntry {
-            anchors.fill: parent
+            anchors.left: parent.left
+            anchors.right: parent.right
             anchors.leftMargin: 4
             anchors.rightMargin: 4
-            anchors.topMargin: 8
-            anchors.bottomMargin: 8
+            anchors.verticalCenter: parent.verticalCenter
         }
 
         Rectangle {

@@ -7,30 +7,20 @@ Item {
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)
 
-    TextCustom {
-        id: hint
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.left: parent.left
-        anchors.margins: 5
-        anchors.leftMargin: 8
-        height: paintedHeight
-
-        text: "Quick Dial"
-    }
-
     // FIXME: port to use the QtMobility contacts model
     ContactsSearchCombo {
         id: contactsSearchBox
-        height: 30
-        anchors.top: hint.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 5
 
-        leftIconSource: text ? "../assets/cross.png" : "../assets/search_icon.png"
+        anchors.top: parent.top
+        anchors.topMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+
         rightIconSource: "../assets/call_icon.png"
         rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
+        hint: "Quick dial"
 
         onLeftIconClicked: text = ""
         onRightIconClicked: {
@@ -47,39 +37,40 @@ Item {
     Column {
         id: buttonsGroup
         anchors.top: contactsSearchBox.bottom
+        anchors.topMargin: 10
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 5
-        spacing: 5
 
-        Button {
-            height: 45
+        ListItem {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            iconSource: "../assets/icon_keypad.png"
-            text: "Dial Pad"
-            onClicked: telephony.showDial();
+            topSeparator: true
+            isIcon: true
+            iconSource: selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
+            text: "Keypad"
+            onClicked: telephony.showKeypad();
+            selected: telephony.keypad.loaded
         }
 
-        Button {
-            height: 45
+        ListItem {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            iconSource: "../assets/icon_voicemail.png"
+            isIcon: true
+            iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
             text: "Voicemail"
         }
 
-        Button {
-            height: 45
+        ListItem {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            // FIXME: use a real icon for call log
-            iconSource: "../assets/icon_voicemail.png"
+            isIcon: true
+            iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
             text: "Call Log"
             onClicked: telephony.showCallLog();
+            selected: telephony.callLog.loaded
         }
     }
 }

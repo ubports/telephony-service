@@ -2,51 +2,63 @@ import QtQuick 1.1
 import QtMobility.contacts 1.1
 import TelephonyApp 0.1
 import "ContactUtils"
+import "Widgets"
 
 Item {
     id: telephony
     width: 570
     height: 487
 
+    property alias viewSource: rightPaneContent.source
+    property alias view: rightPaneContent.item
+
+    // Inventory of all the views in the application
+    property ViewModel liveCall: ViewModel {source: "DetailViewLiveCall/LiveCall.qml"}
+    property ViewModel messages: ViewModel {source: "DetailViewMessages/MessagesView.qml"}
+    property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"}
+    property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"}
+    property ViewModel keypad: ViewModel {source: "DetailViewKeypad/KeypadView.qml"}
+    property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"}
+
     function startCallToContact(contact, number) {
-        // To keep this simple we rely on the fact that setting source to a
-        // local file will immadiately make the item availalable.
+        liveCall.load()
         rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
-        rightPaneContent.item.contact = contact
-        rightPaneContent.item.number = number
-        rightPaneContent.item.startCall()
+        view.contact = contact
+        view.number = number
+        view.startCall()
     }
 
     function startCallToNumber(number) {
-        rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
-        rightPaneContent.item.contact = null
-        rightPaneContent.item.number = number
-        rightPaneContent.item.startCall()
+        liveCall.load()
+        view.contact = null
+        view.number = number
+        view.startCall()
     }
 
     function callNumber(number) {
-        rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
-        rightPaneContent.item.contact = null
-        rightPaneContent.item.number = number
+        liveCall.load()
+        view.contact = null
+        view.number = number
         callManager.startCall(number);
     }
 
     function startChat(contact, number) {
-        rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
-        rightPaneContent.item.contact = contact
-        rightPaneContent.item.number = number
-        rightPaneContent.item.newMessage = false
+        messages.load()
+        view.contact = contact
+        view.number = number
+        view.newMessage = false
     }
 
     function endCall(duration) {
-        rightPaneContent.source = "Panes/CallEndedPane.qml"
-        rightPaneContent.item.text = duration;
-        rightPaneContent.item.postText = "";
+        callEnded.load()
+        view.text = duration;
+        view.postText = "";
     }
 
     function showContactDetails(contact) {
-        rightPaneContent.source = "DetailViewContact/ContactDetails.qml"
-        rightPaneContent.item.contact = contact
+        contactDetails.load()
+        view.contact = contact
+        view.added = false
     }
 
     function showContactDetailsFromId(contactId) {
@@ -55,21 +67,21 @@ Item {
     }
 
     function createNewContact(contacts) {
-        rightPaneContent.source = "DetailViewContact/ContactDetails.qml"
-        rightPaneContent.item.createNewContact(contacts)
+        contactDetails.load()
+        view.createNewContact(contacts)
     }
 
     function startNewMessage() {
-        rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
-        rightPaneContent.item.newMessage = true
+        messages.load()
+        view.newMessage = true
     }
 
-    function showDial() {
-        rightPaneContent.source = "DetailViewKeypad/KeypadView.qml"
+    function showKeypad() {
+        keypad.load()
     }
 
     function showCallLog() {
-        rightPaneContent.source = "DetailViewCallLog/CallLog.qml"
+        callLog.load()
     }
 
     ContactLoader {
@@ -90,6 +102,7 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        width: 250
 
         Image {
             id: background
@@ -102,46 +115,55 @@ Item {
         Tabs {
             id: tabs
             anchors.top: parent.top
+            anchors.topMargin: 7
             anchors.left: parent.left
+            anchors.leftMargin: 10
             anchors.right: parent.right
+            anchors.rightMargin: 10
 
-            Component.onCompleted: rightPaneContent.source = "Panes/CallEndedPane.qml";
-            onCurrentTabChanged: {
-                switch (tabs.currentTab) {
-                case 0:
-                    rightPaneContent.source = "Panes/CallEndedPane.qml";
-                    break;
-                case 1:
-                    rightPaneContent.source = "Panes/SelectMessagePane.qml";
-                    break;
-                case 2:
-                    rightPaneContent.source = "Panes/SelectContactPane.qml";
-                    break;
+            model: [
+                {
+                    "iconUnselected": "../assets/tab_icon_call_inactive.png",
+                    "iconSelected": "../assets/tab_icon_call_active.png",
+                    "panel": "PanelCalls/CallPanel.qml",
+                    "pane": "Panes/CallEndedPane.qml"
+                },
+                {
+                    "iconUnselected": "../assets/tab_icon_messaging_inactive.png",
+                    "iconSelected": "../assets/tab_icon_messaging_active.png",
+                    "panel": "PanelMessages/MessagesPanel.qml",
+                    "pane": "Panes/SelectMessagePane.qml"
+                },
+                {
+                    "iconUnselected": "../assets/tab_icon_contacts_inactive.png",
+                    "iconSelected": "../assets/tab_icon_contacts_active.png",
+                    "panel": "PanelContacts/ContactsPanel.qml",
+                    "pane": "Panes/SelectContactPane.qml"
                 }
-            }
+            ]
+
+            Component.onCompleted: rightPaneContent.source = tabs.model[tabs.currentTab].pane
+            onCurrentTabChanged: rightPaneContent.source = tabs.model[tabs.currentTab].pane
         }
 
-        width: 250
+        Rectangle {
+            id: separator
+
+            anchors.top: tabs.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 1
+            color: "white"
+        }
 
         Loader {
             id: leftPaneContent
-            anchors.top: tabs.bottom
+
+            anchors.top: separator.bottom
             anchors.bottom: leftPane.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            source: {
-                switch (tabs.currentTab) {
-                case 0:
-                    "PanelCalls/CallPanel.qml"
-                    break;
-                case 1:
-                    "PanelMessages/MessagesPanel.qml"
-                    break;
-                case 2:
-                    "PanelContacts/ContactsPanel.qml"
-                    break;
-                }
-            }
+            source: tabs.model[tabs.currentTab].panel
         }
 
         Rectangle {

@@ -5,7 +5,7 @@ import "../Widgets"
 import "../fontUtils.js" as Font
 import "../ContactUtils"
 
-Rectangle {
+Item {
     id: contactsPanel
 
     property alias searchQuery : contactsSearchBox.searchQuery
@@ -16,25 +16,33 @@ Rectangle {
 
     SearchEntry {
         id: contactsSearchBox
-        height: 30
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: 5
 
-        leftIconSource: text ? "../assets/cross.png" : "../assets/search_icon.png"
+        anchors.top: parent.top
+        anchors.topMargin: 10
+        anchors.left: parent.left
+        anchors.leftMargin: 10
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+
+        leftIconSource: text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
+        hint: "Search contacts"
         onLeftIconClicked: text = ""
     }
 
-    Button {
+    ListItem {
         id: newContact
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: contactsSearchBox.bottom
+        anchors.topMargin: 10
 
+        topSeparator: true
+        isIcon: true
         iconSource: "../assets/icon_plus.png"
         text: "Add a new contact"
         onClicked: telephony.createNewContact(contactsModel)
+        selected: telephony.contactDetails.loaded && telephony.view.added
     }
 
     ContactModel {
@@ -60,13 +68,13 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 5
         clip: true
         // FIXME: references to runtime and fake model need to be removed before final release
         model: typeof(runtime) != "undefined" ? fakeContacts : contactsModel
 
         delegate: ContactDelegate {
             onClicked: contactsPanel.contactClicked(contact)
+            selected: telephony.contactDetails.loaded && telephony.view.contact == contact
         }
 
         section.property: "display"

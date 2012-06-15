@@ -36,17 +36,24 @@ public:
     Q_INVOKABLE void startCall(const QString &contactId);
     Q_INVOKABLE void endCall(const QString &contactId);
     Q_INVOKABLE void sendDTMF(const QString &contactId, const QString &key);
+    Q_INVOKABLE void setHold(const QString &contactId, bool hold);
+    Q_INVOKABLE void setSpeaker(const QString &contactId, bool speaker);
+    Q_INVOKABLE void setMute(const QString &contactId, bool mute);
 
 signals:
     void callReady(const QString &contactId);
     void callEnded(const QString &contactId);
+    void onHoldChanged(const QString &contactId, bool hold);
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
     void onContactsAvailable(Tp::PendingOperation *op);
     void onCallStateChanged(Tp::CallState state);
+    void onCallFlagsChanged(Tp::CallFlags flags);
 
 private:
+    QString callChannelToContactId(Tp::CallChannel *channel);
+
     QMap<QString, Tp::CallChannelPtr> mChannels;
     QMap<QString, Tp::ContactPtr> mContacts;
 };
