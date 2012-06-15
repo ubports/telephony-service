@@ -23,7 +23,6 @@ AbstractButton {
 
         visible: listItem.selected
         anchors.fill: body
-        anchors.topMargin: -1
         color: "white"
         opacity: 0.7
     }
