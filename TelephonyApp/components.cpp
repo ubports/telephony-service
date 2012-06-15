@@ -24,6 +24,7 @@
 #include "calllogmodel.h"
 #include "calllogproxymodel.h"
 #include "conversationlogmodel.h"
+#include "messagelogmodel.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/qdeclarative.h>
@@ -87,6 +88,8 @@ void Components::onAccountReady()
     mRootContext->setContextProperty("callLogModel", mCallLogModel);
     mConversationLogModel = new ConversationLogModel(mContactManager, this);
     mRootContext->setContextProperty("conversationLogModel", mConversationLogModel);
+    mMessageLogModel = new MessageLogModel(mContactManager, this);
+    mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
 }
 
 Q_EXPORT_PLUGIN2(components, Components)

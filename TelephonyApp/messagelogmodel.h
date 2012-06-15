@@ -17,31 +17,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONVERSATIONLOGMODEL_H
-#define CONVERSATIONLOGMODEL_H
+#ifndef MESSAGELOGMODEL_H
+#define MESSAGELOGMODEL_H
 
 #include "abstractloggermodel.h"
 
-class ConversationLogEntry : public LogEntry {
+class MessageLogEntry : public LogEntry {
 public:
     QVariant data(int role) const;
     QString message;
 };
 
-class ConversationLogModel : public AbstractLoggerModel
+class MessageLogModel : public AbstractLoggerModel
 {
     Q_OBJECT
+    Q_PROPERTY(QString phoneNumber
+               READ phoneNumber
+               WRITE setPhoneNumber
+               NOTIFY phoneNumberChanged)
 public:
-    enum ConversationLogRoles {
-        Message = AbstractLoggerModel::LastLogRole
+    enum MessageLogRoles {
+        Message = AbstractLoggerModel::LastLogRole,
+        Date
     };
 
-    explicit ConversationLogModel(QContactManager *manager, QObject *parent = 0);
+    explicit MessageLogModel(QContactManager *manager, QObject *parent = 0);
+    QString phoneNumber() const;
+    void setPhoneNumber(QString value);
+
+signals:
+    void phoneNumberChanged();
     
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
-    void handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
-    void handleEvents(const Tpl::EventPtrList &events);
+    void handleEntities(const Tpl::EntityPtrList &entities);
+
+private:
+    QString mPhoneNumber;
 };
 
-#endif // CONVERSATIONLOGMODEL_H
+#endif // MESSAGELOGMODEL_H

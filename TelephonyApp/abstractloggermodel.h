@@ -75,6 +75,7 @@ protected:
     void fillContactInfo(LogEntry *entry, const QContact &contact);
     void clearContactInfo(LogEntry *entry);
     void appendEvents(const Tpl::EventPtrList &events);
+    void clear();
 
     virtual LogEntry *createEntry(const Tpl::EventPtr &event);
     virtual void handleEntities(const Tpl::EntityPtrList &entities);

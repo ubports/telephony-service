@@ -30,8 +30,12 @@ Item {
         }
     }
 
+    Component.onCompleted: messageLogModel.phoneNumber = number;
+
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
+
+    onNumberChanged: messageLogModel.phoneNumber = number;
 
     Component {
         id: newHeaderComponent
@@ -92,9 +96,9 @@ Item {
         height: 100
         visible: !view.newMessage
         onNewMessage: {
-            if (messagesLoader.sourceComponent) {
+            /*if (messagesLoader.sourceComponent) {
                 messagesLoader.item.addMessage(message, true)
-            }
+            }*/
 
             if (chatManager.isChattingToContact(number)) {
                 chatManager.sendMessage(number, message);

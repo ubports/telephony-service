@@ -44,14 +44,14 @@ Item {
             anchors {
                 left: parent.left
                 right: parent.right
-                leftMargin: outgoing ? 10 : 1/3 * messages.width
-                rightMargin: outgoing ? 1/3 * messages.width : 10
+                leftMargin: incoming ? 1/3 * messages.width : 10
+                rightMargin: incoming ? 10 : 1/3 * messages.width
             }
 
             Rectangle {
                 anchors.fill: parent
                 anchors.margins: 1
-                color: outgoing ? "white" : "darkGray"
+                color: incoming ? "darkGray" : "white"
                 border.color: "black"
                 border.width: 1
             }
@@ -72,7 +72,7 @@ Item {
 
             TextCustom {
                 id: timeText
-                text: timeStamp
+                text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
                 anchors.bottom: parent.bottom
                 anchors.right: parent.right
                 anchors.rightMargin: 5
@@ -93,9 +93,9 @@ Item {
         orientation: ListView.Vertical
         ListModel { id: messagesModel }
         // FIXME: references to runtime and fake model need to be removed before final release
-        model: typeof(runtime) != "undefined" ? fakeMessagesModel : messagesModel
+        model: typeof(runtime) != "undefined" ? fakeMessagesModel : messageLogModel
         section.delegate: sectionDelegate
-        section.property: "section"
+        section.property: "date"
         delegate: messageDelegate
         highlightFollowsCurrentItem: true
         currentIndex: (count > 0) ? count-1 : 0

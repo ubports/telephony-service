@@ -197,6 +197,14 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
     endInsertRows();
 }
 
+void AbstractLoggerModel::clear()
+{
+    beginRemoveRows(QModelIndex(), 0, mLogEntries.count()-1);
+    qDeleteAll(mLogEntries);
+    mLogEntries.clear();
+    endRemoveRows();
+}
+
 LogEntry *AbstractLoggerModel::createEntry(const Tpl::EventPtr &event)
 {
     Q_UNUSED(event);

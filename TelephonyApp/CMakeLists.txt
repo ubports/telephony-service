@@ -9,6 +9,7 @@ set(plugin_SRCS
     chatmanager.cpp
     callmanager.cpp
     conversationlogmodel.cpp
+    messagelogmodel.cpp
     telepathyhelper.cpp
     )
 
@@ -21,6 +22,7 @@ set(plugin_HDRS
     chatmanager.h
     callmanager.h
     conversationlogmodel.h
+    messagelogmodel.h
     telepathyhelper.h
     )
 

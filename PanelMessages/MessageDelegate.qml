@@ -55,7 +55,7 @@ AbstractButton {
             anchors.rightMargin: 15
             fontSize: "small"
             height: 30
-            text: text
+            text: message
             elide: Text.ElideRight
         }
     }

@@ -16,12 +16,13 @@ Item {
         delegate: Item {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: message.visible ? 45 : 0
+            height: messageDelegate.visible ? 45 : 0
             MessageDelegate {
-                id: message
+                id: messageDelegate
                 anchors.fill: parent
                 anchors.leftMargin: 5
                 anchors.rightMargin: 5
+                // FIXME: need to match the contact with the number
                 onClicked: telephony.startChat(null, phoneNumber)
             }
         }

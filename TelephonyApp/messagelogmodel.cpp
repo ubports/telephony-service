@@ -17,35 +17,54 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "conversationlogmodel.h"
+#include "messagelogmodel.h"
 #include <TelepathyLoggerQt4/Event>
 #include <TelepathyLoggerQt4/TextEvent>
 #include <TelepathyLoggerQt4/Entity>
 
-QVariant ConversationLogEntry::data(int role) const
+QVariant MessageLogEntry::data(int role) const
 {
     switch (role) {
-    case ConversationLogModel::Message:
+    case MessageLogModel::Message:
         return message;
+    case MessageLogModel::Date:
+        return timestamp.date().toString(Qt::DefaultLocaleLongDate);
     default:
         return LogEntry::data(role);
     }
 }
 
-ConversationLogModel::ConversationLogModel(QContactManager *manager, QObject *parent) :
+MessageLogModel::MessageLogModel(QContactManager *manager, QObject *parent) :
     AbstractLoggerModel(manager, parent)
 {
     // set the role names
     QHash<int, QByteArray> roles = roleNames();
     roles[Message] = "message";
+    roles[Date] = "date";
     setRoleNames(roles);
-
-    fetchLog(Tpl::EventTypeMaskText);
 }
 
-LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
+
+QString MessageLogModel::phoneNumber() const
 {
-    ConversationLogEntry *entry = new ConversationLogEntry();
+    return mPhoneNumber;
+}
+
+void MessageLogModel::setPhoneNumber(QString value)
+{
+    if (mPhoneNumber != value) {
+        clear();
+        mPhoneNumber = value;
+
+        if (!mPhoneNumber.isEmpty()) {
+            fetchLog(Tpl::EventTypeMaskText);
+        }
+    }
+}
+
+LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
+{
+    MessageLogEntry *entry = new MessageLogEntry();
     Tpl::TextEventPtr textEvent = event.dynamicCast<Tpl::TextEvent>();
 
     if (!textEvent) {
@@ -56,37 +75,15 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
     return entry;
 }
 
-void ConversationLogModel::handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates)
+void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
 {
-    if (!dates.count()) {
-        return;
-    }
-    QDate newestDate = dates.first();
-
-    // search for the newest available date
-    Q_FOREACH(const QDate &date, dates) {
-        if (date > newestDate) {
-            newestDate = date;
+    // search for the entity that matches the phone number for this conversation
+    // FIXME: we probably need a more reliable way than string matching for comparing phone numbers
+    Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
+        if (entity->identifier() == mPhoneNumber) {
+            requestDatesForEntities(Tpl::EntityPtrList() << entity);
+            return;
         }
     }
-
-    requestEventsForDates(entity, Tpl::QDateList() << newestDate);
 }
 
-void ConversationLogModel::handleEvents(const Tpl::EventPtrList &events)
-{
-    if (!events.count()) {
-        return;
-    }
-
-    Tpl::EventPtr newestEvent = events.first();
-
-    // search for the newest message
-    Q_FOREACH(const Tpl::EventPtr &event, events) {
-        if (event->timestamp() > newestEvent->timestamp()) {
-            newestEvent = event;
-        }
-    }
-
-    appendEvents(Tpl::EventPtrList() << newestEvent);
-}
