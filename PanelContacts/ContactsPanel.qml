@@ -26,6 +26,17 @@ Rectangle {
         onLeftIconClicked: text = ""
     }
 
+    Button {
+        id: newContact
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: contactsSearchBox.bottom
+
+        iconSource: "../assets/icon_plus.png"
+        text: "Add a new contact"
+        onClicked: telephony.createNewContact(contactsModel)
+    }
+
     ContactModel {
         id: contactsModel
         manager: "folks"
@@ -45,14 +56,15 @@ Rectangle {
 
     ListView {
         id: contactsList
-        anchors.top: contactsSearchBox.bottom
+        anchors.top: newContact.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.margins: 5
         clip: true
         // FIXME: references to runtime and fake model need to be removed before final release
-        model: runtime ? fakeContacts : contactsModel
+        model: typeof(runtime) != "undefined" ? fakeContacts : contactsModel
+
         delegate: ContactDelegate {
             onClicked: contactsPanel.contactClicked(contact)
         }

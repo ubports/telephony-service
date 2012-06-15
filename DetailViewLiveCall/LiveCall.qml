@@ -1,5 +1,6 @@
 import QtQuick 1.0
 import "../Widgets"
+import "../DetailViewKeypad"
 // FIXME: remove useless f*** import
 // FIXME: prevent the StopWatch from resizing
 import "../fontUtils.js" as Font
@@ -84,6 +85,17 @@ Rectangle {
         anchors.top: location.bottom
     }
 
+    Keypad {
+        id: keypad
+        visible: false
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.bottom: mainButtons.top
+        onKeyPressed: {
+            callManager.sendDTMF(liveCall.number, label)
+        }
+        z: 1
+    }
+
     Grid {
         id: mainButtons
         anchors.horizontalCenter: parent.horizontalCenter
@@ -98,6 +110,7 @@ Rectangle {
             height: 45
             color: "#797979"
             iconSource: "../assets/icon_keypad_white.png"
+            onClicked: keypad.visible = !keypad.visible
         }
 
         Button {
