@@ -5,9 +5,10 @@ BaseContactDetailsDelegate {
     id: delegate
 
     function save() {
-        console.log("SAVING " + detail + " " + detailTypeInfo.displayField + " > " + editor.text)
-        if (detail && detailTypeInfo.displayField)
+        if (detail && detailTypeInfo.displayField) {
+            console.log("SAVING " + detail + " " + detailTypeInfo.displayField + " > " + editor.text)
             detail[detailTypeInfo.displayField] = (editor.text) ? editor.text : ""
+        }
     }
 
     onEditableChanged: editor.text = value.text

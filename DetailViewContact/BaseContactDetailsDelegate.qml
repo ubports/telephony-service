@@ -3,13 +3,21 @@ import "../Widgets"
 
 Item {
     id: contactDetailsItem
-    height: editable ? editableGroup.height : readOnlyGroup.height
+
+    /* For deleted items it's not enough to hide them, they will still take space in
+       the layout. We also need to set the height to zero to make them completely go away */
+    height: (deleted) ? 0 : ((editable) ? editableGroup.height : readOnlyGroup.height)
+    opacity: (deleted) ? 0.0 : 1.0
 
     property variant detail
     property variant detailTypeInfo
 
     property bool editable: false
     property bool added: false
+    /* We need to keep track of the deleted state of a detail because it will be
+       actually deleted from the model only when we save the contact, even if we
+       have already called contact.removeDetail() on it. */
+    property bool deleted: false
 
     signal clicked(string value)
     signal actionClicked(string value)
@@ -81,10 +89,8 @@ Item {
             }
         }
 
-        Rectangle {
+        Item {
             id: actionBox
-            border.color: "black"
-            color: "white"
             width: 60
             height: parent.height
             anchors.top: parent.top
@@ -92,10 +98,11 @@ Item {
             anchors.right: parent.right
 
             Button {
-                anchors.fill: parent
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-                iconSource: detailTypeInfo.actionIcon
-
+                iconSource: (detailTypeInfo.actionIcon) ? detailTypeInfo.actionIcon : "../assets/icon_chevron_right.png"
                 onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
             }
         }
@@ -130,7 +137,10 @@ Item {
                 width: 20
                 iconSource: "../assets/icon_minus.png"
 
-                onClicked: deleteClicked()
+                onClicked: {
+                    deleted = true;
+                    deleteClicked();
+                }
             }
 
             Item {
