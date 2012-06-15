@@ -9,7 +9,7 @@ Item {
     property variant editable: false
 
     width: parent.width
-    height: 100
+    height: (editable) ? name.height + 64 : 100
 
     // FIXME: this function is used in two places, should be moved to one common place
     function contactName() {
@@ -59,10 +59,7 @@ Item {
     }
 
     function save() {
-        // FIXME: can't save the name for now because the displaylabel can't
-        // be edited and the proper fields to edit are all these associated with
-        // the Name detail. But the design doesn't specify how to display these
-        // during editing, so this is on hold for now.
+        name.save()
     }
 
     Image {
@@ -90,35 +87,13 @@ Item {
 
         spacing: 10
 
-        TextCustom {
-            id: contactName
+        NameContactDetails {
+            id: name
             anchors.left: parent.left
             anchors.right: parent.right
-            fontSize: "x-large"
-            text: contactDetailsHeader.contactName()
 
-            opacity: !editable ? 1.0 : 0.0
-        }
-
-        Rectangle {
-            id: editorArea
-            border.color: "black"
-            border.width: 1
-            color: "white"
-
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: contactNameEditor.height + 20
-            opacity: editable ? 1.0 : 0.0
-
-            TextContactDetailsEditor {
-                id: contactNameEditor
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.margins: 10
-                text: contactDetailsHeader.contactName()
-            }
+            editable: header.editable
+            detail: (contact) ? contact.name : undefined
         }
 
         TextCustom {
