@@ -9,45 +9,56 @@ Item {
     width: 570
     height: 487
 
+    property alias viewSource: rightPaneContent.source
+    property alias view: rightPaneContent.item
+
+    // Inventory of all the views in the application
+    property ViewModel liveCall: ViewModel {source: "DetailViewLiveCall/LiveCall.qml"}
+    property ViewModel messages: ViewModel {source: "DetailViewMessages/MessagesView.qml"}
+    property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"}
+    property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"}
+    property ViewModel keypad: ViewModel {source: "DetailViewKeypad/KeypadView.qml"}
+    property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"}
+
     function startCallToContact(contact, number) {
-        // To keep this simple we rely on the fact that setting source to a
-        // local file will immadiately make the item availalable.
+        liveCall.load()
         rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
-        rightPaneContent.item.contact = contact
-        rightPaneContent.item.number = number
-        rightPaneContent.item.startCall()
+        view.contact = contact
+        view.number = number
+        view.startCall()
     }
 
     function startCallToNumber(number) {
-        rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
-        rightPaneContent.item.contact = null
-        rightPaneContent.item.number = number
-        rightPaneContent.item.startCall()
+        liveCall.load()
+        view.contact = null
+        view.number = number
+        view.startCall()
     }
 
     function callNumber(number) {
-        rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
-        rightPaneContent.item.contact = null
-        rightPaneContent.item.number = number
+        liveCall.load()
+        view.contact = null
+        view.number = number
         callManager.startCall(number);
     }
 
     function startChat(contact, number) {
-        rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
-        rightPaneContent.item.contact = contact
-        rightPaneContent.item.number = number
-        rightPaneContent.item.newMessage = false
+        messages.load()
+        view.contact = contact
+        view.number = number
+        view.newMessage = false
     }
 
     function endCall(duration) {
-        rightPaneContent.source = "Panes/CallEndedPane.qml"
-        rightPaneContent.item.text = duration;
-        rightPaneContent.item.postText = "";
+        callEnded.load()
+        view.text = duration;
+        view.postText = "";
     }
 
     function showContactDetails(contact) {
-        rightPaneContent.source = "DetailViewContact/ContactDetails.qml"
-        rightPaneContent.item.contact = contact
+        contactDetails.load()
+        view.contact = contact
+        view.added = false
     }
 
     function showContactDetailsFromId(contactId) {
@@ -56,21 +67,21 @@ Item {
     }
 
     function createNewContact(contacts) {
-        rightPaneContent.source = "DetailViewContact/ContactDetails.qml"
-        rightPaneContent.item.createNewContact(contacts)
+        contactDetails.load()
+        view.createNewContact(contacts)
     }
 
     function startNewMessage() {
-        rightPaneContent.source = "DetailViewMessages/MessagesView.qml"
-        rightPaneContent.item.newMessage = true
+        messages.load()
+        view.newMessage = true
     }
 
-    function showDial() {
-        rightPaneContent.source = "DetailViewKeypad/KeypadView.qml"
+    function showKeypad() {
+        keypad.load()
     }
 
     function showCallLog() {
-        rightPaneContent.source = "DetailViewCallLog/CallLog.qml"
+        callLog.load()
     }
 
     ContactLoader {

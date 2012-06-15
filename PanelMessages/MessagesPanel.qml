@@ -33,6 +33,7 @@ Item {
         text: "New Message"
         // FIXME: maybe use a signal and handle in the instance
         onClicked: telephony.startNewMessage()
+        selected: telephony.messages.loaded && telephony.view.newMessage
     }
 
     MessagesList {
