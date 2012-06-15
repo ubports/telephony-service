@@ -56,6 +56,30 @@ void CallManager::endCall(const QString &contactId)
     mContacts.remove(contactId);
 }
 
+void CallManager::sendDTMF(const QString &contactId, const QString &key)
+{
+    if (!mChannels.contains(contactId))
+        return;
+
+    foreach(const Tp::CallContentPtr &content, mChannels[contactId]->contents()) {
+        if (content->supportsDTMF()) {
+            bool ok;
+            Tp::DTMFEvent event = (Tp::DTMFEvent)key.toInt(&ok);
+            if (!ok) {
+                 if (!key.compare("*")) {
+                     event = Tp::DTMFEventAsterisk;
+                 } else if (!key.compare("#")) {
+                     event = Tp::DTMFEventHash;
+                 } else {
+                     qDebug() << "Tone not recognized. DTMF failed";
+                     return;
+                 }
+            }
+            content->startDTMFTone(event);
+        }
+    }
+}
+
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
     mChannels[channel->targetContact()->id()] = channel;

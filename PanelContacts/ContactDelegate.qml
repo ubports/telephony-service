@@ -27,7 +27,7 @@ Item {
     }
     Image {
         id: photoItem
-        source: (contact.avatar.imageUrl && (contact.avatar.imageUrl.toString().length > 0))
+        source: (contact && contact.avatar.imageUrl && (contact.avatar.imageUrl.toString().length > 0))
                 ? contact.avatar.imageUrl : "../assets/default_avatar.png"
         width: 56
         height: width
@@ -55,7 +55,7 @@ Item {
         anchors.left: photoItem.right
         anchors.leftMargin: 2
         fontSize: "small"
-        text: contact.emailAddress ? contact.emailAddress.emailAddress : ""
+        text: (contact && contact.emailAddress) ? contact.emailAddress.emailAddress : ""
     }
 
     TextCustom {
@@ -65,7 +65,7 @@ Item {
         anchors.left: photoItem.right
         anchors.leftMargin: 2
         fontSize: "small"
-        text: contact.phoneNumber ? contact.phoneNumber.number : ""
+        text: (contact && contact.phoneNumber) ? contact.phoneNumber.number : ""
     }
 
     MouseArea {

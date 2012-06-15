@@ -93,7 +93,7 @@ Item {
         orientation: ListView.Vertical
         ListModel { id: messagesModel }
         // FIXME: references to runtime and fake model need to be removed before final release
-        model: runtime ? fakeMessagesModel : messagesModel
+        model: typeof(runtime) != "undefined" ? fakeMessagesModel : messagesModel
         section.delegate: sectionDelegate
         section.property: "section"
         delegate: messageDelegate
