@@ -16,12 +16,12 @@ Item {
         delegate: Item {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: message.visible ? 45 : 0
+            height: message.visible ? message.height : 0
             MessageDelegate {
                 id: message
-                anchors.fill: parent
-                anchors.leftMargin: 5
-                anchors.rightMargin: 5
+
+                anchors.left: parent.left
+                anchors.right: parent.right
                 onClicked: telephony.startChat(contact, contact.phoneNumber.number)
                 visible: contact.displayName.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ? true : false
             }
