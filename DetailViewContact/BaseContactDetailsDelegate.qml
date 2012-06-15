@@ -102,7 +102,7 @@ Item {
                 anchors.margins: 5
                 height: 32
 
-                icon: detailTypeInfo.actionIcon
+                icon: (detailTypeInfo.actionIcon) ? detailTypeInfo.actionIcon : "../assets/icon_chevron_right.png"
 
                 onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
             }
