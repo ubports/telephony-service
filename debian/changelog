@@ -1,3 +1,9 @@
+telephony-app (0.14) UNRELEASED; urgency=low
+
+  * add libqt4-declarative-shaders as dependency
+
+ -- Florian Boucault <kaleo@tequila>  Fri, 15 Jun 2012 18:07:45 +0100
+
 telephony-app (0.13) precise; urgency=low
 
   * add libqtgstreamer-dev as build-dep
