@@ -25,6 +25,7 @@
 #include "calllogproxymodel.h"
 #include "conversationlogmodel.h"
 #include "messagelogmodel.h"
+#include "messagesproxymodel.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/qdeclarative.h>
@@ -72,6 +73,7 @@ void Components::registerTypes(const char *uri)
     // @uri TelephonyApp
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
     qmlRegisterType<CallLogProxyModel>(uri, 0, 1, "CallLogProxyModel");
+    qmlRegisterType<MessagesProxyModel>(uri, 0, 1, "MessagesProxyModel");
 }
 
 void Components::onChannelHandlerCreated(ChannelHandler *ch)
@@ -86,10 +88,20 @@ void Components::onAccountReady()
     // create the log models just when the telepathy helper signals the account is ready
     mCallLogModel = new CallLogModel(mContactManager, this);
     mRootContext->setContextProperty("callLogModel", mCallLogModel);
+
     mConversationLogModel = new ConversationLogModel(mContactManager, this);
     mRootContext->setContextProperty("conversationLogModel", mConversationLogModel);
+    connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageReceived(const QString&, const QString&)),
+            mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
+    connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageSent(const QString&, const QString&)),
+            mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
+
     mMessageLogModel = new MessageLogModel(mContactManager, this);
     mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
+    connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageReceived(const QString&, const QString&)),
+            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
+    connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageSent(const QString&, const QString&)),
+            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
 }
 
 Q_EXPORT_PLUGIN2(components, Components)

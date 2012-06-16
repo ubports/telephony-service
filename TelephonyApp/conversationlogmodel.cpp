@@ -43,6 +43,16 @@ ConversationLogModel::ConversationLogModel(QContactManager *manager, QObject *pa
     fetchLog(Tpl::EventTypeMaskText);
 }
 
+void ConversationLogModel::onMessageReceived(const QString &number, const QString &message)
+{
+    updateLatestMessage(number, message, true);
+}
+
+void ConversationLogModel::onMessageSent(const QString &number, const QString &message)
+{
+    updateLatestMessage(number, message, false);
+}
+
 LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
 {
     ConversationLogEntry *entry = new ConversationLogEntry();
@@ -89,4 +99,37 @@ void ConversationLogModel::handleEvents(const Tpl::EventPtrList &events)
     }
 
     appendEvents(Tpl::EventPtrList() << newestEvent);
+}
+
+void ConversationLogModel::updateLatestMessage(const QString &number, const QString &message, bool incoming)
+{
+    int count = mLogEntries.count();
+    for(int i = 0; i < mLogEntries.count(); ++i) {
+        ConversationLogEntry *entry = dynamic_cast<ConversationLogEntry*>(mLogEntries[i]);
+        if (!entry) {
+            continue;
+        }
+
+        if (entry->phoneNumber == number) {
+            entry->timestamp = QDateTime::currentDateTime();
+            entry->message = message;
+            entry->incoming = incoming;
+            emit dataChanged(index(i,0), index(i,0));
+            return;
+        }
+    }
+
+    // if we reach this point, there is a new conversation, so create the item
+    ConversationLogEntry *entry = new ConversationLogEntry();
+    entry->timestamp = QDateTime::currentDateTime();
+    entry->incoming = incoming;
+    entry->message = message;
+    entry->phoneNumber = number;
+
+    QContact contact = contactForNumber(number);
+    if (!contact.isEmpty()) {
+        fillContactInfo(entry, contact);
+    }
+
+    appendEntry(entry);
 }

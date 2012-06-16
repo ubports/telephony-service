@@ -180,20 +180,21 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         entry->contactAlias = remoteEntity->alias();
         entry->phoneNumber = remoteEntity->identifier();
 
-        // fetch the QContact object
-        QContactDetailFilter filter;
-        filter.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
-        filter.setValue(remoteEntity->identifier());
-        filter.setMatchFlags(QContactFilter::MatchPhoneNumber);
-
-        QList<QContact> contacts = mContactManager->contacts(filter);
-        if (contacts.count() > 0) {
+        QContact contact = contactForNumber(remoteEntity->identifier());
+        if (!contact.isEmpty()) {
             // if more than one contact matches, use the first one
-            fillContactInfo(entry, contacts[0]);
+            fillContactInfo(entry, contact);
         }
 
         mLogEntries.append(entry);
     }
+    endInsertRows();
+}
+
+void AbstractLoggerModel::appendEntry(LogEntry *entry)
+{
+    beginInsertRows(QModelIndex(), mLogEntries.count(), mLogEntries.count());
+    mLogEntries.append(entry);
     endInsertRows();
 }
 
@@ -203,6 +204,21 @@ void AbstractLoggerModel::clear()
     qDeleteAll(mLogEntries);
     mLogEntries.clear();
     endRemoveRows();
+}
+
+QContact AbstractLoggerModel::contactForNumber(const QString &number)
+{
+    // fetch the QContact object
+    QContactDetailFilter filter;
+    filter.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
+    filter.setValue(number);
+    filter.setMatchFlags(QContactFilter::MatchPhoneNumber);
+
+    QList<QContact> contacts = mContactManager->contacts(filter);
+    if (contacts.count() > 0) {
+        return contacts[0];
+    }
+    return QContact();
 }
 
 LogEntry *AbstractLoggerModel::createEntry(const Tpl::EventPtr &event)

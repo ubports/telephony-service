@@ -75,7 +75,9 @@ protected:
     void fillContactInfo(LogEntry *entry, const QContact &contact);
     void clearContactInfo(LogEntry *entry);
     void appendEvents(const Tpl::EventPtrList &events);
+    void appendEntry(LogEntry *entry);
     void clear();
+    QContact contactForNumber(const QString &number);
 
     virtual LogEntry *createEntry(const Tpl::EventPtr &event);
     virtual void handleEntities(const Tpl::EntityPtrList &entities);
@@ -92,7 +94,7 @@ protected slots:
     void onContactsChanged(const QList<QContactLocalId> &contactIds);
     void onContactsRemoved(const QList<QContactLocalId> &contactIds);
 
-private:
+protected:
     QList<LogEntry*> mLogEntries;
     QtMobility::QContactManager *mContactManager;
     Tpl::EventTypeMask mType;

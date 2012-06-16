@@ -45,6 +45,12 @@ public:
     QString phoneNumber() const;
     void setPhoneNumber(QString value);
 
+    Q_INVOKABLE void appendMessage(const QString &contactId, const QString &message, bool incoming);
+
+public slots:
+    void onMessageReceived(const QString &number, const QString &message);
+    void onMessageSent(const QString &number, const QString &message);
+
 signals:
     void phoneNumberChanged();
     

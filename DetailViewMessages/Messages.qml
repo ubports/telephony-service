@@ -1,16 +1,11 @@
 import QtQuick 1.1
+import TelephonyApp 0.1
 import "../Widgets"
 
 Item {
     id: messages
-
-    function addMessage(newMessage, outgoing) {
-        var currentDate = new Date()
-        messagesList.model.append({"section": Qt.formatDate(currentDate, Qt.DefaultLocaleLongDate),
-                               "message": newMessage,
-                               "timeStamp": Qt.formatTime(currentDate, Qt.DefaultLocaleLongDate),
-                               "outgoing": outgoing})
-    }
+    property variant contact
+    property string number
 
     Component {
         id: sectionDelegate
@@ -82,6 +77,12 @@ Item {
         }
     }
 
+    MessagesProxyModel {
+        id: messagesProxyModel
+        messagesModel: messageLogModel
+        ascending: true;
+    }
+
     ListView {
         id: messagesList
 
@@ -93,7 +94,7 @@ Item {
         orientation: ListView.Vertical
         ListModel { id: messagesModel }
         // FIXME: references to runtime and fake model need to be removed before final release
-        model: typeof(runtime) != "undefined" ? fakeMessagesModel : messageLogModel
+        model: typeof(runtime) != "undefined" ? fakeMessagesModel : messagesProxyModel
         section.delegate: sectionDelegate
         section.property: "date"
         delegate: messageDelegate

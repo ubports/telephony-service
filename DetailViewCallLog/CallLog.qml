@@ -92,7 +92,7 @@ Item {
         model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel
 
         delegate: CallLogDelegate {
-            width: parent.width
+            width: callLogView.width
             onClicked: telephony.showContactDetailsFromId(contactId)
             onActionClicked: telephony.callNumber(phoneNumber)
         }

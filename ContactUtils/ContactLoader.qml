@@ -4,6 +4,8 @@ import QtMobility.contacts 1.1
 Item {
     id: loader
     property string contactId
+    property alias filter: contactModel.filter
+
     signal contactLoaded(variant contact)
 
     ContactModel {
@@ -29,7 +31,7 @@ Item {
 
             Component.onCompleted: {
                 // just in case we get more than one contact, check for the index
-                if (loader.contactId != "" && index == 0) {
+                if (index == 0) {
                     loader.contactLoaded(contact);
                 }
             }

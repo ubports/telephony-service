@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import TelephonyApp 0.1
 import "../Widgets"
 
 Item {
@@ -36,6 +37,12 @@ Item {
         selected: telephony.messages.loaded && telephony.view.newMessage
     }
 
+    MessagesProxyModel {
+        id: messagesProxyModel
+        messagesModel: conversationLogModel
+        ascending: false
+    }
+
     MessagesList {
         anchors.top: newMessage.bottom
         // FIXME: make that filling in the available space generic
@@ -43,7 +50,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         // FIXME: reference to fake model needs to be removed before final release
-        model: typeof(runtime) != "undefined" ? fakeMessages : conversationLogModel
+        model: typeof(runtime) != "undefined" ? fakeMessages : messagesProxyModel
         filter: search.searchQuery
     }
 }

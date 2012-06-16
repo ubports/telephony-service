@@ -59,6 +59,34 @@ void MessageLogModel::setPhoneNumber(QString value)
         if (!mPhoneNumber.isEmpty()) {
             fetchLog(Tpl::EventTypeMaskText);
         }
+        emit phoneNumberChanged();
+    }
+}
+
+void MessageLogModel::appendMessage(const QString &contactId, const QString &message, bool incoming)
+{
+    MessageLogEntry *entry = new MessageLogEntry();
+    entry->incoming = incoming;
+    entry->phoneNumber = contactId;
+    entry->message = message;
+    entry->timestamp = QDateTime::currentDateTime();
+    // FIXME: fill the contact info
+    appendEntry(entry);
+}
+
+void MessageLogModel::onMessageReceived(const QString &number, const QString &message)
+{
+    // FIXME: find a better way to compare phone numbers
+    if (number == mPhoneNumber) {
+        appendMessage(number, message, true);
+    }
+}
+
+void MessageLogModel::onMessageSent(const QString &number, const QString &message)
+{
+    // FIXME: find a better way to compare phone numbers
+    if (number == mPhoneNumber) {
+        appendMessage(number, message, false);
     }
 }
 

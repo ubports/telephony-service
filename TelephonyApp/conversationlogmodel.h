@@ -37,11 +37,17 @@ public:
     };
 
     explicit ConversationLogModel(QContactManager *manager, QObject *parent = 0);
-    
+
+public slots:
+    void onMessageReceived(const QString &number, const QString &message);
+    void onMessageSent(const QString &number, const QString &message);
+
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
     void handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     void handleEvents(const Tpl::EventPtrList &events);
+
+    void updateLatestMessage(const QString &number, const QString &message, bool incoming);
 };
 
 #endif // CONVERSATIONLOGMODEL_H

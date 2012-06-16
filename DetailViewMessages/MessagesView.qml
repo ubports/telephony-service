@@ -1,5 +1,7 @@
 import QtQuick 1.1
+import QtMobility.contacts 1.1
 import TelephonyApp 0.1
+import "../ContactUtils"
 
 Item {
     id: view
@@ -36,6 +38,19 @@ Item {
     Component.onDestruction: chatManager.endChat(number);
 
     onNumberChanged: messageLogModel.phoneNumber = number;
+
+    ContactLoader {
+        id: contactLoader
+
+        filter: DetailFilter {
+            detail: ContactDetail.PhoneNumber
+            field: PhoneNumber.number
+            value: view.number
+            matchFlags: DetailFilter.MatchPhoneNumber
+        }
+
+        onContactLoaded: view.contact = contact
+    }
 
     Component {
         id: newHeaderComponent
@@ -96,10 +111,6 @@ Item {
         height: 100
         visible: !view.newMessage
         onNewMessage: {
-            /*if (messagesLoader.sourceComponent) {
-                messagesLoader.item.addMessage(message, true)
-            }*/
-
             if (chatManager.isChattingToContact(number)) {
                 chatManager.sendMessage(number, message);
             } else {
