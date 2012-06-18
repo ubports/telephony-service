@@ -68,6 +68,7 @@ bool TelephonyApplication::setup()
     }
 
     m_view = new QDeclarativeView();
+    m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     loadDummyDataFiles(m_view);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
