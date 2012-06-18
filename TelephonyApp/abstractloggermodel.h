@@ -23,6 +23,7 @@
 #include <QAbstractListModel>
 #include <TelepathyLoggerQt4/PendingOperation>
 #include <TelepathyLoggerQt4/Types>
+#include <TelepathyLoggerQt4/LogManager>
 #include <QDateTime>
 #include <QList>
 #include <QMap>
@@ -97,6 +98,7 @@ protected slots:
     void onContactsRemoved(const QList<QContactLocalId> &contactIds);
 
 protected:
+    Tpl::LogManagerPtr mLogManager;
     QList<LogEntry*> mLogEntries;
     QtMobility::QContactManager *mContactManager;
     Tpl::EventTypeMask mType;
