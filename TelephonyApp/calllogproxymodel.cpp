@@ -25,6 +25,8 @@ CallLogProxyModel::CallLogProxyModel(QObject *parent) :
     QSortFilterProxyModel(parent), mOnlyMissedCalls(false)
 {
     setDynamicSortFilter(true);
+    setSortRole(AbstractLoggerModel::Timestamp);
+    sort(0, Qt::DescendingOrder);
 }
 
 bool CallLogProxyModel::onlyMissedCalls() const
