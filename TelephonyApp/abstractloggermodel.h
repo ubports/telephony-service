@@ -78,6 +78,8 @@ protected:
     void appendEntry(LogEntry *entry);
     void clear();
     QContact contactForNumber(const QString &number);
+    void invalidateRequests();
+    bool validateRequest(Tpl::PendingOperation *op);
 
     virtual LogEntry *createEntry(const Tpl::EventPtr &event);
     virtual void handleEntities(const Tpl::EntityPtrList &entities);
@@ -98,6 +100,7 @@ protected:
     QList<LogEntry*> mLogEntries;
     QtMobility::QContactManager *mContactManager;
     Tpl::EventTypeMask mType;
+    QList<Tpl::PendingOperation*> mActiveOperations;
 };
 
 #endif // CALLLOGMODEL_H

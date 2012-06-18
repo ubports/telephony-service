@@ -117,6 +117,7 @@ void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type)
     connect(pendingEntities,
             SIGNAL(finished(Tpl::PendingOperation*)),
             SLOT(onPendingEntitiesFinished(Tpl::PendingOperation*)));
+    mActiveOperations.append(pendingEntities);
 }
 
 void AbstractLoggerModel::requestDatesForEntities(const Tpl::EntityPtrList &entities)
@@ -130,6 +131,7 @@ void AbstractLoggerModel::requestDatesForEntities(const Tpl::EntityPtrList &enti
         connect(pendingDates,
                 SIGNAL(finished(Tpl::PendingOperation*)),
                 SLOT(onPendingDatesFinished(Tpl::PendingOperation*)));
+        mActiveOperations.append(pendingDates);
     }
 }
 
@@ -143,6 +145,7 @@ void AbstractLoggerModel::requestEventsForDates(const Tpl::EntityPtr &entity, co
         connect(pendingEvents,
                 SIGNAL(finished(Tpl::PendingOperation*)),
                 SLOT(onPendingEventsFinished(Tpl::PendingOperation*)));
+        mActiveOperations.append(pendingEvents);
     }
 }
 
@@ -221,6 +224,29 @@ QContact AbstractLoggerModel::contactForNumber(const QString &number)
     return QContact();
 }
 
+void AbstractLoggerModel::invalidateRequests()
+{
+    // clear the model
+    clear();
+
+    // and invalidate all pending requests
+    mActiveOperations.clear();
+}
+
+bool AbstractLoggerModel::validateRequest(Tpl::PendingOperation *op)
+{
+    // if invalidateRequests() was called, the *op is not going to be on the list anymore
+    // so we consider it invalid
+    int index = mActiveOperations.indexOf(op);
+
+    if (index >= 0) {
+        mActiveOperations.removeAt(index);
+        return true;
+    }
+
+    return false;
+}
+
 LogEntry *AbstractLoggerModel::createEntry(const Tpl::EventPtr &event)
 {
     Q_UNUSED(event);
@@ -257,6 +283,11 @@ void AbstractLoggerModel::onPendingEntitiesFinished(Tpl::PendingOperation *op)
 
 void AbstractLoggerModel::onPendingDatesFinished(Tpl::PendingOperation *op)
 {
+    // check if the request is still valid
+    if (!validateRequest(op)) {
+        return;
+    }
+
     Tpl::PendingDates *pd = qobject_cast<Tpl::PendingDates*>(op);
     if (!pd) {
         return;
@@ -267,6 +298,11 @@ void AbstractLoggerModel::onPendingDatesFinished(Tpl::PendingOperation *op)
 
 void AbstractLoggerModel::onPendingEventsFinished(Tpl::PendingOperation *op)
 {
+    // check if the request is still valid
+    if (!validateRequest(op)) {
+        return;
+    }
+
     Tpl::PendingEvents *pe = qobject_cast<Tpl::PendingEvents*>(op);
     if (!pe) {
         return;

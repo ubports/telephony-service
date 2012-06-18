@@ -53,7 +53,7 @@ QString MessageLogModel::phoneNumber() const
 void MessageLogModel::setPhoneNumber(QString value)
 {
     if (mPhoneNumber != value) {
-        clear();
+        invalidateRequests();
         mPhoneNumber = value;
 
         if (!mPhoneNumber.isEmpty()) {
