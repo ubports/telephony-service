@@ -1,3 +1,9 @@
+telephony-app (0.15) precise; urgency=low
+
+  * Make sure all logger models share the same instance of the logmanager
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 18 Jun 2012 20:27:31 -0300
+
 telephony-app (0.14) precise; urgency=low
 
   [ Florian Boucault ]
