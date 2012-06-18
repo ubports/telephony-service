@@ -4,7 +4,7 @@ import "../Widgets"
 ListItem {
     id: messageDelegate
 
-    iconSource: avatar == "" ? avatar : "../assets/default_avatar.png"
+    iconSource: avatar == "" ? "../assets/default_avatar.png" : avatar
     text: contactAlias
     subtext: message
 
