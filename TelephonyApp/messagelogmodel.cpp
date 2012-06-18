@@ -63,14 +63,17 @@ void MessageLogModel::setPhoneNumber(QString value)
     }
 }
 
-void MessageLogModel::appendMessage(const QString &contactId, const QString &message, bool incoming)
+void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming)
 {
     MessageLogEntry *entry = new MessageLogEntry();
     entry->incoming = incoming;
-    entry->phoneNumber = contactId;
+    entry->phoneNumber = number;
     entry->message = message;
     entry->timestamp = QDateTime::currentDateTime();
-    // FIXME: fill the contact info
+    QContact contact = contactForNumber(number);
+    if (!contact.isEmpty()) {
+        fillContactInfo(entry, contact);
+    }
     appendEntry(entry);
 }
 
