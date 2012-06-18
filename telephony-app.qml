@@ -6,8 +6,8 @@ import "Widgets"
 
 Item {
     id: telephony
-    width: 570
-    height: 487
+    width: 800
+    height: 800
 
     property alias viewSource: rightPaneContent.source
     property alias view: rightPaneContent.item
@@ -55,8 +55,9 @@ Item {
         view.postText = "";
     }
 
-    function showContactDetails(contact) {
+    function showContactDetails(contacts, contact) {
         contactDetails.load()
+        view.contactsModel = contacts
         view.contact = contact
         view.added = false
     }

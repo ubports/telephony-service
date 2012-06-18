@@ -21,8 +21,7 @@ Item {
     width: 400
     height: 600
 
-    function createNewContact(contactsModel) {
-        contactDetails.contactsModel = contactsModel;
+    function createNewContact() {
         contact = Qt.createQmlObject("import QtMobility.contacts 1.1; Contact {}", contactsModel);
         editable = true;
         added = true;
@@ -198,8 +197,8 @@ Item {
                         console.log("Add detail: " + contact.addDetail(addedDetails[i]));
                     }
 
-                    if (contact.modified) contact.save();
-                    if (contact.added) contactsModel.saveContact(contact);
+                    if (contact.modified || contact.added)
+                        contactsModel.saveContact(contact);
 
                     editable = false;
                 }
