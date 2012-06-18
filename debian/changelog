@@ -1,8 +1,12 @@
-telephony-app (0.14) UNRELEASED; urgency=low
+telephony-app (0.14) precise; urgency=low
 
+  [ Florian Boucault ]
   * add libqt4-declarative-shaders as dependency
 
- -- Florian Boucault <kaleo@tequila>  Fri, 15 Jun 2012 18:07:45 +0100
+  [ Gustavo Pichorim Boiko ]
+  * Add support for retrieving sms messages from android
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 18 Jun 2012 16:27:53 -0300
 
 telephony-app (0.13) precise; urgency=low
 
