@@ -105,7 +105,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.top: number.bottom
             anchors.topMargin: 2
-            text: "Home"//contact ? contact.geoLocation.label : ""
+            text: contact ? contact.geoLocation.label : ""
             color: "#a0a0a2"
             style: Text.Sunken
             styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
@@ -126,7 +126,7 @@ Item {
 
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: 15
-            anchors.top: location.bottom
+            anchors.top: location.text != "" ? location.bottom : number.bottom
         }
 
         Keypad {
