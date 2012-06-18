@@ -4,7 +4,7 @@ import "../Widgets"
 BaseContactDetailsDelegate {
     id: delegate
 
-    function save() {
+    function saveDetail() {
         if (detail && detailTypeInfo.displayField) {
             console.log("SAVING " + detail + " " + detailTypeInfo.displayField + " > " + editor.text)
             detail[detailTypeInfo.displayField] = (editor.text) ? editor.text : ""

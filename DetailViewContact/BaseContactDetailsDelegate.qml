@@ -1,5 +1,6 @@
 import QtQuick 1.1
 import "../Widgets"
+import "DetailTypeUtilities.js" as DetailUtils
 
 Item {
     id: contactDetailsItem
@@ -26,6 +27,17 @@ Item {
     /* Internal properties, use by derived components */
     property variant readOnlyContentBox: readOnlyContentBox
     property variant editableContentBox: editableContentBox
+
+    function save() {
+        // First save the subType of the detail, then check if we are being
+        // subclassed and if the subclass defines its own saving function, and
+        // in that case call it
+
+        if (subTypeEditor.selectedValue != "")
+            DetailUtils.setDetailSubType(detail, subTypeEditor.selectedValue);
+
+        if (saveDetail instanceof Function) saveDetail();
+    }
 
     ListView.onRemove: SequentialAnimation {
         PropertyAction { target: contactDetailsItem; property: "ListView.delayRemove"; value: true }
@@ -61,7 +73,7 @@ Item {
                 id: readOnlyContentBox
 
                 anchors.left: parent.left
-                anchors.right: typeText.left
+                anchors.right: subTypeText.left
                 anchors.top: parent.top
                 anchors.topMargin: 8
                 anchors.leftMargin: 8
@@ -70,20 +82,12 @@ Item {
             }
 
             TextCustom {
-                id: typeText
+                id: subTypeText
                 anchors.right: parent.right
                 anchors.top: parent.top
                 anchors.rightMargin: 8
                 anchors.topMargin: 8
-                text: {
-                    // The backend supports multiple types but we can just handle one,
-                    // so let's pick just the first
-                    var parts = detail.contexts.toString().split(",")
-                    for (var i = 0; i < parts.length; i++) {
-                        if (parts[i].indexOf("type=") == 0) return parts[i].substring(5)
-                    }
-                    return "";
-                }
+                text: DetailUtils.getDetailSubType(detail)
                 fontSize: "large"
                 color: "lightgrey"
             }
@@ -126,7 +130,7 @@ Item {
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.leftMargin: 10
-            height: Math.max(editableContentBox.height, typeEditor.paintedHeight)
+            height: Math.max(editableContentBox.height, subTypeEditor.height)
 
             ButtonWithForeground {
                 id: removeButton
@@ -147,7 +151,7 @@ Item {
                 id: editableContentBox
 
                 anchors.left: parent.left
-                anchors.right: typeEditor.left
+                anchors.right: subTypeEditor.left
                 anchors.top: parent.top
                 anchors.topMargin: 8
                 anchors.leftMargin: 16
@@ -157,15 +161,16 @@ Item {
                 visible: editable
             }
 
-            TextCustom {
-                id: typeEditor
+            ContactDetailSubTypeChooser {
+                id: subTypeEditor
                 anchors.right: parent.right
                 anchors.top: parent.top
                 anchors.rightMargin: 8
                 anchors.topMargin: 8
-                text: typeText.text
-                fontSize: "large"
-                color: "lightgrey"
+                detailTypeInfo: contactDetailsItem.detailTypeInfo
+                detail: contactDetailsItem.detail
+
+                opacity: editable ? 1.0 : 0.0
             }
         }
     }

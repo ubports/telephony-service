@@ -4,7 +4,7 @@ import "../Widgets"
 BaseContactDetailsDelegate {
     id: delegate
 
-    function save() {
+    function saveDetail() {
         detail.street = editor.street
         detail.locality = editor.locality
         detail.region = editor.region
