@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import "../Widgets"
 
-Item {
+BaseMessageHeader {
     id: header
 
     property variant contact
@@ -9,74 +9,89 @@ Item {
 
     TextCustom {
         id: name
-        anchors {
-            verticalCenter: parent.verticalCenter
-            left: parent.left
-            leftMargin: 20
-        }
-        color: "black"
-        text: contact ? contact.displayLabel : "Unknown Contact"
+
+        anchors.left: parent.left
+        anchors.leftMargin: 13
+        anchors.verticalCenter: parent.verticalCenter
         fontSize: "x-large"
-    }
-
-    Item {
-        id: details
-        height: childrenRect.height
-        anchors {
-            right: image.left
-            rightMargin: 20
-            verticalCenter: image.verticalCenter
-        }
-
-        TextCustom {
-            id: number
-            anchors {
-                right: parent.right
-                top: parent.top
-            }
-            color: "darkGray"
-            text: header.number
-            fontSize: "medium"
-        }
-        TextCustom {
-            anchors {
-                right: parent.right
-                top: number.bottom
-            }
-            color: "darkGray"
-            // FIXME: handle the phone number properly
-            text: "" //contact ? contact.phoneType : ""
-            fontSize: "medium"
-        }
+        elide: Text.ElideRight
+        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+        style: Text.Raised
+        styleColor: "white"
+        text: contact ? contact.displayLabel : "Unknown Contact"
     }
 
     Image {
-        id: image
-        source: contact ? contact.avatar.imageUrl : ""
-        width: height
-        anchors {
-            right: parent.right
-            rightMargin: 20
-            top: parent.top
-            bottom: parent.bottom
-            topMargin: 10
-            bottomMargin: 10
-        }
+        id: icon
 
-        MouseArea {
-            anchors.fill: parent
-            onClicked: telephony.showContactDetails(contact)
-        }
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: -1
+        width: 28
+        height: width
+        sourceSize.width: width
+        fillMode: Image.PreserveAspectFit
+        source: contact ? contact.avatar.imageUrl : ""
     }
 
-    Rectangle {
-        id: line
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
+    BorderImage {
+        id: iconFrame
+
+        source: "../Widgets/artwork/ListItemFrame.png"
+        anchors.fill: icon
+        anchors.bottomMargin: -1
+        border.left: 3
+        border.right: 3
+        border.top: 3
+        border.bottom: 3
+        horizontalTileMode: BorderImage.Stretch
+        verticalTileMode: BorderImage.Stretch
+    }
+
+    AbstractButton {
+        anchors.fill: icon
+        onClicked: telephony.showContactDetails(contact)
+    }
+
+    Item {
+        anchors.right: icon.left
+        anchors.rightMargin: 5
+        anchors.left: name.right
+        anchors.leftMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenterOffset: -1
+        height: childrenRect.height
+
+        TextCustom {
+            id: label
+
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            horizontalAlignment: Text.AlignRight
+            fontSize: "medium"
+            elide: Text.ElideRight
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            style: Text.Raised
+            styleColor: "white"
+            text: header.number
         }
-        height: 1
-        color: "gray"
+
+        TextCustom {
+            id: sublabel
+
+            anchors.top: label.bottom
+            anchors.topMargin: 1
+            anchors.left: parent.left
+            anchors.right: parent.right
+            horizontalAlignment: Text.AlignRight
+            fontSize: "small"
+            elide: Text.ElideRight
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            style: Text.Raised
+            styleColor: "white"
+            text: contact ? contact.phoneType : ""
+        }
     }
 }
