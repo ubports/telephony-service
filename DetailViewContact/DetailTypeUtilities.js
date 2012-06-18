@@ -80,7 +80,7 @@ function getDetailSubType(detail) {
 
 function setDetailSubType(detail, newSubType) {
     if (detail) {
-        if (detail.toString().indexOf("QDeclarativeContactPhoneNumber") == 0)
+        if (detail.toString().indexOf("QDeclarativeContactPhoneNumber") == 0) {
             detail.subTypes = [newSubType];
             return;
         }
