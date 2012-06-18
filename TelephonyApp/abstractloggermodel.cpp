@@ -57,7 +57,7 @@ QVariant LogEntry::data(int role) const
 }
 
 AbstractLoggerModel::AbstractLoggerModel(QContactManager *manager, QObject *parent) :
-    QAbstractListModel(parent), mType(Tpl::EventTypeMaskAny), mContactManager(manager)
+    QAbstractListModel(parent), mType(Tpl::EventTypeMaskAny), mContactManager(manager), mLogManager(Tpl::LogManager::instance())
 {
     // set the role names
     QHash<int, QByteArray> roles;
@@ -103,8 +103,7 @@ QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
 
 void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type)
 {
-    Tpl::LogManagerPtr manager = Tpl::LogManager::instance();
-    Tpl::PendingEntities *pendingEntities = manager->queryEntities(TelepathyHelper::instance()->account());
+    Tpl::PendingEntities *pendingEntities = mLogManager->queryEntities(TelepathyHelper::instance()->account());
 
     // store the type for the event fetching stage
     mType = type;
@@ -122,11 +121,10 @@ void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type)
 
 void AbstractLoggerModel::requestDatesForEntities(const Tpl::EntityPtrList &entities)
 {
-    Tpl::LogManagerPtr manager = Tpl::LogManager::instance();
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
 
     foreach(Tpl::EntityPtr entity, entities) {
-        Tpl::PendingDates *pendingDates = manager->queryDates(account, entity, mType);
+        Tpl::PendingDates *pendingDates = mLogManager->queryDates(account, entity, mType);
 
         connect(pendingDates,
                 SIGNAL(finished(Tpl::PendingOperation*)),
@@ -137,11 +135,10 @@ void AbstractLoggerModel::requestDatesForEntities(const Tpl::EntityPtrList &enti
 
 void AbstractLoggerModel::requestEventsForDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates)
 {
-    Tpl::LogManagerPtr manager = Tpl::LogManager::instance();
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
 
     foreach(QDate date, dates) {
-        Tpl::PendingEvents *pendingEvents = manager->queryEvents(account, entity, mType, date);
+        Tpl::PendingEvents *pendingEvents = mLogManager->queryEvents(account, entity, mType, date);
         connect(pendingEvents,
                 SIGNAL(finished(Tpl::PendingOperation*)),
                 SLOT(onPendingEventsFinished(Tpl::PendingOperation*)));
