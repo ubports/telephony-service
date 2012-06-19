@@ -68,15 +68,15 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         flickableDirection: Flickable.VerticalFlick
+        boundsBehavior: Flickable.StopAtBounds
         clip: true
         contentHeight: detailsList.height + 32 + newDetailChooser.height + 10
 
         Column {
             id: detailsList
+
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.margins: 1
-            spacing: 16
 
             Repeater {
                 model: (contact) ? DetailTypes.supportedTypes : []

@@ -22,11 +22,16 @@ BaseContactDetailsDelegate {
 
     TextCustom {
         id: formattedAddress
+
         parent: readOnlyContentBox
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        fontSize: "x-large"
+        fontSize: "large"
+        elide: Text.ElideRight
+        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+        style: Text.Raised
+        styleColor: "white"
 
         /* Render the address with the same style as in Android */
         function nonEmpty(item) { return item && item.length > 0 }
