@@ -7,7 +7,7 @@ Item {
     signal clicked(string contactId)
     signal actionClicked(string contactId, string phoneNumber)
 
-    height: 54
+    height: infoBox.height
 
     ListItem {
         id: infoBox
