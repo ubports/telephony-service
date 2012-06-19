@@ -30,7 +30,7 @@ Item {
 
         topSeparator: true
         isIcon: true
-        iconSource: "../assets/icon_message_grey.png"
+        iconSource: "../assets/add_new_message_icon.png"
         text: "New Message"
         // FIXME: maybe use a signal and handle in the instance
         onClicked: telephony.startNewMessage()

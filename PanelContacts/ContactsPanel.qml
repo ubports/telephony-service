@@ -39,7 +39,7 @@ Item {
 
         topSeparator: true
         isIcon: true
-        iconSource: "../assets/icon_plus.png"
+        iconSource: "../assets/add_contacts_icon.png"
         text: "Add a new contact"
         onClicked: telephony.createNewContact(contactsModel)
         selected: telephony.contactDetails.loaded && telephony.view.added
