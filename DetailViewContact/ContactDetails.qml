@@ -27,19 +27,46 @@ Item {
         added = true;
     }
 
+    Item {
+        id: background
+
+        anchors.fill: parent
+
+        Image {
+            anchors.fill: parent
+            source: "../assets/noise_tile.png"
+            fillMode: Image.Tile
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "black"
+            opacity: 0.05
+        }
+    }
+
     ContactDetailsHeader {
         id: header
         contact: contactDetails.contact
         editable: contactDetails.editable
     }
 
+    Image {
+        anchors.top: header.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        source: "../assets/right_pane_pattern.png"
+        fillMode: Image.Tile
+    }
+
     Flickable {
         id: scrollArea
+
         anchors.top: header.bottom
         anchors.bottom: editFooter.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 10
         flickableDirection: Flickable.VerticalFlick
         clip: true
         contentHeight: detailsList.height + 32 + newDetailChooser.height + 10
