@@ -45,6 +45,15 @@ Item {
         }
     }
 
+    Rectangle {
+        anchors.top: header.bottom
+        anchors.bottom: editFooter.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        color: "white"
+        opacity: 0.3
+    }
+
     ContactDetailsHeader {
         id: header
         contact: contactDetails.contact
@@ -178,7 +187,7 @@ Item {
         Rectangle {
             anchors.fill: parent
             color: "white"
-            opacity: 0.3
+            opacity: 0.5
         }
 
         Rectangle {
