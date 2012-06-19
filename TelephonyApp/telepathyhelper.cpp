@@ -27,7 +27,8 @@
 
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
-      mChannelHandler(0)
+      mChannelHandler(0),
+      mFirstTime(true)
 {
     mChatManager = new ChatManager(this);
     mCallManager = new CallManager(this);
@@ -106,6 +107,32 @@ void TelepathyHelper::createAccount()
             SLOT(onAccountCreated(Tp::PendingOperation*)));
 }
 
+void TelepathyHelper::initializeAccount()
+{
+    // watch for account state and connection changes
+    connect(mAccount.data(),
+            SIGNAL(stateChanged(bool)),
+            SLOT(onAccountStateChanged(bool)));
+    connect(mAccount.data(),
+            SIGNAL(connectionChanged(const Tp::ConnectionPtr&)),
+            SLOT(onAccountConnectionChanged(const Tp::ConnectionPtr&)));
+
+    // and make sure it is enabled and connected
+    if (!mAccount->isEnabled()) {
+        ensureAccountEnabled();
+    } else {
+        ensureAccountConnected();
+    }
+}
+
+void TelepathyHelper::ensureAccountEnabled()
+{
+    mAccount->setConnectsAutomatically(true);
+    connect(mAccount->setEnabled(true),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onAccountEnabled(Tp::PendingOperation*)));
+}
+
 void TelepathyHelper::ensureAccountConnected()
 {
     // if the account is not connected, request it to connect
@@ -113,7 +140,11 @@ void TelepathyHelper::ensureAccountConnected()
         Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", "online");
         mAccount->setRequestedPresence(presence);
     }
-    emit accountReady();
+
+    if (mFirstTime) {
+        emit accountReady();
+        mFirstTime = false;
+    }
 }
 
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
@@ -136,7 +167,7 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
     }
 
     mAccount = accountSet->accounts()[0];
-    ensureAccountConnected();
+    initializeAccount();
 }
 
 void TelepathyHelper::onAccountCreated(Tp::PendingOperation *op)
@@ -154,14 +185,25 @@ void TelepathyHelper::onAccountCreated(Tp::PendingOperation *op)
     }
 
     mAccount = pa->account();
-    mAccount->setConnectsAutomatically(true);
-    connect(mAccount->setEnabled(true),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onAccountEnabled(Tp::PendingOperation*)));
+    initializeAccount();
 }
 
 void TelepathyHelper::onAccountEnabled(Tp::PendingOperation *op)
 {
     // we might need to do more stuff once the account is enabled, but making sure it is connected is a good start
     ensureAccountConnected();
+}
+
+void TelepathyHelper::onAccountStateChanged(bool enabled)
+{
+    if (!enabled) {
+        ensureAccountEnabled();
+    }
+}
+
+void TelepathyHelper::onAccountConnectionChanged(const Tp::ConnectionPtr &connection)
+{
+    if (connection.isNull()) {
+        ensureAccountConnected();
+    }
 }
