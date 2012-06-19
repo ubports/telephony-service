@@ -32,17 +32,10 @@ Column {
         newItems.model.append({})
     }
 
-    Item {
+    ListSectionHeader {
         anchors.left: parent.left
         anchors.right: parent.right
-        height: section.paintedHeight + 10
-        TextCustom {
-            id: section
-            anchors.left: parent.left
-            anchors.verticalCenter: parent.verticalCenter
-            text: detailTypeInfo.name
-            fontSize: "small"
-        }
+        text: detailTypeInfo.name
     }
 
     Repeater {
