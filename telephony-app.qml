@@ -6,8 +6,8 @@ import "Widgets"
 
 Item {
     id: telephony
-    width: 800
-    height: 800
+    width: 570
+    height: 487
 
     property alias viewSource: rightPaneContent.source
     property alias view: rightPaneContent.item
