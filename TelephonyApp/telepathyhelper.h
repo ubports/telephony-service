@@ -53,12 +53,16 @@ public Q_SLOTS:
 
 protected:
     void createAccount();
+    void initializeAccount();
+    void ensureAccountEnabled();
     void ensureAccountConnected();
 
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);
     void onAccountCreated(Tp::PendingOperation *op);
     void onAccountEnabled(Tp::PendingOperation *op);
+    void onAccountStateChanged(bool enabled);
+    void onAccountConnectionChanged(const Tp::ConnectionPtr &connection);
 
 private:
     explicit TelepathyHelper(QObject *parent = 0);
@@ -72,6 +76,7 @@ private:
     ChannelHandler *mChannelHandler;
     ChatManager *mChatManager;
     CallManager *mCallManager;
+    bool mFirstTime;
 };
 
 #endif // TELEPATHYHELPER_H

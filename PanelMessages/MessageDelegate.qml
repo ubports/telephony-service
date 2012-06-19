@@ -4,13 +4,9 @@ import "../Widgets"
 ListItem {
     id: messageDelegate
 
-    // FIXME: reference to fake model needs to be removed before final release
-    property variant contact: fakeContacts.fromId(contactId)
-
-    // FIXME: the dummydata prefix should be in the model
-    iconSource: "../dummydata/" + contact.photo
-    text: contact.displayName
-    subtext: lastMessageContent
+    iconSource: avatar == "" ? "../assets/default_avatar.png" : avatar
+    text: contactAlias
+    subtext: message
 
     TextCustom {
         id: subsublabel
@@ -26,6 +22,6 @@ ListItem {
         style: Text.Raised
         styleColor: "white"
         opacity: messageDelegate.enabled ? 1.0 : 0.5
-        text: lastMessageDate
+        text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
     }
 }

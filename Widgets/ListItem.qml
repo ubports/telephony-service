@@ -80,7 +80,6 @@ AbstractButton {
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: 1
                 width: listItem.isIcon ? 16 : 36
-                height: width
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
                 opacity: listItem.enabled ? 1.0 : 0.5

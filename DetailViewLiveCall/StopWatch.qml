@@ -1,10 +1,9 @@
 import QtQuick 1.0
 import "../Widgets"
 
-Rectangle {
+Item {
     property int time: 0
-    radius: 4
-    color: "#3a3a3a"
+
     height: count.paintedHeight + 8 * 2
     width: count.paintedWidth + 22 * 2
 
@@ -18,6 +17,7 @@ Rectangle {
 
     TextCustom {
         id: count
+
         anchors.centerIn: parent
         color: "white"
         // FIXME: factor into a named function

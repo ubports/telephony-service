@@ -1,6 +1,5 @@
 import QtQuick 1.1
 
 NotificationPane {
-    image: "../assets/icon_messages.png"
-    text: "Select a message"
+    image: "../assets/pane_messages_icon.png"
 }

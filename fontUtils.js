@@ -21,7 +21,7 @@ function sizeToPixels(size) {
         case "small": return 10
         case "medium": return 11
         case "large": return 13
-        case "x-large": return 15
+        case "x-large": return 18
         case "xx-large": return 30
     }
 }

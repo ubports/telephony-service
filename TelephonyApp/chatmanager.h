@@ -40,6 +40,7 @@ public:
 signals:
     void chatReady(const QString &contactId);
     void messageReceived(const QString &contactId, const QString &message);
+    void messageSent(const QString &contactId, const QString &message);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);

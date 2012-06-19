@@ -55,8 +55,9 @@ Item {
         view.postText = "";
     }
 
-    function showContactDetails(contact) {
+    function showContactDetails(contacts, contact) {
         contactDetails.load()
+        view.contactsModel = contacts
         view.contact = contact
         view.added = false
     }

@@ -20,72 +20,29 @@
 #ifndef CALLLOGMODEL_H
 #define CALLLOGMODEL_H
 
-#include <QAbstractListModel>
-#include <TelepathyLoggerQt4/PendingOperation>
-#include <QDateTime>
-#include <QList>
-#include <QUrl>
-#include <QContact>
-#include <QContactId>
+#include "abstractloggermodel.h"
+#include <QTime>
 
-using namespace QtMobility;
-
-class CallEntry {
+class CallLogEntry : public LogEntry {
 public:
-    QContactLocalId localId;
-    QString contactId;
-    QString contactAlias;
-    QUrl avatar;
-    QString phoneNumber;
-    QString phoneType;
-    QDateTime timestamp;
+    QVariant data(int role) const;
+    QTime duration;
     bool missed;
-    bool incoming;
 };
 
-namespace QtMobility {
-    class QContactManager;
-}
-
-class CallLogModel : public QAbstractListModel
+class CallLogModel : public AbstractLoggerModel
 {
     Q_OBJECT
 public:
     enum CallLogRoles {
-        ContactId = Qt::UserRole,
-        ContactAlias,
-        Avatar,
-        PhoneNumber,
-        PhoneType,
-        Timestamp,
-        Missed,
-        Incoming
+        Duration = AbstractLoggerModel::LastLogRole,
+        Missed
     };
 
-    explicit CallLogModel(QObject *parent = 0);
-
-    int rowCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
+    explicit CallLogModel(QtMobility::QContactManager *manager, QObject *parent = 0);
     
 protected:
-    void fetchCallLog();
-    void fillContactInfo(CallEntry &entry, const QContact &contact);
-    void clearContactInfo(CallEntry &entry);
-
-protected slots:
-    void onPendingEntitiesFinished(Tpl::PendingOperation *op);
-    void onPendingDatesFinished(Tpl::PendingOperation *op);
-    void onPendingEventsFinished(Tpl::PendingOperation *op);
-
-    // QContactManager related slots
-    void onContactsAdded(const QList<QContactLocalId> &contactIds);
-    void onContactsChanged(const QList<QContactLocalId> &contactIds);
-    void onContactsRemoved(const QList<QContactLocalId> &contactIds);
-
-private:
-    QList<CallEntry> mCallEntries;
-    QContactManager *mContactManager;
-
+    LogEntry *createEntry(const Tpl::EventPtr &event);
 };
 
 #endif // CALLLOGMODEL_H

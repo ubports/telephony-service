@@ -16,18 +16,18 @@ Item {
         delegate: Item {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: message.visible ? message.height : 0
+            height: messageDelegate.visible ? messageDelegate.height : 0
             MessageDelegate {
-                id: message
+                id: messageDelegate
 
                 anchors.left: parent.left
                 anchors.right: parent.right
-                onClicked: telephony.startChat(contact, contact.phoneNumber.number)
-                visible: contact.displayName.toLowerCase().indexOf(filter.toLowerCase()) >= 0 ? true : false
+                // FIXME: need to match the contact with the number
+                onClicked: telephony.startChat(null, phoneNumber)
                 selected: telephony.messages.loaded
                           && !telephony.view.newMessage
-                          && telephony.view.contact == contact
-                          && telephony.view.number == contact.phoneNumber.number
+                          //&& telephony.view.contact == contact
+                          && telephony.view.number == phoneNumber
             }
         }
     }

@@ -21,11 +21,43 @@ Item {
     width: 400
     height: 600
 
-    function createNewContact(contactsModel) {
-        contactDetails.contactsModel = contactsModel;
+    function createNewContact() {
         contact = Qt.createQmlObject("import QtMobility.contacts 1.1; Contact {}", contactsModel);
         editable = true;
         added = true;
+    }
+
+    Item {
+        id: background
+
+        anchors.fill: parent
+
+        Image {
+            anchors.fill: parent
+            source: "../assets/noise_tile.png"
+            fillMode: Image.Tile
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "black"
+            opacity: 0.05
+        }
+    }
+
+    Rectangle {
+        anchors.top: header.bottom
+        anchors.bottom: editFooter.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        color: "white"
+        opacity: 0.3
+    }
+
+    Rectangle {
+        anchors.fill: header
+        color: "white"
+        opacity: 0.5
     }
 
     ContactDetailsHeader {
@@ -34,23 +66,32 @@ Item {
         editable: contactDetails.editable
     }
 
+    Image {
+        anchors.top: header.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        source: "../assets/right_pane_pattern.png"
+        fillMode: Image.Tile
+    }
+
     Flickable {
         id: scrollArea
+
         anchors.top: header.bottom
         anchors.bottom: editFooter.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.margins: 10
         flickableDirection: Flickable.VerticalFlick
+        boundsBehavior: Flickable.StopAtBounds
         clip: true
-        contentHeight: detailsList.height + 32 + newDetailChooser.height + 10
+        contentHeight: detailsList.height + (contactDetails.editable ? 32 + newDetailChooser.height + 10 : 0)
 
         Column {
             id: detailsList
+
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.margins: 1
-            spacing: 16
 
             Repeater {
                 model: (contact) ? DetailTypes.supportedTypes : []
@@ -140,68 +181,98 @@ Item {
         }
     }
 
-    Rectangle {
+    Item {
         id: editFooter
+
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 50
-        color: "grey"
 
-        Button {
-            id: deleteButton
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.margins: 10
-            text: "Delete"
-            opacity: (editable) ? 1.0 : 0.0
+        height: 36
+
+        Rectangle {
+            anchors.fill: parent
+            color: "white"
+            opacity: 0.5
         }
 
-        Button {
-            id: cancelButton
-            anchors.top: parent.top
-            anchors.right: editSaveButton.left
-            anchors.margins: 10
-            text: "Cancel"
-            opacity: (editable) ? 1.0 : 0.0
-            onClicked: editable = false
-       }
+        Rectangle {
+            id: separator
 
-        Button {
-            id: editSaveButton
             anchors.top: parent.top
+            anchors.left: parent.left
             anchors.right: parent.right
-            anchors.margins: 10
-            text: (editable) ? "Save" : "Edit"
-            onClicked: {
-                if (!editable) editable = true;
-                else {
-                    /* We ask each detail delegate to save all edits to the underlying
-                       model object. The other way to do it would be to change editable
-                       to false and catch onEditableChanged in the delegates and save there.
-                       However that other way doesn't work since we can't guarantee that all
-                       delegates have received the signal before we call contact.save() here.
-                    */
-                    header.save();
+            height: 1
+            color: "white"
+        }
 
-                    var addedDetails = [];
-                    for (var i = 0; i < detailsList.children.length; i++) {
-                        var saver = detailsList.children[i].save;
-                        if (saver && saver instanceof Function) {
-                            var newDetails = saver();
-                            for (var k = 0; k < newDetails.length; k++)
-                                addedDetails.push(newDetails[k]);
+        Item {
+            id: footerButtons
+
+            anchors.top: separator.bottom
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            ButtonSmall {
+                id: deleteButton
+
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 10
+                text: "Delete"
+                opacity: (editable) ? 1.0 : 0.0
+            }
+
+            ButtonSmall {
+                id: cancelButton
+
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: editSaveButton.left
+                anchors.rightMargin: 10
+                text: "Cancel"
+                opacity: (editable) ? 1.0 : 0.0
+                onClicked: editable = false
+           }
+
+            ButtonSmall {
+                id: editSaveButton
+
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+                anchors.rightMargin: 10
+                color: editable ? "#dd4f22" : "#e3e5e8"
+                text: (editable) ? "Save" : "Edit"
+                onClicked: {
+                    if (!editable) editable = true;
+                    else {
+                        /* We ask each detail delegate to save all edits to the underlying
+                           model object. The other way to do it would be to change editable
+                           to false and catch onEditableChanged in the delegates and save there.
+                           However that other way doesn't work since we can't guarantee that all
+                           delegates have received the signal before we call contact.save() here.
+                        */
+                        header.save();
+
+                        var addedDetails = [];
+                        for (var i = 0; i < detailsList.children.length; i++) {
+                            var saver = detailsList.children[i].save;
+                            if (saver && saver instanceof Function) {
+                                var newDetails = saver();
+                                for (var k = 0; k < newDetails.length; k++)
+                                    addedDetails.push(newDetails[k]);
+                            }
                         }
+
+                        for (i = 0; i < addedDetails.length; i++) {
+                            console.log("Add detail: " + contact.addDetail(addedDetails[i]));
+                        }
+
+                        if (contact.modified || contact.added)
+                            contactsModel.saveContact(contact);
+
+                        editable = false;
                     }
-
-                    for (i = 0; i < addedDetails.length; i++) {
-                        console.log("Add detail: " + contact.addDetail(addedDetails[i]));
-                    }
-
-                    if (contact.modified) contact.save();
-                    if (contact.added) contactsModel.saveContact(contact);
-
-                    editable = false;
                 }
             }
         }

@@ -7,7 +7,7 @@ Item {
     signal clicked(string contactId)
     signal actionClicked(string contactId, string phoneNumber)
 
-    height: childrenRect.height
+    height: infoBox.height
 
     ListItem {
         id: infoBox
@@ -32,7 +32,7 @@ Item {
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised
         styleColor: "white"
-        text: timestamp
+        text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
     }
 
     Row {

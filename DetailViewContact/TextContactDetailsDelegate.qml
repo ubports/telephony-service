@@ -4,7 +4,7 @@ import "../Widgets"
 BaseContactDetailsDelegate {
     id: delegate
 
-    function save() {
+    function saveDetail() {
         if (detail && detailTypeInfo.displayField) {
             console.log("SAVING " + detail + " " + detailTypeInfo.displayField + " > " + editor.text)
             detail[detailTypeInfo.displayField] = (editor.text) ? editor.text : ""
@@ -15,12 +15,16 @@ BaseContactDetailsDelegate {
 
     TextCustom {
         id: value
+
         parent: readOnlyContentBox
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        fontSize: "x-large"
-
+        fontSize: "large"
+        elide: Text.ElideRight
+        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+        style: Text.Raised
+        styleColor: "white"
         text: (detail && detailTypeInfo.displayField) ? detail[detailTypeInfo.displayField] : ""
     }
 

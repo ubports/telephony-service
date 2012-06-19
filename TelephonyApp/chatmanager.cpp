@@ -60,6 +60,7 @@ void ChatManager::sendMessage(const QString &contactId, const QString &message)
         return;
 
     mChannels[contactId]->send(message);
+    emit messageSent(contactId, message);
 }
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)

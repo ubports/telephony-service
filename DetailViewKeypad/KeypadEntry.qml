@@ -7,53 +7,31 @@ Item {
 
     property alias value: input.text
 
-    height: 42
+    height: 49
 
-    Rectangle {
+    BorderImage {
+        id: background
+
         anchors.fill: parent
-        color: "#757575"
-        border.color: "#b1b1b1"
-        border.width: 1
+        source: "../assets/keypad_entry_background.png"
+        border {left: 15; right: 15; top: 18; bottom: 1}
+        horizontalTileMode: BorderImage.Stretch
+        verticalTileMode: BorderImage.Stretch
     }
 
-    Row {
+    TextInput {
+        id: input
+
         anchors.left: parent.left
-        anchors.leftMargin: 9
+        anchors.leftMargin: 19
         anchors.right: parent.right
-        anchors.rightMargin: 9
+        anchors.rightMargin: 20
         anchors.verticalCenter: parent.verticalCenter
-        layoutDirection: Qt.RightToLeft
-        // FIXME: too small spacing
-        spacing: 4
-
-        // FIXME: replace with ButtonWithForeground
-        AbstractButton {
-            id: clearButton
-
-            anchors.top: input.top
-            anchors.bottom: input.bottom
-            width: childrenRect.width
-
-            onClicked: input.text = ""
-
-            Image {
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                smooth: true
-                fillMode: Image.PreserveAspectFit
-                source: "../assets/icon_backspace.png"
-            }
-        }
-
-        TextInput {
-            id: input
-
-            height: font.pixelSize
-            horizontalAlignment: TextInput.AlignRight
-            width: parent.width - clearButton.width
-            text: "+44 7979"
-            font.pixelSize: Font.sizeToPixels("x-large")
-            color: "white"
-        }
+        anchors.verticalCenterOffset: 1
+        height: font.pixelSize
+        horizontalAlignment: TextInput.AlignRight
+        text: "+44 01234 56789"
+        font.pixelSize: Font.sizeToPixels("x-large")
+        color: "#e3e5e8"
     }
 }

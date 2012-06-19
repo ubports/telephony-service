@@ -2,7 +2,7 @@ import QtQuick 1.1
 import "../Widgets"
 
 ListItem {
-    width: parent.width
+    width: (parent) ? parent.width : undefined
 
     // FIXME: this function is used in two places, should be moved to one common place
     function contactName() {

@@ -1,12 +1,13 @@
 import QtQuick 1.1
 import "../Widgets"
+import "DetailTypeUtilities.js" as DetailUtils
 
 Item {
     id: contactDetailsItem
 
     /* For deleted items it's not enough to hide them, they will still take space in
        the layout. We also need to set the height to zero to make them completely go away */
-    height: (deleted) ? 0 : ((editable) ? editableGroup.height : readOnlyGroup.height)
+    height: (deleted) ? 0 : (((editable) ? editableGroup.height : readOnlyGroup.height) + bottomSeparatorLine.height)
     opacity: (deleted) ? 0.0 : 1.0
 
     property variant detail
@@ -19,6 +20,8 @@ Item {
        have already called contact.removeDetail() on it. */
     property bool deleted: false
 
+    property bool bottomSeparator: false
+
     signal clicked(string value)
     signal actionClicked(string value)
     signal deleteClicked()
@@ -26,6 +29,17 @@ Item {
     /* Internal properties, use by derived components */
     property variant readOnlyContentBox: readOnlyContentBox
     property variant editableContentBox: editableContentBox
+
+    function save() {
+        // First save the subType of the detail, then check if we are being
+        // subclassed and if the subclass defines its own saving function, and
+        // in that case call it
+
+        if (subTypeEditor.selectedValue != "")
+            DetailUtils.setDetailSubType(detail, subTypeEditor.selectedValue);
+
+        if (saveDetail instanceof Function) saveDetail();
+    }
 
     ListView.onRemove: SequentialAnimation {
         PropertyAction { target: contactDetailsItem; property: "ListView.delayRemove"; value: true }
@@ -39,21 +53,36 @@ Item {
         NumberAnimation { target: contactDetailsItem; property: "height"; from: 0; duration: 250 }
     }
 
+    Image {
+        id: bottomSeparatorLine
+
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: visible ? 2 : 0
+        source: "../Widgets/artwork/ListItemSeparator.png"
+        visible: contactDetailsItem.bottomSeparator
+    }
+
     Item {
         id: readOnlyGroup
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        height: childrenRect.height
+        height: contentBox.height + 2*contentBox.anchors.topMargin
         visible: !editable
 
         AbstractButton {
             id: contentBox
 
             anchors.left: parent.left
-            anchors.right: actionBox.left
+            anchors.leftMargin: 8
+            anchors.right: separator.left
+            anchors.rightMargin: 7
             anchors.top: parent.top
-            height: Math.max(childrenRect.height, 36)
+            anchors.topMargin: 9
+            height: childrenRect.height
 
             onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
 
@@ -61,55 +90,61 @@ Item {
                 id: readOnlyContentBox
 
                 anchors.left: parent.left
-                anchors.right: typeText.left
+                anchors.right: subTypeText.left
                 anchors.top: parent.top
-                anchors.topMargin: 8
-                anchors.leftMargin: 8
-                anchors.rightMargin: 8
-                height: childrenRect.height + 8
+                anchors.rightMargin: 10
+                height: childrenRect.height
             }
 
             TextCustom {
-                id: typeText
+                id: subTypeText
+
                 anchors.right: parent.right
                 anchors.top: parent.top
-                anchors.rightMargin: 8
-                anchors.topMargin: 8
-                text: {
-                    // The backend supports multiple types but we can just handle one,
-                    // so let's pick just the first
-                    var parts = detail.contexts.toString().split(",")
-                    for (var i = 0; i < parts.length; i++) {
-                        if (parts[i].indexOf("type=") == 0) return parts[i].substring(5)
-                    }
-                    return "";
-                }
-                fontSize: "large"
-                color: "lightgrey"
+                horizontalAlignment: Text.AlignRight
+                text: DetailUtils.getDetailSubType(detail)
+                fontSize: "medium"
+                elide: Text.ElideRight
+                color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+                style: Text.Raised
+                styleColor: "white"
             }
         }
 
-        Item {
-            id: actionBox
-            width: 60
-            height: parent.height
+        Rectangle {
+            id: separator
+
             anchors.top: parent.top
-            anchors.bottom: contentBox.bottom
+            anchors.bottom: parent.bottom
+            anchors.right: actionBox.left
+            width: 1
+            color: "black"
+            opacity: 0.1
+        }
+
+        AbstractButton {
+            id: actionBox
+
+            width: 40
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
             anchors.right: parent.right
+            onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
 
-            Button {
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
+            Image {
+                anchors.centerIn: parent
+                width: 16
+                sourceSize.width: width
+                fillMode: Image.PreserveAspectFit
 
-                iconSource: (detailTypeInfo.actionIcon) ? detailTypeInfo.actionIcon : "../assets/icon_chevron_right.png"
-                onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
+                source: (detailTypeInfo.actionIcon) ? detailTypeInfo.actionIcon : "../assets/icon_chevron_right.png"
             }
         }
     }
 
     Item {
         id: editableGroup
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -126,7 +161,7 @@ Item {
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.leftMargin: 10
-            height: Math.max(editableContentBox.height, typeEditor.paintedHeight)
+            height: Math.max(editableContentBox.height, subTypeEditor.height)
 
             ButtonWithForeground {
                 id: removeButton
@@ -147,7 +182,7 @@ Item {
                 id: editableContentBox
 
                 anchors.left: parent.left
-                anchors.right: typeEditor.left
+                anchors.right: subTypeEditor.left
                 anchors.top: parent.top
                 anchors.topMargin: 8
                 anchors.leftMargin: 16
@@ -157,15 +192,16 @@ Item {
                 visible: editable
             }
 
-            TextCustom {
-                id: typeEditor
+            ContactDetailSubTypeChooser {
+                id: subTypeEditor
                 anchors.right: parent.right
                 anchors.top: parent.top
                 anchors.rightMargin: 8
                 anchors.topMargin: 8
-                text: typeText.text
-                fontSize: "large"
-                color: "lightgrey"
+                detailTypeInfo: contactDetailsItem.detailTypeInfo
+                detail: contactDetailsItem.detail
+
+                opacity: editable ? 1.0 : 0.0
             }
         }
     }

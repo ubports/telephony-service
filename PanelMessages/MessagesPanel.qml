@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import TelephonyApp 0.1
 import "../Widgets"
 
 Item {
@@ -29,11 +30,17 @@ Item {
 
         topSeparator: true
         isIcon: true
-        iconSource: "../assets/icon_message_grey.png"
+        iconSource: "../assets/add_new_message_icon.png"
         text: "New Message"
         // FIXME: maybe use a signal and handle in the instance
         onClicked: telephony.startNewMessage()
         selected: telephony.messages.loaded && telephony.view.newMessage
+    }
+
+    MessagesProxyModel {
+        id: messagesProxyModel
+        messagesModel: conversationLogModel
+        ascending: false
     }
 
     MessagesList {
@@ -43,7 +50,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         // FIXME: reference to fake model needs to be removed before final release
-        model: fakeMessages
+        model: typeof(runtime) != "undefined" ? fakeMessages : messagesProxyModel
         filter: search.searchQuery
     }
 }
