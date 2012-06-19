@@ -54,6 +54,12 @@ Item {
         opacity: 0.3
     }
 
+    Rectangle {
+        anchors.fill: header
+        color: "white"
+        opacity: 0.5
+    }
+
     ContactDetailsHeader {
         id: header
         contact: contactDetails.contact
