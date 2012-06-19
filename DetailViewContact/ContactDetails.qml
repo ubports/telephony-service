@@ -85,7 +85,7 @@ Item {
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
         clip: true
-        contentHeight: detailsList.height + 32 + newDetailChooser.height + 10
+        contentHeight: detailsList.height + (contactDetails.editable ? 32 + newDetailChooser.height + 10 : 0)
 
         Column {
             id: detailsList
