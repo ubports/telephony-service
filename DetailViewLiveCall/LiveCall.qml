@@ -173,7 +173,7 @@ Item {
                 anchors.bottomMargin: 2
                 anchors.leftMargin: 2
                 anchors.rightMargin: 1
-                source: "../assets/keypad_div_tile.png"
+                source: "../assets/livecall_keypad_div_tile.png"
                 fillMode: Image.Tile
             }
 
