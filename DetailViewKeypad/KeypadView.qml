@@ -1,33 +1,43 @@
 import QtQuick 1.1
 
 Item {
-
     property string viewName: "keypad"
-    width: keypad.width
-    height: childrenRect.height
 
-    anchors.centerIn: parent
+    anchors.fill: parent
 
-    KeypadEntry {
-        id: keypadEntry
-        
-        anchors.left: parent.left
-        anchors.right: parent.right
+    Rectangle {
+        id: background
+
+        anchors.fill: parent
+        color: "#3a3c41"
     }
 
-    Keypad {
-        id: keypad
-        
-        anchors.top: keypadEntry.bottom
-        anchors.topMargin: 6
-        
-        onKeyPressed: keypadEntry.value += label
-    }
+    Item {
+        width: keypad.width
+        height: childrenRect.height
 
-    CallButton {
-        anchors.top: keypad.bottom
-        anchors.topMargin: 21
-        anchors.horizontalCenter: parent.horizontalCenter
-        onClicked: telephony.callNumber(keypadEntry.value)
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: -26
+
+        KeypadEntry {
+            id: keypadEntry
+
+            anchors.left: keypad.left
+            anchors.right: keypad.right
+        }
+
+        Keypad {
+            id: keypad
+
+            anchors.top: keypadEntry.bottom
+            onKeyPressed: keypadEntry.value += label
+        }
+
+        CallButton {
+            anchors.top: keypad.bottom
+            anchors.topMargin: 16
+            anchors.horizontalCenter: parent.horizontalCenter
+            onClicked: telephony.callNumber(keypadEntry.value)
+        }
     }
 }
