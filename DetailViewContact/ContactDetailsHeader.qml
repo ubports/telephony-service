@@ -9,7 +9,7 @@ Item {
     property variant editable: false
 
     width: parent.width
-    height: 81
+    height: 82
 
     // FIXME: this function is used in two places, should be moved to one common place
     function contactName() {
