@@ -1,6 +1,15 @@
 import QtQuick 1.1
 
 ListModel {
+    // Convert timestamp from string into Date objects
+    Component.onCompleted: {
+        for(var i = 0; i < count; i++) {
+            var entry = get(i)
+            var dateTime = new Date(entry.timestamp)
+            setProperty(i, "timestamp", dateTime)
+        }
+    }
+
     ListElement {
         contactId: 0
         contactAlias: "Allison Reeves"
@@ -9,7 +18,7 @@ ListModel {
         avatar: "../dummydata/allisonreeves.jpg"
         incoming: true
         missed: false
-        timestamp: "10:23 AM"
+        timestamp: "June 13, 2012 11:13:32"
     }
     ListElement {
         contactId: 1
@@ -19,7 +28,7 @@ ListModel {
         avatar: "../dummydata/frankjohnson.jpg"
         incoming: false
         missed: false
-        timestamp: "9:59 AM"
+        timestamp: "June 11, 2012 15:31:01"
     }
     ListElement {
         contactId: 1
@@ -29,7 +38,7 @@ ListModel {
         avatar: "../dummydata/frankjohnson.jpg"
         incoming: true
         missed: true
-        timestamp: "9:59 AM"
+        timestamp: "June 11, 2012 23:03:35"
     }
 
 }
