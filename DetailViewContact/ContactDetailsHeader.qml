@@ -9,7 +9,7 @@ Item {
     property variant editable: false
 
     width: parent.width
-    height: (editable) ? name.height + 64 : 100
+    height: 81
 
     // FIXME: this function is used in two places, should be moved to one common place
     function contactName() {
@@ -63,65 +63,68 @@ Item {
     }
 
     Image {
-        id: avatar
+        id: icon
+
         anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.margins: 10
-        source: {
-            if (contact) {
-                if (contact.avatar.imageUrl) {
-                    if (contact.avatar.imageUrl.toString().length > 0) {
-                        return contact.avatar.imageUrl;
-                    }
-                }
-            }
-            return "../assets/default_avatar.png";
-        }
+        anchors.leftMargin: 10
+        anchors.verticalCenter: parent.verticalCenter
+        width: 61
+        height: width
+        sourceSize.width: width
+        fillMode: Image.PreserveAspectFit
+        source: contact ? contact.avatar.imageUrl : ""
     }
 
-    Column {
-        anchors.left: avatar.right
-        anchors.top: parent.top
+    BorderImage {
+        id: iconFrame
+
+        source: "../Widgets/artwork/ListItemFrame.png"
+        anchors.fill: icon
+        anchors.bottomMargin: -1
+        border.left: 3
+        border.right: 3
+        border.top: 3
+        border.bottom: 3
+        horizontalTileMode: BorderImage.Stretch
+        verticalTileMode: BorderImage.Stretch
+    }
+
+    Item {
+        anchors.left: icon.right
+        anchors.leftMargin: 10
         anchors.right: parent.right
-        anchors.margins: 10
+        anchors.rightMargin: 10
+        anchors.top: parent.top
+        anchors.topMargin: 10
+        height: childrenRect.height
 
-        spacing: 10
+        TextCustom {
+            id: label
 
-        NameContactDetails {
-            id: name
+            anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-
-            editable: header.editable
-            detail: (contact) ? contact.name : undefined
+            fontSize: "x-large"
+            elide: Text.ElideRight
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            style: Text.Raised
+            styleColor: "white"
+            text: contact ? contact.name : "Unknown Contact"
         }
 
         TextCustom {
-            id: statusUpdate
+            id: sublabel
+
+            anchors.top: label.bottom
+            anchors.topMargin: 1
             anchors.left: parent.left
             anchors.right: parent.right
+            fontSize: "medium"
+            elide: Text.ElideRight
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            style: Text.Raised
+            styleColor: "white"
             text: "A social update will show in here"
-
-            opacity: !editable ? 1.0 : 0.0
-        }
-
-        Row {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            spacing: 5
-            opacity: !editable ? 1.0 : 0.0
-
-            Image {
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                fillMode: Image.PreserveAspectFit
-                source: (contact) ? contactDetailsHeader.iconForState(contact.presence.state) : ""
-            }
-
-            TextCustom {
-                anchors.verticalCenter: parent.verticalCenter
-                text: (contact) ? nameForState(contact.presence.state) : ""
-            }
         }
     }
 }
