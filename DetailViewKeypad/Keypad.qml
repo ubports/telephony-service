@@ -3,8 +3,8 @@ import QtQuick 1.1
 Item {
     id: keypad
 
-    width: childrenRect.width
-    height: childrenRect.height
+    width: keys.width
+    height: keys.height
 
     signal keyPressed(int keycode, string label)
 

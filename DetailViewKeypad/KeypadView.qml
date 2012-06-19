@@ -24,6 +24,8 @@ Item {
 
             anchors.left: keypad.left
             anchors.right: keypad.right
+            anchors.leftMargin: -2
+            anchors.rightMargin: -2
         }
 
         Keypad {
