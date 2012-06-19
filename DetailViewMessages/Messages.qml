@@ -32,16 +32,14 @@ Item {
         id: messageDelegate
 
         Item {
-            height: background.height
-            anchors {
-                left: parent.left
-                right: parent.right
-                leftMargin: incoming ? 1/3 * messages.width : 10
-                rightMargin: incoming ? 10 : 1/3 * messages.width
-            }
+            height: textBubble.visible ? textBubble.height : imageBubble.height
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.leftMargin: incoming ? 40 : 10
+            anchors.rightMargin: incoming ? 10 : 40
 
             BorderImage {
-                id: background
+                id: textBubble
 
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -49,6 +47,7 @@ Item {
                 anchors.bottom: messageText.bottom
                 anchors.bottomMargin: -13
 
+                visible: message != ""
                 smooth: true
                 source: incoming ? "../assets/bubble_right.png" : "../assets/bubble_left.png"
                 border {top: 15; bottom: 40; left: incoming ? 15 : 21; right: incoming ? 21 : 15}
@@ -69,6 +68,36 @@ Item {
                 wrapMode: Text.WordWrap
                 fontSize: "medium"
                 color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            }
+
+            Image {
+                id: image
+
+                property bool horizontal: image.sourceSize.width >= image.sourceSize.height
+
+                width: horizontal ? parent.width : undefined
+                height: horizontal ? undefined : 200
+                clip: true
+                fillMode: Image.PreserveAspectCrop
+                source: imageSource
+                smooth: true
+                cache: false
+                asynchronous: true
+            }
+
+            BorderImage {
+                id: imageBubble
+
+                anchors.fill: image
+                anchors.topMargin: -4
+                anchors.bottomMargin: -6
+                anchors.leftMargin: incoming ? -5 : -12
+                anchors.rightMargin: incoming ? -12 : -5
+
+                visible: !textBubble.visible
+                smooth: true
+                source: incoming ? "../assets/bubble_image_right.png" : "../assets/bubble_image_left.png"
+                border {top: 15; bottom: 40; left: incoming ? 15 : 21; right: incoming ? 21 : 15}
             }
         }
     }
