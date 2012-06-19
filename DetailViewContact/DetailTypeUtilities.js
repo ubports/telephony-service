@@ -28,12 +28,11 @@ var supportedTypes = [
             },
             {
                 name: "Address",
-                delegateSource: "TextContactDetailsDelegate.qml",
+                delegateSource: "AddressContactDetailsDelegate.qml",
                 items: "addresses",
                 newItemText: "Add a postal address",
                 newItemType: "Address",
                 actionIcon: "../assets/icon_address.png",
-                delegateSource: "AddressContactDetailsDelegate.qml",
                 subTypes: postalAddressSubTypes
             },
             {
