@@ -17,6 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <glib.h>
+#include <unistd.h>
+#include <libnotify/notify.h>
+
 #include "telephonyappapprover.h"
 #include <QMessageBox>
 
@@ -65,6 +69,13 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
     context->setFinished();
 }
 
+void action_accept(NotifyNotification* notification,
+                   char*               action,
+                   gpointer            data)
+{
+    qDebug() << "GOT IT";
+}
+
 void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
@@ -87,7 +98,34 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         callChannel->setRinging();
     }
 
-    int ret = QMessageBox::question(NULL, "Incoming call",
+    NotifyNotification* notification;
+    gboolean            success;
+    GError*             error = NULL;
+
+    /* initial notification */
+
+    qDebug() << "FUCKCKCKC";
+
+    notification = notify_notification_new ("HELLO", "dobobobob", "");
+    qDebug() << "444444";
+
+    notify_notification_add_action (notification,
+                                    "action_accept",
+                                    "Accept",
+                                    action_accept,
+                                    NULL,
+                                    NULL);
+
+    notify_notification_add_action (notification,
+                                    "action_decline_1",
+                                    "Decline",
+                                    action_accept,
+                                    NULL,
+                                    NULL);
+    notify_notification_show(notification, &error);
+    qDebug() << "FUCKCKCKC";
+
+    int ret = QMessageBox::question(NULL, "HELLO",
                     QString("Incoming call from %1\nAnswer?").arg(contact->id()),
                     QMessageBox::Yes | QMessageBox::No);
     if (ret == QMessageBox::Yes) {
