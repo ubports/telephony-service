@@ -10,10 +10,11 @@ Item {
     // FIXME: refactor StopWatch, callStarted, Timer into StopWatch
     property variant callStarted
     property variant contact
+    property QtObject call
     property string number: ""
-    property bool onHold: false
+    property bool onHold: call ? call.held : false
     property bool isSpeaker: false
-    property bool isMuted: false
+    property bool isMuted: call ? call.muted : false
     property bool isDtmf: false
 
     function startCall() {
@@ -25,8 +26,21 @@ Item {
         callTicker.stop();
         // FIXME: dont reset callStarted
         callStarted = null;
-        telephony.endCall(stopWatch.elapsed);
-        callManager.endCall(liveCall.number);
+        if (call) {
+            call.endCall();
+        }
+    }
+
+    onNumberChanged: {
+        call = callManager.callEntryForContact(number);
+    }
+
+    Connections {
+        target: call
+
+        onCallEnded: {
+            telephony.endCall(stopWatch.elapsed);
+        }
     }
 
     Rectangle {
@@ -137,7 +151,9 @@ Item {
             anchors.bottom: mainButtonsContainer.top
             anchors.bottomMargin: 10
             onKeyPressed: {
-                callManager.sendDTMF(liveCall.number, label)
+                if (call) {
+                    call.sendDTMF(label)
+                }
             }
             z: 1
         }
@@ -208,8 +224,9 @@ Item {
                     iconSource: selected ? "../assets/incall_keypad_pause_selected.png" : "../assets/incall_keypad_pause_unselected.png"
                     selected: liveCall.onHold
                     onClicked: {
-                        liveCall.onHold = !liveCall.onHold
-                        callManager.setHold(liveCall.number, liveCall.onHold)
+                        if (call) {
+                            call.held = !call.held
+                        }
                     }
                 }
 
@@ -218,8 +235,9 @@ Item {
                     iconSource: selected ? "../assets/incall_keypad_mute_selected.png" : "../assets/incall_keypad_mute_unselected.png"
                     selected: liveCall.isMuted
                     onClicked: {
-                        liveCall.isMuted = !liveCall.isMuted
-                        callManager.setMute(liveCall.number, liveCall.isMuted)
+                        if (call) {
+                            call.muted = !call.muted
+                        }
                     }
                 }
             }

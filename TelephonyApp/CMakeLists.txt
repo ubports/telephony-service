@@ -7,6 +7,7 @@ set(plugin_SRCS
     components.cpp
     channelhandler.cpp
     chatmanager.cpp
+    callentry.cpp
     callmanager.cpp
     conversationlogmodel.cpp
     messagelogmodel.cpp
@@ -21,6 +22,7 @@ set(plugin_HDRS
     components.h
     channelhandler.h
     chatmanager.h
+    callentry.h
     callmanager.h
     conversationlogmodel.h
     messagelogmodel.h

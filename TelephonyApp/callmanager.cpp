@@ -19,6 +19,7 @@
  */
 
 #include "callmanager.h"
+#include "callentry.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/ContactManager>
@@ -28,36 +29,19 @@
 #define ANDROID_TELEPHONY_DBUS_PATH "/com/canonical/android/telephony/Telephony"
 #define ANDROID_TELEPHONY_DBUS_IFACE "com.canonical.android.telephony.Telephony"
 
-#define TP_UFA_DBUS_ADDRESS "org.freedesktop.Telepathy.Connection.ufa.ufa.ufa"
-#define TP_UFA_DBUS_MUTE_FACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
-
 CallManager::CallManager(QObject *parent)
 : QObject(parent)
 {
 }
 
-bool CallManager::isTalkingToContact(const QString &contactId)
+bool CallManager::isTalkingToContact(const QString &contactId) const
 {
-    return mChannels.contains(contactId);
-}
-
-QString CallManager::callChannelToContactId(Tp::CallChannel *channel)
-{
-    QString contactId;
-    QMapIterator<QString, Tp::CallChannelPtr> i(mChannels);
-    while (i.hasNext()) {
-        i.next();
-        if (i.value().data() == channel) {
-            contactId = i.key();
-            break;
-        }
-    }
-    return contactId;
+    return mCallEntries.contains(contactId);
 }
 
 void CallManager::startCall(const QString &contactId)
 {
-    if (!mChannels.contains(contactId)) {
+    if (!mCallEntries.contains(contactId)) {
         // Request the contact to start audio call
         Tp::AccountPtr account = TelepathyHelper::instance()->account();
         connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << contactId),
@@ -66,55 +50,10 @@ void CallManager::startCall(const QString &contactId)
     }
 }
 
-void CallManager::endCall(const QString &contactId)
-{
-    if (!mChannels.contains(contactId))
-        return;
-
-    mChannels[contactId]->hangup();
-    mChannels[contactId]->requestClose();
-    mChannels.remove(contactId);
-    mContacts.remove(contactId);
-}
-
-void CallManager::sendDTMF(const QString &contactId, const QString &key)
-{
-    if (!mChannels.contains(contactId))
-        return;
-
-    foreach(const Tp::CallContentPtr &content, mChannels[contactId]->contents()) {
-        if (content->supportsDTMF()) {
-            bool ok;
-            Tp::DTMFEvent event = (Tp::DTMFEvent)key.toInt(&ok);
-            if (!ok) {
-                 if (!key.compare("*")) {
-                     event = Tp::DTMFEventAsterisk;
-                 } else if (!key.compare("#")) {
-                     event = Tp::DTMFEventHash;
-                 } else {
-                     qDebug() << "Tone not recognized. DTMF failed";
-                     return;
-                 }
-            }
-            content->startDTMFTone(event);
-        }
-    }
-}
-
-void CallManager::setHold(const QString &contactId, bool hold)
-{
-    if (!mChannels.contains(contactId))
-        return;
-
-    mChannels[contactId]->requestHold(hold);
-}
-
 void CallManager::setSpeaker(const QString &contactId, bool speaker)
 {
-    if (!mChannels.contains(contactId))
-        return;
-
-    QDBusInterface androidIf(ANDROID_DBUS_ADDRESS, 
+    Q_UNUSED(contactId)
+    QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
                              ANDROID_TELEPHONY_DBUS_PATH, 
                              ANDROID_TELEPHONY_DBUS_IFACE);
     if (speaker) {
@@ -124,52 +63,24 @@ void CallManager::setSpeaker(const QString &contactId, bool speaker)
     }
 }
 
-void CallManager::setMute(const QString &contactId, bool mute)
+QObject *CallManager::callEntryForContact(const QString &contactId) const
 {
-    Tp::ChannelPtr channel = mChannels[contactId];
-    if (!channel)
-        return;
+    if (mCallEntries.contains(contactId)) {
+        return mCallEntries[contactId];
+    }
 
-    // Replace this by a Mute interface method call when it
-    // becomes available in telepathy-qt
-    QDBusInterface callChannelIf(TP_UFA_DBUS_ADDRESS, 
-                                 channel->objectPath(), 
-                                 TP_UFA_DBUS_MUTE_FACE);
-    callChannelIf.call("RequestMuted", mute);
+    return 0;
 }
 
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
-    mChannels[channel->targetContact()->id()] = channel;
-    connect(channel.data(), SIGNAL(callStateChanged(Tp::CallState)),
-                     this, SLOT(onCallStateChanged(Tp::CallState)));
-    connect(channel.data(), SIGNAL(callFlagsChanged(Tp::CallFlags)),
-                     this, SLOT(onCallFlagsChanged(Tp::CallFlags)));
+    CallEntry *entry = new CallEntry(channel->targetContact()->id(), channel, this);
+    mCallEntries[channel->targetContact()->id()] = entry;
+    connect(entry,
+            SIGNAL(callEnded()),
+            SLOT(onCallEnded()));
 
-    channel->accept();
-    emit callReady(channel->targetContact()->id());
-}
-
-void CallManager::onCallStateChanged(Tp::CallState state)
-{
-    Tp::CallChannel *channel =  qobject_cast<Tp::CallChannel*>(sender());
-    QString contactId = callChannelToContactId(channel);
-
-    if(!contactId.isNull()) {
-        if (state == Tp::CallStateEnded) {
-            endCall(contactId);
-            emit callEnded(contactId);
-        }
-    }
-}
-
-void CallManager::onCallFlagsChanged(Tp::CallFlags flags)
-{
-    Tp::CallChannel *channel = qobject_cast<Tp::CallChannel*>(sender());
-    QString contactId = callChannelToContactId(channel);
-    bool locallyHeld = flags & Tp::CallFlagLocallyHeld;
-    qDebug() << "locallyHeld" << locallyHeld;
-    emit onHoldChanged(contactId, locallyHeld);
+    emit callReady(entry->contactId());
 }
 
 void CallManager::onContactsAvailable(Tp::PendingOperation *op)
@@ -189,5 +100,21 @@ void CallManager::onContactsAvailable(Tp::PendingOperation *op)
 
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;
+    }
+}
+
+void CallManager::onCallEnded()
+{
+    CallEntry *entry = qobject_cast<CallEntry*>(sender());
+    if (!entry) {
+        return;
+    }
+
+    emit callEnded(entry->contactId());
+
+    // at this point the entry should be removed
+    if (mCallEntries.contains(entry->contactId())) {
+        mCallEntries.remove(entry->contactId());
+        delete entry;
     }
 }
