@@ -40,6 +40,7 @@ Item {
     MessagesProxyModel {
         id: messagesProxyModel
         messagesModel: conversationLogModel
+        searchString: search.text
         ascending: false
     }
 
