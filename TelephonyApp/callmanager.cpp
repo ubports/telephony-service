@@ -150,4 +150,6 @@ void CallManager::onCallEnded()
     mCallEntries.removeAll(entry);
     delete entry;
     emit hasCallsChanged();
+    emit foregroundCallChanged();
+    emit backgroundCallChanged();
 }
