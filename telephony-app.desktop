@@ -6,4 +6,4 @@ Comment=telephony application
 Exec=telephony-app %u
 Terminal=false
 Icon=telephony-app
-MimeType=x-scheme-handler/contact
+MimeType=x-scheme-handler/contact;x-scheme-handler/incoming_call;x-scheme-handler/outgoing_call

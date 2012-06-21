@@ -4,6 +4,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
+#include <QtGui/QGraphicsObject>
 #include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeView>
@@ -37,7 +38,8 @@ static void printUsage(const QStringList& arguments)
 {
     qDebug() << "usage:"
              << arguments.at(0).toUtf8().constData()
-             << "[contact://CONTACT_KEY]";
+             << "[contact://CONTACT_KEY]"
+             << "[call://PHONE_NUMBER]";
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
@@ -47,27 +49,34 @@ TelephonyApplication::TelephonyApplication(int &argc, char **argv)
 
 bool TelephonyApplication::setup()
 {
+    static QList<QString> validSchemes;
+
+    if (validSchemes.isEmpty()) {
+        validSchemes << "contact";
+        validSchemes << "call";
+    }
+
     QString contactKey;
     QStringList arguments = this->arguments();
     if (arguments.size() > 2) {
         printUsage(arguments);
         return 1;
     } else if (arguments.size() == 2) {
-        QString contactUri = arguments.at(1);
-        QString contactUriScheme = "contact://";
-        if (!contactUri.startsWith(contactUriScheme)) {
+        QUrl uri(arguments.at(1));
+        if (!validSchemes.contains(uri.scheme())) {
             printUsage(arguments);
             return 1;
         } else {
-            contactKey = contactUri.mid(contactUriScheme.size());
+            m_argUrl = QUrl(arguments.at(1));
         }
     }
 
-    if (sendMessage(contactKey)) {
+    if (sendMessage(arguments.at(1))) {
         return false;
     }
 
     m_view = new QDeclarativeView();
+    QObject::connect(m_view, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onViewStatusChanged));
     m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     loadDummyDataFiles(m_view);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
@@ -78,6 +87,7 @@ bool TelephonyApplication::setup()
     setActivationWindow(m_view);
 
     QObject::connect(this, SIGNAL(messageReceived(QString)), this, SLOT(onMessageReceived(QString)));
+    parseUrl(arguments.at(1));
     return true;
 }
 
@@ -88,14 +98,42 @@ TelephonyApplication::~TelephonyApplication()
     }
 }
 
+void TelephonyApplication::onViewStatusChanged(QDeclarativeView::Status status)
+{
+    if (m_argUrl.isEmpty() || (status != QDeclarativeView::Ready)) {
+        return;
+    }
+    parseUrl(m_argUrl);
+    m_argUrl.clear();
+}
+
+void TelephonyApplication::parseUrl(const QUrl &url)
+{
+    if (url.isEmpty()) {
+        return;
+    }
+
+    QString squeme(url.scheme());
+
+    if (squeme == "contact") {
+        // Workaround to propagate a property change even when the contactKey was the same
+        m_view->rootContext()->setContextProperty("contactKey", "");
+        m_view->rootContext()->setContextProperty("contactKey", url.host());
+    } else if (squeme == "call") {
+        QGraphicsObject *telephony = m_view->rootObject();
+        if (telephony) {
+            const QMetaObject *mo = telephony->metaObject();
+            int index = mo->indexOfMethod("startCallToNumber(QVariant)");
+            if (index != -1) {
+                QMetaMethod method = mo->method(index);
+                method.invoke(telephony, Q_ARG(QVariant, QVariant(url.host())));
+            }
+        }
+    }
+}
+
 void TelephonyApplication::onMessageReceived(const QString &message)
 {
-    if (m_view) {
-        if (message.length()) {
-            // Workaround to propagate a property change even when the contactKey was the same
-            m_view->rootContext()->setContextProperty("contactKey", "");
-            m_view->rootContext()->setContextProperty("contactKey", message);
-        }
-        activeWindow();
-    }
+    parseUrl(QUrl(message));
+    activeWindow();
 }
