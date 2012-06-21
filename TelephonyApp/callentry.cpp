@@ -21,14 +21,14 @@
 #include "callentry.h"
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/PendingReady>
+#include <TelepathyQt/Connection>
 
-#define TP_UFA_DBUS_ADDRESS "org.freedesktop.Telepathy.Connection.ufa.ufa.ufa"
 #define TP_UFA_DBUS_MUTE_FACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
 
 CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     QObject(parent),
     mChannel(channel),
-    mMuteInterface(TP_UFA_DBUS_ADDRESS, channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
+    mMuteInterface(channel->connection()->objectPath(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
 {
     connect(mChannel->becomeReady(Tp::Features()
                                   << Tp::CallChannel::FeatureCore
@@ -50,16 +50,8 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     channel->accept();
 
     connect(&mMuteInterface,
-            SIGNAL(MuteStateChanged(uint32)),
+            SIGNAL(MuteStateChanged(uint)),
             SIGNAL(mutedChanged()));
-}
-
-bool CallEntry::isHeld() const
-{
-    if (!mChannel->actualFeatures().contains(Tp::CallChannel::FeatureLocalHoldState)) {
-        return false;
-    }
-    return (mChannel->localHoldState() == Tp::LocalHoldStateHeld);
 }
 
 QString CallEntry::phoneNumber() const
@@ -94,6 +86,15 @@ void CallEntry::endCall()
     mChannel->requestClose();
 }
 
+bool CallEntry::isHeld() const
+{
+    if (!mChannel->actualFeatures().contains(Tp::CallChannel::FeatureLocalHoldState)) {
+        return false;
+    }
+    return (mChannel->localHoldState() == Tp::LocalHoldStateHeld);
+}
+
+
 void CallEntry::setHold(bool hold)
 {
     mChannel->requestHold(hold);
@@ -118,7 +119,8 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
     if (op->isError()) {
         qWarning() << "PendingOperation finished with error:" << op->errorName() << op->errorMessage();
     }
-    emit
+
+    emit heldChanged();
 }
 
 void CallEntry::onCallStateChanged(Tp::CallState state)
