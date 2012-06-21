@@ -19,11 +19,13 @@
 
 #include "messagesproxymodel.h"
 #include "abstractloggermodel.h"
+#include "messagelogmodel.h"
 
 MessagesProxyModel::MessagesProxyModel(QObject *parent) :
     QSortFilterProxyModel(parent), mAscending(true)
 {
     setSortRole(AbstractLoggerModel::Timestamp);
+    setDynamicSortFilter(true);
     updateSorting();
 }
 
@@ -56,7 +58,55 @@ void MessagesProxyModel::setMessagesModel(QObject *value)
     }
 }
 
+QString MessagesProxyModel::searchString() const
+{
+    return mSearchString;
+}
+
+void MessagesProxyModel::setSearchString(QString value)
+{
+    if (value != mSearchString) {
+        mSearchString = value;
+        invalidateFilter();
+        emit searchStringChanged();
+    }
+}
+
 void MessagesProxyModel::updateSorting()
 {
     sort(0, mAscending ? Qt::AscendingOrder : Qt::DescendingOrder);
+}
+
+bool MessagesProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+{
+    QModelIndex sourceIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+
+    if (!sourceIndex.isValid()) {
+        return false;
+    }
+
+    if (mSearchString.isEmpty()) {
+        return true;
+    }
+
+    // test the contact alias
+    QString value = sourceIndex.data(AbstractLoggerModel::ContactAlias).toString();
+    if (value.indexOf(mSearchString, 0, Qt::CaseInsensitive) >= 0) {
+        return true;
+    }
+
+    // test the phone number
+    value = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
+    // FIXME: use a more reliable way to compare the phone number
+    if (value.indexOf(mSearchString, 0, Qt::CaseInsensitive) >= 0) {
+        return true;
+    }
+
+    // test the message text
+    value = sourceIndex.data(MessageLogModel::Message).toString();
+    if (value.indexOf(mSearchString, 0, Qt::CaseInsensitive) >= 0) {
+        return true;
+    }
+
+    return false;
 }

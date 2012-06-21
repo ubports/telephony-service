@@ -1,50 +1,31 @@
 import QtQuick 1.1
-import "../Widgets"
-import "../fontUtils.js" as Font
 
-Rectangle {
+Item {
     property alias image: icon.source
-    property alias text: textCustom.text
-    property string preText: ""
-    property string postText: ""
-    color: "#ebebeb"
+
+    Item {
+        id: background
+
+        anchors.fill: parent
+
+        Image {
+            anchors.fill: parent
+            source: "../assets/noise_tile.png"
+            fillMode: Image.Tile
+        }
+
+        Rectangle {
+            anchors.fill: parent
+            color: "black"
+            opacity: 0.05
+        }
+    }
 
     Image {
         id: icon
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -40
 
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: -75
         fillMode: Image.PreserveAspectFit
-    }
-
-    TextCustom {
-        id: preTextCustom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: 4
-        anchors.top: icon.bottom
-
-        font.pixelSize: Font.sizeToPixels("large")
-        text: preText
-        color: "#a9a9a9"
-    }
-
-    TextCustom {
-        id: textCustom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: preTextCustom.bottom
-
-        font.pixelSize: Font.sizeToPixels("x-large")
-        color: "#a9a9a9"
-    }
-
-    TextCustom {
-        id: postTextCustom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: textCustom.bottom
-
-        font.pixelSize: Font.sizeToPixels("large")
-        text: postText
-        color: "#a9a9a9"
     }
 }

@@ -7,7 +7,7 @@ Item {
     signal clicked(string contactId)
     signal actionClicked(string contactId, string phoneNumber)
 
-    height: 54
+    height: infoBox.height
 
     ListItem {
         id: infoBox
@@ -28,7 +28,6 @@ Item {
         anchors.bottom: infoBox.bottom
         anchors.bottomMargin: 5
         fontSize: "medium"
-        width: 45
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised
         styleColor: "white"
