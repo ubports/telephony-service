@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import TelephonyApp 0.1
 import "../Widgets"
 
 Item {
@@ -42,15 +43,24 @@ Item {
         anchors.right: parent.right
 
         ListItem {
+
+            function getIconSource() {
+                if (callManager.hasCalls) {
+                    return selected ? "../assets/call_icon_livecall_active.png" : "../assets/call_icon_livecall_inactive.png"
+                } else {
+                    return selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
+                }
+            }
+
             anchors.left: parent.left
             anchors.right: parent.right
 
             topSeparator: true
             isIcon: true
-            iconSource: selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
-            text: "Keypad"
-            onClicked: telephony.showKeypad();
-            selected: telephony.keypad.loaded
+            iconSource: getIconSource()
+            text: callManager.hasCalls ? "On Call" : "Keypad"
+            onClicked: callManager.hasCalls ? telephony.showLiveCall() : telephony.showKeypad();
+            selected: telephony.liveCall.loaded || telephony.keypad.loaded
         }
 
         ListItem {
