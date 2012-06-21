@@ -87,6 +87,7 @@ void CallEntry::endCall()
 {
     mChannel->hangup();
     mChannel->requestClose();
+    emit callEnded();
 }
 
 bool CallEntry::isHeld() const
@@ -131,7 +132,6 @@ void CallEntry::onCallStateChanged(Tp::CallState state)
 {
     if (state == Tp::CallStateEnded) {
         endCall();
-        emit callEnded();
     }
 }
 
