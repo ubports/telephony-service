@@ -27,6 +27,7 @@ private slots:
 private:
     QDeclarativeView *m_view;
     QUrl m_argUrl;
+    bool m_applicationIsReady;
 };
 
 #endif // TELEPHONYAPPLICATION_H

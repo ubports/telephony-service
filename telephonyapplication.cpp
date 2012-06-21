@@ -43,7 +43,7 @@ static void printUsage(const QStringList& arguments)
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
-    : QtSingleApplication(argc, argv), m_view(0)
+    : QtSingleApplication(argc, argv), m_view(0), m_applicationIsReady(false)
 {
 }
 
@@ -87,7 +87,6 @@ bool TelephonyApplication::setup()
     setActivationWindow(m_view);
 
     QObject::connect(this, SIGNAL(messageReceived(QString)), this, SLOT(onMessageReceived(QString)));
-    parseUrl(arguments.at(1));
     return true;
 }
 
@@ -113,6 +112,7 @@ void TelephonyApplication::onViewStatusChanged(QDeclarativeView::Status status)
 void TelephonyApplication::onApplicationReady()
 {
     QObject::disconnect(QObject::sender(), SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
+    m_applicationIsReady = true;
     parseUrl(m_argUrl);
     m_argUrl.clear();
 }
@@ -144,6 +144,10 @@ void TelephonyApplication::parseUrl(const QUrl &url)
 
 void TelephonyApplication::onMessageReceived(const QString &message)
 {
-    parseUrl(QUrl(message));
+    if (m_applicationIsReady) {
+        parseUrl(QUrl(message));
+    } else {
+        m_argUrl = QUrl(message);
+    }
     activeWindow();
 }
