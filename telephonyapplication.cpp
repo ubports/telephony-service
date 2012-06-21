@@ -113,13 +113,13 @@ void TelephonyApplication::parseUrl(const QUrl &url)
         return;
     }
 
-    QString squeme(url.scheme());
+    QString scheme(url.scheme());
 
-    if (squeme == "contact") {
+    if (scheme == "contact") {
         // Workaround to propagate a property change even when the contactKey was the same
         m_view->rootContext()->setContextProperty("contactKey", "");
         m_view->rootContext()->setContextProperty("contactKey", url.host());
-    } else if (squeme == "call") {
+    } else if (scheme == "call") {
         QGraphicsObject *telephony = m_view->rootObject();
         if (telephony) {
             const QMetaObject *mo = telephony->metaObject();
