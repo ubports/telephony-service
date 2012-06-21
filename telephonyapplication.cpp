@@ -71,12 +71,12 @@ bool TelephonyApplication::setup()
         }
     }
 
-    if (sendMessage(arguments.at(1))) {
+    if (sendMessage(m_argUrl.toString())) {
         return false;
     }
 
     m_view = new QDeclarativeView();
-    QObject::connect(m_view, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onViewStatusChanged));
+    QObject::connect(m_view, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onViewStatusChanged(QDeclarativeView::Status)));
     m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     loadDummyDataFiles(m_view);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
@@ -145,7 +145,8 @@ void TelephonyApplication::parseUrl(const QUrl &url)
 void TelephonyApplication::onMessageReceived(const QString &message)
 {
     if (m_applicationIsReady) {
-        parseUrl(QUrl(message));
+        parseUrl(m_argUrl);
+        m_argUrl.clear();
     } else {
         m_argUrl = QUrl(message);
     }

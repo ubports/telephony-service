@@ -227,11 +227,21 @@ Item {
         }
     }
 
+    // TODO: This object only exists to emit "applicationReady" sigal, we should find a better way to do this
+    QtObject {
+        id: applicationLoader
+        property variant model
+
+        model: callLogModel
+        onModelChanged: {
+            telephony.applicationReady()
+        }
+    }
+
     Connections {
         target: callManager
         onCallReady: {
-            telephony.applicationReady()
-            startCallToNumber(contactId)
+           startCallToNumber(contactId)
         }
         onCallEnded: {
             if (rightPaneContent.item.viewName == "livecall" &&
@@ -239,6 +249,5 @@ Item {
                 rightPaneContent.item.endCall()
             }
         }
-
     }
 }
