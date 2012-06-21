@@ -39,7 +39,7 @@ Item {
         target: call
 
         onCallEnded: {
-            telephony.endCall(stopWatch.elapsed);
+            telephony.endCall();
         }
     }
 

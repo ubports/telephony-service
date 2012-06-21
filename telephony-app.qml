@@ -49,10 +49,8 @@ Item {
         view.newMessage = false
     }
 
-    function endCall(duration) {
+    function endCall() {
         callEnded.load()
-        view.text = duration;
-        view.postText = "";
     }
 
     function showContactDetails(contacts, contact) {
