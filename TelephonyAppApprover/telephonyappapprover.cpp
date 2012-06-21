@@ -69,14 +69,24 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
     context->setFinished();
 }
 
+class EventData {
+public:
+    TelephonyAppApprover* self;
+    Tp::ChannelDispatchOperationPtr dispatchOp;
+    Tp::ChannelPtr channel;
+    Tp::PendingReady *pr;
+};
+
 void action_accept(NotifyNotification* notification,
                    char*               action,
                    gpointer            data)
 {
     qDebug() << "GOT IT";
-    TelephonyAppApprover* approver = (TelephonyAppApprover*) data;
+    EventData* eventData = (EventData*) data;
+    TelephonyAppApprover* approver = (TelephonyAppApprover*) eventData->self;
     if (NULL != approver) {
-        approver->onApproved();
+        approver->onApproved((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp,
+                             (Tp::PendingReady *) eventData->pr);
     }
 }
 
@@ -85,17 +95,13 @@ void action_reject(NotifyNotification* notification,
                    gpointer            data)
 {
     qDebug() << "REFUSED IT";
-    TelephonyAppApprover* approver = (TelephonyAppApprover*) data;
+    EventData* eventData = (EventData*) data;
+    TelephonyAppApprover* approver = (TelephonyAppApprover*) eventData->self;
     if (NULL != approver) {
-        approver->onRejected();
+        approver->onRejected((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp,
+                             (Tp::ChannelPtr) eventData->channel);
     }
 }
-
-class EventData {
-public:
-    TelephonyAppApprover* self;
-    Tp::ChannelDispatchOperationPtr dispatchOp;
-};
 
 void delete_data(gpointer data) {
     if (NULL != data)
@@ -104,6 +110,8 @@ void delete_data(gpointer data) {
 
 void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
 {
+    qDebug() << "NOTIFICATION";
+
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[pr]);
     QString accountId = channel->property("accountId").toString();
@@ -133,8 +141,16 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     EventData* data = new EventData();
     data->self = this;
     data->dispatchOp = dispatchOp;
-    qDebug() << "NOTIFICATION";
-    notification = notify_notification_new ("HELLO", "dobobobob", "");
+    data->channel = channel;
+    data->pr = pr;
+
+    notification = notify_notification_new ("Incoming call",
+                                            QString("Incoming call from %1").arg(contact->id()).toStdString().c_str(),
+                                            "");
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-snap-decisions",
+                                        "true");
+
     notify_notification_add_action (notification,
                                     "action_accept",
                                     "Accept",
@@ -149,6 +165,7 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
                                     delete_data);
     notify_notification_show(notification, &error);
 
+/*
     int ret = QMessageBox::question(NULL, "HELLO",
                     QString("Incoming call from %1\nAnswer?").arg(contact->id()),
                     QMessageBox::Yes | QMessageBox::No);
@@ -163,20 +180,29 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         connect(claimop, SIGNAL(finished(Tp::PendingOperation*)),
                 this, SLOT(onClaimFinished(Tp::PendingOperation*)));
     }
+*/
 }
 
-void TelephonyAppApprover::onApproved()
+void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
+                                      Tp::PendingReady *pr)
 {
-
+    dispatchOp->handleWith(TP_QT_IFACE_CLIENT + ".TelephonyApp");
+    mDispatchOps.removeAll(dispatchOp);
+    mChannels.remove(pr);
 }
 
-void TelephonyAppApprover::onRejected()
+void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
+                                      Tp::ChannelPtr channel)
 {
-
+    Tp::PendingOperation *claimop = dispatchOp->claim();
+    mChannels[claimop] = channel;
+    connect(claimop, SIGNAL(finished(Tp::PendingOperation*)),
+            this, SLOT(onClaimFinished(Tp::PendingOperation*)));
 }
 
 void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
 {
+    qDebug() << "CLAIM Finished";
     if(!op || op->isError()) {
         qDebug() << "onClaimFinished() error";
         // TODO do something
