@@ -25,11 +25,11 @@ Item {
         onLeftIconClicked: text = ""
         onRightIconClicked: {
             telephony.startCallToNumber(text);
-            text = ""
+            text = "";
         }
         onContactSelected: {
-            telephony.startCallToContact(contact, number)
-            text = ""
+            telephony.callNumber(number);
+            text = "";
         }
         z: 1
     }

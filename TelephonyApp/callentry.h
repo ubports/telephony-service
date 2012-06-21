@@ -36,10 +36,11 @@ class CallEntry : public QObject
                WRITE setMute
                NOTIFY mutedChanged)
     // FIXME: handle conference
-    Q_PROPERTY(QString contactId
-               READ contactId)
+    Q_PROPERTY(QString phoneNumber
+               READ phoneNumber
+               NOTIFY phoneNumberChanged)
 public:
-    explicit CallEntry(const QString &contactId, const Tp::CallChannelPtr &channel, QObject *parent = 0);
+    explicit CallEntry(const Tp::CallChannelPtr &channel, QObject *parent = 0);
 
     bool isHeld() const;
     void setHold(bool hold);
@@ -47,24 +48,25 @@ public:
     bool isMuted() const;
     void setMute(bool value);
 
-    QString contactId() const;
+    QString phoneNumber() const;
 
     Q_INVOKABLE void sendDTMF(const QString &key);
     Q_INVOKABLE void endCall();
 
-protected slots:
+protected Q_SLOTS:
+    void onChannelReady(Tp::PendingOperation *op);
     void onCallStateChanged(Tp::CallState state);
     void onCallFlagsChanged(Tp::CallFlags flags);
 
-signals:
+Q_SIGNALS:
     void callEnded();
     void heldChanged();
     void mutedChanged();
+    void phoneNumberChanged();
     
 private:
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
-    QString mContactId;
     
 };
 

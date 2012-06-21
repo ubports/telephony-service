@@ -19,16 +19,25 @@
  */
 
 #include "callentry.h"
+#include <TelepathyQt/Contact>
+#include <TelepathyQt/PendingReady>
 
 #define TP_UFA_DBUS_ADDRESS "org.freedesktop.Telepathy.Connection.ufa.ufa.ufa"
 #define TP_UFA_DBUS_MUTE_FACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
 
-CallEntry::CallEntry(const QString &contactId, const Tp::CallChannelPtr &channel, QObject *parent) :
+CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     QObject(parent),
     mChannel(channel),
-    mContactId(contactId),
     mMuteInterface(TP_UFA_DBUS_ADDRESS, channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
 {
+    connect(mChannel->becomeReady(Tp::Features()
+                                  << Tp::CallChannel::FeatureCore
+                                  << Tp::CallChannel::FeatureCallMembers
+                                  << Tp::CallChannel::FeatureCallState
+                                  << Tp::CallChannel::FeatureContents
+                                  << Tp::CallChannel::FeatureLocalHoldState),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onChannelReady(Tp::PendingOperation*)));
     connect(channel.data(),
             SIGNAL(callStateChanged(Tp::CallState)),
             SLOT(onCallStateChanged(Tp::CallState)));
@@ -47,12 +56,15 @@ CallEntry::CallEntry(const QString &contactId, const Tp::CallChannelPtr &channel
 
 bool CallEntry::isHeld() const
 {
+    if (!mChannel->actualFeatures().contains(Tp::CallChannel::FeatureLocalHoldState)) {
+        return false;
+    }
     return (mChannel->localHoldState() == Tp::LocalHoldStateHeld);
 }
 
-QString CallEntry::contactId() const
+QString CallEntry::phoneNumber() const
 {
-    return mContactId;
+    return mChannel->targetContact()->id();
 }
 
 void CallEntry::sendDTMF(const QString &key)
@@ -99,6 +111,14 @@ void CallEntry::setMute(bool value)
     // Replace this by a Mute interface method call when it
     // becomes available in telepathy-qt
     mMuteInterface.call("RequestMuted", value);
+}
+
+void CallEntry::onChannelReady(Tp::PendingOperation *op)
+{
+    if (op->isError()) {
+        qWarning() << "PendingOperation finished with error:" << op->errorName() << op->errorMessage();
+    }
+    emit
 }
 
 void CallEntry::onCallStateChanged(Tp::CallState state)

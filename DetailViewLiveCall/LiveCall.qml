@@ -10,8 +10,8 @@ Item {
     // FIXME: refactor StopWatch, callStarted, Timer into StopWatch
     property variant callStarted
     property variant contact
-    property QtObject call
-    property string number: ""
+    property QtObject call: callManager.foregroundCall
+    property string number: call.phoneNumber
     property bool onHold: call ? call.held : false
     property bool isSpeaker: false
     property bool isMuted: call ? call.muted : false
@@ -28,17 +28,6 @@ Item {
         callStarted = null;
         if (call) {
             call.endCall();
-        }
-    }
-
-    onNumberChanged: {
-        call = callManager.callEntryForContact(number);
-    }
-
-    Connections {
-        target: call
-
-        onCallEnded: {
             telephony.endCall();
         }
     }

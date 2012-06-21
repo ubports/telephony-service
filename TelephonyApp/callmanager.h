@@ -21,31 +21,40 @@
 #ifndef CALLMANAGER_H
 #define CALLMANAGER_H
 
-#include <QtCore/QObject>
 #include <QtCore/QMap>
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/ReceivedMessage>
 
 class CallEntry;
 
-typedef QMap<QString, CallEntry*> CallEntryMap;
-typedef QMap<QString, Tp::ContactPtr> ContactMap;
-
 class CallManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QObject *foregroundCall
+               READ foregroundCall
+               NOTIFY foregroundCallChanged)
+    Q_PROPERTY(QObject *backgroundCall
+               READ backgroundCall
+               NOTIFY backgroundCallChanged)
+    Q_PROPERTY(bool hasCalls
+               READ hasCalls
+               NOTIFY hasCallsChanged)
 public:
     explicit CallManager(QObject *parent = 0);
     
-    Q_INVOKABLE bool isTalkingToContact(const QString &contactId) const;
-    Q_INVOKABLE void startCall(const QString &contactId);
-    Q_INVOKABLE void setSpeaker(const QString &contactId, bool speaker);
+    Q_INVOKABLE void startCall(const QString &phoneNumber);
+    Q_INVOKABLE void setSpeaker(bool speaker);
 
-    Q_INVOKABLE QObject *callEntryForContact(const QString &contactId) const;
+    QObject *foregroundCall() const;
+    QObject *backgroundCall() const;
+    bool hasCalls() const;
 
-signals:
-    void callReady(const QString &contactId);
-    void callEnded(const QString &contactId);
+Q_SIGNALS:
+    void callReady();
+    void callEnded();
+    void foregroundCallChanged();
+    void backgroundCallChanged();
+    void hasCallsChanged();
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
@@ -53,8 +62,8 @@ public Q_SLOTS:
     void onCallEnded();
 
 private:
-    CallEntryMap mCallEntries;
-    ContactMap mContacts;
+    QList<CallEntry*> mCallEntries;
+    QMap<QString, Tp::ContactPtr> mContacts;
 };
 
 #endif // CALLMANAGER_H

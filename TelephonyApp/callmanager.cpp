@@ -34,25 +34,24 @@ CallManager::CallManager(QObject *parent)
 {
 }
 
-bool CallManager::isTalkingToContact(const QString &contactId) const
+void CallManager::startCall(const QString &phoneNumber)
 {
-    return mCallEntries.contains(contactId);
-}
-
-void CallManager::startCall(const QString &contactId)
-{
-    if (!mCallEntries.contains(contactId)) {
-        // Request the contact to start audio call
-        Tp::AccountPtr account = TelepathyHelper::instance()->account();
-        connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << contactId),
-                SIGNAL(finished(Tp::PendingOperation*)),
-                SLOT(onContactsAvailable(Tp::PendingOperation*)));
+    // check if we are already talking to that phone number
+    Q_FOREACH(const CallEntry *entry, mCallEntries) {
+        if (entry->phoneNumber() == phoneNumber) {
+            return;
+        }
     }
+
+    // Request the contact to start audio call
+    Tp::AccountPtr account = TelepathyHelper::instance()->account();
+    connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
 
-void CallManager::setSpeaker(const QString &contactId, bool speaker)
+void CallManager::setSpeaker(bool speaker)
 {
-    Q_UNUSED(contactId)
     QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
                              ANDROID_TELEPHONY_DBUS_PATH, 
                              ANDROID_TELEPHONY_DBUS_IFACE);
@@ -63,24 +62,58 @@ void CallManager::setSpeaker(const QString &contactId, bool speaker)
     }
 }
 
-QObject *CallManager::callEntryForContact(const QString &contactId) const
+QObject *CallManager::foregroundCall() const
 {
-    if (mCallEntries.contains(contactId)) {
-        return mCallEntries[contactId];
+    // if we have only one call, return it as being always in foreground
+    // even if it is held
+    if (mCallEntries.count() == 1) {
+        return mCallEntries.first();
+    }
+
+    Q_FOREACH(CallEntry *entry, mCallEntries) {
+        if (!entry->isHeld()) {
+            return entry;
+        }
     }
 
     return 0;
 }
 
+QObject *CallManager::backgroundCall() const
+{
+    // if we have only one call, assume there is no call in background
+    // even if the foreground call is held
+    if (mCallEntries.count() == 1) {
+        return 0;
+    }
+
+    Q_FOREACH(CallEntry *entry, mCallEntries) {
+        if (entry->isHeld()) {
+            return entry;
+        }
+    }
+
+    return 0;
+}
+
+bool CallManager::hasCalls() const
+{
+    return !mCallEntries.isEmpty();
+}
+
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
-    CallEntry *entry = new CallEntry(channel->targetContact()->id(), channel, this);
-    mCallEntries[channel->targetContact()->id()] = entry;
+    CallEntry *entry = new CallEntry(channel, this);
+    mCallEntries.append(entry);
     connect(entry,
             SIGNAL(callEnded()),
             SLOT(onCallEnded()));
 
-    emit callReady(entry->contactId());
+    // FIXME: check which of those signals we really need to emit here
+    emit callReady();
+    emit hasCallsChanged();
+    emit foregroundCallChanged();
+    emit backgroundCallChanged();
 }
 
 void CallManager::onContactsAvailable(Tp::PendingOperation *op)
@@ -105,16 +138,16 @@ void CallManager::onContactsAvailable(Tp::PendingOperation *op)
 
 void CallManager::onCallEnded()
 {
+    // FIXME: handle multiple calls
     CallEntry *entry = qobject_cast<CallEntry*>(sender());
     if (!entry) {
         return;
     }
 
-    emit callEnded(entry->contactId());
+    emit callEnded();
 
     // at this point the entry should be removed
-    if (mCallEntries.contains(entry->contactId())) {
-        mCallEntries.remove(entry->contactId());
-        delete entry;
-    }
+    mCallEntries.removeAll(entry);
+    delete entry;
+    emit hasCallsChanged();
 }
