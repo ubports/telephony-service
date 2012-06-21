@@ -36,6 +36,8 @@ public:
     void addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                               const Tp::ChannelDispatchOperationPtr &dispatchOperation);
     Tp::ChannelDispatchOperationPtr dispatchOperation(Tp::PendingOperation *op);
+    void onApproved();
+    void onRejected();
 
 private Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);

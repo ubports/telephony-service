@@ -16,6 +16,7 @@ find_package(QtMobility COMPONENTS Contacts REQUIRED)
 pkg_check_modules(TP_QT4 REQUIRED TelepathyQt4)
 pkg_check_modules(TPL_QT4 REQUIRED TelepathyLoggerQt4)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
+pkg_check_modules(NOTIFY REQUIRED libnotify)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
