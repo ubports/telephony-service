@@ -20,6 +20,8 @@ Item {
     property ViewModel keypad: ViewModel {source: "DetailViewKeypad/KeypadView.qml"}
     property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"}
 
+    signal applicationReady
+
     function startCallToContact(contact, number) {
         liveCall.load()
         rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
@@ -228,6 +230,7 @@ Item {
     Connections {
         target: callManager
         onCallReady: {
+            telephony.applicationReady()
             startCallToNumber(contactId)
         }
         onCallEnded: {

@@ -22,6 +22,7 @@ private:
 private slots:
     void onMessageReceived(const QString &message);
     void onViewStatusChanged(QDeclarativeView::Status status);
+    void onApplicationReady();
 
 private:
     QDeclarativeView *m_view;

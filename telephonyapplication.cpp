@@ -103,6 +103,16 @@ void TelephonyApplication::onViewStatusChanged(QDeclarativeView::Status status)
     if (m_argUrl.isEmpty() || (status != QDeclarativeView::Ready)) {
         return;
     }
+
+    QGraphicsObject *telephony = m_view->rootObject();
+    if (telephony) {
+        QObject::connect(telephony, SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
+    }
+}
+
+void TelephonyApplication::onApplicationReady()
+{
+    QObject::disconnect(QObject::sender(), SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
     parseUrl(m_argUrl);
     m_argUrl.clear();
 }
