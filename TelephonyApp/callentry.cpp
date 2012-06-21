@@ -28,7 +28,7 @@
 CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     QObject(parent),
     mChannel(channel),
-    mMuteInterface(channel->connection()->objectPath(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
+    mMuteInterface(channel->connectibusName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
 {
     connect(mChannel->becomeReady(Tp::Features()
                                   << Tp::CallChannel::FeatureCore
@@ -56,6 +56,9 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
 
 QString CallEntry::phoneNumber() const
 {
+    if (!mChannel->actualFeatures().contains(Tp::CallChannel::FeatureCore)) {
+        return "";
+    }
     return mChannel->targetContact()->id();
 }
 
@@ -121,6 +124,7 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
     }
 
     emit heldChanged();
+    emit phoneNumberChanged();
 }
 
 void CallEntry::onCallStateChanged(Tp::CallState state)
