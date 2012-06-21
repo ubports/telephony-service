@@ -74,6 +74,32 @@ void action_accept(NotifyNotification* notification,
                    gpointer            data)
 {
     qDebug() << "GOT IT";
+    TelephonyAppApprover* approver = (TelephonyAppApprover*) data;
+    if (NULL != approver) {
+        approver->onApproved();
+    }
+}
+
+void action_reject(NotifyNotification* notification,
+                   char*               action,
+                   gpointer            data)
+{
+    qDebug() << "REFUSED IT";
+    TelephonyAppApprover* approver = (TelephonyAppApprover*) data;
+    if (NULL != approver) {
+        approver->onRejected();
+    }
+}
+
+class EventData {
+public:
+    TelephonyAppApprover* self;
+    Tp::ChannelDispatchOperationPtr dispatchOp;
+};
+
+void delete_data(gpointer data) {
+    if (NULL != data)
+    delete (EventData*) data;
 }
 
 void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
@@ -104,26 +130,24 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
 
     /* initial notification */
 
-    qDebug() << "FUCKCKCKC";
-
+    EventData* data = new EventData();
+    data->self = this;
+    data->dispatchOp = dispatchOp;
+    qDebug() << "NOTIFICATION";
     notification = notify_notification_new ("HELLO", "dobobobob", "");
-    qDebug() << "444444";
-
     notify_notification_add_action (notification,
                                     "action_accept",
                                     "Accept",
                                     action_accept,
-                                    NULL,
-                                    NULL);
-
+                                    data,
+                                    delete_data);
     notify_notification_add_action (notification,
                                     "action_decline_1",
                                     "Decline",
-                                    action_accept,
-                                    NULL,
-                                    NULL);
+                                    action_reject,
+                                    data,
+                                    delete_data);
     notify_notification_show(notification, &error);
-    qDebug() << "FUCKCKCKC";
 
     int ret = QMessageBox::question(NULL, "HELLO",
                     QString("Incoming call from %1\nAnswer?").arg(contact->id()),
@@ -139,6 +163,16 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         connect(claimop, SIGNAL(finished(Tp::PendingOperation*)),
                 this, SLOT(onClaimFinished(Tp::PendingOperation*)));
     }
+}
+
+void TelephonyAppApprover::onApproved()
+{
+
+}
+
+void TelephonyAppApprover::onRejected()
+{
+
 }
 
 void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
