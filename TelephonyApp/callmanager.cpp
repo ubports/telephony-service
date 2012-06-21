@@ -148,7 +148,7 @@ void CallManager::onCallEnded()
 
     // at this point the entry should be removed
     mCallEntries.removeAll(entry);
-    delete entry;
+    entry->deleteLater();
     emit hasCallsChanged();
     emit foregroundCallChanged();
     emit backgroundCallChanged();
