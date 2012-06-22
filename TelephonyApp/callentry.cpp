@@ -30,6 +30,7 @@
 CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     QObject(parent),
     mChannel(channel),
+    mVoicemail(false),
     mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
 {
     connect(mChannel->becomeReady(Tp::Features()
@@ -111,7 +112,6 @@ bool CallEntry::isHeld() const
     return (mChannel->localHoldState() == Tp::LocalHoldStateHeld);
 }
 
-
 void CallEntry::setHold(bool hold)
 {
     mChannel->requestHold(hold);
@@ -155,4 +155,15 @@ void CallEntry::onCallStateChanged(Tp::CallState state)
 void CallEntry::onCallFlagsChanged(Tp::CallFlags flags)
 {
     // TODO: handle ringing
+}
+
+void CallEntry::setVoicemail(bool voicemail)
+{
+    mVoicemail = voicemail;
+    emit voicemailChanged();
+}
+
+bool CallEntry::isVoicemail() const
+{
+    return mVoicemail;
 }

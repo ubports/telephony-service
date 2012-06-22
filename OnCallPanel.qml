@@ -24,7 +24,17 @@ Rectangle {
     }
 
     Text {
-        text: call ? call.phoneNumber : ""
+        text: {
+            if (call) {
+                if (call.voicemail) {
+                    "Voicemail"
+                } else {
+                    call.phoneNumber
+                }
+            } else {
+                ""
+            }
+        }
         anchors.margins: 5
         anchors.left: avatar.right
         anchors.verticalCenter: avatar.verticalCenter

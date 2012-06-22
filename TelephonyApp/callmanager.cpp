@@ -28,10 +28,18 @@
 #define ANDROID_DBUS_ADDRESS "com.canonical.Android"
 #define ANDROID_TELEPHONY_DBUS_PATH "/com/canonical/android/telephony/Telephony"
 #define ANDROID_TELEPHONY_DBUS_IFACE "com.canonical.android.telephony.Telephony"
+#define ANDROID_TELEPHONY_PROPERTIES_DBUS_IFACE "org.freedesktop.DBus.Properties"
+
+#define PROPERTY_VOICEMAILNUMBER "VoiceMailNumber"
+#define PROPERTY_VOICEMAILCOUNT "VMessageCount"
+
+typedef QMap<QString, QVariant> dbusQMap;
+Q_DECLARE_METATYPE(dbusQMap)
 
 CallManager::CallManager(QObject *parent)
 : QObject(parent)
 {
+    refreshProperties();
 }
 
 void CallManager::startCall(const QString &phoneNumber)
@@ -109,6 +117,9 @@ bool CallManager::hasBackgroundCall() const
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
     CallEntry *entry = new CallEntry(channel, this);
+    if (entry->phoneNumber() == getVoicemailNumber()) {
+        entry->setVoicemail(true);
+    }
     mCallEntries.append(entry);
     connect(entry,
             SIGNAL(callEnded()),
@@ -121,11 +132,11 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
             SIGNAL(backgroundCallChanged()));
 
     // FIXME: check which of those signals we really need to emit here
-    emit callReady();
     emit hasCallsChanged();
     emit hasBackgroundCallChanged();
     emit foregroundCallChanged();
     emit backgroundCallChanged();
+    emit callReady();
 }
 
 void CallManager::onContactsAvailable(Tp::PendingOperation *op)
@@ -164,4 +175,30 @@ void CallManager::onCallEnded()
     emit hasBackgroundCallChanged();
     emit foregroundCallChanged();
     emit backgroundCallChanged();
+}
+
+void CallManager::refreshProperties()
+{
+     QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
+                             ANDROID_TELEPHONY_DBUS_PATH, 
+                             ANDROID_TELEPHONY_PROPERTIES_DBUS_IFACE);
+     QDBusMessage reply = androidIf.call("GetAll", ANDROID_TELEPHONY_DBUS_IFACE);
+     QVariantList args = reply.arguments();
+     QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
+     mProperties.clear();
+     QMapIterator<QString, QVariant> i(map);
+     while(i.hasNext()) {
+         i.next();
+         mProperties[i.key()] = i.value();
+     }
+}
+
+QString CallManager::getVoicemailNumber()
+{
+    return mProperties[PROPERTY_VOICEMAILNUMBER].toString();
+}
+
+int CallManager::getVoicemailCount()
+{
+    return mProperties[PROPERTY_VOICEMAILCOUNT].toInt();
 }

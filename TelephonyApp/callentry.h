@@ -38,6 +38,10 @@ class CallEntry : public QObject
                READ isMuted
                WRITE setMute
                NOTIFY mutedChanged)
+    Q_PROPERTY(bool voicemail
+               READ isVoicemail
+               WRITE setVoicemail
+               NOTIFY voicemailChanged)
     // FIXME: handle conference
     Q_PROPERTY(QString phoneNumber
                READ phoneNumber
@@ -58,6 +62,9 @@ public:
     bool isMuted() const;
     void setMute(bool value);
 
+    bool isVoicemail() const;
+    void setVoicemail(bool voicemail);
+
     QString phoneNumber() const;
     QString contactAlias() const;
     QString contactAvatar() const;
@@ -74,6 +81,7 @@ Q_SIGNALS:
     void callEnded();
     void heldChanged();
     void mutedChanged();
+    void voicemailChanged();
     void phoneNumberChanged();
     void contactAliasChanged();
     void contactAvatarChanged();
@@ -82,6 +90,7 @@ private:
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
     QContact mContact;
+    bool mVoicemail;
 };
 
 #endif // CALLENTRY_H

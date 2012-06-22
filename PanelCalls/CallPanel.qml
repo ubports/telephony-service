@@ -45,7 +45,7 @@ Item {
         ListItem {
 
             function getIconSource() {
-                if (callManager.hasCalls) {
+                if (callManager.hasCalls && !telephony.isVoicemailActive()) {
                     return selected ? "../assets/call_icon_livecall_active.png" : "../assets/call_icon_livecall_inactive.png"
                 } else {
                     return selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
@@ -58,8 +58,8 @@ Item {
             topSeparator: true
             isIcon: true
             iconSource: getIconSource()
-            text: callManager.hasCalls ? "On Call" : "Keypad"
-            onClicked: callManager.hasCalls ? telephony.showLiveCall() : telephony.showKeypad();
+            text: callManager.hasCalls && !telephony.isVoicemailActive() ? "On Call" : "Keypad"
+            onClicked: callManager.hasCalls && !telephony.isVoicemailActive() ? telephony.showLiveCall() : telephony.showKeypad();
             selected: telephony.liveCall.loaded || telephony.keypad.loaded
         }
 
@@ -70,6 +70,9 @@ Item {
             isIcon: true
             iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
             text: "Voicemail"
+            visible: callManager.getVoicemailNumber() != ""
+            onClicked: telephony.showVoicemail()
+            selected: telephony.voicemail.loaded
         }
 
         ListItem {
