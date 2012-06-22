@@ -156,11 +156,10 @@ void CallManager::onCallEnded()
         return;
     }
 
-    emit callEnded();
-
     // at this point the entry should be removed
     mCallEntries.removeAll(entry);
     entry->deleteLater();
+    emit callEnded();
     emit hasCallsChanged();
     emit hasBackgroundCallChanged();
     emit foregroundCallChanged();

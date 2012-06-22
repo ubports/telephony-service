@@ -11,7 +11,7 @@ Item {
     property variant callStarted
     property variant contact
     property QtObject call: callManager.foregroundCall
-    property string number: call.phoneNumber
+    property string number: call ? call.phoneNumber : ""
     property bool onHold: call ? call.held : false
     property bool isSpeaker: false
     property bool isMuted: call ? call.muted : false
@@ -28,7 +28,15 @@ Item {
         callStarted = null;
         if (call) {
             call.endCall();
-            telephony.endCall();
+        }
+    }
+
+    Connections {
+        target: callManager
+        onCallEnded: {
+            if (!callManager.hasCalls) {
+                telephony.endCall();
+            }
         }
     }
 
