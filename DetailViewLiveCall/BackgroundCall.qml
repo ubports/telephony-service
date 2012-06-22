@@ -32,5 +32,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         text: "Swap Calls"
+
+        onClicked: call.held = false
     }
 }
