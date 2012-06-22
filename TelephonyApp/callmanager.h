@@ -39,6 +39,9 @@ class CallManager : public QObject
     Q_PROPERTY(bool hasCalls
                READ hasCalls
                NOTIFY hasCallsChanged)
+    Q_PROPERTY(bool hasBackgroundCall
+               READ hasBackgroundCall
+               NOTIFY hasBackgroundCallChanged)
 public:
     explicit CallManager(QObject *parent = 0);
     
@@ -48,6 +51,7 @@ public:
     QObject *foregroundCall() const;
     QObject *backgroundCall() const;
     bool hasCalls() const;
+    bool hasBackgroundCall() const;
 
 Q_SIGNALS:
     void callReady();
@@ -55,6 +59,7 @@ Q_SIGNALS:
     void foregroundCallChanged();
     void backgroundCallChanged();
     void hasCallsChanged();
+    void hasBackgroundCallChanged();
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);

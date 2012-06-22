@@ -101,6 +101,11 @@ bool CallManager::hasCalls() const
     return !mCallEntries.isEmpty();
 }
 
+bool CallManager::hasBackgroundCall() const
+{
+    return mCallEntries.count() > 1;
+}
+
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
     CallEntry *entry = new CallEntry(channel, this);
@@ -108,10 +113,17 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
     connect(entry,
             SIGNAL(callEnded()),
             SLOT(onCallEnded()));
+    connect(entry,
+            SIGNAL(heldChanged()),
+            SIGNAL(foregroundCallChanged()));
+    connect(entry,
+            SIGNAL(heldChanged()),
+            SIGNAL(backgroundCallChanged()));
 
     // FIXME: check which of those signals we really need to emit here
     emit callReady();
     emit hasCallsChanged();
+    emit hasBackgroundCallChanged();
     emit foregroundCallChanged();
     emit backgroundCallChanged();
 }
@@ -150,6 +162,7 @@ void CallManager::onCallEnded()
     mCallEntries.removeAll(entry);
     entry->deleteLater();
     emit hasCallsChanged();
+    emit hasBackgroundCallChanged();
     emit foregroundCallChanged();
     emit backgroundCallChanged();
 }
