@@ -47,6 +47,8 @@ public:
     
     Q_INVOKABLE void startCall(const QString &phoneNumber);
     Q_INVOKABLE void setSpeaker(bool speaker);
+    Q_INVOKABLE QString getVoicemailNumber();
+    Q_INVOKABLE int getVoicemailCount();
 
     QObject *foregroundCall() const;
     QObject *backgroundCall() const;
@@ -67,8 +69,11 @@ public Q_SLOTS:
     void onCallEnded();
 
 private:
+    void refreshProperties();
+
     QList<CallEntry*> mCallEntries;
     QMap<QString, Tp::ContactPtr> mContacts;
+    QMap<QString, QVariant> mProperties;
 };
 
 #endif // CALLMANAGER_H

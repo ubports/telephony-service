@@ -60,6 +60,7 @@ set(QML_DIRS
     DetailViewContact
     DetailViewKeypad
     DetailViewLiveCall
+    DetailViewVoicemail
     DetailViewMessages
     LiveCallDetailView
     PanelCalls

@@ -11,9 +11,11 @@ Item {
 
     property alias viewSource: rightPaneContent.source
     property alias view: rightPaneContent.item
+    property QtObject call: callManager.foregroundCall
 
     // Inventory of all the views in the application
     property ViewModel liveCall: ViewModel {source: "DetailViewLiveCall/LiveCall.qml"}
+    property ViewModel voicemail: ViewModel {source: "DetailViewVoicemail/Voicemail.qml"}
     property ViewModel messages: ViewModel {source: "DetailViewMessages/MessagesView.qml"}
     property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"}
     property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"}
@@ -23,6 +25,16 @@ Item {
     function showLiveCall() {
         liveCall.load()
         view.startCall()
+    }
+
+    function showVoicemail() {
+        voicemail.load()
+    }
+
+    function isVoicemailActive() {
+        if (call)
+            return call.voicemail
+        return false
     }
 
     function callNumber(number) {
@@ -167,9 +179,20 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            visible: !telephony.liveCall.loaded && callManager.hasCalls
+            visible: {
+                if (!callManager.hasCalls) { 
+                    return false
+                } else {
+                    if (isVoicemailActive() && !telephony.voicemail.loaded) {
+                        return true 
+                    } else if (!isVoicemailActive() && !telephony.liveCall.loaded) {
+                        return true
+                    }
+                }
+                return false
+            }
 
-            onClicked: telephony.showLiveCall()
+            onClicked: isVoicemailActive() ? telephony.showVoicemail() : telephony.showLiveCall()
         }
     }
 
@@ -222,7 +245,11 @@ Item {
     Connections {
         target: callManager
         onCallReady: {
-            showLiveCall();
+            if (isVoicemailActive()) {
+                showVoicemail()
+            } else {
+                showLiveCall();
+            }
         }
 
     }
