@@ -1,3 +1,9 @@
+telephony-app (0.17) precise; urgency=low
+
+  * add voicemail support
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 22 Jun 2012 15:21:56 -0700
+
 telephony-app (0.16) precise; urgency=low
 
   * Make sure the telepathy-ufa account is always enabled and connected while
