@@ -133,7 +133,7 @@ void TelephonyApplication::parseUrl(const QUrl &url)
         QGraphicsObject *telephony = m_view->rootObject();
         if (telephony) {
             const QMetaObject *mo = telephony->metaObject();
-            int index = mo->indexOfMethod("startCallToNumber(QVariant)");
+            int index = mo->indexOfMethod("callNumber(QVariant)");
             if (index != -1) {
                 QMetaMethod method = mo->method(index);
                 method.invoke(telephony, Q_ARG(QVariant, QVariant(url.host())));

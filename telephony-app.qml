@@ -22,25 +22,12 @@ Item {
 
     signal applicationReady
 
-    function startCallToContact(contact, number) {
+    function showLiveCall() {
         liveCall.load()
-        rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
-        view.contact = contact
-        view.number = number
-        view.startCall()
-    }
-
-    function startCallToNumber(number) {
-        liveCall.load()
-        view.contact = null
-        view.number = number
         view.startCall()
     }
 
     function callNumber(number) {
-        liveCall.load()
-        view.contact = null
-        view.number = number
         callManager.startCall(number);
     }
 
@@ -51,10 +38,8 @@ Item {
         view.newMessage = false
     }
 
-    function endCall(duration) {
+    function endCall() {
         callEnded.load()
-        view.text = duration;
-        view.postText = "";
     }
 
     function showContactDetails(contacts, contact) {
@@ -179,6 +164,15 @@ Item {
             color: "white"
             opacity: 0.3
         }
+
+        OnCallPanel {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            visible: !telephony.liveCall.loaded && callManager.hasCalls
+
+            onClicked: telephony.showLiveCall()
+        }
     }
 
     Item {
@@ -237,13 +231,7 @@ Item {
     Connections {
         target: callManager
         onCallReady: {
-           startCallToNumber(contactId)
-        }
-        onCallEnded: {
-            if (rightPaneContent.item.viewName == "livecall" &&
-                rightPaneContent.item.number == contactId) {
-                rightPaneContent.item.endCall()
-            }
+            showLiveCall();
         }
     }
 }

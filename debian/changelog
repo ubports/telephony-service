@@ -1,10 +1,11 @@
-telephony-app (0.16) UNRELEASED; urgency=low
+telephony-app (0.16) precise; urgency=low
 
   * Make sure the telepathy-ufa account is always enabled and connected while
     the application is running (LP: #1015177 LP: #1015205)
   * Reimplement message searching (LP: #1015394)
+  * Add support for handling multiple calls
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 20 Jun 2012 18:02:10 -0300
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 22 Jun 2012 14:32:39 -0300
 
 telephony-app (0.15) precise; urgency=low
 

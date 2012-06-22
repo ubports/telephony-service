@@ -18,6 +18,7 @@
  */
 
 #include "conversationlogmodel.h"
+#include "contactmanager.h"
 #include <TelepathyLoggerQt4/Event>
 #include <TelepathyLoggerQt4/TextEvent>
 #include <TelepathyLoggerQt4/Entity>
@@ -32,8 +33,8 @@ QVariant ConversationLogEntry::data(int role) const
     }
 }
 
-ConversationLogModel::ConversationLogModel(QContactManager *manager, QObject *parent) :
-    AbstractLoggerModel(manager, parent)
+ConversationLogModel::ConversationLogModel(QObject *parent) :
+    AbstractLoggerModel(parent)
 {
     // set the role names
     QHash<int, QByteArray> roles = roleNames();
@@ -126,7 +127,7 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
     entry->message = message;
     entry->phoneNumber = number;
 
-    QContact contact = contactForNumber(number);
+    QContact contact = ContactManager::instance()->contactForNumber(number);
     if (!contact.isEmpty()) {
         fillContactInfo(entry, contact);
     }
