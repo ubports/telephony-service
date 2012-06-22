@@ -41,7 +41,7 @@ public:
         Date
     };
 
-    explicit MessageLogModel(QContactManager *manager, QObject *parent = 0);
+    explicit MessageLogModel(QObject *parent = 0);
     QString phoneNumber() const;
     void setPhoneNumber(QString value);
 

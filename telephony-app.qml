@@ -162,6 +162,15 @@ Item {
             color: "white"
             opacity: 0.3
         }
+
+        OnCallPanel {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            visible: !telephony.liveCall.loaded && callManager.hasCalls
+
+            onClicked: telephony.showLiveCall()
+        }
     }
 
     Item {

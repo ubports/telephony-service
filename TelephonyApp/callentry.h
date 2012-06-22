@@ -22,7 +22,10 @@
 #define CALLENTRY_H
 
 #include <QObject>
+#include <QContact>
 #include <TelepathyQt/CallChannel>
+
+using namespace QtMobility;
 
 class CallEntry : public QObject
 {
@@ -39,6 +42,13 @@ class CallEntry : public QObject
     Q_PROPERTY(QString phoneNumber
                READ phoneNumber
                NOTIFY phoneNumberChanged)
+
+    Q_PROPERTY(QString contactAlias
+               READ contactAlias
+               NOTIFY contactAliasChanged)
+    Q_PROPERTY(QString contactAvatar
+               READ contactAvatar
+               NOTIFY contactAvatarChanged)
 public:
     explicit CallEntry(const Tp::CallChannelPtr &channel, QObject *parent = 0);
 
@@ -49,6 +59,8 @@ public:
     void setMute(bool value);
 
     QString phoneNumber() const;
+    QString contactAlias() const;
+    QString contactAvatar() const;
 
     Q_INVOKABLE void sendDTMF(const QString &key);
     Q_INVOKABLE void endCall();
@@ -63,11 +75,13 @@ Q_SIGNALS:
     void heldChanged();
     void mutedChanged();
     void phoneNumberChanged();
+    void contactAliasChanged();
+    void contactAvatarChanged();
     
 private:
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
-    
+    QContact mContact;
 };
 
 #endif // CALLENTRY_H

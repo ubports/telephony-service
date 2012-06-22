@@ -4,6 +4,7 @@ set(plugin_SRCS
     abstractloggermodel.cpp
     calllogmodel.cpp
     calllogproxymodel.cpp
+    contactmanager.cpp
     components.cpp
     channelhandler.cpp
     chatmanager.cpp
@@ -19,6 +20,7 @@ set(plugin_HDRS
     abstractloggermodel.h
     calllogmodel.h
     calllogproxymodel.h
+    contactmanager.h
     components.h
     channelhandler.h
     chatmanager.h

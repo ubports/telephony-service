@@ -19,6 +19,8 @@
  */
 
 #include "callentry.h"
+#include "contactmanager.h"
+#include <QContactAvatar>
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/Connection>
@@ -60,6 +62,17 @@ QString CallEntry::phoneNumber() const
         return "";
     }
     return mChannel->targetContact()->id();
+}
+
+QString CallEntry::contactAlias() const
+{
+    return mContact.displayLabel();
+}
+
+QString CallEntry::contactAvatar() const
+{
+    QContactAvatar avatar = mContact.detail<QContactAvatar>();
+    return avatar.imageUrl().toString();
 }
 
 void CallEntry::sendDTMF(const QString &key)
@@ -123,6 +136,10 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
     if (op->isError()) {
         qWarning() << "PendingOperation finished with error:" << op->errorName() << op->errorMessage();
     }
+
+    mContact = ContactManager::instance()->contactForNumber(mChannel->targetContact()->id());
+    emit contactAliasChanged();
+    emit contactAvatarChanged();
 
     emit heldChanged();
     emit phoneNumberChanged();

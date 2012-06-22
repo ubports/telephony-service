@@ -33,8 +33,8 @@ QVariant CallLogEntry::data(int role) const
     }
 }
 
-CallLogModel::CallLogModel(QContactManager *manager, QObject *parent) :
-    AbstractLoggerModel(manager, parent)
+CallLogModel::CallLogModel(QObject *parent) :
+    AbstractLoggerModel(parent)
 {
     // set the role names
     QHash<int, QByteArray> roles = roleNames();
