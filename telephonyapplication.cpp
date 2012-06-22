@@ -4,6 +4,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
 #include <QtCore/QStringList>
+#include <QtGui/QGraphicsObject>
 #include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeView>
@@ -37,37 +38,45 @@ static void printUsage(const QStringList& arguments)
 {
     qDebug() << "usage:"
              << arguments.at(0).toUtf8().constData()
-             << "[contact://CONTACT_KEY]";
+             << "[contact://CONTACT_KEY]"
+             << "[call://PHONE_NUMBER]";
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
-    : QtSingleApplication(argc, argv), m_view(0)
+    : QtSingleApplication(argc, argv), m_view(0), m_applicationIsReady(false)
 {
 }
 
 bool TelephonyApplication::setup()
 {
+    static QList<QString> validSchemes;
+
+    if (validSchemes.isEmpty()) {
+        validSchemes << "contact";
+        validSchemes << "call";
+    }
+
     QString contactKey;
     QStringList arguments = this->arguments();
     if (arguments.size() > 2) {
         printUsage(arguments);
         return 1;
     } else if (arguments.size() == 2) {
-        QString contactUri = arguments.at(1);
-        QString contactUriScheme = "contact://";
-        if (!contactUri.startsWith(contactUriScheme)) {
+        QUrl uri(arguments.at(1));
+        if (!validSchemes.contains(uri.scheme())) {
             printUsage(arguments);
             return 1;
         } else {
-            contactKey = contactUri.mid(contactUriScheme.size());
+            m_argUrl = QUrl(arguments.at(1));
         }
     }
 
-    if (sendMessage(contactKey)) {
+    if (sendMessage(m_argUrl.toString())) {
         return false;
     }
 
     m_view = new QDeclarativeView();
+    QObject::connect(m_view, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onViewStatusChanged(QDeclarativeView::Status)));
     m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     loadDummyDataFiles(m_view);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
@@ -88,14 +97,58 @@ TelephonyApplication::~TelephonyApplication()
     }
 }
 
+void TelephonyApplication::onViewStatusChanged(QDeclarativeView::Status status)
+{
+    if (m_argUrl.isEmpty() || (status != QDeclarativeView::Ready)) {
+        return;
+    }
+
+    QGraphicsObject *telephony = m_view->rootObject();
+    if (telephony) {
+        QObject::connect(telephony, SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
+    }
+}
+
+void TelephonyApplication::onApplicationReady()
+{
+    QObject::disconnect(QObject::sender(), SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
+    m_applicationIsReady = true;
+    parseUrl(m_argUrl);
+    m_argUrl.clear();
+}
+
+void TelephonyApplication::parseUrl(const QUrl &url)
+{
+    if (url.isEmpty()) {
+        return;
+    }
+
+    QString scheme(url.scheme());
+
+    if (scheme == "contact") {
+        // Workaround to propagate a property change even when the contactKey was the same
+        m_view->rootContext()->setContextProperty("contactKey", "");
+        m_view->rootContext()->setContextProperty("contactKey", url.host());
+    } else if (scheme == "call") {
+        QGraphicsObject *telephony = m_view->rootObject();
+        if (telephony) {
+            const QMetaObject *mo = telephony->metaObject();
+            int index = mo->indexOfMethod("callNumber(QVariant)");
+            if (index != -1) {
+                QMetaMethod method = mo->method(index);
+                method.invoke(telephony, Q_ARG(QVariant, QVariant(url.host())));
+            }
+        }
+    }
+}
+
 void TelephonyApplication::onMessageReceived(const QString &message)
 {
-    if (m_view) {
-        if (message.length()) {
-            // Workaround to propagate a property change even when the contactKey was the same
-            m_view->rootContext()->setContextProperty("contactKey", "");
-            m_view->rootContext()->setContextProperty("contactKey", message);
-        }
-        activeWindow();
+    if (m_applicationIsReady) {
+        parseUrl(m_argUrl);
+        m_argUrl.clear();
+    } else {
+        m_argUrl = QUrl(message);
     }
+    activeWindow();
 }

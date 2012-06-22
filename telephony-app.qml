@@ -20,6 +20,8 @@ Item {
     property ViewModel keypad: ViewModel {source: "DetailViewKeypad/KeypadView.qml"}
     property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"}
 
+    signal applicationReady
+
     function showLiveCall() {
         liveCall.load()
         view.startCall()
@@ -220,10 +222,16 @@ Item {
     }
 
     Connections {
+        target: telepathyHelper
+        onAccountReady: {
+            telephony.applicationReady()
+        }
+    }
+
+    Connections {
         target: callManager
         onCallReady: {
             showLiveCall();
         }
-
     }
 }

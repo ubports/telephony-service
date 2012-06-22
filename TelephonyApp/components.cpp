@@ -58,7 +58,7 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
             SLOT(onAccountReady()));
 
     mRootContext->setContextProperty("contactManager", ContactManager::instance());
-    mRootContext->setContextProperty("telepathyManager", TelepathyHelper::instance());
+    mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", TelepathyHelper::instance()->chatManager());
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
 
