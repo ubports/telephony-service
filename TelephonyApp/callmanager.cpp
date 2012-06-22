@@ -19,6 +19,7 @@
  */
 
 #include "callmanager.h"
+#include "callentry.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/ContactManager>
@@ -28,93 +29,30 @@
 #define ANDROID_TELEPHONY_DBUS_PATH "/com/canonical/android/telephony/Telephony"
 #define ANDROID_TELEPHONY_DBUS_IFACE "com.canonical.android.telephony.Telephony"
 
-#define TP_UFA_DBUS_ADDRESS "org.freedesktop.Telepathy.Connection.ufa.ufa.ufa"
-#define TP_UFA_DBUS_MUTE_FACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
-
 CallManager::CallManager(QObject *parent)
 : QObject(parent)
 {
 }
 
-bool CallManager::isTalkingToContact(const QString &contactId)
+void CallManager::startCall(const QString &phoneNumber)
 {
-    return mChannels.contains(contactId);
-}
-
-QString CallManager::callChannelToContactId(Tp::CallChannel *channel)
-{
-    QString contactId;
-    QMapIterator<QString, Tp::CallChannelPtr> i(mChannels);
-    while (i.hasNext()) {
-        i.next();
-        if (i.value().data() == channel) {
-            contactId = i.key();
-            break;
+    // check if we are already talking to that phone number
+    Q_FOREACH(const CallEntry *entry, mCallEntries) {
+        if (entry->phoneNumber() == phoneNumber) {
+            return;
         }
     }
-    return contactId;
+
+    // Request the contact to start audio call
+    Tp::AccountPtr account = TelepathyHelper::instance()->account();
+    connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
 
-void CallManager::startCall(const QString &contactId)
+void CallManager::setSpeaker(bool speaker)
 {
-    if (!mChannels.contains(contactId)) {
-        // Request the contact to start audio call
-        Tp::AccountPtr account = TelepathyHelper::instance()->account();
-        connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << contactId),
-                SIGNAL(finished(Tp::PendingOperation*)),
-                SLOT(onContactsAvailable(Tp::PendingOperation*)));
-    }
-}
-
-void CallManager::endCall(const QString &contactId)
-{
-    if (!mChannels.contains(contactId))
-        return;
-
-    mChannels[contactId]->hangup();
-    mChannels[contactId]->requestClose();
-    mChannels.remove(contactId);
-    mContacts.remove(contactId);
-}
-
-void CallManager::sendDTMF(const QString &contactId, const QString &key)
-{
-    if (!mChannels.contains(contactId))
-        return;
-
-    foreach(const Tp::CallContentPtr &content, mChannels[contactId]->contents()) {
-        if (content->supportsDTMF()) {
-            bool ok;
-            Tp::DTMFEvent event = (Tp::DTMFEvent)key.toInt(&ok);
-            if (!ok) {
-                 if (!key.compare("*")) {
-                     event = Tp::DTMFEventAsterisk;
-                 } else if (!key.compare("#")) {
-                     event = Tp::DTMFEventHash;
-                 } else {
-                     qDebug() << "Tone not recognized. DTMF failed";
-                     return;
-                 }
-            }
-            content->startDTMFTone(event);
-        }
-    }
-}
-
-void CallManager::setHold(const QString &contactId, bool hold)
-{
-    if (!mChannels.contains(contactId))
-        return;
-
-    mChannels[contactId]->requestHold(hold);
-}
-
-void CallManager::setSpeaker(const QString &contactId, bool speaker)
-{
-    if (!mChannels.contains(contactId))
-        return;
-
-    QDBusInterface androidIf(ANDROID_DBUS_ADDRESS, 
+    QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
                              ANDROID_TELEPHONY_DBUS_PATH, 
                              ANDROID_TELEPHONY_DBUS_IFACE);
     if (speaker) {
@@ -124,52 +62,70 @@ void CallManager::setSpeaker(const QString &contactId, bool speaker)
     }
 }
 
-void CallManager::setMute(const QString &contactId, bool mute)
+QObject *CallManager::foregroundCall() const
 {
-    Tp::ChannelPtr channel = mChannels[contactId];
-    if (!channel)
-        return;
+    // if we have only one call, return it as being always in foreground
+    // even if it is held
+    if (mCallEntries.count() == 1) {
+        return mCallEntries.first();
+    }
 
-    // Replace this by a Mute interface method call when it
-    // becomes available in telepathy-qt
-    QDBusInterface callChannelIf(TP_UFA_DBUS_ADDRESS, 
-                                 channel->objectPath(), 
-                                 TP_UFA_DBUS_MUTE_FACE);
-    callChannelIf.call("RequestMuted", mute);
+    Q_FOREACH(CallEntry *entry, mCallEntries) {
+        if (!entry->isHeld()) {
+            return entry;
+        }
+    }
+
+    return 0;
+}
+
+QObject *CallManager::backgroundCall() const
+{
+    // if we have only one call, assume there is no call in background
+    // even if the foreground call is held
+    if (mCallEntries.count() == 1) {
+        return 0;
+    }
+
+    Q_FOREACH(CallEntry *entry, mCallEntries) {
+        if (entry->isHeld()) {
+            return entry;
+        }
+    }
+
+    return 0;
+}
+
+bool CallManager::hasCalls() const
+{
+    return !mCallEntries.isEmpty();
+}
+
+bool CallManager::hasBackgroundCall() const
+{
+    return mCallEntries.count() > 1;
 }
 
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
-    mChannels[channel->targetContact()->id()] = channel;
-    connect(channel.data(), SIGNAL(callStateChanged(Tp::CallState)),
-                     this, SLOT(onCallStateChanged(Tp::CallState)));
-    connect(channel.data(), SIGNAL(callFlagsChanged(Tp::CallFlags)),
-                     this, SLOT(onCallFlagsChanged(Tp::CallFlags)));
+    CallEntry *entry = new CallEntry(channel, this);
+    mCallEntries.append(entry);
+    connect(entry,
+            SIGNAL(callEnded()),
+            SLOT(onCallEnded()));
+    connect(entry,
+            SIGNAL(heldChanged()),
+            SIGNAL(foregroundCallChanged()));
+    connect(entry,
+            SIGNAL(heldChanged()),
+            SIGNAL(backgroundCallChanged()));
 
-    channel->accept();
-    emit callReady(channel->targetContact()->id());
-}
-
-void CallManager::onCallStateChanged(Tp::CallState state)
-{
-    Tp::CallChannel *channel =  qobject_cast<Tp::CallChannel*>(sender());
-    QString contactId = callChannelToContactId(channel);
-
-    if(!contactId.isNull()) {
-        if (state == Tp::CallStateEnded) {
-            endCall(contactId);
-            emit callEnded(contactId);
-        }
-    }
-}
-
-void CallManager::onCallFlagsChanged(Tp::CallFlags flags)
-{
-    Tp::CallChannel *channel = qobject_cast<Tp::CallChannel*>(sender());
-    QString contactId = callChannelToContactId(channel);
-    bool locallyHeld = flags & Tp::CallFlagLocallyHeld;
-    qDebug() << "locallyHeld" << locallyHeld;
-    emit onHoldChanged(contactId, locallyHeld);
+    // FIXME: check which of those signals we really need to emit here
+    emit callReady();
+    emit hasCallsChanged();
+    emit hasBackgroundCallChanged();
+    emit foregroundCallChanged();
+    emit backgroundCallChanged();
 }
 
 void CallManager::onContactsAvailable(Tp::PendingOperation *op)
@@ -190,4 +146,22 @@ void CallManager::onContactsAvailable(Tp::PendingOperation *op)
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;
     }
+}
+
+void CallManager::onCallEnded()
+{
+    // FIXME: handle multiple calls
+    CallEntry *entry = qobject_cast<CallEntry*>(sender());
+    if (!entry) {
+        return;
+    }
+
+    // at this point the entry should be removed
+    mCallEntries.removeAll(entry);
+    entry->deleteLater();
+    emit callEnded();
+    emit hasCallsChanged();
+    emit hasBackgroundCallChanged();
+    emit foregroundCallChanged();
+    emit backgroundCallChanged();
 }
