@@ -227,13 +227,9 @@ Item {
         }
     }
 
-    // TODO: This object only exists to emit "applicationReady" sigal, we should find a better way to do this
-    QtObject {
-        id: applicationLoader
-        property variant model
-
-        model: callLogModel
-        onModelChanged: {
+    Connections {
+        target: telepathyHelper
+        onAccountReady: {
             telephony.applicationReady()
         }
     }

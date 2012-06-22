@@ -59,7 +59,7 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
 
     mContactManager = new QtMobility::QContactManager("folks", QMap<QString,QString>(), this);
     mRootContext->setContextProperty("contactManager", mContactManager);
-    mRootContext->setContextProperty("telepathyManager", TelepathyHelper::instance());
+    mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", TelepathyHelper::instance()->chatManager());
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
 
