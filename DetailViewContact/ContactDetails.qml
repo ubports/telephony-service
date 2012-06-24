@@ -120,7 +120,7 @@ Item {
 
                             onDeleteClicked: contact.removeDetail(modelData)
                             onActionClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startChat(contact, modelData.number);
-                            onClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startCallToContact(contact, modelData.number);
+                            onClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.callNumber(modelData.number);
                         }
                     }
                 }

@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import TelephonyApp 0.1
 import "../Widgets"
 
 Item {
@@ -25,11 +26,11 @@ Item {
         onLeftIconClicked: text = ""
         onRightIconClicked: {
             telephony.startCallToNumber(text);
-            text = ""
+            text = "";
         }
         onContactSelected: {
-            telephony.startCallToContact(contact, number)
-            text = ""
+            telephony.callNumber(number);
+            text = "";
         }
         z: 1
     }
@@ -42,15 +43,24 @@ Item {
         anchors.right: parent.right
 
         ListItem {
+
+            function getIconSource() {
+                if (callManager.hasCalls && !telephony.isVoicemailActive()) {
+                    return selected ? "../assets/call_icon_livecall_active.png" : "../assets/call_icon_livecall_inactive.png"
+                } else {
+                    return selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
+                }
+            }
+
             anchors.left: parent.left
             anchors.right: parent.right
 
             topSeparator: true
             isIcon: true
-            iconSource: selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
-            text: "Keypad"
-            onClicked: telephony.showKeypad();
-            selected: telephony.keypad.loaded
+            iconSource: getIconSource()
+            text: callManager.hasCalls && !telephony.isVoicemailActive() ? "On Call" : "Keypad"
+            onClicked: callManager.hasCalls && !telephony.isVoicemailActive() ? telephony.showLiveCall() : telephony.showKeypad();
+            selected: telephony.liveCall.loaded || telephony.keypad.loaded
         }
 
         ListItem {
@@ -60,6 +70,9 @@ Item {
             isIcon: true
             iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
             text: "Voicemail"
+            visible: callManager.getVoicemailNumber() != ""
+            onClicked: telephony.showVoicemail()
+            selected: telephony.voicemail.loaded
         }
 
         ListItem {

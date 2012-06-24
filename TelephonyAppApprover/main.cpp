@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <libnotify/notify.h>
+
 #include "telephonyappapprover.h"
 #include <QApplication>
 #include <TelepathyQt/ClientRegistrar>
@@ -26,6 +28,8 @@ int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     app.setQuitOnLastWindowClosed(false);
+
+    notify_init("Telephony App Approver");
 
     Tp::registerTypes();
     Tp::ClientRegistrarPtr registrar = Tp::ClientRegistrar::create();

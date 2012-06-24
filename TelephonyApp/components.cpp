@@ -24,12 +24,12 @@
 #include "calllogmodel.h"
 #include "calllogproxymodel.h"
 #include "conversationlogmodel.h"
+#include "contactmanager.h"
 #include "messagelogmodel.h"
 #include "messagesproxymodel.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/qdeclarative.h>
-#include <QContactManager>
 #include <TelepathyQt/Debug>
 #include <TelepathyLoggerQt4/Init>
 
@@ -57,9 +57,8 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
             SIGNAL(accountReady()),
             SLOT(onAccountReady()));
 
-    mContactManager = new QtMobility::QContactManager("folks", QMap<QString,QString>(), this);
-    mRootContext->setContextProperty("contactManager", mContactManager);
-    mRootContext->setContextProperty("telepathyManager", TelepathyHelper::instance());
+    mRootContext->setContextProperty("contactManager", ContactManager::instance());
+    mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", TelepathyHelper::instance()->chatManager());
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
 
@@ -86,17 +85,17 @@ void Components::onChannelHandlerCreated(ChannelHandler *ch)
 void Components::onAccountReady()
 {
     // create the log models just when the telepathy helper signals the account is ready
-    mCallLogModel = new CallLogModel(mContactManager, this);
+    mCallLogModel = new CallLogModel(this);
     mRootContext->setContextProperty("callLogModel", mCallLogModel);
 
-    mConversationLogModel = new ConversationLogModel(mContactManager, this);
+    mConversationLogModel = new ConversationLogModel(this);
     mRootContext->setContextProperty("conversationLogModel", mConversationLogModel);
     connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageReceived(const QString&, const QString&)),
             mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
     connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageSent(const QString&, const QString&)),
             mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
 
-    mMessageLogModel = new MessageLogModel(mContactManager, this);
+    mMessageLogModel = new MessageLogModel(this);
     mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
     connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageReceived(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&)));

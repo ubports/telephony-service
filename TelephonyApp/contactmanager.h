@@ -17,32 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CALLLOGMODEL_H
-#define CALLLOGMODEL_H
+#ifndef CONTACTMANAGER_H
+#define CONTACTMANAGER_H
 
-#include "abstractloggermodel.h"
-#include <QTime>
+#include <QContactManager>
 
-class CallLogEntry : public LogEntry {
-public:
-    QVariant data(int role) const;
-    QTime duration;
-    bool missed;
-};
+using namespace QtMobility;
 
-class CallLogModel : public AbstractLoggerModel
+class ContactManager : public QContactManager
 {
     Q_OBJECT
 public:
-    enum CallLogRoles {
-        Duration = AbstractLoggerModel::LastLogRole,
-        Missed
-    };
+    static ContactManager *instance();
 
-    explicit CallLogModel(QObject *parent = 0);
+    QContact contactForNumber(const QString &number);
+
+private:
+    explicit ContactManager();
     
-protected:
-    LogEntry *createEntry(const Tpl::EventPtr &event);
 };
 
-#endif // CALLLOGMODEL_H
+#endif // CONTACTMANAGER_H
