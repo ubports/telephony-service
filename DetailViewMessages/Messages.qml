@@ -39,14 +39,14 @@ Item {
             anchors {
                 left: parent.left
                 right: parent.right
-                leftMargin: incoming ? 1/3 * messages.width : 10
-                rightMargin: incoming ? 10 : 1/3 * messages.width
+                rightMargin: incoming ? 1/3 * messages.width : 10
+                leftMargin: incoming ? 10 : 1/3 * messages.width
             }
 
             Rectangle {
                 anchors.fill: parent
                 anchors.margins: 1
-                color: incoming ? "darkGray" : "white"
+                color: incoming ? "white" : "darkGray"
                 border.color: "black"
                 border.width: 1
             }

@@ -241,7 +241,6 @@ Item {
                 rightPaneContent.source = ""
                 startChat("", contactId)
             }
-            rightPaneContent.item.addMessage(message, false)
         }
     }
 
