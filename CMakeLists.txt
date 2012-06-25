@@ -61,8 +61,8 @@ install(FILES ${CMAKE_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyApp.
 install(FILES TelephonyApp.client DESTINATION share/telepathy/clients)
 file(GLOB QML_JS_FILES *.qml *.js)
 
-configure_file(com.canonical.TelephonyApp.service.in com.canonical.TelephonyApp.in.service)
-install(FILES ${CMAKE_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyApp.service DESTINATION share/dbus-1/services)
+configure_file(com.canonical.TelephonyApp.service.in com.canonical.TelephonyApp.service)
+install(FILES ${CMAKE_BINARY_DIR}/com.canonical.TelephonyApp.service DESTINATION share/dbus-1/services)
 
 install(FILES ${QML_JS_FILES}
     DESTINATION ${TELEPHONY_APP_DIR}
