@@ -22,12 +22,29 @@
 
 #include <QObject>
 #include <QContact>
+#include <QDeclarativeListProperty>
+#include <QUrl>
 
 using namespace QtMobility;
+
+class ContactName;
 
 class ContactEntry : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString id
+               READ id
+               NOTIFY changed)
+    Q_PROPERTY(QString displayLabel
+               READ displayLabel
+               NOTIFY changed)
+    Q_PROPERTY(QUrl avatar
+               READ avatar
+               NOTIFY changed)
+    Q_PROPERTY(ContactName *name
+               READ name
+               NOTIFY changed)
+
 public:
     explicit ContactEntry(const QContact &contact = QContact(), QObject *parent = 0);
 
@@ -36,14 +53,19 @@ public:
 
     QString displayLabel() const;
     QUrl avatar() const;
+    ContactName *name() const;
 
     void setContact(const QContact &contact);
     
 Q_SIGNALS:
     void changed(ContactEntry *entry);
 
+protected Q_SLOTS:
+    void onDetailChanged();
+
 private:
     QContact mContact;
+    ContactName *mName;
 };
 
 #endif // CONTACTENTRY_H

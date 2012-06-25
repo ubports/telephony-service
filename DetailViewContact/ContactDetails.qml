@@ -140,7 +140,7 @@ Item {
                 CallLogProxyModel {
                     id: proxyModel
                     logModel: callLogModel
-                    contactId: (contact) ? contact.guid.guid : "some string that won't match"
+                    contactId: (contact) ? contact.id : "some string that won't match"
                 }
                 // FIXME: references to runtime and fake model need to be removed before final release
                 model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel

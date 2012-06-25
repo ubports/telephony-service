@@ -74,7 +74,7 @@ Item {
         height: width
         sourceSize.width: width
         fillMode: Image.PreserveAspectFit
-        source: contact ? contact.avatar.imageUrl : ""
+        source: contact ? contact.avatar : ""
     }
 
     BorderImage {

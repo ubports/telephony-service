@@ -18,12 +18,17 @@
  */
 
 #include "contactentry.h"
+#include "contactname.h"
 #include <QContactGuid>
 #include <QContactAvatar>
 
 ContactEntry::ContactEntry(const QContact &contact, QObject *parent) :
     QObject(parent), mContact(contact)
 {
+    mName = new ContactName(contact.detail<QContactName>(), this);
+    connect(mName,
+            SIGNAL(changed()),
+            SLOT(onDetailChanged()));
 }
 
 QContactLocalId ContactEntry::localId() const
@@ -38,7 +43,7 @@ QString ContactEntry::id() const
 
 QString ContactEntry::displayLabel() const
 {
-    return mContact.displayLabel();
+    return mName->customLabel();
 }
 
 QUrl ContactEntry::avatar() const
@@ -46,8 +51,18 @@ QUrl ContactEntry::avatar() const
     return mContact.detail<QContactAvatar>().imageUrl();
 }
 
+ContactName *ContactEntry::name() const
+{
+    return mName;
+}
+
 void ContactEntry::setContact(const QContact &contact)
 {
     mContact = contact;
+    emit changed(this);
+}
+
+void ContactEntry::onDetailChanged()
+{
     emit changed(this);
 }

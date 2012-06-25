@@ -54,9 +54,8 @@ Item {
         callEnded.load()
     }
 
-    function showContactDetails(contacts, contact) {
+    function showContactDetails(contact) {
         contactDetails.load()
-        view.contactsModel = contacts
         view.contact = contact
         view.added = false
     }

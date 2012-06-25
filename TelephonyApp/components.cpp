@@ -28,6 +28,8 @@
 #include "contactmodel.h"
 #include "contactentry.h"
 #include "contactproxymodel.h"
+#include "contactdetail.h"
+#include "contactname.h"
 #include "messagelogmodel.h"
 #include "messagesproxymodel.h"
 
@@ -81,6 +83,8 @@ void Components::registerTypes(const char *uri)
     qmlRegisterType<MessagesProxyModel>(uri, 0, 1, "MessagesProxyModel");
     qmlRegisterType<ContactEntry>(uri, 0, 1, "ContactEntry");
     qmlRegisterType<ContactProxyModel>(uri, 0, 1, "ContactProxyModel");
+    qmlRegisterType<ContactDetail>(uri, 0, 1, "ContactDetail");
+    qmlRegisterType<ContactName>(uri, 0, 1, "ContactName");
 }
 
 void Components::onChannelHandlerCreated(ChannelHandler *ch)

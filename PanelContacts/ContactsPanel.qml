@@ -12,7 +12,7 @@ Item {
 
     anchors.fill: parent
     signal contactClicked(variant contact)
-    onContactClicked: telephony.showContactDetails(contactsModel, contact)
+    onContactClicked: telephony.showContactDetails(contact)
 
     SearchEntry {
         id: contactsSearchBox
