@@ -26,11 +26,20 @@ include_directories(
 
 set(TELEPHONY_APP telephony-app)
 
-qt4_wrap_cpp(telephonyapplication_MOC_SRCS telephonyapplication.h)
+set(telephony_app_HDRS
+    telephonyapplication.h
+    telephonyappdbus.h)
+
+set(telephony_app_SRCS
+    telephonyapplication.cpp
+    telephonyappdbus.cpp
+    main.cpp)
+
+qt4_add_dbus_adaptor(telephony_app_SRCS TelephonyApp.xml telephonyappdbus.h TelephonyAppDBus)
+qt4_wrap_cpp(telephonyapplication_MOC_SRCS ${telephony_app_HDRS})
 add_executable(${TELEPHONY_APP}
     ${telephonyapplication_MOC_SRCS}
-    telephonyapplication.cpp
-    main.cpp
+    ${telephony_app_SRCS}
     )
 
 target_link_libraries(${TELEPHONY_APP}
@@ -38,6 +47,7 @@ target_link_libraries(${TELEPHONY_APP}
     ${QT_QTGUI_LIBRARIES}
     ${QT_QTNETWORK_LIBRARIES}
     ${QT_QTDECLARATIVE_LIBRARIES}
+    ${QT_QTDBUS_LIBRARIES}
     qtsingleapplication
     )
 
@@ -49,6 +59,9 @@ configure_file(org.freedesktop.Telepathy.Client.TelephonyApp.service.in org.free
 install(FILES ${CMAKE_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyApp.service DESTINATION share/dbus-1/services)
 install(FILES TelephonyApp.client DESTINATION share/telepathy/clients)
 file(GLOB QML_JS_FILES *.qml *.js)
+
+configure_file(com.canonical.TelephonyApp.service.in com.canonical.TelephonyApp.in.service)
+install(FILES ${CMAKE_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyApp.service DESTINATION share/dbus-1/services)
 
 install(FILES ${QML_JS_FILES}
     DESTINATION ${TELEPHONY_APP_DIR}

@@ -6,6 +6,8 @@
 #include <QtDeclarative/QDeclarativeView>
 #include <QtSingleApplication>
 
+class TelephonyAppDBus;
+
 class TelephonyApplication : public QtSingleApplication
 {
     Q_OBJECT
@@ -26,6 +28,7 @@ private slots:
 
 private:
     QDeclarativeView *m_view;
+    TelephonyAppDBus *m_dbus;
     QUrl m_argUrl;
     bool m_applicationIsReady;
 };
