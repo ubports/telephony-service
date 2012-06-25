@@ -29,76 +29,23 @@ Item {
     }
 
     Component {
-        id: messageDelegate
+        id: messageImageDelegate
 
-        Item {
-            height: textBubble.visible ? textBubble.height : imageBubble.height
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.leftMargin: incoming ? 40 : 10
-            anchors.rightMargin: incoming ? 10 : 40
+        MessageBubbleImage {
+            maximumWidth: messagesList.width - parent.anchors.leftMargin - parent.anchors.rightMargin
+            maximumHeight: 200
 
-            BorderImage {
-                id: textBubble
+            imageSource: parent.imageSource
+            mirrored: parent.incoming
+        }
+    }
 
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: messageText.bottom
-                anchors.bottomMargin: -13
+    Component {
+        id: messageTextDelegate
 
-                visible: message != ""
-                smooth: true
-                source: incoming ? "../assets/bubble_right.png" : "../assets/bubble_left.png"
-                border {top: 15; bottom: 40; left: incoming ? 15 : 21; right: incoming ? 21 : 15}
-            }
-
-            TextCustom {
-                id: messageText
-
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.leftMargin: incoming ? 17 : 18 + 8
-                anchors.rightMargin: 18 + 1
-                anchors.top: parent.top
-                anchors.topMargin: 12
-
-                lineHeight: 1.3
-                text: message
-                wrapMode: Text.WordWrap
-                fontSize: "medium"
-                color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-            }
-
-            Image {
-                id: image
-
-                property bool horizontal: image.sourceSize.width >= image.sourceSize.height
-
-                width: horizontal ? parent.width : undefined
-                height: horizontal ? undefined : 200
-                clip: true
-                fillMode: Image.PreserveAspectCrop
-                source: imageSource
-                smooth: true
-                cache: false
-                asynchronous: true
-            }
-
-            BorderImage {
-                id: imageBubble
-
-                anchors.fill: image
-                anchors.topMargin: -4
-                anchors.bottomMargin: -6
-                anchors.leftMargin: incoming ? -5 : -12
-                anchors.rightMargin: incoming ? -12 : -5
-
-                visible: !textBubble.visible
-                smooth: true
-                source: incoming ? "../assets/bubble_image_right.png" : "../assets/bubble_image_left.png"
-                border {top: 15; bottom: 40; left: incoming ? 15 : 21; right: incoming ? 21 : 15}
-            }
+        MessageBubbleText {
+            text: parent.message
+            mirrored: parent.incoming
         }
     }
 
@@ -123,7 +70,24 @@ Item {
         model: typeof(runtime) != "undefined" ? fakeMessagesModel : messagesProxyModel
         section.delegate: sectionDelegate
         section.property: "date"
-        delegate: messageDelegate
+        delegate: Loader {
+            /* Workaround Qt bug http://bugreports.qt.nokia.com/browse/QTBUG-16057
+               More documentation at http://bugreports.qt.nokia.com/browse/QTBUG-18011
+            */
+            property bool incoming: model.incoming
+            property string imageSource: model.imageSource
+            property string message: model.message
+
+            anchors.left: if (sourceComponent == messageTextDelegate) return parent.left
+                          else return incoming ? undefined : parent.left
+            anchors.right: if (sourceComponent == messageTextDelegate) return parent.right
+                          else return incoming ? parent.right : undefined
+
+            anchors.leftMargin: incoming ? 40 : 10
+            anchors.rightMargin: incoming ? 10 : 40
+
+            sourceComponent: message != "" ? messageTextDelegate : messageImageDelegate
+        }
         highlightFollowsCurrentItem: true
         currentIndex: (count > 0) ? count-1 : 0
     }
