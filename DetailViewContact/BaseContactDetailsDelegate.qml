@@ -137,7 +137,7 @@ Item {
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
 
-                source: (detailTypeInfo.actionIcon) ? detailTypeInfo.actionIcon : "../assets/icon_chevron_right.png"
+                source: (detailTypeInfo.actionIcon) ? detailTypeInfo.actionIcon : ""
             }
         }
     }
