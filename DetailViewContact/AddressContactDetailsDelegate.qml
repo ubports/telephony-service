@@ -1,5 +1,6 @@
 import QtQuick 1.1
 import "../Widgets"
+import "DetailTypeUtilities.js" as DetailUtils
 
 BaseContactDetailsDelegate {
     id: delegate
@@ -20,28 +21,51 @@ BaseContactDetailsDelegate {
        editor.country = detail.country
     }
 
-    TextCustom {
-        id: formattedAddress
-
+    Item {
         parent: readOnlyContentBox
+
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        fontSize: "large"
-        elide: Text.ElideRight
-        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-        style: Text.Raised
-        styleColor: "white"
+        height: childrenRect.height
 
-        /* Render the address with the same style as in Android */
-        function nonEmpty(item) { return item && item.length > 0 }
-        text: [
-            detail.street,
-            [ [detail.locality, detail.region].filter(nonEmpty).join(", "),
-              detail.postcode
-            ].filter(nonEmpty).join(" "),
-            detail.country
-          ].filter(nonEmpty).join("\n");
+        TextCustom {
+            id: formattedAddress
+
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: subTypeText.left
+            anchors.rightMargin: 10
+            fontSize: "large"
+            elide: Text.ElideRight
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            style: Text.Raised
+            styleColor: "white"
+
+            /* Render the address with the same style as in Android */
+            function nonEmpty(item) { return item && item.length > 0 }
+            text: [
+                detail.street,
+                [ [detail.locality, detail.region].filter(nonEmpty).join(", "),
+                  detail.postcode
+                ].filter(nonEmpty).join(" "),
+                detail.country
+              ].filter(nonEmpty).join("\n");
+        }
+
+        TextCustom {
+            id: subTypeText
+
+            anchors.right: parent.right
+            anchors.top: parent.top
+            horizontalAlignment: Text.AlignRight
+            text: DetailUtils.getDetailSubType(detail)
+            fontSize: "medium"
+            elide: Text.ElideRight
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            style: Text.Raised
+            styleColor: "white"
+        }
     }
 
     AddressContactDetailsEditor {
