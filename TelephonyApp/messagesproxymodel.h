@@ -33,6 +33,10 @@ class MessagesProxyModel : public QSortFilterProxyModel
                READ messagesModel
                WRITE setMessagesModel
                NOTIFY messagesModelChanged)
+    Q_PROPERTY (QString searchString
+                READ searchString
+                WRITE setSearchString
+                NOTIFY searchStringChanged)
 public:
     explicit MessagesProxyModel(QObject *parent = 0);
     
@@ -42,14 +46,22 @@ public:
     QObject *messagesModel() const;
     void setMessagesModel(QObject *value);
 
+    QString searchString() const;
+    void setSearchString(QString value);
+
     void updateSorting();
 
 signals:
     void ascendingChanged();
     void messagesModelChanged();
+    void searchStringChanged();
+
+protected:
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
 private:
     bool mAscending;
+    QString mSearchString;
 };
 
 #endif // MESSAGESPROXYMODEL_H

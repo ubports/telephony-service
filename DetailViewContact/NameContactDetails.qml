@@ -37,10 +37,15 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        fontSize: "x-large"
         height: paintedHeight
-        opacity: !editable ? 1.0 : 0.0
 
+        fontSize: "x-large"
+        elide: Text.ElideRight
+        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+        style: Text.Raised
+        styleColor: "white"
+
+        opacity: !editable ? 1.0 : 0.0
         text: (detail && detail.customLabel && detail.customLabel.length > 0) ? detail.customLabel : formatCustomLabel()
     }
 

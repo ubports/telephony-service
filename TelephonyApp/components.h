@@ -52,7 +52,6 @@ private:
     CallLogModel *mCallLogModel;
     ConversationLogModel *mConversationLogModel;
     MessageLogModel *mMessageLogModel;
-    QtMobility::QContactManager *mContactManager;
 };
 
 #endif // COMPONENTS_H

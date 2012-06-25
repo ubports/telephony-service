@@ -9,7 +9,7 @@ Item {
     property variant editable: false
 
     width: parent.width
-    height: 82
+    height: editable ? name.height : 82
 
     // FIXME: this function is used in two places, should be moved to one common place
     function contactName() {
@@ -67,7 +67,9 @@ Item {
 
         anchors.left: parent.left
         anchors.leftMargin: 10
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenter: (editable) ? undefined : parent.verticalCenter
+        anchors.top: (editable) ? parent.top : undefined
+        anchors.topMargin: (editable) ? 16 : 0
         width: 61
         height: width
         sourceSize.width: width
@@ -98,24 +100,20 @@ Item {
         anchors.topMargin: 10
         height: childrenRect.height
 
-        TextCustom {
-            id: label
-
+        NameContactDetails {
+            id: name
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
-            fontSize: "x-large"
-            elide: Text.ElideRight
-            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-            style: Text.Raised
-            styleColor: "white"
-            text: contact ? contact.name : "Unknown Contact"
+
+            editable: header.editable
+            detail: (contact) ? contact.name : undefined
         }
 
         TextCustom {
             id: sublabel
 
-            anchors.top: label.bottom
+            anchors.top: name.bottom
             anchors.topMargin: 1
             anchors.left: parent.left
             anchors.right: parent.right
@@ -125,6 +123,7 @@ Item {
             style: Text.Raised
             styleColor: "white"
             text: "A social update will show in here"
+            opacity: !editable ? 1.0 : 0.0
         }
     }
 }

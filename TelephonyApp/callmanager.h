@@ -21,41 +21,59 @@
 #ifndef CALLMANAGER_H
 #define CALLMANAGER_H
 
-#include <QtCore/QObject>
 #include <QtCore/QMap>
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/ReceivedMessage>
 
+class CallEntry;
+
 class CallManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QObject *foregroundCall
+               READ foregroundCall
+               NOTIFY foregroundCallChanged)
+    Q_PROPERTY(QObject *backgroundCall
+               READ backgroundCall
+               NOTIFY backgroundCallChanged)
+    Q_PROPERTY(bool hasCalls
+               READ hasCalls
+               NOTIFY hasCallsChanged)
+    Q_PROPERTY(bool hasBackgroundCall
+               READ hasBackgroundCall
+               NOTIFY hasBackgroundCallChanged)
 public:
     explicit CallManager(QObject *parent = 0);
     
-    Q_INVOKABLE bool isTalkingToContact(const QString &contactId);
-    Q_INVOKABLE void startCall(const QString &contactId);
-    Q_INVOKABLE void endCall(const QString &contactId);
-    Q_INVOKABLE void sendDTMF(const QString &contactId, const QString &key);
-    Q_INVOKABLE void setHold(const QString &contactId, bool hold);
-    Q_INVOKABLE void setSpeaker(const QString &contactId, bool speaker);
-    Q_INVOKABLE void setMute(const QString &contactId, bool mute);
+    Q_INVOKABLE void startCall(const QString &phoneNumber);
+    Q_INVOKABLE void setSpeaker(bool speaker);
+    Q_INVOKABLE QString getVoicemailNumber();
+    Q_INVOKABLE int getVoicemailCount();
 
-signals:
-    void callReady(const QString &contactId);
-    void callEnded(const QString &contactId);
-    void onHoldChanged(const QString &contactId, bool hold);
+    QObject *foregroundCall() const;
+    QObject *backgroundCall() const;
+    bool hasCalls() const;
+    bool hasBackgroundCall() const;
+
+Q_SIGNALS:
+    void callReady();
+    void callEnded();
+    void foregroundCallChanged();
+    void backgroundCallChanged();
+    void hasCallsChanged();
+    void hasBackgroundCallChanged();
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
     void onContactsAvailable(Tp::PendingOperation *op);
-    void onCallStateChanged(Tp::CallState state);
-    void onCallFlagsChanged(Tp::CallFlags flags);
+    void onCallEnded();
 
 private:
-    QString callChannelToContactId(Tp::CallChannel *channel);
+    void refreshProperties();
 
-    QMap<QString, Tp::CallChannelPtr> mChannels;
+    QList<CallEntry*> mCallEntries;
     QMap<QString, Tp::ContactPtr> mContacts;
+    QMap<QString, QVariant> mProperties;
 };
 
 #endif // CALLMANAGER_H

@@ -1,9 +1,17 @@
-telephony-app (0.16) UNRELEASED; urgency=low
+telephony-app (0.17) precise; urgency=low
+
+  * add voicemail support
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 22 Jun 2012 15:21:56 -0700
+
+telephony-app (0.16) precise; urgency=low
 
   * Make sure the telepathy-ufa account is always enabled and connected while
     the application is running (LP: #1015177 LP: #1015205)
+  * Reimplement message searching (LP: #1015394)
+  * Add support for handling multiple calls
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 19 Jun 2012 16:43:51 -0300
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 22 Jun 2012 14:32:39 -0300
 
 telephony-app (0.15) precise; urgency=low
 

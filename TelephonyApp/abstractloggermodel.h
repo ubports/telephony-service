@@ -30,7 +30,6 @@
 #include <QUrl>
 #include <QContact>
 #include <QContactId>
-#include <QContactManager>
 
 using namespace QtMobility;
 
@@ -64,7 +63,7 @@ public:
         LastLogRole
     };
 
-    explicit AbstractLoggerModel(QtMobility::QContactManager *manager, QObject *parent = 0);
+    explicit AbstractLoggerModel(QObject *parent = 0);
 
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -78,7 +77,6 @@ protected:
     void appendEvents(const Tpl::EventPtrList &events);
     void appendEntry(LogEntry *entry);
     void clear();
-    QContact contactForNumber(const QString &number);
     void invalidateRequests();
     bool validateRequest(Tpl::PendingOperation *op);
 
@@ -100,7 +98,6 @@ protected slots:
 protected:
     Tpl::LogManagerPtr mLogManager;
     QList<LogEntry*> mLogEntries;
-    QtMobility::QContactManager *mContactManager;
     Tpl::EventTypeMask mType;
     QList<Tpl::PendingOperation*> mActiveOperations;
 };

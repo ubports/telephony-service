@@ -36,7 +36,7 @@ public:
         Message = AbstractLoggerModel::LastLogRole
     };
 
-    explicit ConversationLogModel(QContactManager *manager, QObject *parent = 0);
+    explicit ConversationLogModel(QObject *parent = 0);
 
 public slots:
     void onMessageReceived(const QString &number, const QString &message);

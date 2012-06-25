@@ -11,34 +11,35 @@ Item {
 
     property alias viewSource: rightPaneContent.source
     property alias view: rightPaneContent.item
+    property QtObject call: callManager.foregroundCall
 
     // Inventory of all the views in the application
     property ViewModel liveCall: ViewModel {source: "DetailViewLiveCall/LiveCall.qml"}
+    property ViewModel voicemail: ViewModel {source: "DetailViewVoicemail/Voicemail.qml"}
     property ViewModel messages: ViewModel {source: "DetailViewMessages/MessagesView.qml"}
     property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"}
     property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"}
     property ViewModel keypad: ViewModel {source: "DetailViewKeypad/KeypadView.qml"}
     property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"}
 
-    function startCallToContact(contact, number) {
+    signal applicationReady
+
+    function showLiveCall() {
         liveCall.load()
-        rightPaneContent.source = "DetailViewLiveCall/LiveCall.qml"
-        view.contact = contact
-        view.number = number
         view.startCall()
     }
 
-    function startCallToNumber(number) {
-        liveCall.load()
-        view.contact = null
-        view.number = number
-        view.startCall()
+    function showVoicemail() {
+        voicemail.load()
+    }
+
+    function isVoicemailActive() {
+        if (call)
+            return call.voicemail
+        return false
     }
 
     function callNumber(number) {
-        liveCall.load()
-        view.contact = null
-        view.number = number
         callManager.startCall(number);
     }
 
@@ -49,10 +50,8 @@ Item {
         view.newMessage = false
     }
 
-    function endCall(duration) {
+    function endCall() {
         callEnded.load()
-        view.text = duration;
-        view.postText = "";
     }
 
     function showContactDetails(contacts, contact) {
@@ -69,7 +68,8 @@ Item {
 
     function createNewContact(contacts) {
         contactDetails.load()
-        view.createNewContact(contacts)
+        view.contactsModel = contacts
+        view.createNewContact()
     }
 
     function startNewMessage() {
@@ -177,6 +177,26 @@ Item {
             color: "white"
             opacity: 0.3
         }
+
+        OnCallPanel {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            visible: {
+                if (!callManager.hasCalls) { 
+                    return false
+                } else {
+                    if (isVoicemailActive() && !telephony.voicemail.loaded) {
+                        return true 
+                    } else if (!isVoicemailActive() && !telephony.liveCall.loaded) {
+                        return true
+                    }
+                }
+                return false
+            }
+
+            onClicked: isVoicemailActive() ? telephony.showVoicemail() : telephony.showLiveCall()
+        }
     }
 
     Item {
@@ -226,16 +246,20 @@ Item {
     }
 
     Connections {
+        target: telepathyHelper
+        onAccountReady: {
+            telephony.applicationReady()
+        }
+    }
+
+    Connections {
         target: callManager
         onCallReady: {
-            startCallToNumber(contactId)
-        }
-        onCallEnded: {
-            if (rightPaneContent.item.viewName == "livecall" &&
-                rightPaneContent.item.number == contactId) {
-                rightPaneContent.item.endCall()
+            if (isVoicemailActive()) {
+                showVoicemail()
+            } else {
+                showLiveCall();
             }
         }
-
     }
 }
