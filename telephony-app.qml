@@ -68,7 +68,8 @@ Item {
 
     function createNewContact(contacts) {
         contactDetails.load()
-        view.createNewContact(contacts)
+        view.contactsModel = contacts
+        view.createNewContact()
     }
 
     function startNewMessage() {
