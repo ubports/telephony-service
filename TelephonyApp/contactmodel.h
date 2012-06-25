@@ -1,0 +1,61 @@
+/*
+ * Copyright (C) 2012 Canonical, Ltd.
+ *
+ * Authors:
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef CONTACTMODEL_H
+#define CONTACTMODEL_H
+
+#include <QAbstractListModel>
+#include <QContact>
+
+class ContactEntry;
+class ContactManager;
+
+using namespace QtMobility;
+
+class ContactModel : public QAbstractListModel
+{
+    Q_OBJECT
+public:
+    enum ModelRoles {
+        ContactRole = Qt::UserRole
+    };
+
+    explicit ContactModel(QObject *parent = 0);
+
+    virtual int rowCount(const QModelIndex &parent) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
+
+    Q_INVOKABLE QObject *contactFromId(const QString &guid);
+
+protected:
+    void addContacts(const QList<QContact> &contacts);
+    void removeContact(ContactEntry *entry);
+
+protected Q_SLOTS:
+    void onContactsAdded(QList<QContactLocalId> ids);
+    void onContactsChanged(QList<QContactLocalId> ids);
+    void onContactsRemoved(QList<QContactLocalId> ids);
+    void onContactEntryChanged(ContactEntry *entry);
+
+private:
+    ContactManager *mContactManager;
+    QList<ContactEntry*> mContactEntries;
+};
+
+#endif // CONTACTMODEL_H

@@ -1,5 +1,5 @@
 import QtQuick 1.1
-import QtMobility.contacts 1.1
+import TelephonyApp 0.1
 import ".."
 import "../Widgets"
 import "../fontUtils.js" as Font
@@ -45,21 +45,10 @@ Item {
         selected: telephony.contactDetails.loaded && telephony.view.added
     }
 
-    ContactModel {
-        id: contactsModel
-        manager: "folks"
-
-        filter: ContactFilters {
-            filterText: contactsSearchBox.text
-        }
-
-        sortOrders: [
-            SortOrder {
-               detail: ContactDetail.DisplayLabel
-               field: DisplayLabel.label
-               direction:Qt.AscendingOrder
-            }
-        ]
+    ContactProxyModel {
+        id: contactProxyModel
+        filterText: contactsSearchBox.text
+        model: contactModel
     }
 
     ListView {
@@ -70,7 +59,7 @@ Item {
         anchors.right: parent.right
         clip: true
         // FIXME: references to runtime and fake model need to be removed before final release
-        model: typeof(runtime) != "undefined" ? fakeContacts : contactsModel
+        model: typeof(runtime) != "undefined" ? fakeContacts : contactProxyModel
 
         delegate: ContactDelegate {
             onClicked: contactsPanel.contactClicked(contact)
