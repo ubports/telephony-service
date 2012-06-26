@@ -9,7 +9,7 @@ Item {
     property variant editable: false
 
     width: parent.width
-    height: editable ? name.height : 82
+    height: editable ? labelBox.height : 82
 
     // FIXME: this function is used in two places, should be moved to one common place
     function contactName() {
@@ -67,9 +67,8 @@ Item {
 
         anchors.left: parent.left
         anchors.leftMargin: 10
-        anchors.verticalCenter: (editable) ? undefined : parent.verticalCenter
-        anchors.top: (editable) ? parent.top : undefined
-        anchors.topMargin: (editable) ? 16 : 0
+        anchors.top: parent.top
+        anchors.topMargin: 10
         width: 61
         height: width
         sourceSize.width: width
@@ -92,10 +91,11 @@ Item {
     }
 
     Item {
+        id: labelBox
+
         anchors.left: icon.right
         anchors.leftMargin: 10
         anchors.right: parent.right
-        anchors.rightMargin: 10
         anchors.top: parent.top
         anchors.topMargin: 10
         height: childrenRect.height
@@ -117,6 +117,7 @@ Item {
             anchors.topMargin: 1
             anchors.left: parent.left
             anchors.right: parent.right
+            anchors.rightMargin: 10
             fontSize: "medium"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)

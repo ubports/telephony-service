@@ -37,6 +37,7 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.rightMargin: 10
         height: paintedHeight
 
         fontSize: "x-large"
