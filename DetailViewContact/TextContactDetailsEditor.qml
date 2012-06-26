@@ -1,9 +1,9 @@
 import QtQuick 1.1
 import "../Widgets"
+import "../fontUtils.js" as FontUtils
 
 TextInput {
-    anchors.top: parent.top
-    anchors.left: parent.left
-    anchors.right: parent.right
-    font.pixelSize: 20
+    font.pixelSize: FontUtils.sizeToPixels("large")
+    color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+    selectByMouse: true
 }

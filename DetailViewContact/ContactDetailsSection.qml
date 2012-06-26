@@ -65,26 +65,34 @@ Column {
     Item {
         anchors.left: parent.left
         anchors.right: parent.right
-        height: Math.max(addText.paintedHeight, addButton.height) + 16
+        height: editable ? 32 : 0
         opacity: editable ? 1.0 : 0.0
+        Behavior on height {StandardAnimation {}}
+        Behavior on opacity {StandardAnimation {}}
 
         ButtonWithForeground {
             id: addButton
             anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.topMargin: 8
-            width: 20
-            iconSource: "../assets/icon_plus.png"
+            anchors.leftMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
+            width: 12
+            iconSource: "../assets/edit_contact_mode_add.png"
         }
 
         TextCustom {
             id: addText
+
             anchors.left: addButton.right
-            anchors.leftMargin: 8
-            anchors.verticalCenter: addButton.verticalCenter
-            color: "green"
+            anchors.leftMargin: 5
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.verticalCenterOffset: -1
+            fontSize: "small"
+            font.italic: true
+            elide: Text.ElideRight
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            style: Text.Raised
+            styleColor: "white"
             text: (detailTypeInfo.newItemText) ? detailTypeInfo.newItemText : ""
-            fontSize: "x-large"
         }
 
         MouseArea {
