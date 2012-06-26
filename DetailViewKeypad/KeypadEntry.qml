@@ -30,8 +30,9 @@ Item {
         anchors.verticalCenterOffset: 1
         height: font.pixelSize
         horizontalAlignment: TextInput.AlignRight
-        text: "+44 01234 56789"
+        text: ""
         font.pixelSize: Font.sizeToPixels("x-large")
         color: "#e3e5e8"
+        focus: true
     }
 }
