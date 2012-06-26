@@ -36,7 +36,7 @@ Item {
             maximumHeight: 200
 
             imageSource: parent.imageSource
-            mirrored: parent.incoming
+            mirrored: !parent.incoming
         }
     }
 
@@ -45,7 +45,7 @@ Item {
 
         MessageBubbleText {
             text: parent.message
-            mirrored: parent.incoming
+            mirrored: !parent.incoming
         }
     }
 
@@ -79,12 +79,12 @@ Item {
             property string message: model.message
 
             anchors.left: if (sourceComponent == messageTextDelegate) return parent.left
-                          else return incoming ? undefined : parent.left
+                          else return incoming ? parent.left : undefined
             anchors.right: if (sourceComponent == messageTextDelegate) return parent.right
-                          else return incoming ? parent.right : undefined
+                          else return incoming ? undefined : parent.right
 
-            anchors.leftMargin: incoming ? 40 : 10
-            anchors.rightMargin: incoming ? 10 : 40
+            anchors.leftMargin: incoming ? 10 : 40
+            anchors.rightMargin: incoming ? 40 : 10
 
             sourceComponent: message != "" ? messageTextDelegate : messageImageDelegate
         }

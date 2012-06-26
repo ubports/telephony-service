@@ -16,3 +16,6 @@ debian/*.debhelper
 debian/*.debhelper.log
 debian/*.substvars
 
+org.freedesktop.Telepathy.Client.TelephonyApp.service
+telephonyappadaptor.*
+

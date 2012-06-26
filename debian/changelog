@@ -1,3 +1,27 @@
+telephony-app (0.17newyork2) precise; urgency=low
+
+  [ Tiago Salem Herrmann]
+  * do not add outgoing as incoming messages
+
+  [ Ugo Riboni ]
+  * Expose a DBUS interface from the telephony app and put in it 
+  a method to show the messages tab
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Tue, 26 Jun 2012 06:14:36 -0700
+
+telephony-app (0.17newyork1) precise; urgency=low
+
+  [ Florian Boucault ]
+  * Better center icon in notification panes.
+  * Updated contact details iconset.
+
+  [ Ugo Riboni ]
+  * Put back an icon that was removed by mistake
+  * Correctly set parent model so that new contact won't show up blank.
+  * Bring back contact name editing which was removed by mistake
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 25 Jun 2012 15:15:10 -0700
+
 telephony-app (0.17) precise; urgency=low
 
   * add voicemail support

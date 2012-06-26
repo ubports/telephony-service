@@ -38,6 +38,8 @@ Item {
             anchors.right: sendButton.left
             anchors.rightMargin: 10
             anchors.verticalCenter: parent.verticalCenter
+            focus: true
+            Keys.forwardTo: [sendButton]
         }
 
         Button {

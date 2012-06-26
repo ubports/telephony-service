@@ -22,6 +22,7 @@ ListItem {
         style: Text.Raised
         styleColor: "white"
         opacity: messageDelegate.enabled ? 1.0 : 0.5
+        // FIXME: show time if today otherwise date without year
         text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
     }
 }

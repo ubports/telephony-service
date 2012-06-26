@@ -13,10 +13,6 @@ Item {
 
     property string pendingMessage
 
-    function addMessage(message) {
-        messagesLoader.item.addMessage(message, false)
-    }
-
     Connections {
         target: chatManager
 
@@ -119,7 +115,7 @@ Item {
     Loader {
         id: messagesLoader
 
-        sourceComponent: newMessage ? undefined : messagesComponent
+        sourceComponent: view.newMessage ? undefined : messagesComponent
         anchors.top: headerLoader.bottom
         anchors.bottom: footer.top
     }

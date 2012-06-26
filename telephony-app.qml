@@ -213,6 +213,7 @@ Item {
             Loader {
                 id: rightPaneContent
                 anchors.fill: parent
+                focus: true
             }
         }
 
@@ -241,7 +242,6 @@ Item {
                 rightPaneContent.source = ""
                 startChat("", contactId)
             }
-            rightPaneContent.item.addMessage(message, false)
         }
     }
 
@@ -261,5 +261,10 @@ Item {
                 showLiveCall();
             }
         }
+    }
+
+    Connections {
+        target: dbus
+        onShowMessagesRequested: tabs.currentTab = 1
     }
 }
