@@ -1,5 +1,6 @@
 import QtQuick 1.1
 import "../Widgets"
+import "DetailTypeUtilities.js" as DetailUtils
 
 BaseContactDetailsDelegate {
     id: delegate
@@ -13,19 +14,42 @@ BaseContactDetailsDelegate {
 
     onEditableChanged: editor.text = value.text
 
-    TextCustom {
-        id: value
-
+    Item {
         parent: readOnlyContentBox
+
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        fontSize: "large"
-        elide: Text.ElideRight
-        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-        style: Text.Raised
-        styleColor: "white"
-        text: (detail && detailTypeInfo.displayField) ? detail[detailTypeInfo.displayField] : ""
+        height: childrenRect.height
+
+        TextCustom {
+            id: value
+
+            anchors.top: parent.top
+            anchors.left: parent.left
+            anchors.right: subTypeText.left
+            anchors.rightMargin: 10
+            fontSize: "large"
+            elide: Text.ElideRight
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            style: Text.Raised
+            styleColor: "white"
+            text: (detail && detailTypeInfo.displayField) ? detail[detailTypeInfo.displayField] : ""
+        }
+
+        TextCustom {
+            id: subTypeText
+
+            anchors.right: parent.right
+            anchors.top: parent.top
+            horizontalAlignment: Text.AlignRight
+            text: DetailUtils.getDetailSubType(detail)
+            fontSize: "medium"
+            elide: Text.ElideRight
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+            style: Text.Raised
+            styleColor: "white"
+        }
     }
 
     TextContactDetailsEditor {

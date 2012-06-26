@@ -31,6 +31,7 @@ Item {
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised
         styleColor: "white"
+        // FIXME: show time if today otherwise date without year
         text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
     }
 
