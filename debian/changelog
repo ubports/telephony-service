@@ -1,3 +1,16 @@
+telephony-app (0.17newyork3) precise; urgency=low
+
+  [ Florian Boucault ]
+  * Contact details: implemented visual design for call log.
+  * Contact details edit mode: implemented visuals.
+  * Contact details edit mode: preliminary implementation of combobox visuals.
+  * On call panel: implemented visual design.
+
+  [ Ugo Riboni ]
+  * Automatically give focus to message entry in conversations.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 26 Jun 2012 17:16:13 -0300
+
 telephony-app (0.17newyork2) precise; urgency=low
 
   [ Tiago Salem Herrmann]
