@@ -6,9 +6,25 @@ Item {
     id: contactDetailsItem
 
     /* For deleted items it's not enough to hide them, they will still take space in
-       the layout. We also need to set the height to zero to make them completely go away */
-    height: (deleted) ? 0 : (((editable) ? editableGroup.height : readOnlyGroup.height) + bottomSeparatorLine.height)
+       the layout. We also need to set the height to zero to make them completely go away.
+       There is a 2 pixels vertical spacing between fields in edit mode.
+    */
+    height: (deleted) ? 0 : (((editable) ? editableGroup.height + 2 : readOnlyGroup.height) + bottomSeparatorLine.height)
     opacity: (deleted) ? 0.0 : 1.0
+
+    state: "read"
+    states: [
+        State {
+            name: "read"
+        },
+        State {
+            name: "edit"
+            when: contactDetailsItem.editable
+        }
+    ]
+    transitions: Transition {
+        StandardAnimation { property: "height" }
+    }
 
     property variant detail
     property variant detailTypeInfo
@@ -70,15 +86,17 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
+        // center contentBox vertically
         height: contentBox.height + 2*contentBox.anchors.topMargin
-        visible: !editable
+        opacity: editable ? 0.0 : 1.0
+        Behavior on opacity {StandardAnimation {}}
 
         AbstractButton {
             id: contentBox
 
             anchors.left: parent.left
             anchors.leftMargin: 8
-            anchors.right: separator.left
+            anchors.right: readOnlySeparator.left
             anchors.rightMargin: 7
             anchors.top: parent.top
             anchors.topMargin: 9
@@ -90,29 +108,14 @@ Item {
                 id: readOnlyContentBox
 
                 anchors.left: parent.left
-                anchors.right: subTypeText.left
-                anchors.top: parent.top
-                anchors.rightMargin: 10
-                height: childrenRect.height
-            }
-
-            TextCustom {
-                id: subTypeText
-
                 anchors.right: parent.right
                 anchors.top: parent.top
-                horizontalAlignment: Text.AlignRight
-                text: DetailUtils.getDetailSubType(detail)
-                fontSize: "medium"
-                elide: Text.ElideRight
-                color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-                style: Text.Raised
-                styleColor: "white"
+                height: childrenRect.height
             }
         }
 
         Rectangle {
-            id: separator
+            id: readOnlySeparator
 
             anchors.top: parent.top
             anchors.bottom: parent.bottom
@@ -142,35 +145,29 @@ Item {
         }
     }
 
-    Item {
+    EditBox {
         id: editableGroup
 
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        visible: editable
-        height: childrenRect.height
+        opacity: editable ? 1.0 : 0.0
+        Behavior on opacity {StandardAnimation {}}
 
-        Rectangle {
-            id: editorArea
-            border.color: "black"
-            border.width: 1
-            color: "white"
-
+        Item {
+            parent: editableGroup.leftBox
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.leftMargin: 10
-            height: Math.max(editableContentBox.height, subTypeEditor.height)
+            height: editableContentBox.height
 
             ButtonWithForeground {
                 id: removeButton
 
                 anchors.left: parent.left
-                anchors.leftMargin: -10
-                anchors.verticalCenter: parent.verticalCenter
-                width: 20
-                iconSource: "../assets/icon_minus.png"
+                anchors.leftMargin: 10
+                anchors.verticalCenter: editableContentBox.verticalCenter
+                width: 12
+                iconSource: "../assets/edit_contact_mode_remove.png"
 
                 onClicked: {
                     deleted = true;
@@ -181,28 +178,24 @@ Item {
             Item {
                 id: editableContentBox
 
-                anchors.left: parent.left
-                anchors.right: subTypeEditor.left
-                anchors.top: parent.top
-                anchors.topMargin: 8
-                anchors.leftMargin: 16
-                anchors.rightMargin: 8
-                height: childrenRect.height + 16
-
-                visible: editable
-            }
-
-            ContactDetailSubTypeChooser {
-                id: subTypeEditor
+                anchors.left: removeButton.right
                 anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.rightMargin: 8
-                anchors.topMargin: 8
-                detailTypeInfo: contactDetailsItem.detailTypeInfo
-                detail: contactDetailsItem.detail
-
-                opacity: editable ? 1.0 : 0.0
+                anchors.leftMargin: 5
+                anchors.rightMargin: 5
+                height: childrenRect.height
             }
+        }
+
+        ContactDetailSubTypeChooser {
+            id: subTypeEditor
+
+            parent: editableGroup.rightBox
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            width: 76
+            detailTypeInfo: contactDetailsItem.detailTypeInfo
+            detail: contactDetailsItem.detail
         }
     }
 }

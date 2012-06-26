@@ -213,6 +213,7 @@ Item {
             Loader {
                 id: rightPaneContent
                 anchors.fill: parent
+                focus: true
             }
         }
 
