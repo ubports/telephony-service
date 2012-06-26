@@ -19,8 +19,11 @@
 
 #include "contactentry.h"
 #include "contactname.h"
+#include "contactphonenumber.h"
 #include <QContactGuid>
 #include <QContactAvatar>
+#include <QContactPhoneNumber>
+#include <QDebug>
 
 ContactEntry::ContactEntry(const QContact &contact, QObject *parent) :
     QObject(parent), mContact(contact)
@@ -29,6 +32,8 @@ ContactEntry::ContactEntry(const QContact &contact, QObject *parent) :
     connect(mName,
             SIGNAL(changed()),
             SLOT(onDetailChanged()));
+
+    loadDetails();
 }
 
 QContactLocalId ContactEntry::localId() const
@@ -62,7 +67,77 @@ void ContactEntry::setContact(const QContact &contact)
     emit changed(this);
 }
 
+QDeclarativeListProperty<ContactDetail> ContactEntry::phoneNumbers()
+{
+    int *type = new int;
+    *type = ContactDetail::PhoneNumber;
+    return QDeclarativeListProperty<ContactDetail>(this, (void*) type, detailAppend, detailCount, detailAt);
+}
+
 void ContactEntry::onDetailChanged()
 {
     emit changed(this);
 }
+
+void ContactEntry::detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail)
+{
+    ContactEntry *entry = qobject_cast<ContactEntry*>(p->object);
+    if (!entry) {
+        qWarning() << "Object is not a ContactEntry!";
+        return;
+    }
+
+    int type = *(int*)p->data;
+    // FIXME: check if we shouldn't copy the detail instead of just appending it
+    entry->mDetails[(ContactDetail::DetailType)type].append(detail);
+    // FIXME: add the detail to the contact
+}
+
+int ContactEntry::detailCount(QDeclarativeListProperty<ContactDetail> *p)
+{
+    ContactEntry *entry = qobject_cast<ContactEntry*>(p->object);
+    if (!entry) {
+        qWarning() << "Object is not a ContactEntry!";
+        return 0;
+    }
+
+    int type = *(int*)p->data;
+    return entry->mDetails[(ContactDetail::DetailType)type].count();
+
+}
+
+ContactDetail *ContactEntry::detailAt(QDeclarativeListProperty<ContactDetail> *p, int index)
+{
+    ContactEntry *entry = qobject_cast<ContactEntry*>(p->object);
+    if (!entry) {
+        qWarning() << "Object is not a ContactEntry!";
+        return 0;
+    }
+
+    int type = *(int*)p->data;
+
+    return entry->mDetails[(ContactDetail::DetailType)type].at(index);
+}
+
+void ContactEntry::loadDetails()
+{
+    // load the phone numbers
+    Q_FOREACH(const QContactPhoneNumber &detail, mContact.details<QContactPhoneNumber>()) {
+        ContactPhoneNumber *number = new ContactPhoneNumber(detail, this);
+        connect(number,
+                SIGNAL(changed()),
+                SLOT(onDetailChanged()));
+        mDetails[ContactDetail::PhoneNumber].append(number);
+    }
+}
+
+/*void ContactEntry::detailClear(QDeclarativeListProperty<ContactDetail*> *p)
+{
+    ContactEntry *entry = qobject_cast<ContactEntry*>(p->object);
+    if (!entry) {
+        qWarning() << "Object is not a ContactEntry!";
+        return;
+    }
+
+    int type = *(int*)p->data;
+}*/

@@ -9,6 +9,7 @@ set(plugin_SRCS
     contactmanager.cpp
     contactmodel.cpp
     contactname.cpp
+    contactphonenumber.cpp
     contactproxymodel.cpp
     components.cpp
     channelhandler.cpp
@@ -30,6 +31,7 @@ set(plugin_HDRS
     contactmanager.h
     contactmodel.h
     contactname.h
+    contactphonenumber.h
     contactproxymodel.h
     components.h
     channelhandler.h

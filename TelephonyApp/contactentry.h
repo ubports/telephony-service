@@ -24,10 +24,12 @@
 #include <QContact>
 #include <QDeclarativeListProperty>
 #include <QUrl>
+#include "contactdetail.h"
 
 using namespace QtMobility;
 
 class ContactName;
+class ContactPhoneNumber;
 
 class ContactEntry : public QObject
 {
@@ -44,6 +46,9 @@ class ContactEntry : public QObject
     Q_PROPERTY(ContactName *name
                READ name
                NOTIFY changed)
+    Q_PROPERTY(QDeclarativeListProperty<ContactDetail> phoneNumbers
+               READ phoneNumbers
+               NOTIFY changed)
 
 public:
     explicit ContactEntry(const QContact &contact = QContact(), QObject *parent = 0);
@@ -56,9 +61,20 @@ public:
     ContactName *name() const;
 
     void setContact(const QContact &contact);
+
+    QDeclarativeListProperty<ContactDetail> phoneNumbers();
     
+    // QDeclarativeListProperty helpers
+    static void detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail);
+    static int  detailCount(QDeclarativeListProperty<ContactDetail> *p);
+    static ContactDetail* detailAt(QDeclarativeListProperty<ContactDetail> *p, int index);
+    //static void  detailClear(QDeclarativeListProperty<ContactDetail*> *p);
+
 Q_SIGNALS:
     void changed(ContactEntry *entry);
+
+protected:
+    void loadDetails();
 
 protected Q_SLOTS:
     void onDetailChanged();
@@ -66,6 +82,7 @@ protected Q_SLOTS:
 private:
     QContact mContact;
     ContactName *mName;
+    QMap<ContactDetail::DetailType, QList<ContactDetail*> > mDetails;
 };
 
 #endif // CONTACTENTRY_H
