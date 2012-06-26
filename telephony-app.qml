@@ -262,4 +262,9 @@ Item {
             }
         }
     }
+
+    Connections {
+        target: dbus
+        onShowMessagesRequested: tabs.currentTab = 1
+    }
 }

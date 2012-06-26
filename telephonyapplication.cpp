@@ -10,6 +10,7 @@
 #include <QtDeclarative/QDeclarativeView>
 
 #include "config.h"
+#include "telephonyappdbus.h"
 
 // inspired by qmlviewer’s QDeclarativeViewer::loadDummyDataFiles(…)
 static void loadDummyDataFiles(QDeclarativeView* view)
@@ -45,6 +46,7 @@ static void printUsage(const QStringList& arguments)
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
     : QtSingleApplication(argc, argv), m_view(0), m_applicationIsReady(false)
 {
+    m_dbus = new TelephonyAppDBus(this);
 }
 
 bool TelephonyApplication::setup()
@@ -75,11 +77,17 @@ bool TelephonyApplication::setup()
         return false;
     }
 
+
+    if (!m_dbus->connectToBus()) {
+        qWarning() << "Failed to expose com.canonical.TelephonyApp on DBUS.";
+    }
+
     m_view = new QDeclarativeView();
     QObject::connect(m_view, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onViewStatusChanged(QDeclarativeView::Status)));
     m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     loadDummyDataFiles(m_view);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
+    m_view->rootContext()->setContextProperty("dbus", m_dbus);
     QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
     m_view->setSource(source);
     m_view->show();

@@ -1,0 +1,18 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+    <dox:d><![CDATA[
+      @mainpage
+
+      An interface to the telephony application.
+    ]]></dox:d>
+    <interface name="com.canonical.TelephonyApp" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+        <dox:d>
+          An interface to the telephony application.
+        </dox:d>
+        <method name="ShowMessages">
+            <dox:d><![CDATA[
+               Request to open the messages tab.
+            ]]></dox:d>
+        </method>
+    </interface>
+</node>
