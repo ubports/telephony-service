@@ -3,9 +3,6 @@ import QtMobility.contacts 1.1
 import TelephonyApp 0.1
 import "../Widgets"
 import "DetailTypeUtilities.js" as DetailTypes
-// FIXME: write a different delegate for the call log shown in the contact
-// details once we get wireframes or visual designs for that
-import "../DetailViewCallLog"
 
 Item {
     id: contactDetails
@@ -145,10 +142,10 @@ Item {
                 // FIXME: references to runtime and fake model need to be removed before final release
                 model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel
 
-                delegate: CallLogDelegate {
-                    id: delegate
+                delegate: CallLogContactDetailsDelegate {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
+                    bottomSeparator: true
 
                     onClicked: telephony.showContactDetailsFromId(contactId)
                     onActionClicked: telephony.callNumber(phoneNumber)

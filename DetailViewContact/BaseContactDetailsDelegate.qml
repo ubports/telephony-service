@@ -90,24 +90,9 @@ Item {
                 id: readOnlyContentBox
 
                 anchors.left: parent.left
-                anchors.right: subTypeText.left
-                anchors.top: parent.top
-                anchors.rightMargin: 10
-                height: childrenRect.height
-            }
-
-            TextCustom {
-                id: subTypeText
-
                 anchors.right: parent.right
                 anchors.top: parent.top
-                horizontalAlignment: Text.AlignRight
-                text: DetailUtils.getDetailSubType(detail)
-                fontSize: "medium"
-                elide: Text.ElideRight
-                color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-                style: Text.Raised
-                styleColor: "white"
+                height: childrenRect.height
             }
         }
 
