@@ -28,6 +28,7 @@ AbstractButton {
             anchors.left: parent.left
             anchors.right: expander.left
             anchors.rightMargin: 10
+            elide: Text.ElideRight
             fontSize: "medium"
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             text: {
