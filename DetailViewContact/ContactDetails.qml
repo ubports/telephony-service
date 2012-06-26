@@ -25,6 +25,13 @@ Item {
         added = true;
     }
 
+    Connections {
+        target: contactModel
+        onContactAdded: {
+            contactDetails.contact = contact;
+        }
+    }
+
     Item {
         id: background
 

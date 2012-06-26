@@ -145,6 +145,9 @@ void ContactModel::addContacts(const QList<QContact> &contacts)
                 SIGNAL(changed(ContactEntry*)),
                 SLOT(onContactEntryChanged(ContactEntry*)));
         mContactEntries.append(entry);
+        emit contactAdded(entry);
+
+        // check if this entry is pending load
         if (entry->id() == mPendingId) {
             emit contactLoaded(entry);
             mPendingId = "";

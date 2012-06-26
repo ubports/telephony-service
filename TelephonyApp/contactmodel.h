@@ -49,6 +49,7 @@ public:
 
 Q_SIGNALS:
     void contactLoaded(ContactEntry *contact);
+    void contactAdded(ContactEntry *contact);
 
 protected:
     void addContacts(const QList<QContact> &contacts);
