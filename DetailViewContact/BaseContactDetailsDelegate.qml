@@ -192,7 +192,6 @@ Item {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            anchors.rightMargin: 10
             width: 76
             detailTypeInfo: contactDetailsItem.detailTypeInfo
             detail: contactDetailsItem.detail

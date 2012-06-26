@@ -2,7 +2,7 @@ import QtQuick 1.1
 import "../Widgets"
 import "DetailTypeUtilities.js" as DetailUtils
 
-Item {
+AbstractButton {
     id: chooser
 
     property variant detail
@@ -10,31 +10,41 @@ Item {
     property alias selectedValue: currentText.text
 
     onDetailChanged: optionsList.model = null
-    height: current.height
-    width: Math.max(current.width, options.width)
+    onClicked: {
+        optionsList.model = (detailTypeInfo.subTypes) ? detailTypeInfo.subTypes : []
+    }
 
-    Button {
+    Item {
         id: current
-        anchors.left: parent.left
-        anchors.top: parent.top
 
-        onClicked: {
-            optionsList.model = (detailTypeInfo.subTypes) ? detailTypeInfo.subTypes : []
-        }
+        anchors.fill: parent
+        anchors.leftMargin: 10
+        anchors.rightMargin: 10
 
         TextCustom {
             id: currentText
+
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
-            anchors.right:  parent.right
-            anchors.margins: 5
-            fontSize: "x-large"
+            anchors.right: expander.left
+            anchors.rightMargin: 10
+            fontSize: "medium"
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             text: {
                 // Use first allowed subtype as default in case there's no detail or no subType
                 var subType = DetailUtils.getDetailSubType(detail)
                 if (subType == "" && detailTypeInfo.subTypes) return detailTypeInfo.subTypes[0]
                 else return subType
             }
+        }
+
+        Image {
+            id: expander
+
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            width: 8
+            source: "../assets/edit_contact_mode_arrow.png"
         }
     }
 
