@@ -1,158 +1,70 @@
 import QtQuick 1.1
-import "../Widgets"
 
 Item {
     id: editor
+
     property variant detail
     property bool expanded: false
 
-    property alias prefix: prefix.text
-    property alias firstName: firstName.text
-    property alias middleName: middleName.text
-    property alias lastName: lastName.text
-    property alias suffix: suffix.text
+    property alias prefix: prefix.value
+    property alias firstName: firstName.value
+    property alias middleName: middleName.value
+    property alias lastName: lastName.value
+    property alias suffix: suffix.value
 
-    height: fields.childrenRect.height + 32
+    height: fields.height
 
     Column {
         id: fields
+
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        spacing: 2
 
-        TextCustom {
+        EditBoxName {
+            id: prefix
+
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.topMargin: 4
-            anchors.leftMargin: 4
-            fontSize: "small"
-            text: "Prefix"
+            value: (detail) ? detail.prefix : ""
+            description: "Prefix"
         }
 
-        Rectangle {
-            border.width: 1
-            border.color: "black"
+        EditBoxName {
+            id: firstName
+
             anchors.left: parent.left
             anchors.right: parent.right
-            height: childrenRect.height + 4
-
-            TextInput {
-                id: prefix
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: 4
-                anchors.leftMargin: 4
-                text: (detail) ? detail.prefix : ""
-                font.pixelSize: 20
-            }
+            value: (detail) ? detail.firstName : ""
+            description: "First"
         }
 
-        TextCustom {
+        EditBoxName {
+            id: middleName
+
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.topMargin: 4
-            anchors.leftMargin: 4
-            fontSize: "small"
-            text: "First name"
+            value: (detail) ? detail.middleName : ""
+            description: "Middle"
         }
 
-        Rectangle {
-            border.width: 1
-            border.color: "black"
+        EditBoxName {
+            id: lastName
+
             anchors.left: parent.left
             anchors.right: parent.right
-            height: childrenRect.height + 4
-
-            TextInput {
-                id: firstName
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: 4
-                anchors.leftMargin: 4
-                text: (detail) ? detail.firstName : ""
-                font.pixelSize: 20
-            }
+            value: (detail) ? detail.lastName : ""
+            description: "Last"
         }
 
-        TextCustom {
+        EditBoxName {
+            id: suffix
+
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.topMargin: 4
-            anchors.leftMargin: 4
-            fontSize: "small"
-            text: "Middle name"
-        }
-
-        Rectangle {
-            border.width: 1
-            border.color: "black"
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: childrenRect.height + 4
-
-            TextInput {
-                id: middleName
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: 4
-                anchors.leftMargin: 4
-                text: (detail) ? detail.middleName : ""
-                font.pixelSize: 20
-            }
-        }
-
-        TextCustom {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.topMargin: 4
-            anchors.leftMargin: 4
-            fontSize: "small"
-            text: "Last name"
-        }
-
-        Rectangle {
-            border.width: 1
-            border.color: "black"
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: childrenRect.height + 4
-
-            TextInput {
-                id: lastName
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: 4
-                anchors.leftMargin: 4
-                text: (detail) ? detail.lastName : ""
-                font.pixelSize: 20
-            }
-        }
-
-        TextCustom {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.topMargin: 4
-            anchors.leftMargin: 4
-            fontSize: "small"
-            text: "Suffix"
-        }
-
-        Rectangle {
-            border.width: 1
-            border.color: "black"
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: childrenRect.height + 4
-
-            TextInput {
-                id: suffix
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: 4
-                anchors.leftMargin: 4
-                text: (detail) ? detail.suffix : ""
-                font.pixelSize: 20
-            }
+            value: (detail) ? detail.suffix : ""
+            description: "Suffix"
         }
     }
 }

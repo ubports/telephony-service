@@ -38,7 +38,6 @@ Item {
 
     function showLiveCall() {
         liveCall.load()
-        view.startCall()
     }
 
     function showVoicemail() {
@@ -182,12 +181,16 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            visible: {
-                if (!callManager.hasCalls) { 
+            anchors.bottomMargin: shown ? 0 : -height
+            Behavior on anchors.bottomMargin {StandardAnimation {}}
+
+            property bool shown
+            shown: {
+                if (!callManager.hasCalls) {
                     return false
                 } else {
                     if (isVoicemailActive() && !telephony.voicemail.loaded) {
-                        return true 
+                        return true
                     } else if (!isVoicemailActive() && !telephony.liveCall.loaded) {
                         return true
                     }
@@ -213,6 +216,7 @@ Item {
             Loader {
                 id: rightPaneContent
                 anchors.fill: parent
+                focus: true
             }
         }
 
@@ -241,7 +245,6 @@ Item {
                 rightPaneContent.source = ""
                 startChat("", contactId)
             }
-            rightPaneContent.item.addMessage(message, false)
         }
     }
 
@@ -261,5 +264,10 @@ Item {
                 showLiveCall();
             }
         }
+    }
+
+    Connections {
+        target: dbus
+        onShowMessagesRequested: tabs.currentTab = 1
     }
 }

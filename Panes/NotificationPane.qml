@@ -25,7 +25,7 @@ Item {
         id: icon
 
         anchors.centerIn: parent
-        anchors.verticalCenterOffset: -75
+        anchors.verticalCenterOffset: -20
         fillMode: Image.PreserveAspectFit
     }
 }

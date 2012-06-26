@@ -113,14 +113,14 @@ void Components::onAccountReady()
     connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageReceived(const QString&, const QString&)),
             mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
     connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageSent(const QString&, const QString&)),
-            mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
+            mConversationLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 
     mMessageLogModel = new MessageLogModel(this);
     mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
     connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageReceived(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
     connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageSent(const QString&, const QString&)),
-            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
+            mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 }
 
 Q_EXPORT_PLUGIN2(components, Components)

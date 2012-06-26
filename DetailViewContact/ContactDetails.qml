@@ -2,9 +2,6 @@ import QtQuick 1.1
 import TelephonyApp 0.1
 import "../Widgets"
 import "DetailTypeUtilities.js" as DetailTypes
-// FIXME: write a different delegate for the call log shown in the contact
-// details once we get wireframes or visual designs for that
-import "../DetailViewCallLog"
 
 Item {
     id: contactDetails
@@ -90,7 +87,7 @@ Item {
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
         clip: true
-        contentHeight: detailsList.height + (contactDetails.editable ? 32 + newDetailChooser.height + 10 : 0)
+        contentHeight: detailsList.height + (contactDetails.editable ? 32 + newDetailChooser.height + 10 : callLogSection.height)
 
         Column {
             id: detailsList
@@ -130,33 +127,37 @@ Item {
                     }
                 }
             }
+        }
 
+        // Call Log section
+        ContactDetailsSection {
+            id: callLogSection
 
-            // Call Log section
-            ContactDetailsSection {
-                id: callLogSection
-                editable: false
-                anchors.left: parent.left
-                anchors.right: parent.right
-                opacity: (contactDetails.editable) ? 0.0 : 1.0
+            editable: false
+            anchors.top: detailsList.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            opacity: (contactDetails.editable) ? 0.0 : 1.0
+            Behavior on opacity {StandardAnimation {}}
 
-                detailTypeInfo: { return { name: "Call Log" } }
+            detailTypeInfo: { return { name: "Call Log" } }
 
-                CallLogProxyModel {
-                    id: proxyModel
-                    logModel: callLogModel
-                    contactId: (contact) ? contact.id : "some string that won't match"
-                }
-                // FIXME: references to runtime and fake model need to be removed before final release
-                model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel
+            CallLogProxyModel {
+                id: proxyModel
+                logModel: callLogModel
+                contactId: (contact) ? contact.guid.guid : "some string that won't match"
+            }
+            // FIXME: references to runtime and fake model need to be removed before final release
+            model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel
 
-                delegate: CallLogDelegate {
-                    id: delegate
-                    anchors.left: (parent) ? parent.left : undefined
-                    anchors.right: (parent) ? parent.right : undefined
+            delegate: CallLogContactDetailsDelegate {
+                id: delegate
+                anchors.left: (parent) ? parent.left : undefined
+                anchors.right: (parent) ? parent.right : undefined
+                bottomSeparator: true
 
-                    onActionClicked: telephony.callNumber(phoneNumber)
-                }
+                onClicked: telephony.showContactDetailsFromId(contactId)
+                onActionClicked: telephony.callNumber(phoneNumber)
             }
         }
 
@@ -165,7 +166,7 @@ Item {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: detailsList.bottom
+            anchors.top: callLogSection.bottom
             anchors.topMargin: 32
             anchors.leftMargin: 1
             anchors.rightMargin: 1
