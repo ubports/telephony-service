@@ -65,8 +65,10 @@ Column {
     Item {
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 32
+        height: editable ? 32 : 0
         opacity: editable ? 1.0 : 0.0
+        Behavior on height {StandardAnimation {}}
+        Behavior on opacity {StandardAnimation {}}
 
         ButtonWithForeground {
             id: addButton

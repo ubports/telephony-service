@@ -10,6 +10,7 @@ Item {
 
     width: parent.width
     height: editable ? labelBox.height : 82
+    Behavior on height {StandardAnimation {}}
 
     // FIXME: this function is used in two places, should be moved to one common place
     function contactName() {

@@ -12,6 +12,20 @@ Item {
     height: (deleted) ? 0 : (((editable) ? editableGroup.height + 2 : readOnlyGroup.height) + bottomSeparatorLine.height)
     opacity: (deleted) ? 0.0 : 1.0
 
+    state: "read"
+    states: [
+        State {
+            name: "read"
+        },
+        State {
+            name: "edit"
+            when: contactDetailsItem.editable
+        }
+    ]
+    transitions: Transition {
+        StandardAnimation { property: "height" }
+    }
+
     property variant detail
     property variant detailTypeInfo
 
@@ -74,7 +88,8 @@ Item {
         anchors.top: parent.top
         // center contentBox vertically
         height: contentBox.height + 2*contentBox.anchors.topMargin
-        visible: !editable
+        opacity: editable ? 0.0 : 1.0
+        Behavior on opacity {StandardAnimation {}}
 
         AbstractButton {
             id: contentBox
@@ -151,7 +166,8 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        visible: editable
+        opacity: editable ? 1.0 : 0.0
+        Behavior on opacity {StandardAnimation {}}
 
         Item {
             parent: editableGroup.leftBox

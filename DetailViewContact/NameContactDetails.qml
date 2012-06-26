@@ -47,6 +47,7 @@ Item {
         styleColor: "white"
 
         opacity: !editable ? 1.0 : 0.0
+        Behavior on opacity {StandardAnimation {}}
         text: (detail && detail.customLabel && detail.customLabel.length > 0) ? detail.customLabel : formatCustomLabel()
     }
 
@@ -56,6 +57,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         opacity: editable ? 1.0 : 0.0
+        Behavior on opacity {StandardAnimation {}}
 
         detail: name.detail
     }
