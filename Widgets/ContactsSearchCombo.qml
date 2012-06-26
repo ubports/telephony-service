@@ -1,5 +1,5 @@
 import QtQuick 1.1
-import QtMobility.contacts 1.1
+import TelephonyApp 0.1
 import "../Widgets"
 import "../ContactUtils"
 
@@ -8,13 +8,12 @@ DropDownSearch {
 
     signal contactSelected(variant contact, string number)
 
-    ContactModel {
+    ContactProxyModel {
         id: contacts
-        manager: "folks"
-        filter: ContactFilters {
-            filterText: search.searchQuery
-        }
+        model: contactModel
+        filterText: search.text != "" ? search.text : "some text that won't match"
     }
+
     // FIXME: references to runtime and fake model need to be removed before final release
     model: typeof(runtime) != "undefined" ? fakeContacts : contacts
 
