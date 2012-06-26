@@ -1,3 +1,14 @@
+telephony-app (0.17newyork2) precise; urgency=low
+
+  [ Tiago Salem Herrmann]
+  * do not add outgoing as incoming messages
+
+  [ Ugo Riboni ]
+  * Expose a DBUS interface from the telephony app and put in it 
+  a method to show the messages tab
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Tue, 26 Jun 2012 06:14:36 -0700
+
 telephony-app (0.17newyork1) precise; urgency=low
 
   [ Florian Boucault ]
