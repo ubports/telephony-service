@@ -29,6 +29,8 @@ Item {
             anchors.margins: 8
             font.pixelSize: Font.sizeToPixels("x-large")
             cursorVisible: focus
+            focus: true
+            Keys.forwardTo: [sendButton]
         }
 
         Button {
