@@ -42,6 +42,8 @@ Item {
         anchors.right: parent.right
         // FIXME: Does not uses contentHeight here
         height: visible ? (contentHeight >= listMaximumHeight ? listMaximumHeight : contentHeight) : 0
+        Behavior on height {StandardAnimation {}}
+        clip: true
     }
 
     states: [
