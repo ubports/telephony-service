@@ -49,6 +49,9 @@ class ContactEntry : public QObject
     Q_PROPERTY(QDeclarativeListProperty<ContactDetail> phoneNumbers
                READ phoneNumbers
                NOTIFY changed)
+    Q_PROPERTY(QDeclarativeListProperty<ContactDetail> emails
+               READ emails
+               NOTIFY changed)
 
 public:
     explicit ContactEntry(const QContact &contact = QContact(), QObject *parent = 0);
@@ -63,6 +66,7 @@ public:
     void setContact(const QContact &contact);
 
     QDeclarativeListProperty<ContactDetail> phoneNumbers();
+    QDeclarativeListProperty<ContactDetail> emails();
     
     // QDeclarativeListProperty helpers
     static void detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail);

@@ -23,6 +23,9 @@
 ContactPhoneNumber::ContactPhoneNumber(const QContactDetail &detail, QObject *parent) :
     ContactDetail(detail, parent)
 {
+    connect(this,
+            SIGNAL(detailChanged()),
+            SIGNAL(changed()));
 }
 
 int ContactPhoneNumber::type() const

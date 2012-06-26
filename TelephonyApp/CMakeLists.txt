@@ -5,6 +5,7 @@ set(plugin_SRCS
     calllogmodel.cpp
     calllogproxymodel.cpp
     contactdetail.cpp
+    contactemailaddress.cpp
     contactentry.cpp
     contactmanager.cpp
     contactmodel.cpp
@@ -27,6 +28,7 @@ set(plugin_HDRS
     calllogmodel.h
     calllogproxymodel.h
     contactdetail.h
+    contactemailaddress.h
     contactentry.h
     contactmanager.h
     contactmodel.h

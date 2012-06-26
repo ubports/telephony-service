@@ -17,11 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "contactemailaddress.h"
 #include "contactentry.h"
 #include "contactname.h"
 #include "contactphonenumber.h"
 #include <QContactGuid>
 #include <QContactAvatar>
+#include <QContactEmailAddress>
 #include <QContactPhoneNumber>
 #include <QDebug>
 
@@ -69,9 +71,14 @@ void ContactEntry::setContact(const QContact &contact)
 
 QDeclarativeListProperty<ContactDetail> ContactEntry::phoneNumbers()
 {
-    int *type = new int;
-    *type = ContactDetail::PhoneNumber;
-    return QDeclarativeListProperty<ContactDetail>(this, (void*) type, detailAppend, detailCount, detailAt);
+    static int type = ContactDetail::PhoneNumber;
+    return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+}
+
+QDeclarativeListProperty<ContactDetail> ContactEntry::emails()
+{
+    static int type = ContactDetail::EmailAddress;
+    return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
 }
 
 void ContactEntry::onDetailChanged()
@@ -121,13 +128,22 @@ ContactDetail *ContactEntry::detailAt(QDeclarativeListProperty<ContactDetail> *p
 
 void ContactEntry::loadDetails()
 {
-    // load the phone numbers
+    // Phone numbers
     Q_FOREACH(const QContactPhoneNumber &detail, mContact.details<QContactPhoneNumber>()) {
         ContactPhoneNumber *number = new ContactPhoneNumber(detail, this);
         connect(number,
                 SIGNAL(changed()),
                 SLOT(onDetailChanged()));
         mDetails[ContactDetail::PhoneNumber].append(number);
+    }
+
+    // Email addresses
+    Q_FOREACH(const QContactEmailAddress &detail, mContact.details<QContactEmailAddress>()) {
+        ContactEmailAddress *email = new ContactEmailAddress(detail, this);
+        connect(email,
+                SIGNAL(changed()),
+                SLOT(onDetailChanged()));
+        mDetails[ContactDetail::EmailAddress].append(email);
     }
 }
 
