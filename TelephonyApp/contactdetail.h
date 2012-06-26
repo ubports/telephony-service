@@ -16,6 +16,9 @@ class ContactDetail : public QObject
                READ contexts
                WRITE setContexts
                NOTIFY detailChanged)
+    Q_PROPERTY(QString definitionName
+               READ definitionName
+               NOTIFY detailChanged)
     Q_ENUMS(DetailType)
 
 public:
@@ -37,6 +40,8 @@ public:
 
     QStringList contexts() const;
     void setContexts(const QStringList &contexts);
+
+    QString definitionName() const;
     
 signals:
     void typeChanged();

@@ -31,3 +31,8 @@ void ContactDetail::setContexts(const QStringList &contexts)
     mDetail.setContexts(contexts);
     emit detailChanged();
 }
+
+QString ContactDetail::definitionName() const
+{
+    return mDetail.definitionName();
+}
