@@ -26,7 +26,6 @@ Item {
 
     function showLiveCall() {
         liveCall.load()
-        view.startCall()
     }
 
     function showVoicemail() {
