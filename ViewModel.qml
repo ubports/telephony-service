@@ -24,7 +24,6 @@ QtObject {
         // To keep this simple we rely on the fact that setting source to a
         // local file will immediately make the item available.
         telephony.viewSource = source
-        rightPaneContent.forceActiveFocus()
         return rightPaneContent.item
     }
 }
