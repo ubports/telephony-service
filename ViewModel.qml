@@ -18,12 +18,11 @@ import QtQuick 1.1
 
 QtObject {
     property url source
-    property bool loaded: String(telephony.viewSource).indexOf(source) != -1
+    property bool loaded: telephony.viewLoader != undefined && String(telephony.viewLoader.source).indexOf(source) != -1
 
     function load() {
         // To keep this simple we rely on the fact that setting source to a
         // local file will immediately make the item available.
-        telephony.viewSource = source
-        return rightPaneContent.item
+        telephony.viewLoader.source = source
     }
 }

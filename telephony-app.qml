@@ -9,8 +9,8 @@ Item {
     width: 570
     height: 487
 
-    property alias viewSource: rightPaneContent.source
-    property alias view: rightPaneContent.item
+    property alias viewLoader: rightPaneLoaders.currentLoader
+    property alias view: rightPaneLoaders.currentItem
     property QtObject call: callManager.foregroundCall
 
     // Inventory of all the views in the application
@@ -141,9 +141,6 @@ Item {
                     "pane": "Panes/SelectContactPane.qml"
                 }
             ]
-
-            Component.onCompleted: rightPaneContent.source = tabs.model[tabs.currentTab].pane
-            onCurrentTabChanged: rightPaneContent.source = tabs.model[tabs.currentTab].pane
         }
 
         Rectangle {
@@ -212,11 +209,29 @@ Item {
         Rectangle {
             anchors.fill: parent
             color: "#ebebeb"
+        }
 
-            Loader {
-                id: rightPaneContent
+        /* Instantiate a Loader per tab and keep its loaded content alive.
+           That makes the application stateful.
+           Ref.: https://bugs.launchpad.net/newyork/+bug/1017659
+        */
+        Item {
+            id: rightPaneLoaders
+
+            property variant currentLoader: children[children.length - 1 - tabs.currentTab]
+            property variant currentItem: currentLoader != undefined ? currentLoader.item : undefined
+            anchors.fill: parent
+        }
+
+        Repeater {
+            model: tabs.model
+            delegate: Loader {
+                property bool isCurrent: index == tabs.currentTab
+                parent: rightPaneLoaders
                 anchors.fill: parent
-                focus: true
+                source: modelData.pane
+                visible: isCurrent
+                focus: isCurrent
             }
         }
 
@@ -233,16 +248,16 @@ Item {
     Connections {
         target: chatManager
         onChatReady: {
-            if (rightPaneContent.item.viewName != "messages"
-                    || rightPaneContent.item.number != contactId) {
-                rightPaneContent.source = ""
+            if (telephony.view.viewName != "messages"
+                    || telephony.view.number != contactId) {
+                telephony.viewLoader.source = ""
                 startChat("", contactId)
             }
         }
         onMessageReceived: {
-            if (rightPaneContent.item.viewName != "messages"
-                    || rightPaneContent.item.number != contactId) {
-                rightPaneContent.source = ""
+            if (telephony.view.viewName != "messages"
+                    || telephony.view.number != contactId) {
+                telephony.viewLoader.source = ""
                 startChat("", contactId)
             }
         }
