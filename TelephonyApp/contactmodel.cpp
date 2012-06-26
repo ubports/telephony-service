@@ -22,6 +22,7 @@
 #include "contactmanager.h"
 #include <QContactDetailFilter>
 #include <QContactGuid>
+#include <QContactSaveRequest>
 #include <QDebug>
 #include <QUrl>
 
@@ -83,6 +84,24 @@ QObject *ContactModel::contactFromId(const QString &guid)
     return 0;
 }
 
+void ContactModel::saveContact(ContactEntry *entry)
+{
+    if (!entry->modified()) {
+        return;
+    }
+
+    QContact contact = mContactManager->compatibleContact(entry->contact());
+    QContactSaveRequest *request = new QContactSaveRequest(this);
+    request->setManager(mContactManager);
+    request->setContact(contact);
+
+    connect(request,
+            SIGNAL(stateChanged(QContactAbstractRequest::State)),
+            SLOT(onContactsSaved()));
+
+    request->start();
+}
+
 void ContactModel::addContacts(const QList<QContact> &contacts)
 {
     beginInsertRows(QModelIndex(), mContactEntries.count(), mContactEntries.count()+contacts.count()-1);
@@ -119,7 +138,7 @@ void ContactModel::onContactsAdded(QList<QContactLocalId> ids)
 void ContactModel::onContactsChanged(QList<QContactLocalId> ids)
 {
     Q_FOREACH(ContactEntry *entry, mContactEntries) {
-        if (ids.indexOf(entry->localId() >= 0)) {
+        if (ids.contains(entry->localId())) {
             // the changed signal is going to be emitted by the entry
             entry->setContact(mContactManager->contact(entry->localId()));
         }
@@ -139,4 +158,16 @@ void ContactModel::onContactEntryChanged(ContactEntry *entry)
 {
     QModelIndex entryIndex = index(mContactEntries.indexOf(entry), 0);
     emit dataChanged(entryIndex, entryIndex);
+}
+
+void ContactModel::onContactSaved()
+{
+    QContactSaveRequest *request = qobject_cast<QContactSaveRequest*>(QObject::sender());
+    if (request->isFinished() && request->error() != QContactManager::NoError) {
+        qWarning() << "Failed to save the contact. Error:" << request->error();
+        //FIXME: maybe we should map the error codes to texts
+    }
+
+    // there is no need to process the result of the request as we are watching the contacts added,
+    // removed and changed signals
 }

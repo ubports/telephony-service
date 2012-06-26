@@ -65,9 +65,8 @@ Item {
         // the contact details will be loaded once the contact loads
     }
 
-    function createNewContact(contacts) {
+    function createNewContact() {
         contactDetails.load()
-        view.contactsModel = contacts
         view.createNewContact()
     }
 
@@ -82,6 +81,10 @@ Item {
 
     function showCallLog() {
         callLog.load()
+    }
+
+    function resetView() {
+        rightPaneContent.source = tabs.model[tabs.currentTab].pane
     }
 
     ContactLoader {

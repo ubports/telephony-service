@@ -1,5 +1,5 @@
 import QtQuick 1.1
-import QtMobility.contacts 1.1
+import TelephonyApp 0.1
 import "../Widgets"
 
 Column {
@@ -56,7 +56,7 @@ Column {
             Binding { target: item; property: "editable"; value: contactDetailsSection.editable }
             Binding { target: item; property: "added"; value: true }
             Binding { target: item; property: "detail";
-                      value: Qt.createQmlObject("import QtMobility.contacts 1.1; " + detailTypeInfo.newItemType + "{}", newItem) }
+                      value: Qt.createQmlObject("import TelephonyApp 0.1; " + detailTypeInfo.newItemType + "{}", newItem) }
 
             opacity: editable ? 1.0 : 0.0
         }

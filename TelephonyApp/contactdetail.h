@@ -16,6 +16,8 @@ class ContactDetail : public QObject
                READ contexts
                WRITE setContexts
                NOTIFY detailChanged)
+    Q_ENUMS(DetailType)
+
 public:
     explicit ContactDetail(const QContactDetail &detail = QContactDetail(), QObject *parent = 0);
 
@@ -30,6 +32,8 @@ public:
 
     virtual int type() const;
     void setDetail(const QContactDetail &detail);
+
+    QContactDetail& detail();
 
     QStringList contexts() const;
     void setContexts(const QStringList &contexts);

@@ -11,7 +11,7 @@ var supportedTypes = [
                 delegateSource: "TextContactDetailsDelegate.qml",
                 items: "phoneNumbers",
                 newItemText: "Add a phone number",
-                newItemType: "PhoneNumber",
+                newItemType: "ContactPhoneNumber",
                 actionIcon: "../assets/icon_message_grey.png",
                 displayField: "number",
                 subTypes: phoneSubTypes
@@ -21,7 +21,7 @@ var supportedTypes = [
                 delegateSource: "TextContactDetailsDelegate.qml",
                 items: "emails",
                 newItemText: "Add an email address",
-                newItemType: "EmailAddress",
+                newItemType: "ContactEmailAddress",
                 actionIcon: "../assets/icon_envelope_grey.png",
                 displayField: "emailAddress",
                 subTypes: emailSubTypes
@@ -31,7 +31,7 @@ var supportedTypes = [
                 delegateSource: "AddressContactDetailsDelegate.qml",
                 items: "addresses",
                 newItemText: "Add a postal address",
-                newItemType: "Address",
+                newItemType: "ContactAddress",
                 actionIcon: "../assets/icon_address.png",
                 subTypes: postalAddressSubTypes
             },
@@ -41,7 +41,7 @@ var supportedTypes = [
                 items: "onlineAccounts",
                 newItemText: "Add an online account",
                 displayField: "accountUri",
-                newItemType: "OnlineAccount",
+                newItemType: "ContactOnlineAccount",
                 subTypes: IMSubTypes
             }
         ];
@@ -62,7 +62,7 @@ function getTypesWithNoItems(contact) {
 
 function getDetailSubType(detail) {
    /* Phone numbers have a special field for the subType */
-   if (detail.toString().indexOf("QDeclarativeContactPhoneNumber") == 0)
+   if (detail.toString().indexOf("ContactPhoneNumber") == 0)
         return (detail.subTypes.length > 0) ? detail.subTypes[0] : ""
 
     // The backend supports multiple types but we can just handle one,
@@ -79,7 +79,7 @@ function getDetailSubType(detail) {
 
 function setDetailSubType(detail, newSubType) {
     if (detail) {
-        if (detail.toString().indexOf("QDeclarativeContactPhoneNumber") == 0) {
+        if (detail.toString().indexOf("ContactPhoneNumber") == 0) {
             detail.subTypes = [newSubType];
             return;
         }

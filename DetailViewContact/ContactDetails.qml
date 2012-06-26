@@ -1,5 +1,4 @@
 import QtQuick 1.1
-import QtMobility.contacts 1.1
 import TelephonyApp 0.1
 import "../Widgets"
 import "DetailTypeUtilities.js" as DetailTypes
@@ -14,7 +13,6 @@ Item {
     property bool editable: false
     property variant contact: null
     property variant added: false
-    property variant contactsModel
 
     onContactChanged: editable = false
 
@@ -22,7 +20,7 @@ Item {
     height: 600
 
     function createNewContact() {
-        contact = Qt.createQmlObject("import QtMobility.contacts 1.1; Contact {}", contactsModel);
+        contact = Qt.createQmlObject("import TelephonyApp 0.1; ContactEntry {}", contactModel);
         editable = true;
         added = true;
     }
@@ -232,7 +230,13 @@ Item {
                 anchors.rightMargin: 10
                 text: "Cancel"
                 opacity: (editable) ? 1.0 : 0.0
-                onClicked: editable = false
+                onClicked: {
+                    if (added) {
+                        telephony.resetView();
+                    } else {
+                        editable = false;
+                    }
+                }
            }
 
             ButtonSmall {
@@ -268,8 +272,8 @@ Item {
                             console.log("Add detail: " + contact.addDetail(addedDetails[i]));
                         }
 
-                        if (contact.modified || contact.added)
-                            contactsModel.saveContact(contact);
+                        if (contact.modified || added)
+                            contactModel.saveContact(contact);
 
                         editable = false;
                     }

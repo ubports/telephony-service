@@ -11,8 +11,6 @@ BaseContactDetailsDelegate {
         }
     }
 
-    onEditableChanged: editor.text = value.text
-
     TextCustom {
         id: value
 
@@ -34,5 +32,6 @@ BaseContactDetailsDelegate {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        text: value.text
     }
 }

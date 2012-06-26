@@ -41,7 +41,7 @@ Item {
         isIcon: true
         iconSource: "../assets/add_contacts_icon.png"
         text: "Add a new contact"
-        onClicked: telephony.createNewContact(contactsModel)
+        onClicked: telephony.createNewContact()
         selected: telephony.contactDetails.loaded && telephony.view.added
     }
 

@@ -42,6 +42,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const;
 
     Q_INVOKABLE QObject *contactFromId(const QString &guid);
+    Q_INVOKABLE void saveContact(ContactEntry *entry);
 
 protected:
     void addContacts(const QList<QContact> &contacts);
@@ -52,6 +53,7 @@ protected Q_SLOTS:
     void onContactsChanged(QList<QContactLocalId> ids);
     void onContactsRemoved(QList<QContactLocalId> ids);
     void onContactEntryChanged(ContactEntry *entry);
+    void onContactSaved();
 
 private:
     ContactManager *mContactManager;

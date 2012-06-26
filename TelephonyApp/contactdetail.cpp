@@ -16,6 +16,11 @@ void ContactDetail::setDetail(const QContactDetail &detail)
     emit detailChanged();
 }
 
+QContactDetail& ContactDetail::detail()
+{
+    return mDetail;
+}
+
 QStringList ContactDetail::contexts() const
 {
     return mDetail.contexts();

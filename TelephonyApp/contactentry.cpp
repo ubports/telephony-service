@@ -32,7 +32,7 @@
 #include <QDebug>
 
 ContactEntry::ContactEntry(const QContact &contact, QObject *parent) :
-    QObject(parent), mContact(contact)
+    QObject(parent), mContact(contact), mModified(false)
 {
     mName = new ContactName(contact.detail<QContactName>(), this);
     connect(mName,
@@ -67,9 +67,28 @@ ContactName *ContactEntry::name() const
     return mName;
 }
 
+bool ContactEntry::modified() const
+{
+    return mModified;
+}
+
+void ContactEntry::setModified(bool value)
+{
+    mModified = value;
+    emit changed(this);
+}
+
+QContact& ContactEntry::contact()
+{
+    return mContact;
+}
+
 void ContactEntry::setContact(const QContact &contact)
 {
+    mModified = false;
     mContact = contact;
+    loadDetails();
+
     emit changed(this);
 }
 
@@ -97,8 +116,49 @@ QDeclarativeListProperty<ContactDetail> ContactEntry::phoneNumbers()
     return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
 }
 
+bool ContactEntry::addDetail(ContactDetail *detail)
+{
+    ContactDetail::DetailType type = (ContactDetail::DetailType) detail->type();
+
+    ContactDetail *newDetail;
+    // copy the detail into a new instance
+    switch (type) {
+    case ContactDetail::Address:
+        newDetail = new ContactAddress(detail->detail(), this);
+        break;
+    case ContactDetail::EmailAddress:
+        newDetail = new ContactEmailAddress(detail->detail(), this);
+        break;
+    case ContactDetail::InstantMessaging:
+        newDetail = new ContactOnlineAccount(detail->detail(), this);
+        break;
+    case ContactDetail::PhoneNumber:
+        newDetail = new ContactPhoneNumber(detail->detail(), this);
+        break;
+    default:
+        newDetail = new ContactDetail(detail->detail(), this);
+    }
+
+    if (mContact.saveDetail(&newDetail->detail())) {
+        mDetails[type].append(newDetail);
+        connect(newDetail,
+                SIGNAL(changed()),
+                SLOT(onDetailChanged()));
+        return true;
+    }
+    return false;
+}
+
 void ContactEntry::onDetailChanged()
 {
+    ContactDetail *detail = qobject_cast<ContactDetail*>(sender());
+    if (!detail) {
+        qWarning() << "Detail changed emitted from an object that is not a detail";
+    }
+    if (mContact.saveDetail(&detail->detail())) {
+        mModified = true;
+    }
+
     emit changed(this);
 }
 
@@ -110,10 +170,7 @@ void ContactEntry::detailAppend(QDeclarativeListProperty<ContactDetail> *p, Cont
         return;
     }
 
-    int type = *(int*)p->data;
-    // FIXME: check if we shouldn't copy the detail instead of just appending it
-    entry->mDetails[(ContactDetail::DetailType)type].append(detail);
-    // FIXME: add the detail to the contact
+    entry->addDetail(detail);
 }
 
 int ContactEntry::detailCount(QDeclarativeListProperty<ContactDetail> *p)
@@ -144,19 +201,14 @@ ContactDetail *ContactEntry::detailAt(QDeclarativeListProperty<ContactDetail> *p
 
 void ContactEntry::loadDetails()
 {
+    // clear previously saved details
+    Q_FOREACH(const QList<ContactDetail*> list, mDetails.values()) {
+        qDeleteAll(list);
+    }
+    mDetails.clear();
+
     load<QContactAddress, ContactAddress>();
     load<QContactEmailAddress, ContactEmailAddress>();
     load<QContactOnlineAccount, ContactOnlineAccount>();
     load<QContactPhoneNumber, ContactPhoneNumber>();
 }
-
-/*void ContactEntry::detailClear(QDeclarativeListProperty<ContactDetail*> *p)
-{
-    ContactEntry *entry = qobject_cast<ContactEntry*>(p->object);
-    if (!entry) {
-        qWarning() << "Object is not a ContactEntry!";
-        return;
-    }
-
-    int type = *(int*)p->data;
-}*/

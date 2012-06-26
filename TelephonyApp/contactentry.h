@@ -46,6 +46,9 @@ class ContactEntry : public QObject
     Q_PROPERTY(ContactName *name
                READ name
                NOTIFY changed)
+    Q_PROPERTY(bool modified
+               READ modified
+               NOTIFY changed)
     Q_PROPERTY(QDeclarativeListProperty<ContactDetail> addresses
                READ addresses
                NOTIFY changed)
@@ -69,6 +72,10 @@ public:
     QUrl avatar() const;
     ContactName *name() const;
 
+    bool modified() const;
+    void setModified(bool value);
+
+    QContact& contact();
     void setContact(const QContact &contact);
 
     QDeclarativeListProperty<ContactDetail> addresses();
@@ -76,11 +83,12 @@ public:
     QDeclarativeListProperty<ContactDetail> onlineAccounts();
     QDeclarativeListProperty<ContactDetail> phoneNumbers();
 
+    Q_INVOKABLE bool addDetail(ContactDetail *detail);
+
     // QDeclarativeListProperty helpers
     static void detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail);
     static int  detailCount(QDeclarativeListProperty<ContactDetail> *p);
     static ContactDetail* detailAt(QDeclarativeListProperty<ContactDetail> *p, int index);
-    //static void  detailClear(QDeclarativeListProperty<ContactDetail*> *p);
 
 Q_SIGNALS:
     void changed(ContactEntry *entry);
@@ -104,6 +112,7 @@ protected Q_SLOTS:
 private:
     QContact mContact;
     ContactName *mName;
+    bool mModified;
     QMap<ContactDetail::DetailType, QList<ContactDetail*> > mDetails;
 };
 
