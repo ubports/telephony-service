@@ -23,6 +23,7 @@
 #include <QContactDetailFilter>
 #include <QContactGuid>
 #include <QContactSaveRequest>
+#include <QContactPhoneNumber>
 #include <QDebug>
 #include <QUrl>
 
@@ -73,7 +74,7 @@ QVariant ContactModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QObject *ContactModel::contactFromId(const QString &guid)
+ContactEntry *ContactModel::contactFromId(const QString &guid)
 {
     Q_FOREACH(ContactEntry *entry, mContactEntries) {
         if (entry->id() == guid) {
@@ -82,6 +83,12 @@ QObject *ContactModel::contactFromId(const QString &guid)
     }
 
     return 0;
+}
+
+ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
+{
+    QContact contact = mContactManager->contactForNumber(phoneNumber);
+    return contactFromId(contact.detail<QContactGuid>().guid());
 }
 
 void ContactModel::saveContact(ContactEntry *entry)
@@ -102,6 +109,18 @@ void ContactModel::saveContact(ContactEntry *entry)
     request->start();
 }
 
+void ContactModel::loadContactFromId(const QString &guid)
+{
+    // check if the contact is already there
+    ContactEntry *entry = contactFromId(guid);
+    if (entry) {
+        emit contactLoaded(entry);
+    } else {
+        // if it is not, save the guid for when it loads
+        mPendingId = guid;
+    }
+}
+
 void ContactModel::addContacts(const QList<QContact> &contacts)
 {
     beginInsertRows(QModelIndex(), mContactEntries.count(), mContactEntries.count()+contacts.count()-1);
@@ -112,6 +131,10 @@ void ContactModel::addContacts(const QList<QContact> &contacts)
                 SIGNAL(changed(ContactEntry*)),
                 SLOT(onContactEntryChanged(ContactEntry*)));
         mContactEntries.append(entry);
+        if (entry->id() == mPendingId) {
+            emit contactLoaded(entry);
+            mPendingId = "";
+        }
     }
 
     endInsertRows();

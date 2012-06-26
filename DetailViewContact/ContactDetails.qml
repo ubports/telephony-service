@@ -148,7 +148,6 @@ Item {
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
 
-                    onClicked: telephony.showContactDetailsFromId(contactId)
                     onActionClicked: telephony.callNumber(phoneNumber)
                 }
             }

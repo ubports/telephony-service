@@ -41,8 +41,13 @@ public:
     virtual int rowCount(const QModelIndex &parent) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
 
-    Q_INVOKABLE QObject *contactFromId(const QString &guid);
+    Q_INVOKABLE ContactEntry *contactFromId(const QString &guid);
+    Q_INVOKABLE ContactEntry *contactFromPhoneNumber(const QString &phoneNumber);
     Q_INVOKABLE void saveContact(ContactEntry *entry);
+    Q_INVOKABLE void loadContactFromId(const QString &guid);
+
+Q_SIGNALS:
+    void contactLoaded(ContactEntry *contact);
 
 protected:
     void addContacts(const QList<QContact> &contacts);
@@ -58,6 +63,7 @@ protected Q_SLOTS:
 private:
     ContactManager *mContactManager;
     QList<ContactEntry*> mContactEntries;
+    QString mPendingId;
 };
 
 #endif // CONTACTMODEL_H

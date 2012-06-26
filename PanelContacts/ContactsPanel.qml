@@ -3,7 +3,6 @@ import TelephonyApp 0.1
 import ".."
 import "../Widgets"
 import "../fontUtils.js" as Font
-import "../ContactUtils"
 
 Item {
     id: contactsPanel
