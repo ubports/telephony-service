@@ -12,14 +12,6 @@ Item {
     property QtObject call: callManager.foregroundCall
     property string number: callManager.getVoicemailNumber()
 
-    Component.onCompleted: if (call && call.active) { startCall() }
-
-    function startCall() {
-        stopWatch.time = call.elapsedTime;
-        callTicker.start();
-    }
-
-
     function isVoicemailActive() {
         return call && call.voicemail
     }
@@ -84,17 +76,9 @@ Item {
                 fontSize: "large"
             }
 
-            // FIXME: move inside StopWatch
-            Timer {
-                id: callTicker
-
-                interval: 1000
-                repeat: true
-                onTriggered: if (call != null) { stopWatch.time = call.elapsedTime }
-            }
-
             StopWatch {
                 id: stopWatch
+                time: call && call.voicemail ? call.elapsedTime : 0
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 15
@@ -131,9 +115,5 @@ Item {
             }
 
         }
-    }
-    Connections {
-        target: call
-        onCallActive: startCall()
     }
 }

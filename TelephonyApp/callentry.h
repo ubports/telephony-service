@@ -64,6 +64,7 @@ class CallEntry : public QObject
 
 public:
     explicit CallEntry(const Tp::CallChannelPtr &channel, QObject *parent = 0);
+    void timerEvent(QTimerEvent *event);
 
     bool isHeld() const;
     void setHold(bool hold);

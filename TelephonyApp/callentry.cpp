@@ -59,6 +59,11 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
             SIGNAL(mutedChanged()));
 }
 
+void CallEntry::timerEvent(QTimerEvent *event)
+{
+    emit elapsedTimeChanged();
+}
+
 QString CallEntry::phoneNumber() const
 {
     if (!mChannel->actualFeatures().contains(Tp::CallChannel::FeatureCore)) {
@@ -152,6 +157,7 @@ void CallEntry::onCallStateChanged(Tp::CallState state)
     if (state == Tp::CallStateEnded) {
         endCall();
     } else if (state == Tp::CallStateActive) {
+        startTimer(1000);
         mElapsedTime.start();
         emit callActive();
     }
