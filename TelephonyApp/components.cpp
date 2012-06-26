@@ -29,7 +29,11 @@
 #include "contactentry.h"
 #include "contactproxymodel.h"
 #include "contactdetail.h"
+#include "contactaddress.h"
+#include "contactemailaddress.h"
 #include "contactname.h"
+#include "contactonlineaccount.h"
+#include "contactphonenumber.h"
 #include "messagelogmodel.h"
 #include "messagesproxymodel.h"
 
@@ -84,7 +88,11 @@ void Components::registerTypes(const char *uri)
     qmlRegisterType<ContactEntry>(uri, 0, 1, "ContactEntry");
     qmlRegisterType<ContactProxyModel>(uri, 0, 1, "ContactProxyModel");
     qmlRegisterType<ContactDetail>(uri, 0, 1, "ContactDetail");
+    qmlRegisterType<ContactAddress>(uri, 0, 1, "ContactAddress");
+    qmlRegisterType<ContactEmailAddress>(uri, 0, 1, "ContactEmailAddress");
     qmlRegisterType<ContactName>(uri, 0, 1, "ContactName");
+    qmlRegisterType<ContactOnlineAccount>(uri, 0, 1, "ContactOnlineAccount");
+    qmlRegisterType<ContactPhoneNumber>(uri, 0, 1, "ContactPhoneNumber");
 }
 
 void Components::onChannelHandlerCreated(ChannelHandler *ch)

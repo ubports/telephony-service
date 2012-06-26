@@ -18,7 +18,6 @@
  */
 
 #include "contactonlineaccount.h"
-#include <QContactOnlineAccount>
 
 ContactOnlineAccount::ContactOnlineAccount(const QContactDetail &detail, QObject *parent) :
     ContactDetail(detail, parent)

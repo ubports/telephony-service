@@ -21,6 +21,7 @@
 #define CONTACTPHONENUMBER_H
 
 #include "contactdetail.h"
+#include <QContactPhoneNumber>
 
 class ContactPhoneNumber : public ContactDetail
 {
@@ -34,7 +35,7 @@ class ContactPhoneNumber : public ContactDetail
                WRITE setSubTypes
                NOTIFY changed)
 public:
-    explicit ContactPhoneNumber(const QContactDetail &detail, QObject *parent = 0);
+    explicit ContactPhoneNumber(const QContactDetail &detail = QContactPhoneNumber(), QObject *parent = 0);
     
     int type() const;
 

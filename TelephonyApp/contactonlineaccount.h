@@ -21,6 +21,7 @@
 #define CONTACTONLINEACCOUNT_H
 
 #include "contactdetail.h"
+#include <QContactOnlineAccount>
 
 class ContactOnlineAccount : public ContactDetail
 {
@@ -31,7 +32,7 @@ class ContactOnlineAccount : public ContactDetail
     Q_PROPERTY(QStringList subTypes READ subTypes WRITE setSubTypes NOTIFY changed)
 
 public:
-    explicit ContactOnlineAccount(const QContactDetail &detail, QObject *parent = 0);
+    explicit ContactOnlineAccount(const QContactDetail &detail = QContactOnlineAccount(), QObject *parent = 0);
 
     int type() const;
 

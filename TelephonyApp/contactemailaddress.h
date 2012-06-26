@@ -21,6 +21,7 @@
 #define CONTACTEMAILADDRESS_H
 
 #include "contactdetail.h"
+#include <QContactEmailAddress>
 
 class ContactEmailAddress : public ContactDetail
 {
@@ -30,7 +31,7 @@ class ContactEmailAddress : public ContactDetail
                WRITE setEmailAddress
                NOTIFY changed)
 public:
-    explicit ContactEmailAddress(const QContactDetail &detail, QObject *parent = 0);
+    explicit ContactEmailAddress(const QContactDetail &detail = QContactEmailAddress(), QObject *parent = 0);
     
     int type() const;
 

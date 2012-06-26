@@ -18,7 +18,6 @@
  */
 
 #include "contactphonenumber.h"
-#include <QContactPhoneNumber>
 
 ContactPhoneNumber::ContactPhoneNumber(const QContactDetail &detail, QObject *parent) :
     ContactDetail(detail, parent)

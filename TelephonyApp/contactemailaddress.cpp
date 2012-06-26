@@ -18,7 +18,6 @@
  */
 
 #include "contactemailaddress.h"
-#include <QContactEmailAddress>
 
 ContactEmailAddress::ContactEmailAddress(const QContactDetail &detail, QObject *parent) :
     ContactDetail(detail, parent)

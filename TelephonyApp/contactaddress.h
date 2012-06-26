@@ -21,6 +21,7 @@
 #define CONTACTADDRESS_H
 
 #include "contactdetail.h"
+#include <QContactAddress>
 
 class ContactAddress : public ContactDetail
 {
@@ -34,7 +35,7 @@ class ContactAddress : public ContactDetail
     Q_PROPERTY(QStringList subTypes READ subTypes WRITE setSubTypes NOTIFY changed)
 
 public:
-    explicit ContactAddress(const QContactDetail &detail, QObject *parent = 0);
+    explicit ContactAddress(const QContactDetail &detail = QContactAddress(), QObject *parent = 0);
 
     int type() const;
 

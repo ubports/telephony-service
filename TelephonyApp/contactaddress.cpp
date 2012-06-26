@@ -18,7 +18,6 @@
  */
 
 #include "contactaddress.h"
-#include <QContactAddress>
 
 ContactAddress::ContactAddress(const QContactDetail &detail, QObject *parent) :
     ContactDetail(detail, parent)
