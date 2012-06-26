@@ -1,3 +1,9 @@
+telephony-app (0.17newyork5) precise; urgency=low
+
+  * fix contact edit. (LP: #1017954)
+
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Tue, 26 Jun 2012 15:18:46 -0700
+
 telephony-app (0.17newyork4) precise; urgency=low
 
   * start timer as soon as the call becomes active (LP: #1017655)
