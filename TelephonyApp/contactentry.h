@@ -52,6 +52,9 @@ class ContactEntry : public QObject
     Q_PROPERTY(QDeclarativeListProperty<ContactDetail> emails
                READ emails
                NOTIFY changed)
+    Q_PROPERTY(QDeclarativeListProperty<ContactDetail> onlineAccounts
+               READ onlineAccounts
+               NOTIFY changed)
     Q_PROPERTY(QDeclarativeListProperty<ContactDetail> phoneNumbers
                READ phoneNumbers
                NOTIFY changed)
@@ -70,6 +73,7 @@ public:
 
     QDeclarativeListProperty<ContactDetail> addresses();
     QDeclarativeListProperty<ContactDetail> emails();
+    QDeclarativeListProperty<ContactDetail> onlineAccounts();
     QDeclarativeListProperty<ContactDetail> phoneNumbers();
 
     // QDeclarativeListProperty helpers

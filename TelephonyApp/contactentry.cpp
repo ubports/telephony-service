@@ -21,11 +21,13 @@
 #include "contactemailaddress.h"
 #include "contactentry.h"
 #include "contactname.h"
+#include "contactonlineaccount.h"
 #include "contactphonenumber.h"
 #include <QContactGuid>
 #include <QContactAddress>
 #include <QContactAvatar>
 #include <QContactEmailAddress>
+#include <QContactOnlineAccount>
 #include <QContactPhoneNumber>
 #include <QDebug>
 
@@ -77,15 +79,21 @@ QDeclarativeListProperty<ContactDetail> ContactEntry::addresses()
     return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
 }
 
-QDeclarativeListProperty<ContactDetail> ContactEntry::phoneNumbers()
-{
-    static int type = ContactDetail::PhoneNumber;
-    return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
-}
-
 QDeclarativeListProperty<ContactDetail> ContactEntry::emails()
 {
     static int type = ContactDetail::EmailAddress;
+    return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+}
+
+QDeclarativeListProperty<ContactDetail> ContactEntry::onlineAccounts()
+{
+    static int type = ContactDetail::InstantMessaging;
+    return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+}
+
+QDeclarativeListProperty<ContactDetail> ContactEntry::phoneNumbers()
+{
+    static int type = ContactDetail::PhoneNumber;
     return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
 }
 
@@ -138,6 +146,7 @@ void ContactEntry::loadDetails()
 {
     load<QContactAddress, ContactAddress>();
     load<QContactEmailAddress, ContactEmailAddress>();
+    load<QContactOnlineAccount, ContactOnlineAccount>();
     load<QContactPhoneNumber, ContactPhoneNumber>();
 }
 

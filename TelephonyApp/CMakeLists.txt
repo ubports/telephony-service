@@ -11,6 +11,7 @@ set(plugin_SRCS
     contactmanager.cpp
     contactmodel.cpp
     contactname.cpp
+    contactonlineaccount.cpp
     contactphonenumber.cpp
     contactproxymodel.cpp
     components.cpp
@@ -35,6 +36,7 @@ set(plugin_HDRS
     contactmanager.h
     contactmodel.h
     contactname.h
+    contactonlineaccount.h
     contactphonenumber.h
     contactproxymodel.h
     components.h
