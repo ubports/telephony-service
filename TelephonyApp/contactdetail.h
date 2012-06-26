@@ -12,6 +12,10 @@ class ContactDetail : public QObject
     Q_PROPERTY(int type
                READ type
                NOTIFY typeChanged)
+    Q_PROPERTY(QStringList contexts
+               READ contexts
+               WRITE setContexts
+               NOTIFY detailChanged)
 public:
     explicit ContactDetail(const QContactDetail &detail = QContactDetail(), QObject *parent = 0);
 
@@ -26,6 +30,9 @@ public:
 
     virtual int type() const;
     void setDetail(const QContactDetail &detail);
+
+    QStringList contexts() const;
+    void setContexts(const QStringList &contexts);
     
 signals:
     void typeChanged();
