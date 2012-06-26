@@ -88,10 +88,6 @@ function getDetailSubType(detail) {
         return "Other";
     } else if (detail.definitionName == "OnlineAccount") {
         // TODO: online account information is empty
-        console.log ("Online Account subtype: " + detail.subTypes.length);
-        console.log ("OnlineAccount context: " + detail.contexts.length);
-        console.log ("OnlineAccount serviceProvider: " + detail.serviceProvider);
-        console.log ("OnlineAccount capabilities: " + detail.capabilities);
         return "Other";
     } else {
         // The backend supports multiple types but we can just handle one,
