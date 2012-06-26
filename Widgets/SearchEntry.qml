@@ -20,7 +20,7 @@ import QtQuick 1.1
 import "../fontUtils.js" as FontUtils
 //import "utils.js" as Utils
 
-AbstractButton {
+FocusScope {
     id: searchEntry
 
     property alias text : searchInput.text
