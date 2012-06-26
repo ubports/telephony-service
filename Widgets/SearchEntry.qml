@@ -34,6 +34,8 @@ FocusScope {
     property alias leftIconVisible: leftIcon.visible
     property string rightIconSource
     property alias rightIconVisible: rightIcon.visible
+    property string backgroundSource: "../assets/input_field_background.sci"
+
 
     signal activateFirstResult
     signal leftIconClicked
@@ -52,7 +54,7 @@ FocusScope {
 
     BorderImage {
         anchors.fill: parent
-        source: "../assets/input_field_background.sci"
+        source: searchEntry.backgroundSource
         smooth: false
     }
 

@@ -7,6 +7,7 @@ Item {
     property alias searchQuery: entry.searchQuery
     property alias model: searchView.model
     property alias delegate: searchView.delegate
+    property alias count: searchView.count
     property int listMaximumHeight: 400
     property alias text: entry.text
     property int currentIndex: -1
@@ -31,6 +32,7 @@ Item {
         onTextChanged: text != "" ? dropDownSearch.state = "searching" : dropDownSearch.state = "idle"
         onLeftIconClicked: parent.leftIconClicked()
         onRightIconClicked: parent.rightIconClicked()
+        backgroundSource: dropDownSearch.state == "searching" && searchView.count > 0 ? "../assets/input_field_autofill_top.sci" : "../assets/input_field_background.sci"
     }
 
     ListView {
