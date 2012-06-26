@@ -20,6 +20,7 @@
 
 #include "callentry.h"
 #include "contactmanager.h"
+#include <QTime>
 #include <QContactAvatar>
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/PendingReady>
@@ -31,6 +32,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     QObject(parent),
     mChannel(channel),
     mVoicemail(false),
+    mElapsedTime(QTime::currentTime()),
     mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
 {
     connect(mChannel->becomeReady(Tp::Features()
@@ -149,6 +151,9 @@ void CallEntry::onCallStateChanged(Tp::CallState state)
 {
     if (state == Tp::CallStateEnded) {
         endCall();
+    } else if (state == Tp::CallStateActive) {
+        mElapsedTime.start();
+        emit callActive();
     }
 }
 
@@ -167,3 +172,14 @@ bool CallEntry::isVoicemail() const
 {
     return mVoicemail;
 }
+
+int CallEntry::elapsedTime() const
+{
+    return mElapsedTime.secsTo(QTime::currentTime());
+}
+
+bool CallEntry::isActive() const
+{
+    return (mChannel->callState() == Tp::CallStateActive);
+}
+

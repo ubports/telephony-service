@@ -7,8 +7,7 @@ Item {
 
     property string viewName: "livecall"
     // FIXME: better name that does not sound like a boolean; store it in the StopWatch but also alias it here
-    // FIXME: refactor StopWatch, callStarted, Timer into StopWatch
-    property variant callStarted
+    // FIXME: refactor StopWatch, Timer into StopWatch
     property variant contact
     property QtObject call: callManager.foregroundCall
     property string number: call ? call.phoneNumber : ""
@@ -17,15 +16,14 @@ Item {
     property bool isMuted: call ? call.muted : false
     property bool isDtmf: false
 
+    Component.onCompleted: if (call && call.active) { startCall() }
+
     function startCall() {
-        callStarted = new Date();
+        stopWatch.time = call.elapsedTime;
         callTicker.start();
     }
 
     function endCall() {
-        callTicker.stop();
-        // FIXME: dont reset callStarted
-        callStarted = null;
         if (call) {
             call.endCall();
         }
@@ -147,7 +145,7 @@ Item {
 
                 interval: 1000
                 repeat: true
-                onTriggered: if (callStarted != null) { stopWatch.time = (new Date() - callStarted) / 1000 }
+                onTriggered: if (call != null) { stopWatch.time = call.elapsedTime }
             }
 
             StopWatch {
@@ -282,5 +280,10 @@ Item {
                 }
             }
         }
+    }
+
+    Connections {
+        target: call
+        onCallActive: startCall()
     }
 }
