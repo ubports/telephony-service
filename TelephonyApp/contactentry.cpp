@@ -17,11 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "contactaddress.h"
 #include "contactemailaddress.h"
 #include "contactentry.h"
 #include "contactname.h"
 #include "contactphonenumber.h"
 #include <QContactGuid>
+#include <QContactAddress>
 #include <QContactAvatar>
 #include <QContactEmailAddress>
 #include <QContactPhoneNumber>
@@ -67,6 +69,12 @@ void ContactEntry::setContact(const QContact &contact)
 {
     mContact = contact;
     emit changed(this);
+}
+
+QDeclarativeListProperty<ContactDetail> ContactEntry::addresses()
+{
+    static int type = ContactDetail::Address;
+    return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
 }
 
 QDeclarativeListProperty<ContactDetail> ContactEntry::phoneNumbers()
@@ -128,23 +136,9 @@ ContactDetail *ContactEntry::detailAt(QDeclarativeListProperty<ContactDetail> *p
 
 void ContactEntry::loadDetails()
 {
-    // Phone numbers
-    Q_FOREACH(const QContactPhoneNumber &detail, mContact.details<QContactPhoneNumber>()) {
-        ContactPhoneNumber *number = new ContactPhoneNumber(detail, this);
-        connect(number,
-                SIGNAL(changed()),
-                SLOT(onDetailChanged()));
-        mDetails[ContactDetail::PhoneNumber].append(number);
-    }
-
-    // Email addresses
-    Q_FOREACH(const QContactEmailAddress &detail, mContact.details<QContactEmailAddress>()) {
-        ContactEmailAddress *email = new ContactEmailAddress(detail, this);
-        connect(email,
-                SIGNAL(changed()),
-                SLOT(onDetailChanged()));
-        mDetails[ContactDetail::EmailAddress].append(email);
-    }
+    load<QContactAddress, ContactAddress>();
+    load<QContactEmailAddress, ContactEmailAddress>();
+    load<QContactPhoneNumber, ContactPhoneNumber>();
 }
 
 /*void ContactEntry::detailClear(QDeclarativeListProperty<ContactDetail*> *p)

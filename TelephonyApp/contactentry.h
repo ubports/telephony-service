@@ -46,11 +46,14 @@ class ContactEntry : public QObject
     Q_PROPERTY(ContactName *name
                READ name
                NOTIFY changed)
-    Q_PROPERTY(QDeclarativeListProperty<ContactDetail> phoneNumbers
-               READ phoneNumbers
+    Q_PROPERTY(QDeclarativeListProperty<ContactDetail> addresses
+               READ addresses
                NOTIFY changed)
     Q_PROPERTY(QDeclarativeListProperty<ContactDetail> emails
                READ emails
+               NOTIFY changed)
+    Q_PROPERTY(QDeclarativeListProperty<ContactDetail> phoneNumbers
+               READ phoneNumbers
                NOTIFY changed)
 
 public:
@@ -65,9 +68,10 @@ public:
 
     void setContact(const QContact &contact);
 
-    QDeclarativeListProperty<ContactDetail> phoneNumbers();
+    QDeclarativeListProperty<ContactDetail> addresses();
     QDeclarativeListProperty<ContactDetail> emails();
-    
+    QDeclarativeListProperty<ContactDetail> phoneNumbers();
+
     // QDeclarativeListProperty helpers
     static void detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail);
     static int  detailCount(QDeclarativeListProperty<ContactDetail> *p);
@@ -79,6 +83,16 @@ Q_SIGNALS:
 
 protected:
     void loadDetails();
+
+    template<typename T1, typename T2> void load() {
+        Q_FOREACH(const T1 &detail, mContact.details<T1>()) {
+            T2 *detailWrapper = new T2(detail, this);
+            connect(detailWrapper,
+                    SIGNAL(changed()),
+                    SLOT(onDetailChanged()));
+            mDetails[(ContactDetail::DetailType)detailWrapper->type()].append(detailWrapper);
+        }
+    }
 
 protected Q_SLOTS:
     void onDetailChanged();

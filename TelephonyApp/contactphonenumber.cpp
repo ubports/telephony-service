@@ -48,7 +48,7 @@ void ContactPhoneNumber::setNumber(const QString &value)
 
 QStringList ContactPhoneNumber::subTypes() const
 {
-    return mDetail.value(QContactPhoneNumber::FieldSubTypes).split(",");
+    return mDetail.value<QStringList>(QContactPhoneNumber::FieldSubTypes);
 }
 
 void ContactPhoneNumber::setSubTypes(const QStringList &value)
