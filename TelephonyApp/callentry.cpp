@@ -31,6 +31,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     QObject(parent),
     mChannel(channel),
     mVoicemail(false),
+    mLocalMuteState(false),
     mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
 {
     connect(mChannel->becomeReady(Tp::Features()
@@ -54,7 +55,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
 
     connect(&mMuteInterface,
             SIGNAL(MuteStateChanged(uint)),
-            SIGNAL(mutedChanged()));
+            SLOT(onMutedChanged(uint)));
 }
 
 QString CallEntry::phoneNumber() const
@@ -117,11 +118,19 @@ void CallEntry::setHold(bool hold)
     mChannel->requestHold(hold);
 }
 
+void CallEntry::onMutedChanged(uint state)
+{
+    // Replace this by a Mute interface method call when it
+    // becomes available in telepathy-qt
+    mLocalMuteState = (state == 1);
+    emit mutedChanged();
+}
+
 bool CallEntry::isMuted() const
 {
     // Replace this by a Mute interface method call when it
     // becomes available in telepathy-qt
-    return (mMuteInterface.property("LocalMuteState") == 1);
+    return mLocalMuteState;
 }
 
 void CallEntry::setMute(bool value)

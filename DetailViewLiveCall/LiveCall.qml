@@ -13,7 +13,7 @@ Item {
     property QtObject call: callManager.foregroundCall
     property string number: call ? call.phoneNumber : ""
     property bool onHold: call ? call.held : false
-    property bool isSpeaker: false
+    property bool isSpeaker: callManager.speaker
     property bool isMuted: call ? call.muted : false
     property bool isDtmf: false
 
@@ -229,8 +229,7 @@ Item {
                         iconSource: selected ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
                         selected: liveCall.isSpeaker
                         onClicked: {
-                            liveCall.isSpeaker = !liveCall.isSpeaker
-                            callManager.setSpeaker(liveCall.number, liveCall.isSpeaker)
+                            callManager.speaker = !selected
                         }
                     }
 

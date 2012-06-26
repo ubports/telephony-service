@@ -58,16 +58,23 @@ void CallManager::startCall(const QString &phoneNumber)
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
 
+bool CallManager::isSpeakerOn() const
+{
+    QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
+                             ANDROID_TELEPHONY_DBUS_PATH, 
+                             ANDROID_TELEPHONY_DBUS_IFACE);
+    return androidIf.call("isSpeakerOn").arguments()[0].toBool();
+}
+
 void CallManager::setSpeaker(bool speaker)
 {
     QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
                              ANDROID_TELEPHONY_DBUS_PATH, 
                              ANDROID_TELEPHONY_DBUS_IFACE);
-    if (speaker) {
-        androidIf.call("turnOnSpeaker", speaker, true);
-    } else {
-        androidIf.call("restoreSpeakerMode");
-    }
+    androidIf.call("turnOnSpeaker", speaker, false);
+    // we should get signals from the backend to know when the speaker
+    // state changed. for now, we emit the signals
+    emit speakerChanged();
 }
 
 QObject *CallManager::foregroundCall() const
