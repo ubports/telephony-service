@@ -16,6 +16,7 @@
 
 import QtQuick 1.1
 import "../Widgets"
+import "../fontUtils.js" as FontUtils
 
 Item {
     id: addressEditorField
