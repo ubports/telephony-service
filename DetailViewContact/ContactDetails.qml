@@ -218,7 +218,13 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 10
                 text: "Delete"
-                opacity: (editable) ? 1.0 : 0.0
+                opacity: (editable && !added) ? 1.0 : 0.0
+
+                onClicked: {
+                    // FIXME: show a dialog asking for confirmation
+                    contactModel.removeContact(contact);
+                    telephony.resetView();
+                }
             }
 
             ButtonSmall {
@@ -236,7 +242,7 @@ Item {
                         editable = false;
                     }
                 }
-           }
+            }
 
             ButtonSmall {
                 id: editSaveButton
@@ -275,6 +281,7 @@ Item {
                             contactModel.saveContact(contact);
 
                         editable = false;
+                        added = false;
                     }
                 }
             }

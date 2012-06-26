@@ -45,13 +45,14 @@ public:
     Q_INVOKABLE ContactEntry *contactFromPhoneNumber(const QString &phoneNumber);
     Q_INVOKABLE void saveContact(ContactEntry *entry);
     Q_INVOKABLE void loadContactFromId(const QString &guid);
+    Q_INVOKABLE void removeContact(ContactEntry *entry);
 
 Q_SIGNALS:
     void contactLoaded(ContactEntry *contact);
 
 protected:
     void addContacts(const QList<QContact> &contacts);
-    void removeContact(ContactEntry *entry);
+    void removeContactFromModel(ContactEntry *entry);
 
 protected Q_SLOTS:
     void onContactsAdded(QList<QContactLocalId> ids);
@@ -59,6 +60,7 @@ protected Q_SLOTS:
     void onContactsRemoved(QList<QContactLocalId> ids);
     void onContactEntryChanged(ContactEntry *entry);
     void onContactSaved();
+    void onContactRemoved();
 
 private:
     ContactManager *mContactManager;

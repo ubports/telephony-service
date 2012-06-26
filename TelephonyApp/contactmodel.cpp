@@ -23,6 +23,7 @@
 #include <QContactDetailFilter>
 #include <QContactGuid>
 #include <QContactSaveRequest>
+#include <QContactRemoveRequest>
 #include <QContactPhoneNumber>
 #include <QDebug>
 #include <QUrl>
@@ -104,7 +105,7 @@ void ContactModel::saveContact(ContactEntry *entry)
 
     connect(request,
             SIGNAL(stateChanged(QContactAbstractRequest::State)),
-            SLOT(onContactsSaved()));
+            SLOT(onContactSaved()));
 
     request->start();
 }
@@ -119,6 +120,19 @@ void ContactModel::loadContactFromId(const QString &guid)
         // if it is not, save the guid for when it loads
         mPendingId = guid;
     }
+}
+
+void ContactModel::removeContact(ContactEntry *entry)
+{
+    QContactRemoveRequest *request = new QContactRemoveRequest(this);
+    request->setManager(mContactManager);
+    request->setContactId(entry->localId());
+
+    connect(request,
+            SIGNAL(stateChanged(QContactAbstractRequest::State)),
+            SLOT(onContactRemoved()));
+
+    request->start();
 }
 
 void ContactModel::addContacts(const QList<QContact> &contacts)
@@ -140,7 +154,7 @@ void ContactModel::addContacts(const QList<QContact> &contacts)
     endInsertRows();
 }
 
-void ContactModel::removeContact(ContactEntry *entry)
+void ContactModel::removeContactFromModel(ContactEntry *entry)
 {
     int index = mContactEntries.indexOf(entry);
     if (index < 0) {
@@ -171,8 +185,8 @@ void ContactModel::onContactsChanged(QList<QContactLocalId> ids)
 void ContactModel::onContactsRemoved(QList<QContactLocalId> ids)
 {
     Q_FOREACH(ContactEntry *entry, mContactEntries) {
-        if (ids.indexOf(entry->localId() >= 0)) {
-            removeContact(entry);
+        if (ids.contains(entry->localId())) {
+            removeContactFromModel(entry);
         }
     }
 }
@@ -188,6 +202,18 @@ void ContactModel::onContactSaved()
     QContactSaveRequest *request = qobject_cast<QContactSaveRequest*>(QObject::sender());
     if (request->isFinished() && request->error() != QContactManager::NoError) {
         qWarning() << "Failed to save the contact. Error:" << request->error();
+        //FIXME: maybe we should map the error codes to texts
+    }
+
+    // there is no need to process the result of the request as we are watching the contacts added,
+    // removed and changed signals
+}
+
+void ContactModel::onContactRemoved()
+{
+    QContactRemoveRequest *request = qobject_cast<QContactRemoveRequest*>(QObject::sender());
+    if (request->isFinished() && request->error() != QContactManager::NoError) {
+        qWarning() << "Failed to remove the contact. Error:" << request->error();
         //FIXME: maybe we should map the error codes to texts
     }
 
