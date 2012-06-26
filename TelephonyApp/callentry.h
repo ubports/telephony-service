@@ -76,6 +76,7 @@ protected Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
     void onCallStateChanged(Tp::CallState state);
     void onCallFlagsChanged(Tp::CallFlags flags);
+    void onMutedChanged(uint state);
 
 Q_SIGNALS:
     void callEnded();
@@ -91,6 +92,7 @@ private:
     QDBusInterface mMuteInterface;
     QContact mContact;
     bool mVoicemail;
+    bool mLocalMuteState;
 };
 
 #endif // CALLENTRY_H
