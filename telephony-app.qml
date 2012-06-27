@@ -9,18 +9,19 @@ Item {
 
     property alias viewLoader: rightPaneLoaders.currentLoader
     property alias view: rightPaneLoaders.currentItem
+    property alias currentTab: tabs.currentTab
     property QtObject call: callManager.foregroundCall
 
     property string contactId: contactKey
 
     // Inventory of all the views in the application
-    property ViewModel liveCall: ViewModel {source: "DetailViewLiveCall/LiveCall.qml"}
-    property ViewModel voicemail: ViewModel {source: "DetailViewVoicemail/Voicemail.qml"}
-    property ViewModel messages: ViewModel {source: "DetailViewMessages/MessagesView.qml"}
-    property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"}
-    property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"}
-    property ViewModel keypad: ViewModel {source: "DetailViewKeypad/KeypadView.qml"}
-    property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"}
+    property ViewModel liveCall: ViewModel {source: "DetailViewLiveCall/LiveCall.qml"; tab: 0 }
+    property ViewModel voicemail: ViewModel {source: "DetailViewVoicemail/Voicemail.qml"; tab: 0 }
+    property ViewModel messages: ViewModel {source: "DetailViewMessages/MessagesView.qml"; tab: 1 }
+    property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"; tab: 0 }
+    property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"; tab: 2 }
+    property ViewModel keypad: ViewModel {source: "DetailViewKeypad/KeypadView.qml"; tab: 0 }
+    property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"; tab: 0 }
 
     signal applicationReady
 
