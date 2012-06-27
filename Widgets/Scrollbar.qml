@@ -18,7 +18,6 @@ import QtQuick 1.1
 
 // FIXME:
 // - add dragging
-// - hide after timeout, not distance
 Item {
     id: scrollbar
 
@@ -74,11 +73,39 @@ Item {
     }
 
     MouseArea {
-        id: hoverArea
+        id: proximityArea
 
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: thumbArea.left
+        anchors.left: parent.left
         enabled: __scrollable
         hoverEnabled: true
+        onContainsMouseChanged: {
+            if (containsMouse) {
+                autohideTimer.restart()
+                thumb.shown = true
+            }
+        }
+    }
+
+    MouseArea {
+        id: thumbArea
+
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.left: thumb.left
+        enabled: __scrollable
+        hoverEnabled: true
+        //onClicked: // FIXME: position where the mouse is
+    }
+
+    Timer {
+        id: autohideTimer
+
+        interval: 1000
+        onTriggered: if (!proximityArea.containsMouse && !thumbArea.containsMouse) thumb.shown = false
     }
 
     Column {
@@ -86,8 +113,9 @@ Item {
 
         anchors.right: slider.right
 
-        property bool shown: hoverArea.containsMouse
-        onShownChanged: y = hoverArea.mouseY - thumb.height / 2 // FIXME: clamp so that thumb never goes beyond the height of the scrollbar
+        property bool shown
+        // FIXME: clamp so that thumb never goes beyond the height of the scrollbar
+        y: shown ? proximityArea.mouseY - thumb.height / 2 : undefined
         opacity: shown ? 1.0 : 0.0
         Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
 
