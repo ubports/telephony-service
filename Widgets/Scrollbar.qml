@@ -18,6 +18,8 @@ import QtQuick 1.1
 
 // FIXME:
 // - add dragging
+// - if clicking in a zone where the thumb is not, should scroll one page and move the thumb under the mouse
+// - document all the behaviours
 Item {
     id: scrollbar
 
