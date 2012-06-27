@@ -49,7 +49,7 @@ Item {
                 }
 
                 TextCustom {
-                    text: modelData.contexts.toString()
+                    text: modelData.subTypes.toString()
                     color: fontColor
                     fontSize: delegate.fontSize
                     anchors.right: parent.right

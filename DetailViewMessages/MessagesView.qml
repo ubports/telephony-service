@@ -1,7 +1,6 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import TelephonyApp 0.1
-import "../ContactUtils"
 
 Item {
     id: view
@@ -33,19 +32,10 @@ Item {
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
 
-    onNumberChanged: messageLogModel.phoneNumber = number;
-
-    ContactLoader {
-        id: contactLoader
-
-        filter: DetailFilter {
-            detail: ContactDetail.PhoneNumber
-            field: PhoneNumber.number
-            value: view.number
-            matchFlags: DetailFilter.MatchPhoneNumber
-        }
-
-        onContactLoaded: view.contact = contact
+    // FIXME: use the contact id if possible
+    onNumberChanged: {
+        messageLogModel.phoneNumber = number;
+        view.contact = contactModel.contactFromPhoneNumber(number);
     }
 
     Component {

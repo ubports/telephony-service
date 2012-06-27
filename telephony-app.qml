@@ -1,7 +1,5 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
-import TelephonyApp 0.1
-import "ContactUtils"
 import "Widgets"
 
 Item {
@@ -13,6 +11,8 @@ Item {
     property alias view: rightPaneLoaders.currentItem
     property QtObject call: callManager.foregroundCall
 
+    property string contactId: contactKey
+
     // Inventory of all the views in the application
     property ViewModel liveCall: ViewModel {source: "DetailViewLiveCall/LiveCall.qml"}
     property ViewModel voicemail: ViewModel {source: "DetailViewVoicemail/Voicemail.qml"}
@@ -23,6 +23,18 @@ Item {
     property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"}
 
     signal applicationReady
+
+    onContactIdChanged: {
+        if (contactId != "") {
+            console.log("ContactId: " + contactId);
+            contactModel.loadContactFromId(contactId);
+        }
+    }
+
+    Connections {
+        target: contactModel
+        onContactLoaded: telephony.showContactDetails(contact);
+    }
 
     function showLiveCall() {
         liveCall.load()
@@ -53,21 +65,18 @@ Item {
         callEnded.load()
     }
 
-    function showContactDetails(contacts, contact) {
+    function showContactDetails(contact) {
         contactDetails.load()
-        view.contactsModel = contacts
         view.contact = contact
         view.added = false
     }
 
     function showContactDetailsFromId(contactId) {
-        contactLoader.contactId = contactId;
-        // the contact details will be loaded once the contact loads
+        contactModel.loadContactFromId(contactId);
     }
 
-    function createNewContact(contacts) {
+    function createNewContact() {
         contactDetails.load()
-        view.contactsModel = contacts
         view.createNewContact()
     }
 
@@ -84,17 +93,8 @@ Item {
         callLog.load()
     }
 
-    ContactLoader {
-        id: contactLoader
-        contactId: contactKey
-
-        onContactLoaded: {
-            // switch to the contacts tab
-            tabs.currentTab = 2;
-
-            // and load the contact details
-            showContactDetails(contact)
-        }
+    function resetView() {
+        viewLoader.source = tabs.model[tabs.currentTab].pane
     }
 
     Item {

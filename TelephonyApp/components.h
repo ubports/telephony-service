@@ -30,6 +30,7 @@ class ChannelHandler;
 class CallLogModel;
 class ConversationLogModel;
 class MessageLogModel;
+class ContactModel;
 
 namespace QtMobility {
     class QContactManager;
@@ -52,6 +53,7 @@ private:
     CallLogModel *mCallLogModel;
     ConversationLogModel *mConversationLogModel;
     MessageLogModel *mMessageLogModel;
+    ContactModel *mContactModel;
 };
 
 #endif // COMPONENTS_H

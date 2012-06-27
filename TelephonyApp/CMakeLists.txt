@@ -4,7 +4,16 @@ set(plugin_SRCS
     abstractloggermodel.cpp
     calllogmodel.cpp
     calllogproxymodel.cpp
+    contactaddress.cpp
+    contactdetail.cpp
+    contactemailaddress.cpp
+    contactentry.cpp
     contactmanager.cpp
+    contactmodel.cpp
+    contactname.cpp
+    contactonlineaccount.cpp
+    contactphonenumber.cpp
+    contactproxymodel.cpp
     components.cpp
     channelhandler.cpp
     chatmanager.cpp
@@ -20,7 +29,16 @@ set(plugin_HDRS
     abstractloggermodel.h
     calllogmodel.h
     calllogproxymodel.h
+    contactaddress.h
+    contactdetail.h
+    contactemailaddress.h
+    contactentry.h
     contactmanager.h
+    contactmodel.h
+    contactname.h
+    contactonlineaccount.h
+    contactphonenumber.h
+    contactproxymodel.h
     components.h
     channelhandler.h
     chatmanager.h
@@ -37,6 +55,7 @@ qt4_wrap_cpp(plugin_MOC_SRCS ${plugin_HDRS})
 include_directories(
     ${QT_QTCORE_INCLUDE_DIR}
     ${QT_QTGUI_INCLUDE_DIR}
+    ${QT_QTDECLARATIVE_INCLUDE_DIR}
     ${QTMOBILITY_CONTACTS_INCLUDE_DIR}
     ${QTMOBILITY_INCLUDE_DIR}
     ${TP_QT4_INCLUDE_DIRS}
