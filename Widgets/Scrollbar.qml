@@ -74,6 +74,10 @@ Item {
         Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
     }
 
+    function clamp(x, min, max) {
+        return Math.max(min, Math.min(max, x))
+    }
+
     MouseArea {
         id: proximityArea
 
@@ -94,8 +98,7 @@ Item {
     Binding {
         target: thumb
         property: "y"
-        // FIXME: clamp so that thumb never goes beyond the height of the scrollbar
-        value: proximityArea.mouseY - thumb.height / 2
+        value: clamp(proximityArea.mouseY - thumb.height / 2, 0, scrollbar.height - thumb.height)
         when: proximityArea.containsMouse && thumb.shown
     }
 
@@ -108,8 +111,7 @@ Item {
         anchors.left: thumb.left
         enabled: __scrollable
         hoverEnabled: true
-        // FIXME: clamp so that thumb never goes beyond the height of the scrollbar
-        onClicked: thumb.y = thumbArea.mouseY - thumb.height / 2
+        onClicked: thumb.y = clamp(thumbArea.mouseY - thumb.height / 2, 0, scrollbar.height - thumb.height)
     }
 
     Timer {
