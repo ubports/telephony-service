@@ -2,23 +2,22 @@ import QtQuick 1.1
 import "../fontUtils.js" as Font
 import "../Widgets"
 
-Item {
+BaseMessageHeader {
     id: header
-    width: 575
-    height: 100
 
     signal contactSelected(variant contact, string number)
     signal numberSelected(string number)
 
     ContactsSearchCombo {
         id: contactsSearchEntry
-        height: 30
+
         anchors {
-            left: image.right
-            leftMargin: 20
+            left: parent.left
+            leftMargin: 10
             right: parent.right
-            rightMargin: 20
+            rightMargin: 10
             verticalCenter: parent.verticalCenter
+            verticalCenterOffset: -1
         }
         leftIconSource: "../assets/empty.png"
         onLeftIconClicked: text = ""
@@ -37,39 +36,13 @@ Item {
         TextCustom {
             id: toText
             text: "To:"
-            fontSize: "large"
-            color: "white"
+            fontSize: "medium"
+            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
                 leftMargin: 10
             }
         }
-    }
-
-    // this is a placeholder for image
-    Rectangle {
-        id: image
-        color: "white"
-        width: height
-        anchors {
-            left: parent.left
-            leftMargin: 20
-            top: parent.top
-            bottom: parent.bottom
-            topMargin: 20
-            bottomMargin: 20
-        }
-    }
-
-    Rectangle {
-        id: line
-        anchors {
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
-        height: 1
-        color: "gray"
     }
 }

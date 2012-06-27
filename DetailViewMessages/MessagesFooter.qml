@@ -1,51 +1,59 @@
 import QtQuick 1.1
 import "../Widgets"
-import "../fontUtils.js" as Font
 
 Item {
+    id: footer
 
     signal newMessage(string message)
 
+    height: 36
+
     Rectangle {
-        id: newMessageBox
+        anchors.fill: parent
+        color: "white"
+        opacity: 0.3
+    }
 
-        border.color: "black"
-        border.width: 1
-        radius: 10
-        color: "lightGray"
-        anchors {
-            verticalCenter: parent.verticalCenter
-            left: parent.left
-            right: parent.right
-            leftMargin: 20
-            rightMargin: 20
-        }
-        height: 40
-        smooth: true
+    Rectangle {
+        id: separator
 
-        TextInput {
-            id: textInput
-            anchors.fill: parent
-            anchors.margins: 8
-            font.pixelSize: Font.sizeToPixels("x-large")
-            cursorVisible: focus
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 1
+        color: "white"
+    }
+
+    Item {
+        anchors.top: separator.bottom
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        SearchEntry {
+            id: entry
+
+            anchors.left: parent.left
+            anchors.leftMargin: 10
+            anchors.right: sendButton.left
+            anchors.rightMargin: 10
+            anchors.verticalCenter: parent.verticalCenter
             focus: true
             Keys.forwardTo: [sendButton]
         }
 
         Button {
             id: sendButton
-            anchors {
-                right: newMessageBox.right
-                rightMargin: 10
-                verticalCenter: parent.verticalCenter
-            }
-            height: 25
-            color: "#37b301"
+
+            anchors.right: parent.right
+            anchors.rightMargin: 5
+            anchors.top: entry.top
+            anchors.bottom: entry.bottom
             width: 62
+            color: "#37b301"
             text: "Send"
             onClicked: {
-                footer.newMessage(textInput.text)
+                footer.newMessage(entry.text)
                 textInput.text = ""
             }
         }

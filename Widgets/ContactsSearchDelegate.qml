@@ -3,9 +3,10 @@ import "../Widgets"
 
 Item {
     id: delegate
-    property string fontColor: "white"
-    property string fontSize: "medium"
-    property int margins: 5
+
+    property string fontColor: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+    property string fontSize: "large"
+    property bool isLast: false
 
     signal contactClicked(variant contact, string number)
 
@@ -21,49 +22,52 @@ Item {
         Repeater {
             model: contact.phoneNumbers
 
-            Rectangle {
+            Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: 50
-                color: "gray"
+                height: 35
 
-                Rectangle {
-                    id: div
-                    color: fontColor
+                BorderImage {
+                    id: background
+
+                    anchors.fill: parent
+                    anchors.bottomMargin: delegate.isLast ? -3 : 0
+                    source: delegate.isLast ? "../assets/input_field_autofill_bottom.sci" : "../assets/input_field_autofill_middle.sci"
+                }
+
+                Item {
+                    id: labels
+
                     anchors.left: parent.left
+                    anchors.leftMargin: 12
                     anchors.right: parent.right
-                    anchors.top: parent.top
-                    height: 1
-                }
+                    anchors.rightMargin: 12
+                    anchors.verticalCenter: parent.verticalCenter
+                    height: childrenRect.height
 
+                    TextCustom {
+                        id: contactName
 
-                TextCustom {
-                    id: contactName
-                    text: contact.displayLabel
-                    font.bold: true
-                    fontSize: delegate.fontSize
-                    color: fontColor
-                    anchors.left: parent.left
-                    anchors.top: div.bottom
-                    anchors.margins: margins
-                }
+                        anchors.left: parent.left
+                        text: contact.displayLabel
+                        fontSize: delegate.fontSize
+                        color: fontColor
+                        style: Text.Raised
+                        styleColor: "white"
+                    }
 
-                TextCustom {
-                    text: modelData.subTypes.toString()
-                    color: fontColor
-                    fontSize: delegate.fontSize
-                    anchors.right: parent.right
-                    anchors.top: div.bottom
-                    anchors.margins: margins
-                }
-
-                TextCustom {
-                    text: modelData.number
-                    color: "dark gray"
-                    fontSize: delegate.fontSize
-                    anchors.left: parent.left
-                    anchors.top: contactName.bottom
-                    anchors.margins: margins
+                    TextCustom {
+                        anchors.left: contactName.right
+                        anchors.leftMargin: 10
+                        anchors.right: parent.right
+                        horizontalAlignment: Text.AlignRight
+                        elide: Text.ElideRight
+                        text: modelData.number
+                        color: "dark gray"
+                        fontSize: delegate.fontSize
+                        style: Text.Raised
+                        styleColor: "white"
+                    }
                 }
 
                 MouseArea {

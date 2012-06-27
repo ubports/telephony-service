@@ -19,6 +19,7 @@ DropDownSearch {
     delegate: ContactsSearchDelegate {
         anchors.left: parent ? parent.left : undefined
         anchors.right: parent ? parent.right : undefined
+        isLast: index == count-1
 
         onContactClicked: {
             search.text = number
