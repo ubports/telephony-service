@@ -12,8 +12,6 @@ BaseContactDetailsDelegate {
         }
     }
 
-    onEditableChanged: editor.text = value.text
-
     Item {
         parent: readOnlyContentBox
 
@@ -58,5 +56,6 @@ BaseContactDetailsDelegate {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        text: value.text
     }
 }

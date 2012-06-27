@@ -1,3 +1,16 @@
+telephony-app (0.17newyork7) precise; urgency=low
+
+  * Make sure the correct tab is selected for all the views.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 27 Jun 2012 19:43:17 -0300
+
+telephony-app (0.17newyork6) precise; urgency=low
+
+  * Replace the libdeclarative-contacts model by one written specifically to the
+    application.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 27 Jun 2012 19:16:57 -0300
+
 telephony-app (0.17newyork5) precise; urgency=low
 
   * fix contact edit. (LP: #1017954)

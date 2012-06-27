@@ -1,7 +1,6 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import TelephonyApp 0.1
-import "../ContactUtils"
 
 Item {
     id: view
@@ -33,27 +32,35 @@ Item {
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
 
-    onNumberChanged: messageLogModel.phoneNumber = number;
+    // FIXME: use the contact id if possible
+    onNumberChanged: {
+        messageLogModel.phoneNumber = number;
+        view.contact = contactModel.contactFromPhoneNumber(number);
+    }
 
-    ContactLoader {
-        id: contactLoader
+    Item {
+        id: background
 
-        filter: DetailFilter {
-            detail: ContactDetail.PhoneNumber
-            field: PhoneNumber.number
-            value: view.number
-            matchFlags: DetailFilter.MatchPhoneNumber
+        anchors.fill: parent
+
+        Image {
+            anchors.fill: parent
+            source: "../assets/noise_tile.png"
+            fillMode: Image.Tile
         }
 
-        onContactLoaded: view.contact = contact
+        Rectangle {
+            anchors.fill: parent
+            color: "black"
+            opacity: 0.05
+        }
     }
 
     Component {
         id: newHeaderComponent
+
         NewMessageHeader {
-            id: newHeader
             width: view.width
-            height: 100
 
             onContactSelected: {
                 view.contact = contact;
@@ -71,26 +78,37 @@ Item {
 
     Component {
         id: headerComponent
+
         MessagesHeader {
-            id: header
+            width: view.width
             contact: view.contact
             number: view.number
-            width: view.width
-            height: 100
         }
     }
 
     Loader {
         id: headerLoader
+
         sourceComponent: view.newMessage ? newHeaderComponent : headerComponent
         anchors.top: parent.top
     }
 
-     Loader {
-         id: messagesLoader
-         sourceComponent: view.newMessage ? undefined : messagesComponent
-         anchors.top: headerLoader.bottom
-     }
+    Image {
+        anchors.top: messagesLoader.top
+        anchors.bottom: footer.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        source: "../assets/right_pane_pattern.png"
+        fillMode: Image.Tile
+    }
+
+    Loader {
+        id: messagesLoader
+
+        sourceComponent: view.newMessage ? undefined : messagesComponent
+        anchors.top: headerLoader.bottom
+        anchors.bottom: footer.top
+    }
 
     Component {
         id: messagesComponent
@@ -103,9 +121,11 @@ Item {
 
     MessagesFooter {
         id: footer
-        width: view.width
-        height: 100
-        visible: !view.newMessage
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+
         onNewMessage: {
             if (chatManager.isChattingToContact(number)) {
                 chatManager.sendMessage(number, message);
@@ -114,7 +134,6 @@ Item {
                 chatManager.startChat(number);
             }
         }
-        anchors.bottom: parent.bottom
     }
 }
 

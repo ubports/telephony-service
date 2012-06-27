@@ -20,7 +20,7 @@ import QtQuick 1.1
 import "../fontUtils.js" as FontUtils
 //import "utils.js" as Utils
 
-AbstractButton {
+FocusScope {
     id: searchEntry
 
     property alias text : searchInput.text
@@ -34,6 +34,8 @@ AbstractButton {
     property alias leftIconVisible: leftIcon.visible
     property string rightIconSource
     property alias rightIconVisible: rightIcon.visible
+    property string backgroundSource: "../assets/input_field_background.sci"
+
 
     signal activateFirstResult
     signal leftIconClicked
@@ -52,7 +54,7 @@ AbstractButton {
 
     BorderImage {
         anchors.fill: parent
-        source: "../assets/input_field_background.sci"
+        source: searchEntry.backgroundSource
         smooth: false
     }
 
