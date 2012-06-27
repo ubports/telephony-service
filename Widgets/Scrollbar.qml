@@ -16,9 +16,22 @@
 
 import QtQuick 1.1
 
+/*
+   Usage:
+
+   Flickable {
+       id: flickable
+   }
+
+   Scrollbar {
+       targetFlickable: flickable
+   }
+*/
+
 // FIXME:
-// - add dragging
 // - document all the behaviours
+// - use only one MouseArea in thumb
+// - make scrolling by dragging not 1-to-1 but instead ensuring that the whole area can be browsed
 // - try to make the thumb follow the mouse when in thumb area
 Item {
     id: scrollbar
@@ -52,7 +65,6 @@ Item {
                                                             targetFlickable.visibleArea.yPosition))
                 return clampedYPosition * scrollbar.height
             }
-            when: !dragMouseArea.drag.active
         }
     }
 
@@ -93,7 +105,7 @@ Item {
     Binding {
         target: thumb
         property: "y"
-        value: clamp(proximityArea.mouseY - thumb.height / 2, 0, scrollbar.height - thumb.height)
+        value: clamp(proximityArea.mouseY - thumb.height / 2, thumb.minimumY, thumb.maximumY)
         when: proximityArea.containsMouse && thumb.shown
     }
 
@@ -116,7 +128,7 @@ Item {
             } else {
                 targetY = thumbArea.mouseY - thumb.height * 3 / 4
             }
-            thumb.y = clamp(targetY, 0, scrollbar.height - thumb.height)
+            thumb.y = clamp(targetY, thumb.minimumY, thumb.maximumY)
         }
     }
 
@@ -133,6 +145,8 @@ Item {
         anchors.right: slider.right
 
         property bool shown
+        property int minimumY: 0
+        property int maximumY: scrollbar.height - thumb.height
 
         function show() {
             autohideTimer.restart()
@@ -147,8 +161,19 @@ Item {
 
             width: childrenRect.width
             height: childrenRect.height
-            onPressed: scrollOnePageUp()
+            onClicked: scrollOnePageUp()
             enabled: __scrollable && thumb.shown
+
+            // dragging behaviour
+            onPressed: lastDragY = mouse.y
+            property int lastDragY
+            drag {
+                target: thumb
+                axis: Drag.YAxis
+                minimumY: thumb.minimumY
+                maximumY: thumb.maximumY
+            }
+            onMouseYChanged: if (drag.active) targetFlickable.contentY = clamp(targetFlickable.contentY + mouseY - lastDragY, 0, targetFlickable.contentHeight - targetFlickable.height)
 
             Image {
                 source: parent.pressed ? "artwork/scrollbar_top_pressed.png" : "artwork/scrollbar_top_idle.png"
@@ -160,34 +185,25 @@ Item {
 
             width: childrenRect.width
             height: childrenRect.height
-            onPressed: scrollOnePageDown()
+            onClicked: scrollOnePageDown()
             enabled: __scrollable && thumb.shown
+
+            // dragging behaviour
+            onPressed: lastDragY = mouse.y
+            property int lastDragY
+            drag {
+                target: thumb
+                axis: Drag.YAxis
+                minimumY: thumb.minimumY
+                maximumY: thumb.maximumY
+            }
+            onMouseYChanged: if (drag.active) targetFlickable.contentY = clamp(targetFlickable.contentY + mouseY - lastDragY, 0, targetFlickable.contentHeight - targetFlickable.height)
+
 
             Image {
                 source: parent.pressed ? "artwork/scrollbar_bottom_pressed.png" : "artwork/scrollbar_bottom_idle.png"
             }
         }
-
-        /*
-        MouseArea {
-            id: dragMouseArea
-
-            anchors.fill: parent
-            hoverEnabled: true
-            acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
-            drag.target: slider
-            drag.axis: Drag.YAxis
-            drag.minimumY: 0
-            drag.maximumY: scrollbar.height - slider.height
-
-            onPositionChanged: {
-                if (drag.active) {
-                    targetFlickable.contentY = slider.y * targetFlickable.contentHeight / scrollbar.height
-                }
-            }
-        }
-
-        */
     }
 
     // Scroll by amount pixels never overshooting
