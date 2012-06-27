@@ -9,7 +9,7 @@ Item {
     property string viewName: "contacts"
     property bool editable: false
     property variant contact: null
-    property variant added: false
+    property bool added: false
 
     onContactChanged: editable = false
 
@@ -25,7 +25,10 @@ Item {
     Connections {
         target: contactModel
         onContactAdded: {
-            contactDetails.contact = contact;
+            if (added) {
+                contactDetails.contact = contact;
+                added = false;
+            }
         }
     }
 
@@ -290,7 +293,7 @@ Item {
                             contactModel.saveContact(contact);
 
                         editable = false;
-                        added = false;
+                        // added = false will be set when the new contact entry appears
                     }
                 }
             }
