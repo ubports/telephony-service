@@ -111,7 +111,17 @@ Item {
         anchors.left: thumb.left
         enabled: __scrollable
         hoverEnabled: true
-        onClicked: thumb.y = clamp(thumbArea.mouseY - thumb.height / 2, 0, scrollbar.height - thumb.height)
+        onClicked: {
+            var targetY
+            var goingUp = thumbArea.mouseY < thumb.y
+            if (goingUp) {
+                scrollOnePageUp()
+                targetY = thumbArea.mouseY - thumb.height / 4
+            } else {
+                targetY = thumbArea.mouseY - thumb.height * 3 / 4
+            }
+            thumb.y = clamp(targetY, 0, scrollbar.height - thumb.height)
+        }
     }
 
     Timer {
@@ -136,7 +146,7 @@ Item {
 
             width: childrenRect.width
             height: childrenRect.height
-            onPressed: scrollBy(-targetFlickable.height)
+            onPressed: scrollOnePageUp()
             enabled: __scrollable && thumb.shown
 
             Image {
@@ -149,7 +159,7 @@ Item {
 
             width: childrenRect.width
             height: childrenRect.height
-            onPressed: scrollBy(targetFlickable.height)
+            onPressed: scrollOnePageDown()
             enabled: __scrollable && thumb.shown
 
             Image {
@@ -186,6 +196,14 @@ Item {
                                                       destination))
         scrollAnimation.to = clampedDestination
         scrollAnimation.restart()
+    }
+
+    function scrollOnePageUp() {
+        scrollBy(-targetFlickable.height)
+    }
+
+    function scrollOnePageDown() {
+        scrollBy(targetFlickable.height)
     }
 
     SmoothedAnimation {
