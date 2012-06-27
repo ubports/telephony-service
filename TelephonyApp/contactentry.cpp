@@ -23,6 +23,7 @@
 #include "contactname.h"
 #include "contactonlineaccount.h"
 #include "contactphonenumber.h"
+#include "contactmodel.h"
 #include <QContactGuid>
 #include <QContactAddress>
 #include <QContactAvatar>
@@ -31,8 +32,8 @@
 #include <QContactPhoneNumber>
 #include <QDebug>
 
-ContactEntry::ContactEntry(const QContact &contact, QObject *parent) :
-    QObject(parent), mContact(contact), mModified(false)
+ContactEntry::ContactEntry(const QContact &contact, ContactModel *parent) :
+    QObject(parent), mContact(contact), mModified(false), mModel(parent)
 {
     mName = new ContactName(contact.detail<QContactName>(), this);
     connect(mName,
@@ -147,6 +148,25 @@ bool ContactEntry::addDetail(ContactDetail *detail)
         return true;
     }
     return false;
+}
+
+bool ContactEntry::removeDetail(ContactDetail *detail)
+{
+    if (mContact.removeDetail(&detail->detail())) {
+        mModified = true;
+        mDetails[(ContactDetail::DetailType)detail->type()].removeAll(detail);
+        detail->deleteLater();
+        emit changed(this);
+        return true;
+    }
+    return false;
+}
+
+void ContactEntry::revertChanges()
+{
+    if (mModel) {
+        mModel->updateContact(this);
+    }
 }
 
 void ContactEntry::onDetailChanged()

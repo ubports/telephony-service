@@ -29,7 +29,7 @@
 using namespace QtMobility;
 
 class ContactName;
-class ContactPhoneNumber;
+class ContactModel;
 
 class ContactEntry : public QObject
 {
@@ -63,7 +63,7 @@ class ContactEntry : public QObject
                NOTIFY changed)
 
 public:
-    explicit ContactEntry(const QContact &contact = QContact(), QObject *parent = 0);
+    explicit ContactEntry(const QContact &contact = QContact(), ContactModel *parent = 0);
 
     QContactLocalId localId() const;
     QString id() const;
@@ -84,6 +84,8 @@ public:
     QDeclarativeListProperty<ContactDetail> phoneNumbers();
 
     Q_INVOKABLE bool addDetail(ContactDetail *detail);
+    Q_INVOKABLE bool removeDetail(ContactDetail *detail);
+    Q_INVOKABLE void revertChanges();
 
     // QDeclarativeListProperty helpers
     static void detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail);
@@ -114,6 +116,7 @@ private:
     ContactName *mName;
     bool mModified;
     QMap<ContactDetail::DetailType, QList<ContactDetail*> > mDetails;
+    ContactModel *mModel;
 };
 
 #endif // CONTACTENTRY_H

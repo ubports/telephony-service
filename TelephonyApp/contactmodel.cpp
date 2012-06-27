@@ -135,6 +135,11 @@ void ContactModel::removeContact(ContactEntry *entry)
     request->start();
 }
 
+void ContactModel::updateContact(ContactEntry *entry)
+{
+    entry->setContact(mContactManager->contact(entry->localId()));
+}
+
 void ContactModel::addContacts(const QList<QContact> &contacts)
 {
     beginInsertRows(QModelIndex(), mContactEntries.count(), mContactEntries.count()+contacts.count()-1);

@@ -47,6 +47,8 @@ public:
     Q_INVOKABLE void loadContactFromId(const QString &guid);
     Q_INVOKABLE void removeContact(ContactEntry *entry);
 
+    void updateContact(ContactEntry *entry);
+
 Q_SIGNALS:
     void contactLoaded(ContactEntry *contact);
     void contactAdded(ContactEntry *contact);

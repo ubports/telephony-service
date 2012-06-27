@@ -247,6 +247,7 @@ Item {
                     if (added) {
                         telephony.resetView();
                     } else {
+                        contact.revertChanges();
                         editable = false;
                     }
                 }
