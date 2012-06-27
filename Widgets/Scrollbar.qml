@@ -19,7 +19,6 @@ import QtQuick 1.1
 // FIXME:
 // - add dragging
 // - document all the behaviours
-// - the thumb should appear when in thumb area
 // - try to make the thumb follow the mouse when in thumb area
 Item {
     id: scrollbar
@@ -88,12 +87,7 @@ Item {
         anchors.left: parent.left
         enabled: __scrollable
         hoverEnabled: true
-        onContainsMouseChanged: {
-            if (containsMouse) {
-                autohideTimer.restart()
-                thumb.shown = true
-            }
-        }
+        onEntered: thumb.show()
     }
 
     Binding {
@@ -112,6 +106,7 @@ Item {
         anchors.left: thumb.left
         enabled: __scrollable
         hoverEnabled: true
+        onEntered: thumb.show()
         onClicked: {
             var targetY
             var goingUp = thumbArea.mouseY < thumb.y
@@ -138,6 +133,11 @@ Item {
         anchors.right: slider.right
 
         property bool shown
+
+        function show() {
+            autohideTimer.restart()
+            thumb.shown = true
+        }
 
         opacity: shown ? 1.0 : 0.0
         Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
