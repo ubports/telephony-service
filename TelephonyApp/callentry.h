@@ -22,6 +22,7 @@
 #define CALLENTRY_H
 
 #include <QObject>
+#include <QTime>
 #include <QContact>
 #include <TelepathyQt/CallChannel>
 
@@ -53,8 +54,17 @@ class CallEntry : public QObject
     Q_PROPERTY(QString contactAvatar
                READ contactAvatar
                NOTIFY contactAvatarChanged)
+
+    Q_PROPERTY(int elapsedTime
+               READ elapsedTime
+               NOTIFY elapsedTimeChanged)
+    Q_PROPERTY(bool active 
+               READ isActive
+               NOTIFY activeChanged)
+
 public:
     explicit CallEntry(const Tp::CallChannelPtr &channel, QObject *parent = 0);
+    void timerEvent(QTimerEvent *event);
 
     bool isHeld() const;
     void setHold(bool hold);
@@ -64,6 +74,9 @@ public:
 
     bool isVoicemail() const;
     void setVoicemail(bool voicemail);
+
+    int elapsedTime() const;
+    bool isActive() const;
 
     QString phoneNumber() const;
     QString contactAlias() const;
@@ -76,21 +89,27 @@ protected Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
     void onCallStateChanged(Tp::CallState state);
     void onCallFlagsChanged(Tp::CallFlags flags);
+    void onMutedChanged(uint state);
 
 Q_SIGNALS:
     void callEnded();
+    void callActive();
+    void activeChanged();
     void heldChanged();
     void mutedChanged();
     void voicemailChanged();
     void phoneNumberChanged();
     void contactAliasChanged();
     void contactAvatarChanged();
+    void elapsedTimeChanged();
     
 private:
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
     QContact mContact;
     bool mVoicemail;
+    bool mLocalMuteState;
+    QTime mElapsedTime;
 };
 
 #endif // CALLENTRY_H

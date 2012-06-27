@@ -20,6 +20,7 @@
 
 #include "callentry.h"
 #include "contactmanager.h"
+#include <QTime>
 #include <QContactAvatar>
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/PendingReady>
@@ -31,6 +32,8 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     QObject(parent),
     mChannel(channel),
     mVoicemail(false),
+    mLocalMuteState(false),
+    mElapsedTime(QTime::currentTime()),
     mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
 {
     connect(mChannel->becomeReady(Tp::Features()
@@ -54,7 +57,12 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
 
     connect(&mMuteInterface,
             SIGNAL(MuteStateChanged(uint)),
-            SIGNAL(mutedChanged()));
+            SLOT(onMutedChanged(uint)));
+}
+
+void CallEntry::timerEvent(QTimerEvent *event)
+{
+    emit elapsedTimeChanged();
 }
 
 QString CallEntry::phoneNumber() const
@@ -117,11 +125,19 @@ void CallEntry::setHold(bool hold)
     mChannel->requestHold(hold);
 }
 
+void CallEntry::onMutedChanged(uint state)
+{
+    // Replace this by a Mute interface method call when it
+    // becomes available in telepathy-qt
+    mLocalMuteState = (state == 1);
+    emit mutedChanged();
+}
+
 bool CallEntry::isMuted() const
 {
     // Replace this by a Mute interface method call when it
     // becomes available in telepathy-qt
-    return (mMuteInterface.property("LocalMuteState") == 1);
+    return mLocalMuteState;
 }
 
 void CallEntry::setMute(bool value)
@@ -149,6 +165,10 @@ void CallEntry::onCallStateChanged(Tp::CallState state)
 {
     if (state == Tp::CallStateEnded) {
         endCall();
+    } else if (state == Tp::CallStateActive) {
+        startTimer(1000);
+        mElapsedTime.start();
+        emit callActive();
     }
 }
 
@@ -167,3 +187,14 @@ bool CallEntry::isVoicemail() const
 {
     return mVoicemail;
 }
+
+int CallEntry::elapsedTime() const
+{
+    return mElapsedTime.secsTo(QTime::currentTime());
+}
+
+bool CallEntry::isActive() const
+{
+    return (mChannel->callState() == Tp::CallStateActive);
+}
+

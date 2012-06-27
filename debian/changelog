@@ -1,3 +1,31 @@
+telephony-app (0.17newyork5) precise; urgency=low
+
+  * fix contact edit. (LP: #1017954)
+
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Tue, 26 Jun 2012 15:18:46 -0700
+
+telephony-app (0.17newyork4) precise; urgency=low
+
+  * start timer as soon as the call becomes active (LP: #1017655)
+  * remove fake phone number from the keypad entry (LP: #1015247)
+  * fix Mute button on LiveCall view (LP: #1017647)
+  * fix Speaker button on LiveCall view (LP: #1017645)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Tue, 26 Jun 2012 14:12:49 -0700
+
+telephony-app (0.17newyork3) precise; urgency=low
+
+  [ Florian Boucault ]
+  * Contact details: implemented visual design for call log.
+  * Contact details edit mode: implemented visuals.
+  * Contact details edit mode: preliminary implementation of combobox visuals.
+  * On call panel: implemented visual design.
+
+  [ Ugo Riboni ]
+  * Automatically give focus to message entry in conversations.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 26 Jun 2012 17:16:13 -0300
+
 telephony-app (0.17newyork2) precise; urgency=low
 
   [ Tiago Salem Herrmann]

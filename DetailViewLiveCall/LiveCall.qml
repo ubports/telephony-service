@@ -7,25 +7,16 @@ Item {
 
     property string viewName: "livecall"
     // FIXME: better name that does not sound like a boolean; store it in the StopWatch but also alias it here
-    // FIXME: refactor StopWatch, callStarted, Timer into StopWatch
-    property variant callStarted
+    // FIXME: refactor StopWatch, Timer into StopWatch
     property variant contact
     property QtObject call: callManager.foregroundCall
     property string number: call ? call.phoneNumber : ""
     property bool onHold: call ? call.held : false
-    property bool isSpeaker: false
+    property bool isSpeaker: callManager.speaker
     property bool isMuted: call ? call.muted : false
     property bool isDtmf: false
 
-    function startCall() {
-        callStarted = new Date();
-        callTicker.start();
-    }
-
     function endCall() {
-        callTicker.stop();
-        // FIXME: dont reset callStarted
-        callStarted = null;
         if (call) {
             call.endCall();
         }
@@ -141,17 +132,9 @@ Item {
                 fontSize: "large"
             }
 
-            // FIXME: move inside StopWatch
-            Timer {
-                id: callTicker
-
-                interval: 1000
-                repeat: true
-                onTriggered: if (callStarted != null) { stopWatch.time = (new Date() - callStarted) / 1000 }
-            }
-
             StopWatch {
                 id: stopWatch
+                time: call ? call.elapsedTime : 0
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 15
@@ -229,8 +212,7 @@ Item {
                         iconSource: selected ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
                         selected: liveCall.isSpeaker
                         onClicked: {
-                            liveCall.isSpeaker = !liveCall.isSpeaker
-                            callManager.setSpeaker(liveCall.number, liveCall.isSpeaker)
+                            callManager.speaker = !selected
                         }
                     }
 
