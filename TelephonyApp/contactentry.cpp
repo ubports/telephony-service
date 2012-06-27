@@ -141,11 +141,16 @@ bool ContactEntry::addDetail(ContactDetail *detail)
     }
 
     if (mContact.saveDetail(&newDetail->detail())) {
+        mModified = true;
         mDetails[type].append(newDetail);
         connect(newDetail,
                 SIGNAL(changed()),
                 SLOT(onDetailChanged()));
+        emit changed(this);
         return true;
+    } else {
+        qWarning() << "Failed to add new detail to contact";
+        delete newDetail;
     }
     return false;
 }

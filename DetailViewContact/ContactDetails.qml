@@ -25,6 +25,7 @@ Item {
     Connections {
         target: contactModel
         onContactAdded: {
+            // refresh the contact object with the saved data
             if (added) {
                 contactDetails.contact = contact;
                 added = false;
