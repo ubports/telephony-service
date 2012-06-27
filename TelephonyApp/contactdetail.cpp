@@ -21,14 +21,14 @@ QContactDetail& ContactDetail::detail()
     return mDetail;
 }
 
-QStringList ContactDetail::contexts() const
+QVariant ContactDetail::contexts() const
 {
     return mDetail.contexts();
 }
 
-void ContactDetail::setContexts(const QStringList &contexts)
+void ContactDetail::setContexts(const QVariant &contexts)
 {
-    mDetail.setContexts(contexts);
+    mDetail.setValue(QContactDetail::FieldContext, contexts);
     emit detailChanged();
 }
 

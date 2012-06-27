@@ -45,12 +45,12 @@ void ContactOnlineAccount::setAccountUri(const QString &value)
     }
 }
 
-QStringList ContactOnlineAccount::capabilities() const
+QVariant ContactOnlineAccount::capabilities() const
 {
     return mDetail.value<QStringList>(QContactOnlineAccount::FieldCapabilities);
 }
 
-void ContactOnlineAccount::setCapabilities(const QStringList &value)
+void ContactOnlineAccount::setCapabilities(const QVariant &value)
 {
     // FIXME: maybe we should check if the list has really changed?
     mDetail.setValue(QContactOnlineAccount::FieldCapabilities, value);
@@ -83,12 +83,12 @@ void ContactOnlineAccount::setServiceProvider(const QString &value)
     }
 }
 
-QStringList ContactOnlineAccount::subTypes() const
+QVariant ContactOnlineAccount::subTypes() const
 {
     return mDetail.value<QStringList>(QContactOnlineAccount::FieldSubTypes);
 }
 
-void ContactOnlineAccount::setSubTypes(const QStringList &value)
+void ContactOnlineAccount::setSubTypes(const QVariant &value)
 {
     // FIXME: maybe we should check if the list has really changed?
     mDetail.setValue(QContactOnlineAccount::FieldSubTypes, value);

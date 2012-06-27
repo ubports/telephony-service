@@ -30,7 +30,7 @@ class ContactPhoneNumber : public ContactDetail
                READ number
                WRITE setNumber
                NOTIFY changed)
-    Q_PROPERTY(QStringList subTypes
+    Q_PROPERTY(QVariant subTypes
                READ subTypes
                WRITE setSubTypes
                NOTIFY changed)
@@ -42,8 +42,8 @@ public:
     QString number() const;
     void setNumber(const QString &value);
 
-    QStringList subTypes() const;
-    void setSubTypes(const QStringList &value);
+    QVariant subTypes() const;
+    void setSubTypes(const QVariant &value);
 
 Q_SIGNALS:
     void changed();

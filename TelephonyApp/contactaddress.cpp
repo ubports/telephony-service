@@ -110,12 +110,12 @@ void ContactAddress::setStreet(const QString &value)
     }
 }
 
-QStringList ContactAddress::subTypes() const
+QVariant ContactAddress::subTypes() const
 {
     return mDetail.value<QStringList>(QContactAddress::FieldSubTypes);
 }
 
-void ContactAddress::setSubTypes(const QStringList &value)
+void ContactAddress::setSubTypes(const QVariant &value)
 {
     //FIXME: we are just setting this one all the time, maybe we should check if the list really changed
     mDetail.setValue(QContactAddress::FieldSubTypes, value);

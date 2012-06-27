@@ -27,9 +27,9 @@ class ContactOnlineAccount : public ContactDetail
 {
     Q_OBJECT
     Q_PROPERTY(QString accountUri READ accountUri WRITE setAccountUri NOTIFY changed)
-    Q_PROPERTY(QStringList capabilities READ capabilities WRITE setCapabilities NOTIFY changed)
+    Q_PROPERTY(QVariant capabilities READ capabilities WRITE setCapabilities NOTIFY changed)
     Q_PROPERTY(QString protocol READ protocol WRITE setProtocol NOTIFY changed)
-    Q_PROPERTY(QStringList subTypes READ subTypes WRITE setSubTypes NOTIFY changed)
+    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY changed)
 
 public:
     explicit ContactOnlineAccount(const QContactDetail &detail = QContactOnlineAccount(), QObject *parent = 0);
@@ -39,8 +39,8 @@ public:
     QString accountUri() const;
     void setAccountUri(const QString &value);
 
-    QStringList capabilities() const;
-    void setCapabilities(const QStringList &value);
+    QVariant capabilities() const;
+    void setCapabilities(const QVariant &value);
 
     QString protocol() const;
     void setProtocol(const QString &value);
@@ -48,8 +48,8 @@ public:
     QString serviceProvider() const;
     void setServiceProvider(const QString &value);
 
-    QStringList subTypes() const;
-    void setSubTypes(const QStringList &value);
+    QVariant subTypes() const;
+    void setSubTypes(const QVariant &value);
     
 Q_SIGNALS:
     void changed();

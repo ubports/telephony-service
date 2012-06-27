@@ -12,7 +12,7 @@ class ContactDetail : public QObject
     Q_PROPERTY(int type
                READ type
                NOTIFY typeChanged)
-    Q_PROPERTY(QStringList contexts
+    Q_PROPERTY(QVariant contexts
                READ contexts
                WRITE setContexts
                NOTIFY detailChanged)
@@ -38,8 +38,8 @@ public:
 
     QContactDetail& detail();
 
-    QStringList contexts() const;
-    void setContexts(const QStringList &contexts);
+    QVariant contexts() const;
+    void setContexts(const QVariant &contexts);
 
     QString definitionName() const;
     

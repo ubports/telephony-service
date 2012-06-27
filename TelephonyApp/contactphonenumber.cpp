@@ -18,6 +18,7 @@
  */
 
 #include "contactphonenumber.h"
+#include <QDebug>
 
 ContactPhoneNumber::ContactPhoneNumber(const QContactDetail &detail, QObject *parent) :
     ContactDetail(detail, parent)
@@ -45,13 +46,14 @@ void ContactPhoneNumber::setNumber(const QString &value)
     }
 }
 
-QStringList ContactPhoneNumber::subTypes() const
+QVariant ContactPhoneNumber::subTypes() const
 {
     return mDetail.value<QStringList>(QContactPhoneNumber::FieldSubTypes);
 }
 
-void ContactPhoneNumber::setSubTypes(const QStringList &value)
+void ContactPhoneNumber::setSubTypes(const QVariant &value)
 {
+    qDebug() << "BLABLA setting subtypes:" << value;
     //FIXME: we are just setting this one all the time, maybe we should check if the list really changed
     mDetail.setValue(QContactPhoneNumber::FieldSubTypes, value);
     emit changed();

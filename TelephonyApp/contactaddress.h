@@ -32,7 +32,7 @@ class ContactAddress : public ContactDetail
     Q_PROPERTY(QString postcode READ postcode WRITE setPostcode NOTIFY changed)
     Q_PROPERTY(QString region READ region WRITE setRegion NOTIFY changed)
     Q_PROPERTY(QString street READ street WRITE setStreet NOTIFY changed)
-    Q_PROPERTY(QStringList subTypes READ subTypes WRITE setSubTypes NOTIFY changed)
+    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY changed)
 
 public:
     explicit ContactAddress(const QContactDetail &detail = QContactAddress(), QObject *parent = 0);
@@ -57,8 +57,8 @@ public:
     QString street() const;
     void setStreet(const QString &value);
 
-    QStringList subTypes() const;
-    void setSubTypes(const QStringList &value);
+    QVariant subTypes() const;
+    void setSubTypes(const QVariant &value);
 
 Q_SIGNALS:
     void changed();
