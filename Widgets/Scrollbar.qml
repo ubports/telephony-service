@@ -30,7 +30,6 @@ import QtQuick 1.1
 
 // FIXME:
 // - document all the behaviours
-// - use only one MouseArea in thumb
 // - make scrolling by dragging not 1-to-1 but instead ensuring that the whole area can be browsed
 // - try to make the thumb follow the mouse when in thumb area
 Item {
@@ -95,7 +94,7 @@ Item {
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.right: thumbArea.left
+        anchors.right: sliderArea.left
         anchors.left: parent.left
         enabled: __scrollable
         hoverEnabled: true
@@ -110,7 +109,7 @@ Item {
     }
 
     MouseArea {
-        id: thumbArea
+        id: sliderArea
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -121,12 +120,12 @@ Item {
         onEntered: thumb.show()
         onClicked: {
             var targetY
-            var goingUp = thumbArea.mouseY < thumb.y
+            var goingUp = sliderArea.mouseY < thumb.y
             if (goingUp) {
                 scrollOnePageUp()
-                targetY = thumbArea.mouseY - thumb.height / 4
+                targetY = sliderArea.mouseY - thumb.height / 4
             } else {
-                targetY = thumbArea.mouseY - thumb.height * 3 / 4
+                targetY = sliderArea.mouseY - thumb.height * 3 / 4
             }
             thumb.y = clamp(targetY, thumb.minimumY, thumb.maximumY)
         }
@@ -136,13 +135,15 @@ Item {
         id: autohideTimer
 
         interval: 1000
-        onTriggered: if (!proximityArea.containsMouse && !thumbArea.containsMouse) thumb.shown = false
+        onTriggered: if (!proximityArea.containsMouse && !sliderArea.containsMouse) thumb.shown = false
     }
 
-    Column {
+    Item {
         id: thumb
 
         anchors.right: slider.right
+        width: thumbVisual.width
+        height: thumbVisual.height
 
         property bool shown
         property int minimumY: 0
@@ -157,16 +158,17 @@ Item {
         Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
 
         MouseArea {
-            id: thumbTop
+            id: thumbArea
 
-            width: childrenRect.width
-            height: childrenRect.height
-            onClicked: scrollOnePageUp()
+            property bool isInThumbTop: mouseY < thumb.height / 2
+
+            anchors.fill: parent
+            onClicked: if (isInThumbTop) scrollOnePageUp(); else scrollOnePageDown()
             enabled: __scrollable && thumb.shown
 
             // dragging behaviour
-            onPressed: lastDragY = mouse.y
             property int lastDragY
+            onPressed: lastDragY = mouse.y
             drag {
                 target: thumb
                 axis: Drag.YAxis
@@ -174,34 +176,18 @@ Item {
                 maximumY: thumb.maximumY
             }
             onMouseYChanged: if (drag.active) targetFlickable.contentY = clamp(targetFlickable.contentY + mouseY - lastDragY, 0, targetFlickable.contentHeight - targetFlickable.height)
-
-            Image {
-                source: parent.pressed ? "artwork/scrollbar_top_pressed.png" : "artwork/scrollbar_top_idle.png"
-            }
         }
 
-        MouseArea {
-            id: thumbBottom
-
-            width: childrenRect.width
-            height: childrenRect.height
-            onClicked: scrollOnePageDown()
-            enabled: __scrollable && thumb.shown
-
-            // dragging behaviour
-            onPressed: lastDragY = mouse.y
-            property int lastDragY
-            drag {
-                target: thumb
-                axis: Drag.YAxis
-                minimumY: thumb.minimumY
-                maximumY: thumb.maximumY
-            }
-            onMouseYChanged: if (drag.active) targetFlickable.contentY = clamp(targetFlickable.contentY + mouseY - lastDragY, 0, targetFlickable.contentHeight - targetFlickable.height)
-
+        Column {
+            id: thumbVisual
 
             Image {
-                source: parent.pressed ? "artwork/scrollbar_bottom_pressed.png" : "artwork/scrollbar_bottom_idle.png"
+                id: thumbTop
+                source: thumbArea.isInThumbTop && thumbArea.pressed ? "artwork/scrollbar_top_pressed.png" : "artwork/scrollbar_top_idle.png"
+            }
+            Image {
+                id: thumbBottom
+                source: !thumbArea.isInThumbTop && thumbArea.pressed ? "artwork/scrollbar_bottom_pressed.png" : "artwork/scrollbar_bottom_idle.png"
             }
         }
     }
