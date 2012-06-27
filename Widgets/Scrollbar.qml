@@ -89,6 +89,14 @@ Item {
         }
     }
 
+    Binding {
+        target: thumb
+        property: "y"
+        // FIXME: clamp so that thumb never goes beyond the height of the scrollbar
+        value: proximityArea.mouseY - thumb.height / 2
+        when: proximityArea.containsMouse && thumb.shown
+    }
+
     MouseArea {
         id: thumbArea
 
@@ -98,7 +106,8 @@ Item {
         anchors.left: thumb.left
         enabled: __scrollable
         hoverEnabled: true
-        //onClicked: // FIXME: position where the mouse is
+        // FIXME: clamp so that thumb never goes beyond the height of the scrollbar
+        onClicked: thumb.y = thumbArea.mouseY - thumb.height / 2
     }
 
     Timer {
@@ -114,8 +123,7 @@ Item {
         anchors.right: slider.right
 
         property bool shown
-        // FIXME: clamp so that thumb never goes beyond the height of the scrollbar
-        y: shown ? proximityArea.mouseY - thumb.height / 2 : undefined
+
         opacity: shown ? 1.0 : 0.0
         Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
 
