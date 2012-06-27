@@ -1,3 +1,10 @@
+telephony-app (0.17newyork6) precise; urgency=low
+
+  * Replace the libdeclarative-contacts model by one written specifically to the
+    application.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 27 Jun 2012 19:16:57 -0300
+
 telephony-app (0.17newyork5) precise; urgency=low
 
   * fix contact edit. (LP: #1017954)
