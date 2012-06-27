@@ -94,7 +94,7 @@ Item {
     }
 
     function resetView() {
-        rightPaneContent.source = tabs.model[tabs.currentTab].pane
+        viewLoader.source = tabs.model[tabs.currentTab].pane
     }
 
     Item {
