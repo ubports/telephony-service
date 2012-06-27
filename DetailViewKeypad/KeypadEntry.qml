@@ -2,7 +2,7 @@ import QtQuick 1.1
 import "../Widgets"
 import "../fontUtils.js" as Font
 
-Item {
+FocusScope {
     id: keypadEntry
 
     property alias value: input.text
