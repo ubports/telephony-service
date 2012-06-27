@@ -16,14 +16,20 @@
 
 import QtQuick 1.1
 
-// FIXME: add dragging
+// FIXME:
+// - add dragging
+// - hide after timeout, not distance
 Item {
     id: scrollbar
 
     property variant targetFlickable
+    property bool __scrollable: targetFlickable.visibleArea.heightRatio != 1.0
 
     width: 30
     height: 400
+
+    opacity: __scrollable ? 1.0 : 0.0
+    Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
 
     Rectangle {
         id: slider
@@ -64,13 +70,14 @@ Item {
 
         color: "white"
         opacity: thumb.shown ? 1.0 : 0.0
-        Behavior on opacity {NumberAnimation {duration: 200; easing.type: Easing.InOutQuad}}
+        Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
     }
 
     MouseArea {
         id: hoverArea
 
         anchors.fill: parent
+        enabled: __scrollable
         hoverEnabled: true
     }
 
@@ -82,7 +89,7 @@ Item {
         property bool shown: hoverArea.containsMouse
         onShownChanged: y = hoverArea.mouseY - thumb.height / 2 // FIXME: clamp so that thumb never goes beyond the height of the scrollbar
         opacity: shown ? 1.0 : 0.0
-        Behavior on opacity {NumberAnimation {duration: 200; easing.type: Easing.InOutQuad}}
+        Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
 
         MouseArea {
             id: thumbTop
@@ -90,7 +97,7 @@ Item {
             width: childrenRect.width
             height: childrenRect.height
             onPressed: scrollBy(-targetFlickable.height)
-            enabled: thumb.shown
+            enabled: __scrollable && thumb.shown
 
             Image {
                 source: parent.pressed ? "artwork/scrollbar_top_pressed.png" : "artwork/scrollbar_top_idle.png"
@@ -103,7 +110,7 @@ Item {
             width: childrenRect.width
             height: childrenRect.height
             onPressed: scrollBy(targetFlickable.height)
-            enabled: thumb.shown
+            enabled: __scrollable && thumb.shown
 
             Image {
                 source: parent.pressed ? "artwork/scrollbar_bottom_pressed.png" : "artwork/scrollbar_bottom_idle.png"
