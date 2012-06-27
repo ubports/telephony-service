@@ -53,7 +53,6 @@ QVariant ContactPhoneNumber::subTypes() const
 
 void ContactPhoneNumber::setSubTypes(const QVariant &value)
 {
-    qDebug() << "BLABLA setting subtypes:" << value;
     //FIXME: we are just setting this one all the time, maybe we should check if the list really changed
     mDetail.setValue(QContactPhoneNumber::FieldSubTypes, value);
     emit changed();
