@@ -11,7 +11,7 @@ var supportedTypes = [
                 delegateSource: "TextContactDetailsDelegate.qml",
                 items: "phoneNumbers",
                 newItemText: "Add a phone number",
-                newItemType: "PhoneNumber",
+                newItemType: "ContactPhoneNumber",
                 actionIcon: "../assets/contact_icon_phone.png",
                 displayField: "number",
                 subTypes: phoneSubTypes
@@ -21,7 +21,7 @@ var supportedTypes = [
                 delegateSource: "TextContactDetailsDelegate.qml",
                 items: "emails",
                 newItemText: "Add an email address",
-                newItemType: "EmailAddress",
+                newItemType: "ContactEmailAddress",
                 actionIcon: "../assets/contact_icon_email.png",
                 displayField: "emailAddress",
                 subTypes: emailSubTypes
@@ -31,7 +31,7 @@ var supportedTypes = [
                 delegateSource: "AddressContactDetailsDelegate.qml",
                 items: "addresses",
                 newItemText: "Add a postal address",
-                newItemType: "Address",
+                newItemType: "ContactAddress",
                 actionIcon: "../assets/contact_icon_location.png",
                 subTypes: postalAddressSubTypes
             },
@@ -41,7 +41,7 @@ var supportedTypes = [
                 items: "onlineAccounts",
                 newItemText: "Add an online account",
                 displayField: "accountUri",
-                newItemType: "OnlineAccount",
+                newItemType: "ContactOnlineAccount",
                 actionIcon: "../assets/contact_icon_IM.png",
                 subTypes: IMSubTypes
             }

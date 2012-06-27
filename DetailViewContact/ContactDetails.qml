@@ -1,5 +1,4 @@
 import QtQuick 1.1
-import QtMobility.contacts 1.1
 import TelephonyApp 0.1
 import "../Widgets"
 import "DetailTypeUtilities.js" as DetailTypes
@@ -10,8 +9,7 @@ Item {
     property string viewName: "contacts"
     property bool editable: false
     property variant contact: null
-    property variant added: false
-    property variant contactsModel
+    property bool added: false
 
     onContactChanged: editable = false
 
@@ -19,9 +17,20 @@ Item {
     height: 600
 
     function createNewContact() {
-        contact = Qt.createQmlObject("import QtMobility.contacts 1.1; Contact {}", contactsModel);
+        contact = Qt.createQmlObject("import TelephonyApp 0.1; ContactEntry {}", contactModel);
         editable = true;
         added = true;
+    }
+
+    Connections {
+        target: contactModel
+        onContactAdded: {
+            // refresh the contact object with the saved data
+            if (added) {
+                contactDetails.contact = contact;
+                added = false;
+            }
+        }
     }
 
     Item {
@@ -140,7 +149,7 @@ Item {
             CallLogProxyModel {
                 id: proxyModel
                 logModel: callLogModel
-                contactId: (contact) ? contact.guid.guid : "some string that won't match"
+                contactId: (contact) ? contact.id : "some string that won't match"
             }
             // FIXME: references to runtime and fake model need to be removed before final release
             model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel
@@ -221,7 +230,13 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 10
                 text: "Delete"
-                opacity: (editable) ? 1.0 : 0.0
+                opacity: (editable && !added) ? 1.0 : 0.0
+
+                onClicked: {
+                    // FIXME: show a dialog asking for confirmation
+                    contactModel.removeContact(contact);
+                    telephony.resetView();
+                }
             }
 
             ButtonSmall {
@@ -232,8 +247,15 @@ Item {
                 anchors.rightMargin: 10
                 text: "Cancel"
                 opacity: (editable) ? 1.0 : 0.0
-                onClicked: editable = false
-           }
+                onClicked: {
+                    if (added) {
+                        telephony.resetView();
+                    } else {
+                        contact.revertChanges();
+                        editable = false;
+                    }
+                }
+            }
 
             ButtonSmall {
                 id: editSaveButton
@@ -268,10 +290,11 @@ Item {
                             console.log("Add detail: " + contact.addDetail(addedDetails[i]));
                         }
 
-                        if (contact.modified || contact.added)
-                            contactsModel.saveContact(contact);
+                        if (contact.modified || added)
+                            contactModel.saveContact(contact);
 
                         editable = false;
+                        // added = false will be set when the new contact entry appears
                     }
                 }
             }
