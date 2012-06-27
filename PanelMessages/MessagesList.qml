@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import "../Widgets"
 
 // FIXME: the ListView could be the toplevel item
 Item {
@@ -30,5 +31,14 @@ Item {
                           && telephony.view.number == phoneNumber
             }
         }
+    }
+
+    Scrollbar {
+        id: scrollbar
+
+        anchors.right: listView.right
+        anchors.top: listView.top
+        anchors.bottom: listView.bottom
+        targetFlickable: listView
     }
 }
