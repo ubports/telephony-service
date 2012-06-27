@@ -59,8 +59,7 @@ AbstractButton {
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
             width: 8
-            source: "../assets/edit_contact_mode_arrow.png"
-            rotation: chooser.opened ? 180 : 0
+            source: chooser.opened ? "../assets/edit_contact_dropup_arrow.png" : "../assets/edit_contact_dropdown_arrow.png"
         }
     }
 
