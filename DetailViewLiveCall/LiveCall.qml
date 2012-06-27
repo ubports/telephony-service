@@ -1,6 +1,8 @@
 import QtQuick 1.0
+import QtMobility.contacts 1.1
 import "../Widgets"
 import "../DetailViewKeypad"
+import "../ContactUtils"
 
 Item {
     id: liveCall
@@ -15,6 +17,19 @@ Item {
     property bool isSpeaker: callManager.speaker
     property bool isMuted: call ? call.muted : false
     property bool isDtmf: false
+
+    ContactLoader {
+        id: contactLoader
+
+        filter: DetailFilter {
+            detail: ContactDetail.PhoneNumber
+            field: PhoneNumber.number
+            value: liveCall.number
+            matchFlags: DetailFilter.MatchPhoneNumber
+        }
+
+        onContactLoaded: liveCall.contact = contact
+    }
 
     function endCall() {
         if (call) {
