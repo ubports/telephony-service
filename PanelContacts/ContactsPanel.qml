@@ -79,19 +79,9 @@ Item {
 
         section.property: "display"
         section.criteria: ViewSection.FirstCharacter
-        section.delegate: TextCustom {
+        section.delegate: ListSectionHeader {
             width: parent.width
-            height: paintedHeight
             text: section
-            font.pixelSize: Font.sizeToPixels("medium")
-            font.bold: true
-            Rectangle {
-                height: 1
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                color: "black"
-            }
         }
     }
 }
