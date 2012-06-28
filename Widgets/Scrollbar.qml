@@ -150,18 +150,18 @@ Item {
         hoverEnabled: true
         onEntered: thumb.show()
         onPressed: {
-            if (isInThumbTop) {
-               thumb.placeThumbTopUnderMouse(mouse)
-           } else {
-               thumb.placeThumbBottomUnderMouse(mouse)
-           }
+            if (mouseY < thumb.y) {
+                thumb.placeThumbTopUnderMouse(mouse)
+            } else if (mouseY > thumb.y + thumb.height) {
+                thumb.placeThumbBottomUnderMouse(mouse)
+            }
         }
         onClicked: {
             if (isInThumbTop) {
-               __scrollOnePageUp()
-           } else {
-               __scrollOnePageDown()
-           }
+                __scrollOnePageUp()
+            } else {
+                __scrollOnePageDown()
+            }
         }
 
         // dragging behaviour
