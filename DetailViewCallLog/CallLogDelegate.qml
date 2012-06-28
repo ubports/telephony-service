@@ -15,6 +15,7 @@ Item {
         anchors.left: parent.left
         anchors.right: separator.left
         iconSource: avatar
+        placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
         subtext: phoneNumber
         onClicked: callItem.clicked(contactId)

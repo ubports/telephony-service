@@ -20,7 +20,7 @@ ListModel {
         phoneNumber: "555-434-6888"
     }
     ListElement {
-        avatar: "frankjohnson.jpg"
+        avatar: ""
         contactAlias: "Frank Johnson"
         message: "I am an engineer too, bugger off!"
         timestamp: "June 10, 2012 22:10:18"

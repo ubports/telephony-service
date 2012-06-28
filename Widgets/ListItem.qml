@@ -8,6 +8,7 @@ AbstractButton {
 
     property bool isIcon: false // FIXME: not nice
     property alias iconSource: icon.source // FIXME: think of a way to have the selected state done automatically
+    property url placeholderIconSource
     property alias text: label.text
     property alias subtext: sublabel.text
     property bool selected: false
@@ -83,6 +84,7 @@ AbstractButton {
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
                 opacity: listItem.enabled ? 1.0 : 0.5
+                onStatusChanged: if (status == Image.Error && listItem.placeholderIconSource) source = listItem.placeholderIconSource
             }
 
             BorderImage {

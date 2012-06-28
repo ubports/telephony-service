@@ -36,7 +36,8 @@ AbstractButton {
             anchors.margins: 1
             fillMode: Image.PreserveAspectCrop
             smooth: true
-            source: (call && call.contactAvatar != "") ? call.contactAvatar : "assets/default_avatar.png"
+            source: (call && call.contactAvatar != "") ? call.contactAvatar : "assets/avatar_contacts_list.png"
+            onStatusChanged: if (status == Image.Error) source = "assets/avatar_contacts_list.png"
         }
 
         BorderImage {
