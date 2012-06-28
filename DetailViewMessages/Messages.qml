@@ -17,7 +17,7 @@ Item {
 
             TextCustom {
                 anchors.left: parent.left
-                anchors.leftMargin: 16
+                anchors.leftMargin: 18
                 text: section
                 fontSize: "medium"
                 elide: Text.ElideRight
@@ -63,7 +63,7 @@ Item {
         anchors.bottomMargin: 10
         contentWidth: parent.width
         contentHeight: messages.height
-        spacing: 13
+        spacing: 24
         orientation: ListView.Vertical
         ListModel { id: messagesModel }
         // FIXME: references to runtime and fake model need to be removed before final release
@@ -83,8 +83,8 @@ Item {
             anchors.right: if (sourceComponent == messageTextDelegate) return parent.right
                           else return incoming ? undefined : parent.right
 
-            anchors.leftMargin: incoming ? 10 : 40
-            anchors.rightMargin: incoming ? 40 : 10
+            anchors.leftMargin: incoming ? 10 : 39
+            anchors.rightMargin: incoming ? 39 : 10
 
             sourceComponent: message != "" ? messageTextDelegate : messageImageDelegate
         }

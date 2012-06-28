@@ -50,15 +50,15 @@ Item {
     BorderImage {
         id: bubble
 
-        property int topPadding: 4
+        property int topPadding: 5
         property int bottomPadding: 6
-        property int leftPadding: messageBubble.mirrored ? 6 : 13
-        property int rightPadding: messageBubble.mirrored ? 13 : 6
+        property int leftPadding: messageBubble.mirrored ? 6 : 14
+        property int rightPadding: messageBubble.mirrored ? 14 : 6
 
         width: image.paintedWidth + leftPadding + rightPadding
         height: image.paintedHeight + topPadding + bottomPadding
         smooth: true
         source: messageBubble.mirrored ? "../assets/bubble_image_right.png" : "../assets/bubble_image_left.png"
-        border {top: 15; bottom: 40; left: messageBubble.mirrored ? 15 : 21; right: messageBubble.mirrored ? 21 : 15}
+        border {top: 20; bottom: 24; left: messageBubble.mirrored ? 19 : 27; right: messageBubble.mirrored ? 27 : 19}
     }
 }
