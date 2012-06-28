@@ -31,6 +31,7 @@ import QtQuick 1.1
 */
 
 // FIXME:
+// - clicking on the proximityArea eats clicks
 // - make scrolling by dragging not 1-to-1 but instead ensuring that the whole area can be browsed
 // - try to make the thumb follow the mouse when in sliderArea maybe using a timer to ease the targetting of parts of the thumb
 Item {
