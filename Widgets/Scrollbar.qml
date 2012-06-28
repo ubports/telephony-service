@@ -132,7 +132,10 @@ Item {
     MouseArea {
         id: thumbArea
 
-        property bool isInThumbTop: mouseY < thumb.y + thumb.height / 2
+        property int thumbMiddleY: thumb.y + thumb.height / 2
+        property int thumbBottomY: thumb.y + thumb.height
+        property bool isInThumbTop: mouseY > thumb.y && mouseY < thumbMiddleY
+        property bool isInThumbBottom: mouseY > thumbMiddleY && mouseY < thumbBottomY
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -146,14 +149,14 @@ Item {
         onPressed: {
             if (mouseY < thumb.y) {
                 thumb.placeThumbTopUnderMouse(mouse)
-            } else if (mouseY > thumb.y + thumb.height) {
+            } else if (mouseY > thumbBottomY) {
                 thumb.placeThumbBottomUnderMouse(mouse)
             }
         }
         onClicked: {
             if (isInThumbTop) {
                 __scrollOnePageUp()
-            } else {
+            } else if (isInThumbBottom) {
                 __scrollOnePageDown()
             }
         }
