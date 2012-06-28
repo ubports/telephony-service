@@ -76,11 +76,11 @@ Item {
         width: slider.width
 
         property int thumbMargin: 3
-        property bool isTop: thumb.y > slider.y // FIXME: is that correct?
+        property bool isThumbAboveSlider: thumb.y < slider.y
 
         // FIXME: simplify
-        y: isTop ? slider.y + slider.height : thumb.y + thumbMargin
-        height: isTop ? (thumb.y + thumb.height - thumbMargin) - y : (slider.y) - y
+        y: isThumbAboveSlider ? thumb.y + thumbMargin : slider.y + slider.height
+        height: isThumbAboveSlider ? (slider.y) - y : (thumb.y + thumb.height - thumbMargin) - y
 
         color: "white"
         opacity: thumb.shown ? 1.0 : 0.0
