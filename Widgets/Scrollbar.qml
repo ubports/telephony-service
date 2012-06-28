@@ -27,7 +27,6 @@ import QtQuick 1.1
       targetFlickable: flickable
   }
 */
-
 Item {
     id: scrollbar
 
@@ -176,7 +175,7 @@ Item {
         Binding {
             target: targetFlickable
             property: "contentY"
-            value: thumb.y / scrollbar.height * targetFlickable.contentHeight // FIXME
+            value: thumb.y / (scrollbar.height - thumb.height) * (targetFlickable.contentHeight - targetFlickable.height)
             when: thumbArea.drag.active
         }
     }
