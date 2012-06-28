@@ -46,8 +46,7 @@ Item {
 
     MessagesList {
         anchors.top: newMessage.bottom
-        // FIXME: make that filling in the available space generic
-        height: parent.height - search.height - newMessage.height - 10
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         // FIXME: reference to fake model needs to be removed before final release
