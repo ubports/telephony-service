@@ -152,15 +152,14 @@ Item {
         hoverEnabled: true
         onEntered: thumb.show()
         onClicked: {
-            var targetY
             var goingUp = sliderArea.mouseY < thumb.y
             if (goingUp) {
                 __scrollOnePageUp()
-                targetY = sliderArea.mouseY - thumb.height / 4
+                thumb.placeThumbTopUnderMouse(mouse)
             } else {
-                targetY = sliderArea.mouseY - thumb.height * 3 / 4
+                __scrollOnePageDown()
+                thumb.placeThumbBottomUnderMouse(mouse)
             }
-            thumb.y = __clamp(targetY, thumb.minimumY, thumb.maximumY)
         }
     }
 
@@ -185,6 +184,14 @@ Item {
         function show() {
             autohideTimer.restart()
             thumb.shown = true
+        }
+
+        function placeThumbTopUnderMouse(mouse) {
+            y = __clamp(mouse.y - height / 4, minimumY, maximumY)
+        }
+
+        function placeThumbBottomUnderMouse(mouse) {
+            y = __clamp(mouse.y - height * 3 / 4, minimumY, maximumY)
         }
 
         opacity: shown ? 1.0 : 0.0
