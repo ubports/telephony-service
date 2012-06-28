@@ -185,10 +185,7 @@ Item {
 
         interval: 1000
         repeat: true
-        onTriggered: if (!proximityArea.containsMouse && !thumbArea.containsMouse && !thumbArea.pressed) {
-                         stop()
-                         thumb.shown = false
-                     }
+        onTriggered: if (!proximityArea.containsMouse && !thumbArea.containsMouse && !thumbArea.pressed) thumb.hide()
     }
 
     Item {
@@ -204,7 +201,12 @@ Item {
 
         function show() {
             autohideTimer.restart()
-            thumb.shown = true
+            shown = true
+        }
+
+        function hide() {
+            autohideTimer.stop()
+            shown = false
         }
 
         function placeThumbTopUnderMouse(mouse) {
