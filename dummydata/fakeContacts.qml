@@ -42,7 +42,7 @@ ListModel {
         email: "frank.johnson@mail.com"
         phone: "555-224-5532"
         phoneType: "Mobile"
-        avatar: "frankjohnson.jpg"
+        avatar: ""
         favourite: false
         location: "London"
         presence: 1

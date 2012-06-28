@@ -8,7 +8,7 @@ Item {
     property variant editable: false
 
     width: parent.width
-    height: editable ? labelBox.height : 82
+    height: editable ? Math.max(labelBox.height, 82) : 82
     Behavior on height {StandardAnimation {}}
 
     // FIXME: this function is used in two places, should be moved to one common place
@@ -39,7 +39,8 @@ Item {
         height: width
         sourceSize.width: width
         fillMode: Image.PreserveAspectFit
-        source: contact ? contact.avatar : ""
+        source: (contact && contact.avatar != "") ? contact.avatar : "../assets/avatar_contacts_details.png"
+        onStatusChanged: if (status == Image.Error) source = "../assets/avatar_contacts_details.png"
     }
 
     BorderImage {

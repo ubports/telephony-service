@@ -149,6 +149,7 @@ void AbstractLoggerModel::requestEventsForDates(const Tpl::EntityPtr &entity, co
 
 void AbstractLoggerModel::fillContactInfo(LogEntry *entry, const QContact &contact)
 {
+    // FIXME: set the contact ID to something else than the GUID
     QContactGuid guid = contact.detail<QContactGuid>();
     QContactAvatar avatar = contact.detail<QContactAvatar>();
     entry->contactId = guid.guid();
@@ -178,10 +179,18 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         entry->timestamp = event->timestamp();
 
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
-        entry->contactAlias = remoteEntity->alias();
-        entry->phoneNumber = remoteEntity->identifier();
+        QStringList splittedId = remoteEntity->identifier().split(":");
+        if (splittedId.count() == 2) {
+            entry->phoneNumber = splittedId[1];
+            // FIXME: we should use the contact id once we can match it
+        } else {
+            qWarning() << "The ID from logger is not using the format contactId:phoneNumber";
+        }
 
-        QContact contact = ContactManager::instance()->contactForNumber(remoteEntity->identifier());
+        entry->contactAlias = remoteEntity->alias();
+
+        // FIXME: use the contact id
+        QContact contact = ContactManager::instance()->contactForNumber(entry->phoneNumber);
         if (!contact.isEmpty()) {
             // if more than one contact matches, use the first one
             fillContactInfo(entry, contact);

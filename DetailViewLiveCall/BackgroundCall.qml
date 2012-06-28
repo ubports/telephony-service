@@ -15,7 +15,8 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         width: height
-        source: (call && call.contactAvatar != "") ? call.contactAvatar : "../assets/default_avatar.png"
+        source: (call && call.contactAvatar != "") ? call.contactAvatar : "../assets/avatar_incall_rightpane.png"
+        onStatusChanged: if (status == Image.Error) source = "../assets/avatar_incall_rightpane.png"
     }
 
     Text {
