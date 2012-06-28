@@ -135,6 +135,7 @@ Item {
         onEntered: thumb.show()
     }
 
+    /* While the mouse is in the proximityArea, the thumb follows it */
     Binding {
         target: thumb
         property: "y"
