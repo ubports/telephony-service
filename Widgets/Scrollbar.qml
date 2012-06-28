@@ -161,18 +161,27 @@ Item {
             }
         }
 
-        // dragging behaviour
+        /* Dragging behaviour */
+        property int dragYStart
+        property int thumbYStart
         drag {
-            target: thumb
-            axis: Drag.YAxis
-            minimumY: thumb.minimumY
-            maximumY: thumb.maximumY
+            target: Item {}
+            /* necessary to make sure drag is activated even by a non vertical movement */
+            axis: Drag.XandYAxis
+            onActiveChanged: if (drag.active) {dragYStart = drag.target.y; thumbYStart = thumb.y}
         }
 
         Binding {
             target: targetFlickable
             property: "contentY"
             value: thumb.y / (scrollbar.height - thumb.height) * (targetFlickable.contentHeight - targetFlickable.height)
+            when: thumbArea.drag.active
+        }
+
+        Binding {
+            target: thumb
+            property: "y"
+            value: __clamp(thumbArea.drag.target.y - thumbArea.dragYStart + thumbArea.thumbYStart, thumb.minimumY, thumb.maximumY)
             when: thumbArea.drag.active
         }
     }
