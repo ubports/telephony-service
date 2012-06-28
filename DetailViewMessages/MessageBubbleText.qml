@@ -35,13 +35,13 @@ Item {
 
         property int topPadding: 12
         property int bottomPadding: 13
-        property int leftPadding: messageBubble.mirrored ? 17 : 26
+        property int leftPadding: messageBubble.mirrored ? 17 : 33
         property int rightPadding: 19
         height: label.height + topPadding + bottomPadding
 
         smooth: true
         source: messageBubble.mirrored ? "../assets/bubble_right.png" : "../assets/bubble_left.png"
-        border {top: 15; bottom: 40; left: messageBubble.mirrored ? 15 : 21; right: messageBubble.mirrored ? 21 : 15}
+        border {top: 17; bottom: 22; left: messageBubble.mirrored ? 15 : 24; right: messageBubble.mirrored ? 24 : 15}
     }
 
     TextCustom {
