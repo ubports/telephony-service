@@ -69,6 +69,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     
 protected:
+    QString phoneNumberFromId(const QString &id) const;
     void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny);
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
     void requestEventsForDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);

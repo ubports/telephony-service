@@ -102,6 +102,18 @@ QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
     return mLogEntries[index.row()]->data(role);
 }
 
+QString AbstractLoggerModel::phoneNumberFromId(const QString &id) const
+{
+    QStringList splittedId = id.split(":");
+    if (splittedId.count() == 2) {
+        return splittedId[1];
+    } else {
+        qWarning() << "The ID from logger is not using the format contactId:phoneNumber";
+    }
+
+    return id;
+}
+
 void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type)
 {
     Tpl::PendingEntities *pendingEntities = mLogManager->queryEntities(TelepathyHelper::instance()->account());
@@ -179,15 +191,7 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         entry->timestamp = event->timestamp();
 
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
-        QStringList splittedId = remoteEntity->identifier().split(":");
-        if (splittedId.count() == 2) {
-            entry->phoneNumber = splittedId[1];
-            // FIXME: we should use the contact id once we can match it
-        } else {
-            qWarning() << "The ID from logger is not using the format contactId:phoneNumber";
-        }
-
-        entry->contactAlias = remoteEntity->alias();
+        entry->phoneNumber = phoneNumberFromId(remoteEntity->identifier());
 
         // FIXME: use the contact id
         QContact contact = ContactManager::instance()->contactForNumber(entry->phoneNumber);
