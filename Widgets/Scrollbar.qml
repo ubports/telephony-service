@@ -47,23 +47,23 @@ Item {
     opacity: __scrollable ? 1.0 : 0.0
     Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
 
-    function clamp(x, min, max) {
+    function __clamp(x, min, max) {
         return Math.max(min, Math.min(max, x))
     }
 
     // Scroll by amount pixels never overshooting
-    function scrollBy(amount) {
+    function __scrollBy(amount) {
         var destination = targetFlickable.contentY + amount
-        scrollAnimation.to = clamp(destination, 0, targetFlickable.contentHeight - targetFlickable.height)
+        scrollAnimation.to = __clamp(destination, 0, targetFlickable.contentHeight - targetFlickable.height)
         scrollAnimation.restart()
     }
 
-    function scrollOnePageUp() {
-        scrollBy(-targetFlickable.height)
+    function __scrollOnePageUp() {
+        __scrollBy(-targetFlickable.height)
     }
 
-    function scrollOnePageDown() {
-        scrollBy(targetFlickable.height)
+    function __scrollOnePageDown() {
+        __scrollBy(targetFlickable.height)
     }
 
     SmoothedAnimation {
@@ -84,14 +84,14 @@ Item {
         width: 2
         color: "#fc7134"
 
-        height: clamp(targetFlickable.visibleArea.heightRatio * scrollbar.height, minimalHeight, scrollbar.height)
+        height: __clamp(targetFlickable.visibleArea.heightRatio * scrollbar.height, minimalHeight, scrollbar.height)
         Behavior on height {NumberAnimation {duration: 200; easing.type: Easing.InOutQuad}}
 
         Binding {
             target: slider
             property: "y"
             value: {
-                var yPosition = clamp(targetFlickable.visibleArea.yPosition, 0, 1-targetFlickable.visibleArea.heightRatio)
+                var yPosition = __clamp(targetFlickable.visibleArea.yPosition, 0, 1-targetFlickable.visibleArea.heightRatio)
                 return yPosition * scrollbar.height
             }
         }
@@ -129,7 +129,7 @@ Item {
     Binding {
         target: thumb
         property: "y"
-        value: clamp(proximityArea.mouseY - thumb.height / 2, thumb.minimumY, thumb.maximumY)
+        value: __clamp(proximityArea.mouseY - thumb.height / 2, thumb.minimumY, thumb.maximumY)
         when: proximityArea.containsMouse && thumb.shown
     }
 
@@ -147,12 +147,12 @@ Item {
             var targetY
             var goingUp = sliderArea.mouseY < thumb.y
             if (goingUp) {
-                scrollOnePageUp()
+                __scrollOnePageUp()
                 targetY = sliderArea.mouseY - thumb.height / 4
             } else {
                 targetY = sliderArea.mouseY - thumb.height * 3 / 4
             }
-            thumb.y = clamp(targetY, thumb.minimumY, thumb.maximumY)
+            thumb.y = __clamp(targetY, thumb.minimumY, thumb.maximumY)
         }
     }
 
@@ -188,7 +188,7 @@ Item {
             property bool isInThumbTop: mouseY < thumb.height / 2
 
             anchors.fill: parent
-            onClicked: if (isInThumbTop) scrollOnePageUp(); else scrollOnePageDown()
+            onClicked: if (isInThumbTop) __scrollOnePageUp(); else __scrollOnePageDown()
             enabled: __scrollable && thumb.shown
 
             // dragging behaviour
@@ -200,7 +200,7 @@ Item {
                 minimumY: thumb.minimumY
                 maximumY: thumb.maximumY
             }
-            onMouseYChanged: if (drag.active) targetFlickable.contentY = clamp(targetFlickable.contentY + mouseY - lastDragY, 0, targetFlickable.contentHeight - targetFlickable.height)
+            onMouseYChanged: if (drag.active) targetFlickable.contentY = __clamp(targetFlickable.contentY + mouseY - lastDragY, 0, targetFlickable.contentHeight - targetFlickable.height)
         }
 
         Column {
