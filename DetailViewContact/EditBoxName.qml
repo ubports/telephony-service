@@ -15,39 +15,6 @@
  */
 
 import QtQuick 1.1
-import "../Widgets"
-import "../fontUtils.js" as FontUtils
 
-EditBox {
-    id: editBox
-
-    property alias value: input.text
-    property alias description: label.text
-
-    TextInput {
-        id: input
-
-        parent: editBox.leftBox
-        anchors.left: parent.left
-        anchors.leftMargin: 7
-        anchors.right: parent.right
-        font.pixelSize: FontUtils.sizeToPixels("large")
-        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-        selectByMouse: true
-    }
-
-    TextCustom {
-        id: label
-
-        parent: editBox.rightBox
-        anchors.left: parent.left
-        anchors.leftMargin: 10
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
-        fontSize: "medium"
-        elide: Text.ElideRight
-        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-        style: Text.Raised
-        styleColor: "white"
-    }
+AddressEditorField {
 }
