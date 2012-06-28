@@ -8,7 +8,7 @@ Item {
     property string viewName: "livecall"
     // FIXME: better name that does not sound like a boolean; store it in the StopWatch but also alias it here
     // FIXME: refactor StopWatch, Timer into StopWatch
-    property variant contact
+    property variant contact: call ? contactModel.contactFromPhoneNumber(call.phoneNumber) : null
     property QtObject call: callManager.foregroundCall
     property string number: call ? call.phoneNumber : ""
     property bool onHold: call ? call.held : false
@@ -72,7 +72,7 @@ Item {
                 height: 140
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
-                source: (contact && contact.avatar.imageUrl != "") ? contact.avatar.imageUrl : "../assets/icon_address_book.png"
+                source: (contact && contact.avatar != "") ? contact.avatar : "../assets/pane_contacts_icon.png"
                 smooth: true
             }
 
@@ -125,6 +125,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: number.bottom
                 anchors.topMargin: 2
+                // FIXME: add back geo-location information to the ContactEntry model
                 text: contact ? contact.geoLocation.label : ""
                 color: "#a0a0a2"
                 style: Text.Sunken
