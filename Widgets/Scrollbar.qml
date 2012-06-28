@@ -209,6 +209,8 @@ Item {
             shown = false
         }
 
+        Behavior on y {SmoothedAnimation {duration: 100; easing.type: Easing.InOutQuad}}
+
         function placeThumbTopUnderMouse(mouse) {
             y = __clamp(mouse.y - height / 4, minimumY, maximumY)
         }
