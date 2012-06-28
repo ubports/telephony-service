@@ -28,9 +28,6 @@ import QtQuick 1.1
   }
 */
 
-// FIXME:
-// - make scrolling by dragging not 1-to-1 but instead ensuring that the whole area can be browsed
-// - try to make the thumb follow the mouse when in sliderArea maybe using a timer to ease the targetting of parts of the thumb
 Item {
     id: scrollbar
 
@@ -127,7 +124,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.left: parent.left
-        anchors.right: sliderArea.left
+        anchors.right: thumbArea.left
         enabled: __scrollable
         hoverEnabled: true
         onEntered: thumb.show()
@@ -142,7 +139,9 @@ Item {
     }
 
     MouseArea {
-        id: sliderArea
+        id: thumbArea
+
+        property bool isInThumbTop: mouseY < thumb.y + thumb.height / 2
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -151,15 +150,34 @@ Item {
         enabled: __scrollable
         hoverEnabled: true
         onEntered: thumb.show()
+        onPressed: {
+            if (isInThumbTop) {
+               thumb.placeThumbTopUnderMouse(mouse)
+           } else {
+               thumb.placeThumbBottomUnderMouse(mouse)
+           }
+        }
         onClicked: {
-            var goingUp = sliderArea.mouseY < thumb.y
-            if (goingUp) {
-                __scrollOnePageUp()
-                thumb.placeThumbTopUnderMouse(mouse)
-            } else {
-                __scrollOnePageDown()
-                thumb.placeThumbBottomUnderMouse(mouse)
-            }
+            if (isInThumbTop) {
+               __scrollOnePageUp()
+           } else {
+               __scrollOnePageDown()
+           }
+        }
+
+        // dragging behaviour
+        drag {
+            target: thumb
+            axis: Drag.YAxis
+            minimumY: thumb.minimumY
+            maximumY: thumb.maximumY
+        }
+
+        Binding {
+            target: targetFlickable
+            property: "contentY"
+            value: thumb.y / scrollbar.height * targetFlickable.contentHeight // FIXME
+            when: thumbArea.drag.active
         }
     }
 
@@ -167,15 +185,15 @@ Item {
         id: autohideTimer
 
         interval: 1000
-        onTriggered: if (!proximityArea.containsMouse && !sliderArea.containsMouse) thumb.shown = false
+        onTriggered: if (!proximityArea.containsMouse && !thumbArea.containsMouse) thumb.shown = false
     }
 
     Item {
         id: thumb
 
         anchors.right: slider.right
-        width: thumbVisual.width
-        height: thumbVisual.height
+        width: childrenRect.width
+        height: childrenRect.height
 
         property bool shown
         property int minimumY: 0
@@ -197,30 +215,7 @@ Item {
         opacity: shown ? 1.0 : 0.0
         Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
 
-        MouseArea {
-            id: thumbArea
-
-            property bool isInThumbTop: mouseY < thumb.height / 2
-
-            anchors.fill: parent
-            onClicked: if (isInThumbTop) __scrollOnePageUp(); else __scrollOnePageDown()
-            enabled: __scrollable && thumb.shown
-
-            // dragging behaviour
-            property int lastDragY
-            onPressed: lastDragY = mouse.y
-            drag {
-                target: thumb
-                axis: Drag.YAxis
-                minimumY: thumb.minimumY
-                maximumY: thumb.maximumY
-            }
-            onMouseYChanged: if (drag.active) targetFlickable.contentY = __clamp(targetFlickable.contentY + mouseY - lastDragY, 0, targetFlickable.contentHeight - targetFlickable.height)
-        }
-
         Column {
-            id: thumbVisual
-
             Image {
                 id: thumbTop
                 source: thumbArea.isInThumbTop && thumbArea.pressed ? "artwork/scrollbar_top_pressed.png" : "artwork/scrollbar_top_idle.png"
