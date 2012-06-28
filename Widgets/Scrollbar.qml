@@ -219,7 +219,7 @@ Item {
             y = __clamp(mouse.y - height * 3 / 4, minimumY, maximumY)
         }
 
-        opacity: shown ? 1.0 : 0.0
+        opacity: shown ? (thumbArea.containsMouse ? 1.0 : 0.5) : 0.0
         Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
 
         Column {
