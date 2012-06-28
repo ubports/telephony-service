@@ -61,6 +61,7 @@ Item {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+        anchors.rightMargin: 10
         opacity: editable ? 1.0 : 0.0
         Behavior on opacity {StandardAnimation {}}
 
