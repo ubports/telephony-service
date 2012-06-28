@@ -127,8 +127,8 @@ Item {
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.right: sliderArea.left
         anchors.left: parent.left
+        anchors.right: sliderArea.left
         enabled: __scrollable
         hoverEnabled: true
         onEntered: thumb.show()
