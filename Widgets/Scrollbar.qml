@@ -17,19 +17,20 @@
 import QtQuick 1.1
 
 /*
-   Usage:
+  FIXME: document behaviours
 
-   Flickable {
-       id: flickable
-   }
+  Example usage:
 
-   Scrollbar {
-       targetFlickable: flickable
-   }
+  Flickable {
+      id: flickable
+  }
+
+  Scrollbar {
+      targetFlickable: flickable
+  }
 */
 
 // FIXME:
-// - document all the behaviours
 // - make scrolling by dragging not 1-to-1 but instead ensuring that the whole area can be browsed
 // - try to make the thumb follow the mouse when in sliderArea maybe using a timer to ease the targetting of parts of the thumb
 Item {
