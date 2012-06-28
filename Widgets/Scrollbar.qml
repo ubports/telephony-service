@@ -129,14 +129,6 @@ Item {
         onEntered: thumb.show()
     }
 
-    /* While the mouse is in the proximityArea, the thumb follows it */
-    Binding {
-        target: thumb
-        property: "y"
-        value: __clamp(proximityArea.mouseY - thumb.height / 2, thumb.minimumY, thumb.maximumY)
-        when: proximityArea.containsMouse && thumb.shown
-    }
-
     MouseArea {
         id: thumbArea
 
@@ -200,6 +192,14 @@ Item {
         property bool shown
         property int minimumY: 0
         property int maximumY: scrollbar.height - thumb.height
+
+        /* Show the thumb as close as possible to the mouse pointer */
+        onShownChanged: {
+            if (shown) {
+                var mouseY = proximityArea.containsMouse ? proximityArea.mouseY : thumbArea.mouseY
+                y = __clamp(mouseY - thumb.height / 2, thumb.minimumY, thumb.maximumY)
+            }
+        }
 
         function show() {
             autohideTimer.restart()
