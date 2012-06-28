@@ -215,11 +215,22 @@ Item {
         }
 
         function placeThumbTopUnderMouse(mouse) {
-            y = __clamp(mouse.y - height / 4, minimumY, maximumY)
+            yAnimation.to = __clamp(mouse.y - height / 4, minimumY, maximumY)
+            yAnimation.restart()
         }
 
         function placeThumbBottomUnderMouse(mouse) {
-            y = __clamp(mouse.y - height * 3 / 4, minimumY, maximumY)
+            yAnimation.to = __clamp(mouse.y - height * 3 / 4, minimumY, maximumY)
+            yAnimation.restart()
+        }
+
+        NumberAnimation {
+            id: yAnimation
+
+            duration: 100
+            easing.type: Easing.InOutQuad
+            target: thumb
+            property: "y"
         }
 
         opacity: shown ? (thumbArea.containsMouse ? 1.0 : 0.5) : 0.0
