@@ -146,6 +146,8 @@ Item {
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         anchors.left: thumb.left
+        /* Wider target area more tolerant to mistakes */
+        anchors.leftMargin: -8
         enabled: __scrollable
         hoverEnabled: true
         onEntered: thumb.show()
