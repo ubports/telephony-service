@@ -51,6 +51,30 @@ Item {
         return Math.max(min, Math.min(max, x))
     }
 
+    // Scroll by amount pixels never overshooting
+    function scrollBy(amount) {
+        var destination = targetFlickable.contentY + amount
+        scrollAnimation.to = clamp(destination, 0, targetFlickable.contentHeight - targetFlickable.height)
+        scrollAnimation.restart()
+    }
+
+    function scrollOnePageUp() {
+        scrollBy(-targetFlickable.height)
+    }
+
+    function scrollOnePageDown() {
+        scrollBy(targetFlickable.height)
+    }
+
+    SmoothedAnimation {
+        id: scrollAnimation
+
+        duration: 200
+        easing.type: Easing.InOutQuad
+        target: targetFlickable
+        property: "contentY"
+    }
+
     Rectangle {
         id: slider
 
@@ -191,29 +215,5 @@ Item {
                 source: !thumbArea.isInThumbTop && thumbArea.pressed ? "artwork/scrollbar_bottom_pressed.png" : "artwork/scrollbar_bottom_idle.png"
             }
         }
-    }
-
-    // Scroll by amount pixels never overshooting
-    function scrollBy(amount) {
-        var destination = targetFlickable.contentY + amount
-        scrollAnimation.to = clamp(destination, 0, targetFlickable.contentHeight - targetFlickable.height)
-        scrollAnimation.restart()
-    }
-
-    function scrollOnePageUp() {
-        scrollBy(-targetFlickable.height)
-    }
-
-    function scrollOnePageDown() {
-        scrollBy(targetFlickable.height)
-    }
-
-    SmoothedAnimation {
-        id: scrollAnimation
-
-        duration: 200
-        easing.type: Easing.InOutQuad
-        target: targetFlickable
-        property: "contentY"
     }
 }
