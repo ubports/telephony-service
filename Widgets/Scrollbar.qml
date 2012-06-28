@@ -184,7 +184,11 @@ Item {
         id: autohideTimer
 
         interval: 1000
-        onTriggered: if (!proximityArea.containsMouse && !thumbArea.containsMouse) thumb.shown = false
+        repeat: true
+        onTriggered: if (!proximityArea.containsMouse && !thumbArea.containsMouse && !thumbArea.pressed) {
+                         stop()
+                         thumb.shown = false
+                     }
     }
 
     Item {
