@@ -105,14 +105,14 @@ Item {
     Rectangle {
         id: sliderThumbConnector
 
-        anchors.right: parent.right
-        width: slider.width
-
-        property int thumbMargin: 3
         property bool isThumbAboveSlider: thumb.y < slider.y
 
-        y: isThumbAboveSlider ? thumb.y + thumbMargin : slider.y + slider.height
-        height: isThumbAboveSlider ? (slider.y) - y : (thumb.y + thumb.height - thumbMargin) - y
+        anchors.left: slider.left
+        anchors.right: slider.right
+        anchors.top: isThumbAboveSlider ? thumb.top : slider.bottom
+        anchors.bottom: isThumbAboveSlider ? slider.top : thumb.bottom
+        anchors.topMargin: isThumbAboveSlider ? 3 : 0
+        anchors.bottomMargin: isThumbAboveSlider ? 0 : 3
 
         color: "white"
         opacity: thumb.shown ? 1.0 : 0.0
