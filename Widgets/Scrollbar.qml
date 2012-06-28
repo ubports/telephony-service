@@ -101,6 +101,7 @@ Item {
         }
     }
 
+    /* The sliderThumbConnector ensures a visual connection between the slider and the thumb */
     Rectangle {
         id: sliderThumbConnector
 
