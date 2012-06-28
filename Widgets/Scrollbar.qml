@@ -51,7 +51,7 @@ Item {
         return Math.max(min, Math.min(max, x))
     }
 
-    // Scroll by amount pixels never overshooting
+    /* Scroll by amount pixels never overshooting */
     function __scrollBy(amount) {
         var destination = targetFlickable.contentY + amount
         scrollAnimation.to = __clamp(destination, 0, targetFlickable.contentHeight - targetFlickable.height)
@@ -119,6 +119,9 @@ Item {
         Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
     }
 
+    /* The thumb appears whenever the mouse gets close enough to the scrollbar
+       and disappears after being for a long enough time far enough of it
+    */
     MouseArea {
         id: proximityArea
 
