@@ -1,3 +1,18 @@
+telephony-app (0.17newyork8) precise; urgency=low
+
+  [ Florian Boucault ]
+  * Contact detail view edit mode: better looking arrows for the combobox.
+  * Messages view: implemented visual design.
+  * Messages panel: compute the height of the list of messages properly.
+
+  [ Gustavo Pichorim Boiko ]
+  * Do not load the dummy data from the binary application.
+
+  [ Olivier Tilloy ]
+  * Display the contact information in the active call view.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 28 Jun 2012 12:24:50 -0300
+
 telephony-app (0.17newyork7) precise; urgency=low
 
   * Make sure the correct tab is selected for all the views.
