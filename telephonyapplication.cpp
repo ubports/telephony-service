@@ -12,29 +12,6 @@
 #include "config.h"
 #include "telephonyappdbus.h"
 
-// inspired by qmlviewer’s QDeclarativeViewer::loadDummyDataFiles(…)
-static void loadDummyDataFiles(QDeclarativeView* view)
-{
-    QDir dir(telephonyAppDirectory() + "/dummydata", "*.qml");
-    Q_FOREACH(const QString& qmlFile, dir.entryList()) {
-        const QString filePath = dir.filePath(qmlFile);
-        QDeclarativeComponent comp(view->engine(), filePath);
-        QObject* dummyData = comp.create();
-        if(comp.isError()) {
-            Q_FOREACH(const QDeclarativeError &error, comp.errors()) {
-                qWarning() << error;
-            }
-        }
-        if (dummyData) {
-            qDebug() << "Loaded dummy data:" << filePath;
-            QString propertyName = qmlFile;
-            propertyName.chop(4);
-            view->rootContext()->setContextProperty(propertyName, dummyData);
-            dummyData->setParent(view);
-        }
-    }
-}
-
 static void printUsage(const QStringList& arguments)
 {
     qDebug() << "usage:"
@@ -77,7 +54,6 @@ bool TelephonyApplication::setup()
         return false;
     }
 
-
     if (!m_dbus->connectToBus()) {
         qWarning() << "Failed to expose com.canonical.TelephonyApp on DBUS.";
     }
@@ -85,7 +61,6 @@ bool TelephonyApplication::setup()
     m_view = new QDeclarativeView();
     QObject::connect(m_view, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onViewStatusChanged(QDeclarativeView::Status)));
     m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-    loadDummyDataFiles(m_view);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     m_view->rootContext()->setContextProperty("dbus", m_dbus);
     QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
