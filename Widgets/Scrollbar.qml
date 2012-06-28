@@ -75,6 +75,10 @@ Item {
         property: "contentY"
     }
 
+    /* The slider's position represents which part of the flickable is visible.
+       The slider's size represents the size the visible part relative to the
+       total size of the flickable.
+    */
     Rectangle {
         id: slider
 
