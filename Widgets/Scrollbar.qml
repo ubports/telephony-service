@@ -60,7 +60,7 @@ Item {
         width: 2
         color: "#fc7134"
 
-        height: Math.min(scrollbar.height, Math.max(minimalHeight, targetFlickable.visibleArea.heightRatio * scrollbar.height))
+        height: clamp(targetFlickable.visibleArea.heightRatio * scrollbar.height, minimalHeight, scrollbar.height)
         Behavior on height {NumberAnimation {duration: 200; easing.type: Easing.InOutQuad}}
 
         Binding {
@@ -196,9 +196,7 @@ Item {
     // Scroll by amount pixels never overshooting
     function scrollBy(amount) {
         var destination = targetFlickable.contentY + amount
-        var clampedDestination = Math.max(0, Math.min(targetFlickable.contentHeight - targetFlickable.height,
-                                                      destination))
-        scrollAnimation.to = clampedDestination
+        scrollAnimation.to = clamp(destination, 0, targetFlickable.contentHeight - targetFlickable.height)
         scrollAnimation.restart()
     }
 
