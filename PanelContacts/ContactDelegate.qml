@@ -6,5 +6,6 @@ ListItem {
 
     // FIXME: this function is used in two places, should be moved to one common place
     text: display
-    iconSource: decoration ? decoration : "../assets/default_avatar.png"
+    iconSource: decoration ? decoration : placeholderIconSource
+    placeholderIconSource: "../assets/avatar_contacts_list.png"
 }

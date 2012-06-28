@@ -72,7 +72,8 @@ Item {
                 height: 140
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
-                source: (contact && contact.avatar != "") ? contact.avatar : "" // FIXME: fallback picture
+                source: (contact && contact.avatar != "") ? contact.avatar : "../assets/avatar_incall_rightpane.png"
+                onStatusChanged: if (status == Image.Error) source = "../assets/avatar_incall_rightpane.png"
                 smooth: true
             }
 
