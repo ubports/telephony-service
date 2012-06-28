@@ -72,7 +72,7 @@ Item {
                 height: 140
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
-                source: (contact && contact.avatar != "") ? contact.avatar : "../assets/pane_contacts_icon.png"
+                source: (contact && contact.avatar != "") ? contact.avatar : "" // FIXME: fallback picture
                 smooth: true
             }
 
