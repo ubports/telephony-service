@@ -39,7 +39,9 @@ Item {
     property bool __scrollable: targetFlickable.visibleArea.heightRatio != 1.0
 
     width: 30
-    height: 400
+    anchors.right: targetFlickable.right
+    anchors.top: targetFlickable.top
+    anchors.bottom: targetFlickable.bottom
 
     opacity: __scrollable ? 1.0 : 0.0
     Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}

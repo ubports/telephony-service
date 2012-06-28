@@ -92,4 +92,7 @@ Item {
         currentIndex: (count > 0) ? count-1 : 0
     }
 
+    Scrollbar {
+        targetFlickable: messagesList
+    }
 }

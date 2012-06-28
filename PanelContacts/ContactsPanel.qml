@@ -72,4 +72,8 @@ Item {
             text: section
         }
     }
+
+    Scrollbar {
+        targetFlickable: contactsList
+    }
 }

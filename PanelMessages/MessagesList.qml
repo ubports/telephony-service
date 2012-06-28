@@ -34,11 +34,6 @@ Item {
     }
 
     Scrollbar {
-        id: scrollbar
-
-        anchors.right: listView.right
-        anchors.top: listView.top
-        anchors.bottom: listView.bottom
         targetFlickable: listView
     }
 }

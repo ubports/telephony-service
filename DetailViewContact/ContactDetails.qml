@@ -190,6 +190,10 @@ Item {
         }
     }
 
+    Scrollbar {
+        targetFlickable: scrollArea
+    }
+
     Item {
         id: editFooter
 
