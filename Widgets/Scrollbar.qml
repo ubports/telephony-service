@@ -78,7 +78,6 @@ Item {
         property int thumbMargin: 3
         property bool isThumbAboveSlider: thumb.y < slider.y
 
-        // FIXME: simplify
         y: isThumbAboveSlider ? thumb.y + thumbMargin : slider.y + slider.height
         height: isThumbAboveSlider ? (slider.y) - y : (thumb.y + thumb.height - thumbMargin) - y
 
