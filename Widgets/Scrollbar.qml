@@ -47,6 +47,10 @@ Item {
     opacity: __scrollable ? 1.0 : 0.0
     Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
 
+    function clamp(x, min, max) {
+        return Math.max(min, Math.min(max, x))
+    }
+
     Rectangle {
         id: slider
 
@@ -63,9 +67,8 @@ Item {
             target: slider
             property: "y"
             value: {
-                var clampedYPosition = Math.max(0, Math.min(1-targetFlickable.visibleArea.heightRatio,
-                                                            targetFlickable.visibleArea.yPosition))
-                return clampedYPosition * scrollbar.height
+                var yPosition = clamp(targetFlickable.visibleArea.yPosition, 0, 1-targetFlickable.visibleArea.heightRatio)
+                return yPosition * scrollbar.height
             }
         }
     }
@@ -85,10 +88,6 @@ Item {
         color: "white"
         opacity: thumb.shown ? 1.0 : 0.0
         Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
-    }
-
-    function clamp(x, min, max) {
-        return Math.max(min, Math.min(max, x))
     }
 
     MouseArea {
