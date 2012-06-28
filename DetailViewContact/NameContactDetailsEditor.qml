@@ -19,31 +19,13 @@ Item {
         id: background
 
         anchors.left: parent.left
-        anchors.right: expandButton.left
+        anchors.right: parent.right
         anchors.top: parent.top
         height: fields.height + 2 * fields.anchors.topMargin
         Behavior on height {StandardAnimation {}}
 
         source: "../assets/edit_contact_mode_box.png"
         border {left: 1; right: 1; top: 2; bottom: 0}
-    }
-
-    AbstractButton {
-        id: expandButton
-
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        width: 20
-
-        Image {
-            anchors.top: parent.top
-            anchors.topMargin: 10
-            anchors.right: parent.right
-            source: editor.expanded ? "../assets/edit_contact_dropup_arrow.png" : "../assets/edit_contact_dropdown_arrow.png"
-        }
-
-        onClicked: editor.expanded = !editor.expanded
     }
 
     Column {
@@ -66,7 +48,7 @@ Item {
             anchors.right: parent.right
             value: (detail) ? detail.prefix : ""
             description: "Prefix"
-            visible: editor.expanded || value != ""
+            visible: editor.expanded
         }
 
         EditBoxName {
@@ -85,7 +67,7 @@ Item {
             anchors.right: parent.right
             value: (detail) ? detail.middleName : ""
             description: "Middle"
-            visible: editor.expanded || value != ""
+            visible: editor.expanded
         }
 
         EditBoxName {
@@ -104,8 +86,27 @@ Item {
             anchors.right: parent.right
             value: (detail) ? detail.suffix : ""
             description: "Suffix"
-            visible: editor.expanded || value != ""
+            visible: editor.expanded
         }
+    }
+
+    AbstractButton {
+        id: expandButton
+
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        anchors.rightMargin: 10
+        width: 20
+
+        Image {
+            anchors.top: parent.top
+            anchors.topMargin: 10
+            anchors.right: parent.right
+            source: editor.expanded ? "../assets/edit_contact_dropup_arrow.png" : "../assets/edit_contact_dropdown_arrow.png"
+        }
+
+        onClicked: editor.expanded = !editor.expanded
     }
 }
 
