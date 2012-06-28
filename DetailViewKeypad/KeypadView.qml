@@ -26,6 +26,8 @@ Item {
             anchors.right: keypad.right
             anchors.leftMargin: -2
             anchors.rightMargin: -2
+            focus: true
+            Keys.forwardTo: [callButton]
         }
 
         Keypad {
@@ -36,6 +38,8 @@ Item {
         }
 
         CallButton {
+            id: callButton
+
             anchors.top: keypad.bottom
             anchors.topMargin: 16
             anchors.horizontalCenter: parent.horizontalCenter

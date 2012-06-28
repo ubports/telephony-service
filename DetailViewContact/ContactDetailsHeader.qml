@@ -1,5 +1,4 @@
 import QtQuick 1.1
-import QtMobility.contacts 1.1
 import "../Widgets"
 
 Item {
@@ -25,40 +24,6 @@ Item {
         else return "";
     }
 
-    function iconForState(state) {
-        switch (state) {
-        case Presence.Unknown:
-        case Presence.Available:
-        case Presence.Hidden:
-        case Presence.Busy:
-        case Presence.Away:
-        case Presence.ExtendedAway:
-        case Presence.Offline:
-        default:
-            return "../assets/icon_availability.png"
-        }
-    }
-
-    function nameForState(state) {
-        // FIXME: translate those strings
-        switch (state) {
-        case Presence.Available:
-            return "Available";
-        case Presence.Hidden:
-            return "Hidden";
-        case Presence.Busy:
-            return "Busy";
-        case Presence.Away:
-        case Presence.ExtendedAway:
-            return "Away";
-        case Presence.Offline:
-            return "Offline";
-        case Presence.Unknown:
-        default:
-            return "Unknown";
-        }
-    }
-
     function save() {
         name.save()
     }
@@ -74,7 +39,7 @@ Item {
         height: width
         sourceSize.width: width
         fillMode: Image.PreserveAspectFit
-        source: contact ? contact.avatar.imageUrl : ""
+        source: contact ? contact.avatar : ""
     }
 
     BorderImage {

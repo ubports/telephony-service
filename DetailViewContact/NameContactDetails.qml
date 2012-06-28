@@ -9,9 +9,14 @@ Item {
 
     height: (editable) ? editor.height : text.paintedHeight
 
+    function isNotEmptyString(string) {
+        return (string && string.length != 0);
+    }
+
     function formatCustomLabel() {
+        // Concatenate all the non empty strings
         return (detail) ?
-           [detail.prefix, detail.firstName, detail.middleName, detail.lastName, detail.suffix].join(" ") :
+           [detail.prefix, detail.firstName, detail.middleName, detail.lastName, detail.suffix].filter(isNotEmptyString).join(" ") :
            "";
     }
 

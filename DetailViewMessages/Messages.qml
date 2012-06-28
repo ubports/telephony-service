@@ -7,73 +7,45 @@ Item {
     property variant contact
     property string number
 
+    clip: true
+
     Component {
         id: sectionDelegate
+
         Item {
-            height: sectionText.height + line.anchors.bottomMargin
+            height: childrenRect.height + 13
 
             TextCustom {
-                id: sectionText
+                anchors.left: parent.left
+                anchors.leftMargin: 16
                 text: section
-                anchors.bottom: line.top
                 fontSize: "medium"
-            }
-
-            Rectangle {
-                id: line
-                color: "black"
-                width: messages.width
-                height: 1
-                anchors.bottom: parent.bottom
-                anchors.bottomMargin: 5
+                elide: Text.ElideRight
+                color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+                style: Text.Raised
+                styleColor: "white"
             }
         }
     }
 
     Component {
-        id: messageDelegate
-        Item {
-            id: bg
+        id: messageImageDelegate
 
-            height: messageText.paintedHeight + 40
-            anchors {
-                left: parent.left
-                right: parent.right
-                rightMargin: incoming ? 1/3 * messages.width : 10
-                leftMargin: incoming ? 10 : 1/3 * messages.width
-            }
+        MessageBubbleImage {
+            maximumWidth: messagesList.width - parent.anchors.leftMargin - parent.anchors.rightMargin
+            maximumHeight: 200
 
-            Rectangle {
-                anchors.fill: parent
-                anchors.margins: 1
-                color: incoming ? "white" : "darkGray"
-                border.color: "black"
-                border.width: 1
-            }
+            imageSource: parent.imageSource
+            mirrored: !parent.incoming
+        }
+    }
 
-            TextCustom {
-                id: messageText
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    top: parent.top
-                    margins: 5
-                }
+    Component {
+        id: messageTextDelegate
 
-                text: message
-                wrapMode: Text.WordWrap
-                fontSize: "large"
-            }
-
-            TextCustom {
-                id: timeText
-                text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
-                anchors.bottom: parent.bottom
-                anchors.right: parent.right
-                anchors.rightMargin: 5
-                color: "gray"
-                fontSize: "small"
-            }
+        MessageBubbleText {
+            text: parent.message
+            mirrored: !parent.incoming
         }
     }
 
@@ -87,17 +59,35 @@ Item {
         id: messagesList
 
         anchors.fill: parent
+        anchors.topMargin: 10
+        anchors.bottomMargin: 10
         contentWidth: parent.width
         contentHeight: messages.height
-        clip: true
-        spacing: 8
+        spacing: 13
         orientation: ListView.Vertical
         ListModel { id: messagesModel }
         // FIXME: references to runtime and fake model need to be removed before final release
         model: typeof(runtime) != "undefined" ? fakeMessagesModel : messagesProxyModel
         section.delegate: sectionDelegate
         section.property: "date"
-        delegate: messageDelegate
+        delegate: Loader {
+            /* Workaround Qt bug http://bugreports.qt.nokia.com/browse/QTBUG-16057
+               More documentation at http://bugreports.qt.nokia.com/browse/QTBUG-18011
+            */
+            property bool incoming: model.incoming
+            property string imageSource: model.imageSource
+            property string message: model.message
+
+            anchors.left: if (sourceComponent == messageTextDelegate) return parent.left
+                          else return incoming ? parent.left : undefined
+            anchors.right: if (sourceComponent == messageTextDelegate) return parent.right
+                          else return incoming ? undefined : parent.right
+
+            anchors.leftMargin: incoming ? 10 : 40
+            anchors.rightMargin: incoming ? 40 : 10
+
+            sourceComponent: message != "" ? messageTextDelegate : messageImageDelegate
+        }
         highlightFollowsCurrentItem: true
         currentIndex: (count > 0) ? count-1 : 0
     }

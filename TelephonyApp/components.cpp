@@ -25,6 +25,15 @@
 #include "calllogproxymodel.h"
 #include "conversationlogmodel.h"
 #include "contactmanager.h"
+#include "contactmodel.h"
+#include "contactentry.h"
+#include "contactproxymodel.h"
+#include "contactdetail.h"
+#include "contactaddress.h"
+#include "contactemailaddress.h"
+#include "contactname.h"
+#include "contactonlineaccount.h"
+#include "contactphonenumber.h"
 #include "messagelogmodel.h"
 #include "messagesproxymodel.h"
 
@@ -62,6 +71,9 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
     mRootContext->setContextProperty("chatManager", TelepathyHelper::instance()->chatManager());
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
 
+    mContactModel = new ContactModel(this);
+    mRootContext->setContextProperty("contactModel", mContactModel);
+
     connect(TelepathyHelper::instance(),
             SIGNAL(channelHandlerCreated(ChannelHandler*)),
             SLOT(onChannelHandlerCreated(ChannelHandler*)));
@@ -73,6 +85,14 @@ void Components::registerTypes(const char *uri)
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
     qmlRegisterType<CallLogProxyModel>(uri, 0, 1, "CallLogProxyModel");
     qmlRegisterType<MessagesProxyModel>(uri, 0, 1, "MessagesProxyModel");
+    qmlRegisterType<ContactEntry>(uri, 0, 1, "ContactEntry");
+    qmlRegisterType<ContactProxyModel>(uri, 0, 1, "ContactProxyModel");
+    qmlRegisterType<ContactDetail>(uri, 0, 1, "ContactDetail");
+    qmlRegisterType<ContactAddress>(uri, 0, 1, "ContactAddress");
+    qmlRegisterType<ContactEmailAddress>(uri, 0, 1, "ContactEmailAddress");
+    qmlRegisterType<ContactName>(uri, 0, 1, "ContactName");
+    qmlRegisterType<ContactOnlineAccount>(uri, 0, 1, "ContactOnlineAccount");
+    qmlRegisterType<ContactPhoneNumber>(uri, 0, 1, "ContactPhoneNumber");
 }
 
 void Components::onChannelHandlerCreated(ChannelHandler *ch)
