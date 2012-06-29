@@ -28,18 +28,16 @@
 #include <QList>
 #include <QMap>
 #include <QUrl>
-#include <QContact>
-#include <QContactId>
 
-using namespace QtMobility;
+class ContactEntry;
 
 class LogEntry {
 public:
     virtual QVariant data(int role) const;
 
     // for simplicity keep the members as public
-    QContactLocalId localId;
     QString contactId;
+    QString customId;
     QString contactAlias;
     QUrl avatar;
     QString phoneNumber;
@@ -70,10 +68,11 @@ public:
     
 protected:
     QString phoneNumberFromId(const QString &id) const;
+    QString customIdentifierFromId(const QString &id) const;
     void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny);
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
     void requestEventsForDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
-    void fillContactInfo(LogEntry *entry, const QContact &contact);
+    void fillContactInfo(LogEntry *entry, ContactEntry *contact);
     void clearContactInfo(LogEntry *entry);
     void appendEvents(const Tpl::EventPtrList &events);
     void appendEntry(LogEntry *entry);
@@ -92,9 +91,9 @@ protected slots:
     void onPendingEventsFinished(Tpl::PendingOperation *op);
 
     // QContactManager related slots
-    void onContactsAdded(const QList<QContactLocalId> &contactIds);
-    void onContactsChanged(const QList<QContactLocalId> &contactIds);
-    void onContactsRemoved(const QList<QContactLocalId> &contactIds);
+    void onContactAdded(ContactEntry *contact);
+    void onContactChanged(ContactEntry *contact);
+    void onContactRemoved(const QString &contactId);
 
 protected:
     Tpl::LogManagerPtr mLogManager;

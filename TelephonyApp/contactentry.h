@@ -37,6 +37,9 @@ class ContactEntry : public QObject
     Q_PROPERTY(QString id
                READ id
                NOTIFY changed)
+    Q_PROPERTY(QString customId
+               READ customId
+               NOTIFY changed)
     Q_PROPERTY(QString displayLabel
                READ displayLabel
                NOTIFY changed)
@@ -67,6 +70,7 @@ public:
 
     QContactLocalId localId() const;
     QString id() const;
+    QString customId() const;
 
     QString displayLabel() const;
     QUrl avatar() const;
@@ -117,6 +121,7 @@ private:
     bool mModified;
     QMap<ContactDetail::DetailType, QList<ContactDetail*> > mDetails;
     ContactModel *mModel;
+    QString mCustomId;
 };
 
 #endif // CONTACTENTRY_H

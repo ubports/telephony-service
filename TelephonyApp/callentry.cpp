@@ -19,7 +19,8 @@
  */
 
 #include "callentry.h"
-#include "contactmanager.h"
+#include "contactentry.h"
+#include "contactmodel.h"
 #include <QTime>
 #include <QContactAvatar>
 #include <TelepathyQt/Contact>
@@ -153,9 +154,12 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
         qWarning() << "PendingOperation finished with error:" << op->errorName() << op->errorMessage();
     }
 
-    mContact = ContactManager::instance()->contactForNumber(mChannel->targetContact()->id());
-    emit contactAliasChanged();
-    emit contactAvatarChanged();
+    ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(mChannel->targetContact()->id());
+    if (entry) {
+        mContact = entry->contact();
+        emit contactAliasChanged();
+        emit contactAvatarChanged();
+    }
 
     emit heldChanged();
     emit phoneNumberChanged();

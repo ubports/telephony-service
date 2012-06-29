@@ -21,7 +21,7 @@
 #define CONTACTMODEL_H
 
 #include <QAbstractListModel>
-#include <QContact>
+#include <QContactManager>
 
 class ContactEntry;
 class ContactManager;
@@ -36,12 +36,13 @@ public:
         ContactRole = Qt::UserRole
     };
 
-    explicit ContactModel(QObject *parent = 0);
+    static ContactModel *instance();
 
     virtual int rowCount(const QModelIndex &parent) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
 
     Q_INVOKABLE ContactEntry *contactFromId(const QString &guid);
+    Q_INVOKABLE ContactEntry *contactFromCustomId(const QString &customId);
     Q_INVOKABLE ContactEntry *contactFromPhoneNumber(const QString &phoneNumber);
     Q_INVOKABLE void saveContact(ContactEntry *entry);
     Q_INVOKABLE void loadContactFromId(const QString &guid);
@@ -52,6 +53,8 @@ public:
 Q_SIGNALS:
     void contactLoaded(ContactEntry *contact);
     void contactAdded(ContactEntry *contact);
+    void contactChanged(ContactEntry *contact);
+    void contactRemoved(const QString &contactId);
 
 protected:
     void addContacts(const QList<QContact> &contacts);
@@ -66,7 +69,9 @@ protected Q_SLOTS:
     void onContactRemoved();
 
 private:
-    ContactManager *mContactManager;
+    explicit ContactModel(QObject *parent = 0);
+
+    QContactManager *mContactManager;
     QList<ContactEntry*> mContactEntries;
     QString mPendingId;
 };

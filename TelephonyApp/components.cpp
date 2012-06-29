@@ -24,7 +24,6 @@
 #include "calllogmodel.h"
 #include "calllogproxymodel.h"
 #include "conversationlogmodel.h"
-#include "contactmanager.h"
 #include "contactmodel.h"
 #include "contactentry.h"
 #include "contactproxymodel.h"
@@ -66,13 +65,10 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
             SIGNAL(accountReady()),
             SLOT(onAccountReady()));
 
-    mRootContext->setContextProperty("contactManager", ContactManager::instance());
     mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", TelepathyHelper::instance()->chatManager());
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
-
-    mContactModel = new ContactModel(this);
-    mRootContext->setContextProperty("contactModel", mContactModel);
+    mRootContext->setContextProperty("contactModel", ContactModel::instance());
 
     connect(TelepathyHelper::instance(),
             SIGNAL(channelHandlerCreated(ChannelHandler*)),

@@ -19,7 +19,6 @@
 
 #include "contactmodel.h"
 #include "contactentry.h"
-#include "contactmanager.h"
 #include <QContactDetailFilter>
 #include <QContactGuid>
 #include <QContactSaveRequest>
@@ -28,8 +27,14 @@
 #include <QDebug>
 #include <QUrl>
 
+ContactModel *ContactModel::instance()
+{
+    static ContactModel *model = new ContactModel();
+    return model;
+}
+
 ContactModel::ContactModel(QObject *parent) :
-    QAbstractListModel(parent), mContactManager(ContactManager::instance())
+    QAbstractListModel(parent), mContactManager(new QContactManager("folks"))
 {
     QHash<int, QByteArray> roles = roleNames();
     roles[ContactRole] = "contact";
@@ -86,9 +91,36 @@ ContactEntry *ContactModel::contactFromId(const QString &guid)
     return 0;
 }
 
+ContactEntry *ContactModel::contactFromCustomId(const QString &customId)
+{
+    if (customId.isEmpty()) {
+        return 0;
+    }
+
+    Q_FOREACH(ContactEntry *entry, mContactEntries) {
+        if (entry->customId() == customId) {
+            return entry;
+        }
+    }
+
+    return 0;
+}
+
 ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
 {
-    QContact contact = mContactManager->contactForNumber(phoneNumber);
+    QContact contact;
+
+    // fetch the QContact object
+    QContactDetailFilter filter;
+    filter.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
+    filter.setValue(phoneNumber);
+    filter.setMatchFlags(QContactFilter::MatchPhoneNumber);
+
+    QList<QContact> contactList = mContactManager->contacts(filter);
+    if (contactList.count() > 0) {
+        contact = contactList[0];
+    }
+
     return contactFromId(contact.detail<QContactGuid>().guid());
 }
 
@@ -171,7 +203,9 @@ void ContactModel::removeContactFromModel(ContactEntry *entry)
     }
 
     beginRemoveRows(QModelIndex(), index, index);
+    emit contactRemoved(entry->id());
     mContactEntries.removeAt(index);
+    entry->deleteLater();
     endRemoveRows();
 }
 
@@ -202,6 +236,7 @@ void ContactModel::onContactsRemoved(QList<QContactLocalId> ids)
 void ContactModel::onContactEntryChanged(ContactEntry *entry)
 {
     QModelIndex entryIndex = index(mContactEntries.indexOf(entry), 0);
+    emit contactChanged(entry);
     emit dataChanged(entryIndex, entryIndex);
 }
 

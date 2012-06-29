@@ -5,10 +5,10 @@ set(plugin_SRCS
     calllogmodel.cpp
     calllogproxymodel.cpp
     contactaddress.cpp
+    contactcustomid.cpp
     contactdetail.cpp
     contactemailaddress.cpp
     contactentry.cpp
-    contactmanager.cpp
     contactmodel.cpp
     contactname.cpp
     contactonlineaccount.cpp
@@ -33,7 +33,6 @@ set(plugin_HDRS
     contactdetail.h
     contactemailaddress.h
     contactentry.h
-    contactmanager.h
     contactmodel.h
     contactname.h
     contactonlineaccount.h

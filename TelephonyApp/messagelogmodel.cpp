@@ -18,7 +18,7 @@
  */
 
 #include "messagelogmodel.h"
-#include "contactmanager.h"
+#include "contactmodel.h"
 #include <TelepathyLoggerQt4/Event>
 #include <TelepathyLoggerQt4/TextEvent>
 #include <TelepathyLoggerQt4/Entity>
@@ -71,8 +71,8 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
     entry->phoneNumber = number;
     entry->message = message;
     entry->timestamp = QDateTime::currentDateTime();
-    QContact contact = ContactManager::instance()->contactForNumber(number);
-    if (!contact.isEmpty()) {
+    ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
+    if (contact) {
         fillContactInfo(entry, contact);
     }
     appendEntry(entry);

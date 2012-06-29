@@ -19,19 +19,14 @@
 
 #include "abstractloggermodel.h"
 #include "telepathyhelper.h"
-#include "contactmanager.h"
+#include "contactentry.h"
+#include "contactmodel.h"
 #include <TelepathyLoggerQt4/LogManager>
 #include <TelepathyLoggerQt4/PendingDates>
 #include <TelepathyLoggerQt4/PendingEntities>
 #include <TelepathyLoggerQt4/PendingEvents>
 #include <TelepathyLoggerQt4/Entity>
 #include <TelepathyLoggerQt4/Event>
-#include <QContactManager>
-#include <QContactDetailFilter>
-#include <QContactAvatar>
-#include <QContactGuid>
-#include <QContactPhoneNumber>
-
 
 QVariant LogEntry::data(int role) const
 {
@@ -71,16 +66,15 @@ AbstractLoggerModel::AbstractLoggerModel(QObject *parent) :
     roles[Incoming] = "incoming";
     setRoleNames(roles);
 
-    connect(ContactManager::instance(),
-            SIGNAL(contactsAdded(QList<QContactLocalId>)),
-            SLOT(onContactsAdded(QList<QContactLocalId>)));
-    connect(ContactManager::instance(),
-            SIGNAL(contactsChanged(QList<QContactLocalId>)),
-            SLOT(onContactsChanged(QList<QContactLocalId>)));
-    connect(ContactManager::instance(),
-            SIGNAL(contactsRemoved(QList<QContactLocalId>)),
-            SLOT(onContactsRemoved(QList<QContactLocalId>)));
-    // FIXME: check if we need to listen to the QContactManager::dataChanged() signal
+    connect(ContactModel::instance(),
+            SIGNAL(contactAdded(ContactEntry*)),
+            SLOT(onContactAdded(ContactEntry*)));
+    connect(ContactModel::instance(),
+            SIGNAL(contactChanged(ContactEntry*)),
+            SLOT(onContactChanged(ContactEntry*)));
+    connect(ContactModel::instance(),
+            SIGNAL(contactRemoved(const QString &contactId)),
+            SLOT(onContactRemoved(const QString &contactId)));
 }
 
 int AbstractLoggerModel::rowCount(const QModelIndex &parent) const
@@ -107,6 +101,18 @@ QString AbstractLoggerModel::phoneNumberFromId(const QString &id) const
     QStringList splittedId = id.split(":");
     if (splittedId.count() == 2) {
         return splittedId[1];
+    } else {
+        qWarning() << "The ID from logger is not using the format contactId:phoneNumber";
+    }
+
+    return id;
+}
+
+QString AbstractLoggerModel::customIdentifierFromId(const QString &id) const
+{
+    QStringList splittedId = id.split(":");
+    if (splittedId.count() == 2) {
+        return splittedId[0];
     } else {
         qWarning() << "The ID from logger is not using the format contactId:phoneNumber";
     }
@@ -159,25 +165,18 @@ void AbstractLoggerModel::requestEventsForDates(const Tpl::EntityPtr &entity, co
     }
 }
 
-void AbstractLoggerModel::fillContactInfo(LogEntry *entry, const QContact &contact)
+void AbstractLoggerModel::fillContactInfo(LogEntry *entry, ContactEntry *contact)
 {
-    // FIXME: set the contact ID to something else than the GUID
-    QContactGuid guid = contact.detail<QContactGuid>();
-    QContactAvatar avatar = contact.detail<QContactAvatar>();
-    entry->contactId = guid.guid();
-    entry->avatar = avatar.imageUrl();
-    entry->localId = contact.localId();
-
-    if (entry->contactAlias.isEmpty()) {
-        entry->contactAlias = contact.displayLabel();
-    }
+    entry->contactId = contact->id();
+    entry->customId = contact->customId();
+    entry->avatar = contact->avatar();
+    entry->contactAlias = contact->displayLabel();
 }
 
 void AbstractLoggerModel::clearContactInfo(LogEntry *entry)
 {
     entry->avatar = "";
     entry->contactId = "";
-    entry->localId = QContactLocalId();
     entry->contactAlias = "";
 }
 
@@ -191,11 +190,11 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         entry->timestamp = event->timestamp();
 
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
+        entry->customId = customIdentifierFromId(remoteEntity->identifier());
         entry->phoneNumber = phoneNumberFromId(remoteEntity->identifier());
 
-        // FIXME: use the contact id
-        QContact contact = ContactManager::instance()->contactForNumber(entry->phoneNumber);
-        if (!contact.isEmpty()) {
+        ContactEntry *contact = ContactModel::instance()->contactFromCustomId(entry->customId);
+        if (contact) {
             // if more than one contact matches, use the first one
             fillContactInfo(entry, contact);
         }
@@ -307,53 +306,37 @@ void AbstractLoggerModel::onPendingEventsFinished(Tpl::PendingOperation *op)
     handleEvents(pe->events());
 }
 
-void AbstractLoggerModel::onContactsAdded(const QList<QContactLocalId> &contactIds)
+void AbstractLoggerModel::onContactAdded(ContactEntry *contact)
 {
-    QList<QContact> contacts = ContactManager::instance()->contacts(contactIds);
-
     // now we need to iterate over the events to look for contacts matching
     int count = mLogEntries.count();
     for (int i = 0; i < count; ++i) {
         LogEntry *entry = mLogEntries[i];
-
-        // and for each event, we check if it matches
-        foreach (const QContact &contact, contacts) {
-            bool foundMatch = false;
-            QList<QContactPhoneNumber> phoneNumbers = contact.details<QContactPhoneNumber>();
-            foreach (const QContactPhoneNumber &number, phoneNumbers) {
-                if (entry->phoneNumber == number.number()) {
-                    fillContactInfo(entry, contact);
-                    emit dataChanged(index(i,0), index(i,0));
-                    foundMatch = true;
-                    break;
-                }
-            }
-            if (foundMatch) {
-                break;
-            }
+        if (entry->customId == contact->customId()) {
+            fillContactInfo(entry, contact);
+            emit dataChanged(index(i,0), index(i,0));
         }
     }
 }
 
-void AbstractLoggerModel::onContactsChanged(const QList<QContactLocalId> &contactIds)
+void AbstractLoggerModel::onContactChanged(ContactEntry *contact)
 {
     int count = mLogEntries.count();
     for (int i = 0; i < count; ++i) {
         LogEntry *entry = mLogEntries[i];
-        int position = contactIds.indexOf(entry->localId);
-        if (position >= 0) {
-            fillContactInfo(entry, ContactManager::instance()->contact(contactIds[position]));
+        if (entry->customId == contact->customId()) {
+            fillContactInfo(entry, contact);
             emit dataChanged(index(i, 0), index(i, 0));
         }
     }
 }
 
-void AbstractLoggerModel::onContactsRemoved(const QList<QContactLocalId> &contactIds)
+void AbstractLoggerModel::onContactRemoved(const QString &contactId)
 {
     int count = mLogEntries.count();
     for (int i = 0; i < count; ++i) {
         LogEntry *entry = mLogEntries[i];
-        if (contactIds.indexOf(entry->localId) >=0) {
+        if (entry->contactId == contactId) {
             clearContactInfo(entry);
             emit dataChanged(index(i,0), index(i,0));
         }
