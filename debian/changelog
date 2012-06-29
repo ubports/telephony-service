@@ -1,3 +1,9 @@
+telephony-app (0.19) precise; urgency=low
+
+  * do not anchor in callLogSection, otherwise the detail chooser wont be shown (LP: #1019003)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 29 Jun 2012 14:30:04 -0700
+
 telephony-app (0.18) precise; urgency=low
 
   * Update the messages model to work with latest logger changes (LP: #1018982 LP: #1018985)
