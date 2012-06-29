@@ -32,7 +32,7 @@ BaseMessageHeader {
         height: width
         sourceSize.width: width
         fillMode: Image.PreserveAspectFit
-        source: contact ? contact.avatar.imageUrl : "../assets/avatar_messaging.png"
+        source: contact ? contact.avatar : "../assets/avatar_messaging.png"
         onStatusChanged: if (status == Image.Error) source = "../assets/avatar_messaging.png"
     }
 

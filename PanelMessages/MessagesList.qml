@@ -23,7 +23,7 @@ Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 // FIXME: need to match the contact with the number
-                onClicked: telephony.startChat(null, phoneNumber)
+                onClicked: telephony.startChat(contactModel.contactFromPhoneNumber(phoneNumber), phoneNumber)
                 selected: telephony.messages.loaded
                           && !telephony.view.newMessage
                           //&& telephony.view.contact == contact

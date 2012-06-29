@@ -112,7 +112,7 @@ void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
     // search for the entity that matches the phone number for this conversation
     // FIXME: we probably need a more reliable way than string matching for comparing phone numbers
     Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
-        if (entity->identifier() == mPhoneNumber) {
+        if (phoneNumberFromId(entity->identifier()) == mPhoneNumber) {
             requestDatesForEntities(Tpl::EntityPtrList() << entity);
             return;
         }
