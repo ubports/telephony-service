@@ -37,8 +37,10 @@ typedef QMap<QString, QVariant> dbusQMap;
 Q_DECLARE_METATYPE(dbusQMap)
 
 CallManager::CallManager(QObject *parent)
-: QObject(parent)
+: QObject(parent),
+  mAndroidInterface(ANDROID_DBUS_ADDRESS, ANDROID_TELEPHONY_DBUS_PATH, ANDROID_TELEPHONY_DBUS_IFACE)
 {
+    connect(&mAndroidInterface, SIGNAL(SpeakerSetChanged()), SIGNAL(speakerChanged()));
     refreshProperties();
 }
 
@@ -72,9 +74,6 @@ void CallManager::setSpeaker(bool speaker)
                              ANDROID_TELEPHONY_DBUS_PATH, 
                              ANDROID_TELEPHONY_DBUS_IFACE);
     androidIf.call("turnOnSpeaker", speaker, false);
-    // we should get signals from the backend to know when the speaker
-    // state changed. for now, we emit the signals
-    emit speakerChanged();
 }
 
 QObject *CallManager::foregroundCall() const
