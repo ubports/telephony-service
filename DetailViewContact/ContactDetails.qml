@@ -170,7 +170,7 @@ Item {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: callLogSection.bottom
+            anchors.top: detailsList.bottom
             anchors.topMargin: 32
             anchors.leftMargin: 1
             anchors.rightMargin: 1
