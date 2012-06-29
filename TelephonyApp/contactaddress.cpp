@@ -118,6 +118,6 @@ QVariant ContactAddress::subTypes() const
 void ContactAddress::setSubTypes(const QVariant &value)
 {
     //FIXME: we are just setting this one all the time, maybe we should check if the list really changed
-    mDetail.setValue(QContactAddress::FieldSubTypes, value);
+    mDetail.setValue(QContactAddress::FieldSubTypes, value.toStringList());
     emit changed();
 }

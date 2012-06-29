@@ -28,7 +28,7 @@ QVariant ContactDetail::contexts() const
 
 void ContactDetail::setContexts(const QVariant &contexts)
 {
-    mDetail.setValue(QContactDetail::FieldContext, contexts);
+    mDetail.setContexts(contexts.toStringList());
     emit detailChanged();
 }
 
