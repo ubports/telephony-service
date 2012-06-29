@@ -54,7 +54,7 @@ Item {
             text: "Send"
             onClicked: {
                 footer.newMessage(entry.text)
-                textInput.text = ""
+                entry.text = ""
             }
         }
     }
