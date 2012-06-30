@@ -1,4 +1,4 @@
-telephony-app (0.20ubuntu1) quantal; urgency=low
+telephony-app (0.21) precise; urgency=low
 
   * Fix clearing the input field when a text message is sent (LP: #1019411)
 
