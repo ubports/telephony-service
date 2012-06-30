@@ -4,7 +4,6 @@ var phoneSubTypes = [ "Home", "Mobile", "Work", "Work Fax", "Home Fax", "Pager",
 var emailSubTypes = [ "Work", "Home", "Mobile", "Other" ];
 var postalAddressSubTypes = [ "Work", "Home", "Other" ];
 var IMSubTypes = [ "AIM", "Windows Live", "Yahoo", "Skype", "QQ", "Google Talk", "ICQ", "Jabber" ];
-
 var supportedTypes = [
             {
                 name: "Phone",
@@ -87,8 +86,27 @@ function getDetailSubType(detail) {
 
         return "Other";
     } else if (detail.definitionName == "OnlineAccount") {
-        // TODO: online account information is empty
-        return "Other";
+        var protocol = detail.protocol;
+        if (protocol == "aim") {
+            return "AIM";
+        } else if (protocol == "msn") {
+            return "Windows Live";
+        } else if (protocol == "yahoo") {
+            return "Yahoo";
+        } else if (protocol == "skype") {
+            return "Skype";
+        } else if (protocol == "qq") {
+            return "QQ";
+        } else if (protocol == "google-talk") {
+            return "Google Talk";
+        } else if (protocol == "icq") {
+            return "ICQ";
+        } else if (protocol == "jabber") {
+            return "Jabber"
+        } else {
+            console.log("Invalid protocol: " + protocol);
+            return "other";
+        }
     } else {
         // The backend supports multiple types but we can just handle one,
         // so let's pick just the first
@@ -137,8 +155,27 @@ function setDetailSubType(detail, newSubType) {
             detail.subTypes = [ "other" ];
         }
     } else if (detail.definitionName == "OnlineAccount") {
-        // TODO: fix online account information
-        return;
+        var protocol = newSubType;
+        if (protocol == "AIM") {
+            detail.protocol = "aim";
+        } else if (protocol == "Windows Live") {
+            detail.protocol = "msn";
+        } else if (protocol == "Yahoo") {
+            detail.protocol = "yahoo";
+        } else if (protocol == "Skype") {
+            detail.protocol = "skype";
+        } else if (protocol == "QQ") {
+            detail.protocol = "qq";
+        } else if (protocol == "Google Talk") {
+            detail.protocol = "google-talk";
+        } else if (protocol == "ICQ") {
+            detail.protocol = "icq";
+        } else if (protocol == "Jabber") {
+            detail.protocol = "jabber";
+        } else {
+            console.log("Invalid protocol: " + protocol);
+            detail.protocol = "other";
+        }
     } else {
         var types = ""
         if (newSubType == "Home") {
