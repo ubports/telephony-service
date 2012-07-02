@@ -68,8 +68,22 @@ class ContactEntry : public QObject
 public:
     explicit ContactEntry(const QContact &contact = QContact(), ContactModel *parent = 0);
 
+    /**
+     * The Local ID is a numberic value that uniquely identifies a QContact in a QContactManager.
+     * This value has no relation to any identifiers the contact migh have in the backend engine.
+     */
     QContactLocalId localId() const;
+
+    /**
+     * The ID is the unique identifier of the contact in its backend. It is mapped from the contact's guid
+     * that contains the libfolks persona ID in the manager we use.
+     */
     QString id() const;
+
+    /**
+     * The Custom ID field was customly created and added in QtFolks to hold the Android contact id that is
+     * used to match contact information in call logs, messages and phone lookups.
+     */
     QString customId() const;
 
     QString displayLabel() const;
