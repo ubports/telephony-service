@@ -1,3 +1,14 @@
+telephony-app (0.22) precise; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * When exposing QStringList properties to QML, use QVariant to wrap the values. (LP: #1019351)
+  * Use the android contact id to find the contact to be used to fill the info on entries.
+
+  [ Renato Araujo Oliveira Filho ]
+  * Implemented IM type translate.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 02 Jul 2012 14:38:33 -0300
+
 telephony-app (0.21) precise; urgency=low
 
   * Fix clearing the input field when a text message is sent (LP: #1019411)
