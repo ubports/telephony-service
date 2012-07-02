@@ -81,8 +81,8 @@ function getDetailSubType(detail) {
             }
         } else if (detail.subTypes.indexOf("cell") > -1) {
             return "Mobile";
-        } else if (detail.subTypes.indexOf("page") > -1) {
-            return "Page";
+        } else if (detail.subTypes.indexOf("pager") > -1) {
+            return "Pager";
         }
 
         return "Other";
