@@ -26,13 +26,13 @@
 class ContactAddress : public ContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString country READ country WRITE setCountry NOTIFY changed)
-    Q_PROPERTY(QString locality READ locality WRITE setLocality NOTIFY changed)
-    Q_PROPERTY(QString postOfficeBox READ postOfficeBox WRITE setPostOfficeBox NOTIFY changed)
-    Q_PROPERTY(QString postcode READ postcode WRITE setPostcode NOTIFY changed)
-    Q_PROPERTY(QString region READ region WRITE setRegion NOTIFY changed)
-    Q_PROPERTY(QString street READ street WRITE setStreet NOTIFY changed)
-    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY changed)
+    Q_PROPERTY(QString country READ country WRITE setCountry NOTIFY countryChanged)
+    Q_PROPERTY(QString locality READ locality WRITE setLocality NOTIFY localityChanged)
+    Q_PROPERTY(QString postOfficeBox READ postOfficeBox WRITE setPostOfficeBox NOTIFY postOfficeBoxChanged)
+    Q_PROPERTY(QString postcode READ postcode WRITE setPostcode NOTIFY postcodeChanged)
+    Q_PROPERTY(QString region READ region WRITE setRegion NOTIFY regionChanged)
+    Q_PROPERTY(QString street READ street WRITE setStreet NOTIFY streetChanged)
+    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY subTypesChanged)
 
 public:
     explicit ContactAddress(const QContactDetail &detail = QContactAddress(), QObject *parent = 0);
@@ -62,6 +62,13 @@ public:
 
 Q_SIGNALS:
     void changed();
+    void countryChanged();
+    void localityChanged();
+    void postOfficeBoxChanged();
+    void postcodeChanged();
+    void regionChanged();
+    void streetChanged();
+    void subTypesChanged();
 
 };
 
