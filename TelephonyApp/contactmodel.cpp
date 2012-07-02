@@ -203,10 +203,10 @@ void ContactModel::removeContactFromModel(ContactEntry *entry)
     }
 
     beginRemoveRows(QModelIndex(), index, index);
-    emit contactRemoved(entry->id());
     mContactEntries.removeAt(index);
     entry->deleteLater();
     endRemoveRows();
+    emit contactRemoved(entry->id());
 }
 
 void ContactModel::onContactsAdded(QList<QContactLocalId> ids)
