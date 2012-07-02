@@ -88,8 +88,10 @@ bool ContactEntry::modified() const
 
 void ContactEntry::setModified(bool value)
 {
-    mModified = value;
-    emit changed(this);
+    if (value != mModified) {
+        mModified = value;
+        emit modifiedChanged();
+    }
 }
 
 QContact& ContactEntry::contact()
@@ -99,8 +101,8 @@ QContact& ContactEntry::contact()
 
 void ContactEntry::setContact(const QContact &contact)
 {
-    mModified = false;
     mContact = contact;
+    setModified(false);
     loadDetails();
 
     emit changed(this);
@@ -154,12 +156,11 @@ bool ContactEntry::addDetail(ContactDetail *detail)
     }
 
     if (mContact.saveDetail(&newDetail->detail())) {
-        mModified = true;
+        setModified(true);
         mDetails[type].append(newDetail);
         connect(newDetail,
                 SIGNAL(changed()),
                 SLOT(onDetailChanged()));
-        emit changed(this);
         return true;
     } else {
         qWarning() << "Failed to add new detail to contact";
@@ -171,10 +172,9 @@ bool ContactEntry::addDetail(ContactDetail *detail)
 bool ContactEntry::removeDetail(ContactDetail *detail)
 {
     if (mContact.removeDetail(&detail->detail())) {
-        mModified = true;
+        setModified(true);
         mDetails[(ContactDetail::DetailType)detail->type()].removeAll(detail);
         detail->deleteLater();
-        emit changed(this);
         return true;
     }
     return false;
@@ -194,10 +194,8 @@ void ContactEntry::onDetailChanged()
         qWarning() << "Detail changed emitted from an object that is not a detail";
     }
     if (mContact.saveDetail(&detail->detail())) {
-        mModified = true;
+        setModified(true);
     }
-
-    emit changed(this);
 }
 
 void ContactEntry::detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail)
