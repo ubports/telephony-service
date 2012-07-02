@@ -102,7 +102,7 @@ QString AbstractLoggerModel::phoneNumberFromId(const QString &id) const
     if (splittedId.count() == 2) {
         return splittedId[1];
     } else {
-        qWarning() << "The ID from logger is not using the format contactId:phoneNumber";
+        qWarning() << "The ID from logger is not using the format contactId:phoneNumber" << id;
     }
 
     return id;
@@ -114,7 +114,7 @@ QString AbstractLoggerModel::customIdentifierFromId(const QString &id) const
     if (splittedId.count() == 2) {
         return splittedId[0];
     } else {
-        qWarning() << "The ID from logger is not using the format contactId:phoneNumber";
+        qWarning() << "The ID from logger is not using the format contactId:phoneNumber" << id;
     }
 
     return id;
