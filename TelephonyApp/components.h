@@ -53,7 +53,6 @@ private:
     CallLogModel *mCallLogModel;
     ConversationLogModel *mConversationLogModel;
     MessageLogModel *mMessageLogModel;
-    ContactModel *mContactModel;
 };
 
 #endif // COMPONENTS_H

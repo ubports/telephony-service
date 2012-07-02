@@ -17,24 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONTACTMANAGER_H
-#define CONTACTMANAGER_H
+#include "contactcustomid.h"
 
-#include <QContactManager>
+Q_DEFINE_LATIN1_CONSTANT(ContactCustomId::DefinitionName, "CustomId");
+Q_DEFINE_LATIN1_CONSTANT(ContactCustomId::FieldCustomId, "CustomId");
 
-using namespace QtMobility;
-
-class ContactManager : public QContactManager
+void ContactCustomId::setCustomId(const QString &id)
 {
-    Q_OBJECT
-public:
-    static ContactManager *instance();
+    setValue(FieldCustomId, id);
+}
 
-    QContact contactForNumber(const QString &number);
-
-private:
-    explicit ContactManager();
-    
-};
-
-#endif // CONTACTMANAGER_H
+QString ContactCustomId::customId() const
+{
+    return value(FieldCustomId);
+}
