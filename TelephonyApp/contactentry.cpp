@@ -49,7 +49,6 @@ ContactEntry::ContactEntry(const QContact &contact, ContactModel *parent) :
     if (ids.count() >= 2) {
         mCustomId = ids.last();
     }
-    qDebug() << "Custom id:" << mCustomId;
 }
 
 QContactLocalId ContactEntry::localId() const
