@@ -53,7 +53,7 @@ QVariant ContactOnlineAccount::capabilities() const
 void ContactOnlineAccount::setCapabilities(const QVariant &value)
 {
     // FIXME: maybe we should check if the list has really changed?
-    mDetail.setValue(QContactOnlineAccount::FieldCapabilities, value);
+    mDetail.setValue(QContactOnlineAccount::FieldCapabilities, value.toStringList());
     emit changed();
 }
 
@@ -91,6 +91,6 @@ QVariant ContactOnlineAccount::subTypes() const
 void ContactOnlineAccount::setSubTypes(const QVariant &value)
 {
     // FIXME: maybe we should check if the list has really changed?
-    mDetail.setValue(QContactOnlineAccount::FieldSubTypes, value);
+    mDetail.setValue(QContactOnlineAccount::FieldSubTypes, value.toStringList());
     emit changed();
 }
