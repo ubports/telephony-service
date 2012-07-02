@@ -24,7 +24,6 @@
 #include <QContactManager>
 
 class ContactEntry;
-class ContactManager;
 
 using namespace QtMobility;
 
