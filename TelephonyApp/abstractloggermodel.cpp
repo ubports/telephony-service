@@ -194,6 +194,9 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         entry->customId = customIdentifierFromId(remoteEntity->identifier());
         entry->phoneNumber = phoneNumberFromId(remoteEntity->identifier());
 
+        // set the alias from the entity as a fallback value in case the contact is not found.
+        entry->contactAlias = remoteEntity->alias();
+
         ContactEntry *contact = ContactModel::instance()->contactFromCustomId(entry->customId);
         if (contact) {
             // if more than one contact matches, use the first one
