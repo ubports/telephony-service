@@ -130,7 +130,7 @@ function getDetailSubType(detail) {
         } else if (protocol == PROTOCOL_TYPE_ICQ) {
             return PROTOCOL_LABEL_ICQ;
         } else if (protocol == PROTOCOL_TYPE_JABBER) {
-            return PROTOCOL_LABEL_JABBER
+            return PROTOCOL_LABEL_JABBER;
         } else {
             console.log("Invalid protocol: " + protocol);
             return PROTOCOL_LABEL_OTHER;
