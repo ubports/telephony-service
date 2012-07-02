@@ -1,9 +1,37 @@
 .pragma library
 
+
+var PROTOCOL_LABEL_AIM      = "AIM";
+var PROTOCOL_LABEL_MSN      = "Windows Live";
+var PROTOCOL_LABEL_YAHOO    = "Yahoo";
+var PROTOCOL_LABEL_SKYPE    = "Skype";
+var PROTOCOL_LABEL_QQ       = "QQ";
+var PROTOCOL_LABEL_GTALK    = "Google Talk";
+var PROTOCOL_LABEL_ICQ      = "ICQ";
+var PROTOCOL_LABEL_JABBER   = "Jabber";
+var PROTOCOL_LABEL_OTHER    = "Other";
+
+var PROTOCOL_TYPE_AIM       = "aim";
+var PROTOCOL_TYPE_MSN       = "msn";
+var PROTOCOL_TYPE_YAHOO     = "yahoo";
+var PROTOCOL_TYPE_SKYPE     = "skype";
+var PROTOCOL_TYPE_QQ        = "qq";
+var PROTOCOL_TYPE_GTALK     = "google-talk";
+var PROTOCOL_TYPE_ICQ       = "icq";
+var PROTOCOL_TYPE_JABBER    = "jabber";
+var PROTOCOL_TYPE_OTHER     = "other";
+
 var phoneSubTypes = [ "Home", "Mobile", "Work", "Work Fax", "Home Fax", "Pager", "Other" ];
 var emailSubTypes = [ "Work", "Home", "Mobile", "Other" ];
 var postalAddressSubTypes = [ "Work", "Home", "Other" ];
-var IMSubTypes = [ "AIM", "Windows Live", "Yahoo", "Skype", "QQ", "Google Talk", "ICQ", "Jabber" ];
+var IMSubTypes = [ PROTOCOL_LABEL_AIM,
+                   PROTOCOL_LABEL_MSN,
+                   PROTOCOL_LABEL_YAHOO,
+                   PROTOCOL_LABEL_SKYPE,
+                   PROTOCOL_LABEL_QQ,
+                   PROTOCOL_LABEL_GTALK,
+                   PROTOCOL_LABEL_ICQ,
+                   PROTOCOL_LABEL_JABBER ];
 var supportedTypes = [
             {
                 name: "Phone",
@@ -87,25 +115,25 @@ function getDetailSubType(detail) {
         return "Other";
     } else if (detail.definitionName == "OnlineAccount") {
         var protocol = detail.protocol;
-        if (protocol == "aim") {
-            return "AIM";
-        } else if (protocol == "msn") {
-            return "Windows Live";
-        } else if (protocol == "yahoo") {
-            return "Yahoo";
-        } else if (protocol == "skype") {
-            return "Skype";
-        } else if (protocol == "qq") {
-            return "QQ";
-        } else if (protocol == "google-talk") {
-            return "Google Talk";
-        } else if (protocol == "icq") {
-            return "ICQ";
-        } else if (protocol == "jabber") {
-            return "Jabber"
+        if (protocol == PROTOCOL_TYPE_AIM) {
+            return PROTOCOL_LABEL_AIM;
+        } else if (protocol == PROTOCOL_TYPE_MSN) {
+            return PROTOCOL_LABEL_MSN;
+        } else if (protocol == PROTOCOL_TYPE_YAHOO) {
+            return PROTOCOL_LABEL_YAHOO;
+        } else if (protocol == PROTOCOL_TYPE_SKYPE) {
+            return PROTOCOL_LABEL_SKYPE;
+        } else if (protocol == PROTOCOL_TYPE_QQ) {
+            return PROTOCOL_LABEL_QQ;
+        } else if (protocol == PROTOCOL_TYPE_GTALK) {
+            return PROTOCOL_LABEL_GTALK;
+        } else if (protocol == PROTOCOL_TYPE_ICQ) {
+            return PROTOCOL_LABEL_ICQ;
+        } else if (protocol == PROTOCOL_TYPE_JABBER) {
+            return PROTOCOL_LABEL_JABBER
         } else {
             console.log("Invalid protocol: " + protocol);
-            return "other";
+            return PROTOCOL_LABEL_OTHER;
         }
     } else {
         // The backend supports multiple types but we can just handle one,
@@ -156,25 +184,25 @@ function setDetailSubType(detail, newSubType) {
         }
     } else if (detail.definitionName == "OnlineAccount") {
         var protocol = newSubType;
-        if (protocol == "AIM") {
-            detail.protocol = "aim";
-        } else if (protocol == "Windows Live") {
-            detail.protocol = "msn";
-        } else if (protocol == "Yahoo") {
-            detail.protocol = "yahoo";
-        } else if (protocol == "Skype") {
-            detail.protocol = "skype";
-        } else if (protocol == "QQ") {
-            detail.protocol = "qq";
-        } else if (protocol == "Google Talk") {
-            detail.protocol = "google-talk";
-        } else if (protocol == "ICQ") {
-            detail.protocol = "icq";
-        } else if (protocol == "Jabber") {
-            detail.protocol = "jabber";
+        if (protocol == PROTOCOL_LABEL_AIM) {
+            detail.protocol = PROTOCOL_TYPE_AIM;
+        } else if (protocol == PROTOCOL_LABEL_MSN) {
+            detail.protocol = PROTOCOL_TYPE_MSN;
+        } else if (protocol == PROTOCOL_LABEL_YAHOO) {
+            detail.protocol = PROTOCOL_TYPE_YAHOO;
+        } else if (protocol == PROTOCOL_LABEL_SKYPE) {
+            detail.protocol = PROTOCOL_TYPE_SKYPE;
+        } else if (protocol == PROTOCOL_LABEL_QQ) {
+            detail.protocol = PROTOCOL_TYPE_QQ;
+        } else if (protocol == PROTOCOL_LABEL_GTALK) {
+            detail.protocol = PROTOCOL_TYPE_GTALK;
+        } else if (protocol == PROTOCOL_LABEL_ICQ) {
+            detail.protocol = PROTOCOL_TYPE_ICQ;
+        } else if (protocol == PROTOCOL_LABEL_JABBER) {
+            detail.protocol = PROTOCOL_TYPE_JABBER;
         } else {
             console.log("Invalid protocol: " + protocol);
-            detail.protocol = "other";
+            detail.protocol = PROTOCOL_TYPE_OTHER;
         }
     } else {
         var types = ""
