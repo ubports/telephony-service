@@ -311,9 +311,10 @@ void AbstractLoggerModel::onContactAdded(ContactEntry *contact)
 {
     // now we need to iterate over the events to look for contacts matching
     int count = mLogEntries.count();
+    QString customId = contact->customId();
     for (int i = 0; i < count; ++i) {
         LogEntry *entry = mLogEntries[i];
-        if (entry->customId == contact->customId()) {
+        if (entry->customId == customId) {
             fillContactInfo(entry, contact);
             emit dataChanged(index(i,0), index(i,0));
         }
@@ -323,9 +324,10 @@ void AbstractLoggerModel::onContactAdded(ContactEntry *contact)
 void AbstractLoggerModel::onContactChanged(ContactEntry *contact)
 {
     int count = mLogEntries.count();
+    QString customId = contact->customId();
     for (int i = 0; i < count; ++i) {
         LogEntry *entry = mLogEntries[i];
-        if (entry->customId == contact->customId()) {
+        if (entry->customId == customId) {
             fillContactInfo(entry, contact);
             emit dataChanged(index(i, 0), index(i, 0));
         }
