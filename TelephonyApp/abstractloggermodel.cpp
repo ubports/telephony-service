@@ -177,6 +177,7 @@ void AbstractLoggerModel::clearContactInfo(LogEntry *entry)
 {
     entry->avatar = "";
     entry->contactId = "";
+    entry->customId = "";
     entry->contactAlias = "";
 }
 
