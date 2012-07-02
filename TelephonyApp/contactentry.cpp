@@ -172,9 +172,10 @@ bool ContactEntry::addDetail(ContactDetail *detail)
 bool ContactEntry::removeDetail(ContactDetail *detail)
 {
     if (mContact.removeDetail(&detail->detail())) {
+        // Removing the detail from the contact is enough at this point.
+        // The QML might still access the detail object while animating so
+        // don't remove it here.
         setModified(true);
-        mDetails[(ContactDetail::DetailType)detail->type()].removeAll(detail);
-        detail->deleteLater();
         return true;
     }
     return false;
