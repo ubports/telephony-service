@@ -26,6 +26,8 @@
 #include <QContactPhoneNumber>
 #include <QDebug>
 #include <QUrl>
+#include <QDBusInterface>
+#include <QDBusReply>
 
 ContactModel *ContactModel::instance()
 {
@@ -108,20 +110,18 @@ ContactEntry *ContactModel::contactFromCustomId(const QString &customId)
 
 ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
 {
-    QContact contact;
+    // FIXME: replace this by something not relying specifically on android
+    QDBusInterface contacts("com.canonical.Android",
+                            "/com/canonical/android/contacts/Contacts",
+                            "com.canonical.android.contacts.Contacts");
+    QDBusReply<QString> reply = contacts.call("getContactKeyForNumber", phoneNumber);
+    QString id = reply.value();
 
-    // fetch the QContact object
-    QContactDetailFilter filter;
-    filter.setDetailDefinitionName(QContactPhoneNumber::DefinitionName, QContactPhoneNumber::FieldNumber);
-    filter.setValue(phoneNumber);
-    filter.setMatchFlags(QContactFilter::MatchPhoneNumber);
-
-    QList<QContact> contactList = mContactManager->contacts(filter);
-    if (contactList.count() > 0) {
-        contact = contactList[0];
+    if (id.isEmpty()) {
+        return 0;
     }
 
-    return contactFromId(contact.detail<QContactGuid>().guid());
+    return contactFromCustomId(id);
 }
 
 void ContactModel::saveContact(ContactEntry *entry)

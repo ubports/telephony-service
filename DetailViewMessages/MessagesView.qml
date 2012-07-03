@@ -32,12 +32,6 @@ Item {
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
 
-    // FIXME: use the contact id if possible
-    onNumberChanged: {
-        messageLogModel.phoneNumber = number;
-        view.contact = contactModel.contactFromPhoneNumber(number);
-    }
-
     Item {
         id: background
 
@@ -69,7 +63,7 @@ Item {
             }
 
             onNumberSelected: {
-                view.contact = null;
+                view.contact = contactModel.contactFromPhoneNumber(number);
                 view.number = number;
                 view.newMessage = false;
             }
