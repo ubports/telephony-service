@@ -97,6 +97,8 @@ protected slots:
     void onContactRemoved(const QString &contactId);
 
 protected:
+    void parseEntityId(const Tpl::EntityPtr &entity, LogEntry *entry);
+
     Tpl::LogManagerPtr mLogManager;
     QList<LogEntry*> mLogEntries;
     Tpl::EventTypeMask mType;

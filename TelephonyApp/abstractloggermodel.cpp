@@ -197,8 +197,7 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         entry->timestamp = event->timestamp();
 
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
-        entry->customId = customIdentifierFromId(remoteEntity->identifier());
-        entry->phoneNumber = phoneNumberFromId(remoteEntity->identifier());
+        parseEntityId(remoteEntity, entry);
 
         // set the alias from the entity as a fallback value in case the contact is not found.
         entry->contactAlias = remoteEntity->alias();
@@ -352,6 +351,16 @@ void AbstractLoggerModel::onContactRemoved(const QString &contactId)
             clearContactInfo(entry);
             emit dataChanged(index(i,0), index(i,0));
         }
+    }
+}
+
+void AbstractLoggerModel::parseEntityId(const Tpl::EntityPtr &entity, LogEntry *entry)
+{
+    entry->customId = customIdentifierFromId(entity->identifier());
+    if (entity->entityType() == Tpl::EntityTypeRoom) {
+        entry->phoneNumber = entity->alias();
+    } else {
+        entry->phoneNumber = phoneNumberFromId(entity->identifier());
     }
 }
 
