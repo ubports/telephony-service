@@ -29,8 +29,8 @@ Item {
     }
 
     Component.onCompleted: {
-        messageLogModel.threadId = threadId;
         messageLogModel.phoneNumber = number;
+        messageLogModel.threadId = threadId;
     }
 
     // make sure the text channel gets closed after chatting
@@ -38,12 +38,13 @@ Item {
 
     // FIXME: use the contact id if possible
     onThreadIdChanged: {
-        messageLogModel.phoneNumber = number;
         messageLogModel.threadId = threadId;
-        view.contact = contactModel.contactFromPhoneNumber(number);
     }
 
-    onNumberChanged: view.contact = contactModel.contactFromPhoneNumber(number);
+    onNumberChanged: {
+        messageLogModel.phoneNumber = number;
+        view.contact = contactModel.contactFromPhoneNumber(number);
+    }
 
     Item {
         id: background
@@ -73,12 +74,14 @@ Item {
                 view.contact = contact;
                 view.number = number;
                 view.newMessage = false;
+                view.threadId = ""
             }
 
             onNumberSelected: {
                 view.contact = null;
                 view.number = number;
                 view.newMessage = false;
+                view.threadId = ""
             }
         }
     }

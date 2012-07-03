@@ -115,7 +115,7 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
             continue;
         }
 
-        if (entry->phoneNumber == number) {
+        if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number)) {
             entry->timestamp = QDateTime::currentDateTime();
             entry->message = message;
             entry->incoming = incoming;

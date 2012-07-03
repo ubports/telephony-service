@@ -58,8 +58,10 @@ Item {
     function startChat(contact, number, threadId) {
         messages.load()
         view.contact = contact
-        view.threadId = threadId
         view.number = number
+        // "" is just an invalid thread id to force
+        // the models to reload
+        view.threadId = threadId ? threadId : ""
         view.newMessage = false
     }
 
@@ -251,16 +253,16 @@ Item {
         target: chatManager
         onChatReady: {
             if (telephony.view.viewName != "messages"
-                    || telephony.view.number != contactId) {
+                    || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat("", contactId, "")
+                startChat("", contactId, null)
             }
         }
         onMessageReceived: {
             if (telephony.view.viewName != "messages"
-                    || telephony.view.number != contactId) {
+                    || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat("", contactId, "")
+                startChat("", contactId, null)
             }
         }
     }

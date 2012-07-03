@@ -54,12 +54,6 @@ void MessageLogModel::setPhoneNumber(QString value)
 {
     if (mPhoneNumber != value) {
         mPhoneNumber = value;
-
-        // no not refetch log if we have a mThreadId.
-        if (!mPhoneNumber.isEmpty() && mThreadId.isEmpty()) {
-            invalidateRequests();
-            fetchLog(Tpl::EventTypeMaskText);
-        }
         emit phoneNumberChanged();
     }
 }
@@ -71,15 +65,13 @@ QString MessageLogModel::threadId() const
 
 void MessageLogModel::setThreadId(QString value)
 {
-    if (mThreadId != value) {
-        invalidateRequests();
-        mThreadId = value;
-
-        if (!mThreadId.isEmpty()) {
-            fetchLog(Tpl::EventTypeMaskText);
-        }
-        emit threadIdChanged();
-    }
+    // we have to fetchLog() every thread id change,
+    // even if it is null, since we can still group
+    // based on phone numbers
+    invalidateRequests();
+    mThreadId = value;
+    fetchLog(Tpl::EventTypeMaskText);
+    emit threadIdChanged();
 }
 void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming)
 {
@@ -130,7 +122,8 @@ void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
 {
     // search for the entity that matches the thread id for this conversation
     Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
-        if (threadIdFromIdentifier(entity->identifier()) == mThreadId) {
+        if (threadIdFromIdentifier(entity->identifier()) == mThreadId ||
+            (!mPhoneNumber.isEmpty() && mPhoneNumber == entity->alias())) {
             requestDatesForEntities(Tpl::EntityPtrList() << entity);
             return;
         }
