@@ -193,6 +193,9 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
     beginInsertRows(QModelIndex(), mLogEntries.count(), (mLogEntries.count() + events.count()-1));
     foreach(Tpl::EventPtr event, events) {
         LogEntry *entry = createEntry(event);
+        if (!entry) {
+            continue;
+        }
         entry->incoming = (event->sender()->entityType() != Tpl::EntityTypeSelf);
         entry->timestamp = event->timestamp();
 
@@ -271,6 +274,11 @@ void AbstractLoggerModel::handleDates(const Tpl::EntityPtr &entity, const Tpl::Q
 
 void AbstractLoggerModel::handleEvents(const Tpl::EventPtrList &events)
 {
+    // we have to clear the cache right before
+    // adding new items to the model or we
+    // might have duplicated data if we receive messages while
+    // fetching
+    clear();
     // just add all the events to the list
     appendEvents(events);
 }

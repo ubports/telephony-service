@@ -63,11 +63,12 @@ QString MessageLogModel::threadId() const
     return mThreadId;
 }
 
-void MessageLogModel::setThreadId(QString value)
+void MessageLogModel::setThreadId(const QString &value)
 {
     mThreadId = value;
     emit threadIdChanged();
 }
+
 void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming)
 {
     MessageLogEntry *entry = new MessageLogEntry();

@@ -256,14 +256,14 @@ Item {
             if (telephony.view.viewName != "messages"
                     || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat("", contactId, "")
+                startChat(contactModel.contactFromPhoneNumber(contactId), contactId, "")
             }
         }
         onMessageReceived: {
             if (telephony.view.viewName != "messages"
                     || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat("", contactId, "")
+                startChat(contactModel.contactFromPhoneNumber(contactId), contactId, "")
             }
         }
     }

@@ -68,6 +68,19 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
 
     entry->message = textEvent->message();
     entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
+
+    // avoid adding the same entry twice
+    entry->phoneNumber = textEvent->receiver()->alias();
+    for(int i = 0; i < mLogEntries.count(); ++i) {
+        ConversationLogEntry *entry1 = dynamic_cast<ConversationLogEntry*>(mLogEntries[i]);
+        if (!entry1) {
+            continue;
+        }
+        if (entry1->phoneNumber == entry->phoneNumber) {
+            return NULL;
+        }
+    }
+
     return entry;
 }
 

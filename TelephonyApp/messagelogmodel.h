@@ -50,7 +50,7 @@ public:
     QString phoneNumber() const;
     void setPhoneNumber(QString value);
     QString threadId() const;
-    void setThreadId(QString value);
+    void setThreadId(const QString &value);
 
     Q_INVOKABLE void appendMessage(const QString &number, const QString &message, bool incoming);
     Q_INVOKABLE void refreshModel();

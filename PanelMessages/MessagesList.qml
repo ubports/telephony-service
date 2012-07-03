@@ -27,7 +27,7 @@ Item {
                 selected: telephony.messages.loaded
                           && !telephony.view.newMessage
                           //&& telephony.view.contact == contact
-                          && (threadId != null && (telephony.view.threadId == threadId) 
+                          && (threadId != "" && (telephony.view.threadId == threadId) 
                           || telephony.view.number == phoneNumber)
             }
         }
