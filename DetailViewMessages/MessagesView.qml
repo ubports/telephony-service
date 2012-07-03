@@ -13,6 +13,10 @@ Item {
 
     property string pendingMessage
 
+    function refreshModel() {
+        messageLogModel.refreshModel()
+    }
+
     Connections {
         target: chatManager
 
@@ -75,6 +79,7 @@ Item {
                 view.number = number;
                 view.newMessage = false;
                 view.threadId = ""
+                refreshModel()
             }
 
             onNumberSelected: {
@@ -82,6 +87,7 @@ Item {
                 view.number = number;
                 view.newMessage = false;
                 view.threadId = ""
+                refreshModel()
             }
         }
     }

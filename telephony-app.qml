@@ -61,8 +61,9 @@ Item {
         view.number = number
         // "" is just an invalid thread id to force
         // the models to reload
-        view.threadId = threadId ? threadId : ""
+        view.threadId = threadId
         view.newMessage = false
+        view.refreshModel()
     }
 
     function endCall() {
@@ -255,14 +256,14 @@ Item {
             if (telephony.view.viewName != "messages"
                     || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat("", contactId, null)
+                startChat("", contactId, "")
             }
         }
         onMessageReceived: {
             if (telephony.view.viewName != "messages"
                     || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat("", contactId, null)
+                startChat("", contactId, "")
             }
         }
     }

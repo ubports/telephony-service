@@ -53,6 +53,8 @@ public:
     void setThreadId(QString value);
 
     Q_INVOKABLE void appendMessage(const QString &number, const QString &message, bool incoming);
+    Q_INVOKABLE void refreshModel();
+
 
 public slots:
     void onMessageReceived(const QString &number, const QString &message);

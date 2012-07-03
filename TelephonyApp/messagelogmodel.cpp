@@ -65,12 +65,7 @@ QString MessageLogModel::threadId() const
 
 void MessageLogModel::setThreadId(QString value)
 {
-    // we have to fetchLog() every thread id change,
-    // even if it is null, since we can still group
-    // based on phone numbers
-    invalidateRequests();
     mThreadId = value;
-    fetchLog(Tpl::EventTypeMaskText);
     emit threadIdChanged();
 }
 void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming)
@@ -130,3 +125,8 @@ void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
     }
 }
 
+void MessageLogModel::refreshModel()
+{
+    invalidateRequests();
+    fetchLog(Tpl::EventTypeMaskText);
+}
