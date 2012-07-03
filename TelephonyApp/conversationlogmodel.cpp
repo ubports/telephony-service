@@ -28,6 +28,8 @@ QVariant ConversationLogEntry::data(int role) const
     switch (role) {
     case ConversationLogModel::Message:
         return message;
+    case ConversationLogModel::ThreadId:
+        return threadId;
     default:
         return LogEntry::data(role);
     }
@@ -39,6 +41,7 @@ ConversationLogModel::ConversationLogModel(QObject *parent) :
     // set the role names
     QHash<int, QByteArray> roles = roleNames();
     roles[Message] = "message";
+    roles[ThreadId] = "threadId";
     setRoleNames(roles);
 
     fetchLog(Tpl::EventTypeMaskText);
@@ -64,6 +67,7 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
     }
 
     entry->message = textEvent->message();
+    entry->threadId = threadIdFromIdentifier(textEvent->sender()->identifier());
     return entry;
 }
 

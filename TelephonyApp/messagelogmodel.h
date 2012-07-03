@@ -35,6 +35,11 @@ class MessageLogModel : public AbstractLoggerModel
                READ phoneNumber
                WRITE setPhoneNumber
                NOTIFY phoneNumberChanged)
+    Q_PROPERTY(QString threadId
+               READ threadId
+               WRITE setThreadId
+               NOTIFY threadIdChanged)
+
 public:
     enum MessageLogRoles {
         Message = AbstractLoggerModel::LastLogRole,
@@ -44,6 +49,8 @@ public:
     explicit MessageLogModel(QObject *parent = 0);
     QString phoneNumber() const;
     void setPhoneNumber(QString value);
+    QString threadId() const;
+    void setThreadId(QString value);
 
     Q_INVOKABLE void appendMessage(const QString &number, const QString &message, bool incoming);
 
@@ -53,6 +60,7 @@ public slots:
 
 signals:
     void phoneNumberChanged();
+    void threadIdChanged();
     
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
@@ -60,6 +68,7 @@ protected:
 
 private:
     QString mPhoneNumber;
+    QString mThreadId;
 };
 
 #endif // MESSAGELOGMODEL_H

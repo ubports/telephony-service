@@ -43,6 +43,7 @@ public:
     Q_INVOKABLE ContactEntry *contactFromId(const QString &guid);
     Q_INVOKABLE ContactEntry *contactFromCustomId(const QString &customId);
     Q_INVOKABLE ContactEntry *contactFromPhoneNumber(const QString &phoneNumber);
+    Q_INVOKABLE bool comparePhoneNumbers(const QString &phoneNumber1, const QString &phoneNumber2) const;
     Q_INVOKABLE void saveContact(ContactEntry *entry);
     Q_INVOKABLE void loadContactFromId(const QString &guid);
     Q_INVOKABLE void removeContact(ContactEntry *entry);

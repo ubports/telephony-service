@@ -55,9 +55,10 @@ Item {
         callManager.startCall(number);
     }
 
-    function startChat(contact, number) {
+    function startChat(contact, number, threadId) {
         messages.load()
         view.contact = contact
+        view.threadId = threadId
         view.number = number
         view.newMessage = false
     }
@@ -252,14 +253,14 @@ Item {
             if (telephony.view.viewName != "messages"
                     || telephony.view.number != contactId) {
                 telephony.viewLoader.source = ""
-                startChat("", contactId)
+                startChat("", contactId, "")
             }
         }
         onMessageReceived: {
             if (telephony.view.viewName != "messages"
                     || telephony.view.number != contactId) {
                 telephony.viewLoader.source = ""
-                startChat("", contactId)
+                startChat("", contactId, "")
             }
         }
     }

@@ -9,6 +9,7 @@ Item {
     property variant contact
     property string number
     property bool newMessage: false
+    property string threadId
 
     property string pendingMessage
 
@@ -27,16 +28,22 @@ Item {
         }
     }
 
-    Component.onCompleted: messageLogModel.phoneNumber = number;
+    Component.onCompleted: {
+        messageLogModel.threadId = threadId;
+        messageLogModel.phoneNumber = number;
+    }
 
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
 
     // FIXME: use the contact id if possible
-    onNumberChanged: {
+    onThreadIdChanged: {
         messageLogModel.phoneNumber = number;
+        messageLogModel.threadId = threadId;
         view.contact = contactModel.contactFromPhoneNumber(number);
     }
+
+    onNumberChanged: view.contact = contactModel.contactFromPhoneNumber(number);
 
     Item {
         id: background

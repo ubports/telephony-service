@@ -108,6 +108,12 @@ QString AbstractLoggerModel::phoneNumberFromId(const QString &id) const
     return id;
 }
 
+QString AbstractLoggerModel::threadIdFromIdentifier(const QString &id) const
+{
+    // that is basically the same method, but better to use the right name
+    return phoneNumberFromId(id);
+}
+
 QString AbstractLoggerModel::customIdentifierFromId(const QString &id) const
 {
     QStringList splittedId = id.split(":");
@@ -187,7 +193,7 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
     beginInsertRows(QModelIndex(), mLogEntries.count(), (mLogEntries.count() + events.count()-1));
     foreach(Tpl::EventPtr event, events) {
         LogEntry *entry = createEntry(event);
-        entry->incoming = (event->receiver()->entityType() == Tpl::EntityTypeSelf);
+        entry->incoming = (event->receiver()->entityType() == Tpl::EntityTypeRoom);
         entry->timestamp = event->timestamp();
 
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();

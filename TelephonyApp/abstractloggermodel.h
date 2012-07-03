@@ -68,6 +68,7 @@ public:
     
 protected:
     QString phoneNumberFromId(const QString &id) const;
+    QString threadIdFromIdentifier(const QString &id) const;
     QString customIdentifierFromId(const QString &id) const;
     void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny);
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
