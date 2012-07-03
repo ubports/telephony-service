@@ -21,9 +21,19 @@ var PROTOCOL_TYPE_ICQ       = "icq";
 var PROTOCOL_TYPE_JABBER    = "jabber";
 var PROTOCOL_TYPE_OTHER     = "other";
 
+var ADDRESS_LABEL_HOME      = "Home";
+var ADDRESS_LABEL_WORK      = "Work";
+var ADDRESS_LABEL_OTHER     = "Other";
+
+var ADDRESS_TYPE_HOME       = "home";
+var ADDRESS_TYPE_WORK       = "work";
+var ADDRESS_TYPE_OTHER      = "other";
+
 var phoneSubTypes = [ "Home", "Mobile", "Work", "Work Fax", "Home Fax", "Pager", "Other" ];
 var emailSubTypes = [ "Work", "Home", "Mobile", "Other" ];
-var postalAddressSubTypes = [ "Work", "Home", "Other" ];
+var postalAddressSubTypes = [ ADDRESS_LABEL_WORK,
+                              ADDRESS_LABEL_HOME,
+                              ADDRESS_LABEL_OTHER ];
 var IMSubTypes = [ PROTOCOL_LABEL_AIM,
                    PROTOCOL_LABEL_MSN,
                    PROTOCOL_LABEL_YAHOO,
@@ -135,6 +145,15 @@ function getDetailSubType(detail) {
             console.log("Invalid protocol: " + protocol);
             return PROTOCOL_LABEL_OTHER;
         }
+    } else if (detail.definitionName == "Address") {
+        var subTypes = detail.subTypes
+        if (subTypes.indexOf(ADDRESS_TYPE_HOME) > -1) {
+            return ADDRESS_LABEL_HOME;
+        } else if (subTypes.indexOf(ADDRESS_TYPE_WORK) > -1) {
+            return ADDRESS_LABEL_WORK;
+        } else {
+            return ADDRESS_LABEL_OTHER;
+        }
     } else {
         // The backend supports multiple types but we can just handle one,
         // so let's pick just the first
@@ -203,6 +222,14 @@ function setDetailSubType(detail, newSubType) {
         } else {
             console.log("Invalid protocol: " + protocol);
             detail.protocol = PROTOCOL_TYPE_OTHER;
+        }
+    } else if (detail.definitionName == "Address") {
+        if (newSubType == ADDRESS_LABEL_HOME) {
+            detail.subTypes = [ ADDRESS_TYPE_HOME ];
+        } else if (newSubType == ADDRESS_LABEL_WORK) {
+            detail.subTypes = [ ADDRESS_TYPE_WORK ];
+        } else {
+            detail.subTypes = [ ADDRESS_TYPE_OTHER ];
         }
     } else {
         var types = ""
