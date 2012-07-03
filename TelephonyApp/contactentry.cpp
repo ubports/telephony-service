@@ -88,10 +88,8 @@ bool ContactEntry::modified() const
 
 void ContactEntry::setModified(bool value)
 {
-    if (value != mModified) {
-        mModified = value;
-        emit modifiedChanged();
-    }
+    mModified = value;
+    emit changed(this);
 }
 
 QContact& ContactEntry::contact()
@@ -101,8 +99,8 @@ QContact& ContactEntry::contact()
 
 void ContactEntry::setContact(const QContact &contact)
 {
+    mModified = false;
     mContact = contact;
-    setModified(false);
     loadDetails();
 
     emit changed(this);
@@ -156,11 +154,12 @@ bool ContactEntry::addDetail(ContactDetail *detail)
     }
 
     if (mContact.saveDetail(&newDetail->detail())) {
-        setModified(true);
+        mModified = true;
         mDetails[type].append(newDetail);
         connect(newDetail,
                 SIGNAL(changed()),
                 SLOT(onDetailChanged()));
+        emit changed(this);
         return true;
     } else {
         qWarning() << "Failed to add new detail to contact";
@@ -172,10 +171,10 @@ bool ContactEntry::addDetail(ContactDetail *detail)
 bool ContactEntry::removeDetail(ContactDetail *detail)
 {
     if (mContact.removeDetail(&detail->detail())) {
-        // Removing the detail from the contact is enough at this point.
-        // The QML might still access the detail object while animating so
-        // don't remove it here.
-        setModified(true);
+        mModified = true;
+        mDetails[(ContactDetail::DetailType)detail->type()].removeAll(detail);
+        detail->deleteLater();
+        emit changed(this);
         return true;
     }
     return false;
@@ -195,8 +194,10 @@ void ContactEntry::onDetailChanged()
         qWarning() << "Detail changed emitted from an object that is not a detail";
     }
     if (mContact.saveDetail(&detail->detail())) {
-        setModified(true);
+        mModified = true;
     }
+
+    emit changed(this);
 }
 
 void ContactEntry::detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail)
