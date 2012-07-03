@@ -51,7 +51,7 @@ class ContactEntry : public QObject
                NOTIFY changed)
     Q_PROPERTY(bool modified
                READ modified
-               NOTIFY changed)
+               NOTIFY modifiedChanged)
     Q_PROPERTY(QDeclarativeListProperty<ContactDetail> addresses
                READ addresses
                NOTIFY changed)
@@ -112,6 +112,7 @@ public:
 
 Q_SIGNALS:
     void changed(ContactEntry *entry);
+    void modifiedChanged();
 
 protected:
     void loadDetails();

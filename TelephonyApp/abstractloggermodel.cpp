@@ -33,6 +33,8 @@ QVariant LogEntry::data(int role) const
     switch (role) {
     case AbstractLoggerModel::ContactId:
         return contactId;
+    case AbstractLoggerModel::CustomId:
+        return customId;
     case AbstractLoggerModel::ContactAlias:
     case Qt::DisplayRole:
         return contactAlias;
@@ -58,6 +60,7 @@ AbstractLoggerModel::AbstractLoggerModel(QObject *parent) :
     // set the role names
     QHash<int, QByteArray> roles;
     roles[ContactId] = "contactId";
+    roles[CustomId] = "customId";
     roles[ContactAlias] = "contactAlias";
     roles[Avatar] = "avatar";
     roles[PhoneNumber] = "phoneNumber";
@@ -73,8 +76,8 @@ AbstractLoggerModel::AbstractLoggerModel(QObject *parent) :
             SIGNAL(contactChanged(ContactEntry*)),
             SLOT(onContactChanged(ContactEntry*)));
     connect(ContactModel::instance(),
-            SIGNAL(contactRemoved(const QString &contactId)),
-            SLOT(onContactRemoved(const QString &contactId)));
+            SIGNAL(contactRemoved(const QString&)),
+            SLOT(onContactRemoved(const QString&)));
 }
 
 int AbstractLoggerModel::rowCount(const QModelIndex &parent) const

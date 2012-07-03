@@ -75,7 +75,7 @@ Item {
             }
 
             onNumberSelected: {
-                view.contact = null;
+                view.contact = contactModel.contactFromPhoneNumber(number);
                 view.number = number;
                 view.newMessage = false;
                 view.threadId = ""

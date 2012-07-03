@@ -26,12 +26,12 @@
 class ContactName : public ContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString customLabel READ customLabel WRITE setCustomLabel NOTIFY changed)
-    Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY changed)
-    Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY changed)
-    Q_PROPERTY(QString middleName READ middleName WRITE setMiddleName NOTIFY changed)
-    Q_PROPERTY(QString prefix READ prefix WRITE setPrefix NOTIFY changed)
-    Q_PROPERTY(QString suffix READ suffix WRITE setSuffix NOTIFY changed)
+    Q_PROPERTY(QString customLabel READ customLabel WRITE setCustomLabel NOTIFY customLabelChanged)
+    Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
+    Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
+    Q_PROPERTY(QString middleName READ middleName WRITE setMiddleName NOTIFY middleNameChanged)
+    Q_PROPERTY(QString prefix READ prefix WRITE setPrefix NOTIFY prefixChanged)
+    Q_PROPERTY(QString suffix READ suffix WRITE setSuffix NOTIFY suffixChanged)
 
 public:
     explicit ContactName(const QContactDetail &detail = QContactName(), QObject *parent = 0);
@@ -58,6 +58,12 @@ public:
 
 Q_SIGNALS:
     void changed();
+    void customLabelChanged();
+    void firstNameChanged();
+    void lastNameChanged();
+    void middleNameChanged();
+    void prefixChanged();
+    void suffixChanged();
 };
 
 #endif // CONTACTNAME_H

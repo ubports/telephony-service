@@ -52,6 +52,7 @@ class AbstractLoggerModel : public QAbstractListModel
 public:
     enum LogRoles {
         ContactId = Qt::UserRole,
+        CustomId,
         ContactAlias,
         Avatar,
         PhoneNumber,
