@@ -193,7 +193,7 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
     beginInsertRows(QModelIndex(), mLogEntries.count(), (mLogEntries.count() + events.count()-1));
     foreach(Tpl::EventPtr event, events) {
         LogEntry *entry = createEntry(event);
-        entry->incoming = (event->receiver()->entityType() == Tpl::EntityTypeRoom);
+        entry->incoming = (event->sender()->entityType() != Tpl::EntityTypeSelf);
         entry->timestamp = event->timestamp();
 
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
