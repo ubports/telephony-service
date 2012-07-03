@@ -1,6 +1,12 @@
+telephony-app (0.24) precise; urgency=low
+
+  * Fix adding new details while editing a contact (LP: #1019037)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 03 Jul 2012 11:44:17 -0300
+
 telephony-app (0.23) precise; urgency=low
 
-  * Fixed Address type translation. 
+  * Fixed Address type translation.
 
  -- Renato Araujo Oliveira Filho <renato@canonical.com>  Mon, 02 Jul 2012 17:57:46 -0700
 
