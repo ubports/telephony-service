@@ -117,9 +117,10 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
 {
     // search for the entity that matches the thread id for this conversation
+    bool hasPhoneNumber = !mPhoneNumber.isEmpty();
     Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
         if (threadIdFromIdentifier(entity->identifier()) == mThreadId ||
-            (!mPhoneNumber.isEmpty() && mPhoneNumber == entity->alias())) {
+            (hasPhoneNumber && mPhoneNumber == entity->alias())) {
             requestDatesForEntities(Tpl::EntityPtrList() << entity);
             return;
         }
