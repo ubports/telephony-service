@@ -67,7 +67,7 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
     }
 
     entry->message = textEvent->message();
-    entry->threadId = threadIdFromIdentifier(textEvent->sender()->identifier());
+    entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
     return entry;
 }
 
