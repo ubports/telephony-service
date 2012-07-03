@@ -1,3 +1,9 @@
+telephony-app (0.23) precise; urgency=low
+
+  * Fixed Address type translation. 
+
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Mon, 02 Jul 2012 17:57:46 -0700
+
 telephony-app (0.22) precise; urgency=low
 
   [ Gustavo Pichorim Boiko ]
