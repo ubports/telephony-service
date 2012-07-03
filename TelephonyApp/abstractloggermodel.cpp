@@ -73,8 +73,8 @@ AbstractLoggerModel::AbstractLoggerModel(QObject *parent) :
             SIGNAL(contactChanged(ContactEntry*)),
             SLOT(onContactChanged(ContactEntry*)));
     connect(ContactModel::instance(),
-            SIGNAL(contactRemoved(const QString &contactId)),
-            SLOT(onContactRemoved(const QString &contactId)));
+            SIGNAL(contactRemoved(const QString&)),
+            SLOT(onContactRemoved(const QString&)));
 }
 
 int AbstractLoggerModel::rowCount(const QModelIndex &parent) const
