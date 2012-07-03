@@ -26,10 +26,11 @@
 class ContactOnlineAccount : public ContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString accountUri READ accountUri WRITE setAccountUri NOTIFY changed)
-    Q_PROPERTY(QVariant capabilities READ capabilities WRITE setCapabilities NOTIFY changed)
-    Q_PROPERTY(QString protocol READ protocol WRITE setProtocol NOTIFY changed)
-    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY changed)
+    Q_PROPERTY(QString accountUri READ accountUri WRITE setAccountUri NOTIFY accountUriChanged)
+    Q_PROPERTY(QVariant capabilities READ capabilities WRITE setCapabilities NOTIFY capabilitiesChanged)
+    Q_PROPERTY(QString protocol READ protocol WRITE setProtocol NOTIFY protocolChanged)
+    Q_PROPERTY(QString serviceProvider READ serviceProvider WRITE setServiceProvider NOTIFY serviceProviderChanged)
+    Q_PROPERTY(QVariant subTypes READ subTypes WRITE setSubTypes NOTIFY subTypesChanged)
 
 public:
     explicit ContactOnlineAccount(const QContactDetail &detail = QContactOnlineAccount(), QObject *parent = 0);
@@ -53,6 +54,11 @@ public:
     
 Q_SIGNALS:
     void changed();
+    void accountUriChanged();
+    void capabilitiesChanged();
+    void protocolChanged();
+    void serviceProviderChanged();
+    void subTypesChanged();
     
 };
 

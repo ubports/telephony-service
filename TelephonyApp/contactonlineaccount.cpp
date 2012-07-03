@@ -42,6 +42,7 @@ void ContactOnlineAccount::setAccountUri(const QString &value)
     if (value != accountUri()) {
         mDetail.setValue(QContactOnlineAccount::FieldAccountUri, value);
         emit changed();
+        emit accountUriChanged();
     }
 }
 
@@ -55,6 +56,7 @@ void ContactOnlineAccount::setCapabilities(const QVariant &value)
     // FIXME: maybe we should check if the list has really changed?
     mDetail.setValue(QContactOnlineAccount::FieldCapabilities, value.toStringList());
     emit changed();
+    emit capabilitiesChanged();
 }
 
 QString ContactOnlineAccount::protocol() const
@@ -67,6 +69,7 @@ void ContactOnlineAccount::setProtocol(const QString &value)
     if (value != protocol()) {
         mDetail.setValue(QContactOnlineAccount::FieldProtocol, value);
         emit changed();
+        emit protocolChanged();
     }
 }
 
@@ -80,6 +83,7 @@ void ContactOnlineAccount::setServiceProvider(const QString &value)
     if (value != serviceProvider()) {
         mDetail.setValue(QContactOnlineAccount::FieldServiceProvider, value);
         emit changed();
+        emit serviceProviderChanged();
     }
 }
 
@@ -93,4 +97,5 @@ void ContactOnlineAccount::setSubTypes(const QVariant &value)
     // FIXME: maybe we should check if the list has really changed?
     mDetail.setValue(QContactOnlineAccount::FieldSubTypes, value.toStringList());
     emit changed();
+    emit subTypesChanged();
 }
