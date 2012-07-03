@@ -1,3 +1,9 @@
+telephony-app (0.25) precise; urgency=low
+
+  * Use the android service to get the contact ID from a given number.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 03 Jul 2012 18:19:13 -0300
+
 telephony-app (0.24) precise; urgency=low
 
   * Fix adding new details while editing a contact (LP: #1019037)
