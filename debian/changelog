@@ -1,3 +1,9 @@
+telephony-app (0.26) precise; urgency=low
+
+  * Fix sms grouping using threadId and comparePhoneNumbers() (LP: #1004798 LP: #1019041)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 04 Jul 2012 08:16:51 -0700
+
 telephony-app (0.25) precise; urgency=low
 
   * Use the android service to get the contact ID from a given number.
