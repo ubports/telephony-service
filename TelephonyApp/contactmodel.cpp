@@ -270,6 +270,10 @@ bool ContactModel::comparePhoneNumbers(const QString &number1, const QString &nu
 {
     QDBusInterface telephony("com.canonical.Android", "/com/canonical/android/telephony/Telephony", "com.canonical.android.telephony.Telephony");
     QDBusReply<bool> reply = telephony.call("comparePhoneNumbers", number1, number2);
-    return reply.value();
+    if (reply.isValid()) {
+        return reply.value();
+    } else {
+        return false;
+    }
 }
 
