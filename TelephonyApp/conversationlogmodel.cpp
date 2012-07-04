@@ -76,7 +76,7 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
         if (!entry1) {
             continue;
         }
-        if (entry1->phoneNumber == entry->phoneNumber) {
+        if (ContactModel::instance()->comparePhoneNumbers(entry1->phoneNumber, entry->phoneNumber)) {
             return NULL;
         }
     }
