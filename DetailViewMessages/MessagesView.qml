@@ -9,8 +9,16 @@ Item {
     property variant contact
     property string number
     property bool newMessage: false
+    property string threadId
 
     property string pendingMessage
+
+    Binding { target: messageLogModel; property: "phoneNumber"; value: number; }
+    Binding { target: messageLogModel; property: "threadId"; value: threadId; }
+
+    function refreshModel() {
+        messageLogModel.refreshModel()
+    }
 
     Connections {
         target: chatManager
@@ -27,10 +35,12 @@ Item {
         }
     }
 
-    Component.onCompleted: messageLogModel.phoneNumber = number;
-
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
+
+    onNumberChanged: {
+        view.contact = contactModel.contactFromPhoneNumber(number);
+    }
 
     Item {
         id: background
@@ -60,12 +70,16 @@ Item {
                 view.contact = contact;
                 view.number = number;
                 view.newMessage = false;
+                view.threadId = ""
+                refreshModel()
             }
 
             onNumberSelected: {
                 view.contact = contactModel.contactFromPhoneNumber(number);
                 view.number = number;
                 view.newMessage = false;
+                view.threadId = ""
+                refreshModel()
             }
         }
     }

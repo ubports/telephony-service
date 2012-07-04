@@ -55,11 +55,13 @@ Item {
         callManager.startCall(number);
     }
 
-    function startChat(contact, number) {
+    function startChat(contact, number, threadId) {
         messages.load()
         view.contact = contact
         view.number = number
+        view.threadId = threadId
         view.newMessage = false
+        view.refreshModel()
     }
 
     function endCall() {
@@ -250,16 +252,16 @@ Item {
         target: chatManager
         onChatReady: {
             if (telephony.view.viewName != "messages"
-                    || telephony.view.number != contactId) {
+                    || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat("", contactId)
+                startChat(contactModel.contactFromPhoneNumber(contactId), contactId, "")
             }
         }
         onMessageReceived: {
             if (telephony.view.viewName != "messages"
-                    || telephony.view.number != contactId) {
+                    || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat("", contactId)
+                startChat(contactModel.contactFromPhoneNumber(contactId), contactId, "")
             }
         }
     }

@@ -263,3 +263,17 @@ void ContactModel::onContactRemoved()
     // there is no need to process the result of the request as we are watching the contacts added,
     // removed and changed signals
 }
+
+// FIXME: this method should not call android methods directly
+// but use an abstraction layer instead
+bool ContactModel::comparePhoneNumbers(const QString &number1, const QString &number2) const
+{
+    QDBusInterface telephony("com.canonical.Android", "/com/canonical/android/telephony/Telephony", "com.canonical.android.telephony.Telephony");
+    QDBusReply<bool> reply = telephony.call("comparePhoneNumbers", number1, number2);
+    if (reply.isValid()) {
+        return reply.value();
+    } else {
+        return false;
+    }
+}
+

@@ -28,6 +28,8 @@ QVariant ConversationLogEntry::data(int role) const
     switch (role) {
     case ConversationLogModel::Message:
         return message;
+    case ConversationLogModel::ThreadId:
+        return threadId;
     default:
         return LogEntry::data(role);
     }
@@ -39,6 +41,7 @@ ConversationLogModel::ConversationLogModel(QObject *parent) :
     // set the role names
     QHash<int, QByteArray> roles = roleNames();
     roles[Message] = "message";
+    roles[ThreadId] = "threadId";
     setRoleNames(roles);
 
     fetchLog(Tpl::EventTypeMaskText);
@@ -64,6 +67,20 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
     }
 
     entry->message = textEvent->message();
+    entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
+
+    // avoid adding the same entry twice
+    entry->phoneNumber = textEvent->receiver()->alias();
+    Q_FOREACH(LogEntry *logEntry, mLogEntries) {
+        ConversationLogEntry *entry1 = dynamic_cast<ConversationLogEntry*>(logEntry);
+        if (!entry1) {
+            continue;
+        }
+        if (ContactModel::instance()->comparePhoneNumbers(entry1->phoneNumber, entry->phoneNumber)) {
+            return NULL;
+        }
+    }
+
     return entry;
 }
 
@@ -105,13 +122,13 @@ void ConversationLogModel::handleEvents(const Tpl::EventPtrList &events)
 void ConversationLogModel::updateLatestMessage(const QString &number, const QString &message, bool incoming)
 {
     int count = mLogEntries.count();
-    for(int i = 0; i < mLogEntries.count(); ++i) {
+    for(int i = 0; i < count; ++i) {
         ConversationLogEntry *entry = dynamic_cast<ConversationLogEntry*>(mLogEntries[i]);
         if (!entry) {
             continue;
         }
 
-        if (entry->phoneNumber == number) {
+        if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number)) {
             entry->timestamp = QDateTime::currentDateTime();
             entry->message = message;
             entry->incoming = incoming;

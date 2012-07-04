@@ -45,7 +45,6 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     setRoleNames(roles);
 }
 
-
 QString MessageLogModel::phoneNumber() const
 {
     return mPhoneNumber;
@@ -54,14 +53,20 @@ QString MessageLogModel::phoneNumber() const
 void MessageLogModel::setPhoneNumber(QString value)
 {
     if (mPhoneNumber != value) {
-        invalidateRequests();
         mPhoneNumber = value;
-
-        if (!mPhoneNumber.isEmpty()) {
-            fetchLog(Tpl::EventTypeMaskText);
-        }
         emit phoneNumberChanged();
     }
+}
+
+QString MessageLogModel::threadId() const
+{
+    return mThreadId;
+}
+
+void MessageLogModel::setThreadId(const QString &value)
+{
+    mThreadId = value;
+    emit threadIdChanged();
 }
 
 void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming)
@@ -80,16 +85,18 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
 
 void MessageLogModel::onMessageReceived(const QString &number, const QString &message)
 {
-    // FIXME: find a better way to compare phone numbers
-    if (number == mPhoneNumber) {
+    // we have no threadId when we receive a message, so we have to compare
+    // phone numbers
+    if (ContactModel::instance()->comparePhoneNumbers(number, mPhoneNumber)) {
         appendMessage(number, message, true);
     }
 }
 
 void MessageLogModel::onMessageSent(const QString &number, const QString &message)
 {
-    // FIXME: find a better way to compare phone numbers
-    if (number == mPhoneNumber) {
+    // we have no threadId when we receive a message, so we have to compare
+    // phone numbers
+    if (ContactModel::instance()->comparePhoneNumbers(number, mPhoneNumber)) {
         appendMessage(number, message, false);
     }
 }
@@ -109,13 +116,19 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 
 void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
 {
-    // search for the entity that matches the phone number for this conversation
-    // FIXME: we probably need a more reliable way than string matching for comparing phone numbers
+    // search for the entity that matches the thread id for this conversation
+    bool hasPhoneNumber = !mPhoneNumber.isEmpty();
     Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
-        if (phoneNumberFromId(entity->identifier()) == mPhoneNumber) {
+        if (threadIdFromIdentifier(entity->identifier()) == mThreadId ||
+            (hasPhoneNumber && mPhoneNumber == entity->alias())) {
             requestDatesForEntities(Tpl::EntityPtrList() << entity);
             return;
         }
     }
 }
 
+void MessageLogModel::refreshModel()
+{
+    invalidateRequests();
+    fetchLog(Tpl::EventTypeMaskText);
+}

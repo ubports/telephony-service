@@ -111,6 +111,18 @@ QString AbstractLoggerModel::phoneNumberFromId(const QString &id) const
     return id;
 }
 
+QString AbstractLoggerModel::threadIdFromIdentifier(const QString &id) const
+{
+    QStringList splittedId = id.split(":");
+    if (splittedId.count() == 2) {
+        return splittedId[1];
+    } else {
+        qWarning() << "The ID from logger is not using the format contactId:threadId" << id;
+    }
+
+    return id;
+}
+
 QString AbstractLoggerModel::customIdentifierFromId(const QString &id) const
 {
     QStringList splittedId = id.split(":");
@@ -190,12 +202,14 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
     beginInsertRows(QModelIndex(), mLogEntries.count(), (mLogEntries.count() + events.count()-1));
     foreach(Tpl::EventPtr event, events) {
         LogEntry *entry = createEntry(event);
-        entry->incoming = (event->receiver()->entityType() == Tpl::EntityTypeSelf);
+        if (!entry) {
+            continue;
+        }
+        entry->incoming = (event->sender()->entityType() != Tpl::EntityTypeSelf);
         entry->timestamp = event->timestamp();
 
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
-        entry->customId = customIdentifierFromId(remoteEntity->identifier());
-        entry->phoneNumber = phoneNumberFromId(remoteEntity->identifier());
+        parseEntityId(remoteEntity, entry);
 
         // set the alias from the entity as a fallback value in case the contact is not found.
         entry->contactAlias = remoteEntity->alias();
@@ -269,6 +283,11 @@ void AbstractLoggerModel::handleDates(const Tpl::EntityPtr &entity, const Tpl::Q
 
 void AbstractLoggerModel::handleEvents(const Tpl::EventPtrList &events)
 {
+    // we have to clear the cache right before
+    // adding new items to the model or we
+    // might have duplicated data if we receive messages while
+    // fetching
+    clear();
     // just add all the events to the list
     appendEvents(events);
 }
@@ -349,6 +368,16 @@ void AbstractLoggerModel::onContactRemoved(const QString &contactId)
             clearContactInfo(entry);
             emit dataChanged(index(i,0), index(i,0));
         }
+    }
+}
+
+void AbstractLoggerModel::parseEntityId(const Tpl::EntityPtr &entity, LogEntry *entry)
+{
+    entry->customId = customIdentifierFromId(entity->identifier());
+    if (entity->entityType() == Tpl::EntityTypeRoom) {
+        entry->phoneNumber = entity->alias();
+    } else {
+        entry->phoneNumber = phoneNumberFromId(entity->identifier());
     }
 }
 

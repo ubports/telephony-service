@@ -125,7 +125,7 @@ Item {
                             ignoreUnknownSignals: true
 
                             onDeleteClicked: contact.removeDetail(modelData)
-                            onActionClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startChat(contact, modelData.number);
+                            onActionClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startChat(contact, modelData.number, "");
                             onClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.callNumber(modelData.number);
                         }
                     }

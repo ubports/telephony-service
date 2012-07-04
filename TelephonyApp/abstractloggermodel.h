@@ -69,6 +69,7 @@ public:
     
 protected:
     QString phoneNumberFromId(const QString &id) const;
+    QString threadIdFromIdentifier(const QString &id) const;
     QString customIdentifierFromId(const QString &id) const;
     void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny);
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
@@ -97,6 +98,8 @@ protected slots:
     void onContactRemoved(const QString &contactId);
 
 protected:
+    void parseEntityId(const Tpl::EntityPtr &entity, LogEntry *entry);
+
     Tpl::LogManagerPtr mLogManager;
     QList<LogEntry*> mLogEntries;
     Tpl::EventTypeMask mType;
