@@ -135,6 +135,17 @@ Item {
         anchors.bottom: parent.bottom
 
         onNewMessage: {
+            // if the user didn't select a number from the new message header, just
+            // use whatever is on the text field
+            if (view.newMessage) {
+                var phoneNumber = headerLoader.item.text;
+                view.contact = contactModel.contactFromPhoneNumber(phoneNumber);
+                view.number = phoneNumber
+                view.newMessage = false;
+                view.threadId = ""
+                refreshModel()
+            }
+
             if (chatManager.isChattingToContact(number)) {
                 chatManager.sendMessage(number, message);
             } else {

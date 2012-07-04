@@ -8,6 +8,8 @@ BaseMessageHeader {
     signal contactSelected(variant contact, string number)
     signal numberSelected(string number)
 
+    property alias text: contactsSearchEntry.text
+
     ContactsSearchCombo {
         id: contactsSearchEntry
 
