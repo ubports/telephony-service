@@ -34,6 +34,7 @@ BaseMessageHeader {
         fillMode: Image.PreserveAspectFit
         source: contact ? contact.avatar : "../assets/avatar_messaging.png"
         onStatusChanged: if (status == Image.Error) source = "../assets/avatar_messaging.png"
+        asynchronous: true
     }
 
     BorderImage {
