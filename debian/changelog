@@ -1,3 +1,10 @@
+telephony-app (0.29) precise; urgency=low
+
+  * If the user don't click the button when typing a phone number, send the 
+    message to the number the user typed (LP: #1021058)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 04 Jul 2012 18:48:56 -0300
+
 telephony-app (0.28) precise; urgency=low
 
   * do not compare phone numbers directly. Fix the case when an 
