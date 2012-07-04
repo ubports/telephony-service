@@ -116,6 +116,12 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 
 void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
 {
+    // we have to clear the cache right before
+    // adding new items to the model or we
+    // might have duplicated data if we receive messages while
+    // fetching
+    clear();
+
     // search for the entity that matches the thread id for this conversation
     bool hasPhoneNumber = !mPhoneNumber.isEmpty();
     Q_FOREACH(const Tpl::EntityPtr &entity, entities) {

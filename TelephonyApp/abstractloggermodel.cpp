@@ -283,11 +283,6 @@ void AbstractLoggerModel::handleDates(const Tpl::EntityPtr &entity, const Tpl::Q
 
 void AbstractLoggerModel::handleEvents(const Tpl::EventPtrList &events)
 {
-    // we have to clear the cache right before
-    // adding new items to the model or we
-    // might have duplicated data if we receive messages while
-    // fetching
-    clear();
     // just add all the events to the list
     appendEvents(events);
 }
