@@ -71,7 +71,8 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
 
     // avoid adding the same entry twice
     entry->phoneNumber = textEvent->receiver()->alias();
-    Q_FOREACH(ConversationLogEntry *entry1, mLogEntries) {
+    Q_FOREACH(LogEntry *logEntry, mLogEntries) {
+        ConversationLogEntry *entry1 = dynamic_cast<ConversationLogEntry*>(logEntry);
         if (!entry1) {
             continue;
         }
