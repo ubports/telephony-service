@@ -59,8 +59,6 @@ Item {
         messages.load()
         view.contact = contact
         view.number = number
-        // "" is just an invalid thread id to force
-        // the models to reload
         view.threadId = threadId
         view.newMessage = false
         view.refreshModel()
