@@ -113,8 +113,14 @@ QString AbstractLoggerModel::phoneNumberFromId(const QString &id) const
 
 QString AbstractLoggerModel::threadIdFromIdentifier(const QString &id) const
 {
-    // that is basically the same method, but better to use the right name
-    return phoneNumberFromId(id);
+    QStringList splittedId = id.split(":");
+    if (splittedId.count() == 2) {
+        return splittedId[1];
+    } else {
+        qWarning() << "The ID from logger is not using the format contactId:threadId" << id;
+    }
+
+    return id;
 }
 
 QString AbstractLoggerModel::customIdentifierFromId(const QString &id) const
