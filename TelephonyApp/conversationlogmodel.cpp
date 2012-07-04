@@ -121,7 +121,7 @@ void ConversationLogModel::handleEvents(const Tpl::EventPtrList &events)
 void ConversationLogModel::updateLatestMessage(const QString &number, const QString &message, bool incoming)
 {
     int count = mLogEntries.count();
-    for(int i = 0; i < mLogEntries.count(); ++i) {
+    for(int i = 0; i < count; ++i) {
         ConversationLogEntry *entry = dynamic_cast<ConversationLogEntry*>(mLogEntries[i]);
         if (!entry) {
             continue;
