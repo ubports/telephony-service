@@ -1,3 +1,10 @@
+telephony-app (0.27) precise; urgency=low
+
+  * move clear() from abstractloggermodel to messagelogmodel to make 
+    the app show all the messages from a contact properly.
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 04 Jul 2012 10:47:26 -0700
+
 telephony-app (0.26) precise; urgency=low
 
   * Fix sms grouping using threadId and comparePhoneNumbers() (LP: #1004798 LP: #1019041)
