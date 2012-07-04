@@ -126,7 +126,7 @@ void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
     bool hasPhoneNumber = !mPhoneNumber.isEmpty();
     Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
         if (threadIdFromIdentifier(entity->identifier()) == mThreadId ||
-            (hasPhoneNumber && mPhoneNumber == entity->alias())) {
+            (hasPhoneNumber && ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, entity->alias()))) {
             requestDatesForEntities(Tpl::EntityPtrList() << entity);
             return;
         }
