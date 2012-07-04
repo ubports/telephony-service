@@ -1,3 +1,11 @@
+telephony-app (0.28) precise; urgency=low
+
+  * do not compare phone numbers directly. Fix the case when an 
+    user types a phone number manually and a previous conversation 
+    with the same contact isn't displayed
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 04 Jul 2012 11:13:39 -0700
+
 telephony-app (0.27) precise; urgency=low
 
   * move clear() from abstractloggermodel to messagelogmodel to make 
