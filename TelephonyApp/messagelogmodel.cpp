@@ -85,7 +85,6 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
 
 void MessageLogModel::onMessageReceived(const QString &number, const QString &message)
 {
-    // FIXME: find a better way to compare phone numbers
     // we have no threadId when we receive a message, so we have to compare
     // phone numbers
     if (ContactModel::instance()->comparePhoneNumbers(number, mPhoneNumber)) {
@@ -95,7 +94,8 @@ void MessageLogModel::onMessageReceived(const QString &number, const QString &me
 
 void MessageLogModel::onMessageSent(const QString &number, const QString &message)
 {
-    // FIXME: find a better way to compare phone numbers
+    // we have no threadId when we receive a message, so we have to compare
+    // phone numbers
     if (ContactModel::instance()->comparePhoneNumbers(number, mPhoneNumber)) {
         appendMessage(number, message, false);
     }
