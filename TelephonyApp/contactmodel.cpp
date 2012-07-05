@@ -19,6 +19,7 @@
 
 #include "contactmodel.h"
 #include "contactentry.h"
+#include "phoneutils.h"
 #include <QContactDetailFilter>
 #include <QContactGuid>
 #include <QContactSaveRequest>
@@ -268,12 +269,5 @@ void ContactModel::onContactRemoved()
 // but use an abstraction layer instead
 bool ContactModel::comparePhoneNumbers(const QString &number1, const QString &number2) const
 {
-    QDBusInterface telephony("com.canonical.Android", "/com/canonical/android/telephony/Telephony", "com.canonical.android.telephony.Telephony");
-    QDBusReply<bool> reply = telephony.call("comparePhoneNumbers", number1, number2);
-    if (reply.isValid()) {
-        return reply.value();
-    } else {
-        return false;
-    }
+    return compareLoosely(number1, number2);
 }
-
