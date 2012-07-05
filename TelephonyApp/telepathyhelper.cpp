@@ -28,6 +28,7 @@
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mChannelHandler(0),
+      mChannelObserver(0),
       mFirstTime(true)
 {
     mChatManager = new ChatManager(this);
@@ -75,19 +76,30 @@ Tp::AccountPtr TelepathyHelper::account() const
     return mAccount;
 }
 
-void TelepathyHelper::initializeChannelHandler()
+ChannelHandler *TelepathyHelper::channelHandler() const
 {
-    mChannelHandler = new ChannelHandler();
-    Tp::AbstractClientPtr handler(mChannelHandler);
-    mClientRegistrar->registerClient(handler, "TelephonyApp");
+    return mChannelHandler;
+}
+
+ChannelObserver *TelepathyHelper::channelObserver() const
+{
+    return mChannelObserver;
+}
+
+void TelepathyHelper::initializeTelepathyClients()
+{
+    mChannelHandler = new ChannelHandler(this);
+    mClientRegistrar->registerClient(Tp::AbstractClientPtr(mChannelHandler), "TelephonyApp");
+    Q_EMIT channelHandlerCreated(mChannelHandler);
+
+    mChannelObserver = new ChannelObserver(this);
+    mClientRegistrar->registerClient(Tp::AbstractClientPtr(mChannelObserver), "TelephonyAppObserver");
+    Q_EMIT channelObserverCreated(mChannelObserver);
 
     connect(mChannelHandler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
             mChatManager, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
     connect(mChannelHandler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
             mCallManager, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
-
-
-    channelHandlerCreated(mChannelHandler);
 }
 
 void TelepathyHelper::registerClients()
@@ -95,7 +107,7 @@ void TelepathyHelper::registerClients()
     Tp::ChannelFactoryPtr channelFactory = Tp::ChannelFactoryPtr::constCast(mAccountManager->channelFactory());
     channelFactory->addCommonFeatures(Tp::Channel::FeatureCore);
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
-    initializeChannelHandler();
+    initializeTelepathyClients();
 }
 
 void TelepathyHelper::createAccount()

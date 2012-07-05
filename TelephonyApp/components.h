@@ -27,6 +27,7 @@
 #include <QtDeclarative/QDeclarativeExtensionPlugin>
 
 class ChannelHandler;
+class ChannelObserver;
 class CallLogModel;
 class ConversationLogModel;
 class MessageLogModel;
@@ -45,7 +46,8 @@ public:
     void registerTypes(const char *uri);
 
 private Q_SLOTS:
-    void onChannelHandlerCreated(ChannelHandler *ch);
+    void onChannelHandlerCreated(ChannelHandler *handler);
+    void onChannelObserverCreated(ChannelObserver *observer);
     void onAccountReady();
 
 private:

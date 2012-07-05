@@ -21,6 +21,7 @@
 #include "components.h"
 #include "telepathyhelper.h"
 #include "channelhandler.h"
+#include "channelobserver.h"
 #include "calllogmodel.h"
 #include "calllogproxymodel.h"
 #include "conversationlogmodel.h"
@@ -73,6 +74,9 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
     connect(TelepathyHelper::instance(),
             SIGNAL(channelHandlerCreated(ChannelHandler*)),
             SLOT(onChannelHandlerCreated(ChannelHandler*)));
+    connect(TelepathyHelper::instance(),
+            SIGNAL(channelObserverCreated(ChannelObserver*)),
+            SLOT(onChannelObserverCreated(ChannelObserver*)));
 }
 
 void Components::registerTypes(const char *uri)
@@ -91,11 +95,16 @@ void Components::registerTypes(const char *uri)
     qmlRegisterType<ContactPhoneNumber>(uri, 0, 1, "ContactPhoneNumber");
 }
 
-void Components::onChannelHandlerCreated(ChannelHandler *ch)
+void Components::onChannelHandlerCreated(ChannelHandler *handler)
 {
     // register the context property
-    mRootContext->setContextProperty("channelHandler", ch);
-    mRootContext->setContextProperty("telepathyManager", ch);
+    mRootContext->setContextProperty("channelHandler", handler);
+}
+
+void Components::onChannelObserverCreated(ChannelObserver *observer)
+{
+    // register the context property
+    mRootContext->setContextProperty("channelObserver", observer);
 }
 
 void Components::onAccountReady()
@@ -103,6 +112,8 @@ void Components::onAccountReady()
     // create the log models just when the telepathy helper signals the account is ready
     mCallLogModel = new CallLogModel(this);
     mRootContext->setContextProperty("callLogModel", mCallLogModel);
+    connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callEnded(const Tp::CallChannelPtr&)),
+            mCallLogModel, SLOT(onCallEnded(const Tp::CallChannelPtr&)));
 
     mConversationLogModel = new ConversationLogModel(this);
     mRootContext->setContextProperty("conversationLogModel", mConversationLogModel);
