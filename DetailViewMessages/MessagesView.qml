@@ -13,13 +13,6 @@ Item {
 
     property string pendingMessage
 
-    Binding { target: messageLogModel; property: "phoneNumber"; value: number; }
-    Binding { target: messageLogModel; property: "threadId"; value: threadId; }
-
-    function refreshModel() {
-        messageLogModel.refreshModel()
-    }
-
     Connections {
         target: chatManager
 
@@ -71,7 +64,6 @@ Item {
                 view.number = number;
                 view.newMessage = false;
                 view.threadId = ""
-                refreshModel()
             }
 
             onNumberSelected: {
@@ -79,7 +71,6 @@ Item {
                 view.number = number;
                 view.newMessage = false;
                 view.threadId = ""
-                refreshModel()
             }
         }
     }
@@ -124,6 +115,8 @@ Item {
             id: messages
             width: view.width
             height: view.height - footer.height - headerLoader.height
+            threadId: view.threadId
+            number: view.number
         }
     }
 
@@ -143,7 +136,6 @@ Item {
                 view.number = phoneNumber
                 view.newMessage = false;
                 view.threadId = ""
-                refreshModel()
             }
 
             if (chatManager.isChattingToContact(number)) {

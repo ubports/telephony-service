@@ -6,6 +6,10 @@ Item {
     id: messages
     property variant contact
     property string number
+    property string threadId
+
+    Binding { target: messagesProxyModel; property: "phoneNumber"; value: number; }
+    Binding { target: messagesProxyModel; property: "threadId"; value: threadId; }
 
     clip: true
 
