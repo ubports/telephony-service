@@ -8,9 +8,6 @@ Item {
     property string number
     property string threadId
 
-    Binding { target: messagesProxyModel; property: "phoneNumber"; value: number; }
-    Binding { target: messagesProxyModel; property: "threadId"; value: threadId; }
-
     clip: true
 
     Component {
@@ -57,6 +54,8 @@ Item {
         id: messagesProxyModel
         messagesModel: messageLogModel
         ascending: true;
+        phoneNumber: messages.number
+        threadId: messages.threadId
     }
 
     ListView {

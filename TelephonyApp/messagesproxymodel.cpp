@@ -38,7 +38,7 @@ QString MessagesProxyModel::phoneNumber() const
 void MessagesProxyModel::setPhoneNumber(QString value)
 {
     mPhoneNumber = value;
-    invalidate();
+    invalidateFilter();
     emit phoneNumberChanged();
 }
 
@@ -50,7 +50,7 @@ QString MessagesProxyModel::threadId() const
 void MessagesProxyModel::setThreadId(const QString &value)
 {
     mThreadId = value;
-    invalidate();
+    invalidateFilter();
     emit threadIdChanged();
 }
 
@@ -116,10 +116,15 @@ bool MessagesProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
         if (value == mThreadId) {
             return true;
         } else {
-/*            QString phone = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
-            return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phone);*/
+            QString phone = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
+            return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phone);
             return false;
         }
+    }
+    
+    if (!mPhoneNumber.isEmpty()) {
+        QString phone = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
+        return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phone);
     }
 
     if (mSearchString.isEmpty()) {

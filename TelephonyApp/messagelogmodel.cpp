@@ -97,13 +97,5 @@ void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
     clear();
 
     requestDatesForEntities(entities);
-    // search for the entity that matches the thread id for this conversation
-/*    bool hasPhoneNumber = !mPhoneNumber.isEmpty();
-    Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
-        if (threadIdFromIdentifier(entity->identifier()) == mThreadId ||
-            (hasPhoneNumber && ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, entity->alias()))) {
-            return;
-        }
-    }*/
 }
 
