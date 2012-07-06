@@ -73,7 +73,9 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
     entry->timestamp = channel->property("timestamp").toDateTime();
     entry->incoming = !channel->isRequested();
     entry->duration = QTime(0,0,0);
-    if (channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer) {
+
+    // outgoing calls can be missed calls?
+    if (entry->incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer) {
         entry->missed = true;
     } else {
         QDateTime activeTime = channel->property("activeTime").toDateTime();
