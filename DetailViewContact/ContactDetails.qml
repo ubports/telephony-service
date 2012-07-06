@@ -120,7 +120,7 @@ Item {
                     detailTypeInfo: modelData
                     editable: contactDetails.editable
 
-                    model: contact[modelData.items]
+                    model: (contact) ? contact[modelData.items] : []
                     delegate: Loader {
                         anchors.left: (parent) ? parent.left : undefined
                         anchors.right: (parent) ? parent.right : undefined
