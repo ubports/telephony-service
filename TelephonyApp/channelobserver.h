@@ -46,7 +46,7 @@ signals:
     
 protected Q_SLOTS:
     void onCallChannelReady(Tp::PendingOperation *op);
-    void onCallChannelClosed();
+    void onCallChannelInvalidated();
     void onCallStateChanged(Tp::CallState state);
 
 private:

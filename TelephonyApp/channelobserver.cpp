@@ -98,6 +98,9 @@ void ChannelObserver::onCallChannelReady(Tp::PendingOperation *op)
     connect(callChannel.data(),
             SIGNAL(callStateChanged(Tp::CallState)),
             SLOT(onCallStateChanged(Tp::CallState)));
+    connect(callChannel.data(),
+            SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
+            SLOT(onCallChannelInvalidated()));
 
     mChannels.append(callChannel);
 
@@ -121,16 +124,10 @@ void ChannelObserver::onCallChannelReady(Tp::PendingOperation *op)
     context->setFinished();
 }
 
-void ChannelObserver::onCallChannelClosed()
+void ChannelObserver::onCallChannelInvalidated()
 {
-    // this method is to handle the case where the call channel is closed before its
-    // state is changed to ended
     Tp::CallChannelPtr callChannel(qobject_cast<Tp::CallChannel*>(sender()));
-    if (!callChannel || !mChannels.contains(callChannel)) {
-        return;
-    }
-
-    emit callEnded(callChannel);
+    mChannels.removeAll(callChannel);
 }
 
 void ChannelObserver::onCallStateChanged(Tp::CallState state)
@@ -148,7 +145,6 @@ void ChannelObserver::onCallStateChanged(Tp::CallState state)
 
     case Tp::CallStateEnded:
         emit callEnded(callChannel);
-        mChannels.removeAll(callChannel);
         break;
     default:
         break;
