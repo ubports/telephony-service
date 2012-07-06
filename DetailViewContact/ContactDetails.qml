@@ -38,7 +38,7 @@ Item {
             // and adds a new one with a different id. So in order to keep the app in a consistent
             // state, we close the view when the original contact is removed.
             if (contactId == contactDetails.contactId) {
-                contactDetails.contact = "";
+                contactDetails.contactId = "";
                 telephony.resetView();
             }
         }
