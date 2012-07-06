@@ -132,7 +132,6 @@ protected Q_SLOTS:
 
 private:
     QContact mContact;
-    ContactName *mName;
     bool mModified;
     QMap<ContactDetail::DetailType, QList<ContactDetail*> > mDetails;
     ContactModel *mModel;

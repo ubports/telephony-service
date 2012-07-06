@@ -36,11 +36,6 @@
 ContactEntry::ContactEntry(const QContact &contact, ContactModel *parent) :
     QObject(parent), mContact(contact), mModified(false), mModel(parent)
 {
-    mName = new ContactName(contact.detail<QContactName>(), this);
-    connect(mName,
-            SIGNAL(changed()),
-            SLOT(onDetailChanged()));
-
     loadDetails();
 
     // FIXME: we are explicitelly splitting the id as it comes formatted from EDS
@@ -68,7 +63,7 @@ QString ContactEntry::customId() const
 
 QString ContactEntry::displayLabel() const
 {
-    return mName->customLabel();
+    return name()->customLabel();
 }
 
 QUrl ContactEntry::avatar() const
@@ -78,7 +73,7 @@ QUrl ContactEntry::avatar() const
 
 ContactName *ContactEntry::name() const
 {
-    return mName;
+    return qobject_cast<ContactName*>(mDetails[ContactDetail::Name].first());
 }
 
 bool ContactEntry::modified() const
@@ -248,4 +243,15 @@ void ContactEntry::loadDetails()
     load<QContactEmailAddress, ContactEmailAddress>();
     load<QContactOnlineAccount, ContactOnlineAccount>();
     load<QContactPhoneNumber, ContactPhoneNumber>();
+    load<QContactName, ContactName>();
+
+
+    // if the contact doesn't have a name detail, create it.
+    if (mDetails[ContactDetail::Name].isEmpty()) {
+        ContactName *contactName = new ContactName(QContactName(), this);
+        connect(contactName,
+                SIGNAL(changed()),
+                SLOT(onDetailChanged()));
+        mDetails[ContactDetail::Name].append(contactName);
+    }
 }
