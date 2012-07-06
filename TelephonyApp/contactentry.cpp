@@ -239,9 +239,15 @@ void ContactEntry::loadDetails()
     }
     mDetails.clear();
 
-    load<QContactName, ContactName>();
     load<QContactAddress, ContactAddress>();
     load<QContactEmailAddress, ContactEmailAddress>();
     load<QContactOnlineAccount, ContactOnlineAccount>();
     load<QContactPhoneNumber, ContactPhoneNumber>();
+    load<QContactName, ContactName>();
+
+
+    // if the contact doesn't have a name detail, create it.
+    if (mDetails[ContactDetail::Name].count() == 0) {
+        mDetails[ContactDetail::Name].append(new ContactName(QContactName(), this));
+    }
 }
