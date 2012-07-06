@@ -247,7 +247,7 @@ void ContactEntry::loadDetails()
 
 
     // if the contact doesn't have a name detail, create it.
-    if (mDetails[ContactDetail::Name].count() == 0) {
+    if (mDetails[ContactDetail::Name].isEmpty()) {
         ContactName *contactName = new ContactName(QContactName(), this);
         connect(contactName,
                 SIGNAL(changed()),
