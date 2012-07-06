@@ -9,6 +9,7 @@ Item {
     property string viewName: "contacts"
     property bool editable: false
     property variant contact: null
+    property variant contactId: (contact) ? contact.id : null
     property bool added: false
 
     onContactChanged: editable = false
@@ -29,6 +30,15 @@ Item {
             if (added) {
                 contactDetails.contact = contact;
                 added = false;
+            }
+        }
+
+        onContactRemoved: {
+            // When android syncs contacts to a google account, it removes the local contact
+            // and adds a new one with a different id. So in order to keep the app in a consistent
+            // state, we close the view when the original contact is removed.
+            if (contactId != contactDetails.contactId) {
+                telephony.resetView();
             }
         }
     }
