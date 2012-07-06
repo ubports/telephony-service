@@ -75,7 +75,7 @@ Item {
                More documentation at http://bugreports.qt.nokia.com/browse/QTBUG-18011
             */
             property bool incoming: model.incoming
-            property string imageSource: model.imageSource
+            property string imageSource: model.avatar
             property string message: model.message
 
             anchors.left: if (sourceComponent == messageTextDelegate) return parent.left
