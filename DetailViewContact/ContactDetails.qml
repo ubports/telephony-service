@@ -39,7 +39,7 @@ Item {
             // state, we close the view when the original contact is removed.
             // (see http://pad.lv/1021473)
             if (contactId == contactDetails.contactId) {
-                contactDetails.contactId = "";
+                contactDetails.contact = null;
                 telephony.resetView();
             }
         }
