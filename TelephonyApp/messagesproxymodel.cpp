@@ -118,7 +118,6 @@ bool MessagesProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
         } else {
             QString phone = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
             return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phone);
-            return false;
         }
     }
     
