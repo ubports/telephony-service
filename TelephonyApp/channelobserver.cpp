@@ -113,10 +113,10 @@ void ChannelObserver::onCallChannelReady(Tp::PendingOperation *op)
     mContexts.remove(callChannel.data());
 
     // check if this is the last channel from the context
-    Q_FOREACH(Tp::MethodInvocationContextPtr<> context1, mContexts.values()) {
+    Q_FOREACH(Tp::MethodInvocationContextPtr<> otherContext, mContexts.values()) {
         // if we find the context, just return from the function. We need to wait
         // for the other channels to become ready before setting the context finished
-        if (context1 == context) {
+        if (otherContext == context) {
             return;
         }
     }
