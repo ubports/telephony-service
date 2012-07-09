@@ -46,7 +46,7 @@ Item {
 
             function getIconSource() {
                 if (callManager.hasCalls && !telephony.isVoicemailActive()) {
-                    return selected ? "../assets/call_icon_livecall_active.png" : "../assets/call_icon_livecall_inactive.png"
+                    return selected ? "../assets/tab_icon_call_active.png" : "../assets/tab_icon_call_inactive.png"
                 } else {
                     return selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
                 }
