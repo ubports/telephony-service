@@ -22,6 +22,7 @@
 
 #include "abstractloggermodel.h"
 #include <QTime>
+#include <TelepathyQt/CallChannel>
 
 class CallLogEntry : public LogEntry {
 public:
@@ -40,6 +41,9 @@ public:
     };
 
     explicit CallLogModel(QObject *parent = 0);
+
+public Q_SLOTS:
+    void onCallEnded(const Tp::CallChannelPtr &channel);
     
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);

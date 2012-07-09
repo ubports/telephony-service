@@ -108,8 +108,9 @@ void CallEntry::sendDTMF(const QString &key)
 
 void CallEntry::endCall()
 {
-    mChannel->hangup();
-    mChannel->requestClose();
+    connect(mChannel->hangup(),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onCallHangupFinished(Tp::PendingOperation*)));
     emit callEnded();
 }
 
@@ -179,6 +180,11 @@ void CallEntry::onCallStateChanged(Tp::CallState state)
 void CallEntry::onCallFlagsChanged(Tp::CallFlags flags)
 {
     // TODO: handle ringing
+}
+
+void CallEntry::onCallHangupFinished(Tp::PendingOperation *op)
+{
+    mChannel->requestClose();
 }
 
 void CallEntry::setVoicemail(bool voicemail)

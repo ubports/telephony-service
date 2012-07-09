@@ -16,6 +16,7 @@ set(plugin_SRCS
     contactproxymodel.cpp
     components.cpp
     channelhandler.cpp
+    channelobserver.cpp
     chatmanager.cpp
     callentry.cpp
     callmanager.cpp
@@ -40,6 +41,7 @@ set(plugin_HDRS
     contactproxymodel.h
     components.h
     channelhandler.h
+    channelobserver.h
     chatmanager.h
     callentry.h
     callmanager.h

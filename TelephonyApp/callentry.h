@@ -89,6 +89,7 @@ protected Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
     void onCallStateChanged(Tp::CallState state);
     void onCallFlagsChanged(Tp::CallFlags flags);
+    void onCallHangupFinished(Tp::PendingOperation *op);
     void onMutedChanged(uint state);
 
 Q_SIGNALS:
