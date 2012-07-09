@@ -235,8 +235,8 @@ void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
 {
     Tp::CallChannel *channel1 = qobject_cast<Tp::CallChannel*>(sender());
     Tp::ChannelDispatchOperationPtr dispatchOperation;
-    Q_FOREACH(Tp::ChannelDispatchOperationPtr dispatchOp, mDispatchOps) {
-        Q_FOREACH(Tp::ChannelPtr channel, dispatchOp->channels()) {
+    Q_FOREACH(const Tp::ChannelDispatchOperationPtr &dispatchOp, mDispatchOps) {
+        Q_FOREACH(const Tp::ChannelPtr &channel, dispatchOp->channels()) {
             if (channel.data() == channel1) {
                 dispatchOperation = dispatchOp;
             }
@@ -250,7 +250,7 @@ void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
     if (state == Tp::CallStateEnded) {
         mDispatchOps.removeAll(dispatchOperation);
         // remove all channels and pending operations
-        Q_FOREACH(Tp::ChannelPtr chan, dispatchOperation->channels()) {
+        Q_FOREACH(const Tp::ChannelPtr &chan, dispatchOperation->channels()) {
             Tp::PendingOperation* op = mChannels.key(chan);
             if(op) {
                 mChannels.remove(op);
