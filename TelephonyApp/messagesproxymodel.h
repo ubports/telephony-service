@@ -50,7 +50,7 @@ public:
     explicit MessagesProxyModel(QObject *parent = 0);
 
     QString phoneNumber() const;
-    void setPhoneNumber(QString value);
+    void setPhoneNumber(const QString &value);
 
     QString threadId() const;
     void setThreadId(const QString &value);

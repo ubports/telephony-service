@@ -35,7 +35,7 @@ QString MessagesProxyModel::phoneNumber() const
     return mPhoneNumber;
 }
 
-void MessagesProxyModel::setPhoneNumber(QString value)
+void MessagesProxyModel::setPhoneNumber(const QString &value)
 {
     mPhoneNumber = value;
     invalidateFilter();
