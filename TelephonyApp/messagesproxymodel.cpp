@@ -116,8 +116,8 @@ bool MessagesProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
         if (value == mThreadId) {
             return true;
         } else {
-            QString phone = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
-            return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phone);
+            QString phoneNumber = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
+            return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phoneNumber);
         }
     }
     
