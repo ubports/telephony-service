@@ -50,7 +50,7 @@ CallLogModel::CallLogModel(QObject *parent) :
 void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
 {
     Tp::Contacts contacts = channel->remoteMembers();
-    if (contacts.count() == 0) {
+    if (contacts.isEmpty()) {
         qWarning() << "Call channel had no remote contacts:" << channel;
         return;
     }
