@@ -1,3 +1,9 @@
+telephony-app (0.30) precise; urgency=low
+
+  * Fix some contact synchronization issues (LP: #1021473)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 06 Jul 2012 10:57:45 -0300
+
 telephony-app (0.29) precise; urgency=low
 
   * If the user don't click the button when typing a phone number, send the 
