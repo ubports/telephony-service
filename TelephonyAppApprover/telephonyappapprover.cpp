@@ -233,25 +233,25 @@ void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
 
 void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
 {
-    Tp::CallChannel *channel1 = qobject_cast<Tp::CallChannel*>(sender());
+    Tp::CallChannel *channel = qobject_cast<Tp::CallChannel*>(sender());
     Tp::ChannelDispatchOperationPtr dispatchOperation;
-    Q_FOREACH(const Tp::ChannelDispatchOperationPtr &dispatchOp, mDispatchOps) {
-        Q_FOREACH(const Tp::ChannelPtr &channel, dispatchOp->channels()) {
-            if (channel.data() == channel1) {
-                dispatchOperation = dispatchOp;
+    Q_FOREACH(const Tp::ChannelDispatchOperationPtr &otherDispatchOperation, mDispatchOps) {
+        Q_FOREACH(const Tp::ChannelPtr &otherChannel, otherDispatchOperation->channels()) {
+            if (otherChannel.data() == channel) {
+                dispatchOperation = otherDispatchOperation;
             }
         }
     }
 
-    if(!dispatchOperation) {
+    if(dispatchOperation.isNull()) {
         return;
     }
 
     if (state == Tp::CallStateEnded) {
         mDispatchOps.removeAll(dispatchOperation);
         // remove all channels and pending operations
-        Q_FOREACH(const Tp::ChannelPtr &chan, dispatchOperation->channels()) {
-            Tp::PendingOperation* op = mChannels.key(chan);
+        Q_FOREACH(const Tp::ChannelPtr &otherChannel, dispatchOperation->channels()) {
+            Tp::PendingOperation* op = mChannels.key(otherChannel);
             if(op) {
                 mChannels.remove(op);
             }
