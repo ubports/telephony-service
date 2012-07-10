@@ -45,6 +45,7 @@ private Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
     void onClaimFinished(Tp::PendingOperation* op);
     void onHangupFinished(Tp::PendingOperation* op);
+    void onCallStateChanged(Tp::CallState state);
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;

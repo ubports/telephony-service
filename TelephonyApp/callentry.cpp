@@ -59,6 +59,14 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     connect(&mMuteInterface,
             SIGNAL(MuteStateChanged(uint)),
             SLOT(onMutedChanged(uint)));
+
+    // start timer if this call is already active
+    if(mChannel->callState() == Tp::CallStateActive) {
+        startTimer(1000);
+        mElapsedTime.start();
+        Q_EMIT callActive();
+    }
+
 }
 
 void CallEntry::timerEvent(QTimerEvent *event)

@@ -57,8 +57,11 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
     foreach (Tp::ChannelPtr channel, channels) {
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (!callChannel.isNull()) {
-            Tp::PendingReady *pr = callChannel->becomeReady();
+            Tp::PendingReady *pr = callChannel->becomeReady(Tp::Features()
+                                  << Tp::CallChannel::FeatureCore
+                                  << Tp::CallChannel::FeatureCallState);
             mChannels[pr] = callChannel;
+
             connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onChannelReady(Tp::PendingOperation*)));
             callChannel->setProperty("accountId", QVariant(dispatchOperation->account()->uniqueIdentifier()));
@@ -134,6 +137,10 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         callChannel->setRinging();
     }
 
+    connect(channel.data(),
+            SIGNAL(callStateChanged(Tp::CallState)),
+            SLOT(onCallStateChanged(Tp::CallState)));
+
     NotifyNotification* notification;
 
     /* initial notification */
@@ -171,7 +178,9 @@ void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp
 {
     dispatchOp->handleWith(TP_QT_IFACE_CLIENT + ".TelephonyApp");
     mDispatchOps.removeAll(dispatchOp);
-    mChannels.remove(pr);
+    if (pr) {
+        mChannels.remove(pr);
+    }
 }
 
 void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
@@ -221,3 +230,35 @@ void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
     mDispatchOps.removeAll(dispatchOperation(op));
     mChannels.remove(op);
 }
+
+void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
+{
+    Tp::CallChannel *channel = qobject_cast<Tp::CallChannel*>(sender());
+    Tp::ChannelDispatchOperationPtr dispatchOperation;
+    Q_FOREACH(const Tp::ChannelDispatchOperationPtr &otherDispatchOperation, mDispatchOps) {
+        Q_FOREACH(const Tp::ChannelPtr &otherChannel, otherDispatchOperation->channels()) {
+            if (otherChannel.data() == channel) {
+                dispatchOperation = otherDispatchOperation;
+            }
+        }
+    }
+
+    if(dispatchOperation.isNull()) {
+        return;
+    }
+
+    if (state == Tp::CallStateEnded) {
+        mDispatchOps.removeAll(dispatchOperation);
+        // remove all channels and pending operations
+        Q_FOREACH(const Tp::ChannelPtr &otherChannel, dispatchOperation->channels()) {
+            Tp::PendingOperation* op = mChannels.key(otherChannel);
+            if(op) {
+                mChannels.remove(op);
+            }
+        }
+        // TODO: close snap decision
+    } else if (state == Tp::CallStateActive) {
+        onApproved(dispatchOperation, NULL);
+    }
+}
+
