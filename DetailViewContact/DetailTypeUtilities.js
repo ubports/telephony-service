@@ -49,7 +49,7 @@ var supportedTypes = [
                 items: "phoneNumbers",
                 newItemText: "Add a phone number",
                 newItemType: "ContactPhoneNumber",
-                actionIcon: "../assets/contact_icon_phone.png",
+                actionIcon: "../assets/contact_icon_message.png",
                 displayField: "number",
                 subTypes: phoneSubTypes
             },
