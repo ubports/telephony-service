@@ -1,3 +1,10 @@
+telephony-app (0.32) precise; urgency=low
+
+  * open telephony app in the live call view if it was answered 
+    from the phone (LP: #1017592)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Tue, 10 Jul 2012 07:22:23 -0700
+
 telephony-app (0.31) precise; urgency=low
 
   * Watch for new calls to update the call log model (LP: #1019375)
