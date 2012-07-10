@@ -34,8 +34,8 @@ public:
     Q_INVOKABLE bool isChattingToContact(const QString &contactId);
     Q_INVOKABLE void startChat(const QString &contactId);
     Q_INVOKABLE void endChat(const QString &contactId);
-
     Q_INVOKABLE void sendMessage(const QString &contactId, const QString &message);
+    Q_INVOKABLE void acknowledgeMessages(const QString &contactId);
 
 signals:
     void chatReady(const QString &contactId);
