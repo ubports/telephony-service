@@ -1,3 +1,12 @@
+telephony-app (0.33) precise; urgency=low
+
+  * Open the mail client when clicking on a contact's e-mail address
+    (LP: #1018473)
+  * Replace the phone icon by a message one in contact details to match its
+    purpose (LP: #1018435 LP: #1018481)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 10 Jul 2012 13:49:33 -0300
+
 telephony-app (0.32) precise; urgency=low
 
   * open telephony app in the live call view if it was answered 
