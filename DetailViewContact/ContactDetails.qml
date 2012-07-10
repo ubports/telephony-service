@@ -137,8 +137,28 @@ Item {
                             ignoreUnknownSignals: true
 
                             onDeleteClicked: contact.removeDetail(modelData)
-                            onActionClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startChat(contact, modelData.number, "");
-                            onClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.callNumber(modelData.number);
+                            onActionClicked: {
+                                switch(modelData.type) {
+                                case ContactDetail.PhoneNumber:
+                                    telephony.startChat(contact, modelData.number, "");
+                                    break;
+                                case ContactDetail.EmailAddress:
+                                    Qt.openUrlExternally("mailto:" + modelData.emailAddress);
+                                    break;
+                                default:
+                                    break;
+                                }
+                            }
+                            onClicked: {
+                                switch (modelData.type) {
+                                case ContactDetail.PhoneNumber:
+                                    telephony.callNumber(modelData.number);
+                                    break;
+                                case ContactDetail.EmailAddress:
+                                    Qt.openUrlExternally("mailto:" + modelData.emailAddress);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
