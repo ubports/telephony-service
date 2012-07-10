@@ -64,7 +64,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     if(mChannel->callState() == Tp::CallStateActive) {
         startTimer(1000);
         mElapsedTime.start();
-        emit callActive();
+        Q_EMIT callActive();
     }
 
 }
