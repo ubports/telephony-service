@@ -122,8 +122,8 @@ bool MessagesProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
     }
     
     if (!mPhoneNumber.isEmpty()) {
-        QString phone = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
-        return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phone);
+        QString phoneNumber = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
+        return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phoneNumber);
     }
 
     if (mSearchString.isEmpty()) {
