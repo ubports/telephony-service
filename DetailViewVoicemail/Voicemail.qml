@@ -13,7 +13,10 @@ Item {
     property string number: callManager.getVoicemailNumber()
 
     function isVoicemailActive() {
-        return call && call.voicemail
+        var active = false
+        if (call)
+            active = call.voicemail
+        return active
     }
 
     function endCall() {
@@ -97,23 +100,39 @@ Item {
                 }
             }
 
-            Button {
-                id: dialhangupButton
-
-                iconSource: isVoicemailActive() ? "../assets/incall_keypad_endcallbutton_icon.png" : "../assets/call_icon.png"
+            Row {
                 anchors.top: keypad.bottom
                 anchors.topMargin: 20
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: 64
-                color: isVoicemailActive() ? "#bf400c" : "#37b301"
-                onClicked: {
-                    if(isVoicemailActive())
-                        endCall()
-                    else
-                        telephony.callNumber(voicemail.number)
+                spacing: 5
+                Button {
+                    id: dialhangupButton
+                    // FIXME: use the right assets
+                    iconSource: isVoicemailActive() ? "../assets/incall_keypad_endcallbutton_icon.png" : "../assets/call_icon_voicemail_active.png"
+                    width: !isVoicemailActive() ? 128 : 64
+                    color: isVoicemailActive() ? "#bf400c" : "#1f71aa"
+                    onClicked: {
+                        if(isVoicemailActive())
+                            endCall()
+                        else
+                            telephony.callNumber(voicemail.number)
+                    }
+                }
+
+                Button {
+                    id: speakerButton
+                    width: 64
+                    visible: isVoicemailActive()
+                    iconSource: callManager.speaker ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
+                    color: "#565656"
+                    state: callManager.speaker ? "pressed" : ""
+                    onClicked: {
+                        if (call) {
+                            callManager.speaker = !callManager.speaker
+                        }
+                    }
                 }
             }
-
         }
     }
 }
