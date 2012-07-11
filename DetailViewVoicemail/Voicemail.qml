@@ -110,7 +110,7 @@ Item {
                     id: dialhangupButton
                     // FIXME: use the right assets
                     iconSource: isVoicemailActive() ? "../assets/incall_keypad_endcallbutton_icon.png" : "../assets/call_icon_voicemail_active.png"
-                    width: !isVoicemailActive() ? 128 : 64
+                    width: isVoicemailActive() ? 64 : 128
                     color: isVoicemailActive() ? "#bf400c" : "#1f71aa"
                     onClicked: {
                         if(isVoicemailActive())
