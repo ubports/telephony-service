@@ -48,7 +48,7 @@ TelephonyAppDBus::connectToBus()
 }
 
 void
-TelephonyAppDBus::ShowMessages()
+TelephonyAppDBus::ShowMessages(const QString &number)
 {
-    Q_EMIT showMessagesRequested();
+    Q_EMIT showMessagesRequested(number);
 }

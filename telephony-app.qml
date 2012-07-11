@@ -286,6 +286,6 @@ Item {
 
     Connections {
         target: dbus
-        onShowMessagesRequested: tabs.currentTab = 1
+        onShowMessagesRequested: telephony.startChat("", number, "")
     }
 }

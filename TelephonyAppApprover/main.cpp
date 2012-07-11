@@ -20,9 +20,12 @@
 #include <libnotify/notify.h>
 
 #include "telephonyappapprover.h"
+#include "textchannelobserver.h"
 #include <QApplication>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/AbstractClient>
+#include <TelepathyQt/AccountManager>
+#include <TelepathyQt/Contact>
 
 int main(int argc, char **argv)
 {
@@ -32,9 +35,25 @@ int main(int argc, char **argv)
     notify_init("Telephony App Approver");
 
     Tp::registerTypes();
-    Tp::ClientRegistrarPtr registrar = Tp::ClientRegistrar::create();
+
+    Tp::ClientRegistrarPtr registrar = Tp::ClientRegistrar::create(QDBusConnection::sessionBus(),
+                                                                   Tp::AccountFactory::create(QDBusConnection::sessionBus()),
+                                                                   Tp::ConnectionFactory::create(QDBusConnection::sessionBus()),
+                                                                   Tp::ChannelFactory::create(QDBusConnection::sessionBus()),
+                                                                   Tp::ContactFactory::create(Tp::Features()
+                                                                                              << Tp::Contact::FeatureAlias
+                                                                                              << Tp::Contact::FeatureAvatarData
+                                                                                              << Tp::Contact::FeatureAvatarToken));
+
+    // register the approver
     Tp::AbstractClientPtr approver = Tp::AbstractClientPtr::dynamicCast(
           Tp::SharedPtr<TelephonyAppApprover>(new TelephonyAppApprover()));
     registrar->registerClient(approver, "TelephonyAppApprover");
+
+    // and the observer
+    Tp::AbstractClientPtr observer = Tp::AbstractClientPtr::dynamicCast(
+          Tp::SharedPtr<TextChannelObserver>(new TextChannelObserver()));
+    registrar->registerClient(observer, "TelephonyAppIndicatorObserver");
+
     return app.exec();
 }
