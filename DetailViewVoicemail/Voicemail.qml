@@ -13,10 +13,11 @@ Item {
     property string number: callManager.getVoicemailNumber()
 
     function isVoicemailActive() {
-        var active = false
-        if (call)
-            active = call.voicemail
-        return active
+        if (call != null) {
+            return call.voicemail;
+        } else {
+            return false;
+        }
     }
 
     function endCall() {
