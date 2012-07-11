@@ -41,10 +41,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             focus: true
             // send message if return was pressed
-            onActivateFirstResult: {
-                footer.newMessage(text)
-                text = ""
-            }
+            onActivateFirstResult: sendButton.clicked()
         }
 
         Button {
