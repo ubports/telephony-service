@@ -89,7 +89,9 @@ Item {
             sourceComponent: message != "" ? messageTextDelegate : messageImageDelegate
         }
         highlightFollowsCurrentItem: true
-        currentIndex: (count > 0) ? count-1 : 0
+        onCountChanged: { 
+            messagesList.positionViewAtEnd()
+        }
     }
 
 }
