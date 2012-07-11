@@ -6,6 +6,10 @@ org.freedesktop.Telepathy.Channel.ChannelType s=org.freedesktop.Telepathy.Channe
 org.freedesktop.Telepathy.Channel.TargetHandleType u=1
 org.freedesktop.Telepathy.Channel.Type.Call1.InitialAudio b=true
 
+[org.freedesktop.Telepathy.Client.Approver.ApproverChannelFilter 1]
+org.freedesktop.Telepathy.Channel.ChannelType s=org.freedesktop.Telepathy.Channel.Type.Text
+org.freedesktop.Telepathy.Channel.TargetHandleType u=1
+
 [org.freedesktop.Telepathy.Client.Approver.Capabilities]
 org.freedesktop.Telepathy.Channel.Type.Call1/audio=true
 org.freedesktop.Telepathy.Channel.Type.Call1/audio/speex=true

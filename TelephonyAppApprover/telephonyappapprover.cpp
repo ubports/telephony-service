@@ -28,14 +28,36 @@
 #include <TelepathyQt/ChannelClassSpec>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/CallChannel>
+#include <TelepathyQt/TextChannel>
 
 TelephonyAppApprover::TelephonyAppApprover()
-: Tp::AbstractClientApprover(Tp::ChannelClassSpec::audioCall())
+    : Tp::AbstractClientApprover(channelFilters())
 {
+    // Setup a DBus watcher to check if the telephony-app is running
+    mTelephonyAppWatcher.setConnection(QDBusConnection::sessionBus());
+    mTelephonyAppWatcher.setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
+    mTelephonyAppWatcher.addWatchedService(TP_QT_IFACE_CLIENT + ".TelephonyApp");
+
+    connect(&mTelephonyAppWatcher,
+            SIGNAL(serviceRegistered(const QString&)),
+            SLOT(onServiceRegistered(const QString&)));
+    connect(&mTelephonyAppWatcher,
+            SIGNAL(serviceUnregistered(const QString&)),
+            SLOT(onServiceUnregistered(const QString&)));
+    mTelephonyAppRunning = QDBusConnection::sessionBus().interface()->isServiceRegistered(TP_QT_IFACE_CLIENT + ".TelephonyApp").value();
 }
 
 TelephonyAppApprover::~TelephonyAppApprover()
 {
+}
+
+Tp::ChannelClassSpecList TelephonyAppApprover::channelFilters() const
+{
+    Tp::ChannelClassSpecList specList;
+    specList << Tp::ChannelClassSpec::audioCall();
+    specList << Tp::ChannelClassSpec::textChat();
+
+    return specList;
 }
 
 Tp::ChannelDispatchOperationPtr TelephonyAppApprover::dispatchOperation(Tp::PendingOperation *op)
@@ -53,8 +75,12 @@ Tp::ChannelDispatchOperationPtr TelephonyAppApprover::dispatchOperation(Tp::Pend
 void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                                         const Tp::ChannelDispatchOperationPtr &dispatchOperation)
 {
+    bool willHandle = false;
+
     QList<Tp::ChannelPtr> channels = dispatchOperation->channels();
     foreach (Tp::ChannelPtr channel, channels) {
+
+        // Call Channel
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (!callChannel.isNull()) {
             Tp::PendingReady *pr = callChannel->becomeReady(Tp::Features()
@@ -65,11 +91,27 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
             connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onChannelReady(Tp::PendingOperation*)));
             callChannel->setProperty("accountId", QVariant(dispatchOperation->account()->uniqueIdentifier()));
-            mDispatchOps.append(dispatchOperation);
+            willHandle = true;
             continue;
         }
+
+        // Text Channel
+        Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
+        if (!textChannel.isNull()) {
+            // right now we are not using any of the text channel's features in the approver
+            // so no need to call becomeReady() on it.
+            willHandle = true;
+        }
     }
+
+    if (willHandle) {
+        mDispatchOps.append(dispatchOperation);
+    }
+
     context->setFinished();
+
+    // check if we need to approve channels already or if we should wait.
+    processChannels();
 }
 
 class EventData {
@@ -192,6 +234,32 @@ void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp
             this, SLOT(onClaimFinished(Tp::PendingOperation*)));
 }
 
+void TelephonyAppApprover::processChannels()
+{
+    // if the telephony app is not running, do not approve text channels
+    if (!mTelephonyAppRunning) {
+        return;
+    }
+
+    Q_FOREACH (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
+        QList<Tp::ChannelPtr> channels = dispatchOperation->channels();
+        Q_FOREACH (Tp::ChannelPtr channel, channels) {
+            // approve only text channels
+            Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
+            if (textChannel.isNull()) {
+                continue;
+            }
+
+            if (dispatchOperation->possibleHandlers().contains(TP_QT_IFACE_CLIENT + ".TelephonyApp")) {
+                dispatchOperation->handleWith(TP_QT_IFACE_CLIENT + ".TelephonyApp");
+                mDispatchOps.removeAll(dispatchOperation);
+            }
+            // FIXME: this shouldn't happen, but in any case, we need to check what to do when
+            // the telephony app client is not available
+        }
+    }
+}
+
 void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
 {
     if(!op || op->isError()) {
@@ -260,5 +328,24 @@ void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
     } else if (state == Tp::CallStateActive) {
         onApproved(dispatchOperation, NULL);
     }
+}
+
+void TelephonyAppApprover::onServiceRegistered(const QString &serviceName)
+{
+    // for now we are only watching the telephony-app service, so no need to use/compare the
+    // service name
+    Q_UNUSED(serviceName)
+
+    mTelephonyAppRunning = true;
+    processChannels();
+}
+
+void TelephonyAppApprover::onServiceUnregistered(const QString &serviceName)
+{
+    // for now we are only watching the telephony-app service, so no need to use/compare the
+    // service name
+    Q_UNUSED(serviceName)
+
+    mTelephonyAppRunning = false;
 }
 
