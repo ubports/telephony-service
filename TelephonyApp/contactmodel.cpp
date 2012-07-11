@@ -108,7 +108,7 @@ ContactEntry *ContactModel::contactFromCustomId(const QString &customId)
     return 0;
 }
 
-QString ContactModel::contactIdFromPhoneNumber(const QString &phoneNumber)
+QString ContactModel::customIdFromPhoneNumber(const QString &phoneNumber)
 {
     // FIXME: replace this by something not relying specifically on android
     QDBusInterface contacts("com.canonical.Android",
@@ -121,7 +121,7 @@ QString ContactModel::contactIdFromPhoneNumber(const QString &phoneNumber)
 }
 ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
 {
-    QString id = contactIdFromPhoneNumber(phoneNumber);
+    QString id = customIdFromPhoneNumber(phoneNumber);
     if (id.isEmpty()) {
         return 0;
     }

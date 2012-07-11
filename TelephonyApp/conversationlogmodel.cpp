@@ -143,6 +143,7 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
     entry->incoming = incoming;
     entry->message = message;
     entry->phoneNumber = number;
+    entry->customId = ContactModel::instance()->customIdFromPhoneNumber(number);
 
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
     if (contact) {

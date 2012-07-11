@@ -7,9 +7,9 @@ Item {
     id: view
 
     property string viewName: "messages"
-    property variant contact: contactWatcher.contact
-    property string number
-    property string contactId
+    property alias contact: contactWatcher.contact
+    property alias number: contactWatcher.number
+    property alias contactId: contactWatcher.contactId
     property bool newMessage: false
     property string threadId
 
@@ -17,9 +17,6 @@ Item {
 
     Binding { target: messageLogModel; property: "phoneNumber"; value: number; }
     Binding { target: messageLogModel; property: "threadId"; value: threadId; }
-
-    Binding { target: contactWatcher; property: "number"; value: number; }
-    Binding { target: contactWatcher; property: "contactId"; value: contactId; }
 
     function refreshModel() {
         messageLogModel.refreshModel()

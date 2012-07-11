@@ -17,7 +17,7 @@ Item {
         }
         // try to fill the contactId and avoid future queries
         if (number && (!contactId || contactId =="") && unknownContact == false) {
-            contactId = contactModel.contactIdFromPhoneNumber(number);
+            contactId = contactModel.customIdFromPhoneNumber(number);
             if(contactId && contactId != "") {
                 return;
             } else {
