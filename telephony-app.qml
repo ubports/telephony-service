@@ -55,10 +55,10 @@ Item {
         callManager.startCall(number);
     }
 
-    function startChat(contact, number, threadId) {
+    function startChat(customId, number, threadId) {
         messages.load()
-        view.contact = contact
         view.number = number
+        view.contactId = customId
         view.threadId = threadId
         view.newMessage = false
         view.refreshModel()
@@ -251,17 +251,19 @@ Item {
     Connections {
         target: chatManager
         onChatReady: {
+            // FIXME: contactId here is the phoneNumber
             if (telephony.view.viewName != "messages"
                     || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat(contactModel.contactFromPhoneNumber(contactId), contactId, "")
+                startChat("", contactId, "")
             }
         }
         onMessageReceived: {
+            // FIXME: contactId here is the phoneNumber
             if (telephony.view.viewName != "messages"
                     || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat(contactModel.contactFromPhoneNumber(contactId), contactId, "")
+                startChat("", contactId, "")
             }
         }
     }

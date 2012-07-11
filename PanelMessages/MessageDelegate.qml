@@ -1,12 +1,22 @@
 import QtQuick 1.1
+import QtMobility.contacts 1.1
 import "../Widgets"
+import "../"
 
 ListItem {
     id: messageDelegate
+    property variant contact: contactWatcher.contact
 
-    iconSource: avatar != "" ? avatar : ""
+    Binding { target: contactWatcher; property: "number"; value: phoneNumber; }
+    Binding { target: contactWatcher; property: "contactId"; value: customId; }
+
+    ContactWatcher {
+        id: contactWatcher
+    }
+
+    iconSource: contact && contact.avatar != "" ? contact.avatar : ""
     placeholderIconSource: "../assets/avatar_contacts_list.png"
-    text: contactAlias
+    text: contact ? contact.displayLabel : contactAlias
     subtext: message
 
     TextCustom {

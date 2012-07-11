@@ -1,13 +1,15 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import TelephonyApp 0.1
+import "../"
 
 Item {
     id: view
 
     property string viewName: "messages"
-    property variant contact
+    property variant contact: contactWatcher.contact
     property string number
+    property string contactId
     property bool newMessage: false
     property string threadId
 
@@ -16,8 +18,15 @@ Item {
     Binding { target: messageLogModel; property: "phoneNumber"; value: number; }
     Binding { target: messageLogModel; property: "threadId"; value: threadId; }
 
+    Binding { target: contactWatcher; property: "number"; value: number; }
+    Binding { target: contactWatcher; property: "contactId"; value: contactId; }
+
     function refreshModel() {
         messageLogModel.refreshModel()
+    }
+
+    ContactWatcher {
+        id: contactWatcher
     }
 
     Connections {
@@ -37,10 +46,6 @@ Item {
 
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
-
-    onNumberChanged: {
-        view.contact = contactModel.contactFromPhoneNumber(number);
-    }
 
     Item {
         id: background
@@ -67,16 +72,16 @@ Item {
             width: view.width
 
             onContactSelected: {
-                view.contact = contact;
                 view.number = number;
+                contactWatcher.contact = contact;
                 view.newMessage = false;
                 view.threadId = ""
                 refreshModel()
             }
 
             onNumberSelected: {
-                view.contact = contactModel.contactFromPhoneNumber(number);
                 view.number = number;
+                view.contactId = "";
                 view.newMessage = false;
                 view.threadId = ""
                 refreshModel()
@@ -139,7 +144,6 @@ Item {
             // use whatever is on the text field
             if (view.newMessage) {
                 var phoneNumber = headerLoader.item.text;
-                view.contact = contactModel.contactFromPhoneNumber(phoneNumber);
                 view.number = phoneNumber
                 view.newMessage = false;
                 view.threadId = ""
