@@ -119,6 +119,7 @@ QString ContactModel::customIdFromPhoneNumber(const QString &phoneNumber)
     return id;
 
 }
+
 ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
 {
     QString id = customIdFromPhoneNumber(phoneNumber);
