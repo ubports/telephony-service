@@ -16,7 +16,7 @@ Item {
     property variant contact
     property string number
     property string contactId
-    property bool unknownContact: false
+    property bool __unknownContact: false
 
     Component.onCompleted: __checkContact()
 
@@ -26,19 +26,19 @@ Item {
             return;
         }
         // try to fill the contactId and avoid future queries
-        if (number && (!contactId || contactId == "") && !unknownContact) {
+        if (number && (!contactId || contactId == "") && !__unknownContact) {
             contactId = contactModel.customIdFromPhoneNumber(number);
             if(contactId && contactId != "") {
                 return;
             } else {
-                unknownContact = true;
+                __unknownContact = true;
                 contact = null;
                 return;
             }
         }
         // if this contact does not exist on database, 
         // dont waste time asking the backend about it.
-        if(number && !unknownContact) {
+        if(number && !__unknownContact) {
             contact = contactModel.contactFromPhoneNumber(number);
         }
     }
@@ -51,12 +51,12 @@ Item {
 
     onNumberChanged: {
         contactId = ""; 
-        unknownContact = false; 
+        __unknownContact = false; 
         __checkContact();
     }
 
     onContactIdChanged: {
-        unknownContact = false; 
+        __unknownContact = false; 
         __checkContact();
     }
 }
