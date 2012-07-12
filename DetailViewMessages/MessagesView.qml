@@ -9,7 +9,7 @@ Item {
     property string viewName: "messages"
     property alias contact: contactWatcher.contact
     property alias number: contactWatcher.number
-    property alias contactId: contactWatcher.contactId
+    property alias customId: contactWatcher.customId
     property bool newMessage: false
     property string threadId
 
@@ -78,7 +78,7 @@ Item {
 
             onNumberSelected: {
                 view.number = number;
-                view.contactId = "";
+                view.customId = "";
                 view.newMessage = false;
                 view.threadId = ""
                 refreshModel()

@@ -6,7 +6,7 @@ import TelephonyApp 0.1
  * ContactWatcher in an element used to track changes to a specific
  * contact, based on its customId or phone number.
  * Pieces of code interested in a specific contact should create
- * an instance of ContactWatcher and set either "number" or "contactId".
+ * an instance of ContactWatcher and set either "number" or "customId".
  * If the contact is not available yet, this element will track the
  * contacts model events and populate the local "contact" property
  * when it becomes available.
@@ -15,20 +15,20 @@ import TelephonyApp 0.1
 Item {
     property variant contact
     property string number
-    property string contactId
+    property string customId
     property bool __unknownContact: false
 
     Component.onCompleted: __checkContact()
 
     function __checkContact() {
-        if(contactId && contactId != "") {
-            contact = contactModel.contactFromCustomId(contactId);
+        if(customId && customId != "") {
+            contact = contactModel.contactFromCustomId(customId);
             return;
         }
-        // try to fill the contactId and avoid future queries
-        if (number && (!contactId || contactId == "") && !__unknownContact) {
-            contactId = contactModel.customIdFromPhoneNumber(number);
-            if(contactId && contactId != "") {
+        // try to fill the customId and avoid future queries
+        if (number && (!customId || customId == "") && !__unknownContact) {
+            customId = contactModel.customIdFromPhoneNumber(number);
+            if(customId && customId != "") {
                 return;
             } else {
                 __unknownContact = true;
@@ -42,7 +42,7 @@ Item {
             contact = contactModel.contactFromPhoneNumber(number);
         }
     }
- 
+    
     Connections {
         target: contactModel
         onContactAdded: __checkContact()
@@ -50,7 +50,7 @@ Item {
     }
 
     onNumberChanged: {
-        contactId = ""; 
+        customId = ""; 
         __unknownContact = false; 
         __checkContact();
     }
