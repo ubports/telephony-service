@@ -20,6 +20,15 @@ Item {
         messageLogModel.refreshModel()
     }
 
+    function updateActiveChat() {
+        // acknowledge messages as read just when the view is visible
+        if (visible) {
+            chatManager.activeChat = number;
+        } else {
+            chatManager.activeChat = "";
+        }
+    }
+
     Connections {
         target: chatManager
 
@@ -33,27 +42,24 @@ Item {
                 pendingMessage = "";
             }
         }
-
-        onMessageReceived: {
-            if (contactModel.comparePhoneNumbers(contactId, number)) {
-                // if the message received is in the current view, mark it as read
-                chatManager.acknowledgeMessages(contactId);
-            }
-        }
     }
 
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
 
+    onVisibleChanged: updateActiveChat();
+
+    onNewMessageChanged: {
+        if (newMessage) {
+            number = "";
+        }
+    }
+
     onNumberChanged: {
         // get the contact
         view.contact = contactModel.contactFromPhoneNumber(number);
 
-        if (number != "") {
-            // and mark messages that came from the telepathy text channel as read
-            chatManager.acknowledgeMessages(number);
-        }
-
+        updateActiveChat();
     }
 
     Item {
