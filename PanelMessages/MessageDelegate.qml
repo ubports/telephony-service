@@ -1,5 +1,4 @@
 import QtQuick 1.1
-import QtMobility.contacts 1.1
 import "../Widgets"
 
 ListItem {
