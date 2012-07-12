@@ -212,7 +212,7 @@ void ContactModel::removeContactFromModel(ContactEntry *entry)
     mContactEntries.removeAt(index);
     entry->deleteLater();
     endRemoveRows();
-    emit contactRemoved(entry->id());
+    emit contactRemoved(entry->customId());
 }
 
 void ContactModel::onContactsAdded(QList<QContactLocalId> ids)

@@ -13,7 +13,7 @@ import TelephonyApp 0.1
  */
 
 Item {
-    property variant contact
+    property variant contact: null
     property string phoneNumber 
     property string customId
     property bool __unknownContact: false
@@ -21,7 +21,7 @@ Item {
     Component.onCompleted: __checkContact()
 
     function __checkContact() {
-        if(customId && customId != "") {
+        if (customId && customId != "") {
             contact = contactModel.contactFromCustomId(customId);
             return;
         }
@@ -38,15 +38,36 @@ Item {
         }
         // if this contact does not exist on database, 
         // dont waste time asking the backend about it.
-        if(phoneNumber && !__unknownContact) {
+        if (phoneNumber && !__unknownContact) {
             contact = contactModel.contactFromPhoneNumber(phoneNumber);
         }
     }
-    
+
+    function __checkContactAdded(newContact) {
+        // check if we hold an intance of a contact already
+        if (contact) {
+            return;
+        }
+        __checkContact()
+    }
+ 
+    function __checkContactRemoved(removedCustomId) {
+        // check if we hold an intance of a contact already
+        if (!contact) {
+            return;
+        }
+
+        // check if we got removed
+        if (customId == removedCustomId) {
+            contact = null
+            return;
+        }
+    }
+   
     Connections {
         target: contactModel
-        onContactAdded: __checkContact()
-        onContactRemoved: __checkContact()
+        onContactAdded: __checkContactAdded(contact)
+        onContactRemoved: __checkContactRemoved(customId)
     }
 
     onPhoneNumberChanged: {
