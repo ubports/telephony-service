@@ -13,7 +13,7 @@ Item {
     property string number: callManager.getVoicemailNumber()
 
     function isVoicemailActive() {
-        telephony.isVoicemailActive();
+        return telephony.isVoicemailActive();
     }
 
     function endCall() {
@@ -104,8 +104,7 @@ Item {
                 spacing: 5
                 Button {
                     id: dialhangupButton
-                    // FIXME: use the right assets
-                    iconSource: isVoicemailActive() ? "../assets/incall_keypad_endcallbutton_icon.png" : "../assets/call_icon_voicemail_active.png"
+                    iconSource: isVoicemailActive() ? "../assets/incall_keypad_endcallbutton_icon.png" : "../assets/voicemail_icon.png"
                     width: isVoicemailActive() ? 64 : 128
                     color: isVoicemailActive() ? "#bf400c" : "#1f71aa"
                     onClicked: {
