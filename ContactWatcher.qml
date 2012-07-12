@@ -26,7 +26,7 @@ Item {
             return;
         }
         // try to fill the contactId and avoid future queries
-        if (number && (!contactId || contactId == "") && unknownContact == false) {
+        if (number && (!contactId || contactId == "") && !unknownContact) {
             contactId = contactModel.customIdFromPhoneNumber(number);
             if(contactId && contactId != "") {
                 return;
@@ -38,7 +38,7 @@ Item {
         }
         // if this contact does not exist on database, 
         // dont waste time asking the backend about it.
-        if(number && unknownContact == false) {
+        if(number && !unknownContact) {
             contact = contactModel.contactFromPhoneNumber(number);
         }
     }
