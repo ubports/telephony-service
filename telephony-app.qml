@@ -58,7 +58,7 @@ Item {
     function startChat(customId, number, threadId) {
         messages.load()
         view.number = number
-        view.contactId = customId
+        view.customId = customId
         view.threadId = threadId
         view.newMessage = false
         view.refreshModel()

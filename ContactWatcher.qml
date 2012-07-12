@@ -6,7 +6,7 @@ import TelephonyApp 0.1
  * ContactWatcher in an element used to track changes to a specific
  * contact, based on its customId or phone number.
  * Pieces of code interested in a specific contact should create
- * an instance of ContactWatcher and set either "number" or "customId".
+ * an instance of ContactWatcher and set either "phoneNumber" or "customId".
  * If the contact is not available yet, this element will track the
  * contacts model events and populate the local "contact" property
  * when it becomes available.
@@ -14,7 +14,7 @@ import TelephonyApp 0.1
 
 Item {
     property variant contact
-    property string number
+    property string phoneNumber 
     property string customId
     property bool __unknownContact: false
 
@@ -26,8 +26,8 @@ Item {
             return;
         }
         // try to fill the customId and avoid future queries
-        if (number && (!customId || customId == "") && !__unknownContact) {
-            customId = contactModel.customIdFromPhoneNumber(number);
+        if (phoneNumber && (!customId || customId == "") && !__unknownContact) {
+            customId = contactModel.customIdFromPhoneNumber(phoneNumber);
             if(customId && customId != "") {
                 return;
             } else {
@@ -38,8 +38,8 @@ Item {
         }
         // if this contact does not exist on database, 
         // dont waste time asking the backend about it.
-        if(number && !__unknownContact) {
-            contact = contactModel.contactFromPhoneNumber(number);
+        if(phoneNumber && !__unknownContact) {
+            contact = contactModel.contactFromPhoneNumber(phoneNumber);
         }
     }
     
@@ -49,13 +49,13 @@ Item {
         onContactRemoved: __checkContact()
     }
 
-    onNumberChanged: {
+    onPhoneNumberChanged: {
         customId = ""; 
         __unknownContact = false; 
         __checkContact();
     }
 
-    onContactIdChanged: {
+    onCustomIdChanged: {
         __unknownContact = false; 
         __checkContact();
     }

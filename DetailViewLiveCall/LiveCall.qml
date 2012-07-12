@@ -11,7 +11,7 @@ Item {
     // FIXME: refactor StopWatch, Timer into StopWatch
     property alias contact: contactWatcher.contact
     property QtObject call: callManager.foregroundCall
-    property alias number: contactWatcher.number
+    property alias number: contactWatcher.phoneNumber
     property bool onHold: call ? call.held : false
     property bool isSpeaker: callManager.speaker
     property bool isMuted: call ? call.muted : false
@@ -25,7 +25,7 @@ Item {
 
     ContactWatcher {
         id: contactWatcher
-        number: call ? call.phoneNumber : ""
+        phoneNumber: call ? call.phoneNumber : ""
     }
 
     Connections {
