@@ -15,7 +15,7 @@ var PROTOCOL_TYPE_AIM       = "aim";
 var PROTOCOL_TYPE_MSN       = "msn";
 var PROTOCOL_TYPE_YAHOO     = "yahoo";
 var PROTOCOL_TYPE_SKYPE     = "skype";
-var PROTOCOL_TYPE_QQ        = "qq";
+var PROTOCOL_TYPE_IM        = "im";
 var PROTOCOL_TYPE_GTALK     = "google_talk";
 var PROTOCOL_TYPE_ICQ       = "icq";
 var PROTOCOL_TYPE_JABBER    = "jabber";
@@ -133,8 +133,12 @@ function getDetailSubType(detail) {
             return PROTOCOL_LABEL_YAHOO;
         } else if (protocol == PROTOCOL_TYPE_SKYPE) {
             return PROTOCOL_LABEL_SKYPE;
-        } else if (protocol == PROTOCOL_TYPE_QQ) {
-            return PROTOCOL_LABEL_QQ;
+        } else if (protocol == PROTOCOL_TYPE_IM) {
+            if (detail.contexts.indexOf("PROTOCOL=QQ") > -1) {
+                return PROTOCOL_LABEL_QQ;
+            } else {
+                return PROTOCOL_LABEL_OTHER;
+            }
         } else if (protocol == PROTOCOL_TYPE_GTALK) {
             return PROTOCOL_LABEL_GTALK;
         } else if (protocol == PROTOCOL_TYPE_ICQ) {
@@ -179,6 +183,23 @@ function getDetailSubType(detail) {
     return "";
 }
 
+function updateContext(detail, key, values) {
+    // We need a copy because QML list properties can't
+    // be directly modified, they need to be reassigned a modified copy.
+    var contexts = detail.contexts;
+    for (var i = 0; i < contexts.length; i++) {
+        if (contexts[i].indexOf(key) == 0) {
+            // Modify the first type that we find, since it's the same
+            // thing that we did to retrieve the type
+            contexts[i] = key + values;
+            detail.contexts = contexts;
+            return;
+        }
+    }
+    contexts.push(key + values);
+    detail.contexts = contexts;
+}
+
 function setDetailSubType(detail, newSubType) {
     if (!detail) {
         return;
@@ -212,7 +233,8 @@ function setDetailSubType(detail, newSubType) {
         } else if (protocol == PROTOCOL_LABEL_SKYPE) {
             detail.protocol = PROTOCOL_TYPE_SKYPE;
         } else if (protocol == PROTOCOL_LABEL_QQ) {
-            detail.protocol = PROTOCOL_TYPE_QQ;
+            detail.protocol = PROTOCOL_TYPE_IM;
+            updateContext(detail, "PROTOCOL=", "QQ");
         } else if (protocol == PROTOCOL_LABEL_GTALK) {
             detail.protocol = PROTOCOL_TYPE_GTALK;
         } else if (protocol == PROTOCOL_LABEL_ICQ) {
@@ -243,20 +265,7 @@ function setDetailSubType(detail, newSubType) {
             types = "other";
         }
 
-        // We need a copy because QML list properties can't
-        // be directly modified, they need to be reassigned a modified copy.
-        var contexts = detail.contexts;
-        for (var i = 0; i < contexts.length; i++) {
-            if (contexts[i].indexOf("type=") == 0) {
-                // Modify the first type that we find, since it's the same
-                // thing that we did to retrieve the type
-                contexts[i] = "type=" + types;
-                detail.contexts = contexts;
-                return;
-            }
-        }
-        contexts.push("type=" + types);
-        detail.contexts = contexts;
+        updateContext(detail, "type=", types);
     }
 }
 
