@@ -93,7 +93,11 @@ void ChatManager::setActiveChat(const QString &value)
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
-    mChannels[channel->targetContact()->id()] = channel;
+    QString id = channel->targetContact()->id();
+    mChannels[id] = channel;
+    if (id == mActiveChat) {
+        acknowledgeMessages(id);
+    }
 
     emit chatReady(channel->targetContact()->id());
 }
