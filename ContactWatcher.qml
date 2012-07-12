@@ -8,9 +8,9 @@ Item {
     property string contactId
     property bool unknownContact: false
 
-    Component.onCompleted: checkContact()
+    Component.onCompleted: __checkContact()
 
-    function checkContact() {
+    function __checkContact() {
         if(contactId && contactId != "") {
             contact = contactModel.contactFromCustomId(contactId);
             return;
@@ -35,18 +35,18 @@ Item {
  
     Connections {
         target: contactModel
-        onContactAdded: checkContact()
-        onContactRemoved: checkContact()
+        onContactAdded: __checkContact()
+        onContactRemoved: __checkContact()
     }
 
     onNumberChanged: {
         contactId = ""; 
         unknownContact = false; 
-        checkContact();
+        __checkContact();
     }
 
     onContactIdChanged: {
         unknownContact = false; 
-        checkContact();
+        __checkContact();
     }
 }
