@@ -22,7 +22,8 @@
 #include <libnotify/notify.h>
 
 #include "telephonyappapprover.h"
-#include <QMessageBox>
+
+#include <QDebug>
 
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/ChannelClassSpec>
@@ -170,7 +171,11 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
                                     action_reject,
                                     data,
                                     delete_event_data);
-    notify_notification_show(notification, NULL);
+    GError *error = NULL;
+    if (!notify_notification_show(notification, &error)) {
+        qWarning() << "Failed to show snap decision:" << error->message;
+        g_error_free (error);
+    }
 }
 
 void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
