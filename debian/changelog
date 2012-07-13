@@ -1,4 +1,4 @@
-telephony-app (0.36) UNRELEASED; urgency=low
+telephony-app (0.36) precise; urgency=low
 
   * scroll messages view to end when a conversation is open (LP: #1019414)
   * add speaker button to the voicemail view (LP: #1017657)
@@ -7,7 +7,7 @@ telephony-app (0.36) UNRELEASED; urgency=low
   * use the android algorithm to compare phone numbers
   * implement a ContactWatcher and integrate it into the application (LP: #1022746)
 
- -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 13 Jul 2012 13:38:06 -0700
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 13 Jul 2012 14:16:33 -0700
 
 telephony-app (0.35) precise; urgency=low
 
