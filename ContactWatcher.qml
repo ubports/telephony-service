@@ -25,7 +25,11 @@ Item {
             contact = contactModel.contactFromCustomId(customId);
             return;
         }
-        // try to fill the customId and avoid future queries
+        // try to fill the customId and avoid future queries.
+        // in some cases only phoneNumber is set, but this contact
+        // has a customId, so in order to avoid calling contactFromPhoneNumber()
+        // many times, we cache the customId and wait for this contact to
+        // appear in the model.
         if (phoneNumber && (!customId || customId == "") && !__unknownContact) {
             customId = contactModel.customIdFromPhoneNumber(phoneNumber);
             if(customId && customId != "") {
