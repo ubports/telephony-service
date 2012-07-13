@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+#ifndef PHONENUMBERUTILS_H
+#define PHONENUMBERUTILS_H
+
 namespace PhoneNumberUtils 
 {
 
@@ -288,3 +291,5 @@ bool compareLoosely(const QString &a, const QString &b)
 }
 
 }
+
+#endif
