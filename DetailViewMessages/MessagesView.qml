@@ -39,10 +39,28 @@ Item {
                 pendingMessage = "";
             }
         }
+
+        onMessageReceived: {
+            if (contactModel.comparePhoneNumbers(contactId, number)) {
+                // if the message received is in the current view, mark it as read
+                chatManager.acknowledgeMessages(contactId);
+            }
+        }
     }
 
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
+
+    onNumberChanged: {
+        // get the contact
+        view.contact = contactModel.contactFromPhoneNumber(number);
+
+        if (number != "") {
+            // and mark messages that came from the telepathy text channel as read
+            chatManager.acknowledgeMessages(number);
+        }
+
+    }
 
     Item {
         id: background

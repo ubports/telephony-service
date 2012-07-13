@@ -63,6 +63,15 @@ void ChatManager::sendMessage(const QString &contactId, const QString &message)
     emit messageSent(contactId, message);
 }
 
+void ChatManager::acknowledgeMessages(const QString &contactId)
+{
+    if (!mChannels.contains(contactId))
+        return;
+
+    Tp::TextChannelPtr channel = mChannels[contactId];
+    channel->acknowledge(channel->messageQueue());
+}
+
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     mChannels[channel->targetContact()->id()] = channel;
