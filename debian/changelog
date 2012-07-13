@@ -1,8 +1,12 @@
-telephony-app (0.35) UNRELEASED; urgency=low
+telephony-app (0.35) precise; urgency=low
 
+  [ Gustavo Pichorim Boiko ]
   * Acknowledge messages in the telepathy text channel once they are viewed.
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 12 Jul 2012 10:06:52 -0300
+  [ Tiago Salem Herrmann ]
+  * Send message if return key is pressed (LP: #1015250)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 13 Jul 2012 07:05:23 -0700
 
 telephony-app (0.34) precise; urgency=low
 
