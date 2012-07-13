@@ -211,6 +211,10 @@ bool compareLoosely(const QString &a, const QString &b)
          return false;
      }
 
+     if (a == b) {
+         return true;
+     }
+
      ia = indexOfLastNetworkChar (a);
      ib = indexOfLastNetworkChar (b);
      matched = 0;
