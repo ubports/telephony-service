@@ -44,7 +44,7 @@ Item {
     }
 
     function __checkContactAdded(newContact) {
-        // check if we hold an intance of a contact already
+        // check if we hold an instance of a contact already
         if (contact) {
             return;
         }
@@ -57,7 +57,7 @@ Item {
     }
  
     function __checkContactRemoved(removedCustomId) {
-        // check if we hold an intance of a contact already
+        // check if we hold an instance of a contact already
         if (!contact) {
             return;
         }
