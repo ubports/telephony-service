@@ -103,7 +103,7 @@ Item {
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
         clip: true
-        contentHeight: detailsList.height + (contactDetails.editable ? 32 + newDetailChooser.height + 10 : callLogSection.height)
+        contentHeight: detailsList.height + bottomSeparatorLine.height + (contactDetails.editable ? 32 + newDetailChooser.height + 10 : callLogSection.height)
 
         Column {
             id: detailsList
@@ -165,12 +165,23 @@ Item {
             }
         }
 
+        Image {
+            id: bottomSeparatorLine
+
+            anchors.top: detailsList.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: visible ? 2 : 0
+            source: "../Widgets/artwork/ListItemSeparator.png"
+            visible: !callLogSection.visible || callLogSection.opacity != 1.0
+        }
+
         // Call Log section
         ContactDetailsSection {
             id: callLogSection
 
             editable: false
-            anchors.top: detailsList.bottom
+            anchors.top: bottomSeparatorLine.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             opacity: (contactDetails.editable) ? 0.0 : 1.0
