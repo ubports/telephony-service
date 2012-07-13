@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+namespace PhoneNumberUtils 
+{
+
 /** True if c is ISO-LATIN characters 0-9, *, # , +, WILD, WAIT, PAUSE   */
 bool isNonSeparator(char c) 
 {
@@ -282,4 +285,6 @@ bool compareLoosely(const QString &a, const QString &b)
      }
 
      return false;
+}
+
 }

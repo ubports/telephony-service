@@ -269,5 +269,5 @@ void ContactModel::onContactRemoved()
 // but use an abstraction layer instead
 bool ContactModel::comparePhoneNumbers(const QString &number1, const QString &number2) const
 {
-    return compareLoosely(number1, number2);
+    return PhoneNumberUtils::compareLoosely(number1, number2);
 }
