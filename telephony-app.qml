@@ -61,7 +61,6 @@ Item {
         view.customId = customId
         view.threadId = threadId
         view.newMessage = false
-        view.refreshModel()
     }
 
     function endCall() {
