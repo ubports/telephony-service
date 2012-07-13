@@ -37,24 +37,9 @@ class MessagesProxyModel : public QSortFilterProxyModel
                 READ searchString
                 WRITE setSearchString
                 NOTIFY searchStringChanged)
-    Q_PROPERTY(QString phoneNumber
-               READ phoneNumber
-               WRITE setPhoneNumber
-               NOTIFY phoneNumberChanged)
-    Q_PROPERTY(QString threadId
-               READ threadId
-               WRITE setThreadId
-               NOTIFY threadIdChanged)
-
 public:
     explicit MessagesProxyModel(QObject *parent = 0);
-
-    QString phoneNumber() const;
-    void setPhoneNumber(const QString &value);
-
-    QString threadId() const;
-    void setThreadId(const QString &value);
-
+    
     bool ascending() const;
     void setAscending(bool value);
 
@@ -70,8 +55,6 @@ signals:
     void ascendingChanged();
     void messagesModelChanged();
     void searchStringChanged();
-    void phoneNumberChanged();
-    void threadIdChanged();
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
@@ -79,8 +62,6 @@ protected:
 private:
     bool mAscending;
     QString mSearchString;
-    QString mPhoneNumber;
-    QString mThreadId;
 };
 
 #endif // MESSAGESPROXYMODEL_H
