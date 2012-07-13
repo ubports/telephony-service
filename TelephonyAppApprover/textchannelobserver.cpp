@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <libnotify/notify.h>
 #include "textchannelobserver.h"
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
@@ -113,6 +114,32 @@ void TextChannelObserver::removeIndicatorsFromChannel(const Tp::TextChannelPtr &
     mIndicators.remove(textChannel->objectPath());
 }
 
+void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
+{
+    // do not place notification items for scrollback messages
+    if (message.isScrollback() || message.isDeliveryReport() || message.isRescued()) {
+        return;
+    }
+
+    Tp::ContactPtr contact = message.sender();
+    QString title = QString("New SMS message from %1").arg(contact->alias());
+    QString icon = contact->avatarData().fileName;
+    if (icon.isEmpty()) {
+        icon = "mail-unread";
+    }
+
+    NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
+                                                               message.text().toStdString().c_str(),
+                                                               icon.toStdString().c_str());
+    GError *error = NULL;
+    if (!notify_notification_show(notification, &error)) {
+        qWarning() << "Failed to show snap decision:" << error->message;
+        g_error_free (error);
+    }
+
+    g_object_unref(G_OBJECT(notification));
+}
+
 Tp::TextChannelPtr TextChannelObserver::channelFromPath(const QString &path)
 {
     Q_FOREACH(Tp::TextChannelPtr channel, mChannels) {
@@ -158,6 +185,11 @@ void TextChannelObserver::onTextChannelReady(Tp::PendingOperation *op)
     mChannels.append(textChannel);
     updateIndicatorsFromChannel(textChannel);
 
+    // notify the latest message from the channel, if any
+    if (!textChannel->messageQueue().isEmpty()) {
+        showNotificationForMessage(textChannel->messageQueue().last());
+    }
+
     if (!mContexts.contains(textChannel.data())) {
         qWarning() << "Context for channel not available:" << textChannel;
         return;
@@ -189,6 +221,8 @@ void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
     updateIndicatorsFromChannel(textChannel);
+
+    showNotificationForMessage(message);
 }
 
 void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &message)

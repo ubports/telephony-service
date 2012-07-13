@@ -50,6 +50,7 @@ public:
 protected:
     void updateIndicatorsFromChannel(const Tp::TextChannelPtr &textChannel);
     void removeIndicatorsFromChannel(const Tp::TextChannelPtr &textChannel);
+    void showNotificationForMessage(const Tp::ReceivedMessage &message);
     Tp::TextChannelPtr channelFromPath(const QString &path);
 
 protected Q_SLOTS:
