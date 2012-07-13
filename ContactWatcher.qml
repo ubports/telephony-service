@@ -49,7 +49,7 @@ Item {
 
     function __checkContactAdded(newContact) {
         // check if we hold an instance of a contact already
-        if (contact) {// || __unknownContact) {
+        if (contact || __unknownContact) {
             return;
         }
         
