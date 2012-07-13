@@ -354,12 +354,12 @@ void AbstractLoggerModel::onContactChanged(ContactEntry *contact)
     }
 }
 
-void AbstractLoggerModel::onContactRemoved(const QString &contactId)
+void AbstractLoggerModel::onContactRemoved(const QString &customId)
 {
     int count = mLogEntries.count();
     for (int i = 0; i < count; ++i) {
         LogEntry *entry = mLogEntries[i];
-        if (entry->contactId == contactId) {
+        if (entry->customId == customId) {
             clearContactInfo(entry);
             emit dataChanged(index(i,0), index(i,0));
         }

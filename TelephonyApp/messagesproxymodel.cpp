@@ -20,6 +20,7 @@
 #include "messagesproxymodel.h"
 #include "abstractloggermodel.h"
 #include "messagelogmodel.h"
+#include "contactmodel.h"
 
 MessagesProxyModel::MessagesProxyModel(QObject *parent) :
     QSortFilterProxyModel(parent), mAscending(true)
@@ -27,6 +28,30 @@ MessagesProxyModel::MessagesProxyModel(QObject *parent) :
     setSortRole(AbstractLoggerModel::Timestamp);
     setDynamicSortFilter(true);
     updateSorting();
+}
+
+QString MessagesProxyModel::phoneNumber() const
+{
+    return mPhoneNumber;
+}
+
+void MessagesProxyModel::setPhoneNumber(const QString &value)
+{
+    mPhoneNumber = value;
+    invalidateFilter();
+    emit phoneNumberChanged();
+}
+
+QString MessagesProxyModel::threadId() const
+{
+    return mThreadId;
+}
+
+void MessagesProxyModel::setThreadId(const QString &value)
+{
+    mThreadId = value;
+    invalidateFilter();
+    emit threadIdChanged();
 }
 
 bool MessagesProxyModel::ascending() const
@@ -83,6 +108,22 @@ bool MessagesProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
 
     if (!sourceIndex.isValid()) {
         return false;
+    }
+
+
+    if (!mThreadId.isEmpty()) {
+        QString value = sourceIndex.data(MessageLogModel::ThreadId).toString();
+        if (value == mThreadId) {
+            return true;
+        } else {
+            QString phoneNumber = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
+            return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phoneNumber);
+        }
+    }
+    
+    if (!mPhoneNumber.isEmpty()) {
+        QString phoneNumber = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
+        return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phoneNumber);
     }
 
     if (mSearchString.isEmpty()) {

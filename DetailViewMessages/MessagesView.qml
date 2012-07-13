@@ -1,23 +1,22 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import TelephonyApp 0.1
+import "../"
 
 Item {
     id: view
 
     property string viewName: "messages"
-    property variant contact
-    property string number
+    property alias contact: contactWatcher.contact
+    property alias number: contactWatcher.phoneNumber
+    property alias customId: contactWatcher.customId
     property bool newMessage: false
     property string threadId
 
     property string pendingMessage
 
-    Binding { target: messageLogModel; property: "phoneNumber"; value: number; }
-    Binding { target: messageLogModel; property: "threadId"; value: threadId; }
-
-    function refreshModel() {
-        messageLogModel.refreshModel()
+    ContactWatcher {
+        id: contactWatcher
     }
 
     function updateActiveChat() {
@@ -87,19 +86,15 @@ Item {
             width: view.width
 
             onContactSelected: {
-                view.contact = contact;
                 view.number = number;
                 view.newMessage = false;
                 view.threadId = ""
-                refreshModel()
             }
 
             onNumberSelected: {
-                view.contact = contactModel.contactFromPhoneNumber(number);
                 view.number = number;
                 view.newMessage = false;
                 view.threadId = ""
-                refreshModel()
             }
         }
     }
@@ -144,6 +139,8 @@ Item {
             id: messages
             width: view.width
             height: view.height - footer.height - headerLoader.height
+            threadId: view.threadId
+            number: view.number
         }
     }
 
@@ -159,11 +156,9 @@ Item {
             // use whatever is on the text field
             if (view.newMessage) {
                 var phoneNumber = headerLoader.item.text;
-                view.contact = contactModel.contactFromPhoneNumber(phoneNumber);
                 view.number = phoneNumber
                 view.newMessage = false;
                 view.threadId = ""
-                refreshModel()
             }
 
             if (chatManager.isChattingToContact(number)) {

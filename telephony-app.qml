@@ -46,22 +46,23 @@ Item {
     }
 
     function isVoicemailActive() {
-        if (call)
-            return call.voicemail
-        return false
+        if (call) {
+            return call.voicemail;
+        } else {
+            return false
+        }
     }
 
     function callNumber(number) {
         callManager.startCall(number);
     }
 
-    function startChat(contact, number, threadId) {
+    function startChat(customId, number, threadId) {
         messages.load()
-        view.contact = contact
         view.number = number
+        view.customId = customId
         view.threadId = threadId
         view.newMessage = false
-        view.refreshModel()
     }
 
     function endCall() {
@@ -251,17 +252,19 @@ Item {
     Connections {
         target: chatManager
         onChatReady: {
+            // FIXME: contactId here is the phoneNumber
             if (telephony.view.viewName != "messages"
                     || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat(contactModel.contactFromPhoneNumber(contactId), contactId, "")
+                startChat("", contactId, "")
             }
         }
         onMessageReceived: {
+            // FIXME: contactId here is the phoneNumber
             if (telephony.view.viewName != "messages"
                     || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
                 telephony.viewLoader.source = ""
-                startChat(contactModel.contactFromPhoneNumber(contactId), contactId, "")
+                startChat("", contactId, "")
             }
         }
     }

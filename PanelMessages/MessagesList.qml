@@ -22,11 +22,11 @@ Item {
 
                 anchors.left: parent.left
                 anchors.right: parent.right
-                onClicked: telephony.startChat(contactModel.contactFromCustomId(customId), phoneNumber, threadId)
+                onClicked: telephony.startChat(customId, phoneNumber, threadId)
                 selected: telephony.messages.loaded
                           && !telephony.view.newMessage
                           && (threadId != "" && (telephony.view.threadId == threadId) 
-                          || telephony.view.number == phoneNumber)
+                          || contactModel.comparePhoneNumbers(telephony.view.number, phoneNumber))
             }
         }
     }

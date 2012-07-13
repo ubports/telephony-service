@@ -6,6 +6,7 @@ Item {
     id: messages
     property variant contact
     property string number
+    property string threadId
 
     clip: true
 
@@ -53,6 +54,8 @@ Item {
         id: messagesProxyModel
         messagesModel: messageLogModel
         ascending: true;
+        phoneNumber: messages.number
+        threadId: messages.threadId
     }
 
     ListView {
@@ -89,7 +92,9 @@ Item {
             sourceComponent: message != "" ? messageTextDelegate : messageImageDelegate
         }
         highlightFollowsCurrentItem: true
-        currentIndex: (count > 0) ? count-1 : 0
+        onCountChanged: { 
+            messagesList.positionViewAtEnd()
+        }
     }
 
 }

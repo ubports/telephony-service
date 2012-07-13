@@ -17,6 +17,7 @@ Rectangle {
         width: height
         source: (call && call.contactAvatar != "") ? call.contactAvatar : "../assets/avatar_incall_rightpane.png"
         onStatusChanged: if (status == Image.Error) source = "../assets/avatar_incall_rightpane.png"
+        asynchronous: true
     }
 
     Text {

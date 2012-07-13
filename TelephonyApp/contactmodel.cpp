@@ -19,6 +19,7 @@
 
 #include "contactmodel.h"
 #include "contactentry.h"
+#include "phoneutils.h"
 #include <QContactDetailFilter>
 #include <QContactGuid>
 #include <QContactSaveRequest>
@@ -108,7 +109,7 @@ ContactEntry *ContactModel::contactFromCustomId(const QString &customId)
     return 0;
 }
 
-ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
+QString ContactModel::customIdFromPhoneNumber(const QString &phoneNumber)
 {
     // FIXME: replace this by something not relying specifically on android
     QDBusInterface contacts("com.canonical.Android",
@@ -116,7 +117,13 @@ ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
                             "com.canonical.android.contacts.Contacts");
     QDBusReply<QString> reply = contacts.call("getContactKeyForNumber", phoneNumber);
     QString id = reply.value();
+    return id;
 
+}
+
+ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
+{
+    QString id = customIdFromPhoneNumber(phoneNumber);
     if (id.isEmpty()) {
         return 0;
     }
@@ -206,7 +213,7 @@ void ContactModel::removeContactFromModel(ContactEntry *entry)
     mContactEntries.removeAt(index);
     entry->deleteLater();
     endRemoveRows();
-    emit contactRemoved(entry->id());
+    emit contactRemoved(entry->customId());
 }
 
 void ContactModel::onContactsAdded(QList<QContactLocalId> ids)
@@ -264,16 +271,7 @@ void ContactModel::onContactRemoved()
     // removed and changed signals
 }
 
-// FIXME: this method should not call android methods directly
-// but use an abstraction layer instead
 bool ContactModel::comparePhoneNumbers(const QString &number1, const QString &number2) const
 {
-    QDBusInterface telephony("com.canonical.Android", "/com/canonical/android/telephony/Telephony", "com.canonical.android.telephony.Telephony");
-    QDBusReply<bool> reply = telephony.call("comparePhoneNumbers", number1, number2);
-    if (reply.isValid()) {
-        return reply.value();
-    } else {
-        return false;
-    }
+    return PhoneNumberUtils::compareLoosely(number1, number2);
 }
-

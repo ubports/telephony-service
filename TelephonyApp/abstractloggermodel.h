@@ -95,7 +95,7 @@ protected slots:
     // QContactManager related slots
     void onContactAdded(ContactEntry *contact);
     void onContactChanged(ContactEntry *contact);
-    void onContactRemoved(const QString &contactId);
+    void onContactRemoved(const QString &customId);
 
 protected:
     void parseEntityId(const Tpl::EntityPtr &entity, LogEntry *entry);

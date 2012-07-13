@@ -30,6 +30,8 @@ QVariant MessageLogEntry::data(int role) const
         return message;
     case MessageLogModel::Date:
         return timestamp.date().toString(Qt::DefaultLocaleLongDate);
+    case MessageLogModel::ThreadId:
+        return threadId;
     default:
         return LogEntry::data(role);
     }
@@ -42,31 +44,10 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     QHash<int, QByteArray> roles = roleNames();
     roles[Message] = "message";
     roles[Date] = "date";
+    roles[ThreadId] = "threadId";
     setRoleNames(roles);
-}
 
-QString MessageLogModel::phoneNumber() const
-{
-    return mPhoneNumber;
-}
-
-void MessageLogModel::setPhoneNumber(QString value)
-{
-    if (mPhoneNumber != value) {
-        mPhoneNumber = value;
-        emit phoneNumberChanged();
-    }
-}
-
-QString MessageLogModel::threadId() const
-{
-    return mThreadId;
-}
-
-void MessageLogModel::setThreadId(const QString &value)
-{
-    mThreadId = value;
-    emit threadIdChanged();
+    fetchLog(Tpl::EventTypeMaskText);
 }
 
 void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming)
@@ -85,20 +66,12 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
 
 void MessageLogModel::onMessageReceived(const QString &number, const QString &message)
 {
-    // we have no threadId when we receive a message, so we have to compare
-    // phone numbers
-    if (ContactModel::instance()->comparePhoneNumbers(number, mPhoneNumber)) {
-        appendMessage(number, message, true);
-    }
+    appendMessage(number, message, true);
 }
 
 void MessageLogModel::onMessageSent(const QString &number, const QString &message)
 {
-    // we have no threadId when we receive a message, so we have to compare
-    // phone numbers
-    if (ContactModel::instance()->comparePhoneNumbers(number, mPhoneNumber)) {
-        appendMessage(number, message, false);
-    }
+    appendMessage(number, message, false);
 }
 
 LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
@@ -111,6 +84,7 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
     }
 
     entry->message = textEvent->message();
+    entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
     return entry;
 }
 
@@ -122,19 +96,6 @@ void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
     // fetching
     clear();
 
-    // search for the entity that matches the thread id for this conversation
-    bool hasPhoneNumber = !mPhoneNumber.isEmpty();
-    Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
-        if (threadIdFromIdentifier(entity->identifier()) == mThreadId ||
-            (hasPhoneNumber && ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, entity->alias()))) {
-            requestDatesForEntities(Tpl::EntityPtrList() << entity);
-            return;
-        }
-    }
+    requestDatesForEntities(entities);
 }
 
-void MessageLogModel::refreshModel()
-{
-    invalidateRequests();
-    fetchLog(Tpl::EventTypeMaskText);
-}
