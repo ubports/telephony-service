@@ -11,11 +11,11 @@ var PROTOCOL_LABEL_ICQ      = "ICQ";
 var PROTOCOL_LABEL_JABBER   = "Jabber";
 var PROTOCOL_LABEL_OTHER    = "Other";
 
+var PROTOCOL_TYPE_CUSTOM    = "im";
 var PROTOCOL_TYPE_AIM       = "aim";
 var PROTOCOL_TYPE_MSN       = "msn";
 var PROTOCOL_TYPE_YAHOO     = "yahoo";
 var PROTOCOL_TYPE_SKYPE     = "skype";
-var PROTOCOL_TYPE_IM        = "im";
 var PROTOCOL_TYPE_GTALK     = "google_talk";
 var PROTOCOL_TYPE_ICQ       = "icq";
 var PROTOCOL_TYPE_JABBER    = "jabber";
@@ -125,7 +125,13 @@ function getDetailSubType(detail) {
         return "Other";
     } else if (detail.definitionName == "OnlineAccount") {
         var protocol = detail.protocol;
-        if (protocol == PROTOCOL_TYPE_AIM) {
+        if (protocol == PROTOCOL_TYPE_CUSTOM) {
+            if (detail.contexts.indexOf("PROTOCOL=QQ") > -1) {
+                return PROTOCOL_LABEL_QQ;
+            } else {
+                return PROTOCOL_LABEL_OTHER;
+            }
+        } else if (protocol == PROTOCOL_TYPE_AIM) {
             return PROTOCOL_LABEL_AIM;
         } else if (protocol == PROTOCOL_TYPE_MSN) {
             return PROTOCOL_LABEL_MSN;
@@ -133,12 +139,6 @@ function getDetailSubType(detail) {
             return PROTOCOL_LABEL_YAHOO;
         } else if (protocol == PROTOCOL_TYPE_SKYPE) {
             return PROTOCOL_LABEL_SKYPE;
-        } else if (protocol == PROTOCOL_TYPE_IM) {
-            if (detail.contexts.indexOf("PROTOCOL=QQ") > -1) {
-                return PROTOCOL_LABEL_QQ;
-            } else {
-                return PROTOCOL_LABEL_OTHER;
-            }
         } else if (protocol == PROTOCOL_TYPE_GTALK) {
             return PROTOCOL_LABEL_GTALK;
         } else if (protocol == PROTOCOL_TYPE_ICQ) {
@@ -233,7 +233,7 @@ function setDetailSubType(detail, newSubType) {
         } else if (protocol == PROTOCOL_LABEL_SKYPE) {
             detail.protocol = PROTOCOL_TYPE_SKYPE;
         } else if (protocol == PROTOCOL_LABEL_QQ) {
-            detail.protocol = PROTOCOL_TYPE_IM;
+            detail.protocol = PROTOCOL_TYPE_CUSTOM;
             updateContext(detail, "PROTOCOL=", "QQ");
         } else if (protocol == PROTOCOL_LABEL_GTALK) {
             detail.protocol = PROTOCOL_TYPE_GTALK;
