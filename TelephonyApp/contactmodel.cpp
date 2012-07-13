@@ -19,6 +19,7 @@
 
 #include "contactmodel.h"
 #include "contactentry.h"
+#include "contactcustomid.h"
 #include "phoneutils.h"
 #include <QContactDetailFilter>
 #include <QContactGuid>
@@ -250,13 +251,18 @@ void ContactModel::onContactEntryChanged(ContactEntry *entry)
 void ContactModel::onContactSaved()
 {
     QContactSaveRequest *request = qobject_cast<QContactSaveRequest*>(QObject::sender());
-    if (request->isFinished() && request->error() != QContactManager::NoError) {
-        qWarning() << "Failed to save the contact. Error:" << request->error();
-        //FIXME: maybe we should map the error codes to texts
+    if (request->isFinished()) {
+        if (request->error() != QContactManager::NoError) {
+            qWarning() << "Failed to save the contact. Error:" << request->error();
+            //FIXME: maybe we should map the error codes to texts
+        } else {
+            // each request contains just one contact as we just ask one contact to be saved at a time
+            QContact contact = request->contacts().first();
+            QString id = contact.detail<QContactGuid>().guid();
+            QString customId = contact.detail<ContactCustomId>().customId().split(":").last();
+            emit contactSaved(id, customId);
+        }
     }
-
-    // there is no need to process the result of the request as we are watching the contacts added,
-    // removed and changed signals
 }
 
 void ContactModel::onContactRemoved()

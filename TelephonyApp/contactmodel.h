@@ -56,6 +56,7 @@ Q_SIGNALS:
     void contactAdded(ContactEntry *contact);
     void contactChanged(ContactEntry *contact);
     void contactRemoved(const QString &customId);
+    void contactSaved(const QString &contactId, const QString &customId);
 
 protected:
     void addContacts(const QList<QContact> &contacts);
