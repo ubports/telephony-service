@@ -88,7 +88,6 @@ Item {
 
             onContactSelected: {
                 view.number = number;
-                contactWatcher.contact = contact;
                 view.newMessage = false;
                 view.threadId = ""
                 refreshModel()
@@ -96,7 +95,6 @@ Item {
 
             onNumberSelected: {
                 view.number = number;
-                view.customId = "";
                 view.newMessage = false;
                 view.threadId = ""
                 refreshModel()
