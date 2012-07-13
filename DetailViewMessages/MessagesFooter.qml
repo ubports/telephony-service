@@ -30,6 +30,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
+        // FIXME: do not use SearchEntry for a simple input field
         SearchEntry {
             id: entry
 
@@ -39,7 +40,8 @@ Item {
             anchors.rightMargin: 10
             anchors.verticalCenter: parent.verticalCenter
             focus: true
-            Keys.forwardTo: [sendButton]
+            // send message if return was pressed
+            onActivateFirstResult: sendButton.clicked()
         }
 
         Button {
