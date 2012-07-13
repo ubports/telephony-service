@@ -189,8 +189,8 @@ function updateContext(detail, key, values) {
     var contexts = detail.contexts;
     for (var i = 0; i < contexts.length; i++) {
         if (contexts[i].indexOf(key) == 0) {
-            // Modify the first type that we find, since it's the same
-            // thing that we did to retrieve the type
+            // Modify the first value in the list, since we only check for the
+            // first value during the parse phase.
             contexts[i] = key + values;
             detail.contexts = contexts;
             return;
