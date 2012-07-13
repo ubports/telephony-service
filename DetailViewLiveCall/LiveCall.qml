@@ -1,6 +1,7 @@
 import QtQuick 1.0
 import "../Widgets"
 import "../DetailViewKeypad"
+import "../"
 
 Item {
     id: liveCall
@@ -8,9 +9,9 @@ Item {
     property string viewName: "livecall"
     // FIXME: better name that does not sound like a boolean; store it in the StopWatch but also alias it here
     // FIXME: refactor StopWatch, Timer into StopWatch
-    property variant contact: call ? contactModel.contactFromPhoneNumber(call.phoneNumber) : null
+    property alias contact: contactWatcher.contact
     property QtObject call: callManager.foregroundCall
-    property string number: call ? call.phoneNumber : ""
+    property alias number: contactWatcher.phoneNumber
     property bool onHold: call ? call.held : false
     property bool isSpeaker: callManager.speaker
     property bool isMuted: call ? call.muted : false
@@ -20,6 +21,11 @@ Item {
         if (call) {
             call.endCall();
         }
+    }
+
+    ContactWatcher {
+        id: contactWatcher
+        phoneNumber: call ? call.phoneNumber : ""
     }
 
     Connections {

@@ -140,7 +140,7 @@ Item {
                             onActionClicked: {
                                 switch(modelData.type) {
                                 case ContactDetail.PhoneNumber:
-                                    telephony.startChat(contact, modelData.number, "");
+                                    telephony.startChat(contact.customId, modelData.number, "");
                                     break;
                                 case ContactDetail.EmailAddress:
                                     Qt.openUrlExternally("mailto:" + modelData.emailAddress);

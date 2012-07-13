@@ -109,7 +109,7 @@ ContactEntry *ContactModel::contactFromCustomId(const QString &customId)
     return 0;
 }
 
-ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
+QString ContactModel::customIdFromPhoneNumber(const QString &phoneNumber)
 {
     // FIXME: replace this by something not relying specifically on android
     QDBusInterface contacts("com.canonical.Android",
@@ -117,7 +117,13 @@ ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
                             "com.canonical.android.contacts.Contacts");
     QDBusReply<QString> reply = contacts.call("getContactKeyForNumber", phoneNumber);
     QString id = reply.value();
+    return id;
 
+}
+
+ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
+{
+    QString id = customIdFromPhoneNumber(phoneNumber);
     if (id.isEmpty()) {
         return 0;
     }
@@ -207,7 +213,7 @@ void ContactModel::removeContactFromModel(ContactEntry *entry)
     mContactEntries.removeAt(index);
     entry->deleteLater();
     endRemoveRows();
-    emit contactRemoved(entry->id());
+    emit contactRemoved(entry->customId());
 }
 
 void ContactModel::onContactsAdded(QList<QContactLocalId> ids)
