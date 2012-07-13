@@ -61,7 +61,6 @@ Item {
         view.number = number
         view.threadId = threadId
         view.newMessage = false
-        view.refreshModel()
     }
 
     function endCall() {
