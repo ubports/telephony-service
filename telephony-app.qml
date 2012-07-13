@@ -46,9 +46,11 @@ Item {
     }
 
     function isVoicemailActive() {
-        if (call)
-            return call.voicemail
-        return false
+        if (call) {
+            return call.voicemail;
+        } else {
+            return false
+        }
     }
 
     function callNumber(number) {
