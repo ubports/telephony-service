@@ -5,6 +5,7 @@ telephony-app (0.36) UNRELEASED; urgency=low
   * do not update the messages model anymore. We use now a proxy
     model to filter the messages instead
   * use the android algorithm to compare phone numbers
+  * implement a ContactWatcher and integrate it into the application (LP: #1022746)
 
  -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 13 Jul 2012 13:38:06 -0700
 
