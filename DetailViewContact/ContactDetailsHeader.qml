@@ -41,6 +41,7 @@ Item {
         fillMode: Image.PreserveAspectFit
         source: (contact && contact.avatar != "") ? contact.avatar : "../assets/avatar_contacts_details.png"
         onStatusChanged: if (status == Image.Error) source = "../assets/avatar_contacts_details.png"
+        asynchronous: true
     }
 
     BorderImage {

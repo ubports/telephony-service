@@ -85,6 +85,7 @@ AbstractButton {
                 fillMode: Image.PreserveAspectFit
                 opacity: listItem.enabled ? 1.0 : 0.5
                 onStatusChanged: if (status == Image.Error && listItem.placeholderIconSource) source = listItem.placeholderIconSource
+                asynchronous: true
             }
 
             BorderImage {
