@@ -57,7 +57,7 @@ int minPositive (int a, int b)
 /** index of the last character of the network portion
  *  (eg anything after is a post-dial string)
  */
-int indexOfLastNetworkChar(QString a) 
+int indexOfLastNetworkChar(const QString &a) 
 {
     int pIndex, wIndex;
     int origLength;
@@ -80,7 +80,7 @@ int indexOfLastNetworkChar(QString a)
 /** all of a up to len must be an international prefix or
  *  separators/non-dialing digits
  */
-bool matchIntlPrefix(QString a, int len) 
+bool matchIntlPrefix(const QString &a, int len) 
 {
     /* '([^0-9*#+pwn]\+[^0-9*#+pwn] | [^0-9*#+pwn]0(0|11)[^0-9*#+pwn] )$' */
     /*        0       1                           2 3 45               */
@@ -118,7 +118,7 @@ bool matchIntlPrefix(QString a, int len)
 }
 
 /** all of 'a' up to len must match non-US trunk prefix ('0') */
-bool matchTrunkPrefix(QString a, int len) {
+bool matchTrunkPrefix(const QString &a, int len) {
     bool found;
 
     found = false;
@@ -138,7 +138,7 @@ bool matchTrunkPrefix(QString a, int len) {
 
 /** all of 'a' up to len must be a (+|00|011)country code)
  *  We're fast and loose with the country code. Any \d{1,3} matches */
-bool matchIntlPrefixAndCC(QString a, int len) {
+bool matchIntlPrefixAndCC(const QString &a, int len) {
     /*  [^0-9*#+pwn]*(\+|0(0|11)\d\d?\d? [^0-9*#+pwn] $ */
     /*      0          1 2 3 45  6 7  8                 */
 
