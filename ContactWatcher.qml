@@ -48,6 +48,11 @@ Item {
         if (contact) {
             return;
         }
+        
+        if (customId && customId != "" && newContact.customId == customId) {
+            contact = newContact;
+            return;
+        }
         __checkContact()
     }
  
