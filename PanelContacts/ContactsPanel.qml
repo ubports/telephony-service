@@ -65,8 +65,8 @@ Item {
             selected: telephony.contactDetails.loaded && telephony.view.contact == contact
         }
 
-        section.property: "display"
-        section.criteria: ViewSection.FirstCharacter
+        section.property: "initial"
+        section.criteria: ViewSection.FullString
         section.delegate: ListSectionHeader {
             width: parent.width
             text: section

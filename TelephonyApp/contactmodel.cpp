@@ -40,6 +40,7 @@ ContactModel::ContactModel(QObject *parent) :
 {
     QHash<int, QByteArray> roles = roleNames();
     roles[ContactRole] = "contact";
+    roles[InitialRole] = "initial";
     setRoleNames(roles);
 
     connect(mContactManager,
@@ -77,6 +78,8 @@ QVariant ContactModel::data(const QModelIndex &index, int role) const
         return mContactEntries[index.row()]->avatar();
     case ContactRole:
         return QVariant::fromValue(const_cast<QObject *>(static_cast<const QObject *>(mContactEntries[index.row()])));
+    case InitialRole:
+        return mContactEntries[index.row()]->initial();
     }
 
     return QVariant();
