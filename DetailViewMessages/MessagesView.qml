@@ -23,7 +23,7 @@ Item {
         target: chatManager
 
         onChatReady: {
-            if (contactId != number) {
+            if (!contactModel.comparePhoneNumbers(contactId, number)) {
                 return;
             }
 

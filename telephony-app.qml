@@ -250,26 +250,6 @@ Item {
     }
 
     Connections {
-        target: chatManager
-        onChatReady: {
-            // FIXME: contactId here is the phoneNumber
-            if (telephony.view.viewName != "messages"
-                    || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
-                telephony.viewLoader.source = ""
-                startChat("", contactId, "")
-            }
-        }
-        onMessageReceived: {
-            // FIXME: contactId here is the phoneNumber
-            if (telephony.view.viewName != "messages"
-                    || !contactModel.comparePhoneNumbers(telephony.view.number, contactId)) {
-                telephony.viewLoader.source = ""
-                startChat("", contactId, "")
-            }
-        }
-    }
-
-    Connections {
         target: telepathyHelper
         onAccountReady: {
             telephony.applicationReady()
