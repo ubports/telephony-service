@@ -57,5 +57,6 @@ BaseContactDetailsDelegate {
         anchors.left: parent.left
         anchors.right: parent.right
         text: value.text
+        focus: true
     }
 }

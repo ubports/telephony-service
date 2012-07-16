@@ -3,7 +3,7 @@ import TelephonyApp 0.1
 import "../Widgets"
 import "DetailTypeUtilities.js" as DetailTypes
 
-Item {
+FocusScope {
     id: contactDetails
 
     property string viewName: "contacts"
@@ -120,6 +120,7 @@ Item {
 
                     detailTypeInfo: modelData
                     editable: contactDetails.editable
+                    onDetailAdded: focus = true
 
                     model: (contact) ? contact[modelData.items] : []
                     delegate: Loader {
