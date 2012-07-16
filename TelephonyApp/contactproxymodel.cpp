@@ -28,7 +28,7 @@ ContactProxyModel::ContactProxyModel(QObject *parent) :
     setDynamicSortFilter(true);
     setSortLocaleAware(true);
     setSortCaseSensitivity(Qt::CaseInsensitive);
-    sort(Qt::DisplayRole, Qt::AscendingOrder);
+    sort(0, Qt::AscendingOrder);
 }
 
 QObject *ContactProxyModel::model() const
