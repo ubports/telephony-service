@@ -32,7 +32,8 @@ class ContactModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum ModelRoles {
-        ContactRole = Qt::UserRole
+        ContactRole = Qt::UserRole,
+        InitialRole,
     };
 
     static ContactModel *instance();

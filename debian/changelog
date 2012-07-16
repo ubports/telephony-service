@@ -1,3 +1,9 @@
+telephony-app (0.37) UNRELEASED; urgency=low
+
+  * Sort contacts in a case-insensitive manner (LP: #1018656)
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Mon, 16 Jul 2012 16:53:39 +0200
+
 telephony-app (0.36) precise; urgency=low
 
   * scroll messages view to end when a conversation is open (LP: #1019414)

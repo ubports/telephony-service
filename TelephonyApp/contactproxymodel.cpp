@@ -26,7 +26,9 @@ ContactProxyModel::ContactProxyModel(QObject *parent) :
     QSortFilterProxyModel(parent)
 {
     setDynamicSortFilter(true);
-    updateSorting();
+    setSortLocaleAware(true);
+    setSortCaseSensitivity(Qt::CaseInsensitive);
+    sort(0, Qt::AscendingOrder);
 }
 
 QObject *ContactProxyModel::model() const
@@ -83,7 +85,3 @@ bool ContactProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     return false;
 }
 
-void ContactProxyModel::updateSorting()
-{
-    sort(0, Qt::AscendingOrder);
-}
