@@ -1,8 +1,13 @@
-telephony-app (0.37) UNRELEASED; urgency=low
+telephony-app (0.37) precise; urgency=low
 
+  [ Renato Araujo Oliveira Filho ]
+  * Implemented support for QQ protocol. Based on the new IM generic protocol implementation.
+  (LP: #1020280)
+
+  [ Olivier Tilloy ]
   * Sort contacts in a case-insensitive manner (LP: #1018656)
 
- -- Olivier Tilloy <olivier.tilloy@canonical.com>  Mon, 16 Jul 2012 16:53:39 +0200
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Mon, 16 Jul 2012 14:40:54 -0300
 
 telephony-app (0.36) precise; urgency=low
 
