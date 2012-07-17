@@ -111,6 +111,7 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 
     emit chatReady(channel->targetContact()->id());
     emit unreadMessagesCountChanged();
+    emit unreadMessagesChanged(channel->targetContact()->id());
 }
 
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)

@@ -29,6 +29,7 @@ public:
     QVariant data(int role) const;
     QString message;
     QString threadId;
+    int unreadCount;
 };
 
 class ConversationLogModel : public AbstractLoggerModel
@@ -37,7 +38,8 @@ class ConversationLogModel : public AbstractLoggerModel
 public:
     enum ConversationLogRoles {
         Message = AbstractLoggerModel::LastLogRole,
-        ThreadId
+        ThreadId,
+        UnreadCount
     };
 
     explicit ConversationLogModel(QObject *parent = 0);
@@ -45,6 +47,7 @@ public:
 public slots:
     void onMessageReceived(const QString &number, const QString &message);
     void onMessageSent(const QString &number, const QString &message);
+    void onUnreadMessagesChanged(const QString &number);
 
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
