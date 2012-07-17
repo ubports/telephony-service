@@ -41,17 +41,20 @@ public:
     Q_INVOKABLE void acknowledgeMessages(const QString &contactId);
 
     int unreadMessagesCount() const;
+    int unreadMessages(const QString &contactId);
 
 signals:
     void chatReady(const QString &contactId);
     void messageReceived(const QString &contactId, const QString &message);
     void messageSent(const QString &contactId, const QString &message);
     void unreadMessagesCountChanged();
+    void unreadMessagesChanged(const QString &contactId);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
+    void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
 
 
 private:

@@ -18,6 +18,7 @@
  */
 
 #include "chatmanager.h"
+#include "contactmodel.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/ContactManager>
@@ -82,13 +83,25 @@ int ChatManager::unreadMessagesCount() const
     return count;
 }
 
+int ChatManager::unreadMessages(const QString &contactId)
+{
+    int count = 0;
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels.values()) {
+        if (ContactModel::instance()->comparePhoneNumbers(contactId, channel->targetContact()->id())) {
+            count += channel->messageQueue().count();
+        }
+    }
+
+    return count;
+}
+
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     mChannels[channel->targetContact()->id()] = channel;
 
     connect(channel.data(),
             SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
-            SIGNAL(unreadMessagesCountChanged()));
+            SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
 
     emit chatReady(channel->targetContact()->id());
     emit unreadMessagesCountChanged();
@@ -97,6 +110,14 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     emit messageReceived(message.sender()->id(), message.text());
+    emit unreadMessagesChanged(message.sender()->id());
+    emit unreadMessagesCountChanged();
+}
+
+void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
+{
+    // emit the signal saying the unread messages for a specific number has changed
+    emit unreadMessagesChanged(message.sender()->id());
     emit unreadMessagesCountChanged();
 }
 
