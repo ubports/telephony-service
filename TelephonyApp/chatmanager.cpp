@@ -29,6 +29,12 @@ ChatManager::ChatManager(QObject *parent)
 {
 }
 
+ChatManager *ChatManager::instance()
+{
+    static ChatManager *manager = new ChatManager();
+    return manager;
+}
+
 bool ChatManager::isChattingToContact(const QString &contactId)
 {
     return mChannels.contains(contactId);

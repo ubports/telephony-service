@@ -22,6 +22,8 @@
 
 #include "abstractloggermodel.h"
 
+class ChatManager;
+
 class ConversationLogEntry : public LogEntry {
 public:
     QVariant data(int role) const;

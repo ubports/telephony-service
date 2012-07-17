@@ -34,6 +34,8 @@ class ChatManager : public QObject
 public:
     explicit ChatManager(QObject *parent = 0);
     
+    static ChatManager *instance();
+
     Q_INVOKABLE bool isChattingToContact(const QString &contactId);
     Q_INVOKABLE void startChat(const QString &contactId);
     Q_INVOKABLE void endChat(const QString &contactId);
