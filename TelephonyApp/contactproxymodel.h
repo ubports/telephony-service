@@ -44,7 +44,6 @@ public:
 
 protected:
     virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
-    void updateSorting();
 
 Q_SIGNALS:
     void modelChanged();

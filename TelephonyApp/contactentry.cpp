@@ -32,6 +32,7 @@
 #include <QContactOnlineAccount>
 #include <QContactPhoneNumber>
 #include <QDebug>
+#include <QLocale>
 
 ContactEntry::ContactEntry(const QContact &contact, ContactModel *parent) :
     QObject(parent), mContact(contact), mModified(false), mModel(parent)
@@ -64,6 +65,17 @@ QString ContactEntry::customId() const
 QString ContactEntry::displayLabel() const
 {
     return name()->customLabel();
+}
+
+QString ContactEntry::initial() const
+{
+    QString label = displayLabel();
+    if (label.isEmpty()) {
+        return "";
+    } else {
+        QLocale locale;
+        return locale.toUpper(label.left(1));
+    }
 }
 
 QUrl ContactEntry::avatar() const
