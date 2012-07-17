@@ -72,16 +72,32 @@ void ChatManager::acknowledgeMessages(const QString &contactId)
     channel->acknowledge(channel->messageQueue());
 }
 
+int ChatManager::unreadMessagesCount() const
+{
+    int count = 0;
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels.values()) {
+        count += channel->messageQueue().count();
+    }
+
+    return count;
+}
+
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     mChannels[channel->targetContact()->id()] = channel;
 
+    connect(channel.data(),
+            SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
+            SIGNAL(unreadMessagesCountChanged()));
+
     emit chatReady(channel->targetContact()->id());
+    emit unreadMessagesCountChanged();
 }
 
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     emit messageReceived(message.sender()->id(), message.text());
+    emit unreadMessagesCountChanged();
 }
 
 void ChatManager::onContactsAvailable(Tp::PendingOperation *op)

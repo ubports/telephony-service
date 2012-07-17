@@ -28,6 +28,9 @@
 class ChatManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(int unreadMessagesCount
+               READ unreadMessagesCount
+               NOTIFY unreadMessagesCountChanged)
 public:
     explicit ChatManager(QObject *parent = 0);
     
@@ -37,10 +40,13 @@ public:
     Q_INVOKABLE void sendMessage(const QString &contactId, const QString &message);
     Q_INVOKABLE void acknowledgeMessages(const QString &contactId);
 
+    int unreadMessagesCount() const;
+
 signals:
     void chatReady(const QString &contactId);
     void messageReceived(const QString &contactId, const QString &message);
     void messageSent(const QString &contactId, const QString &message);
+    void unreadMessagesCountChanged();
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
