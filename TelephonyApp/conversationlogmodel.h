@@ -48,8 +48,9 @@ protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
     void handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     void handleEvents(const Tpl::EventPtrList &events);
-
     void updateLatestMessage(const QString &number, const QString &message, bool incoming);
+
+    ConversationLogEntry *findEntry(const QString &threadId, const QString &phoneNumber);
 };
 
 #endif // CONVERSATIONLOGMODEL_H
