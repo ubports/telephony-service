@@ -43,7 +43,7 @@ AbstractButton {
         objectString += "   selected: parent.selected;";
         objectString += "}";
 
-        var counter = Qt.createQmlObject(objectString, tabButton, "foo");
+        var counter = Qt.createQmlObject(objectString, tabButton, "TabCountOverlay.qml");
         counter.anchors.verticalCenter = icon.top
         counter.anchors.horizontalCenter = icon.left
     }
