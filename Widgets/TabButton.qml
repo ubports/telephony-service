@@ -33,6 +33,21 @@ AbstractButton {
     anchors.top: parent.top
     anchors.bottom: parent.bottom
 
+    Component.onCompleted: {
+        var objectString =  "import TelephonyApp 0.1;";
+        objectString += "import QtQuick 1.1;";
+        objectString += "import \".\";";
+        objectString += "TabCountOverlay {";
+        objectString += "   id: overlay;";
+        objectString += "   count: " + modelData.eventCountSource + ";";
+        objectString += "   selected: parent.selected;";
+        objectString += "}";
+
+        var counter = Qt.createQmlObject(objectString, tabButton, "foo");
+        counter.anchors.verticalCenter = icon.top
+        counter.anchors.horizontalCenter = icon.left
+    }
+
     BorderImage {
         id: background
 
