@@ -17,10 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <glib.h>
-#include <unistd.h>
-#include <libnotify/notify.h>
-
 #include "telephonyappapprover.h"
 
 #include <QDebug>
@@ -31,7 +27,8 @@
 #include <TelepathyQt/CallChannel>
 
 TelephonyAppApprover::TelephonyAppApprover()
-: Tp::AbstractClientApprover(Tp::ChannelClassSpec::audioCall())
+: Tp::AbstractClientApprover(Tp::ChannelClassSpec::audioCall()),
+  mPendingSnapDecision(NULL)
 {
 }
 
@@ -171,6 +168,9 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
                                     action_reject,
                                     data,
                                     delete_event_data);
+
+    mPendingSnapDecision = notification;
+
     GError *error = NULL;
     if (!notify_notification_show(notification, &error)) {
         qWarning() << "Failed to show snap decision:" << error->message;
@@ -185,6 +185,10 @@ void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp
     mDispatchOps.removeAll(dispatchOp);
     if (pr) {
         mChannels.remove(pr);
+    }
+    if (NULL != mPendingSnapDecision) {
+        notify_notification_close(mPendingSnapDecision, NULL);
+        mPendingSnapDecision = NULL;
     }
 }
 
@@ -261,7 +265,11 @@ void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
                 mChannels.remove(op);
             }
         }
-        // TODO: close snap decision
+
+        if (NULL != mPendingSnapDecision) {
+            notify_notification_close(mPendingSnapDecision, NULL);
+            mPendingSnapDecision = NULL;
+        }
     } else if (state == Tp::CallStateActive) {
         onApproved(dispatchOperation, NULL);
     }
