@@ -30,7 +30,7 @@ class ChatManager : public QObject
     Q_OBJECT
     Q_PROPERTY(int unreadMessagesCount
                READ unreadMessagesCount
-               NOTIFY unreadMessagesCountChanged)
+               NOTIFY unreadMessagesChanged)
 public:
     explicit ChatManager(QObject *parent = 0);
     
@@ -49,7 +49,6 @@ signals:
     void chatReady(const QString &contactId);
     void messageReceived(const QString &contactId, const QString &message);
     void messageSent(const QString &contactId, const QString &message);
-    void unreadMessagesCountChanged();
     void unreadMessagesChanged(const QString &contactId);
 
 public Q_SLOTS:

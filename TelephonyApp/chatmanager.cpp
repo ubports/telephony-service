@@ -59,6 +59,8 @@ void ChatManager::endChat(const QString &contactId)
     mChannels[contactId]->requestClose();
     mChannels.remove(contactId);
     mContacts.remove(contactId);
+
+    emit unreadMessagesChanged(contactId);
 }
 
 void ChatManager::sendMessage(const QString &contactId, const QString &message)
@@ -110,22 +112,19 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
             SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
 
     emit chatReady(channel->targetContact()->id());
-    emit unreadMessagesCountChanged();
     emit unreadMessagesChanged(channel->targetContact()->id());
 }
 
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     emit messageReceived(message.sender()->id(), message.text());
-    emit unreadMessagesChanged(message.sender()->id());
-    emit unreadMessagesCountChanged();
+    emit unreadMessagesChanged(message.sender()->id());;
 }
 
 void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
 {
     // emit the signal saying the unread messages for a specific number has changed
     emit unreadMessagesChanged(message.sender()->id());
-    emit unreadMessagesCountChanged();
 }
 
 void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
