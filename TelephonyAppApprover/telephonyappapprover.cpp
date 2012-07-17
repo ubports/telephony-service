@@ -58,6 +58,8 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
     foreach (Tp::ChannelPtr channel, channels) {
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (!callChannel.isNull()) {
+            dispatchOperation->connection()->becomeReady(Tp::Features()
+                                  << Tp::Connection::FeatureSelfContact);
             Tp::PendingReady *pr = callChannel->becomeReady(Tp::Features()
                                   << Tp::CallChannel::FeatureCore
                                   << Tp::CallChannel::FeatureCallState);
@@ -122,10 +124,6 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[pr]);
     QString accountId = channel->property("accountId").toString();
 
-    if (channel->isRequested()) {
-        return;
-    }
-
     Tp::ContactPtr contact = channel->initiatorContact();
     Tp::ChannelDispatchOperationPtr dispatchOp = dispatchOperation(op);
     
@@ -134,8 +132,17 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     }
 
     Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[pr]);
-    if (callChannel) {
+    if (!callChannel) {
+        return;
+    }
+
+    bool isIncoming = channel->initiatorContact()->id() != dispatchOp->connection()->selfContact()->id();
+
+    if (isIncoming) {
         callChannel->setRinging();
+    } else {
+        onApproved(dispatchOp, NULL);
+        return;
     }
 
     connect(channel.data(),
