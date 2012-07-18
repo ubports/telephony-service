@@ -45,7 +45,13 @@ TelephonyAppApprover::TelephonyAppApprover()
     connect(&mTelephonyAppWatcher,
             SIGNAL(serviceUnregistered(const QString&)),
             SLOT(onServiceUnregistered(const QString&)));
-    mTelephonyAppRunning = QDBusConnection::sessionBus().interface()->isServiceRegistered(TP_QT_IFACE_CLIENT + ".TelephonyApp").value();
+
+    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered(TP_QT_IFACE_CLIENT + ".TelephonyApp");
+    if (reply.isValid()) {
+        mTelephonyAppRunning = reply.value();
+    } else {
+        mTelephonyAppRunning = false;
+    }
 }
 
 TelephonyAppApprover::~TelephonyAppApprover()
