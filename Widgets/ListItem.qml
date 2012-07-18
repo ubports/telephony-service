@@ -14,12 +14,11 @@ AbstractButton {
     property bool selected: false
     property bool topSeparator: false
     property bool bottomSeparator: true
-    property bool unread: false
+    property bool textBold: false
 
     property int __padding: 10
     property bool __hasSubLabel: subtext != ""
-    property color __textColor: (selected || unread) ? "#f37505" : Qt.rgba(0.4, 0.4, 0.4, 1.0)
-    property bool __textBold: unread
+    property color __textColor: (selected || textBold) ? "#f37505" : Qt.rgba(0.4, 0.4, 0.4, 1.0)
 
     Rectangle {
         id: background
@@ -119,7 +118,7 @@ AbstractButton {
             anchors.rightMargin: listItem.__padding
             anchors.verticalCenter: centered ? parent.verticalCenter : undefined
             fontSize: "large"
-            font.bold: unread
+            font.bold: textBold
             elide: Text.ElideRight
 
             color: listItem.__textColor
@@ -138,7 +137,7 @@ AbstractButton {
             anchors.right: parent.right
             anchors.rightMargin: listItem.__padding
             fontSize: "medium"
-            font.bold: unread
+            font.bold: textBold
             elide: Text.ElideRight
 
             color: listItem.__textColor
