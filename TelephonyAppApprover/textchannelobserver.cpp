@@ -109,9 +109,8 @@ void TextChannelObserver::removeIndicatorsFromChannel(const Tp::TextChannelPtr &
     if (!mIndicators.contains(textChannel->objectPath())) {
         return;
     }
-    QIndicate::Indicator *indicator = mIndicators[textChannel->objectPath()];
-    delete indicator;
-    mIndicators.remove(textChannel->objectPath());
+
+    delete mIndicators.take(textChannel->objectPath());
 }
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
