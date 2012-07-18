@@ -98,7 +98,6 @@ void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
             continue;
         }
 
-        qDebug() << "Edit timestamp:" << textEvent->editTimestamp().toTime_t();
         // if the edit timestamp is set, the message was already read and can
         // be appended to the model.
         // Also, if the message is outgoing, it should also be appeneded to the model
