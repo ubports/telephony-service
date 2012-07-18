@@ -68,7 +68,7 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
 
     entry->message = textEvent->message();
     entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
-    entry->phoneNumber = phoneNumberFromId(textEvent->receiver()->alias());
+    entry->phoneNumber = textEvent->receiver()->alias();
 
     return entry;
 }
@@ -130,7 +130,7 @@ void ConversationLogModel::handleEvents(const Tpl::EventPtrList &events)
     // after finding the latest message, check if we have an entry for it already
     // and if we do, just update it
     ConversationLogEntry *entry = findEntry(threadIdFromIdentifier(newestEvent->receiver()->identifier()),
-                                            phoneNumberFromId(newestEvent->receiver()->identifier()));
+                                            newestEvent->receiver()->alias());
     if (entry) {
         if (entry->timestamp >= newestEvent->timestamp()) {
             return;
