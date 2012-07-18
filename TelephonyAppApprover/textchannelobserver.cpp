@@ -132,7 +132,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
                                                                icon.toStdString().c_str());
     GError *error = NULL;
     if (!notify_notification_show(notification, &error)) {
-        qWarning() << "Failed to show snap decision:" << error->message;
+        qWarning() << "Failed to show message notification:" << error->message;
         g_error_free (error);
     }
 
