@@ -32,8 +32,6 @@ class ChatManager : public QObject
                READ unreadMessagesCount
                NOTIFY unreadMessagesChanged)
 public:
-    explicit ChatManager(QObject *parent = 0);
-    
     static ChatManager *instance();
 
     Q_INVOKABLE bool isChattingToContact(const QString &contactId);
@@ -59,6 +57,8 @@ public Q_SLOTS:
 
 
 private:
+    explicit ChatManager(QObject *parent = 0);
+
     QMap<QString, Tp::TextChannelPtr> mChannels;
     QMap<QString, Tp::ContactPtr> mContacts;
 };
