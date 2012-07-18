@@ -128,7 +128,7 @@ void TelephonyApplication::parseUrl(const QUrl &url)
 void TelephonyApplication::onMessageReceived(const QString &message)
 {
     if (m_applicationIsReady) {
-        parseUrl(m_argUrl);
+        parseUrl(message);
         m_argUrl.clear();
     } else {
         m_argUrl = QUrl(message);
