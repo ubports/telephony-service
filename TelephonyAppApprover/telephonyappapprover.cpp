@@ -31,13 +31,15 @@
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/TextChannel>
 
+#define TELEPHONY_APP_CLIENT TP_QT_IFACE_CLIENT + ".TelephonyApp"
+
 TelephonyAppApprover::TelephonyAppApprover()
     : Tp::AbstractClientApprover(channelFilters())
 {
     // Setup a DBus watcher to check if the telephony-app is running
     mTelephonyAppWatcher.setConnection(QDBusConnection::sessionBus());
     mTelephonyAppWatcher.setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
-    mTelephonyAppWatcher.addWatchedService(TP_QT_IFACE_CLIENT + ".TelephonyApp");
+    mTelephonyAppWatcher.addWatchedService(TELEPHONY_APP_CLIENT);
 
     connect(&mTelephonyAppWatcher,
             SIGNAL(serviceRegistered(const QString&)),
@@ -46,7 +48,7 @@ TelephonyAppApprover::TelephonyAppApprover()
             SIGNAL(serviceUnregistered(const QString&)),
             SLOT(onServiceUnregistered(const QString&)));
 
-    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered(TP_QT_IFACE_CLIENT + ".TelephonyApp");
+    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered(TELEPHONY_APP_CLIENT);
     if (reply.isValid()) {
         mTelephonyAppRunning = reply.value();
     } else {
@@ -229,7 +231,7 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
 void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
                                       Tp::PendingReady *pr)
 {
-    dispatchOp->handleWith(TP_QT_IFACE_CLIENT + ".TelephonyApp");
+    dispatchOp->handleWith(TELEPHONY_APP_CLIENT);
     mDispatchOps.removeAll(dispatchOp);
     if (pr) {
         mChannels.remove(pr);
@@ -261,8 +263,8 @@ void TelephonyAppApprover::processChannels()
                 continue;
             }
 
-            if (dispatchOperation->possibleHandlers().contains(TP_QT_IFACE_CLIENT + ".TelephonyApp")) {
-                dispatchOperation->handleWith(TP_QT_IFACE_CLIENT + ".TelephonyApp");
+            if (dispatchOperation->possibleHandlers().contains(TELEPHONY_APP_CLIENT)) {
+                dispatchOperation->handleWith(TELEPHONY_APP_CLIENT);
                 mDispatchOps.removeAll(dispatchOperation);
             }
             // FIXME: this shouldn't happen, but in any case, we need to check what to do when
