@@ -36,10 +36,12 @@ int main(int argc, char **argv)
 
     Tp::registerTypes();
 
-    Tp::ClientRegistrarPtr registrar = Tp::ClientRegistrar::create(QDBusConnection::sessionBus(),
-                                                                   Tp::AccountFactory::create(QDBusConnection::sessionBus()),
-                                                                   Tp::ConnectionFactory::create(QDBusConnection::sessionBus()),
-                                                                   Tp::ChannelFactory::create(QDBusConnection::sessionBus()),
+
+    QDBusConnection sessionBus = QDBusConnection::sessionBus();
+    Tp::ClientRegistrarPtr registrar = Tp::ClientRegistrar::create(sessionBus,
+                                                                   Tp::AccountFactory::create(sessionBus),
+                                                                   Tp::ConnectionFactory::create(sessionBus),
+                                                                   Tp::ChannelFactory::create(sessionBus),
                                                                    Tp::ContactFactory::create(Tp::Features()
                                                                                               << Tp::Contact::FeatureAlias
                                                                                               << Tp::Contact::FeatureAvatarData
