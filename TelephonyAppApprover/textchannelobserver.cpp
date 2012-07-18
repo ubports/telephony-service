@@ -235,6 +235,7 @@ void TextChannelObserver::onIndicatorDisplay(QIndicate::Indicator *indicator)
     Tp::TextChannelPtr channel = channelFromPath(indicator->property("channelPath").toString());
     if (channel.isNull()) {
         qWarning() << "Unable to find the text channel corresponding to the indicator" << indicator;
+        return;
     }
 
     QString id = channel->targetContact()->id();
