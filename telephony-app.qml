@@ -236,6 +236,8 @@ Item {
                 source: modelData.pane
                 visible: isCurrent
                 focus: isCurrent
+
+                onLoaded: item.focus = isCurrent
             }
         }
 

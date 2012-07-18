@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import "../Widgets"
 
-Column {
+FocusScope {
     id: editor
 
     property variant contactModelItem
@@ -11,50 +11,60 @@ Column {
     property alias postcode: postcode.value
     property alias country: country.value
 
-    spacing: 1
+    height: fields.height
 
-    AddressEditorField {
-        id: street
-
+    Column {
+        id: fields
+        anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        value: contactModelItem.street
-        description: "Street"
-    }
 
-    AddressEditorField {
-        id: locality
+        spacing: 1
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        value: contactModelItem.locality
-        description: "Locality"
-    }
+        AddressEditorField {
+            id: street
 
-    AddressEditorField {
-        id: region
+            anchors.left: parent.left
+            anchors.right: parent.right
+            value: contactModelItem.street
+            description: "Street"
+            focus: true
+        }
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        value: contactModelItem.region
-        description: "Region"
-    }
+        AddressEditorField {
+            id: locality
 
-    AddressEditorField {
-        id: postcode
+            anchors.left: parent.left
+            anchors.right: parent.right
+            value: contactModelItem.locality
+            description: "Locality"
+        }
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        value: contactModelItem.postcode
-        description: "Postal Code"
-    }
+        AddressEditorField {
+            id: region
 
-    AddressEditorField {
-        id: country
+            anchors.left: parent.left
+            anchors.right: parent.right
+            value: contactModelItem.region
+            description: "Region"
+        }
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        value: contactModelItem.country
-        description: "Country"
+        AddressEditorField {
+            id: postcode
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            value: contactModelItem.postcode
+            description: "Postal Code"
+        }
+
+        AddressEditorField {
+            id: country
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            value: contactModelItem.country
+            description: "Country"
+        }
     }
 }
