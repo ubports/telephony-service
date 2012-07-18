@@ -44,7 +44,8 @@ AbstractButton {
         objectString += "}";
 
         var counter = Qt.createQmlObject(objectString, tabButton, "TabCountOverlay");
-        counter.anchors.verticalCenter = icon.top
+        counter.anchors.top = tabButton.top
+        counter.anchors.topMargin = 2
         counter.anchors.horizontalCenter = icon.left
     }
 

@@ -25,14 +25,19 @@ BorderImage {
     source: selected ? "../assets/tab_overlay_count_active.png" : "../assets/tab_overlay_count_inactive.png"
     border.left: 3
     border.right: 3
+    border.top: 3
+    border.bottom: 3
     visible: count > 0
     width: border.left + border.right + countText.paintedWidth
+    height: Math.max(sourceSize.height, countText.paintedHeight)
 
     TextCustom {
         id: countText
-        fontSize: "small"
+        fontSize: "x-small"
         color: "white"
-        anchors.centerIn: parent
+        anchors.fill: parent
         text: count
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
     }
 }
