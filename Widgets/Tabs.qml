@@ -86,6 +86,7 @@ Item {
                 selected: tabs.currentTab == index
                 textColor: Qt.rgba(0.4, 0.4, 0.4, 1.0)
                 onClicked: tabs.currentTab = index
+                overlayCounter: eval(modelData.eventCountSource)
             }
         }
     }

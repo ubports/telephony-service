@@ -29,25 +29,10 @@ AbstractButton {
     property bool isLast
     property int contentWidth: text != "" ? invisibleLabel.paintedWidth : icon.paintedWidth
     property int horizontalPadding
+    property int overlayCounter: 0
 
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-
-    Component.onCompleted: {
-        var objectString =  "import TelephonyApp 0.1;";
-        objectString += "import QtQuick 1.1;";
-        objectString += "import \".\";";
-        objectString += "TabCountOverlay {";
-        objectString += "   id: overlay;";
-        objectString += "   count: " + modelData.eventCountSource + ";";
-        objectString += "   selected: parent.selected;";
-        objectString += "}";
-
-        var counter = Qt.createQmlObject(objectString, tabButton, "TabCountOverlay");
-        counter.anchors.top = tabButton.top
-        counter.anchors.topMargin = 2
-        counter.anchors.horizontalCenter = icon.left
-    }
 
     BorderImage {
         id: background
@@ -103,5 +88,14 @@ AbstractButton {
         visible: false
         text: label.text
         fontSize: label.fontSize
+    }
+
+    TabCountOverlay {
+        id: overlay
+        selected: parent.selected
+        count: tabButton.overlayCounter
+        anchors.top: parent.top
+        anchors.topMargin: 2
+        anchors.horizontalCenter: icon.left
     }
 }
