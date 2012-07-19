@@ -24,3 +24,5 @@ target_link_libraries(telephony-app-approver
 install(TARGETS telephony-app-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES org.freedesktop.Telepathy.Client.TelephonyAppApprover.service DESTINATION share/dbus-1/services)
 install(FILES TelephonyAppApprover.client DESTINATION share/telepathy/clients)
+
+add_subdirectory(icons)

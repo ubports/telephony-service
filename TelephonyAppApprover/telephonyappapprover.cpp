@@ -152,9 +152,30 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     data->channel = channel;
     data->pr = pr;
 
-    notification = notify_notification_new ("Incoming call",
-                                            QString("Incoming call from %1").arg(contact->id()).toStdString().c_str(),
-                                            "");
+    QString title = "Unknown caller";
+    bool unknown = true;
+    if (contact->alias() != contact->id()) {
+        unknown = false;
+        title = contact->alias();
+    }
+
+    QString body = "Caller number is not available";
+    if (!contact->id().isEmpty()) {
+        body = QString("Calling from %1").arg(contact->id());
+    }
+
+    QString icon = contact->avatarData().fileName;
+    if (icon.isEmpty()) {
+        if (unknown) {
+            icon = "notification-unknown-call";
+        } else {
+            icon = "notification-unavailable-image-call.svg";
+        }
+    }
+
+    notification = notify_notification_new (title.toStdString().c_str(),
+                                            body.toStdString().c_str(),
+                                            icon.toStdString().c_str());
     notify_notification_set_hint_string(notification,
                                         "x-canonical-snap-decisions",
                                         "true");
