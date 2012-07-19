@@ -1,9 +1,10 @@
-telephony-app (0.42) UNRELEASED; urgency=low
+telephony-app (0.42) precise; urgency=low
 
   * Set the phone number in the alias field of the conversation model as a
     fallback in case the contact is not known.
+  * Fix contact detail saving that was broken by a previous change.
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 19 Jul 2012 14:08:06 -0300
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 19 Jul 2012 15:28:01 -0300
 
 telephony-app (0.41) precise; urgency=low
 
