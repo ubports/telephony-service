@@ -1,3 +1,10 @@
+telephony-app (0.42) UNRELEASED; urgency=low
+
+  * Set the phone number in the alias field of the conversation model as a
+    fallback in case the contact is not known.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 19 Jul 2012 14:08:06 -0300
+
 telephony-app (0.41) precise; urgency=low
 
   * Implement the visual elements representing the unread messages. (LP: #1017661)
