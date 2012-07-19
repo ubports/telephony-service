@@ -30,7 +30,7 @@
 #define TELEPHONY_APP_CLIENT TP_QT_IFACE_CLIENT + ".TelephonyApp"
 
 TelephonyAppApprover::TelephonyAppApprover()
-: Tp::AbstractClientApprover(channelFilters())
+: Tp::AbstractClientApprover(channelFilters()),
   mPendingSnapDecision(NULL)
 {
     // Setup a DBus watcher to check if the telephony-app is running

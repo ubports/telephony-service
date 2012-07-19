@@ -29,9 +29,10 @@ class ChatManager : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString activeChat READ activeChat WRITE setActiveChat NOTIFY activeChatChanged)
+    Q_PROPERTY(int unreadMessagesCount READ unreadMessagesCount NOTIFY unreadMessagesChanged)
 public:
-    explicit ChatManager(QObject *parent = 0);
-    
+    static ChatManager *instance();
+
     Q_INVOKABLE bool isChattingToContact(const QString &contactId);
     Q_INVOKABLE void startChat(const QString &contactId);
     Q_INVOKABLE void endChat(const QString &contactId);
@@ -41,19 +42,26 @@ public:
     QString activeChat() const;
     void setActiveChat(const QString &value);
 
+    int unreadMessagesCount() const;
+    int unreadMessages(const QString &contactId);
+
 signals:
     void chatReady(const QString &contactId);
     void messageReceived(const QString &contactId, const QString &message);
     void messageSent(const QString &contactId, const QString &message);
     void activeChatChanged();
+    void unreadMessagesChanged(const QString &contactId);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
+    void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
 
 
 private:
+    explicit ChatManager(QObject *parent = 0);
+
     QMap<QString, Tp::TextChannelPtr> mChannels;
     QMap<QString, Tp::ContactPtr> mContacts;
     QString mActiveChat;

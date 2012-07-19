@@ -19,6 +19,7 @@
  */
 
 #include "channelhandler.h"
+#include "chatmanager.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/CallChannel>
@@ -58,7 +59,7 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
                     SLOT(onTextChannelReady(Tp::PendingOperation*)));
 
             connect(textChannel.data(), SIGNAL(messageReceived(Tp::ReceivedMessage)),
-                    TelepathyHelper::instance()->chatManager(), SLOT(onMessageReceived(Tp::ReceivedMessage)));
+                    ChatManager::instance(), SLOT(onMessageReceived(Tp::ReceivedMessage)));
             mReadyRequests[pr] = textChannel;
             continue;
         }
