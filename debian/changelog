@@ -1,3 +1,11 @@
+telephony-app (0.41) precise; urgency=low
+
+  * Implement the visual elements representing the unread messages. (LP: #1017661)
+  * Show indicators and OSD notifications for text messages.
+    (LP: #1017662 LP: #1018501 LP: #1024511)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 19 Jul 2012 11:40:20 -0300
+
 telephony-app (0.40) precise; urgency=low
 
   [ Ugo Riboni ]
