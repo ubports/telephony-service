@@ -76,5 +76,6 @@ BaseContactDetailsDelegate {
         country: detail ? detail.country : ""
 
         contactModelItem: delegate.detail
+        focus: true
     }
 }

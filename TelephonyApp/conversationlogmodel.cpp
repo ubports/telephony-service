@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "chatmanager.h"
 #include "conversationlogmodel.h"
 #include "contactmodel.h"
 #include <TelepathyLoggerQt4/Event>
@@ -30,6 +31,8 @@ QVariant ConversationLogEntry::data(int role) const
         return message;
     case ConversationLogModel::ThreadId:
         return threadId;
+    case ConversationLogModel::UnreadCount:
+        return unreadCount;
     default:
         return LogEntry::data(role);
     }
@@ -42,7 +45,12 @@ ConversationLogModel::ConversationLogModel(QObject *parent) :
     QHash<int, QByteArray> roles = roleNames();
     roles[Message] = "message";
     roles[ThreadId] = "threadId";
+    roles[UnreadCount] = "unreadCount";
     setRoleNames(roles);
+
+    connect(ChatManager::instance(),
+            SIGNAL(unreadMessagesChanged(const QString&)),
+            SLOT(onUnreadMessagesChanged(const QString&)));
 
     fetchLog(Tpl::EventTypeMaskText);
 }
@@ -57,6 +65,23 @@ void ConversationLogModel::onMessageSent(const QString &number, const QString &m
     updateLatestMessage(number, message, false);
 }
 
+void ConversationLogModel::onUnreadMessagesChanged(const QString &number)
+{
+    // find if we have a conversation to the number already
+    int count = mLogEntries.count();
+    for (int i = 0; i < count; ++i) {
+        LogEntry *entry = mLogEntries[i];
+        if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number)) {
+            ConversationLogEntry *conversationEntry = dynamic_cast<ConversationLogEntry*>(entry);
+            if (!conversationEntry) {
+                continue;
+            }
+            conversationEntry->unreadCount = ChatManager::instance()->unreadMessages(number);
+            emit dataChanged(index(i, 0), index(i,0));
+        }
+    }
+}
+
 LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
 {
     ConversationLogEntry *entry = new ConversationLogEntry();
@@ -69,6 +94,7 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
     entry->message = textEvent->message();
     entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
     entry->phoneNumber = textEvent->receiver()->alias();
+    entry->unreadCount = ChatManager::instance()->unreadMessages(entry->phoneNumber);
 
     return entry;
 }
@@ -163,6 +189,7 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
             entry->timestamp = QDateTime::currentDateTime();
             entry->message = message;
             entry->incoming = incoming;
+            entry->unreadCount = ChatManager::instance()->unreadMessages(number);
             emit dataChanged(index(i,0), index(i,0));
             return;
         }
@@ -175,6 +202,7 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
     entry->message = message;
     entry->phoneNumber = number;
     entry->customId = ContactModel::instance()->customIdFromPhoneNumber(number);
+    entry->unreadCount = ChatManager::instance()->unreadMessages(number);
 
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
     if (contact) {

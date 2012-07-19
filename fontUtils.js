@@ -18,6 +18,7 @@
 
 function sizeToPixels(size) {
     switch (size) {
+        case "x-small": return 9
         case "small": return 10
         case "medium": return 11
         case "large": return 13
