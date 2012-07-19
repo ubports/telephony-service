@@ -13,6 +13,7 @@
             <dox:d><![CDATA[
                Request to open the messages tab.
             ]]></dox:d>
+            <arg name="number" type="s" direction="in"/>
         </method>
     </interface>
 </node>

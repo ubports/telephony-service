@@ -37,10 +37,10 @@ public:
     bool connectToBus();
 
 public Q_SLOTS:
-    Q_NOREPLY void ShowMessages();
+    Q_NOREPLY void ShowMessages(const QString &number);
 
 Q_SIGNALS:
-    void showMessagesRequested();
+    void showMessagesRequested(const QString &number);
 };
 
 #endif // TELEPHONYAPPDBUS_H

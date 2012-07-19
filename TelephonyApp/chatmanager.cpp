@@ -46,6 +46,11 @@ void ChatManager::startChat(const QString &contactId)
 
 void ChatManager::endChat(const QString &contactId)
 {
+    // if the chat we are ending was the current one, clear the property
+    if (mActiveChat == contactId) {
+        setActiveChat("");
+    }
+
     if (!mChannels.contains(contactId))
         return;
 
@@ -72,9 +77,27 @@ void ChatManager::acknowledgeMessages(const QString &contactId)
     channel->acknowledge(channel->messageQueue());
 }
 
+QString ChatManager::activeChat() const
+{
+    return mActiveChat;
+}
+
+void ChatManager::setActiveChat(const QString &value)
+{
+    if (value != mActiveChat) {
+        mActiveChat = value;
+        acknowledgeMessages(mActiveChat);
+        emit activeChatChanged();
+    }
+}
+
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
-    mChannels[channel->targetContact()->id()] = channel;
+    QString id = channel->targetContact()->id();
+    mChannels[id] = channel;
+    if (id == mActiveChat) {
+        acknowledgeMessages(id);
+    }
 
     emit chatReady(channel->targetContact()->id());
 }
@@ -82,6 +105,11 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     emit messageReceived(message.sender()->id(), message.text());
+
+    // if the message belongs to an active conversation, mark it as read
+    if (message.sender()->id() == mActiveChat) {
+        acknowledgeMessages(mActiveChat);
+    }
 }
 
 void ChatManager::onContactsAvailable(Tp::PendingOperation *op)

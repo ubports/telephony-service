@@ -28,6 +28,7 @@
 class ChatManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString activeChat READ activeChat WRITE setActiveChat NOTIFY activeChatChanged)
 public:
     explicit ChatManager(QObject *parent = 0);
     
@@ -37,10 +38,14 @@ public:
     Q_INVOKABLE void sendMessage(const QString &contactId, const QString &message);
     Q_INVOKABLE void acknowledgeMessages(const QString &contactId);
 
+    QString activeChat() const;
+    void setActiveChat(const QString &value);
+
 signals:
     void chatReady(const QString &contactId);
     void messageReceived(const QString &contactId, const QString &message);
     void messageSent(const QString &contactId, const QString &message);
+    void activeChatChanged();
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
@@ -51,6 +56,7 @@ public Q_SLOTS:
 private:
     QMap<QString, Tp::TextChannelPtr> mChannels;
     QMap<QString, Tp::ContactPtr> mContacts;
+    QString mActiveChat;
 };
 
 #endif // CHATMANAGER_H
