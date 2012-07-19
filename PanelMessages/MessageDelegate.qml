@@ -8,7 +8,7 @@ ListItem {
     placeholderIconSource: "../assets/avatar_contacts_list.png"
     text: contactAlias
     subtext: message
-    unread: unreadCount > 0
+    textBold: unreadCount > 0
 
     TextCustom {
         id: subsublabel
