@@ -1,3 +1,20 @@
+telephony-app (0.40) precise; urgency=low
+
+  [ Ugo Riboni ]
+  * Give focus to the newly created contact details (LP: #1022755)
+  * Close the snap decision if the incoming call state is changed on
+    the phone side (LP: #1021827)
+
+  [ Renato Araujo Oliveira Filho ]
+  * Fixed contact information load when the application is already
+    running (LP: #1022686)
+
+  [ Olivier Tilloy ]
+  * Request the window to be raised and given focus when receiving a
+    message (LP: #1022686)
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Thu, 19 Jul 2012 13:53:34 +0200
+
 telephony-app (0.39) precise; urgency=low
 
   * Do not switch to the messages view for every new message. (LP: #1017649)
