@@ -46,19 +46,22 @@ Item {
     }
 
     function isVoicemailActive() {
-        if (call)
-            return call.voicemail
-        return false
+        if (call) {
+            return call.voicemail;
+        } else {
+            return false
+        }
     }
 
     function callNumber(number) {
         callManager.startCall(number);
     }
 
-    function startChat(contact, number) {
+    function startChat(customId, number, threadId) {
         messages.load()
-        view.contact = contact
         view.number = number
+        view.customId = customId
+        view.threadId = threadId
         view.newMessage = false
     }
 
@@ -233,6 +236,8 @@ Item {
                 source: modelData.pane
                 visible: isCurrent
                 focus: isCurrent
+
+                onLoaded: item.focus = isCurrent
             }
         }
 
@@ -243,24 +248,6 @@ Item {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             source: "assets/detailview_left_border.png"
-        }
-    }
-
-    Connections {
-        target: chatManager
-        onChatReady: {
-            if (telephony.view.viewName != "messages"
-                    || telephony.view.number != contactId) {
-                telephony.viewLoader.source = ""
-                startChat("", contactId)
-            }
-        }
-        onMessageReceived: {
-            if (telephony.view.viewName != "messages"
-                    || telephony.view.number != contactId) {
-                telephony.viewLoader.source = ""
-                startChat("", contactId)
-            }
         }
     }
 

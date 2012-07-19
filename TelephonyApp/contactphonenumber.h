@@ -29,11 +29,11 @@ class ContactPhoneNumber : public ContactDetail
     Q_PROPERTY(QString number
                READ number
                WRITE setNumber
-               NOTIFY changed)
+               NOTIFY numberChanged)
     Q_PROPERTY(QVariant subTypes
                READ subTypes
                WRITE setSubTypes
-               NOTIFY changed)
+               NOTIFY subTypesChanged)
 public:
     explicit ContactPhoneNumber(const QContactDetail &detail = QContactPhoneNumber(), QObject *parent = 0);
     
@@ -47,6 +47,8 @@ public:
 
 Q_SIGNALS:
     void changed();
+    void numberChanged();
+    void subTypesChanged();
     
     
 };

@@ -17,36 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CALLLOGMODEL_H
-#define CALLLOGMODEL_H
+#ifndef CONTACTCUSTOMID_H
+#define CONTACTCUSTOMID_H
 
-#include "abstractloggermodel.h"
-#include <QTime>
-#include <TelepathyQt/CallChannel>
+#include <QContactDetail>
+#include <QLatin1Constant>
 
-class CallLogEntry : public LogEntry {
-public:
-    QVariant data(int role) const;
-    QTime duration;
-    bool missed;
-};
+using namespace QtMobility;
 
-class CallLogModel : public AbstractLoggerModel
+class Q_CONTACTS_EXPORT ContactCustomId : public QContactDetail
 {
-    Q_OBJECT
 public:
-    enum CallLogRoles {
-        Duration = AbstractLoggerModel::LastLogRole,
-        Missed
-    };
+    Q_DECLARE_CUSTOM_CONTACT_DETAIL(ContactCustomId, "CustomId")
+    Q_DECLARE_LATIN1_CONSTANT(FieldCustomId, "CustomId");
 
-    explicit CallLogModel(QObject *parent = 0);
-
-public Q_SLOTS:
-    void onCallEnded(const Tp::CallChannelPtr &channel);
-    
-protected:
-    LogEntry *createEntry(const Tpl::EventPtr &event);
+    void setCustomId(const QString& id);
+    QString customId() const;
 };
 
-#endif // CALLLOGMODEL_H
+#endif // CONTACTCUSTOMID_H

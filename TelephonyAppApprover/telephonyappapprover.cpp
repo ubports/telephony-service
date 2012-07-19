@@ -17,12 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <glib.h>
-#include <unistd.h>
-#include <libnotify/notify.h>
-
 #include "telephonyappapprover.h"
-#include <QMessageBox>
+
+#include <QDebug>
 
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/ChannelClassSpec>
@@ -30,7 +27,8 @@
 #include <TelepathyQt/CallChannel>
 
 TelephonyAppApprover::TelephonyAppApprover()
-: Tp::AbstractClientApprover(Tp::ChannelClassSpec::audioCall())
+: Tp::AbstractClientApprover(Tp::ChannelClassSpec::audioCall()),
+  mPendingSnapDecision(NULL)
 {
 }
 
@@ -57,8 +55,11 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
     foreach (Tp::ChannelPtr channel, channels) {
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (!callChannel.isNull()) {
-            Tp::PendingReady *pr = callChannel->becomeReady();
+            Tp::PendingReady *pr = callChannel->becomeReady(Tp::Features()
+                                  << Tp::CallChannel::FeatureCore
+                                  << Tp::CallChannel::FeatureCallState);
             mChannels[pr] = callChannel;
+
             connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onChannelReady(Tp::PendingOperation*)));
             callChannel->setProperty("accountId", QVariant(dispatchOperation->account()->uniqueIdentifier()));
@@ -134,6 +135,10 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         callChannel->setRinging();
     }
 
+    connect(channel.data(),
+            SIGNAL(callStateChanged(Tp::CallState)),
+            SLOT(onCallStateChanged(Tp::CallState)));
+
     NotifyNotification* notification;
 
     /* initial notification */
@@ -163,7 +168,14 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
                                     action_reject,
                                     data,
                                     delete_event_data);
-    notify_notification_show(notification, NULL);
+
+    mPendingSnapDecision = notification;
+
+    GError *error = NULL;
+    if (!notify_notification_show(notification, &error)) {
+        qWarning() << "Failed to show snap decision:" << error->message;
+        g_error_free (error);
+    }
 }
 
 void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
@@ -171,7 +183,13 @@ void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp
 {
     dispatchOp->handleWith(TP_QT_IFACE_CLIENT + ".TelephonyApp");
     mDispatchOps.removeAll(dispatchOp);
-    mChannels.remove(pr);
+    if (pr) {
+        mChannels.remove(pr);
+    }
+    if (NULL != mPendingSnapDecision) {
+        notify_notification_close(mPendingSnapDecision, NULL);
+        mPendingSnapDecision = NULL;
+    }
 }
 
 void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
@@ -221,3 +239,39 @@ void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
     mDispatchOps.removeAll(dispatchOperation(op));
     mChannels.remove(op);
 }
+
+void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
+{
+    Tp::CallChannel *channel = qobject_cast<Tp::CallChannel*>(sender());
+    Tp::ChannelDispatchOperationPtr dispatchOperation;
+    Q_FOREACH(const Tp::ChannelDispatchOperationPtr &otherDispatchOperation, mDispatchOps) {
+        Q_FOREACH(const Tp::ChannelPtr &otherChannel, otherDispatchOperation->channels()) {
+            if (otherChannel.data() == channel) {
+                dispatchOperation = otherDispatchOperation;
+            }
+        }
+    }
+
+    if(dispatchOperation.isNull()) {
+        return;
+    }
+
+    if (state == Tp::CallStateEnded) {
+        mDispatchOps.removeAll(dispatchOperation);
+        // remove all channels and pending operations
+        Q_FOREACH(const Tp::ChannelPtr &otherChannel, dispatchOperation->channels()) {
+            Tp::PendingOperation* op = mChannels.key(otherChannel);
+            if(op) {
+                mChannels.remove(op);
+            }
+        }
+
+        if (NULL != mPendingSnapDecision) {
+            notify_notification_close(mPendingSnapDecision, NULL);
+            mPendingSnapDecision = NULL;
+        }
+    } else if (state == Tp::CallStateActive) {
+        onApproved(dispatchOperation, NULL);
+    }
+}
+

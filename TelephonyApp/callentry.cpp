@@ -19,7 +19,8 @@
  */
 
 #include "callentry.h"
-#include "contactmanager.h"
+#include "contactentry.h"
+#include "contactmodel.h"
 #include <QTime>
 #include <QContactAvatar>
 #include <TelepathyQt/Contact>
@@ -58,6 +59,14 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     connect(&mMuteInterface,
             SIGNAL(MuteStateChanged(uint)),
             SLOT(onMutedChanged(uint)));
+
+    // start timer if this call is already active
+    if(mChannel->callState() == Tp::CallStateActive) {
+        startTimer(1000);
+        mElapsedTime.start();
+        Q_EMIT callActive();
+    }
+
 }
 
 void CallEntry::timerEvent(QTimerEvent *event)
@@ -107,8 +116,9 @@ void CallEntry::sendDTMF(const QString &key)
 
 void CallEntry::endCall()
 {
-    mChannel->hangup();
-    mChannel->requestClose();
+    connect(mChannel->hangup(),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onCallHangupFinished(Tp::PendingOperation*)));
     emit callEnded();
 }
 
@@ -153,9 +163,12 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
         qWarning() << "PendingOperation finished with error:" << op->errorName() << op->errorMessage();
     }
 
-    mContact = ContactManager::instance()->contactForNumber(mChannel->targetContact()->id());
-    emit contactAliasChanged();
-    emit contactAvatarChanged();
+    ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(mChannel->targetContact()->id());
+    if (entry) {
+        mContact = entry->contact();
+        emit contactAliasChanged();
+        emit contactAvatarChanged();
+    }
 
     emit heldChanged();
     emit phoneNumberChanged();
@@ -175,6 +188,11 @@ void CallEntry::onCallStateChanged(Tp::CallState state)
 void CallEntry::onCallFlagsChanged(Tp::CallFlags flags)
 {
     // TODO: handle ringing
+}
+
+void CallEntry::onCallHangupFinished(Tp::PendingOperation *op)
+{
+    mChannel->requestClose();
 }
 
 void CallEntry::setVoicemail(bool voicemail)

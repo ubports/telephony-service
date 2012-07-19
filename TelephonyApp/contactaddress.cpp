@@ -42,6 +42,7 @@ void ContactAddress::setCountry(const QString &value)
     if (value != country()) {
         mDetail.setValue(QContactAddress::FieldCountry, value);
         emit changed();
+        emit countryChanged();
     }
 }
 
@@ -55,6 +56,7 @@ void ContactAddress::setLocality(const QString &value)
     if (value != locality()) {
         mDetail.setValue(QContactAddress::FieldLocality, value);
         emit changed();
+        emit localityChanged();
     }
 }
 
@@ -68,6 +70,7 @@ void ContactAddress::setPostOfficeBox(const QString &value)
     if (value != postOfficeBox()) {
         mDetail.setValue(QContactAddress::FieldPostOfficeBox, value);
         emit changed();
+        emit postOfficeBoxChanged();
     }
 }
 
@@ -81,6 +84,7 @@ void ContactAddress::setPostcode(const QString &value)
     if (value != postcode()) {
         mDetail.setValue(QContactAddress::FieldPostcode, value);
         emit changed();
+        emit postcodeChanged();
     }
 }
 
@@ -94,6 +98,7 @@ void ContactAddress::setRegion(const QString &value)
     if (value != region()) {
         mDetail.setValue(QContactAddress::FieldRegion, value);
         emit changed();
+        emit regionChanged();
     }
 }
 
@@ -107,6 +112,7 @@ void ContactAddress::setStreet(const QString &value)
     if (value != street()) {
         mDetail.setValue(QContactAddress::FieldStreet, value);
         emit changed();
+        emit streetChanged();
     }
 }
 
@@ -118,6 +124,7 @@ QVariant ContactAddress::subTypes() const
 void ContactAddress::setSubTypes(const QVariant &value)
 {
     //FIXME: we are just setting this one all the time, maybe we should check if the list really changed
-    mDetail.setValue(QContactAddress::FieldSubTypes, value);
+    mDetail.setValue(QContactAddress::FieldSubTypes, value.toStringList());
     emit changed();
+    emit subTypesChanged();
 }

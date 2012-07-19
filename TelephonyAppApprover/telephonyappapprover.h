@@ -20,6 +20,10 @@
 #ifndef TELEPHONYAPPAPPROVER_H
 #define TELEPHONYAPPAPPROVER_H
 
+#include <glib.h>
+#include <unistd.h>
+#include <libnotify/notify.h>
+
 #include <QMap>
 #include <TelepathyQt/AbstractClientApprover>
 #include <TelepathyQt/PendingReady>
@@ -45,10 +49,12 @@ private Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
     void onClaimFinished(Tp::PendingOperation* op);
     void onHangupFinished(Tp::PendingOperation* op);
+    void onCallStateChanged(Tp::CallState state);
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
     QMap<Tp::PendingOperation*,Tp::ChannelPtr> mChannels;
+    NotifyNotification* mPendingSnapDecision;
 };
 
 #endif // TELEPHONYAPPAPPROVER_H

@@ -26,6 +26,7 @@ class ConversationLogEntry : public LogEntry {
 public:
     QVariant data(int role) const;
     QString message;
+    QString threadId;
 };
 
 class ConversationLogModel : public AbstractLoggerModel
@@ -33,7 +34,8 @@ class ConversationLogModel : public AbstractLoggerModel
     Q_OBJECT
 public:
     enum ConversationLogRoles {
-        Message = AbstractLoggerModel::LastLogRole
+        Message = AbstractLoggerModel::LastLogRole,
+        ThreadId
     };
 
     explicit ConversationLogModel(QObject *parent = 0);

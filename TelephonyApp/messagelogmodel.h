@@ -26,24 +26,20 @@ class MessageLogEntry : public LogEntry {
 public:
     QVariant data(int role) const;
     QString message;
+    QString threadId;
 };
 
 class MessageLogModel : public AbstractLoggerModel
 {
     Q_OBJECT
-    Q_PROPERTY(QString phoneNumber
-               READ phoneNumber
-               WRITE setPhoneNumber
-               NOTIFY phoneNumberChanged)
 public:
     enum MessageLogRoles {
         Message = AbstractLoggerModel::LastLogRole,
-        Date
+        Date,
+        ThreadId
     };
 
     explicit MessageLogModel(QObject *parent = 0);
-    QString phoneNumber() const;
-    void setPhoneNumber(QString value);
 
     Q_INVOKABLE void appendMessage(const QString &number, const QString &message, bool incoming);
 
@@ -51,15 +47,10 @@ public slots:
     void onMessageReceived(const QString &number, const QString &message);
     void onMessageSent(const QString &number, const QString &message);
 
-signals:
-    void phoneNumberChanged();
-    
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
     void handleEntities(const Tpl::EntityPtrList &entities);
 
-private:
-    QString mPhoneNumber;
 };
 
 #endif // MESSAGELOGMODEL_H

@@ -43,6 +43,7 @@ void ContactPhoneNumber::setNumber(const QString &value)
     if (value != number()) {
         mDetail.setValue(QContactPhoneNumber::FieldNumber, value);
         emit changed();
+        emit numberChanged();
     }
 }
 
@@ -54,6 +55,7 @@ QVariant ContactPhoneNumber::subTypes() const
 void ContactPhoneNumber::setSubTypes(const QVariant &value)
 {
     //FIXME: we are just setting this one all the time, maybe we should check if the list really changed
-    mDetail.setValue(QContactPhoneNumber::FieldSubTypes, value);
+    mDetail.setValue(QContactPhoneNumber::FieldSubTypes, value.toStringList());
     emit changed();
+    emit subTypesChanged();
 }

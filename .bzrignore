@@ -7,6 +7,7 @@ install_manifest.txt
 config.h
 
 telephony-app
+TelephonyAppApprover/telephony-app-approver
 
 moc_*.cxx
 
@@ -16,6 +17,7 @@ debian/*.debhelper
 debian/*.debhelper.log
 debian/*.substvars
 
+com.canonical.TelephonyApp.service
 org.freedesktop.Telepathy.Client.TelephonyApp.service
 telephonyappadaptor.*
 

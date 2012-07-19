@@ -37,8 +37,14 @@ class ContactEntry : public QObject
     Q_PROPERTY(QString id
                READ id
                NOTIFY changed)
+    Q_PROPERTY(QString customId
+               READ customId
+               NOTIFY changed)
     Q_PROPERTY(QString displayLabel
                READ displayLabel
+               NOTIFY changed)
+    Q_PROPERTY(QString initial
+               READ initial
                NOTIFY changed)
     Q_PROPERTY(QUrl avatar
                READ avatar
@@ -48,7 +54,7 @@ class ContactEntry : public QObject
                NOTIFY changed)
     Q_PROPERTY(bool modified
                READ modified
-               NOTIFY changed)
+               NOTIFY modifiedChanged)
     Q_PROPERTY(QDeclarativeListProperty<ContactDetail> addresses
                READ addresses
                NOTIFY changed)
@@ -65,10 +71,26 @@ class ContactEntry : public QObject
 public:
     explicit ContactEntry(const QContact &contact = QContact(), ContactModel *parent = 0);
 
+    /**
+     * The Local ID is a numeric value that uniquely identifies a QContact in a QContactManager.
+     * This value has no relation to any identifiers the contact might have in the backend engine.
+     */
     QContactLocalId localId() const;
+
+    /**
+     * The ID is the unique identifier of the contact in its backend. It is mapped from the contact's guid
+     * that contains the libfolks persona ID in the manager we use.
+     */
     QString id() const;
 
+    /**
+     * The Custom ID field was customly created and added in QtFolks to hold the Android contact id that is
+     * used to match contact information in call logs, messages and phone lookups.
+     */
+    QString customId() const;
+
     QString displayLabel() const;
+    QString initial() const;
     QUrl avatar() const;
     ContactName *name() const;
 
@@ -94,6 +116,7 @@ public:
 
 Q_SIGNALS:
     void changed(ContactEntry *entry);
+    void modifiedChanged();
 
 protected:
     void loadDetails();
@@ -113,10 +136,10 @@ protected Q_SLOTS:
 
 private:
     QContact mContact;
-    ContactName *mName;
     bool mModified;
     QMap<ContactDetail::DetailType, QList<ContactDetail*> > mDetails;
     ContactModel *mModel;
+    QString mCustomId;
 };
 
 #endif // CONTACTENTRY_H

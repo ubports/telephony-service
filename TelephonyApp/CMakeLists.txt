@@ -5,10 +5,10 @@ set(plugin_SRCS
     calllogmodel.cpp
     calllogproxymodel.cpp
     contactaddress.cpp
+    contactcustomid.cpp
     contactdetail.cpp
     contactemailaddress.cpp
     contactentry.cpp
-    contactmanager.cpp
     contactmodel.cpp
     contactname.cpp
     contactonlineaccount.cpp
@@ -16,6 +16,7 @@ set(plugin_SRCS
     contactproxymodel.cpp
     components.cpp
     channelhandler.cpp
+    channelobserver.cpp
     chatmanager.cpp
     callentry.cpp
     callmanager.cpp
@@ -33,7 +34,6 @@ set(plugin_HDRS
     contactdetail.h
     contactemailaddress.h
     contactentry.h
-    contactmanager.h
     contactmodel.h
     contactname.h
     contactonlineaccount.h
@@ -41,6 +41,7 @@ set(plugin_HDRS
     contactproxymodel.h
     components.h
     channelhandler.h
+    channelobserver.h
     chatmanager.h
     callentry.h
     callmanager.h

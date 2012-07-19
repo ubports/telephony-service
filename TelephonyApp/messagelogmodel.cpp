@@ -18,7 +18,7 @@
  */
 
 #include "messagelogmodel.h"
-#include "contactmanager.h"
+#include "contactmodel.h"
 #include <TelepathyLoggerQt4/Event>
 #include <TelepathyLoggerQt4/TextEvent>
 #include <TelepathyLoggerQt4/Entity>
@@ -30,6 +30,8 @@ QVariant MessageLogEntry::data(int role) const
         return message;
     case MessageLogModel::Date:
         return timestamp.date().toString(Qt::DefaultLocaleLongDate);
+    case MessageLogModel::ThreadId:
+        return threadId;
     default:
         return LogEntry::data(role);
     }
@@ -42,26 +44,10 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     QHash<int, QByteArray> roles = roleNames();
     roles[Message] = "message";
     roles[Date] = "date";
+    roles[ThreadId] = "threadId";
     setRoleNames(roles);
-}
 
-
-QString MessageLogModel::phoneNumber() const
-{
-    return mPhoneNumber;
-}
-
-void MessageLogModel::setPhoneNumber(QString value)
-{
-    if (mPhoneNumber != value) {
-        invalidateRequests();
-        mPhoneNumber = value;
-
-        if (!mPhoneNumber.isEmpty()) {
-            fetchLog(Tpl::EventTypeMaskText);
-        }
-        emit phoneNumberChanged();
-    }
+    fetchLog(Tpl::EventTypeMaskText);
 }
 
 void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming)
@@ -71,8 +57,8 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
     entry->phoneNumber = number;
     entry->message = message;
     entry->timestamp = QDateTime::currentDateTime();
-    QContact contact = ContactManager::instance()->contactForNumber(number);
-    if (!contact.isEmpty()) {
+    ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
+    if (contact) {
         fillContactInfo(entry, contact);
     }
     appendEntry(entry);
@@ -80,18 +66,12 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
 
 void MessageLogModel::onMessageReceived(const QString &number, const QString &message)
 {
-    // FIXME: find a better way to compare phone numbers
-    if (number == mPhoneNumber) {
-        appendMessage(number, message, true);
-    }
+    appendMessage(number, message, true);
 }
 
 void MessageLogModel::onMessageSent(const QString &number, const QString &message)
 {
-    // FIXME: find a better way to compare phone numbers
-    if (number == mPhoneNumber) {
-        appendMessage(number, message, false);
-    }
+    appendMessage(number, message, false);
 }
 
 LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
@@ -104,18 +84,18 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
     }
 
     entry->message = textEvent->message();
+    entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
     return entry;
 }
 
 void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
 {
-    // search for the entity that matches the phone number for this conversation
-    // FIXME: we probably need a more reliable way than string matching for comparing phone numbers
-    Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
-        if (entity->identifier() == mPhoneNumber) {
-            requestDatesForEntities(Tpl::EntityPtrList() << entity);
-            return;
-        }
-    }
+    // we have to clear the cache right before
+    // adding new items to the model or we
+    // might have duplicated data if we receive messages while
+    // fetching
+    clear();
+
+    requestDatesForEntities(entities);
 }
 

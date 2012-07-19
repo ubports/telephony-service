@@ -1,22 +1,29 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import TelephonyApp 0.1
+import "../"
 
 Item {
     id: view
 
     property string viewName: "messages"
-    property variant contact
-    property string number
+    property alias contact: contactWatcher.contact
+    property alias number: contactWatcher.phoneNumber
+    property alias customId: contactWatcher.customId
     property bool newMessage: false
+    property string threadId
 
     property string pendingMessage
+
+    ContactWatcher {
+        id: contactWatcher
+    }
 
     Connections {
         target: chatManager
 
         onChatReady: {
-            if (contactId != number) {
+            if (!contactModel.comparePhoneNumbers(contactId, number)) {
                 return;
             }
 
@@ -25,17 +32,27 @@ Item {
                 pendingMessage = "";
             }
         }
-    }
 
-    Component.onCompleted: messageLogModel.phoneNumber = number;
+        onMessageReceived: {
+            if (contactModel.comparePhoneNumbers(contactId, number)) {
+                // if the message received is in the current view, mark it as read
+                chatManager.acknowledgeMessages(contactId);
+            }
+        }
+    }
 
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
 
-    // FIXME: use the contact id if possible
     onNumberChanged: {
-        messageLogModel.phoneNumber = number;
+        // get the contact
         view.contact = contactModel.contactFromPhoneNumber(number);
+
+        if (number != "") {
+            // and mark messages that came from the telepathy text channel as read
+            chatManager.acknowledgeMessages(number);
+        }
+
     }
 
     Item {
@@ -63,15 +80,15 @@ Item {
             width: view.width
 
             onContactSelected: {
-                view.contact = contact;
                 view.number = number;
                 view.newMessage = false;
+                view.threadId = ""
             }
 
             onNumberSelected: {
-                view.contact = null;
                 view.number = number;
                 view.newMessage = false;
+                view.threadId = ""
             }
         }
     }
@@ -116,6 +133,8 @@ Item {
             id: messages
             width: view.width
             height: view.height - footer.height - headerLoader.height
+            threadId: view.threadId
+            number: view.number
         }
     }
 
@@ -127,6 +146,15 @@ Item {
         anchors.bottom: parent.bottom
 
         onNewMessage: {
+            // if the user didn't select a number from the new message header, just
+            // use whatever is on the text field
+            if (view.newMessage) {
+                var phoneNumber = headerLoader.item.text;
+                view.number = phoneNumber
+                view.newMessage = false;
+                view.threadId = ""
+            }
+
             if (chatManager.isChattingToContact(number)) {
                 chatManager.sendMessage(number, message);
             } else {

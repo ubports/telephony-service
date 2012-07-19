@@ -1,3 +1,163 @@
+telephony-app (0.39) precise; urgency=low
+
+  * Do not switch to the messages view for every new message. (LP: #1017649)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 17 Jul 2012 17:02:00 -0300
+
+telephony-app (0.38) precise; urgency=low
+
+  * Now that qt-folks is returning the contact ids correctly for newly added. (LP: #1021519)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 17 Jul 2012 10:29:07 -0300
+
+telephony-app (0.37) precise; urgency=low
+
+  [ Renato Araujo Oliveira Filho ]
+  * Implemented support for QQ protocol. Based on the new IM generic protocol implementation.
+  (LP: #1020280)
+
+  [ Olivier Tilloy ]
+  * Sort contacts in a case-insensitive manner (LP: #1018656)
+
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Mon, 16 Jul 2012 14:40:54 -0300
+
+telephony-app (0.36) precise; urgency=low
+
+  * scroll messages view to end when a conversation is open (LP: #1019414)
+  * add speaker button to the voicemail view (LP: #1017657)
+  * do not update the messages model anymore. We use now a proxy
+    model to filter the messages instead
+  * use the android algorithm to compare phone numbers
+  * implement a ContactWatcher and integrate it into the application (LP: #1022746)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 13 Jul 2012 14:16:33 -0700
+
+telephony-app (0.35) precise; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Acknowledge messages in the telepathy text channel once they are viewed.
+
+  [ Tiago Salem Herrmann ]
+  * Send message if return key is pressed (LP: #1015250)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 13 Jul 2012 07:05:23 -0700
+
+telephony-app (0.34) precise; urgency=low
+
+  * Fixed google talk protocol name used by folks. (LP: #1020280)
+
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Wed, 11 Jul 2012 14:16:25 -0700
+
+telephony-app (0.33) precise; urgency=low
+
+  * Open the mail client when clicking on a contact's e-mail address
+    (LP: #1018473)
+  * Replace the phone icon by a message one in contact details to match its
+    purpose (LP: #1018435 LP: #1018481)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 10 Jul 2012 13:49:33 -0300
+
+telephony-app (0.32) precise; urgency=low
+
+  * open telephony app in the live call view if it was answered 
+    from the phone (LP: #1017592)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Tue, 10 Jul 2012 07:22:23 -0700
+
+telephony-app (0.31) precise; urgency=low
+
+  * Watch for new calls to update the call log model (LP: #1019375)
+  * Add the missing assets for the On Call entry on the left panel
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 09 Jul 2012 18:17:04 -0300
+
+telephony-app (0.30) precise; urgency=low
+
+  * Fix some contact synchronization issues (LP: #1021473)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 06 Jul 2012 10:57:45 -0300
+
+telephony-app (0.29) precise; urgency=low
+
+  * If the user don't click the button when typing a phone number, send the 
+    message to the number the user typed (LP: #1021058)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 04 Jul 2012 18:48:56 -0300
+
+telephony-app (0.28) precise; urgency=low
+
+  * do not compare phone numbers directly. Fix the case when an 
+    user types a phone number manually and a previous conversation 
+    with the same contact isn't displayed
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 04 Jul 2012 11:13:39 -0700
+
+telephony-app (0.27) precise; urgency=low
+
+  * move clear() from abstractloggermodel to messagelogmodel to make 
+    the app show all the messages from a contact properly.
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 04 Jul 2012 10:47:26 -0700
+
+telephony-app (0.26) precise; urgency=low
+
+  * Fix sms grouping using threadId and comparePhoneNumbers() (LP: #1004798 LP: #1019041)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 04 Jul 2012 08:16:51 -0700
+
+telephony-app (0.25) precise; urgency=low
+
+  * Use the android service to get the contact ID from a given number.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 03 Jul 2012 18:19:13 -0300
+
+telephony-app (0.24) precise; urgency=low
+
+  * Fix adding new details while editing a contact (LP: #1019037)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 03 Jul 2012 11:44:17 -0300
+
+telephony-app (0.23) precise; urgency=low
+
+  * Fixed Address type translation.
+
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Mon, 02 Jul 2012 17:57:46 -0700
+
+telephony-app (0.22) precise; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * When exposing QStringList properties to QML, use QVariant to wrap the values. (LP: #1019351)
+  * Use the android contact id to find the contact to be used to fill the info on entries.
+
+  [ Renato Araujo Oliveira Filho ]
+  * Implemented IM type translate.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 02 Jul 2012 14:38:33 -0300
+
+telephony-app (0.21) precise; urgency=low
+
+  * Fix clearing the input field when a text message is sent (LP: #1019411)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 29 Jun 2012 21:03:36 -0300
+
+telephony-app (0.20) precise; urgency=low
+
+  * listen for speaker signals and update the ui accordingly (LP: #1017644)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 29 Jun 2012 15:08:58 -0700
+
+telephony-app (0.19) precise; urgency=low
+
+  * do not anchor in callLogSection, otherwise the detail chooser wont be shown (LP: #1019003)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 29 Jun 2012 14:30:04 -0700
+
+telephony-app (0.18) precise; urgency=low
+
+  * Update the messages model to work with latest logger changes (LP: #1018982 LP: #1018985)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 29 Jun 2012 13:03:36 -0300
+
 telephony-app (0.17newyork9) precise; urgency=low
 
   * Fix the handling of log entries to be compatible with latest telepathy-logger.

@@ -18,8 +18,10 @@
  */
 
 #include "calllogmodel.h"
+#include "contactmodel.h"
 #include <TelepathyLoggerQt4/Event>
 #include <TelepathyLoggerQt4/CallEvent>
+#include <TelepathyQt/Contact>
 
 QVariant CallLogEntry::data(int role) const
 {
@@ -43,6 +45,46 @@ CallLogModel::CallLogModel(QObject *parent) :
     setRoleNames(roles);
 
     fetchLog(Tpl::EventTypeMaskCall);
+}
+
+void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
+{
+    Tp::Contacts contacts = channel->remoteMembers();
+    if (contacts.isEmpty()) {
+        qWarning() << "Call channel had no remote contacts:" << channel;
+        return;
+    }
+
+    CallLogEntry *entry = new CallLogEntry();
+    // FIXME: handle conference call
+    Q_FOREACH(const Tp::ContactPtr &contact, contacts) {
+        entry->phoneNumber = contact->id();
+        break;
+    }
+
+    // fill the contact info
+    ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(entry->phoneNumber);
+    entry->contactAlias = entry->phoneNumber;
+    if (contact) {
+        fillContactInfo(entry, contact);
+    }
+
+    // fill the call info
+    entry->timestamp = channel->property("timestamp").toDateTime();
+    entry->incoming = !channel->isRequested();
+    entry->duration = QTime(0,0,0);
+
+    // outgoing calls can be missed calls?
+    if (entry->incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer) {
+        entry->missed = true;
+    } else {
+        QDateTime activeTime = channel->property("activeTime").toDateTime();
+        entry->duration.addSecs(activeTime.secsTo(QDateTime::currentDateTime()));
+        entry->missed = false;
+    }
+
+    // and finally add the entry
+    appendEntry(entry);
 }
 
 LogEntry *CallLogModel::createEntry(const Tpl::EventPtr &event)

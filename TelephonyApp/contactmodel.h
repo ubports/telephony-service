@@ -21,10 +21,9 @@
 #define CONTACTMODEL_H
 
 #include <QAbstractListModel>
-#include <QContact>
+#include <QContactManager>
 
 class ContactEntry;
-class ContactManager;
 
 using namespace QtMobility;
 
@@ -33,16 +32,20 @@ class ContactModel : public QAbstractListModel
     Q_OBJECT
 public:
     enum ModelRoles {
-        ContactRole = Qt::UserRole
+        ContactRole = Qt::UserRole,
+        InitialRole,
     };
 
-    explicit ContactModel(QObject *parent = 0);
+    static ContactModel *instance();
 
     virtual int rowCount(const QModelIndex &parent) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
 
     Q_INVOKABLE ContactEntry *contactFromId(const QString &guid);
+    Q_INVOKABLE ContactEntry *contactFromCustomId(const QString &customId);
     Q_INVOKABLE ContactEntry *contactFromPhoneNumber(const QString &phoneNumber);
+    Q_INVOKABLE QString customIdFromPhoneNumber(const QString &phoneNumber);
+    Q_INVOKABLE bool comparePhoneNumbers(const QString &phoneNumber1, const QString &phoneNumber2) const;
     Q_INVOKABLE void saveContact(ContactEntry *entry);
     Q_INVOKABLE void loadContactFromId(const QString &guid);
     Q_INVOKABLE void removeContact(ContactEntry *entry);
@@ -52,6 +55,9 @@ public:
 Q_SIGNALS:
     void contactLoaded(ContactEntry *contact);
     void contactAdded(ContactEntry *contact);
+    void contactChanged(ContactEntry *contact);
+    void contactRemoved(const QString &customId);
+    void contactSaved(const QString &contactId, const QString &customId);
 
 protected:
     void addContacts(const QList<QContact> &contacts);
@@ -66,7 +72,9 @@ protected Q_SLOTS:
     void onContactRemoved();
 
 private:
-    ContactManager *mContactManager;
+    explicit ContactModel(QObject *parent = 0);
+
+    QContactManager *mContactManager;
     QList<ContactEntry*> mContactEntries;
     QString mPendingId;
 };

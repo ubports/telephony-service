@@ -22,6 +22,7 @@
 #define CALLMANAGER_H
 
 #include <QtCore/QMap>
+#include <QDBusInterface>
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/ReceivedMessage>
 
@@ -81,6 +82,7 @@ private:
     QList<CallEntry*> mCallEntries;
     QMap<QString, Tp::ContactPtr> mContacts;
     QMap<QString, QVariant> mProperties;
+    QDBusInterface mAndroidInterface;
 };
 
 #endif // CALLMANAGER_H

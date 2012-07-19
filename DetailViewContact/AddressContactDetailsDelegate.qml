@@ -6,19 +6,13 @@ BaseContactDetailsDelegate {
     id: delegate
 
     function saveDetail() {
-        detail.street = editor.street
-        detail.locality = editor.locality
-        detail.region = editor.region
-        detail.postcode = editor.postcode
-        detail.country = editor.country
-    }
-
-    onEditableChanged: if (editable) {
-       editor.street = detail.street
-       editor.locality = detail.locality
-       editor.region = detail.region
-       editor.postcode = detail.postcode
-       editor.country = detail.country
+        if (detail) {
+            detail.street = editor.street
+            detail.locality = editor.locality
+            detail.region = editor.region
+            detail.postcode = editor.postcode
+            detail.country = editor.country
+        }
     }
 
     Item {
@@ -75,6 +69,13 @@ BaseContactDetailsDelegate {
         anchors.left: parent.left
         anchors.right: parent.right
 
+        street: detail ? detail.street : ""
+        locality: detail ? detail.locality : ""
+        region: detail ? detail.region : ""
+        postcode: detail ? detail.postcode : ""
+        country: detail ? detail.country : ""
+
         contactModelItem: delegate.detail
+        focus: true
     }
 }

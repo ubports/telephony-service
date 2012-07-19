@@ -19,7 +19,8 @@
 
 #include "contactmodel.h"
 #include "contactentry.h"
-#include "contactmanager.h"
+#include "contactcustomid.h"
+#include "phoneutils.h"
 #include <QContactDetailFilter>
 #include <QContactGuid>
 #include <QContactSaveRequest>
@@ -27,12 +28,21 @@
 #include <QContactPhoneNumber>
 #include <QDebug>
 #include <QUrl>
+#include <QDBusInterface>
+#include <QDBusReply>
+
+ContactModel *ContactModel::instance()
+{
+    static ContactModel *model = new ContactModel();
+    return model;
+}
 
 ContactModel::ContactModel(QObject *parent) :
-    QAbstractListModel(parent), mContactManager(ContactManager::instance())
+    QAbstractListModel(parent), mContactManager(new QContactManager("folks"))
 {
     QHash<int, QByteArray> roles = roleNames();
     roles[ContactRole] = "contact";
+    roles[InitialRole] = "initial";
     setRoleNames(roles);
 
     connect(mContactManager,
@@ -70,6 +80,8 @@ QVariant ContactModel::data(const QModelIndex &index, int role) const
         return mContactEntries[index.row()]->avatar();
     case ContactRole:
         return QVariant::fromValue(const_cast<QObject *>(static_cast<const QObject *>(mContactEntries[index.row()])));
+    case InitialRole:
+        return mContactEntries[index.row()]->initial();
     }
 
     return QVariant();
@@ -86,10 +98,41 @@ ContactEntry *ContactModel::contactFromId(const QString &guid)
     return 0;
 }
 
+ContactEntry *ContactModel::contactFromCustomId(const QString &customId)
+{
+    if (customId.isEmpty()) {
+        return 0;
+    }
+
+    Q_FOREACH(ContactEntry *entry, mContactEntries) {
+        if (entry->customId() == customId) {
+            return entry;
+        }
+    }
+
+    return 0;
+}
+
+QString ContactModel::customIdFromPhoneNumber(const QString &phoneNumber)
+{
+    // FIXME: replace this by something not relying specifically on android
+    QDBusInterface contacts("com.canonical.Android",
+                            "/com/canonical/android/contacts/Contacts",
+                            "com.canonical.android.contacts.Contacts");
+    QDBusReply<QString> reply = contacts.call("getContactKeyForNumber", phoneNumber);
+    QString id = reply.value();
+    return id;
+
+}
+
 ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
 {
-    QContact contact = mContactManager->contactForNumber(phoneNumber);
-    return contactFromId(contact.detail<QContactGuid>().guid());
+    QString id = customIdFromPhoneNumber(phoneNumber);
+    if (id.isEmpty()) {
+        return 0;
+    }
+
+    return contactFromCustomId(id);
 }
 
 void ContactModel::saveContact(ContactEntry *entry)
@@ -172,7 +215,9 @@ void ContactModel::removeContactFromModel(ContactEntry *entry)
 
     beginRemoveRows(QModelIndex(), index, index);
     mContactEntries.removeAt(index);
+    entry->deleteLater();
     endRemoveRows();
+    emit contactRemoved(entry->customId());
 }
 
 void ContactModel::onContactsAdded(QList<QContactLocalId> ids)
@@ -202,19 +247,25 @@ void ContactModel::onContactsRemoved(QList<QContactLocalId> ids)
 void ContactModel::onContactEntryChanged(ContactEntry *entry)
 {
     QModelIndex entryIndex = index(mContactEntries.indexOf(entry), 0);
+    emit contactChanged(entry);
     emit dataChanged(entryIndex, entryIndex);
 }
 
 void ContactModel::onContactSaved()
 {
     QContactSaveRequest *request = qobject_cast<QContactSaveRequest*>(QObject::sender());
-    if (request->isFinished() && request->error() != QContactManager::NoError) {
-        qWarning() << "Failed to save the contact. Error:" << request->error();
-        //FIXME: maybe we should map the error codes to texts
+    if (request->isFinished()) {
+        if (request->error() != QContactManager::NoError) {
+            qWarning() << "Failed to save the contact. Error:" << request->error();
+            //FIXME: maybe we should map the error codes to texts
+        } else {
+            // each request contains just one contact as we just ask one contact to be saved at a time
+            QContact contact = request->contacts().first();
+            QString id = contact.detail<QContactGuid>().guid();
+            QString customId = contact.detail<ContactCustomId>().customId().split(":").last();
+            emit contactSaved(id, customId);
+        }
     }
-
-    // there is no need to process the result of the request as we are watching the contacts added,
-    // removed and changed signals
 }
 
 void ContactModel::onContactRemoved()
@@ -227,4 +278,9 @@ void ContactModel::onContactRemoved()
 
     // there is no need to process the result of the request as we are watching the contacts added,
     // removed and changed signals
+}
+
+bool ContactModel::comparePhoneNumbers(const QString &number1, const QString &number2) const
+{
+    return PhoneNumberUtils::compareLoosely(number1, number2);
 }

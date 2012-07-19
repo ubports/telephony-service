@@ -2,7 +2,7 @@ import QtQuick 1.1
 import "../Widgets"
 import "DetailTypeUtilities.js" as DetailUtils
 
-Item {
+FocusScope {
     id: contactDetailsItem
 
     /* For deleted items it's not enough to hide them, they will still take space in

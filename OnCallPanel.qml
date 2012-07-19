@@ -38,6 +38,7 @@ AbstractButton {
             smooth: true
             source: (call && call.contactAvatar != "") ? call.contactAvatar : "assets/avatar_contacts_list.png"
             onStatusChanged: if (status == Image.Error) source = "assets/avatar_contacts_list.png"
+            asynchronous: true
         }
 
         BorderImage {

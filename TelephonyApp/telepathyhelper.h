@@ -28,6 +28,7 @@
 #include <TelepathyQt/ConnectionManager>
 #include <TelepathyQt/Types>
 #include "channelhandler.h"
+#include "channelobserver.h"
 #include "chatmanager.h"
 #include "callmanager.h"
 
@@ -42,13 +43,16 @@ public:
     ChatManager *chatManager() const;
     CallManager *callManager() const;
     Tp::AccountPtr account() const;
+    ChannelHandler *channelHandler() const;
+    ChannelObserver *channelObserver() const;
 
 Q_SIGNALS:
-    void channelHandlerCreated(ChannelHandler *ch);
+    void channelHandlerCreated(ChannelHandler *handler);
+    void channelObserverCreated(ChannelObserver *observer);
     void accountReady();
 
 public Q_SLOTS:
-    void initializeChannelHandler();
+    void initializeTelepathyClients();
     void registerClients(void);
 
 protected:
@@ -74,6 +78,7 @@ private:
     Tp::ClientRegistrarPtr mClientRegistrar;
     Tp::AccountPtr mAccount;
     ChannelHandler *mChannelHandler;
+    ChannelObserver *mChannelObserver;
     ChatManager *mChatManager;
     CallManager *mCallManager;
     bool mFirstTime;

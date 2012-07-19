@@ -38,6 +38,10 @@ public:
 
     QContactDetail& detail();
 
+    /**
+     * For this property and other QStringList properties that are exposed to QML, declare them as QVariant,
+     * as the JavaScript array maps to Qt types as a QVariantList and not directly to QStringList.
+     */
     QVariant contexts() const;
     void setContexts(const QVariant &contexts);
 

@@ -18,6 +18,7 @@
  */
 
 #include "contactaddress.h"
+#include "contactcustomid.h"
 #include "contactemailaddress.h"
 #include "contactentry.h"
 #include "contactname.h"
@@ -31,16 +32,19 @@
 #include <QContactOnlineAccount>
 #include <QContactPhoneNumber>
 #include <QDebug>
+#include <QLocale>
 
 ContactEntry::ContactEntry(const QContact &contact, ContactModel *parent) :
     QObject(parent), mContact(contact), mModified(false), mModel(parent)
 {
-    mName = new ContactName(contact.detail<QContactName>(), this);
-    connect(mName,
-            SIGNAL(changed()),
-            SLOT(onDetailChanged()));
-
     loadDetails();
+
+    // FIXME: we are explicitelly splitting the id as it comes formatted from EDS
+    // check how to handle that for telepathy contacts
+    QStringList ids = mContact.detail<ContactCustomId>().customId().split(":");
+    if (ids.count() >= 2) {
+        mCustomId = ids.last();
+    }
 }
 
 QContactLocalId ContactEntry::localId() const
@@ -53,9 +57,25 @@ QString ContactEntry::id() const
     return mContact.detail<QContactGuid>().guid();
 }
 
+QString ContactEntry::customId() const
+{
+    return mCustomId;
+}
+
 QString ContactEntry::displayLabel() const
 {
-    return mName->customLabel();
+    return name()->customLabel();
+}
+
+QString ContactEntry::initial() const
+{
+    QString label = displayLabel();
+    if (label.isEmpty()) {
+        return "";
+    } else {
+        QLocale locale;
+        return locale.toUpper(label.left(1));
+    }
 }
 
 QUrl ContactEntry::avatar() const
@@ -65,7 +85,7 @@ QUrl ContactEntry::avatar() const
 
 ContactName *ContactEntry::name() const
 {
-    return mName;
+    return qobject_cast<ContactName*>(mDetails[ContactDetail::Name].first());
 }
 
 bool ContactEntry::modified() const
@@ -75,8 +95,10 @@ bool ContactEntry::modified() const
 
 void ContactEntry::setModified(bool value)
 {
-    mModified = value;
-    emit changed(this);
+    if (value != mModified) {
+        mModified = value;
+        emit modifiedChanged();
+    }
 }
 
 QContact& ContactEntry::contact()
@@ -86,8 +108,8 @@ QContact& ContactEntry::contact()
 
 void ContactEntry::setContact(const QContact &contact)
 {
-    mModified = false;
     mContact = contact;
+    setModified(false);
     loadDetails();
 
     emit changed(this);
@@ -141,12 +163,11 @@ bool ContactEntry::addDetail(ContactDetail *detail)
     }
 
     if (mContact.saveDetail(&newDetail->detail())) {
-        mModified = true;
+        setModified(true);
         mDetails[type].append(newDetail);
         connect(newDetail,
                 SIGNAL(changed()),
                 SLOT(onDetailChanged()));
-        emit changed(this);
         return true;
     } else {
         qWarning() << "Failed to add new detail to contact";
@@ -158,10 +179,10 @@ bool ContactEntry::addDetail(ContactDetail *detail)
 bool ContactEntry::removeDetail(ContactDetail *detail)
 {
     if (mContact.removeDetail(&detail->detail())) {
-        mModified = true;
-        mDetails[(ContactDetail::DetailType)detail->type()].removeAll(detail);
-        detail->deleteLater();
-        emit changed(this);
+        // Removing the detail from the contact is enough at this point.
+        // The QML might still access the detail object while animating so
+        // don't remove it here.
+        setModified(true);
         return true;
     }
     return false;
@@ -181,10 +202,8 @@ void ContactEntry::onDetailChanged()
         qWarning() << "Detail changed emitted from an object that is not a detail";
     }
     if (mContact.saveDetail(&detail->detail())) {
-        mModified = true;
+        setModified(true);
     }
-
-    emit changed(this);
 }
 
 void ContactEntry::detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail)
@@ -236,4 +255,15 @@ void ContactEntry::loadDetails()
     load<QContactEmailAddress, ContactEmailAddress>();
     load<QContactOnlineAccount, ContactOnlineAccount>();
     load<QContactPhoneNumber, ContactPhoneNumber>();
+    load<QContactName, ContactName>();
+
+
+    // if the contact doesn't have a name detail, create it.
+    if (mDetails[ContactDetail::Name].isEmpty()) {
+        ContactName *contactName = new ContactName(QContactName(), this);
+        connect(contactName,
+                SIGNAL(changed()),
+                SLOT(onDetailChanged()));
+        mDetails[ContactDetail::Name].append(contactName);
+    }
 }

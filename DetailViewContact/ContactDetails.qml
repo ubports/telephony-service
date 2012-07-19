@@ -1,15 +1,21 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 import "../Widgets"
+import "../"
 import "DetailTypeUtilities.js" as DetailTypes
 
-Item {
+FocusScope {
     id: contactDetails
 
     property string viewName: "contacts"
     property bool editable: false
-    property variant contact: null
+    property alias contact: contactWatcher.contact
+    property variant contactId: (contact) ? contact.id : null
     property bool added: false
+
+    ContactWatcher {
+        id: contactWatcher
+    }
 
     onContactChanged: editable = false
 
@@ -24,11 +30,22 @@ Item {
 
     Connections {
         target: contactModel
-        onContactAdded: {
-            // refresh the contact object with the saved data
-            if (added) {
-                contactDetails.contact = contact;
-                added = false;
+        onContactSaved: {
+            // once the contact gets saved after editing, we reload it in the view
+            // because for added contacts, we need the newly created ContactEntry instead of the one
+            // we were using before.
+            contactWatcher.contact = null;
+            contactWatcher.customId = customId;
+        }
+
+        onContactRemoved: {
+            // When android syncs contacts to a google account, it removes the local contact
+            // and adds a new one with a different id. So in order to keep the app in a consistent
+            // state, we close the view when the original contact is removed.
+            // (see http://pad.lv/1021473)
+            if (contactId == contactDetails.contactId) {
+                contactDetails.contact = null;
+                telephony.resetView();
             }
         }
     }
@@ -91,7 +108,7 @@ Item {
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
         clip: true
-        contentHeight: detailsList.height + (contactDetails.editable ? 32 + newDetailChooser.height + 10 : callLogSection.height)
+        contentHeight: detailsList.height + bottomSeparatorLine.height + (contactDetails.editable ? 32 + newDetailChooser.height + 10 : callLogSection.height)
 
         Column {
             id: detailsList
@@ -108,8 +125,9 @@ Item {
 
                     detailTypeInfo: modelData
                     editable: contactDetails.editable
+                    onDetailAdded: focus = true
 
-                    model: contact[modelData.items]
+                    model: (contact) ? contact[modelData.items] : []
                     delegate: Loader {
                         anchors.left: (parent) ? parent.left : undefined
                         anchors.right: (parent) ? parent.right : undefined
@@ -125,12 +143,43 @@ Item {
                             ignoreUnknownSignals: true
 
                             onDeleteClicked: contact.removeDetail(modelData)
-                            onActionClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.startChat(contact, modelData.number);
-                            onClicked: if (modelData.type == ContactDetail.PhoneNumber) telephony.callNumber(modelData.number);
+                            onActionClicked: {
+                                switch(modelData.type) {
+                                case ContactDetail.PhoneNumber:
+                                    telephony.startChat(contact.customId, modelData.number, "");
+                                    break;
+                                case ContactDetail.EmailAddress:
+                                    Qt.openUrlExternally("mailto:" + modelData.emailAddress);
+                                    break;
+                                default:
+                                    break;
+                                }
+                            }
+                            onClicked: {
+                                switch (modelData.type) {
+                                case ContactDetail.PhoneNumber:
+                                    telephony.callNumber(modelData.number);
+                                    break;
+                                case ContactDetail.EmailAddress:
+                                    Qt.openUrlExternally("mailto:" + modelData.emailAddress);
+                                    break;
+                                }
+                            }
                         }
                     }
                 }
             }
+        }
+
+        Image {
+            id: bottomSeparatorLine
+
+            anchors.top: detailsList.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: visible ? 2 : 0
+            source: "../Widgets/artwork/ListItemSeparator.png"
+            visible: !callLogSection.visible || callLogSection.opacity != 1.0
         }
 
         // Call Log section
@@ -138,7 +187,7 @@ Item {
             id: callLogSection
 
             editable: false
-            anchors.top: detailsList.bottom
+            anchors.top: bottomSeparatorLine.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             opacity: (contactDetails.editable) ? 0.0 : 1.0
@@ -170,7 +219,7 @@ Item {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: callLogSection.bottom
+            anchors.top: detailsList.bottom
             anchors.topMargin: 32
             anchors.leftMargin: 1
             anchors.rightMargin: 1
@@ -298,7 +347,7 @@ Item {
                             contactModel.saveContact(contact);
 
                         editable = false;
-                        // added = false will be set when the new contact entry appears
+                        added = false;
                     }
                 }
             }
