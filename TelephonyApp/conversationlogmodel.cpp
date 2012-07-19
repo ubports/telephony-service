@@ -173,6 +173,9 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
     entry->customId = ContactModel::instance()->customIdFromPhoneNumber(number);
     entry->unreadCount = ChatManager::instance()->unreadMessages(number);
 
+    // set the alias to the phone number as a fallback value in case the contact is not found.
+    entry->contactAlias = number;
+
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
     if (contact) {
         fillContactInfo(entry, contact);
