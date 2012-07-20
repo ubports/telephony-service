@@ -89,8 +89,6 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
         // Call Channel
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (!callChannel.isNull()) {
-            dispatchOperation->connection()->becomeReady(Tp::Features()
-                                  << Tp::Connection::FeatureSelfContact);
             Tp::PendingReady *pr = callChannel->becomeReady(Tp::Features()
                                   << Tp::CallChannel::FeatureCore
                                   << Tp::CallChannel::FeatureCallState);
