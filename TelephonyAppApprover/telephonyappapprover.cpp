@@ -199,20 +199,27 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     data->channel = channel;
     data->pr = pr;
 
-    QString title = "Unknown caller";
+    // if the contact is not known, the alias and the number will be the same
     bool unknown = true;
+    QString title;
     if (contact->alias() != contact->id()) {
         unknown = false;
         title = contact->alias();
+    } else {
+        title = "Unknown caller";
     }
 
-    QString body = "Caller number is not available";
+    QString body;
     if (!contact->id().isEmpty()) {
         body = QString("Calling from %1").arg(contact->id());
+    } else {
+        body = "Caller number is not available";
     }
 
-    QString icon = contact->avatarData().fileName;
-    if (icon.isEmpty()) {
+    QString icon;
+    if (!contact->avatarData().fileName.isEmpty()) {
+        icon = contact->avatarData().fileName;
+    } else {
         if (unknown) {
             icon = "notification-unknown-call";
         } else {
