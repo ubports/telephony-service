@@ -199,11 +199,51 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     data->channel = channel;
     data->pr = pr;
 
-    notification = notify_notification_new ("Incoming call",
-                                            QString("Incoming call from %1").arg(contact->id()).toStdString().c_str(),
-                                            "");
+    // if the contact is not known, the alias and the number will be the same
+    bool unknown = true;
+    QString title;
+    if (contact->alias() != contact->id()) {
+        unknown = false;
+        title = contact->alias();
+    } else {
+        title = "Unknown caller";
+    }
+
+    QString body;
+    if (!contact->id().isEmpty()) {
+        body = QString("Calling from %1").arg(contact->id());
+    } else {
+        body = "Caller number is not available";
+    }
+
+    QString icon;
+    if (!contact->avatarData().fileName.isEmpty()) {
+        icon = contact->avatarData().fileName;
+    } else {
+        if (unknown) {
+            icon = "notification-unknown-call";
+        } else {
+            icon = "notification-unavailable-image-call.svg";
+        }
+    }
+
+    if (icon != contact->avatarData().fileName) {
+        notification = notify_notification_new (title.toStdString().c_str(),
+                                                body.toStdString().c_str(),
+                                                icon.toStdString().c_str());
+    } else {
+        notification = notify_notification_new (title.toStdString().c_str(),
+                                                body.toStdString().c_str(),
+                                                NULL);
+        notify_notification_set_hint_string(notification,
+                                            "image_path",
+                                            icon.toStdString().c_str());
+    }
     notify_notification_set_hint_string(notification,
                                         "x-canonical-snap-decisions",
+                                        "true");
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-private-button-tint",
                                         "true");
 
     notify_notification_add_action (notification,
