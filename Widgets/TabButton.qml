@@ -29,6 +29,7 @@ AbstractButton {
     property bool isLast
     property int contentWidth: text != "" ? invisibleLabel.paintedWidth : icon.paintedWidth
     property int horizontalPadding
+    property int overlayCounter: 0
 
     anchors.top: parent.top
     anchors.bottom: parent.bottom
@@ -87,5 +88,14 @@ AbstractButton {
         visible: false
         text: label.text
         fontSize: label.fontSize
+    }
+
+    TabCountOverlay {
+        id: overlay
+        selected: parent.selected
+        count: tabButton.overlayCounter
+        anchors.top: parent.top
+        anchors.topMargin: 2
+        anchors.horizontalCenter: icon.left
     }
 }

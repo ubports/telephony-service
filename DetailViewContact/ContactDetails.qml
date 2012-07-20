@@ -4,7 +4,7 @@ import "../Widgets"
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes
 
-Item {
+FocusScope {
     id: contactDetails
 
     property string viewName: "contacts"
@@ -125,6 +125,7 @@ Item {
 
                     detailTypeInfo: modelData
                     editable: contactDetails.editable
+                    onDetailAdded: focus = true
 
                     model: (contact) ? contact[modelData.items] : []
                     delegate: Loader {
