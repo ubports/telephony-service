@@ -1,4 +1,4 @@
-telephony-app (0.44) UNRELEASED; urgency=low
+telephony-app (0.44) precise; urgency=low
 
   [ Gustavo Pichorim Boiko ]
   * Change the application name to "Telephony". (LP: #1026308)
@@ -10,7 +10,7 @@ telephony-app (0.44) UNRELEASED; urgency=low
     and channels in initialised state
   * call phone number entered in the quick dial entry when return is pressed (LP: #1015392)
 
- -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 20 Jul 2012 14:06:04 -0700
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 20 Jul 2012 14:06:55 -0700
 
 telephony-app (0.43) precise; urgency=low
 
