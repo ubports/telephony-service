@@ -26,6 +26,15 @@ FocusScope {
         contact = Qt.createQmlObject("import TelephonyApp 0.1; ContactEntry {}", contactModel);
         editable = true;
         added = true;
+
+        for (var i = 0; i < detailsList.children.length; i++) {
+            var child = detailsList.children[i];
+            if (child.detailTypeInfo && child.detailTypeInfo.createOnNew) {
+                child.appendNewItem();
+            }
+        }
+
+        header.focus = true;
     }
 
     Connections {
@@ -87,6 +96,7 @@ FocusScope {
         id: header
         contact: contactDetails.contact
         editable: contactDetails.editable
+        focus: true
     }
 
     Image {
