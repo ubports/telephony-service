@@ -1,11 +1,16 @@
-telephony-app (0.43) UNRELEASED; urgency=low
+telephony-app (0.43) precise; urgency=low
 
+  [ Ugo Riboni ]
   * Display by default a blank email and phone fields when a new
     contact is being created (LP: #1025805)
   * Focus the contact name field when starting to edit a contact (LP: #1026324)
   * Apply the correct visual design for the "add new field" chooser (LP: #1025767)
 
- -- Ubuntu <ubuntu@ubuntu>  Fri, 20 Jul 2012 09:28:36 -0700
+  [ Gustavo Pichorim Boiko ]
+  * Update the application icon to the latest design. (LP: #1025764)
+  * Show contact information in the incoming call snap decision item. (LP: #1025837)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 20 Jul 2012 14:06:00 -0300
 
 telephony-app (0.42) precise; urgency=low
 
