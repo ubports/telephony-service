@@ -181,7 +181,7 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         return;
     }
 
-    bool isIncoming = channel->initiatorContact()->id() != dispatchOp->connection()->selfContact()->id();
+    bool isIncoming = channel->initiatorContact() != dispatchOp->connection()->selfContact();
 
     if (isIncoming && !callChannel->isRequested() && callChannel->callState() == Tp::CallStateInitialised) {
         callChannel->setRinging();
