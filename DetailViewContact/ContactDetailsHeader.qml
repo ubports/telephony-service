@@ -78,22 +78,5 @@ FocusScope {
             detail: (contact) ? contact.name : undefined
             focus: true
         }
-
-        TextCustom {
-            id: sublabel
-
-            anchors.top: name.bottom
-            anchors.topMargin: 1
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.rightMargin: 10
-            fontSize: "medium"
-            elide: Text.ElideRight
-            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-            style: Text.Raised
-            styleColor: "white"
-            text: "A social update will show in here"
-            opacity: !editable ? 1.0 : 0.0
-        }
     }
 }
