@@ -33,6 +33,8 @@ FocusScope {
                 child.appendNewItem();
             }
         }
+
+        header.focus = true;
     }
 
     Connections {
