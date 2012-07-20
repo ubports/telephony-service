@@ -179,6 +179,9 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     notify_notification_set_hint_string(notification,
                                         "x-canonical-snap-decisions",
                                         "true");
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-private-button-tint",
+                                        "true");
 
     notify_notification_add_action (notification,
                                     "action_accept",
