@@ -61,6 +61,7 @@ bool TelephonyApplication::setup()
     m_view = new QDeclarativeView();
     QObject::connect(m_view, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onViewStatusChanged(QDeclarativeView::Status)));
     m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    m_view->setWindowTitle("Telephony");
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     m_view->rootContext()->setContextProperty("dbus", m_dbus);
     QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
