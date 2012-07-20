@@ -237,6 +237,8 @@ FocusScope {
                     }
                 }
             }
+
+            onOpenedChanged: if (opened) scrollArea.contentY = scrollArea.contentHeight
         }
     }
 
