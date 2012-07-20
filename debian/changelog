@@ -1,3 +1,10 @@
+telephony-app (0.44) UNRELEASED; urgency=low
+
+  * Change the application name to "Telephony". (LP: #1026308)
+  * Remove social network update label. (LP: #1027114)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 20 Jul 2012 15:40:29 -0300
+
 telephony-app (0.43) precise; urgency=low
 
   [ Ugo Riboni ]
