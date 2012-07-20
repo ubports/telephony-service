@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import "../Widgets"
 
-Item {
+FocusScope {
     id: editor
 
     property variant detail
@@ -58,6 +58,7 @@ Item {
             anchors.right: parent.right
             value: (detail) ? detail.firstName : ""
             description: "First"
+            focus: true
         }
 
         EditBoxName {

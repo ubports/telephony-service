@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import "../Widgets"
 
-Item {
+FocusScope {
     id: name
 
     property variant detail
@@ -65,5 +65,6 @@ Item {
         Behavior on opacity {StandardAnimation {}}
 
         detail: name.detail
+        focus: true
     }
 }

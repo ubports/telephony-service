@@ -94,6 +94,7 @@ FocusScope {
         id: header
         contact: contactDetails.contact
         editable: contactDetails.editable
+        focus: true
     }
 
     Image {
