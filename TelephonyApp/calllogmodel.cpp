@@ -72,7 +72,7 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
 
     // fill the call info
     entry->timestamp = channel->property("timestamp").toDateTime();
-    bool isIncoming = channel->initiatorContact()->id() != TelepathyHelper::instance()->account()->connection()->selfContact()->id();
+    bool isIncoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
     entry->incoming = isIncoming;
     entry->duration = QTime(0,0,0);
 
