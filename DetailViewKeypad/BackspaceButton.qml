@@ -8,7 +8,7 @@ AbstractButton {
     Image {
         id: image
         source: "../assets/keypad_backspace.png"
-        width: 21
-        height: 13
+        width: 22
+        height: 16
     }
 }

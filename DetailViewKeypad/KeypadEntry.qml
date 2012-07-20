@@ -25,7 +25,7 @@ FocusScope {
         anchors.left: parent.left
         anchors.leftMargin: 19
         anchors.right: backspace.left
-        anchors.rightMargin: 20
+        anchors.rightMargin: 10
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 1
         height: font.pixelSize
@@ -40,7 +40,7 @@ FocusScope {
         id: backspace
         anchors.right: parent.right
         anchors.rightMargin: 19
-        anchors.verticalCenter: parent.verticalCenter
+        anchors.verticalCenter: input.verticalCenter
         onClicked:  {
             if (input.cursorPosition != 0)  {
                 var position = input.cursorPosition;
