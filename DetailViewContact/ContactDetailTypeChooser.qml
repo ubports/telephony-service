@@ -2,7 +2,7 @@ import QtQuick 1.1
 import "../Widgets"
 import "DetailTypeUtilities.js" as DetailTypes
 
-AbstractButton {
+Item {
     id: chooser
 
     property variant contact
@@ -25,10 +25,6 @@ AbstractButton {
     }
 
     onDetailChanged: close()
-    onClicked: {
-        if (opened) close()
-        else open()
-    }
 
     Item {
         id: current
@@ -61,7 +57,7 @@ AbstractButton {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: open()
+            onClicked: (opened) ? close() : open()
         }
     }
 
