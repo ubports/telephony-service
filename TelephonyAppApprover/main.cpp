@@ -40,7 +40,9 @@ int main(int argc, char **argv)
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
     Tp::ClientRegistrarPtr registrar = Tp::ClientRegistrar::create(sessionBus,
                                                                    Tp::AccountFactory::create(sessionBus),
-                                                                   Tp::ConnectionFactory::create(sessionBus),
+                                                                   Tp::ConnectionFactory::create(sessionBus, Tp::Features()
+                                                                                                 << Tp::Connection::FeatureCore
+                                                                                                 << Tp::Connection::FeatureSelfContact),
                                                                    Tp::ChannelFactory::create(sessionBus),
                                                                    Tp::ContactFactory::create(Tp::Features()
                                                                                               << Tp::Contact::FeatureAlias
