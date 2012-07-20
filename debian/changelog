@@ -1,3 +1,56 @@
+telephony-app (0.43) UNRELEASED; urgency=low
+
+  * Display by default a blank email and phone fields when a new
+    contact is being created (LP: #1025805)
+  * Focus the contact name field when starting to edit a contact (LP: #1026324)
+
+ -- Ubuntu <ubuntu@ubuntu>  Fri, 20 Jul 2012 09:03:28 -0700
+
+telephony-app (0.42) precise; urgency=low
+
+  * Set the phone number in the alias field of the conversation model as a
+    fallback in case the contact is not known.
+  * Fix contact detail saving that was broken by a previous change.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 19 Jul 2012 15:28:01 -0300
+
+telephony-app (0.41) precise; urgency=low
+
+  * Implement the visual elements representing the unread messages. (LP: #1017661)
+  * Show indicators and OSD notifications for text messages.
+    (LP: #1017662 LP: #1018501 LP: #1024511)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 19 Jul 2012 11:40:20 -0300
+
+telephony-app (0.40) precise; urgency=low
+
+  [ Ugo Riboni ]
+  * Give focus to the newly created contact details (LP: #1022755)
+  * Close the snap decision if the incoming call state is changed on
+    the phone side (LP: #1021827)
+
+  [ Renato Araujo Oliveira Filho ]
+  * Fixed contact information load when the application is already
+    running (LP: #1022686)
+
+  [ Olivier Tilloy ]
+  * Request the window to be raised and given focus when receiving a
+    message (LP: #1022686)
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Thu, 19 Jul 2012 13:53:34 +0200
+
+telephony-app (0.39) precise; urgency=low
+
+  * Do not switch to the messages view for every new message. (LP: #1017649)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 17 Jul 2012 17:02:00 -0300
+
+telephony-app (0.38) precise; urgency=low
+
+  * Now that qt-folks is returning the contact ids correctly for newly added. (LP: #1021519)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 17 Jul 2012 10:29:07 -0300
+
 telephony-app (0.37) precise; urgency=low
 
   [ Renato Araujo Oliveira Filho ]

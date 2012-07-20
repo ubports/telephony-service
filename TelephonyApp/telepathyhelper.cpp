@@ -19,6 +19,7 @@
  */
 
 #include "telepathyhelper.h"
+#include "chatmanager.h"
 
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ClientRegistrar>
@@ -31,7 +32,6 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
       mChannelObserver(0),
       mFirstTime(true)
 {
-    mChatManager = new ChatManager(this);
     mCallManager = new CallManager(this);
 
     mAccountFeatures << Tp::Account::FeatureCore;
@@ -59,11 +59,6 @@ TelepathyHelper *TelepathyHelper::instance()
 {
     static TelepathyHelper* helper = new TelepathyHelper();
     return helper;
-}
-
-ChatManager *TelepathyHelper::chatManager() const
-{
-    return mChatManager;
 }
 
 CallManager *TelepathyHelper::callManager() const
@@ -97,7 +92,7 @@ void TelepathyHelper::initializeTelepathyClients()
     Q_EMIT channelObserverCreated(mChannelObserver);
 
     connect(mChannelHandler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
-            mChatManager, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+            ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
     connect(mChannelHandler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
             mCallManager, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
 }

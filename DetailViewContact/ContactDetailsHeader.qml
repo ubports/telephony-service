@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import "../Widgets"
 
-Item {
+FocusScope {
     id: contactDetailsHeader
 
     property variant contact: null
@@ -76,6 +76,7 @@ Item {
 
             editable: header.editable
             detail: (contact) ? contact.name : undefined
+            focus: true
         }
 
         TextCustom {

@@ -1,16 +1,21 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 import "../Widgets"
+import "../"
 import "DetailTypeUtilities.js" as DetailTypes
 
-Item {
+FocusScope {
     id: contactDetails
 
     property string viewName: "contacts"
     property bool editable: false
-    property variant contact: null
+    property alias contact: contactWatcher.contact
     property variant contactId: (contact) ? contact.id : null
     property bool added: false
+
+    ContactWatcher {
+        id: contactWatcher
+    }
 
     onContactChanged: editable = false
 
@@ -21,16 +26,25 @@ Item {
         contact = Qt.createQmlObject("import TelephonyApp 0.1; ContactEntry {}", contactModel);
         editable = true;
         added = true;
+
+        for (var i = 0; i < detailsList.children.length; i++) {
+            var child = detailsList.children[i];
+            if (child.detailTypeInfo && child.detailTypeInfo.createOnNew) {
+                child.appendNewItem();
+            }
+        }
+
+        header.focus = true;
     }
 
     Connections {
         target: contactModel
-        onContactAdded: {
-            // refresh the contact object with the saved data
-            if (added) {
-                contactDetails.contact = contact;
-                added = false;
-            }
+        onContactSaved: {
+            // once the contact gets saved after editing, we reload it in the view
+            // because for added contacts, we need the newly created ContactEntry instead of the one
+            // we were using before.
+            contactWatcher.contact = null;
+            contactWatcher.customId = customId;
         }
 
         onContactRemoved: {
@@ -82,6 +96,7 @@ Item {
         id: header
         contact: contactDetails.contact
         editable: contactDetails.editable
+        focus: true
     }
 
     Image {
@@ -120,6 +135,7 @@ Item {
 
                     detailTypeInfo: modelData
                     editable: contactDetails.editable
+                    onDetailAdded: focus = true
 
                     model: (contact) ? contact[modelData.items] : []
                     delegate: Loader {
@@ -337,7 +353,7 @@ Item {
                             contactModel.saveContact(contact);
 
                         editable = false;
-                        // added = false will be set when the new contact entry appears
+                        added = false;
                     }
                 }
             }

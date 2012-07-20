@@ -18,6 +18,7 @@
  */
 
 #include "chatmanager.h"
+#include "contactmodel.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/ContactManager>
@@ -26,6 +27,12 @@
 ChatManager::ChatManager(QObject *parent)
 : QObject(parent)
 {
+}
+
+ChatManager *ChatManager::instance()
+{
+    static ChatManager *manager = new ChatManager();
+    return manager;
 }
 
 bool ChatManager::isChattingToContact(const QString &contactId)
@@ -46,12 +53,19 @@ void ChatManager::startChat(const QString &contactId)
 
 void ChatManager::endChat(const QString &contactId)
 {
+    // if the chat we are ending was the current one, clear the property
+    if (mActiveChat == contactId) {
+        setActiveChat("");
+    }
+
     if (!mChannels.contains(contactId))
         return;
 
     mChannels[contactId]->requestClose();
     mChannels.remove(contactId);
     mContacts.remove(contactId);
+
+    emit unreadMessagesChanged(contactId);
 }
 
 void ChatManager::sendMessage(const QString &contactId, const QString &message)
@@ -72,16 +86,74 @@ void ChatManager::acknowledgeMessages(const QString &contactId)
     channel->acknowledge(channel->messageQueue());
 }
 
+QString ChatManager::activeChat() const
+{
+    return mActiveChat;
+}
+
+void ChatManager::setActiveChat(const QString &value)
+{
+    if (value != mActiveChat) {
+        mActiveChat = value;
+        acknowledgeMessages(mActiveChat);
+        emit activeChatChanged();
+    }
+}
+
+int ChatManager::unreadMessagesCount() const
+{
+    int count = 0;
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels.values()) {
+        count += channel->messageQueue().count();
+    }
+
+    return count;
+}
+
+int ChatManager::unreadMessages(const QString &contactId)
+{
+    int count = 0;
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels.values()) {
+        if (ContactModel::instance()->comparePhoneNumbers(contactId, channel->targetContact()->id())) {
+            count += channel->messageQueue().count();
+        }
+    }
+
+    return count;
+}
+
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
-    mChannels[channel->targetContact()->id()] = channel;
+    QString id = channel->targetContact()->id();
+    mChannels[id] = channel;
+    if (id == mActiveChat) {
+        acknowledgeMessages(id);
+    }
+
+    connect(channel.data(),
+            SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
+            SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
 
     emit chatReady(channel->targetContact()->id());
+    emit unreadMessagesChanged(channel->targetContact()->id());
 }
 
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     emit messageReceived(message.sender()->id(), message.text());
+
+    // if the message belongs to an active conversation, mark it as read
+    if (message.sender()->id() == mActiveChat) {
+        acknowledgeMessages(mActiveChat);
+    }
+
+    emit unreadMessagesChanged(message.sender()->id());;
+}
+
+void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
+{
+    // emit the signal saying the unread messages for a specific number has changed
+    emit unreadMessagesChanged(message.sender()->id());
 }
 
 void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
