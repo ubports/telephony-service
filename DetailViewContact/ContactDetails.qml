@@ -33,6 +33,8 @@ FocusScope {
                 child.appendNewItem();
             }
         }
+
+        header.focus = true;
     }
 
     Connections {
@@ -94,6 +96,7 @@ FocusScope {
         id: header
         contact: contactDetails.contact
         editable: contactDetails.editable
+        focus: true
     }
 
     Image {

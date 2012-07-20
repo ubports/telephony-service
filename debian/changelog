@@ -2,8 +2,9 @@ telephony-app (0.43) UNRELEASED; urgency=low
 
   * Display by default a blank email and phone fields when a new
     contact is being created (LP: #1025805)
+  * Focus the contact name field when starting to edit a contact (LP: #1026324)
 
- -- Ubuntu <ubuntu@ubuntu>  Fri, 20 Jul 2012 07:39:35 -0700
+ -- Ubuntu <ubuntu@ubuntu>  Fri, 20 Jul 2012 09:03:28 -0700
 
 telephony-app (0.42) precise; urgency=low
 
