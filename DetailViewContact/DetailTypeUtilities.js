@@ -42,6 +42,7 @@ var IMSubTypes = [ PROTOCOL_LABEL_AIM,
                    PROTOCOL_LABEL_GTALK,
                    PROTOCOL_LABEL_ICQ,
                    PROTOCOL_LABEL_JABBER ];
+
 var supportedTypes = [
             {
                 name: "Phone",
@@ -51,7 +52,8 @@ var supportedTypes = [
                 newItemType: "ContactPhoneNumber",
                 actionIcon: "../assets/contact_icon_message.png",
                 displayField: "number",
-                subTypes: phoneSubTypes
+                subTypes: phoneSubTypes,
+                createOnNew: true
             },
             {
                 name: "Email",
@@ -61,7 +63,8 @@ var supportedTypes = [
                 newItemType: "ContactEmailAddress",
                 actionIcon: "../assets/contact_icon_email.png",
                 displayField: "emailAddress",
-                subTypes: emailSubTypes
+                subTypes: emailSubTypes,
+                createOnNew: true
             },
             {
                 name: "Address",
