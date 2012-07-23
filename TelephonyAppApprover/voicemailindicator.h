@@ -10,7 +10,7 @@ namespace QIndicate {
     class Server;
 }
 
-class VoiceMailIndicator : public QDBusInterface
+class VoiceMailIndicator : public QObject
 {
     Q_OBJECT
 public:
@@ -19,14 +19,17 @@ public:
 protected:
     void updateCounter();
 
-private slots:
+public slots:
     void onPropertiesChanged(const QString &interfaceName,
                              const QVariantMap &changedProperties,
                              const QStringList &invalidatedProperties);
     void onIndicatorDisplay(QIndicate::Indicator *indicator);
+
 private:
+    QDBusConnection mConnection;
     QIndicate::Server *mIndicateServer;
     QIndicate::Indicator *mIndicator;
+    QDBusInterface mInterface;
 };
 
 #endif // VOICEMAILINDICATOR_H
