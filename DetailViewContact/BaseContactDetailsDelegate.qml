@@ -193,7 +193,7 @@ FocusScope {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            width: 76
+            width: 90
             detailTypeInfo: contactDetailsItem.detailTypeInfo
             detail: contactDetailsItem.detail
         }
