@@ -24,6 +24,7 @@ set(plugin_SRCS
     messagelogmodel.cpp
     messagesproxymodel.cpp
     telepathyhelper.cpp
+    buttonmaskeffect.cpp
     )
 
 set(plugin_HDRS
@@ -49,6 +50,7 @@ set(plugin_HDRS
     messagelogmodel.h
     messagesproxymodel.h
     telepathyhelper.h
+    buttonmaskeffect.h
     )
 
 qt4_wrap_cpp(plugin_MOC_SRCS ${plugin_HDRS})
