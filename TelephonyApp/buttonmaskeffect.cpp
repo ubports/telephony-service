@@ -34,7 +34,9 @@ qreal ButtonMaskEffect::gradientStrength() const
 
 void ButtonMaskEffect::setGradientStrength(qreal gradientStrength)
 {
-    if (gradientStrength == m_gradientStrength) return;
+    if (gradientStrength == m_gradientStrength) {
+        return;
+    }
 
     m_gradientStrength = gradientStrength;
     m_cachedPixmap = QPixmap();
@@ -49,7 +51,9 @@ bool ButtonMaskEffect::dark() const
 
 void ButtonMaskEffect::setDark(bool dark)
 {
-    if (dark == m_dark) return;
+    if (dark == m_dark) {
+        return;
+    }
 
     m_dark = dark;
     m_cachedPixmap = QPixmap();
@@ -65,7 +69,9 @@ QObject* ButtonMaskEffect::mask() const
 void ButtonMaskEffect::setMask(QObject* mask)
 {
     QGraphicsItem* typedMask = dynamic_cast<QGraphicsItem*>(mask);
-    if (typedMask == m_mask) return;
+    if (typedMask == m_mask) {
+        return;
+    }
 
     m_mask = typedMask;
     m_cachedPixmap = QPixmap();
