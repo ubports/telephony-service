@@ -327,6 +327,7 @@ FocusScope {
                 anchors.rightMargin: 10
                 color: editable ? "#dd4f22" : "#e3e5e8"
                 text: (editable) ? "Save" : "Edit"
+                enabled: header.contactNameValid
                 onClicked: {
                     if (!editable) editable = true;
                     else {
