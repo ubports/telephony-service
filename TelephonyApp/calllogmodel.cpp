@@ -19,6 +19,7 @@
 
 #include "calllogmodel.h"
 #include "contactmodel.h"
+#include "telepathyhelper.h"
 #include <TelepathyLoggerQt4/Event>
 #include <TelepathyLoggerQt4/CallEvent>
 #include <TelepathyQt/Contact>
@@ -71,7 +72,8 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
 
     // fill the call info
     entry->timestamp = channel->property("timestamp").toDateTime();
-    entry->incoming = !channel->isRequested();
+    bool isIncoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+    entry->incoming = isIncoming;
     entry->duration = QTime(0,0,0);
 
     // outgoing calls can be missed calls?

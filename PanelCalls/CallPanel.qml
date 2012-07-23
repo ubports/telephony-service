@@ -32,6 +32,12 @@ Item {
             telephony.callNumber(number);
             text = "";
         }
+        onActivateFirstResult: {
+            if (text.match("^[0-9+][0-9+-]*$")) {
+                telephony.callNumber(text);
+                text = "";
+            }
+        }
         z: 1
     }
 

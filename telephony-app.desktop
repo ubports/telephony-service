@@ -1,8 +1,8 @@
 [Desktop Entry]
 Type=Application
-Name=telephony-app
+Name=Telephony
 GenericName=telephony-app
-Comment=telephony application
+Comment=Telephony application
 Exec=telephony-app %u
 Terminal=false
 Icon=telephony-app
