@@ -24,8 +24,8 @@ FocusScope {
 
         anchors.left: parent.left
         anchors.leftMargin: 19
-        anchors.right: parent.right
-        anchors.rightMargin: 20
+        anchors.right: backspace.left
+        anchors.rightMargin: 10
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 1
         height: font.pixelSize
@@ -34,5 +34,19 @@ FocusScope {
         font.pixelSize: Font.sizeToPixels("x-large")
         color: "#e3e5e8"
         focus: true
+    }
+
+    BackspaceButton {
+        id: backspace
+        anchors.right: parent.right
+        anchors.rightMargin: 19
+        anchors.verticalCenter: input.verticalCenter
+        onClicked:  {
+            if (input.cursorPosition != 0)  {
+                var position = input.cursorPosition;
+                input.text = input.text.slice(0, input.cursorPosition - 1) + input.text.slice(input.cursorPosition);
+                input.cursorPosition = position - 1;
+            }
+        }
     }
 }
