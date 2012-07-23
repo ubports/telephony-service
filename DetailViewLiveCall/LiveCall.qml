@@ -58,7 +58,7 @@ Item {
     Item {
         id: container
 
-        anchors.top: backgroundCall.bottom
+        anchors.top: backgroundCall.visible ? backgroundCall.bottom : parent.top
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
