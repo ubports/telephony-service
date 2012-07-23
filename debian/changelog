@@ -1,10 +1,14 @@
 telephony-app (0.45) UNRELEASED; urgency=low
 
+  [ Ugo Riboni ]
   * Add a backspace button to the keypad (LP: #1018276)
   * Email subtypes should not include "mobile" (LP: #1025808)
   * Make sure the subtype editor text is not truncated (LP: #1020092)
 
- -- Ugo Riboni <ugo.riboni@canonical.com>  Mon, 23 Jul 2012 06:59:50 -0700
+  [ Florian Boucault ]
+  * Implement visual design for buttons in all screens (LP: #1027118)
+
+ -- Florian Boucault <florian.boucault@canonical.com>  Mon, 23 Jul 2012 19:06:10 +0100
 
 telephony-app (0.44) precise; urgency=low
 
