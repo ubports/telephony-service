@@ -18,5 +18,5 @@ import QtQuick 1.1
 
 Button {
     width: 65
-    height: 26
+    height: 27
 }

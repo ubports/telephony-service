@@ -48,7 +48,7 @@ Item {
             id: sendButton
 
             anchors.right: parent.right
-            anchors.rightMargin: 5
+            anchors.rightMargin: 10
             anchors.top: entry.top
             anchors.bottom: entry.bottom
             width: 62
