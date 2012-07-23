@@ -76,6 +76,8 @@ void VoiceMailIndicator::onPropertiesChanged(const QString &interfaceName,
 
 void VoiceMailIndicator::onIndicatorDisplay(QIndicate::Indicator *indicator)
 {
-    // TODO: implement
-    qDebug() << "Indicator clicked!";
+    QDBusInterface telephonyApp("com.canonical.TelephonyApp",
+                                "/com/canonical/TelephonyApp",
+                                "com.canonical.TelephonyApp");
+    telephonyApp.call("ShowVoicemail");
 }

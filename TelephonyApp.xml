@@ -15,5 +15,10 @@
             ]]></dox:d>
             <arg name="number" type="s" direction="in"/>
         </method>
+        <method name="ShowVoicemail">
+            <dox:d><![CDATA[
+               Request to open the voicemail tab.
+            ]]></dox:d>
+        </method>
     </interface>
 </node>
