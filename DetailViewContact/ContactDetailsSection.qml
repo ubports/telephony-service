@@ -23,8 +23,8 @@ FocusScope {
             var child = col.children[i];
             if (child && child.item && child.item.save && child.item.save instanceof Function &&
                !child.item.deleted) {
-                child.item.save();
-                if (child.item.added) {
+                var valid = child.item.save();
+                if (child.item.added && valid) {
                     added.push(child.item.detail);
                 }
             }
