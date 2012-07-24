@@ -1,3 +1,10 @@
+telephony-app (0.47) UNRELEASED; urgency=low
+
+  [ Renato Araujo Oliveira Filho ]
+  * Fixed contact loader from another instance.(LP: #1022686)
+
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Tue, 24 Jul 2012 15:16:56 -0300
+
 telephony-app (0.46) precise; urgency=low
 
   * Focus the message input field when opening a conversation (LP: #1028173)
