@@ -16,7 +16,7 @@
 
 import QtQuick 1.1
 
-Item {
+FocusScope {
     id: header
 
     width: 575
