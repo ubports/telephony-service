@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 import "../Widgets"
+import "DetailTypeUtilities.js" as DetailUtils
 
 FocusScope {
     id: contactDetailsSection
@@ -66,12 +67,14 @@ FocusScope {
                 Binding { target: item; property: "detailTypeInfo"; value: contactDetailsSection.detailTypeInfo }
                 Binding { target: item; property: "editable"; value: contactDetailsSection.editable }
                 Binding { target: item; property: "added"; value: true }
-                Binding { target: item; property: "detail";
-                          value: Qt.createQmlObject("import TelephonyApp 0.1; " + detailTypeInfo.newItemType + "{}", newItem) }
 
                 opacity: editable ? 1.0 : 0.0
 
-                onLoaded: item.focus = true
+                onLoaded: {
+                    item.detail = Qt.createQmlObject("import TelephonyApp 0.1; " + detailTypeInfo.newItemType + "{}", newItem);
+                    if (detailTypeInfo.subTypes.length > 0) DetailUtils.setDetailSubType(item.detail, detailTypeInfo.subTypes[0]);
+                    item.focus = true;
+                }
             }
             onItemAdded: item.focus = true
         }
