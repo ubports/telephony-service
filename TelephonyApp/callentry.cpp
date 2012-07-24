@@ -35,8 +35,10 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mVoicemail(false),
     mLocalMuteState(false),
     mElapsedTime(QTime::currentTime()),
-    mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
+    mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE),
+    mState(CallStateIdle)
 {
+    qDebug() << "+++++++++++++++ CALL STATE INITIAL " << mChannel->callState();
     connect(mChannel->becomeReady(Tp::Features()
                                   << Tp::CallChannel::FeatureCore
                                   << Tp::CallChannel::FeatureCallMembers
@@ -64,11 +66,17 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
         startTimer(1000);
         mElapsedTime.start();
         Q_EMIT callActive();
+        mState = CallStateActive;
+        Q_EMIT stateChanged();
     } else {
+        if (mChannel->callState() == Tp::CallStateInitialising ||
+            mChannel->callState() == Tp::CallStateInitialised) {
+            mState = CallStateDialing;
+            Q_EMIT stateChanged();
+        }
         // accept the call if it was not accepted yet
         channel->accept();
     }
-
 }
 
 void CallEntry::timerEvent(QTimerEvent *event)
@@ -178,12 +186,28 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
 
 void CallEntry::onCallStateChanged(Tp::CallState state)
 {
+    qDebug() << "+++++++++++++++ CALL STATE NOW " << state;
     if (state == Tp::CallStateEnded) {
         endCall();
     } else if (state == Tp::CallStateActive) {
         startTimer(1000);
         mElapsedTime.start();
         emit callActive();
+    }
+
+    CallState newState;
+
+    switch (state) {
+    case Tp::CallStateActive: newState = CallStateActive; break;
+    case Tp::CallStateInitialising:
+    case Tp::CallStateInitialised:
+        newState = CallStateDialing; break;
+    default: newState = CallStateIdle; break;
+    }
+
+    if (newState != mState) {
+        mState = newState;
+        Q_EMIT stateChanged();
     }
 }
 
@@ -218,3 +242,7 @@ bool CallEntry::isActive() const
     return (mChannel->callState() == Tp::CallStateActive);
 }
 
+CallEntry::CallState CallEntry::state() const
+{
+    return mState;
+}

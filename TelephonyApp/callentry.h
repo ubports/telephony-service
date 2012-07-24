@@ -31,6 +31,7 @@ using namespace QtMobility;
 class CallEntry : public QObject
 {
     Q_OBJECT
+
     Q_PROPERTY (bool held
                 READ isHeld
                 WRITE setHold
@@ -61,6 +62,10 @@ class CallEntry : public QObject
     Q_PROPERTY(bool active 
                READ isActive
                NOTIFY activeChanged)
+    Q_PROPERTY(CallState state
+               READ state
+               NOTIFY stateChanged)
+    Q_ENUMS(CallState)
 
 public:
     explicit CallEntry(const Tp::CallChannelPtr &channel, QObject *parent = 0);
@@ -77,6 +82,13 @@ public:
 
     int elapsedTime() const;
     bool isActive() const;
+
+    enum CallState {
+        CallStateIdle,
+        CallStateDialing,
+        CallStateActive
+    };
+    CallState state() const;
 
     QString phoneNumber() const;
     QString contactAlias() const;
@@ -103,6 +115,7 @@ Q_SIGNALS:
     void contactAliasChanged();
     void contactAvatarChanged();
     void elapsedTimeChanged();
+    void stateChanged();
     
 private:
     Tp::CallChannelPtr mChannel;
@@ -111,6 +124,7 @@ private:
     bool mVoicemail;
     bool mLocalMuteState;
     QTime mElapsedTime;
+    CallState mState;
 };
 
 #endif // CALLENTRY_H
