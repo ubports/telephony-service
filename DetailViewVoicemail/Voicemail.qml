@@ -76,6 +76,21 @@ Item {
                 fontSize: "large"
             }
 
+            TextCustom {
+                id: dialing
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: 15
+                anchors.top: number.bottom
+
+                text: "Dialing"
+                color: "#a0a0a2"
+                style: Text.Sunken
+                styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
+                fontSize: "large"
+                opacity: (call && call.voicemail && call.dialing) ? 1.0 : 0.0
+            }
+
             StopWatch {
                 id: stopWatch
                 time: call && call.voicemail ? call.elapsedTime : 0
@@ -83,6 +98,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 15
                 anchors.bottom: keypad.top
+                opacity: (call && call.voicemail && !call.dialing) ? 1.0 : 0.0
             }
 
             Keypad {

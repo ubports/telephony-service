@@ -21,6 +21,7 @@
 #include "callentry.h"
 #include "contactentry.h"
 #include "contactmodel.h"
+#include "telepathyhelper.h"
 #include <QTime>
 #include <QContactAvatar>
 #include <TelepathyQt/Contact>
@@ -35,10 +36,8 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mVoicemail(false),
     mLocalMuteState(false),
     mElapsedTime(QTime::currentTime()),
-    mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE),
-    mState(CallStateIdle)
+    mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
 {
-    qDebug() << "+++++++++++++++ CALL STATE INITIAL " << mChannel->callState();
     connect(mChannel->becomeReady(Tp::Features()
                                   << Tp::CallChannel::FeatureCore
                                   << Tp::CallChannel::FeatureCallMembers
@@ -61,19 +60,16 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
             SIGNAL(MuteStateChanged(uint)),
             SLOT(onMutedChanged(uint)));
 
-    // start timer if this call is already active
-    if(mChannel->callState() == Tp::CallStateActive) {
+    switch(mChannel->callState()) {
+    case Tp::CallStateActive: 
+        // start timer if this call is already active
         startTimer(1000);
         mElapsedTime.start();
         Q_EMIT callActive();
-        mState = CallStateActive;
-        Q_EMIT stateChanged();
-    } else {
-        if (mChannel->callState() == Tp::CallStateInitialising ||
-            mChannel->callState() == Tp::CallStateInitialised) {
-            mState = CallStateDialing;
-            Q_EMIT stateChanged();
-        }
+        break;
+    case Tp::CallStateInitialised:
+        emit dialingChanged();
+    default:
         // accept the call if it was not accepted yet
         channel->accept();
     }
@@ -82,6 +78,13 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
 void CallEntry::timerEvent(QTimerEvent *event)
 {
     emit elapsedTimeChanged();
+}
+
+bool CallEntry::dialing() const
+{
+    bool isOutgoing = mChannel->initiatorContact() == TelepathyHelper::instance()->account()->connection()->selfContact();
+      
+    return isOutgoing && (mChannel->callState() == Tp::CallStateInitialised);
 }
 
 QString CallEntry::phoneNumber() const
@@ -182,11 +185,11 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
 
     emit heldChanged();
     emit phoneNumberChanged();
+    emit dialingChanged();
 }
 
 void CallEntry::onCallStateChanged(Tp::CallState state)
 {
-    qDebug() << "+++++++++++++++ CALL STATE NOW " << state;
     if (state == Tp::CallStateEnded) {
         endCall();
     } else if (state == Tp::CallStateActive) {
@@ -194,21 +197,7 @@ void CallEntry::onCallStateChanged(Tp::CallState state)
         mElapsedTime.start();
         emit callActive();
     }
-
-    CallState newState;
-
-    switch (state) {
-    case Tp::CallStateActive: newState = CallStateActive; break;
-    case Tp::CallStateInitialising:
-    case Tp::CallStateInitialised:
-        newState = CallStateDialing; break;
-    default: newState = CallStateIdle; break;
-    }
-
-    if (newState != mState) {
-        mState = newState;
-        Q_EMIT stateChanged();
-    }
+    emit dialingChanged();
 }
 
 void CallEntry::onCallFlagsChanged(Tp::CallFlags flags)
@@ -242,7 +231,3 @@ bool CallEntry::isActive() const
     return (mChannel->callState() == Tp::CallStateActive);
 }
 
-CallEntry::CallState CallEntry::state() const
-{
-    return mState;
-}

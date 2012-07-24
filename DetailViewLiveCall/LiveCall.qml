@@ -1,5 +1,4 @@
 import QtQuick 1.0
-import TelephonyApp 0.1
 import "../Widgets"
 import "../DetailViewKeypad"
 import "../"
@@ -17,12 +16,6 @@ Item {
     property bool isSpeaker: callManager.speaker
     property bool isMuted: call ? call.muted : false
     property bool isDtmf: false
-
-    onCallChanged: console.log(">>>>>>>>>>>>>>>>> CALL IS NOW " + call + " " + ((call) ? call.state : "NULL"))
-    Connections {
-        target: call
-        onStateChanged: console.log(">>>>>>>>>>>>>>>>>>> STATE IS NOW " + call.state)
-    }
 
     function endCall() {
         if (call) {
@@ -160,9 +153,8 @@ Item {
                 style: Text.Sunken
                 styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
                 fontSize: "large"
-                opacity: (call && call.state == CallEntry.CallStateDialing) ? 1.0 : 0.0
+                opacity: (call && call.dialing) ? 1.0 : 0.0
             }
-
 
             StopWatch {
                 id: stopWatch
@@ -171,8 +163,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 15
                 anchors.top: location.text != "" ? location.bottom : number.bottom
-
-                opacity: (call && call.state != CallEntry.CallStateDialing) ? 1.0 : 0.0
+                opacity: (call && !call.dialing) ? 1.0 : 0.0
             }
 
             Keypad {
