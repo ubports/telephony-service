@@ -51,7 +51,6 @@ void VoiceMailIndicator::onPropertiesChanged(const QString &interfaceName,
                                              const QVariantMap &changedProperties,
                                              const QStringList &invalidatedProperties)
 {
-    qDebug() << "Properties changed:" << interfaceName << changedProperties << invalidatedProperties;
     if (interfaceName != TELEPHONY_INTERFACE) {
         return;
     }
