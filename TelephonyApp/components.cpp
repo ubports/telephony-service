@@ -37,6 +37,7 @@
 #include "contactphonenumber.h"
 #include "messagelogmodel.h"
 #include "messagesproxymodel.h"
+#include "buttonmaskeffect.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/qdeclarative.h>
@@ -94,6 +95,7 @@ void Components::registerTypes(const char *uri)
     qmlRegisterType<ContactName>(uri, 0, 1, "ContactName");
     qmlRegisterType<ContactOnlineAccount>(uri, 0, 1, "ContactOnlineAccount");
     qmlRegisterType<ContactPhoneNumber>(uri, 0, 1, "ContactPhoneNumber");
+    qmlRegisterType<ButtonMaskEffect>(uri, 0, 1, "ButtonMaskEffect");
 }
 
 void Components::onChannelHandlerCreated(ChannelHandler *handler)

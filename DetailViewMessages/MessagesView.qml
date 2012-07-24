@@ -3,7 +3,7 @@ import QtMobility.contacts 1.1
 import TelephonyApp 0.1
 import "../"
 
-Item {
+FocusScope {
     id: view
 
     property string viewName: "messages"
@@ -150,6 +150,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        focus: true
 
         onNewMessage: {
             // if the user didn't select a number from the new message header, just

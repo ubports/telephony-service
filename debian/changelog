@@ -1,9 +1,37 @@
-telephony-app (0.44) UNRELEASED; urgency=low
+telephony-app (0.46) precise; urgency=low
 
+  * Focus the message input field when opening a conversation (LP: #1028173)
+  * Prevent saving contacts entirely empty or new empty contact fields (LP: #1027095)
+  * Use the right placeholder contact picture
+    in the call log and in the messages list (LP: #1006085)
+
+ -- Ugo Riboni <ugo.riboni@canonical.com>  Tue, 24 Jul 2012 05:29:36 -0700
+
+telephony-app (0.45) precise; urgency=low
+
+  [ Ugo Riboni ]
+  * Add a backspace button to the keypad (LP: #1018276)
+  * Email subtypes should not include "mobile" (LP: #1025808)
+  * Make sure the subtype editor text is not truncated (LP: #1020092)
+
+  [ Florian Boucault ]
+  * Implement visual design for buttons in all screens (LP: #1027118)
+
+ -- Florian Boucault <florian.boucault@canonical.com>  Mon, 23 Jul 2012 19:07:16 +0100
+
+telephony-app (0.44) precise; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
   * Change the application name to "Telephony". (LP: #1026308)
   * Remove social network update label. (LP: #1027114)
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 20 Jul 2012 15:40:29 -0300
+  [ Tiago Salem Herrmann ]
+  * Change the app to only accept not accepted channels
+  * Make the approver show the snap decision only for incoming channels 
+    and channels in initialised state
+  * call phone number entered in the quick dial entry when return is pressed (LP: #1015392)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 20 Jul 2012 14:06:55 -0700
 
 telephony-app (0.43) precise; urgency=low
 

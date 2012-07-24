@@ -169,10 +169,6 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[pr]);
     QString accountId = channel->property("accountId").toString();
 
-    if (channel->isRequested()) {
-        return;
-    }
-
     Tp::ContactPtr contact = channel->initiatorContact();
     Tp::ChannelDispatchOperationPtr dispatchOp = dispatchOperation(op);
     
@@ -181,8 +177,17 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     }
 
     Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[pr]);
-    if (callChannel) {
+    if (!callChannel) {
+        return;
+    }
+
+    bool isIncoming = channel->initiatorContact() != dispatchOp->connection()->selfContact();
+
+    if (isIncoming && !callChannel->isRequested() && callChannel->callState() == Tp::CallStateInitialised) {
         callChannel->setRinging();
+    } else {
+        onApproved(dispatchOp, NULL);
+        return;
     }
 
     connect(channel.data(),

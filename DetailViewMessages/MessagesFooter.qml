@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import "../Widgets"
 
-Item {
+FocusScope {
     id: footer
 
     signal newMessage(string message)
@@ -48,7 +48,7 @@ Item {
             id: sendButton
 
             anchors.right: parent.right
-            anchors.rightMargin: 5
+            anchors.rightMargin: 10
             anchors.top: entry.top
             anchors.bottom: entry.bottom
             width: 62

@@ -15,7 +15,7 @@
  */
 
 import QtQuick 1.1
-import Qt.labs.shaders 1.0
+import TelephonyApp 0.1
 
 /*!
     \qmlclass Button
@@ -81,6 +81,12 @@ ButtonWithForeground {
         return ((r*212)+(g*715)+(b*73))/1000/255;
     }
 
+    /* If the height of the button is smaller than the height of the shape,
+       scale the shape down by streching it entirely instead of conserving its
+       borders.
+    */
+    property bool __stretching: height < shape.sourceSize.height
+
     Item {
         z: -1
         anchors.fill: parent
@@ -90,12 +96,18 @@ ButtonWithForeground {
             id: shape
 
             anchors.fill: parent
+            visible: false
 
             horizontalTileMode: BorderImage.Stretch
             verticalTileMode: BorderImage.Stretch
             source: button.darkBorder ? "artwork/ButtonShapeDark.png" : "artwork/ButtonShape.png"
-            border.left: 18; border.top: 15
-            border.right: 18; border.bottom: 15
+            border {
+                left: button.__stretching ? 0 : 18
+                right: button.__stretching ? 0 : 18
+                top: button.__stretching ? 0 : 15
+                bottom: button.__stretching ? 0 : 15
+            }
+            smooth: true
         }
 
         // FIXME: might become a paper texture
@@ -104,15 +116,14 @@ ButtonWithForeground {
 
             anchors.fill: shape
             color: button.state != "pressed" ? button.color : button.pressedColor
-        }
 
-        ButtonMaskEffect {
-            anchors.fill: shape
-            gradientStrength: button.state != "pressed" ? 1.0 : 0.0
-            Behavior on gradientStrength {NumberAnimation {duration: 100; easing.type: Easing.OutQuad}}
+            effect: ButtonMaskEffect {
+                gradientStrength: button.state != "pressed" ? (button.darkBorder ? 0.5 : 0.36) : 0.0
+                dark: button.darkBorder
+                Behavior on gradientStrength {NumberAnimation {duration: 100; easing.type: Easing.OutQuad}}
 
-            mask: ShaderEffectSource {sourceItem: shape; live: false; hideSource: true}
-            base: ShaderEffectSource {sourceItem: base; live: true; hideSource: true}
+                mask: shape
+            }
         }
 
         // FIXME: could be generated from the shape (shadow parameters specified in guidelines)
@@ -124,8 +135,13 @@ ButtonWithForeground {
             verticalTileMode: BorderImage.Stretch
             source: if (button.darkBorder) return button.state == "pressed" ? "artwork/ButtonBorderDarkPressed.png" : "artwork/ButtonBorderDarkIdle.png"
                     else return button.state == "pressed" ? "artwork/ButtonBorderPressed.png" : "artwork/ButtonBorderIdle.png"
-            border.left: 14; border.top: 17
-            border.right: 15; border.bottom: 18
+            border {
+                left: button.__stretching ? 0 : 14
+                right: button.__stretching ? 0 : 15
+                top: button.__stretching ? 0 : 17
+                bottom: button.__stretching ? 0 : 18
+            }
+            smooth: true
         }
     }
 }

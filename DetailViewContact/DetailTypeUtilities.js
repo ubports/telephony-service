@@ -30,7 +30,7 @@ var ADDRESS_TYPE_WORK       = "work";
 var ADDRESS_TYPE_OTHER      = "other";
 
 var phoneSubTypes = [ "Home", "Mobile", "Work", "Work Fax", "Home Fax", "Pager", "Other" ];
-var emailSubTypes = [ "Work", "Home", "Mobile", "Other" ];
+var emailSubTypes = [ "Work", "Home", "Other" ];
 var postalAddressSubTypes = [ ADDRESS_LABEL_WORK,
                               ADDRESS_LABEL_HOME,
                               ADDRESS_LABEL_OTHER ];

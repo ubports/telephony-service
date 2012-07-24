@@ -14,7 +14,7 @@ Item {
 
         anchors.left: parent.left
         anchors.right: separator.left
-        iconSource: avatar
+        iconSource: (avatar != "") ? avatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
         subtext: phoneNumber

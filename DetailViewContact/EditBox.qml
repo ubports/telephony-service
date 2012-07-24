@@ -59,7 +59,7 @@ Item {
         id: rightBox
 
         anchors.right: parent.right
-        width: 76
+        width: 90
         anchors.top: parent.top
         anchors.bottom: parent.bottom
     }

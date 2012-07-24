@@ -20,6 +20,7 @@ Item {
 
     signal leftIconClicked
     signal rightIconClicked
+    signal activateFirstResult
 
     signal itemSelected(variant item)
     state: "idle"
@@ -32,6 +33,7 @@ Item {
         onTextChanged: text != "" ? dropDownSearch.state = "searching" : dropDownSearch.state = "idle"
         onLeftIconClicked: parent.leftIconClicked()
         onRightIconClicked: parent.rightIconClicked()
+        onActivateFirstResult: parent.activateFirstResult()
         backgroundSource: dropDownSearch.state == "searching" && searchView.count > 0 ? "../assets/input_field_autofill_top.sci" : "../assets/input_field_background.sci"
     }
 

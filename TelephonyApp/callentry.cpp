@@ -54,7 +54,6 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     connect(mChannel.data(),
             SIGNAL(localHoldStateChanged(Tp::LocalHoldState,Tp::LocalHoldStateReason)),
             SIGNAL(heldChanged()));
-    channel->accept();
 
     connect(&mMuteInterface,
             SIGNAL(MuteStateChanged(uint)),
@@ -65,6 +64,9 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
         startTimer(1000);
         mElapsedTime.start();
         Q_EMIT callActive();
+    } else {
+        // accept the call if it was not accepted yet
+        channel->accept();
     }
 
 }
