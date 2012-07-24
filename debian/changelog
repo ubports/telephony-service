@@ -1,11 +1,11 @@
-telephony-app (0.46) UNRELEASED; urgency=low
+telephony-app (0.46) precise; urgency=low
 
   * Focus the message input field when opening a conversation (LP: #1028173)
   * Prevent saving contacts entirely empty or new empty contact fields (LP: #1027095)
   * Use the right placeholder contact picture
     in the call log and in the messages list (LP: #1006085)
 
- -- Ugo Riboni <ugo.riboni@canonical.com>  Tue, 24 Jul 2012 04:57:59 -0700
+ -- Ugo Riboni <ugo.riboni@canonical.com>  Tue, 24 Jul 2012 05:29:36 -0700
 
 telephony-app (0.45) precise; urgency=low
 
