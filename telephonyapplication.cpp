@@ -83,7 +83,7 @@ TelephonyApplication::~TelephonyApplication()
 
 void TelephonyApplication::onViewStatusChanged(QDeclarativeView::Status status)
 {
-    if (m_argUrl.isEmpty() || (status != QDeclarativeView::Ready)) {
+    if (status != QDeclarativeView::Ready) {
         return;
     }
 
