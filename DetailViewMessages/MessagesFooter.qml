@@ -1,7 +1,7 @@
 import QtQuick 1.1
 import "../Widgets"
 
-Item {
+FocusScope {
     id: footer
 
     signal newMessage(string message)
