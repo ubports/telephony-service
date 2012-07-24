@@ -6,6 +6,7 @@ FocusScope {
 
     property variant contact: null
     property variant editable: false
+    property alias contactNameValid: name.valid
 
     width: parent.width
     height: editable ? Math.max(labelBox.height, 82) : 82

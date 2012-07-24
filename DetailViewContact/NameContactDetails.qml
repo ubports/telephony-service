@@ -7,6 +7,10 @@ FocusScope {
     property variant detail
     property bool editable
 
+    property bool valid: editor.firstName.trim().length > 0 ||
+                         editor.middleName.trim().length > 0 ||
+                         editor.lastName.trim().length > 0
+
     height: (editable) ? editor.height : text.paintedHeight
 
     function isNotEmptyString(string) {

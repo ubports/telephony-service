@@ -6,13 +6,18 @@ BaseContactDetailsDelegate {
     id: delegate
 
     function saveDetail() {
+        if (editor.street.trim().length == 0 && editor.locality.trim().length == 0 &&
+            editor.region.trim().length == 0 && editor.postcode.trim().length == 0 &&
+            editor.country.trim().length == 0) return false;
+
         if (detail) {
             detail.street = editor.street
             detail.locality = editor.locality
             detail.region = editor.region
             detail.postcode = editor.postcode
             detail.country = editor.country
-        }
+            return true;
+        } else return false;
     }
 
     Item {

@@ -54,7 +54,8 @@ FocusScope {
         if (subTypeEditor.selectedValue != "")
             DetailUtils.setDetailSubType(detail, subTypeEditor.selectedValue);
 
-        if (saveDetail instanceof Function) saveDetail();
+        if (saveDetail instanceof Function) return saveDetail();
+        else return true;
     }
 
     ListView.onRemove: SequentialAnimation {
