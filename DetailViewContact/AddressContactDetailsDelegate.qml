@@ -17,7 +17,7 @@ BaseContactDetailsDelegate {
             detail.postcode = editor.postcode
             detail.country = editor.country
             return true;
-        } return false;
+        } else return false;
     }
 
     Item {
