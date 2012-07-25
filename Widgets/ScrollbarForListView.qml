@@ -42,7 +42,8 @@ ScrollbarForFlickable {
         if (sectionCounter.sectionCount == 0) {
             /* When no section header, ListView.contentHeight is reliable.
 
-              FIXME: In QtQuick 1.1 removing a row will break the value of view.contentHeight.
+              FIXME: In QtQuick 1.1 removing a row of the ListView's model that is not
+              visible will break the value of view.contentHeight.
               Ref.: https://bugreports.qt-project.org/browse/QTBUG-23335
             */
             return view.contentHeight
