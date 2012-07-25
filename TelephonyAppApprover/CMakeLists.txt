@@ -24,6 +24,7 @@ target_link_libraries(telephony-app-approver
     ${TP_QT4_LIBRARIES}
     ${NOTIFY_LIBRARIES}
     ${INDICATE_QT_LIBRARIES}
+    ${INDICATE_LIBRARIES}
     )
 
 install(TARGETS telephony-app-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

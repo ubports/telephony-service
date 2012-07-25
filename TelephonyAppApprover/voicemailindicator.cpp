@@ -36,12 +36,19 @@ VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
              mConnection,
              this)
 {
-    mIndicateServer = new QIndicate::Server(this);
+    mIndicateServer = new QIndicate::Server(this, "/com/canonical/TelephonyApp/indicators/voicemail");
     mIndicateServer->setType("message");
     mIndicateServer->setDesktopFile("/usr/share/applications/telephony-app-phone.desktop");
+    mIndicateServer->show();
 
     mIndicator = new QIndicate::Indicator(this);
     mIndicator->setNameProperty("Voicemail");
+
+    // the indicator gets automatically added to the default server, so we need to remove it from there
+    // and add to the correct server
+    QIndicate::Server::defaultInstance()->removeIndicator(mIndicator);
+    mIndicateServer->addIndicator(mIndicator);
+
     connect(mIndicator,
             SIGNAL(display(QIndicate::Indicator*)),
             SLOT(onIndicatorDisplay(QIndicate::Indicator*)));
