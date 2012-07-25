@@ -24,7 +24,6 @@ Item {
     property real contentSize
 
     property real __visibleSizeRatio: pageSize / contentSize
-    property real __visiblePosition: contentPosition / contentSize
     property bool __scrollable: __visibleSizeRatio > 0.0 && __visibleSizeRatio < 1.0
 
     width: 30
@@ -34,6 +33,15 @@ Item {
 
     function __clamp(x, min, max) {
         return Math.max(min, Math.min(max, x))
+    }
+
+    // Linearly project a value x from [xmin, xmax] into [ymin, ymax]
+    function __project(x, xmin, xmax, ymin, ymax) {
+        return ((x - xmin) * ymax - (x - xmax) * ymin) / (xmax - xmin)
+    }
+
+    function __clampAndProject(x, xmin, xmax, ymin, ymax) {
+        return __project(__clamp(x, xmin, xmax), xmin, xmax, ymin, ymax)
     }
 
     /* Scroll by amount pixels never overshooting */
@@ -79,10 +87,7 @@ Item {
         Binding {
             target: slider
             property: "y"
-            value: {
-                var yPosition = __clamp(__visiblePosition, 0, 1-__visibleSizeRatio)
-                return yPosition * scrollbar.height
-            }
+            value: __clampAndProject(contentPosition, 0.0, contentSize - pageSize, 0.0, scrollbar.height - slider.height)
         }
     }
 
