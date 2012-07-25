@@ -100,6 +100,7 @@ void TextChannelObserver::updateIndicatorsFromChannel(const Tp::TextChannelPtr &
         indicator->setIconProperty(QImage(textChannel->targetContact()->avatarData().fileName));
         indicator->setCountProperty(textChannel->messageQueue().count());
         indicator->setTimeProperty(textChannel->messageQueue().last().received());
+        indicator->setDrawAttentionProperty(true);
         indicator->show();
     }
 }
