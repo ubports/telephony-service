@@ -48,7 +48,7 @@ ScrollbarForFlickable {
             */
             return view.contentHeight
         } else {
-            return sectionCounter.sectionCount * scrollbar.__sectionHeaderHeight + scrollbar.view.count * scrollbar.__delegateHeight
+            return sectionCounter.sectionCount * scrollbar.__sectionHeaderHeight + scrollbar.view.count * scrollbar.__delegateHeight + scrollbar.view.spacing * (scrollbar.view.count - 1)
         }
     }
 
