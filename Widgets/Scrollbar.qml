@@ -160,39 +160,20 @@ Item {
         property int dragYStart
         property int dragYAmount: thumbArea.drag.target.y - thumbArea.dragYStart
         property int thumbYStart
-        property int contentYStart
+        property int sliderYStart
         drag {
             target: Item {}
             /* necessary to make sure drag is activated even by a non vertical movement */
             axis: Drag.XandYAxis
-            onActiveChanged: if (drag.active) {dragYStart = drag.target.y; thumbYStart = thumb.y; contentYStart = contentPosition}
+            onActiveChanged: if (drag.active) {dragYStart = drag.target.y; thumbYStart = thumb.y; sliderYStart = slider.y}
         }
 
-        /* The content scrolls differently depending on where the thumb is
-           relative to the slider:
-            - if the thumb is 'connected' to the slider, the thumb allows the
-              user to scroll the entire content, from top to bottom
-            - if the thumb is not 'connected' to the slider, the thumb is fixed
-              to the slider and allows for precision scrolling of a small part
-              of the content
-        */
-        property bool precisionScrolling: contentSize <= thumbArea.height * 2 || thumb.isDetachedFromSlider
-
-        // precision scrolling: the thumb is fixed to the slider
+        /* The thumb allows the user to scroll the entire content, from top to bottom */
         Binding {
             target: scrollbar
             property: "contentPosition"
-            // FIXME: when clamped, reset dragging
-            value: __clamp(thumbArea.contentYStart + thumbArea.dragYAmount, 0, contentSize - pageSize)
-            when: thumbArea.drag.active && thumbArea.precisionScrolling
-        }
-
-        // proportional scrolling: all the content is reachable
-        Binding {
-            target: scrollbar
-            property: "contentPosition"
-            value: __project(thumb.y, 0.0, scrollbar.height - thumb.height, 0.0, contentSize - pageSize)
-            when: thumbArea.drag.active && !thumbArea.precisionScrolling
+            value: __clampAndProject(thumbArea.sliderYStart + thumbArea.dragYAmount, 0.0, scrollbar.height - slider.height, 0.0, contentSize - pageSize)
+            when: thumbArea.drag.active
         }
 
         Binding {
@@ -221,7 +202,6 @@ Item {
         property bool shown
         property int minimumY: 0
         property int maximumY: scrollbar.height - thumb.height
-        property bool isDetachedFromSlider: thumb.y + thumb.height <= slider.y || thumb.y >= slider.y + slider.height
 
         /* Show the thumb as close as possible to the mouse pointer */
         onShownChanged: {
