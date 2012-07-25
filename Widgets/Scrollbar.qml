@@ -191,7 +191,7 @@ Item {
         Binding {
             target: scrollbar
             property: "contentPosition"
-            value: thumb.y / (scrollbar.height - thumb.height) * (contentSize - pageSize)
+            value: __project(thumb.y, 0.0, scrollbar.height - thumb.height, 0.0, contentSize - pageSize)
             when: thumbArea.drag.active && !thumbArea.precisionScrolling
         }
 
