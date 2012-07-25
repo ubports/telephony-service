@@ -37,9 +37,11 @@ ScrollbarForFlickable {
               visible will break the value of view.contentHeight.
               Ref.: https://bugreports.qt-project.org/browse/QTBUG-23335
             */
-            return view.contentHeight
+            return view.contentHeight;
         } else {
-            return sectionCounter.sectionCount * scrollbar.__sectionHeaderHeight + scrollbar.view.count * scrollbar.__delegateHeight + scrollbar.view.spacing * (scrollbar.view.count - 1)
+            return sectionCounter.sectionCount * scrollbar.__sectionHeaderHeight
+                 + scrollbar.view.count * scrollbar.__delegateHeight
+                 + scrollbar.view.spacing * (scrollbar.view.count - 1);
         }
     }
 
