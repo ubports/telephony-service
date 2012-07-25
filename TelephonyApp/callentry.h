@@ -61,6 +61,9 @@ class CallEntry : public QObject
     Q_PROPERTY(bool active 
                READ isActive
                NOTIFY activeChanged)
+    Q_PROPERTY(bool dialing
+               READ dialing
+               NOTIFY dialingChanged)
 
 public:
     explicit CallEntry(const Tp::CallChannelPtr &channel, QObject *parent = 0);
@@ -78,6 +81,7 @@ public:
     int elapsedTime() const;
     bool isActive() const;
 
+    bool dialing() const;
     QString phoneNumber() const;
     QString contactAlias() const;
     QString contactAvatar() const;
@@ -100,6 +104,7 @@ Q_SIGNALS:
     void mutedChanged();
     void voicemailChanged();
     void phoneNumberChanged();
+    void dialingChanged();
     void contactAliasChanged();
     void contactAvatarChanged();
     void elapsedTimeChanged();
@@ -111,6 +116,7 @@ private:
     bool mVoicemail;
     bool mLocalMuteState;
     QTime mElapsedTime;
+    bool mChannelReady;
 };
 
 #endif // CALLENTRY_H

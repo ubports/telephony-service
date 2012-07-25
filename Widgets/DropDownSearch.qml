@@ -2,7 +2,7 @@ import QtQuick 1.1
 
 // FIXME: BUG WHEN SEARCHING
 
-Item {
+FocusScope {
     id: dropDownSearch
     property alias searchQuery: entry.searchQuery
     property alias model: searchView.model
@@ -35,6 +35,7 @@ Item {
         onRightIconClicked: parent.rightIconClicked()
         onActivateFirstResult: parent.activateFirstResult()
         backgroundSource: dropDownSearch.state == "searching" && searchView.count > 0 ? "../assets/input_field_autofill_top.sci" : "../assets/input_field_background.sci"
+        focus: true
     }
 
     ListView {

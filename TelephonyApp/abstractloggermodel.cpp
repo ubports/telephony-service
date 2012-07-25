@@ -263,6 +263,16 @@ bool AbstractLoggerModel::validateRequest(Tpl::PendingOperation *op)
     return false;
 }
 
+QModelIndex AbstractLoggerModel::indexFromEntry(LogEntry *entry) const
+{
+    int pos = mLogEntries.indexOf(entry);
+    if (pos < 0) {
+        return QModelIndex();
+    }
+
+    return index(pos, 0);
+}
+
 LogEntry *AbstractLoggerModel::createEntry(const Tpl::EventPtr &event)
 {
     Q_UNUSED(event);

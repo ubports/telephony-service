@@ -29,17 +29,20 @@ var ADDRESS_TYPE_HOME       = "home";
 var ADDRESS_TYPE_WORK       = "work";
 var ADDRESS_TYPE_OTHER      = "other";
 
-var phoneSubTypes = [ "Home", "Mobile", "Work", "Work Fax", "Home Fax", "Pager", "Other" ];
-var emailSubTypes = [ "Work", "Home", "Other" ];
-var postalAddressSubTypes = [ ADDRESS_LABEL_WORK,
-                              ADDRESS_LABEL_HOME,
+var phoneSubTypes = [ "Mobile", "Home", "Work", "Work Fax", "Home Fax", "Pager", "Other" ];
+
+var emailSubTypes = [ "Home", "Work", "Other" ];
+
+var postalAddressSubTypes = [ ADDRESS_LABEL_HOME,
+                              ADDRESS_LABEL_WORK,
                               ADDRESS_LABEL_OTHER ];
-var IMSubTypes = [ PROTOCOL_LABEL_AIM,
+
+var IMSubTypes = [ PROTOCOL_LABEL_GTALK,
+                   PROTOCOL_LABEL_AIM,
                    PROTOCOL_LABEL_MSN,
                    PROTOCOL_LABEL_YAHOO,
                    PROTOCOL_LABEL_SKYPE,
                    PROTOCOL_LABEL_QQ,
-                   PROTOCOL_LABEL_GTALK,
                    PROTOCOL_LABEL_ICQ,
                    PROTOCOL_LABEL_JABBER ];
 

@@ -66,6 +66,7 @@ private:
     QList<Tp::TextChannelPtr> mChannels;
     QMap<QString, QIndicate::Indicator*> mIndicators;
     QIndicate::Server *mIndicateServer;
+    QIndicate::Indicator *mNewMessageIndicator;
 };
 
 #endif // TEXTCHANNELOBSERVER_H

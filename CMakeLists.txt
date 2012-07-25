@@ -104,12 +104,9 @@ install(FILES ${TELEPHONY_APP}.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
     )
 
-install(FILES ${TELEPHONY_APP}.png
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/icons
-    )
-
 enable_testing()
 
 add_subdirectory(qtsingleapplication)
 add_subdirectory(TelephonyApp)
 add_subdirectory(TelephonyAppApprover)
+add_subdirectory(icons)

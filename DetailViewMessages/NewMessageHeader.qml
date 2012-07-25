@@ -26,6 +26,7 @@ BaseMessageHeader {
 
         rightIconSource: "../assets/icon_message_grey.png"
         rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
+        focus: true
 
         onRightIconClicked: {
             header.numberSelected(text)
