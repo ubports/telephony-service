@@ -25,6 +25,7 @@
 #include <libnotify/notify.h>
 
 #include <QMap>
+#include <QDBusServiceWatcher>
 #include <TelepathyQt/AbstractClientApprover>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/ChannelDispatchOperation>
@@ -37,6 +38,8 @@ public:
     TelephonyAppApprover();
     ~TelephonyAppApprover();
 
+    Tp::ChannelClassSpecList channelFilters() const;
+
     void addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                               const Tp::ChannelDispatchOperationPtr &dispatchOperation);
     Tp::ChannelDispatchOperationPtr dispatchOperation(Tp::PendingOperation *op);
@@ -45,16 +48,23 @@ public:
     void onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
                     Tp::ChannelPtr channel);
 
+protected:
+    void processChannels();
+
 private Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
     void onClaimFinished(Tp::PendingOperation* op);
     void onHangupFinished(Tp::PendingOperation* op);
     void onCallStateChanged(Tp::CallState state);
+    void onServiceRegistered(const QString &serviceName);
+    void onServiceUnregistered(const QString &serviceName);
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
     QMap<Tp::PendingOperation*,Tp::ChannelPtr> mChannels;
     NotifyNotification* mPendingSnapDecision;
+    QDBusServiceWatcher mTelephonyAppWatcher;
+    bool mTelephonyAppRunning;
 };
 
 #endif // TELEPHONYAPPAPPROVER_H

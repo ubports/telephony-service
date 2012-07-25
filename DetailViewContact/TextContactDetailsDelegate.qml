@@ -6,10 +6,11 @@ BaseContactDetailsDelegate {
     id: delegate
 
     function saveDetail() {
-        if (detail && detailTypeInfo.displayField) {
+        if (detail && detailTypeInfo.displayField && editor.text.trim().length > 0) {
             console.log("SAVING " + detail + " " + detailTypeInfo.displayField + " > " + editor.text)
             detail[detailTypeInfo.displayField] = (editor.text) ? editor.text : ""
-        }
+            return true;
+        } else return false;
     }
 
     Item {

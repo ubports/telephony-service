@@ -106,7 +106,8 @@ Item {
                     id: dialhangupButton
                     iconSource: isVoicemailActive() ? "../assets/incall_keypad_endcallbutton_icon.png" : "../assets/voicemail_icon.png"
                     width: isVoicemailActive() ? 64 : 128
-                    color: isVoicemailActive() ? "#bf400c" : "#1f71aa"
+                    color: isVoicemailActive() ? "#bf400c" : "#268bd2"
+                    darkBorder: true
                     onClicked: {
                         if(isVoicemailActive())
                             endCall()
@@ -121,6 +122,7 @@ Item {
                     visible: isVoicemailActive()
                     iconSource: callManager.speaker ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
                     color: "#565656"
+                    darkBorder: true
                     state: callManager.speaker ? "pressed" : ""
                     onClicked: {
                         if (call) {

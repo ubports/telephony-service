@@ -26,6 +26,15 @@ FocusScope {
         contact = Qt.createQmlObject("import TelephonyApp 0.1; ContactEntry {}", contactModel);
         editable = true;
         added = true;
+
+        for (var i = 0; i < detailsList.children.length; i++) {
+            var child = detailsList.children[i];
+            if (child.detailTypeInfo && child.detailTypeInfo.createOnNew) {
+                child.appendNewItem();
+            }
+        }
+
+        header.focus = true;
     }
 
     Connections {
@@ -87,6 +96,7 @@ FocusScope {
         id: header
         contact: contactDetails.contact
         editable: contactDetails.editable
+        focus: true
     }
 
     Image {
@@ -108,7 +118,8 @@ FocusScope {
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
         clip: true
-        contentHeight: detailsList.height + bottomSeparatorLine.height + (contactDetails.editable ? 32 + newDetailChooser.height + 10 : callLogSection.height)
+        contentHeight: detailsList.height + bottomSeparatorLine.height +
+                       (contactDetails.editable ? newDetailChooser.height + newDetailChooser.menuHeight + 10 : callLogSection.height)
 
         Column {
             id: detailsList
@@ -220,12 +231,12 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: detailsList.bottom
-            anchors.topMargin: 32
             anchors.leftMargin: 1
             anchors.rightMargin: 1
 
             opacity: (editable) ? 1.0 : 0.0
             contact: (editable) ? contactDetails.contact : null
+            height: (editable) ? 32 : 0
 
             onSelected: {
                 for (var i = 0; i < detailsList.children.length; i++) {
@@ -236,6 +247,8 @@ FocusScope {
                     }
                 }
             }
+
+            onOpenedChanged: if (opened) scrollArea.contentY = scrollArea.contentHeight
         }
     }
 
@@ -318,6 +331,7 @@ FocusScope {
                 anchors.rightMargin: 10
                 color: editable ? "#dd4f22" : "#e3e5e8"
                 text: (editable) ? "Save" : "Edit"
+                enabled: !editable || header.contactNameValid
                 onClicked: {
                     if (!editable) editable = true;
                     else {

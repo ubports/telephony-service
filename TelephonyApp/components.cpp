@@ -22,6 +22,7 @@
 #include "telepathyhelper.h"
 #include "channelhandler.h"
 #include "channelobserver.h"
+#include "chatmanager.h"
 #include "calllogmodel.h"
 #include "calllogproxymodel.h"
 #include "conversationlogmodel.h"
@@ -36,6 +37,7 @@
 #include "contactphonenumber.h"
 #include "messagelogmodel.h"
 #include "messagesproxymodel.h"
+#include "buttonmaskeffect.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/qdeclarative.h>
@@ -67,7 +69,7 @@ void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
             SLOT(onAccountReady()));
 
     mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
-    mRootContext->setContextProperty("chatManager", TelepathyHelper::instance()->chatManager());
+    mRootContext->setContextProperty("chatManager", ChatManager::instance());
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
     mRootContext->setContextProperty("contactModel", ContactModel::instance());
 
@@ -93,6 +95,7 @@ void Components::registerTypes(const char *uri)
     qmlRegisterType<ContactName>(uri, 0, 1, "ContactName");
     qmlRegisterType<ContactOnlineAccount>(uri, 0, 1, "ContactOnlineAccount");
     qmlRegisterType<ContactPhoneNumber>(uri, 0, 1, "ContactPhoneNumber");
+    qmlRegisterType<ButtonMaskEffect>(uri, 0, 1, "ButtonMaskEffect");
 }
 
 void Components::onChannelHandlerCreated(ChannelHandler *handler)
@@ -117,16 +120,16 @@ void Components::onAccountReady()
 
     mConversationLogModel = new ConversationLogModel(this);
     mRootContext->setContextProperty("conversationLogModel", mConversationLogModel);
-    connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageReceived(const QString&, const QString&)),
+    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&)),
             mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
-    connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageSent(const QString&, const QString&)),
+    connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mConversationLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 
     mMessageLogModel = new MessageLogModel(this);
     mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
-    connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageReceived(const QString&, const QString&)),
+    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
-    connect(TelepathyHelper::instance()->chatManager(), SIGNAL(messageSent(const QString&, const QString&)),
+    connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 }
 

@@ -58,7 +58,7 @@ Item {
     Item {
         id: container
 
-        anchors.top: backgroundCall.bottom
+        anchors.top: backgroundCall.visible ? backgroundCall.bottom : parent.top
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -261,6 +261,7 @@ Item {
                     iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
                     width: 64
                     color: "#bf400c"
+                    darkBorder: true
                     onClicked: endCall()
                 }
 
@@ -270,6 +271,7 @@ Item {
                     iconSource: "../assets/incall_keypad_addcaller_unselected.png"
                     width: 64
                     color: "#666666"
+                    darkBorder: true
                 }
             }
         }

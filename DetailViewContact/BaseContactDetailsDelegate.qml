@@ -54,7 +54,8 @@ FocusScope {
         if (subTypeEditor.selectedValue != "")
             DetailUtils.setDetailSubType(detail, subTypeEditor.selectedValue);
 
-        if (saveDetail instanceof Function) saveDetail();
+        if (saveDetail instanceof Function) return saveDetail();
+        else return true;
     }
 
     ListView.onRemove: SequentialAnimation {
@@ -193,7 +194,7 @@ FocusScope {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            width: 76
+            width: 90
             detailTypeInfo: contactDetailsItem.detailTypeInfo
             detail: contactDetailsItem.detail
         }

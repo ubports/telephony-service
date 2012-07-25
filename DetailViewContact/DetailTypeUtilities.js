@@ -30,7 +30,7 @@ var ADDRESS_TYPE_WORK       = "work";
 var ADDRESS_TYPE_OTHER      = "other";
 
 var phoneSubTypes = [ "Home", "Mobile", "Work", "Work Fax", "Home Fax", "Pager", "Other" ];
-var emailSubTypes = [ "Work", "Home", "Mobile", "Other" ];
+var emailSubTypes = [ "Work", "Home", "Other" ];
 var postalAddressSubTypes = [ ADDRESS_LABEL_WORK,
                               ADDRESS_LABEL_HOME,
                               ADDRESS_LABEL_OTHER ];
@@ -42,6 +42,7 @@ var IMSubTypes = [ PROTOCOL_LABEL_AIM,
                    PROTOCOL_LABEL_GTALK,
                    PROTOCOL_LABEL_ICQ,
                    PROTOCOL_LABEL_JABBER ];
+
 var supportedTypes = [
             {
                 name: "Phone",
@@ -51,7 +52,8 @@ var supportedTypes = [
                 newItemType: "ContactPhoneNumber",
                 actionIcon: "../assets/contact_icon_message.png",
                 displayField: "number",
-                subTypes: phoneSubTypes
+                subTypes: phoneSubTypes,
+                createOnNew: true
             },
             {
                 name: "Email",
@@ -61,7 +63,8 @@ var supportedTypes = [
                 newItemType: "ContactEmailAddress",
                 actionIcon: "../assets/contact_icon_email.png",
                 displayField: "emailAddress",
-                subTypes: emailSubTypes
+                subTypes: emailSubTypes,
+                createOnNew: true
             },
             {
                 name: "Address",

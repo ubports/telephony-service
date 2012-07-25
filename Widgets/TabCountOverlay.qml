@@ -16,7 +16,28 @@
 
 import QtQuick 1.1
 
-Button {
-    width: 65
-    height: 27
+BorderImage {
+    id: overlay
+
+    property int count: 0
+    property bool selected: false
+
+    source: selected ? "../assets/tab_overlay_count_active.png" : "../assets/tab_overlay_count_inactive.png"
+    border.left: 3
+    border.right: 3
+    border.top: 3
+    border.bottom: 3
+    visible: count > 0
+    width: border.left + border.right + countText.paintedWidth
+    height: Math.max(sourceSize.height, countText.paintedHeight)
+
+    TextCustom {
+        id: countText
+        fontSize: "x-small"
+        color: "white"
+        anchors.fill: parent
+        text: count
+        verticalAlignment: Text.AlignVCenter
+        horizontalAlignment: Text.AlignHCenter
+    }
 }

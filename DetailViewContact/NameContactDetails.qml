@@ -1,11 +1,15 @@
 import QtQuick 1.1
 import "../Widgets"
 
-Item {
+FocusScope {
     id: name
 
     property variant detail
     property bool editable
+
+    property bool valid: editor.firstName.trim().length > 0 ||
+                         editor.middleName.trim().length > 0 ||
+                         editor.lastName.trim().length > 0
 
     height: (editable) ? editor.height : text.paintedHeight
 
@@ -65,5 +69,6 @@ Item {
         Behavior on opacity {StandardAnimation {}}
 
         detail: name.detail
+        focus: true
     }
 }

@@ -19,12 +19,12 @@ FocusScope {
 
     function save() {
         var added = [];
-        for (var i = 0; i < children.length; i++) {
-            var child = children[i];
+        for (var i = 0; i < col.children.length; i++) {
+            var child = col.children[i];
             if (child && child.item && child.item.save && child.item.save instanceof Function &&
                !child.item.deleted) {
-                child.item.save();
-                if (child.item.added) {
+                var valid = child.item.save();
+                if (child.item.added && valid) {
                     added.push(child.item.detail);
                 }
             }

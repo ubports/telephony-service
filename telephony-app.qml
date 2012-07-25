@@ -130,19 +130,22 @@ Item {
                     "iconUnselected": "../assets/tab_icon_call_inactive.png",
                     "iconSelected": "../assets/tab_icon_call_active.png",
                     "panel": "PanelCalls/CallPanel.qml",
-                    "pane": "Panes/CallEndedPane.qml"
+                    "pane": "Panes/CallEndedPane.qml",
+                    "eventCountSource": "0"
                 },
                 {
                     "iconUnselected": "../assets/tab_icon_messaging_inactive.png",
                     "iconSelected": "../assets/tab_icon_messaging_active.png",
                     "panel": "PanelMessages/MessagesPanel.qml",
-                    "pane": "Panes/SelectMessagePane.qml"
+                    "pane": "Panes/SelectMessagePane.qml",
+                    "eventCountSource": "chatManager.unreadMessagesCount"
                 },
                 {
                     "iconUnselected": "../assets/tab_icon_contacts_inactive.png",
                     "iconSelected": "../assets/tab_icon_contacts_active.png",
                     "panel": "PanelContacts/ContactsPanel.qml",
-                    "pane": "Panes/SelectContactPane.qml"
+                    "pane": "Panes/SelectContactPane.qml",
+                    "eventCountSource": "0"
                 }
             ]
         }
@@ -271,6 +274,6 @@ Item {
 
     Connections {
         target: dbus
-        onShowMessagesRequested: tabs.currentTab = 1
+        onShowMessagesRequested: telephony.startChat("", number, "")
     }
 }
