@@ -93,19 +93,8 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
 
     entry->message = textEvent->message();
     entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
-
-    // avoid adding the same entry twice
     entry->phoneNumber = textEvent->receiver()->alias();
     entry->unreadCount = ChatManager::instance()->unreadMessages(entry->phoneNumber);
-    Q_FOREACH(LogEntry *logEntry, mLogEntries) {
-        ConversationLogEntry *entry1 = dynamic_cast<ConversationLogEntry*>(logEntry);
-        if (!entry1) {
-            continue;
-        }
-        if (ContactModel::instance()->comparePhoneNumbers(entry1->phoneNumber, entry->phoneNumber)) {
-            return NULL;
-        }
-    }
 
     return entry;
 }
@@ -133,16 +122,58 @@ void ConversationLogModel::handleEvents(const Tpl::EventPtrList &events)
         return;
     }
 
-    Tpl::EventPtr newestEvent = events.first();
+    // This function is going to be called once per entity, so we don't need to check for the entity
+    // at this point
+
+    Tpl::TextEventPtr newestEvent;
+    bool found = false;
 
     // search for the newest message
     Q_FOREACH(const Tpl::EventPtr &event, events) {
-        if (event->timestamp() > newestEvent->timestamp()) {
-            newestEvent = event;
+        const Tpl::TextEventPtr textEvent = event.dynamicCast<Tpl::TextEvent>();
+        if (!textEvent) {
+            continue;
+        }
+
+        // check if the message is an incoming one and if it was read already
+        // and if it was not, ignore it
+        bool incoming = textEvent->sender()->entityType() != Tpl::EntityTypeSelf;
+        if (incoming && textEvent->editTimestamp().toTime_t() == 0) {
+            continue;
+        }
+
+        if (!found || textEvent->timestamp() > newestEvent->timestamp()) {
+            found = true;
+            newestEvent = textEvent;
         }
     }
 
-    appendEvents(Tpl::EventPtrList() << newestEvent);
+    // if no read message was found, exit the function
+    if (!found) {
+        return;
+    }
+
+    // after finding the latest message, check if we have an entry for it already
+    // and if we do, just update it
+    ConversationLogEntry *entry = findEntry(threadIdFromIdentifier(newestEvent->receiver()->identifier()),
+                                            newestEvent->receiver()->alias());
+    if (entry) {
+        if (entry->timestamp >= newestEvent->timestamp()) {
+            return;
+        }
+
+        entry->timestamp = newestEvent->timestamp();
+        entry->threadId = threadIdFromIdentifier(newestEvent->receiver()->identifier());
+        entry->message = newestEvent->message();
+        entry->incoming = newestEvent->sender()->entityType() != Tpl::EntityTypeSelf;
+        QModelIndex index = indexFromEntry(entry);
+        if (index.isValid()) {
+            emit dataChanged(index, index);
+        }
+    } else {
+        // if we didn't find an entry, append the message
+        appendEvents(Tpl::EventPtrList() << newestEvent);
+    }
 }
 
 void ConversationLogModel::updateLatestMessage(const QString &number, const QString &message, bool incoming)
@@ -182,4 +213,20 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
     }
 
     appendEntry(entry);
+}
+
+ConversationLogEntry *ConversationLogModel::findEntry(const QString &threadId, const QString &phoneNumber)
+{
+    Q_FOREACH(LogEntry *logEntry, mLogEntries) {
+        ConversationLogEntry *entry = dynamic_cast<ConversationLogEntry*>(logEntry);
+        if (!entry) {
+            continue;
+        }
+        if (entry->threadId == threadId ||
+            ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, phoneNumber)) {
+            return entry;
+        }
+    }
+
+    return 0;
 }
