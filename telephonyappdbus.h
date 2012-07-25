@@ -38,9 +38,11 @@ public:
 
 public Q_SLOTS:
     Q_NOREPLY void ShowMessages(const QString &number);
+    Q_NOREPLY void NewMessage();
 
 Q_SIGNALS:
     void showMessagesRequested(const QString &number);
+    void newMessageRequested();
 };
 
 #endif // TELEPHONYAPPDBUS_H

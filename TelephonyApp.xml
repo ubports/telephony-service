@@ -15,5 +15,10 @@
             ]]></dox:d>
             <arg name="number" type="s" direction="in"/>
         </method>
+        <method name="NewMessage">
+            <dox:d><![CDATA[
+               Request to open the messages tab to send a new message.
+            ]]></dox:d>
+        </method>
     </interface>
 </node>

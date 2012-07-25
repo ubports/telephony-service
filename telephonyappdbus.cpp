@@ -52,3 +52,8 @@ TelephonyAppDBus::ShowMessages(const QString &number)
 {
     Q_EMIT showMessagesRequested(number);
 }
+
+void TelephonyAppDBus::NewMessage()
+{
+    Q_EMIT newMessageRequested();
+}
