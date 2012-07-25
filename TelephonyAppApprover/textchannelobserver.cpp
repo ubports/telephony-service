@@ -34,6 +34,14 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
     mIndicateServer = QIndicate::Server::defaultInstance();
     mIndicateServer->setType("message");
     mIndicateServer->setDesktopFile("/usr/share/applications/telephony-app-sms.desktop");
+
+    mNewMessageIndicator = new QIndicate::Indicator(this);
+    mNewMessageIndicator->setNameProperty("New Message...");
+    mNewMessageIndicator->show();
+
+    connect(mNewMessageIndicator,
+            SIGNAL(display(QIndicate::Indicator*)),
+            SLOT(onIndicatorDisplay(QIndicate::Indicator*)));
 }
 
 Tp::ChannelClassSpecList TextChannelObserver::channelFilters() const
@@ -233,6 +241,16 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
 
 void TextChannelObserver::onIndicatorDisplay(QIndicate::Indicator *indicator)
 {
+    QDBusInterface telephonyApp("com.canonical.TelephonyApp",
+                                "/com/canonical/TelephonyApp",
+                                "com.canonical.TelephonyApp");
+
+    if (indicator == mNewMessageIndicator) {
+        telephonyApp.call("NewMessage");
+        return;
+    }
+
+    // look for the channel to get the number to display messages from
     Tp::TextChannelPtr channel = channelFromPath(indicator->property("channelPath").toString());
     if (channel.isNull()) {
         qWarning() << "Unable to find the text channel corresponding to the indicator" << indicator;
@@ -240,8 +258,5 @@ void TextChannelObserver::onIndicatorDisplay(QIndicate::Indicator *indicator)
     }
 
     QString id = channel->targetContact()->id();
-    QDBusInterface telephonyApp("com.canonical.TelephonyApp",
-                                "/com/canonical/TelephonyApp",
-                                "com.canonical.TelephonyApp");
     telephonyApp.call("ShowMessages", id);
 }
