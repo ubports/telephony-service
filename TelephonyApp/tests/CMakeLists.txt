@@ -7,8 +7,12 @@ macro(generate_tests)
         qt4_generate_moc(${test}.cpp ${test}.moc)
         add_executable(${test} ${test}.cpp ${test}.moc)
         target_link_libraries(${test}
-            ${QT_QTCORE_LIBRARIES}
             ${QT_QTTEST_LIBRARIES}
+            ${QT_QTCORE_LIBRARIES}
+            ${QT_QTGUI_LIBRARIES}
+            ${QT_QTDBUS_LIBRARIES}
+            ${TPL_QT4_LIBRARIES}
+            telephony-qml
             )
         add_test(${test} ${CMAKE_CURRENT_BINARY_DIR}/${test})
     endforeach(test)
@@ -16,4 +20,5 @@ endmacro(generate_tests)
 
 generate_tests(
     TemplateTest
+    ModelSectionCounterTest
     )
