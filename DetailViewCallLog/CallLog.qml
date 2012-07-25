@@ -98,7 +98,7 @@ Item {
         }
     }
 
-    Scrollbar {
-        targetFlickable: callLogView
+    ScrollbarForListView {
+        view: callLogView
     }
 }

@@ -32,7 +32,7 @@ Item {
         }
     }
 
-    Scrollbar {
-        targetFlickable: listView
+    ScrollbarForListView {
+        view: listView
     }
 }

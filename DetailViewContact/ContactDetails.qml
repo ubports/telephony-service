@@ -252,8 +252,8 @@ FocusScope {
         }
     }
 
-    Scrollbar {
-        targetFlickable: scrollArea
+    ScrollbarForFlickable {
+        flickable: scrollArea
     }
 
     Item {

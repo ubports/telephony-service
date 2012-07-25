@@ -97,7 +97,7 @@ Item {
         }
     }
 
-    Scrollbar {
-        targetFlickable: messagesList
+    ScrollbarForListView {
+        view: messagesList
     }
 }

@@ -16,27 +16,18 @@
 
 import QtQuick 1.1
 
-/*
-  Example usage:
-
-  Flickable {
-      id: flickable
-  }
-
-  Scrollbar {
-      targetFlickable: flickable
-  }
-*/
 Item {
     id: scrollbar
 
-    property variant targetFlickable
-    property bool __scrollable: targetFlickable.visibleArea.heightRatio != 1.0
+    property real pageSize
+    property real contentPosition
+    property real contentSize
+
+    property real __visibleSizeRatio: pageSize / contentSize
+    property real __visiblePosition: contentPosition / contentSize
+    property bool __scrollable: __visibleSizeRatio != 1.0
 
     width: 30
-    anchors.right: targetFlickable.right
-    anchors.top: targetFlickable.top
-    anchors.bottom: targetFlickable.bottom
 
     opacity: __scrollable ? 1.0 : 0.0
     Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
@@ -47,17 +38,17 @@ Item {
 
     /* Scroll by amount pixels never overshooting */
     function __scrollBy(amount) {
-        var destination = targetFlickable.contentY + amount
-        scrollAnimation.to = __clamp(destination, 0, targetFlickable.contentHeight - targetFlickable.height)
+        var destination = contentPosition + amount
+        scrollAnimation.to = __clamp(destination, 0, contentSize - pageSize)
         scrollAnimation.restart()
     }
 
     function __scrollOnePageUp() {
-        __scrollBy(-targetFlickable.height)
+        __scrollBy(-pageSize)
     }
 
     function __scrollOnePageDown() {
-        __scrollBy(targetFlickable.height)
+        __scrollBy(pageSize)
     }
 
     SmoothedAnimation {
@@ -65,8 +56,8 @@ Item {
 
         duration: 200
         easing.type: Easing.InOutQuad
-        target: targetFlickable
-        property: "contentY"
+        target: scrollbar
+        property: "contentPosition"
     }
 
     /* The slider's position represents which part of the flickable is visible.
@@ -82,14 +73,14 @@ Item {
         width: 2
         color: "#fc7134"
 
-        height: __clamp(targetFlickable.visibleArea.heightRatio * scrollbar.height, minimalHeight, scrollbar.height)
+        height: __clamp(__visibleSizeRatio * scrollbar.height, minimalHeight, scrollbar.height)
         Behavior on height {NumberAnimation {duration: 200; easing.type: Easing.InOutQuad}}
 
         Binding {
             target: slider
             property: "y"
             value: {
-                var yPosition = __clamp(targetFlickable.visibleArea.yPosition, 0, 1-targetFlickable.visibleArea.heightRatio)
+                var yPosition = __clamp(__visiblePosition, 0, 1-__visibleSizeRatio)
                 return yPosition * scrollbar.height
             }
         }
@@ -170,7 +161,7 @@ Item {
             target: Item {}
             /* necessary to make sure drag is activated even by a non vertical movement */
             axis: Drag.XandYAxis
-            onActiveChanged: if (drag.active) {dragYStart = drag.target.y; thumbYStart = thumb.y; contentYStart = targetFlickable.contentY}
+            onActiveChanged: if (drag.active) {dragYStart = drag.target.y; thumbYStart = thumb.y; contentYStart = contentPosition}
         }
 
         /* The content scrolls differently depending on where the thumb is
@@ -182,16 +173,16 @@ Item {
               of the content
         */
         Binding {
-            target: targetFlickable
-            property: "contentY"
+            target: scrollbar
+            property: "contentPosition"
             value: {
-                if (targetFlickable.contentHeight <= thumbArea.height * 2 || thumb.isDetachedFromSlider) {
+                if (contentSize <= thumbArea.height * 2 || thumb.isDetachedFromSlider) {
                     // precision scrolling: the thumb is fixed to the slider
                     // FIXME: when clamped, reset dragging
-                    return __clamp(thumbArea.contentYStart + thumbArea.dragYAmount, 0, targetFlickable.contentHeight - targetFlickable.height)
+                    return __clamp(thumbArea.contentYStart + thumbArea.dragYAmount, 0, contentSize - pageSize)
                 } else {
                     // proportional scrolling: all the content is reachable
-                    return thumb.y / (scrollbar.height - thumb.height) * (targetFlickable.contentHeight - targetFlickable.height)
+                    return thumb.y / (scrollbar.height - thumb.height) * (contentSize - pageSize)
                 }
             }
             when: thumbArea.drag.active

@@ -73,7 +73,7 @@ Item {
         }
     }
 
-    Scrollbar {
-        targetFlickable: contactsList
+    ScrollbarForListView {
+        view: contactsList
     }
 }
