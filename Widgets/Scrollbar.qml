@@ -23,8 +23,7 @@ Item {
     property real contentPosition
     property real contentSize
 
-    property real __visibleSizeRatio: pageSize / contentSize
-    property bool __scrollable: __visibleSizeRatio > 0.0 && __visibleSizeRatio < 1.0
+    property bool __scrollable: contentSize > 0.0 && pageSize > 0.0 && contentSize > pageSize
 
     width: 30
 
@@ -81,7 +80,7 @@ Item {
         width: 2
         color: "#fc7134"
 
-        height: __clamp(__visibleSizeRatio * scrollbar.height, minimalHeight, scrollbar.height)
+        height: __clamp(pageSize / contentSize * scrollbar.height, minimalHeight, scrollbar.height)
         Behavior on height {NumberAnimation {duration: 200; easing.type: Easing.InOutQuad}}
 
         Binding {
