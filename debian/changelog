@@ -1,3 +1,9 @@
+telephony-app (0.48) UNRELEASED; urgency=low
+
+  * Use more sensible default subtypes for new fields (LP: #1028161)
+
+ -- Ugo Riboni <ugo.riboni@canonical.com>  Wed, 25 Jul 2012 06:27:20 -0700
+
 telephony-app (0.47) precise; urgency=low
 
   [ Renato Araujo Oliveira Filho ]
