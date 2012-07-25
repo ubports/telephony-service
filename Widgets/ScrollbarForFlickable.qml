@@ -49,23 +49,27 @@ Scrollbar {
         return contentY
     }
 
-    Connections {
-        target: flickable
-        onContentYChanged: {
-            var newValue = __contentPositionFromContentY(flickable.contentY)
-            if (scrollbar.contentPosition != newValue) {
-                scrollbar.contentPosition = newValue
-            }
+    function __updateContentPosition() {
+        var newValue = __contentPositionFromContentY(flickable.contentY)
+        if (scrollbar.contentPosition != newValue) {
+            scrollbar.contentPosition = newValue
+        }
+    }
+
+    function __updateContentY() {
+        var newValue = __contentYFromContentPosition(scrollbar.contentPosition)
+        if (flickable.contentY != newValue) {
+            flickable.contentY = newValue
         }
     }
 
     Connections {
+        target: flickable
+        onContentYChanged: __updateContentPosition()
+    }
+
+    Connections {
         target: scrollbar
-        onContentPositionChanged: {
-            var newValue = __contentYFromContentPosition(scrollbar.contentPosition)
-            if (flickable.contentY != newValue) {
-                flickable.contentY = newValue
-            }
-        }
+        onContentPositionChanged: __updateContentY()
     }
 }

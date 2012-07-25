@@ -17,15 +17,6 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 
-/* FIXME: Removing the first row of the ListView's model will render
-   ListView.contentY invalid and therefore break the scrollbar's position.
-   This is fixable in QtQuick 2.0 thanks to the introduction of the
-   Flickable.originY property.
-
-   Ref.: https://bugreports.qt-project.org/browse/QTBUG-20927
-         https://bugreports.qt-project.org/browse/QTBUG-21358
-         http://doc-snapshot.qt-project.org/5.0/qml-qtquick2-flickable.html#originX-prop
-*/
 ScrollbarForFlickable {
     id: scrollbar
 
@@ -50,6 +41,31 @@ ScrollbarForFlickable {
         } else {
             return sectionCounter.sectionCount * scrollbar.__sectionHeaderHeight + scrollbar.view.count * scrollbar.__delegateHeight + scrollbar.view.spacing * (scrollbar.view.count - 1)
         }
+    }
+
+    /* Removing the first row of the ListView's model will render
+       ListView.contentY invalid and therefore break the scrollbar's position.
+       This is fixable in QtQuick 2.0 thanks to the introduction of the
+       Flickable.originY property.
+       In QtQuick 1.1, we compute originY manually using the fact that
+       ListView.visibleArea.yPosition is not rendered invalid by removing the
+       first row of the ListView's model.
+       Unfortunately the result is not flawless when the ListView uses section
+       headers because ListView.visibleArea.yPosition is often slightly incorrect.
+
+       Ref.: https://bugreports.qt-project.org/browse/QTBUG-20927
+             https://bugreports.qt-project.org/browse/QTBUG-21358
+             http://doc-snapshot.qt-project.org/5.0/qml-qtquick2-flickable.html#originX-prop
+    */
+    property real originY: -view.contentY + Math.round(view.visibleArea.yPosition * contentSize)
+    onOriginYChanged: scrollbar.__updateContentPosition()
+
+    function __contentYFromContentPosition(contentPosition) {
+        return contentPosition - scrollbar.originY
+    }
+
+    function __contentPositionFromContentY(contentY) {
+        return contentY + scrollbar.originY
     }
 
     /* Compute delegate and section header height by instantiating view.delegate
