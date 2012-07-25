@@ -1,6 +1,6 @@
 import QtQuick 1.1
 
-Item {
+FocusScope {
     property string viewName: "keypad"
 
     anchors.fill: parent

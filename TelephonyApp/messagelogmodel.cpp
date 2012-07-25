@@ -88,14 +88,25 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
     return entry;
 }
 
-void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
+void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
 {
-    // we have to clear the cache right before
-    // adding new items to the model or we
-    // might have duplicated data if we receive messages while
-    // fetching
-    clear();
+    Tpl::EventPtrList filteredEvents;
 
-    requestDatesForEntities(entities);
+    Q_FOREACH(const Tpl::EventPtr &event, events) {
+        const Tpl::TextEventPtr textEvent = event.dynamicCast<Tpl::TextEvent>();
+        if (!textEvent) {
+            continue;
+        }
+
+        // if the edit timestamp is set, the message was already read and can
+        // be appended to the model.
+        // Also, if the message is outgoing, it should also be appeneded to the model
+        bool outgoing = textEvent->sender()->entityType() == Tpl::EntityTypeSelf;
+        if (outgoing || textEvent->editTimestamp().toTime_t() > 0) {
+            filteredEvents.append(event);
+        }
+    }
+
+    AbstractLoggerModel::handleEvents(filteredEvents);
 }
 
