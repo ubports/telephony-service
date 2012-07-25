@@ -1,9 +1,14 @@
-telephony-app (0.47) UNRELEASED; urgency=low
+telephony-app (0.47) precise; urgency=low
 
   [ Renato Araujo Oliveira Filho ]
   * Fixed contact loader from another instance.(LP: #1022686)
 
- -- Renato Araujo Oliveira Filho <renato@canonical.com>  Tue, 24 Jul 2012 15:16:56 -0300
+  [ Gustavo Pichorim Boiko ]
+  * Ignore unread messages from logger. Those will be all delivered by the
+    telepathy connection manager. (LP: #1024063)
+  * Turn the indicator blue when a new message arrives. (LP: #1027959)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 25 Jul 2012 10:17:24 -0300
 
 telephony-app (0.46) precise; urgency=low
 
