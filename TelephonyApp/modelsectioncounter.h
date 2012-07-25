@@ -23,12 +23,14 @@
 #include <QtCore/QObject>
 #include <QtCore/QAbstractListModel>
 
+class QDeclarativeVisualModel;
+
 class ModelSectionCounter : public QObject
 {
     Q_OBJECT
 
     Q_PROPERTY(QString sectionProperty READ sectionProperty WRITE setSectionProperty NOTIFY sectionPropertyChanged)
-    Q_PROPERTY(QAbstractListModel* model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(QDeclarativeVisualModel* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(unsigned int sectionCount READ sectionCount NOTIFY sectionCountChanged)
 
 public:
@@ -37,8 +39,8 @@ public:
     QString sectionProperty() const;
     void setSectionProperty(const QString &sectionProperty);
 
-    QAbstractListModel* model() const;
-    void setModel(QAbstractListModel* model);
+    QDeclarativeVisualModel* model() const;
+    void setModel(QDeclarativeVisualModel* model);
 
     unsigned int sectionCount() const;
 
@@ -52,7 +54,7 @@ protected Q_SLOTS:
 
 private:
     QString m_sectionProperty;
-    QAbstractListModel* m_model;
+    QDeclarativeVisualModel* m_model;
     unsigned int m_sectionCount;
 };
 

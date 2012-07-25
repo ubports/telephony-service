@@ -18,6 +18,7 @@
  */
 
 #include "modelsectioncounter.h"
+#include "qdeclarativevisualitemmodel_p.h"
 
 ModelSectionCounter::ModelSectionCounter(QObject *parent) :
     QObject(parent),
@@ -43,18 +44,30 @@ void ModelSectionCounter::setSectionProperty(const QString &sectionProperty)
     updateSectionCount();
 }
 
-QAbstractListModel* ModelSectionCounter::model() const
+QDeclarativeVisualModel* ModelSectionCounter::model() const
 {
     return m_model;
 }
 
-void ModelSectionCounter::setModel(QAbstractListModel* model)
+void ModelSectionCounter::setModel(QDeclarativeVisualModel* model)
 {
     if (model == m_model) {
         return;
     }
 
-    // FIXME: dis/connect updateSectionCount() to model's change signals
+    if (m_model != NULL) {
+        m_model->disconnect(this);
+    }
+
+    m_model = model;
+
+    if (model != NULL) {
+        connect(model, SIGNAL(itemsMoved(int,int,int)), SLOT(updateSectionCount()));
+        connect(model, SIGNAL(itemsChanged(int,int)), SLOT(updateSectionCount()));
+        connect(model, SIGNAL(countChanged()), SLOT(updateSectionCount()));
+        connect(model, SIGNAL(modelReset()), SLOT(updateSectionCount()));
+        connect(model, SIGNAL(createdItem(int,QDeclarativeItem*)), SLOT(updateSectionCount()));
+    }
 
     Q_EMIT modelChanged();
     updateSectionCount();
@@ -68,18 +81,19 @@ unsigned int ModelSectionCounter::sectionCount() const
 void ModelSectionCounter::updateSectionCount()
 {
     unsigned int sectionCount = 0;
-    int rowCount = m_model->rowCount();
-    QString previousRowCriteria;
-    QString currentRowCriteria;
 
-    // FIXME: add support for more than just QStringListModel
-    for (unsigned int i=0; i<rowCount; i++) {
-        QVariant data = m_model->data(m_model->index(i));
-        currentRowCriteria = data.toString()[0];
-        if (currentRowCriteria != previousRowCriteria) {
-            sectionCount++;
+    if (m_model != NULL) {
+        int rowCount = m_model->count();
+        QString previousRowCriteria;
+        QString currentRowCriteria;
+
+        for (unsigned int i=0; i<rowCount; i++) {
+            currentRowCriteria = m_model->stringValue(i, m_sectionProperty);
+            if (currentRowCriteria != previousRowCriteria || i == 0) {
+                sectionCount++;
+            }
+            previousRowCriteria = currentRowCriteria;
         }
-        previousRowCriteria = currentRowCriteria;
     }
 
     if (sectionCount != m_sectionCount) {
