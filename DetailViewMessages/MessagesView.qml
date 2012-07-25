@@ -51,7 +51,8 @@ FocusScope {
     onNewMessageChanged: {
         if (newMessage) {
             number = "";
-        }
+            headerLoader.focus = true;
+        } else footer.focus = true;
     }
 
     onNumberChanged: {
@@ -114,6 +115,7 @@ FocusScope {
 
         sourceComponent: view.newMessage ? newHeaderComponent : headerComponent
         anchors.top: parent.top
+        onLoaded: item.focus = true
     }
 
     Image {

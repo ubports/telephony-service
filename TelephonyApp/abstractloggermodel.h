@@ -81,6 +81,7 @@ protected:
     void clear();
     void invalidateRequests();
     bool validateRequest(Tpl::PendingOperation *op);
+    QModelIndex indexFromEntry(LogEntry *entry) const;
 
     virtual LogEntry *createEntry(const Tpl::EventPtr &event);
     virtual void handleEntities(const Tpl::EntityPtrList &entities);
