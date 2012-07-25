@@ -41,16 +41,31 @@ Scrollbar {
 
 
     // Synchronize scrollbar.contentPosition with flickable.contentY (aka. two-way property binding)
+    function __contentYFromContentPosition(contentPosition) {
+        return contentPosition
+    }
+
+    function __contentPositionFromContentY(contentY) {
+        return contentY
+    }
+
     Connections {
         target: flickable
-        onContentYChanged: if (flickable.contentY != scrollbar.contentPosition) {
-                               scrollbar.contentPosition = flickable.contentY
-                           }
+        onContentYChanged: {
+            var newValue = __contentPositionFromContentY(flickable.contentY)
+            if (scrollbar.contentPosition != newValue) {
+                scrollbar.contentPosition = newValue
+            }
+        }
     }
+
     Connections {
         target: scrollbar
-        onContentPositionChanged: if (flickable.contentY != scrollbar.contentPosition) {
-                                      flickable.contentY = scrollbar.contentPosition
-                                  }
+        onContentPositionChanged: {
+            var newValue = __contentYFromContentPosition(scrollbar.contentPosition)
+            if (flickable.contentY != newValue) {
+                flickable.contentY = newValue
+            }
+        }
     }
 }
