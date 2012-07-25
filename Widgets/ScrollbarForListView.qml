@@ -17,6 +17,14 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 
+/* FIXME: Removing the first row of the ListView's model will render
+   ListView.contentY invalid and therefore break the scrollbar's position.
+   This is fixable in QtQuick 2.0 thanks to the introduction of the
+   Flickable.originY property.
+
+   Ref.: https://bugreports.qt-project.org/browse/QTBUG-20927
+         http://doc-snapshot.qt-project.org/5.0/qml-qtquick2-flickable.html#originX-prop
+*/
 ScrollbarForFlickable {
     id: scrollbar
 
@@ -31,7 +39,11 @@ ScrollbarForFlickable {
     */
     contentSize: {
         if (sectionCounter.sectionCount == 0) {
-            // when no section header, ListView.contentHeight is reliable
+            /* When no section header, ListView.contentHeight is reliable
+
+              FIXME: In QtQuick 1.1 removing a row will break the value of view.contentHeight.
+              Ref.: https://bugreports.qt-project.org/browse/QTBUG-23335
+            */
             return view.contentHeight
         } else {
             return sectionCounter.sectionCount * scrollbar.__sectionHeaderHeight + scrollbar.view.count * scrollbar.__delegateHeight
