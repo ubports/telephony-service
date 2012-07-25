@@ -23,7 +23,7 @@ Item {
     property real contentPosition
     property real contentSize
 
-    property real __visibleSizeRatio: pageSize / contentSize
+    property real __visibleSizeRatio: Math.min(pageSize / contentSize, 1.0)
     property real __visiblePosition: contentPosition / contentSize
     property bool __scrollable: __visibleSizeRatio != 1.0
 
