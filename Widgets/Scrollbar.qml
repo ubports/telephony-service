@@ -176,20 +176,23 @@ Item {
               to the slider and allows for precision scrolling of a small part
               of the content
         */
+        property bool precisionScrolling: contentSize <= thumbArea.height * 2 || thumb.isDetachedFromSlider
+
+        // precision scrolling: the thumb is fixed to the slider
         Binding {
             target: scrollbar
             property: "contentPosition"
-            value: {
-                if (contentSize <= thumbArea.height * 2 || thumb.isDetachedFromSlider) {
-                    // precision scrolling: the thumb is fixed to the slider
-                    // FIXME: when clamped, reset dragging
-                    return __clamp(thumbArea.contentYStart + thumbArea.dragYAmount, 0, contentSize - pageSize)
-                } else {
-                    // proportional scrolling: all the content is reachable
-                    return thumb.y / (scrollbar.height - thumb.height) * (contentSize - pageSize)
-                }
-            }
-            when: thumbArea.drag.active
+            // FIXME: when clamped, reset dragging
+            value: __clamp(thumbArea.contentYStart + thumbArea.dragYAmount, 0, contentSize - pageSize)
+            when: thumbArea.drag.active && thumbArea.precisionScrolling
+        }
+
+        // proportional scrolling: all the content is reachable
+        Binding {
+            target: scrollbar
+            property: "contentPosition"
+            value: thumb.y / (scrollbar.height - thumb.height) * (contentSize - pageSize)
+            when: thumbArea.drag.active && !thumbArea.precisionScrolling
         }
 
         Binding {
