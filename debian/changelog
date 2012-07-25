@@ -1,8 +1,9 @@
 telephony-app (0.48) UNRELEASED; urgency=low
 
   * Use more sensible default subtypes for new fields (LP: #1028161)
+  * Focus the recipient field when composing new message (LP: #1028169)
 
- -- Ugo Riboni <ugo.riboni@canonical.com>  Wed, 25 Jul 2012 06:27:20 -0700
+ -- Ugo Riboni <ugo.riboni@canonical.com>  Wed, 25 Jul 2012 06:37:06 -0700
 
 telephony-app (0.47) precise; urgency=low
 
