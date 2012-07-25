@@ -116,6 +116,7 @@ private:
     bool mVoicemail;
     bool mLocalMuteState;
     QTime mElapsedTime;
+    bool mChannelReady;
 };
 
 #endif // CALLENTRY_H

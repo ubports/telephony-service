@@ -36,7 +36,8 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mVoicemail(false),
     mLocalMuteState(false),
     mElapsedTime(QTime::currentTime()),
-    mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE)
+    mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE),
+    mChannelReady(false)
 {
     connect(mChannel->becomeReady(Tp::Features()
                                   << Tp::CallChannel::FeatureCore
@@ -82,6 +83,10 @@ void CallEntry::timerEvent(QTimerEvent *event)
 
 bool CallEntry::dialing() const
 {
+    if (!mChannelReady) {
+        return false;
+    }
+
     bool isOutgoing = mChannel->initiatorContact() == TelepathyHelper::instance()->account()->connection()->selfContact();
       
     return isOutgoing && (mChannel->callState() == Tp::CallStateInitialised);
@@ -175,6 +180,8 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
     if (op->isError()) {
         qWarning() << "PendingOperation finished with error:" << op->errorName() << op->errorMessage();
     }
+
+    mChannelReady = true;
 
     ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(mChannel->targetContact()->id());
     if (entry) {
