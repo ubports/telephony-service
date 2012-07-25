@@ -23,6 +23,7 @@ import TelephonyApp 0.1
    Flickable.originY property.
 
    Ref.: https://bugreports.qt-project.org/browse/QTBUG-20927
+         https://bugreports.qt-project.org/browse/QTBUG-21358
          http://doc-snapshot.qt-project.org/5.0/qml-qtquick2-flickable.html#originX-prop
 */
 ScrollbarForFlickable {
@@ -39,7 +40,7 @@ ScrollbarForFlickable {
     */
     contentSize: {
         if (sectionCounter.sectionCount == 0) {
-            /* When no section header, ListView.contentHeight is reliable
+            /* When no section header, ListView.contentHeight is reliable.
 
               FIXME: In QtQuick 1.1 removing a row will break the value of view.contentHeight.
               Ref.: https://bugreports.qt-project.org/browse/QTBUG-23335
