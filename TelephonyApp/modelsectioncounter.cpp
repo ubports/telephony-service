@@ -22,10 +22,27 @@
 
 ModelSectionCounter::ModelSectionCounter(QObject *parent) :
     QObject(parent),
+    m_sectionCriteria(FullString),
     m_sectionProperty(""),
     m_model(NULL),
     m_sectionCount(0)
 {
+}
+
+ModelSectionCounter::SectionCriteria ModelSectionCounter::sectionCriteria() const
+{
+    return m_sectionCriteria;
+}
+
+void ModelSectionCounter::setSectionCriteria(ModelSectionCounter::SectionCriteria sectionCriteria)
+{
+    if (sectionCriteria == m_sectionCriteria) {
+        return;
+    }
+
+    m_sectionCriteria = sectionCriteria;
+    Q_EMIT sectionCriteriaChanged();
+    updateSectionCount();
 }
 
 QString ModelSectionCounter::sectionProperty() const
@@ -78,21 +95,30 @@ unsigned int ModelSectionCounter::sectionCount() const
     return m_sectionCount;
 }
 
+QString ModelSectionCounter::sectionString(const QString &value)
+{
+    if (m_sectionCriteria == FirstCharacter) {
+        return value.isEmpty() ? QString() : value.at(0);
+    } else {
+        return value;
+    }
+}
+
 void ModelSectionCounter::updateSectionCount()
 {
     unsigned int sectionCount = 0;
 
     if (m_model != NULL) {
         int rowCount = m_model->count();
-        QString previousRowCriteria;
-        QString currentRowCriteria;
+        QString previousRowString;
+        QString currentRowString;
 
         for (unsigned int i=0; i<rowCount; i++) {
-            currentRowCriteria = m_model->stringValue(i, m_sectionProperty);
-            if (currentRowCriteria != previousRowCriteria || i == 0) {
+            currentRowString = sectionString(m_model->stringValue(i, m_sectionProperty));
+            if (currentRowString != previousRowString || i == 0) {
                 sectionCount++;
             }
-            previousRowCriteria = currentRowCriteria;
+            previousRowString = currentRowString;
         }
     }
 

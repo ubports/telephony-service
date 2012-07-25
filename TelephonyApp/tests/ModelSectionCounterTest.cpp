@@ -43,6 +43,7 @@ private:
 };
 
 Q_DECLARE_METATYPE(QStringListModel*)
+Q_DECLARE_METATYPE(ModelSectionCounter::SectionCriteria)
 
 QDeclarativeVisualModel* ModelSectionCounterTest::createVisualDataModel(QObject* list)
 {
@@ -61,37 +62,51 @@ void ModelSectionCounterTest::testInitialCount_data()
 {
     QTest::addColumn<QStringListModel*>("list");
     QTest::addColumn<QString>("sectionProperty");
+    QTest::addColumn<ModelSectionCounter::SectionCriteria>("sectionCriteria");
     QTest::addColumn<int>("sectionCount");
 
 
-    QTest::newRow("empty list") << new QStringListModel() << "display" << 0;
+    QTest::newRow("empty list") << new QStringListModel() << "display" << ModelSectionCounter::FullString << 0;
+    QTest::newRow("empty list FirstCharacter") << new QStringListModel() << "display" << ModelSectionCounter::FirstCharacter << 0;
 
     QStringList list;
     list << "a" << "b" << "c";
-    QTest::newRow("trivial list") << new QStringListModel(list) << "display" << 3;
+    QTest::newRow("trivial list") << new QStringListModel(list) << "display" << ModelSectionCounter::FullString << 3;
+    QTest::newRow("trivial list FirstCharacter") << new QStringListModel(list) << "display" << ModelSectionCounter::FirstCharacter << 3;
 
     list.clear();
     list << "My blabla" << "My blabla" << "My blabla";
-    QTest::newRow("identical items") << new QStringListModel(list) << "display" << 1;
+    QTest::newRow("identical items") << new QStringListModel(list) << "display" << ModelSectionCounter::FullString << 1;
+    QTest::newRow("identical items FirstCharacter") << new QStringListModel(list) << "display" << ModelSectionCounter::FirstCharacter << 1;
 
     list.clear();
     list << "My blabla" << "My blabla" << "Your blabla";
-    QTest::newRow("ordered list") << new QStringListModel(list) << "display" << 2;
+    QTest::newRow("ordered list") << new QStringListModel(list) << "display" << ModelSectionCounter::FullString << 2;
+    QTest::newRow("ordered list FirstCharacter") << new QStringListModel(list) << "display" << ModelSectionCounter::FirstCharacter << 2;
 
     list.clear();
     list << "My blabla" << "Your blabla" << "My blabla";
-    QTest::newRow("unordered list") << new QStringListModel(list) << "display" << 3;
+    QTest::newRow("unordered list") << new QStringListModel(list) << "display" << ModelSectionCounter::FullString << 3;
+    QTest::newRow("unordered list FirstCharacter") << new QStringListModel(list) << "display" << ModelSectionCounter::FirstCharacter << 3;
+
+    list.clear();
+    list << "My blabla" << "My toto" << "My toto";
+    QTest::newRow("ordered list") << new QStringListModel(list) << "display" << ModelSectionCounter::FullString << 2;
+    QTest::newRow("ordered list FirstCharacter") << new QStringListModel(list) << "display" << ModelSectionCounter::FirstCharacter << 1;
+
 }
 
 void ModelSectionCounterTest::testInitialCount()
 {
     QFETCH(QStringListModel*, list);
     QFETCH(QString, sectionProperty);
+    QFETCH(ModelSectionCounter::SectionCriteria, sectionCriteria);
     QFETCH(int, sectionCount);
     QDeclarativeVisualModel* model = createVisualDataModel(list);
 
     ModelSectionCounter counter;
     counter.setSectionProperty(sectionProperty);
+    counter.setSectionCriteria(sectionCriteria);
     counter.setModel(model);
 
     QCOMPARE(counter.sectionCount(), (unsigned int)sectionCount);

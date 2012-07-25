@@ -29,12 +29,19 @@ class ModelSectionCounter : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(SectionCriteria sectionCriteria READ sectionCriteria WRITE setSectionCriteria NOTIFY sectionCriteriaChanged)
     Q_PROPERTY(QString sectionProperty READ sectionProperty WRITE setSectionProperty NOTIFY sectionPropertyChanged)
     Q_PROPERTY(QDeclarativeVisualModel* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(unsigned int sectionCount READ sectionCount NOTIFY sectionCountChanged)
 
+    Q_ENUMS(SectionCriteria)
+
 public:
     explicit ModelSectionCounter(QObject *parent = 0);
+
+    enum SectionCriteria { FullString, FirstCharacter };
+    SectionCriteria sectionCriteria() const;
+    void setSectionCriteria(SectionCriteria sectionCriteria);
 
     QString sectionProperty() const;
     void setSectionProperty(const QString &sectionProperty);
@@ -48,11 +55,14 @@ Q_SIGNALS:
     void sectionPropertyChanged();
     void modelChanged();
     void sectionCountChanged();
+    void sectionCriteriaChanged();
 
 protected Q_SLOTS:
+    QString sectionString(const QString &value);
     void updateSectionCount();
 
 private:
+    SectionCriteria m_sectionCriteria;
     QString m_sectionProperty;
     QDeclarativeVisualModel* m_model;
     unsigned int m_sectionCount;
