@@ -38,7 +38,6 @@ ContactEntry::ContactEntry(const QContact &contact, ContactModel *parent) :
     QObject(parent), mModel(parent)
 {
     setContact(contact);
-    loadDetails();
 
     // FIXME: we are explicitelly splitting the id as it comes formatted from EDS
     // check how to handle that for telepathy contacts
