@@ -65,6 +65,9 @@ Item {
         anchors.topMargin: 10
         anchors.bottomMargin: 10
         spacing: 24
+        /* Necessary to force the instantiation of all the delegates in order
+           for contentHeight to be accurate. That is required for
+           ScrollbarForListView to operate properly */
         cacheBuffer: 2147483647
         orientation: ListView.Vertical
         ListModel { id: messagesModel }
