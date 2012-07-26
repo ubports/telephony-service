@@ -208,14 +208,19 @@ void ModelSectionCounterTest::testChangeItem()
     QCOMPARE(counter.sectionCount(), (unsigned int)2);
 
     // change value of second row of the list
-    listModel.setData(listModel.index(1), QVariant("Your blabla"));
+    listModel.setData(listModel.index(1), QVariant("Your blabla"), Qt::DisplayRole);
 
     QCOMPARE(counter.sectionCount(), (unsigned int)2);
 
     // change value of first row of the list
-    listModel.setData(listModel.index(0), QVariant("Your blabla"));
+    listModel.setData(listModel.index(0), QVariant("Your blabla"), Qt::DisplayRole);
 
-    QEXPECT_FAIL("", "Fails because QStringListModel::setData() does not trigger the emission of QDeclarativeVisualModel::itemsChanged even though QStringListModel::dataChanged is emitted", Continue);
+    /* The following test fails because QStringListModel::setData() does not
+       trigger the emission of QDeclarativeVisualModel::itemsChanged even
+       though QStringListModel::dataChanged is emitted. That is because
+       QStringListModel does not set any roleNames to itself.
+    */
+    QEXPECT_FAIL("", "Fails because QStringListModel::setData() does not trigger the emission of QDeclarativeVisualModel::itemsChanged. More explanation in the code.", Continue);
     QCOMPARE(counter.sectionCount(), (unsigned int)1);
 }
 
