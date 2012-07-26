@@ -20,5 +20,11 @@
                Request to open the messages tab to send a new message.
             ]]></dox:d>
         </method>
+        <method name="ShowVoicemail">
+            <dox:d><![CDATA[
+               Request to open the voicemail tab.
+            ]]></dox:d>
+        </method>
+
     </interface>
 </node>
