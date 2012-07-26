@@ -1,6 +1,7 @@
 telephony-app (0.50) UNRELEASED; urgency=low
 
   * Fixed contact model loader. (LP: #1029063)
+  * Does not show folks invisible fields in UI. (LP: #1028210)
 
  -- Renato Araujo Oliveira Filho <renato@canonical.com>  Thu, 26 Jul 2012 11:55:28 -0300
 
