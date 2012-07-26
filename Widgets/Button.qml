@@ -56,6 +56,7 @@ ButtonWithForeground {
        DOCME
     */
     property color color: "#e3e5e8"
+    property color __disabledColor: "#e3e5e8"
 
     /*!
        \preliminary
@@ -115,7 +116,13 @@ ButtonWithForeground {
             id: base
 
             anchors.fill: shape
-            color: button.state != "pressed" ? button.color : button.pressedColor
+            color: {
+                if (button.enabled) {
+                    return button.state != "pressed" ? button.color : button.pressedColor
+                } else {
+                    return button.__disabledColor
+                }
+            }
 
             effect: ButtonMaskEffect {
                 gradientStrength: button.state != "pressed" ? (button.darkBorder ? 0.5 : 0.36) : 0.0
