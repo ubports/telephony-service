@@ -64,9 +64,8 @@ Item {
         anchors.fill: parent
         anchors.topMargin: 10
         anchors.bottomMargin: 10
-        contentWidth: parent.width
-        contentHeight: messages.height
         spacing: 24
+        cacheBuffer: 2147483647
         orientation: ListView.Vertical
         ListModel { id: messagesModel }
         // FIXME: references to runtime and fake model need to be removed before final release
@@ -92,12 +91,15 @@ Item {
             sourceComponent: message != "" ? messageTextDelegate : messageImageDelegate
         }
         highlightFollowsCurrentItem: true
-        onCountChanged: { 
+        onCountChanged: {
             messagesList.positionViewAtEnd()
         }
     }
 
     ScrollbarForListView {
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
         view: messagesList
+        workaroundSectionHeightBug: false
     }
 }

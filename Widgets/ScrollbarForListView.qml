@@ -21,6 +21,7 @@ ScrollbarForFlickable {
     id: scrollbar
 
     property ListView view
+    property bool workaroundSectionHeightBug: true
 
     flickable: view
     /* ListView.contentHeight is not reliable when section headers are defined.
@@ -30,7 +31,7 @@ ScrollbarForFlickable {
              https://bugreports.qt-project.org/browse/QTBUG-19941
     */
     contentSize: {
-        if (sectionCounter.sectionCount == 0) {
+        if (workaroundSectionHeightBug || sectionCounter.sectionCount == 0) {
             /* When no section header, ListView.contentHeight is reliable.
 
               FIXME: In QtQuick 1.1 removing a row of the ListView's model that is not
@@ -94,13 +95,13 @@ ScrollbarForFlickable {
 
     VisualDataModel {
         id: visualModel
-        model: view.section.delegate != undefined ? scrollbar.view.model : undefined
+        model: workaroundSectionHeightBug && view.section.delegate != undefined ? scrollbar.view.model : undefined
         delegate: Item {}
     }
 
     ModelSectionCounter {
         id: sectionCounter
-        model: view.section.delegate != undefined ? visualModel : undefined
+        model: workaroundSectionHeightBug && view.section.delegate != undefined ? visualModel : undefined
         sectionProperty: view.section.property
         sectionCriteria: view.section.criteria
     }
