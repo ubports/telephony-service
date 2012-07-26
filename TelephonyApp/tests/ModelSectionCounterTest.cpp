@@ -215,6 +215,7 @@ void ModelSectionCounterTest::testChangeItem()
     // change value of first row of the list
     listModel.setData(listModel.index(0), QVariant("Your blabla"));
 
+    QEXPECT_FAIL("", "Fails because QStringListModel::setData() does not trigger the emission of QDeclarativeVisualModel::itemsChanged even though QStringListModel::dataChanged is emitted", Continue);
     QCOMPARE(counter.sectionCount(), (unsigned int)1);
 }
 
