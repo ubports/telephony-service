@@ -1,3 +1,10 @@
+telephony-app (0.51) precise; urgency=low
+
+  * Make sure the logger models are properly updated when phone numbers are added.
+    (LP: #1029486 LP: #1029503)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 26 Jul 2012 17:13:00 -0300
+
 telephony-app (0.50) precise; urgency=low
 
   [ Renato Araujo Oliveira Filho ]
