@@ -157,6 +157,12 @@ Item {
         }
 
         /* Dragging behaviour */
+        function resetDrag() {
+            dragYStart = drag.target.y
+            thumbYStart = thumb.y
+            sliderYStart = slider.y
+        }
+
         property int dragYStart
         property int dragYAmount: thumbArea.drag.target.y - thumbArea.dragYStart
         property int thumbYStart
@@ -165,13 +171,14 @@ Item {
             target: Item {}
             /* necessary to make sure drag is activated even by a non vertical movement */
             axis: Drag.XandYAxis
-            onActiveChanged: if (drag.active) {dragYStart = drag.target.y; thumbYStart = thumb.y; sliderYStart = slider.y}
+            onActiveChanged: if (drag.active) resetDrag()
         }
 
         /* The thumb allows the user to scroll the entire content, from top to bottom */
         Binding {
             target: scrollbar
             property: "contentPosition"
+            // FIXME: call thumbArea.resetDrag() when clamped
             value: __clampAndProject(thumbArea.sliderYStart + thumbArea.dragYAmount, 0.0, scrollbar.height - slider.height, 0.0, contentSize - pageSize)
             when: thumbArea.drag.active
         }
