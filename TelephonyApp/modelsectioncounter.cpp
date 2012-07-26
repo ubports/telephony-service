@@ -57,6 +57,8 @@ void ModelSectionCounter::setSectionProperty(const QString &sectionProperty)
     }
 
     m_sectionProperty = sectionProperty;
+    watchSectionPropertyRole();
+
     Q_EMIT sectionPropertyChanged();
     updateSectionCount();
 }
@@ -77,6 +79,7 @@ void ModelSectionCounter::setModel(QDeclarativeVisualModel* model)
     }
 
     m_model = model;
+    watchSectionPropertyRole();
 
     if (model != NULL) {
         connect(model, SIGNAL(itemsMoved(int,int,int)), SLOT(updateSectionCount()));
@@ -125,5 +128,18 @@ void ModelSectionCounter::updateSectionCount()
     if (sectionCount != m_sectionCount) {
         m_sectionCount = sectionCount;
         Q_EMIT sectionCountChanged();
+    }
+}
+
+void ModelSectionCounter::watchSectionPropertyRole()
+{
+    /* Necessary to have QDeclarativeVisualModel::itemsChanged
+       emitted when the value of the section property changes.
+       The code is identical to what ListView does internally.
+    */
+    if (!m_sectionProperty.isEmpty() && m_model != NULL) {
+        QList<QByteArray> roles;
+        roles << m_sectionProperty.toUtf8();
+        m_model->setWatchedRoles(roles);
     }
 }
