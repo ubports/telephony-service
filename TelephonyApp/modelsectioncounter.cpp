@@ -120,8 +120,8 @@ void ModelSectionCounter::updateSectionCount()
             currentRowString = sectionString(m_model->stringValue(i, m_sectionProperty));
             if (currentRowString != previousRowString || i == 0) {
                 sectionCount++;
+                previousRowString = currentRowString;
             }
-            previousRowString = currentRowString;
         }
     }
 
