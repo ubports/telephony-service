@@ -1,9 +1,9 @@
-telephony-app (0.52) UNRELEASED; urgency=low
+telephony-app (0.52) precise; urgency=low
 
   * Added constant padding at the top and bottom of the contact details header. (LP: #1029548)
   * Implemented a new Scrollbar widget and added scrollbars to relevant parts of the UI. (LP: #1025780)
 
- -- Florian Boucault <florian.boucault@canonical.com>  Fri, 27 Jul 2012 16:10:24 +0100
+ -- Florian Boucault <florian.boucault@canonical.com>  Fri, 27 Jul 2012 16:14:51 +0100
 
 telephony-app (0.51) precise; urgency=low
 
