@@ -50,11 +50,11 @@ bool TelephonyApplication::setup()
             printUsage(arguments);
             return 1;
         } else {
-            m_argUrl = QUrl(arguments.at(1));
+            m_arg = arguments.at(1);
         }
     }
 
-    if (sendMessage(m_argUrl.toString())) {
+    if (sendMessage(m_arg)) {
         return false;
     }
 
@@ -102,15 +102,23 @@ void TelephonyApplication::onApplicationReady()
 {
     QObject::disconnect(QObject::sender(), SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
     m_applicationIsReady = true;
-    parseUrl(m_argUrl);
-    m_argUrl.clear();
+    parseArgument(m_arg);
+    m_arg.clear();
 }
 
-void TelephonyApplication::parseUrl(const QUrl &url)
+void TelephonyApplication::parseArgument(const QString &arg)
 {
-    if (url.isEmpty()) {
+    if (arg.isEmpty()) {
         return;
     }
+
+    QStringList args = arg.split("://");
+    if (args.size() != 2) {
+        return;
+    }
+
+    QString scheme = args[0];
+    QString value = args[1];
 
     QGraphicsObject *telephony = m_view->rootObject();
     if (!telephony) {
@@ -119,19 +127,18 @@ void TelephonyApplication::parseUrl(const QUrl &url)
     const QMetaObject *mo = telephony->metaObject();
 
 
-    QString scheme(url.scheme());
     if (scheme == "contact") {
         // Workaround to propagate a property change even when the contactKey was the same
         m_view->rootContext()->setContextProperty("contactKey", "");
-        m_view->rootContext()->setContextProperty("contactKey", url.host());
+        m_view->rootContext()->setContextProperty("contactKey", value);
     } else if (scheme == "call") {
         int index = mo->indexOfMethod("callNumber(QVariant)");
         if (index != -1) {
             QMetaMethod method = mo->method(index);
-            method.invoke(telephony, Q_ARG(QVariant, QVariant(url.host())));
+            method.invoke(telephony, Q_ARG(QVariant, QVariant(value)));
         }
     } else if (scheme == "message") {
-        if (url.host().isEmpty()) {
+        if (value.isEmpty()) {
             int index = mo->indexOfMethod("startNewMessage()");
             if (index != -1) {
                 QMetaMethod method = mo->method(index);
@@ -143,7 +150,7 @@ void TelephonyApplication::parseUrl(const QUrl &url)
                 QMetaMethod method = mo->method(index);
                 method.invoke(telephony,
                               Q_ARG(QVariant, QVariant("")),
-                              Q_ARG(QVariant, QVariant(url.host())),
+                              Q_ARG(QVariant, QVariant(value)),
                               Q_ARG(QVariant, QVariant("")));
             }
        }
@@ -159,10 +166,10 @@ void TelephonyApplication::parseUrl(const QUrl &url)
 void TelephonyApplication::onMessageReceived(const QString &message)
 {
     if (m_applicationIsReady) {
-        parseUrl(message);
-        m_argUrl.clear();
+        parseArgument(message);
+        m_arg.clear();
     } else {
-        m_argUrl = QUrl(message);
+        m_arg = message;
     }
     m_view->activateWindow();
     m_view->raise();
