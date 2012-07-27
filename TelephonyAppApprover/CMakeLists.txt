@@ -1,8 +1,9 @@
 
-set(qt_SRCS telephonyappapprover.cpp textchannelobserver.cpp)
-set(qt_HDRS telephonyappapprover.h textchannelobserver.h)
+set(qt_SRCS telephonyappapprover.cpp textchannelobserver.cpp voicemailindicator.cpp)
+set(qt_HDRS telephonyappapprover.h textchannelobserver.h voicemailindicator.h)
 set(approver_SRCS main.cpp ${qt_SRCS})
 set(approver_HDRS ${qt_HDRS})
+set(desktop_FILES telephony-app-sms.desktop telephony-app-phone.desktop)
 qt4_automoc(${qt_SRCS})
 QT4_WRAP_CPP(qt_moc_SRCS ${qt_HDRS})
 
@@ -28,6 +29,6 @@ target_link_libraries(telephony-app-approver
 install(TARGETS telephony-app-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES org.freedesktop.Telepathy.Client.TelephonyAppApprover.service DESTINATION share/dbus-1/services)
 install(FILES TelephonyAppApprover.client DESTINATION share/telepathy/clients)
-install(FILES telephony-app-sms.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+install(FILES ${desktop_FILES} DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
 
 add_subdirectory(icons)

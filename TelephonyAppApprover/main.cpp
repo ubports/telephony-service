@@ -21,6 +21,7 @@
 
 #include "telephonyappapprover.h"
 #include "textchannelobserver.h"
+#include "voicemailindicator.h"
 #include <QApplication>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/AbstractClient>
@@ -58,6 +59,10 @@ int main(int argc, char **argv)
     Tp::AbstractClientPtr observer = Tp::AbstractClientPtr::dynamicCast(
           Tp::SharedPtr<TextChannelObserver>(new TextChannelObserver()));
     registrar->registerClient(observer, "TelephonyAppIndicatorObserver");
+
+    // we don't need to call anything on the indicator, it will work by itself
+    VoiceMailIndicator voiceMailIndicator;
+    Q_UNUSED(voiceMailIndicator);
 
     return app.exec();
 }

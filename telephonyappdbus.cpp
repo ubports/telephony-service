@@ -57,3 +57,8 @@ void TelephonyAppDBus::NewMessage()
 {
     Q_EMIT newMessageRequested();
 }
+
+void TelephonyAppDBus::ShowVoicemail()
+{
+    Q_EMIT showVoicemailRequested();
+}

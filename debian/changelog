@@ -1,9 +1,21 @@
-telephony-app (0.50) UNRELEASED; urgency=low
+telephony-app (0.51) precise; urgency=low
 
+  * Make sure the logger models are properly updated when phone numbers are added.
+    (LP: #1029486 LP: #1029503)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 26 Jul 2012 17:13:00 -0300
+
+telephony-app (0.50) precise; urgency=low
+
+  [ Renato Araujo Oliveira Filho ]
   * Fixed contact model loader. (LP: #1029063)
   * Does not show folks invisible fields in UI. (LP: #1028210)
 
- -- Renato Araujo Oliveira Filho <renato@canonical.com>  Thu, 26 Jul 2012 11:55:28 -0300
+  [ Gustavo Pichorim Boiko ]
+  * Add an entry to the messaging menu to indicate there is a pending voicemail
+    message. (LP: #1025700)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 26 Jul 2012 13:45:23 -0300
 
 telephony-app (0.49) precise; urgency=low
 
