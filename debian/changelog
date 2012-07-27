@@ -1,3 +1,9 @@
+telephony-app (0.53) UNRELEASED; urgency=low
+
+  * change "No Name" in live call view to "Unknown Contact" (LP: #1029681)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 27 Jul 2012 09:05:44 -0700
+
 telephony-app (0.52) precise; urgency=low
 
   * Added constant padding at the top and bottom of the contact details header. (LP: #1029548)
