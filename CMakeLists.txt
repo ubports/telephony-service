@@ -104,6 +104,8 @@ install(FILES ${TELEPHONY_APP}.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
     )
 
+enable_testing()
+
 add_subdirectory(qtsingleapplication)
 add_subdirectory(TelephonyApp)
 add_subdirectory(TelephonyAppApprover)

@@ -72,4 +72,8 @@ Item {
             text: section
         }
     }
+
+    ScrollbarForListView {
+        view: contactsList
+    }
 }

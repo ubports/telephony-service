@@ -1,4 +1,5 @@
 import QtQuick 1.1
+import "../Widgets"
 
 // FIXME: the ListView could be the toplevel item
 Item {
@@ -29,5 +30,9 @@ Item {
                           || contactModel.comparePhoneNumbers(telephony.view.number, phoneNumber))
             }
         }
+    }
+
+    ScrollbarForListView {
+        view: listView
     }
 }
