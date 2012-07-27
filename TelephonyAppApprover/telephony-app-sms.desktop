@@ -3,3 +3,4 @@ Type=Application
 Name=SMS
 Exec=telephony-app
 Icon=indicator-messages
+NoDisplay=true
