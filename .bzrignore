@@ -21,3 +21,9 @@ com.canonical.TelephonyApp.service
 org.freedesktop.Telepathy.Client.TelephonyApp.service
 telephonyappadaptor.*
 
+Testing
+TelephonyApp/tests/TemplateTest
+TelephonyApp/tests/TemplateTest.moc
+CTestTestfile.cmake
+TelephonyApp/tests/ModelSectionCounterTest.moc
+TelephonyApp/tests/ModelSectionCounterTest
