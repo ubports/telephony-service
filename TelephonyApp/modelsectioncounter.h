@@ -58,8 +58,10 @@ Q_SIGNALS:
     void sectionCriteriaChanged();
 
 protected Q_SLOTS:
-    QString sectionString(const QString &value);
     void updateSectionCount();
+
+protected:
+    QString sectionString(const QString &value);
     void watchSectionPropertyRole();
 
 private:
