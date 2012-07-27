@@ -17,6 +17,17 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 
+/*
+  Example usage:
+
+  ListView {
+      id: list
+  }
+
+  ScrollbarForListView {
+      view: list
+  }
+*/
 ScrollbarForFlickable {
     id: scrollbar
 

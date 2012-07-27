@@ -23,7 +23,7 @@ import QtQuick 1.1
       id: flickable
   }
 
-  Scrollbar {
+  ScrollbarForFlickable {
       flickable: flickable
   }
 */
