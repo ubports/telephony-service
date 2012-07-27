@@ -185,6 +185,8 @@ void ContactModel::updateContact(ContactEntry *entry)
 
 void ContactModel::addContacts(const QList<QContact> &contacts)
 {
+    ContactEntry *pending = 0;
+
     beginInsertRows(QModelIndex(), mContactEntries.count(), mContactEntries.count()+contacts.count()-1);
 
     Q_FOREACH(const QContact &contact, contacts) {
@@ -197,12 +199,16 @@ void ContactModel::addContacts(const QList<QContact> &contacts)
 
         // check if this entry is pending load
         if (entry->id() == mPendingId) {
-            emit contactLoaded(entry);
-            mPendingId = "";
+            pending = entry;
         }
     }
 
     endInsertRows();
+
+    if (pending != 0) {
+        emit contactLoaded(pending);
+        mPendingId = "";
+    }
 }
 
 void ContactModel::removeContactFromModel(ContactEntry *entry)
