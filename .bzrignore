@@ -25,3 +25,5 @@ Testing
 TelephonyApp/tests/TemplateTest
 TelephonyApp/tests/TemplateTest.moc
 CTestTestfile.cmake
+TelephonyApp/tests/ModelSectionCounterTest.moc
+TelephonyApp/tests/ModelSectionCounterTest
