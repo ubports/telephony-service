@@ -19,7 +19,7 @@ static void printUsage(const QStringList& arguments)
              << "[contact://CONTACT_KEY]"
              << "[call://PHONE_NUMBER]"
              << "[message://PHONE_NUMBER]"
-             << "[voice-email://]";
+             << "[voicemail://]";
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
@@ -36,7 +36,7 @@ bool TelephonyApplication::setup()
         validSchemes << "contact";
         validSchemes << "call";
         validSchemes << "message";
-        validSchemes << "voice-email";
+        validSchemes << "voicemail";
     }
 
     QString contactKey;
@@ -154,7 +154,7 @@ void TelephonyApplication::parseArgument(const QString &arg)
                               Q_ARG(QVariant, QVariant("")));
             }
        }
-    } else if (scheme == "voice-email") {
+    } else if (scheme == "voicemail") {
         int index = mo->indexOfMethod("showVoicemail()");
         if (index != -1) {
             QMetaMethod method = mo->method(index);

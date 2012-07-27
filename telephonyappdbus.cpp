@@ -60,5 +60,5 @@ void TelephonyAppDBus::NewMessage()
 
 void TelephonyAppDBus::ShowVoicemail()
 {
-    Q_EMIT request(QString("voice-email://"));
+    Q_EMIT request(QString("voicemail://"));
 }
