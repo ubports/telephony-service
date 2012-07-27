@@ -31,7 +31,7 @@ ScrollbarForFlickable {
              https://bugreports.qt-project.org/browse/QTBUG-19941
     */
     contentSize: {
-        if (workaroundSectionHeightBug || sectionCounter.sectionCount == 0) {
+        if (!workaroundSectionHeightBug || sectionCounter.sectionCount == 0) {
             /* When no section header, ListView.contentHeight is reliable.
 
               FIXME: In QtQuick 1.1 removing a row of the ListView's model that is not
