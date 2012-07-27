@@ -271,11 +271,4 @@ Item {
             }
         }
     }
-
-    Connections {
-        target: dbus
-        onShowMessagesRequested: telephony.startChat("", number, "")
-        onNewMessageRequested: telephony.startNewMessage()
-        onShowVoicemailRequested: telephony.showVoicemail()
-    }
 }
