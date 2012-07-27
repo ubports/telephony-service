@@ -35,9 +35,9 @@
 #include <QLocale>
 
 ContactEntry::ContactEntry(const QContact &contact, ContactModel *parent) :
-    QObject(parent), mContact(contact), mModified(false), mModel(parent)
+    QObject(parent), mModel(parent)
 {
-    loadDetails();
+    setContact(contact);
 
     // FIXME: we are explicitelly splitting the id as it comes formatted from EDS
     // check how to handle that for telepathy contacts
@@ -109,6 +109,14 @@ QContact& ContactEntry::contact()
 void ContactEntry::setContact(const QContact &contact)
 {
     mContact = contact;
+
+    // remove invisible details created by folks
+    Q_FOREACH(QContactDetail det, contact.details<QContactOnlineAccount>()) {
+        if (det.contexts().contains("VISIBLE=FALSE", Qt::CaseInsensitive)) {
+            mContact.removeDetail(&det);
+        }
+    }
+
     setModified(false);
     loadDetails();
 
