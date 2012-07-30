@@ -1,8 +1,13 @@
 telephony-app (0.54) UNRELEASED; urgency=low
 
+  [ Florian Boucault ]
   * Fixed out of source building of unit tests. (LP: #1029997)
 
- -- Florian Boucault <florian.boucault@canonical.com>  Mon, 30 Jul 2012 10:54:28 +0100
+  [ Olivier Tilloy ]
+  * Raise and activate the window when an incoming call is accepted.
+    (LP: #1020157)
+
+ -- Olivier Tilloy <olivier.tilloy@canonical.com>  Mon, 30 Jul 2012 16:12:18 +0200
 
 telephony-app (0.53) precise; urgency=low
 

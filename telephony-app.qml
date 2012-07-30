@@ -269,6 +269,7 @@ Item {
             } else {
                 showLiveCall();
             }
+            application.activateWindow();
         }
     }
 
