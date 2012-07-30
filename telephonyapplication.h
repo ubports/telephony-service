@@ -2,7 +2,6 @@
 #define TELEPHONYAPPLICATION_H
 
 #include <QtCore/QObject>
-#include <QtCore/QUrl>
 #include <QtDeclarative/QDeclarativeView>
 #include <QtSingleApplication>
 
@@ -19,7 +18,7 @@ public:
     bool setup();
 
 private:
-    void parseUrl(const QUrl &url);
+    void parseArgument(const QString &arg);
 
 private slots:
     void onMessageReceived(const QString &message);
@@ -29,7 +28,7 @@ private slots:
 private:
     QDeclarativeView *m_view;
     TelephonyAppDBus *m_dbus;
-    QUrl m_argUrl;
+    QString m_arg;
     bool m_applicationIsReady;
 };
 
