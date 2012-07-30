@@ -134,6 +134,4 @@ void TelephonyApplication::onMessageReceived(const QString &message)
     } else {
         m_argUrl = QUrl(message);
     }
-    m_view->activateWindow();
-    m_view->raise();
 }
