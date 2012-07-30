@@ -84,5 +84,5 @@ install(TARGETS telephony-qml DESTINATION ${PLUGIN_DIR})
 install(FILES qmldir DESTINATION ${PLUGIN_DIR})
 
 # deactivated unit tests until they pass in a clean chroot
-#add_subdirectory(tests)
+add_subdirectory(tests)
 

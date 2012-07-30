@@ -1,5 +1,6 @@
 include_directories(
     ${QT_QTTEST_INCLUDE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
     )
 
 macro(generate_tests)

@@ -1,3 +1,9 @@
+telephony-app (0.54) UNRELEASED; urgency=low
+
+  * Fixed out of source building of unit tests. (LP: #1029997)
+
+ -- Florian Boucault <florian.boucault@canonical.com>  Mon, 30 Jul 2012 10:54:28 +0100
+
 telephony-app (0.53) precise; urgency=low
 
   [ Tiago Salem Herrmann ]
