@@ -122,15 +122,15 @@ void Components::onAccountReady()
 
     mConversationLogModel = new ConversationLogModel(this);
     mRootContext->setContextProperty("conversationLogModel", mConversationLogModel);
-    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&)),
-            mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
+    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&)),
+            mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&)));
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mConversationLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 
     mMessageLogModel = new MessageLogModel(this);
     mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
-    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&)),
-            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
+    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&)),
+            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&)));
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 }
