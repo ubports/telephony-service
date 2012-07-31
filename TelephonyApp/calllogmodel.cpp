@@ -20,6 +20,7 @@
 #include "calllogmodel.h"
 #include "contactmodel.h"
 #include "telepathyhelper.h"
+#include <TelepathyLoggerQt4/Entity>
 #include <TelepathyLoggerQt4/Event>
 #include <TelepathyLoggerQt4/CallEvent>
 #include <TelepathyQt/Contact>
@@ -101,4 +102,19 @@ LogEntry *CallLogModel::createEntry(const Tpl::EventPtr &event)
     entry->missed = (callEvent->endReason() == Tp::CallStateChangeReasonNoAnswer);
     entry->duration = callEvent->duration();
     return entry;
+}
+
+void CallLogModel::handleEntities(const Tpl::EntityPtrList &entities)
+{
+    Tpl::EntityPtrList filteredEntities;
+
+    // Filter out room type entities, those don't have call logs.
+    // FIXME: this is not generic for all connection managers
+    Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
+        if (entity->entityType() != Tpl::EntityTypeRoom) {
+            filteredEntities << entity;
+        }
+    }
+
+    AbstractLoggerModel::handleEntities(filteredEntities);
 }

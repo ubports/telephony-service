@@ -99,6 +99,21 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
     return entry;
 }
 
+void ConversationLogModel::handleEntities(const Tpl::EntityPtrList &entities)
+{
+    Tpl::EntityPtrList filteredEntities;
+
+    // For messages we only use room entities in telepathy-ufa
+    // FIXME: this is not generic for all connection managers
+    Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
+        if (entity->entityType() == Tpl::EntityTypeRoom) {
+            filteredEntities << entity;
+        }
+    }
+
+    AbstractLoggerModel::handleEntities(filteredEntities);
+}
+
 void ConversationLogModel::handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates)
 {
     if (!dates.count()) {

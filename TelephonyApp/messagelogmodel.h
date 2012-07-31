@@ -49,6 +49,7 @@ public slots:
 
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
+    void handleEntities(const Tpl::EntityPtrList &entities);
     void handleEvents(const Tpl::EventPtrList &events);
 
 };
