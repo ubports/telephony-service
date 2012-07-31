@@ -68,14 +68,14 @@ void MessageLogModel::onMessageReceived(const QString &number, const QString &me
 {
     appendMessage(number, message, true);
     // force the proxy model to reset to workaround a ListView bug
-    emit loggerFinished();
+    emit resetView();
 }
 
 void MessageLogModel::onMessageSent(const QString &number, const QString &message)
 {
     appendMessage(number, message, false);
     // force the proxy model to reset to workaround a ListView bug
-    emit loggerFinished();
+    emit resetView();
 }
 
 LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)

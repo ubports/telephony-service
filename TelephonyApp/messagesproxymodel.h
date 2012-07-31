@@ -67,7 +67,7 @@ public:
     void updateSorting();
 
 private Q_SLOTS:
-    void loggerFinished();
+    void onResetView();
 
 signals:
     void ascendingChanged();

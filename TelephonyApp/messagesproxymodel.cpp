@@ -87,12 +87,12 @@ void MessagesProxyModel::setMessagesModel(QObject *value)
         emit messagesModelChanged();
         MessageLogModel *loggerModel = qobject_cast<MessageLogModel*>(value);
         if (loggerModel) {
-            connect(loggerModel, SIGNAL(loggerFinished()), SLOT(loggerFinished()));
+            connect(loggerModel, SIGNAL(resetView()), SLOT(onResetView()));
         }
     }
 }
 
-void MessagesProxyModel::loggerFinished()
+void MessagesProxyModel::onResetView()
 {
     reset();
 }

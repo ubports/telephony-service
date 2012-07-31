@@ -68,7 +68,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
 
 Q_SIGNALS:
-    void loggerFinished();
+    void resetView();
     
 protected:
     QString phoneNumberFromId(const QString &id) const;
