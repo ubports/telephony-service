@@ -47,7 +47,7 @@ public:
 
 signals:
     void chatReady(const QString &contactId);
-    void messageReceived(const QString &contactId, const QString &message);
+    void messageReceived(const QString &contactId, const QString &message, const QDateTime &timestamp);
     void messageSent(const QString &contactId, const QString &message);
     void activeChatChanged();
     void unreadMessagesChanged(const QString &contactId);
