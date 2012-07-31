@@ -1,8 +1,15 @@
-telephony-app (0.55) UNRELEASED; urgency=low
+telephony-app (0.55) precise; urgency=low
 
+  [ Tiago Salem Herrmann ]
   * reset the proxy model when logger is fully loaded (LP: #1028166)
 
- -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Tue, 31 Jul 2012 13:26:05 -0700
+  [ Gustavo Pichorim Boiko ]
+  * Make sure the telephony-app uses the correct timestamp for received messages.
+    (LP: #1031472)
+  * Use the comparePhoneNumbers() in chatmanager to check for existing text
+    channels. (LP: #1030116)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 31 Jul 2012 17:33:14 -0300
 
 telephony-app (0.54) precise; urgency=low
 
