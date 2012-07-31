@@ -40,6 +40,10 @@ void MessagesProxyModel::setPhoneNumber(const QString &value)
     mPhoneNumber = value;
     invalidateFilter();
     emit phoneNumberChanged();
+    // when the filter changes we also have to reset the model as the
+    // ListView element seems to not behave correctly when rows
+    // are changed. The same is done for setThreadId().
+    reset();
 }
 
 QString MessagesProxyModel::threadId() const
@@ -52,6 +56,7 @@ void MessagesProxyModel::setThreadId(const QString &value)
     mThreadId = value;
     invalidateFilter();
     emit threadIdChanged();
+    reset();
 }
 
 bool MessagesProxyModel::ascending() const
@@ -80,7 +85,16 @@ void MessagesProxyModel::setMessagesModel(QObject *value)
     if (model) {
         setSourceModel(model);
         emit messagesModelChanged();
+        MessageLogModel *loggerModel = qobject_cast<MessageLogModel*>(value);
+        if (loggerModel) {
+            connect(loggerModel, SIGNAL(resetView()), SLOT(onResetView()));
+        }
     }
+}
+
+void MessagesProxyModel::onResetView()
+{
+    reset();
 }
 
 QString MessagesProxyModel::searchString() const

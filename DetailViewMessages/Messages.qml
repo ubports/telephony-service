@@ -10,6 +10,8 @@ Item {
 
     clip: true
 
+    Component.onCompleted: messagesList.positionViewAtEnd();
+
     Component {
         id: sectionDelegate
 

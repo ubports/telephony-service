@@ -66,6 +66,9 @@ public:
 
     void updateSorting();
 
+private Q_SLOTS:
+    void onResetView();
+
 signals:
     void ascendingChanged();
     void messagesModelChanged();

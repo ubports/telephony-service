@@ -66,6 +66,9 @@ public:
 
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
+
+Q_SIGNALS:
+    void resetView();
     
 protected:
     QString phoneNumberFromId(const QString &id) const;
