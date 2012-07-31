@@ -225,6 +225,7 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         mLogEntries.append(entry);
     }
     endInsertRows();
+    Q_EMIT loggerFinished();
 }
 
 void AbstractLoggerModel::appendEntry(LogEntry *entry)

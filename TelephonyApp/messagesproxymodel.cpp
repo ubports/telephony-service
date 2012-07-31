@@ -85,7 +85,16 @@ void MessagesProxyModel::setMessagesModel(QObject *value)
     if (model) {
         setSourceModel(model);
         emit messagesModelChanged();
+        MessageLogModel *loggerModel = qobject_cast<MessageLogModel*>(value);
+        if (loggerModel) {
+            connect(loggerModel, SIGNAL(loggerFinished()), SLOT(loggerFinished()));
+        }
     }
+}
+
+void MessagesProxyModel::loggerFinished()
+{
+    reset();
 }
 
 QString MessagesProxyModel::searchString() const

@@ -66,6 +66,9 @@ public:
 
     void updateSorting();
 
+private Q_SLOTS:
+    void loggerFinished();
+
 signals:
     void ascendingChanged();
     void messagesModelChanged();
