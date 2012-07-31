@@ -1,3 +1,9 @@
+telephony-app (0.55) UNRELEASED; urgency=low
+
+  * reset the proxy model when logger is fully loaded (LP: #1028166)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Tue, 31 Jul 2012 13:26:05 -0700
+
 telephony-app (0.54) precise; urgency=low
 
   [ Florian Boucault ]
