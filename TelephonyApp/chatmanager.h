@@ -58,6 +58,9 @@ public Q_SLOTS:
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
 
+protected:
+    Tp::TextChannelPtr existingChat(const QString &contactId);
+
 
 private:
     explicit ChatManager(QObject *parent = 0);
