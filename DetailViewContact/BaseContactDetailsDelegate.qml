@@ -129,7 +129,7 @@ FocusScope {
         AbstractButton {
             id: actionBox
 
-            width: 40
+            width: 50
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
