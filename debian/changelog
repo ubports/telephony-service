@@ -1,9 +1,13 @@
-telephony-app (0.56) UNRELEASED; urgency=low
+telephony-app (0.56) precise; urgency=low
 
+  [ Olivier Tilloy ]
   * Work around the fact that the scrollbar proximity sensor eats
     mouse clicks. (LP: #1030136)
 
- -- Olivier Tilloy <olivier.tilloy@canonical.com>  Wed, 01 Aug 2012 13:09:18 +0100
+  [ Gustavo Pichorim Boiko ]
+  * Add the correct icon for the phone/voicemail indicator. (LP: #1029708)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 01 Aug 2012 10:45:10 -0300
 
 telephony-app (0.55) precise; urgency=low
 
