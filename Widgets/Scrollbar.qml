@@ -112,7 +112,6 @@ Item {
        and disappears after being for a long enough time far enough of it
     */
     MouseArea {
-        // FIXME: clicking on the proximityArea eats clicks
         id: proximityArea
 
         anchors.top: parent.top
@@ -120,6 +119,14 @@ Item {
         anchors.left: parent.left
         anchors.right: thumbArea.left
         enabled: __scrollable
+        /* XXX: workaround for the lack of a mouse proxy behaviour. Setting
+                acceptedButtons to a supposedly unused value will prevent the
+                proximity area from eating mouse clicks. This is properly fixed
+                in QtQuick 2.
+
+           Ref.: https://bugreports.qt-project.org/browse/QTBUG-13007
+        */
+        acceptedButtons: Qt.XButton2
         hoverEnabled: true
         onEntered: thumb.show()
     }
@@ -137,7 +144,7 @@ Item {
         anchors.right: parent.right
         anchors.left: thumb.left
         /* Wider target area more tolerant to mistakes */
-        anchors.leftMargin: -8
+        anchors.leftMargin: -2
         enabled: __scrollable
         hoverEnabled: true
         onEntered: thumb.show()
