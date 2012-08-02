@@ -32,6 +32,8 @@ QVariant MessageLogEntry::data(int role) const
         return timestamp.date().toString(Qt::DefaultLocaleLongDate);
     case MessageLogModel::ThreadId:
         return threadId;
+    case MessageLogModel::IsLatest:
+        return isLatest;
     default:
         return LogEntry::data(role);
     }
@@ -45,6 +47,7 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     roles[Message] = "message";
     roles[Date] = "date";
     roles[ThreadId] = "threadId";
+    roles[IsLatest] = "isLatest";
     setRoleNames(roles);
 
     fetchLog(Tpl::EventTypeMaskText);
@@ -62,6 +65,8 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
         fillContactInfo(entry, contact);
     }
     appendEntry(entry);
+
+    updateLatestMessages(number);
 }
 
 void MessageLogModel::onMessageReceived(const QString &number, const QString &message)
@@ -85,6 +90,7 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 
     entry->message = textEvent->message();
     entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
+    entry->isLatest = false;
     return entry;
 }
 
@@ -108,5 +114,62 @@ void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
     }
 
     AbstractLoggerModel::handleEvents(filteredEvents);
+
+    // now check for the latest message for each number in the events
+    QList<QString> phoneNumbers;
+    Q_FOREACH (const Tpl::EventPtr &event, events) {
+        // in ufa logger events, the alias of the receiver is always the phone number
+        QString phoneNumber = event->receiver()->alias();
+        if (!phoneNumbers.contains(phoneNumber)) {
+            phoneNumbers.append(phoneNumber);
+        }
+    }
+
+    Q_FOREACH (const QString &phoneNumber, phoneNumbers) {
+        updateLatestMessages(phoneNumber);
+    }
+}
+
+void MessageLogModel::updateLatestMessages(const QString &phoneNumber)
+{
+    if (mLogEntries.count() == 0) {
+        return;
+    }
+
+    MessageLogEntry *latestEntry = 0;
+
+    // go through the list of messages trying to find the latest one, and reset the latest flag on other items
+    Q_FOREACH (LogEntry *entry, mLogEntries) {
+        if (!ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, phoneNumber)) {
+            continue;
+        }
+
+        MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
+
+        // reset the isLatest flag
+        if (messageEntry->isLatest) {
+            QModelIndex index = indexFromEntry(messageEntry);
+            messageEntry->isLatest = false;
+            emit dataChanged(index, index);
+        }
+
+        if (!latestEntry) {
+            latestEntry = messageEntry;
+            continue;
+        }
+
+        if (messageEntry->timestamp > latestEntry->timestamp) {
+            latestEntry = messageEntry;
+        }
+    }
+
+    if (!latestEntry) {
+        return;
+    }
+
+    // after finding the latest one, mark it as being so
+    QModelIndex index = indexFromEntry(latestEntry);
+    latestEntry->isLatest = true;
+    emit dataChanged(index, index);
 }
 
