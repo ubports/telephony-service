@@ -339,9 +339,6 @@ void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
         return;
     }
 
-    if (channel) {
-        channel->requestClose();
-    }
     mDispatchOps.removeAll(dispatchOperation(op));
     mChannels.remove(op);
 }
@@ -352,10 +349,6 @@ void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
         qDebug() << "onHangupFinished() error";
         // TODO do something
         return;
-    }
-    Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
-    if (channel) {
-        channel->requestClose();
     }
     mDispatchOps.removeAll(dispatchOperation(op));
     mChannels.remove(op);
