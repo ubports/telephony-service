@@ -51,7 +51,6 @@ public slots:
 
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
-    void handleEntities(const Tpl::EntityPtrList &entities);
     void handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     void handleEvents(const Tpl::EventPtrList &events);
     void updateLatestMessage(const QString &number, const QString &message, bool incoming);

@@ -47,7 +47,6 @@ public Q_SLOTS:
     
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
-    void handleEntities(const Tpl::EntityPtrList &entities);
 };
 
 #endif // CALLLOGMODEL_H

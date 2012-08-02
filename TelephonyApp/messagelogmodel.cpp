@@ -47,7 +47,7 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     roles[ThreadId] = "threadId";
     setRoleNames(roles);
 
-    fetchLog(Tpl::EventTypeMaskText);
+    fetchLog(Tpl::EventTypeMaskText, EntityTypeList() << Tpl::EntityTypeRoom);
 }
 
 void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming)
@@ -86,21 +86,6 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
     entry->message = textEvent->message();
     entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
     return entry;
-}
-
-void MessageLogModel::handleEntities(const Tpl::EntityPtrList &entities)
-{
-    Tpl::EntityPtrList filteredEntities;
-
-    // For messages we only use room entities in telepathy-ufa
-    // FIXME: this is not generic for all connection managers
-    Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
-        if (entity->entityType() == Tpl::EntityTypeRoom) {
-            filteredEntities << entity;
-        }
-    }
-
-    AbstractLoggerModel::handleEntities(filteredEntities);
 }
 
 void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)

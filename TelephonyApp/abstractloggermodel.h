@@ -31,6 +31,8 @@
 
 class ContactEntry;
 
+typedef QList<Tpl::EntityType> EntityTypeList;
+
 class LogEntry {
 public:
     virtual QVariant data(int role) const;
@@ -71,7 +73,7 @@ protected:
     QString phoneNumberFromId(const QString &id) const;
     QString threadIdFromIdentifier(const QString &id) const;
     QString customIdentifierFromId(const QString &id) const;
-    void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny);
+    void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny, EntityTypeList entityTypes = EntityTypeList());
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
     void requestEventsForDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     void fillContactInfo(LogEntry *entry, ContactEntry *contact);
@@ -105,6 +107,7 @@ protected:
     Tpl::LogManagerPtr mLogManager;
     QList<LogEntry*> mLogEntries;
     Tpl::EventTypeMask mType;
+    EntityTypeList mEntityTypes;
     QList<Tpl::PendingOperation*> mActiveOperations;
 };
 

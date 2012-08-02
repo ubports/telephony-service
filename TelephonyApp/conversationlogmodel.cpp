@@ -52,7 +52,7 @@ ConversationLogModel::ConversationLogModel(QObject *parent) :
             SIGNAL(unreadMessagesChanged(const QString&)),
             SLOT(onUnreadMessagesChanged(const QString&)));
 
-    fetchLog(Tpl::EventTypeMaskText);
+    fetchLog(Tpl::EventTypeMaskText, EntityTypeList() << Tpl::EntityTypeRoom);
 }
 
 void ConversationLogModel::onMessageReceived(const QString &number, const QString &message)
@@ -97,21 +97,6 @@ LogEntry *ConversationLogModel::createEntry(const Tpl::EventPtr &event)
     entry->unreadCount = ChatManager::instance()->unreadMessages(entry->phoneNumber);
 
     return entry;
-}
-
-void ConversationLogModel::handleEntities(const Tpl::EntityPtrList &entities)
-{
-    Tpl::EntityPtrList filteredEntities;
-
-    // For messages we only use room entities in telepathy-ufa
-    // FIXME: this is not generic for all connection managers
-    Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
-        if (entity->entityType() == Tpl::EntityTypeRoom) {
-            filteredEntities << entity;
-        }
-    }
-
-    AbstractLoggerModel::handleEntities(filteredEntities);
 }
 
 void ConversationLogModel::handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates)

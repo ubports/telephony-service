@@ -46,7 +46,8 @@ CallLogModel::CallLogModel(QObject *parent) :
     roles[Missed] = "missed";
     setRoleNames(roles);
 
-    fetchLog(Tpl::EventTypeMaskCall);
+    fetchLog(Tpl::EventTypeMaskCall, EntityTypeList() << Tpl::EntityTypeContact
+                                                      << Tpl::EntityTypeSelf);
 }
 
 void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
@@ -102,19 +103,4 @@ LogEntry *CallLogModel::createEntry(const Tpl::EventPtr &event)
     entry->missed = (callEvent->endReason() == Tp::CallStateChangeReasonNoAnswer);
     entry->duration = callEvent->duration();
     return entry;
-}
-
-void CallLogModel::handleEntities(const Tpl::EntityPtrList &entities)
-{
-    Tpl::EntityPtrList filteredEntities;
-
-    // Filter out room type entities, those don't have call logs.
-    // FIXME: this is not generic for all connection managers
-    Q_FOREACH(const Tpl::EntityPtr &entity, entities) {
-        if (entity->entityType() != Tpl::EntityTypeRoom) {
-            filteredEntities << entity;
-        }
-    }
-
-    AbstractLoggerModel::handleEntities(filteredEntities);
 }
