@@ -38,6 +38,7 @@
 #include "messagelogmodel.h"
 #include "messagesproxymodel.h"
 #include "buttonmaskeffect.h"
+#include "modelsectioncounter.h"
 
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/qdeclarative.h>
@@ -96,6 +97,7 @@ void Components::registerTypes(const char *uri)
     qmlRegisterType<ContactOnlineAccount>(uri, 0, 1, "ContactOnlineAccount");
     qmlRegisterType<ContactPhoneNumber>(uri, 0, 1, "ContactPhoneNumber");
     qmlRegisterType<ButtonMaskEffect>(uri, 0, 1, "ButtonMaskEffect");
+    qmlRegisterType<ModelSectionCounter>(uri, 0, 1, "ModelSectionCounter");
 }
 
 void Components::onChannelHandlerCreated(ChannelHandler *handler)
@@ -120,15 +122,15 @@ void Components::onAccountReady()
 
     mConversationLogModel = new ConversationLogModel(this);
     mRootContext->setContextProperty("conversationLogModel", mConversationLogModel);
-    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&)),
-            mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
+    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&)),
+            mConversationLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&)));
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mConversationLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 
     mMessageLogModel = new MessageLogModel(this);
     mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
-    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&)),
-            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&)));
+    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&)),
+            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&)));
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 }

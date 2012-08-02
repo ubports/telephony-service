@@ -66,6 +66,9 @@ public:
 
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
+
+Q_SIGNALS:
+    void resetView();
     
 protected:
     QString phoneNumberFromId(const QString &id) const;
@@ -82,6 +85,7 @@ protected:
     void invalidateRequests();
     bool validateRequest(Tpl::PendingOperation *op);
     QModelIndex indexFromEntry(LogEntry *entry) const;
+    void updateLogForContact(ContactEntry *contactEntry);
 
     virtual LogEntry *createEntry(const Tpl::EventPtr &event);
     virtual void handleEntities(const Tpl::EntityPtrList &entities);

@@ -97,4 +97,8 @@ Item {
             onActionClicked: telephony.callNumber(phoneNumber)
         }
     }
+
+    ScrollbarForListView {
+        view: callLogView
+    }
 }

@@ -17,7 +17,9 @@ static void printUsage(const QStringList& arguments)
     qDebug() << "usage:"
              << arguments.at(0).toUtf8().constData()
              << "[contact://CONTACT_KEY]"
-             << "[call://PHONE_NUMBER]";
+             << "[call://PHONE_NUMBER]"
+             << "[message://PHONE_NUMBER]"
+             << "[voicemail://]";
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
@@ -33,6 +35,8 @@ bool TelephonyApplication::setup()
     if (validSchemes.isEmpty()) {
         validSchemes << "contact";
         validSchemes << "call";
+        validSchemes << "message";
+        validSchemes << "voicemail";
     }
 
     QString contactKey;
@@ -46,11 +50,11 @@ bool TelephonyApplication::setup()
             printUsage(arguments);
             return 1;
         } else {
-            m_argUrl = QUrl(arguments.at(1));
+            m_arg = arguments.at(1);
         }
     }
 
-    if (sendMessage(m_argUrl.toString())) {
+    if (sendMessage(m_arg)) {
         return false;
     }
 
@@ -62,6 +66,7 @@ bool TelephonyApplication::setup()
     QObject::connect(m_view, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onViewStatusChanged(QDeclarativeView::Status)));
     m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     m_view->setWindowTitle("Telephony");
+    m_view->rootContext()->setContextProperty("application", this);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     m_view->rootContext()->setContextProperty("dbus", m_dbus);
     QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
@@ -70,6 +75,7 @@ bool TelephonyApplication::setup()
 
     setActivationWindow(m_view);
 
+    QObject::connect(m_dbus, SIGNAL(request(QString)), this, SLOT(onMessageReceived(QString)));
     QObject::connect(this, SIGNAL(messageReceived(QString)), this, SLOT(onMessageReceived(QString)));
     return true;
 }
@@ -97,31 +103,63 @@ void TelephonyApplication::onApplicationReady()
 {
     QObject::disconnect(QObject::sender(), SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
     m_applicationIsReady = true;
-    parseUrl(m_argUrl);
-    m_argUrl.clear();
+    parseArgument(m_arg);
+    m_arg.clear();
 }
 
-void TelephonyApplication::parseUrl(const QUrl &url)
+void TelephonyApplication::parseArgument(const QString &arg)
 {
-    if (url.isEmpty()) {
+    if (arg.isEmpty()) {
         return;
     }
 
-    QString scheme(url.scheme());
+    QStringList args = arg.split("://");
+    if (args.size() != 2) {
+        return;
+    }
+
+    QString scheme = args[0];
+    QString value = args[1];
+
+    QGraphicsObject *telephony = m_view->rootObject();
+    if (!telephony) {
+        return;
+    }
+    const QMetaObject *mo = telephony->metaObject();
+
 
     if (scheme == "contact") {
         // Workaround to propagate a property change even when the contactKey was the same
         m_view->rootContext()->setContextProperty("contactKey", "");
-        m_view->rootContext()->setContextProperty("contactKey", url.host());
+        m_view->rootContext()->setContextProperty("contactKey", value);
     } else if (scheme == "call") {
-        QGraphicsObject *telephony = m_view->rootObject();
-        if (telephony) {
-            const QMetaObject *mo = telephony->metaObject();
-            int index = mo->indexOfMethod("callNumber(QVariant)");
+        int index = mo->indexOfMethod("callNumber(QVariant)");
+        if (index != -1) {
+            QMetaMethod method = mo->method(index);
+            method.invoke(telephony, Q_ARG(QVariant, QVariant(value)));
+        }
+    } else if (scheme == "message") {
+        if (value.isEmpty()) {
+            int index = mo->indexOfMethod("startNewMessage()");
             if (index != -1) {
                 QMetaMethod method = mo->method(index);
-                method.invoke(telephony, Q_ARG(QVariant, QVariant(url.host())));
+                method.invoke(telephony);
             }
+        } else {
+            int index = mo->indexOfMethod("startChat(QVariant,QVariant,QVariant)");
+            if (index != -1) {
+                QMetaMethod method = mo->method(index);
+                method.invoke(telephony,
+                              Q_ARG(QVariant, QVariant("")),
+                              Q_ARG(QVariant, QVariant(value)),
+                              Q_ARG(QVariant, QVariant("")));
+            }
+       }
+    } else if (scheme == "voicemail") {
+        int index = mo->indexOfMethod("showVoicemail()");
+        if (index != -1) {
+            QMetaMethod method = mo->method(index);
+            method.invoke(telephony);
         }
     }
 }
@@ -129,11 +167,9 @@ void TelephonyApplication::parseUrl(const QUrl &url)
 void TelephonyApplication::onMessageReceived(const QString &message)
 {
     if (m_applicationIsReady) {
-        parseUrl(message);
-        m_argUrl.clear();
+        parseArgument(message);
+        m_arg.clear();
     } else {
-        m_argUrl = QUrl(message);
+        m_arg = message;
     }
-    m_view->activateWindow();
-    m_view->raise();
 }

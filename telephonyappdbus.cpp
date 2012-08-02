@@ -50,15 +50,15 @@ TelephonyAppDBus::connectToBus()
 void
 TelephonyAppDBus::ShowMessages(const QString &number)
 {
-    Q_EMIT showMessagesRequested(number);
+    Q_EMIT request(QString("message://%1").arg(number));
 }
 
 void TelephonyAppDBus::NewMessage()
 {
-    Q_EMIT newMessageRequested();
+    Q_EMIT request(QString("message://"));
 }
 
 void TelephonyAppDBus::ShowVoicemail()
 {
-    Q_EMIT showVoicemailRequested();
+    Q_EMIT request(QString("voicemail://"));
 }

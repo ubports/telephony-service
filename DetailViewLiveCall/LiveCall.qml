@@ -107,7 +107,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 15
                 anchors.top: pictureFrame.bottom
-                text: contact ? contact.displayLabel : "No Name"
+                text: contact ? contact.displayLabel : "Unknown Contact"
                 color: "white"
                 style: Text.Sunken
                 styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)

@@ -45,7 +45,7 @@ public:
     explicit ConversationLogModel(QObject *parent = 0);
 
 public slots:
-    void onMessageReceived(const QString &number, const QString &message);
+    void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp);
     void onMessageSent(const QString &number, const QString &message);
     void onUnreadMessagesChanged(const QString &number);
 
@@ -53,7 +53,10 @@ protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
     void handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     void handleEvents(const Tpl::EventPtrList &events);
-    void updateLatestMessage(const QString &number, const QString &message, bool incoming);
+    void updateLatestMessage(const QString &number,
+                             const QString &message,
+                             bool incoming,
+                             const QDateTime &timestamp = QDateTime::currentDateTime());
 
     ConversationLogEntry *findEntry(const QString &threadId, const QString &phoneNumber);
 };

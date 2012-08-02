@@ -55,9 +55,9 @@ ConversationLogModel::ConversationLogModel(QObject *parent) :
     fetchLog(Tpl::EventTypeMaskText);
 }
 
-void ConversationLogModel::onMessageReceived(const QString &number, const QString &message)
+void ConversationLogModel::onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp)
 {
-    updateLatestMessage(number, message, true);
+    updateLatestMessage(number, message, true, timestamp);
 }
 
 void ConversationLogModel::onMessageSent(const QString &number, const QString &message)
@@ -176,7 +176,7 @@ void ConversationLogModel::handleEvents(const Tpl::EventPtrList &events)
     }
 }
 
-void ConversationLogModel::updateLatestMessage(const QString &number, const QString &message, bool incoming)
+void ConversationLogModel::updateLatestMessage(const QString &number, const QString &message, bool incoming, const QDateTime &timestamp)
 {
     int count = mLogEntries.count();
     for(int i = 0; i < count; ++i) {
@@ -186,7 +186,11 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
         }
 
         if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number)) {
-            entry->timestamp = QDateTime::currentDateTime();
+            if (entry->timestamp > timestamp) {
+                return;
+            }
+
+            entry->timestamp = timestamp;
             entry->message = message;
             entry->incoming = incoming;
             entry->unreadCount = ChatManager::instance()->unreadMessages(number);

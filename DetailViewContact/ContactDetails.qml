@@ -252,6 +252,10 @@ FocusScope {
         }
     }
 
+    ScrollbarForFlickable {
+        flickable: scrollArea
+    }
+
     Item {
         id: editFooter
 

@@ -42,9 +42,7 @@ public Q_SLOTS:
     Q_NOREPLY void ShowVoicemail();
 
 Q_SIGNALS:
-    void showMessagesRequested(const QString &number);
-    void newMessageRequested();
-    void showVoicemailRequested();
+    void request(const QString &message);
 };
 
 #endif // TELEPHONYAPPDBUS_H

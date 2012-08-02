@@ -30,5 +30,6 @@ install(TARGETS telephony-app-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDI
 install(FILES org.freedesktop.Telepathy.Client.TelephonyAppApprover.service DESTINATION share/dbus-1/services)
 install(FILES TelephonyAppApprover.client DESTINATION share/telepathy/clients)
 install(FILES ${desktop_FILES} DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+install(FILES telephony-app-approver.desktop DESTINATION /etc/xdg/autostart)
 
 add_subdirectory(icons)

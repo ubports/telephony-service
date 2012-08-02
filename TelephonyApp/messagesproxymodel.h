@@ -82,6 +82,9 @@ public:
 
     virtual QVariant data(const QModelIndex &index, int role) const;
 
+private Q_SLOTS:
+    void onResetView();
+
 signals:
     void ascendingChanged();
     void messagesModelChanged();

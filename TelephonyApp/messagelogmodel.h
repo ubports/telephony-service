@@ -44,10 +44,13 @@ public:
 
     explicit MessageLogModel(QObject *parent = 0);
 
-    Q_INVOKABLE void appendMessage(const QString &number, const QString &message, bool incoming);
+    Q_INVOKABLE void appendMessage(const QString &number,
+                                   const QString &message,
+                                   bool incoming,
+                                   const QDateTime &timestamp = QDateTime::currentDateTime());
 
 public slots:
-    void onMessageReceived(const QString &number, const QString &message);
+    void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp);
     void onMessageSent(const QString &number, const QString &message);
 
 protected:

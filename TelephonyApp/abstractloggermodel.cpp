@@ -27,6 +27,8 @@
 #include <TelepathyLoggerQt4/PendingEvents>
 #include <TelepathyLoggerQt4/Entity>
 #include <TelepathyLoggerQt4/Event>
+#include <QContact>
+#include <QContactPhoneNumber>
 
 QVariant LogEntry::data(int role) const
 {
@@ -223,6 +225,7 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         mLogEntries.append(entry);
     }
     endInsertRows();
+    Q_EMIT resetView();
 }
 
 void AbstractLoggerModel::appendEntry(LogEntry *entry)
@@ -271,6 +274,31 @@ QModelIndex AbstractLoggerModel::indexFromEntry(LogEntry *entry) const
     }
 
     return index(pos, 0);
+}
+
+void AbstractLoggerModel::updateLogForContact(ContactEntry *contactEntry)
+{
+    // now we need to iterate over the events to look for contacts matching
+    int count = mLogEntries.count();
+    QString customId = contactEntry->customId();
+    for (int i = 0; i < count; ++i) {
+        LogEntry *entry = mLogEntries[i];
+        if (!entry->customId.isEmpty()) {
+            if (entry->customId == customId) {
+                fillContactInfo(entry, contactEntry);
+                emit dataChanged(index(i,0), index(i,0));
+            }
+        } else {
+            // check if any of the contact's phone numbers match
+            Q_FOREACH(const QContactPhoneNumber &number, contactEntry->contact().details<QContactPhoneNumber>()) {
+                if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number.number())) {
+                    fillContactInfo(entry, contactEntry);
+                    emit dataChanged(index(i,0), index(i,0));
+                    continue;
+                }
+            }
+        }
+    }
 }
 
 LogEntry *AbstractLoggerModel::createEntry(const Tpl::EventPtr &event)
@@ -339,29 +367,12 @@ void AbstractLoggerModel::onPendingEventsFinished(Tpl::PendingOperation *op)
 
 void AbstractLoggerModel::onContactAdded(ContactEntry *contact)
 {
-    // now we need to iterate over the events to look for contacts matching
-    int count = mLogEntries.count();
-    QString customId = contact->customId();
-    for (int i = 0; i < count; ++i) {
-        LogEntry *entry = mLogEntries[i];
-        if (entry->customId == customId) {
-            fillContactInfo(entry, contact);
-            emit dataChanged(index(i,0), index(i,0));
-        }
-    }
+    updateLogForContact(contact);
 }
 
 void AbstractLoggerModel::onContactChanged(ContactEntry *contact)
 {
-    int count = mLogEntries.count();
-    QString customId = contact->customId();
-    for (int i = 0; i < count; ++i) {
-        LogEntry *entry = mLogEntries[i];
-        if (entry->customId == customId) {
-            fillContactInfo(entry, contact);
-            emit dataChanged(index(i, 0), index(i, 0));
-        }
-    }
+    updateLogForContact(contact);
 }
 
 void AbstractLoggerModel::onContactRemoved(const QString &customId)

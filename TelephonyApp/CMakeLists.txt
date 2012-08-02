@@ -25,6 +25,7 @@ set(plugin_SRCS
     messagesproxymodel.cpp
     telepathyhelper.cpp
     buttonmaskeffect.cpp
+    modelsectioncounter.cpp
     )
 
 set(plugin_HDRS
@@ -51,6 +52,7 @@ set(plugin_HDRS
     messagesproxymodel.h
     telepathyhelper.h
     buttonmaskeffect.h
+    modelsectioncounter.h
     )
 
 qt4_wrap_cpp(plugin_MOC_SRCS ${plugin_HDRS})
@@ -80,4 +82,7 @@ target_link_libraries(telephony-qml
 set(PLUGIN_DIR ${QT_IMPORTS_DIR}/TelephonyApp)
 install(TARGETS telephony-qml DESTINATION ${PLUGIN_DIR})
 install(FILES qmldir DESTINATION ${PLUGIN_DIR})
+
+# deactivated unit tests until they pass in a clean chroot
+add_subdirectory(tests)
 

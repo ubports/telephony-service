@@ -9,7 +9,8 @@ FocusScope {
     property alias contactNameValid: name.valid
 
     width: parent.width
-    height: editable ? Math.max(labelBox.height, 82) : 82
+    // ensure that there is equal padding at the top and bottom of labelBox
+    height: editable ? Math.max(labelBox.height + labelBox.anchors.topMargin * 2, 82) : 82
     Behavior on height {StandardAnimation {}}
 
     // FIXME: this function is used in two places, should be moved to one common place

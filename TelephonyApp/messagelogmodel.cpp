@@ -53,13 +53,13 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     fetchLog(Tpl::EventTypeMaskText);
 }
 
-void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming)
+void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming, const QDateTime &timestamp)
 {
     MessageLogEntry *entry = new MessageLogEntry();
     entry->incoming = incoming;
     entry->phoneNumber = number;
     entry->message = message;
-    entry->timestamp = QDateTime::currentDateTime();
+    entry->timestamp = timestamp;
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
     if (contact) {
         fillContactInfo(entry, contact);
@@ -69,14 +69,18 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
     updateLatestMessages(number);
 }
 
-void MessageLogModel::onMessageReceived(const QString &number, const QString &message)
+void MessageLogModel::onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp)
 {
-    appendMessage(number, message, true);
+    appendMessage(number, message, true, timestamp);
+    // force the proxy model to reset to workaround a ListView bug
+    emit resetView();
 }
 
 void MessageLogModel::onMessageSent(const QString &number, const QString &message)
 {
     appendMessage(number, message, false);
+    // force the proxy model to reset to workaround a ListView bug
+    emit resetView();
 }
 
 LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)

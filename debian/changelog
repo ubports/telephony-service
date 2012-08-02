@@ -1,3 +1,66 @@
+telephony-app (0.56) precise; urgency=low
+
+  [ Olivier Tilloy ]
+  * Work around the fact that the scrollbar proximity sensor eats
+    mouse clicks. (LP: #1030136)
+
+  [ Gustavo Pichorim Boiko ]
+  * Add the correct icon for the phone/voicemail indicator. (LP: #1029708)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 01 Aug 2012 10:45:10 -0300
+
+telephony-app (0.55) precise; urgency=low
+
+  [ Tiago Salem Herrmann ]
+  * reset the proxy model when logger is fully loaded (LP: #1028166)
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure the telephony-app uses the correct timestamp for received messages.
+    (LP: #1031472)
+  * Use the comparePhoneNumbers() in chatmanager to check for existing text
+    channels. (LP: #1030116)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 31 Jul 2012 17:33:14 -0300
+
+telephony-app (0.54) precise; urgency=low
+
+  [ Florian Boucault ]
+  * Fixed out of source building of unit tests. (LP: #1029997)
+
+  [ Olivier Tilloy ]
+  * Raise and activate the window when an incoming call is accepted.
+    (LP: #1020157)
+
+  [ Renato Araujo Oliveira Filho ]
+  * Fixed application loader from dbus method. (LP: #1029120 LP: #1029124)
+
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Mon, 30 Jul 2012 12:55:22 -0300
+
+telephony-app (0.53) precise; urgency=low
+
+  [ Tiago Salem Herrmann ]
+  * change "No Name" in live call view to "Unknown Contact" (LP: #1029681)
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure the approver gets started when the desktop loads. (LP: #1029890)
+  * Do not display the desktop files used only by the indicators. (LP: #1029161)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 27 Jul 2012 13:44:18 -0300
+
+telephony-app (0.52) precise; urgency=low
+
+  * Added constant padding at the top and bottom of the contact details header. (LP: #1029548)
+  * Implemented a new Scrollbar widget and added scrollbars to relevant parts of the UI. (LP: #1025780)
+
+ -- Florian Boucault <florian.boucault@canonical.com>  Fri, 27 Jul 2012 16:14:51 +0100
+
+telephony-app (0.51) precise; urgency=low
+
+  * Make sure the logger models are properly updated when phone numbers are added.
+    (LP: #1029486 LP: #1029503)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 26 Jul 2012 17:13:00 -0300
+
 telephony-app (0.50) precise; urgency=low
 
   [ Renato Araujo Oliveira Filho ]

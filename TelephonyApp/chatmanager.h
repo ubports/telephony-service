@@ -47,7 +47,7 @@ public:
 
 signals:
     void chatReady(const QString &contactId);
-    void messageReceived(const QString &contactId, const QString &message);
+    void messageReceived(const QString &contactId, const QString &message, const QDateTime &timestamp);
     void messageSent(const QString &contactId, const QString &message);
     void activeChatChanged();
     void unreadMessagesChanged(const QString &contactId);
@@ -57,6 +57,9 @@ public Q_SLOTS:
     void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
+
+protected:
+    Tp::TextChannelPtr existingChat(const QString &contactId);
 
 
 private:
