@@ -115,6 +115,15 @@ ContactEntry *ContactModel::contactFromCustomId(const QString &customId)
 
 QString ContactModel::customIdFromPhoneNumber(const QString &phoneNumber)
 {
+    // try to first iterate over the contacts we have
+    Q_FOREACH(ContactEntry *entry, mContactEntries) {
+        Q_FOREACH(const QContactPhoneNumber &storedPhoneNumber, entry->contact().details<QContactPhoneNumber>()) {
+            if (comparePhoneNumbers(storedPhoneNumber.number(), phoneNumber)) {
+                return entry->customId();
+            }
+        }
+    }
+
     // FIXME: replace this by something not relying specifically on android
     QDBusInterface contacts("com.canonical.Android",
                             "/com/canonical/android/contacts/Contacts",
