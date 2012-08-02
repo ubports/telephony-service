@@ -61,19 +61,6 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
             SIGNAL(MuteStateChanged(uint)),
             SLOT(onMutedChanged(uint)));
 
-    switch(mChannel->callState()) {
-    case Tp::CallStateActive: 
-        // start timer if this call is already active
-        startTimer(1000);
-        mElapsedTime.start();
-        Q_EMIT callActive();
-        break;
-    case Tp::CallStateInitialised:
-        emit dialingChanged();
-    default:
-        // accept the call if it was not accepted yet
-        channel->accept();
-    }
 }
 
 void CallEntry::timerEvent(QTimerEvent *event)
@@ -179,6 +166,20 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
 {
     if (op->isError()) {
         qWarning() << "PendingOperation finished with error:" << op->errorName() << op->errorMessage();
+    }
+
+    switch(mChannel->callState()) {
+    case Tp::CallStateActive: 
+        // start timer if this call is already active
+        startTimer(1000);
+        mElapsedTime.start();
+        Q_EMIT callActive();
+        break;
+    case Tp::CallStateInitialised:
+        emit dialingChanged();
+    default:
+        // accept the call if it was not accepted yet
+        mChannel->accept();
     }
 
     mChannelReady = true;
