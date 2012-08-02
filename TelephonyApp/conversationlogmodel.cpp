@@ -71,7 +71,7 @@ void ConversationLogModel::onUnreadMessagesChanged(const QString &number)
     int count = mLogEntries.count();
     for (int i = 0; i < count; ++i) {
         LogEntry *entry = mLogEntries[i];
-        if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number)) {
+        if (ContactModel::comparePhoneNumbers(entry->phoneNumber, number)) {
             ConversationLogEntry *conversationEntry = dynamic_cast<ConversationLogEntry*>(entry);
             if (!conversationEntry) {
                 continue;
@@ -185,7 +185,7 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
             continue;
         }
 
-        if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number)) {
+        if (ContactModel::comparePhoneNumbers(entry->phoneNumber, number)) {
             if (entry->timestamp > timestamp) {
                 return;
             }
@@ -227,7 +227,7 @@ ConversationLogEntry *ConversationLogModel::findEntry(const QString &threadId, c
             continue;
         }
         if (entry->threadId == threadId ||
-            ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, phoneNumber)) {
+            ContactModel::comparePhoneNumbers(entry->phoneNumber, phoneNumber)) {
             return entry;
         }
     }
