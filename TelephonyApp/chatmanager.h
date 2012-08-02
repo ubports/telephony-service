@@ -33,24 +33,24 @@ class ChatManager : public QObject
 public:
     static ChatManager *instance();
 
-    Q_INVOKABLE bool isChattingToContact(const QString &contactId);
-    Q_INVOKABLE void startChat(const QString &contactId);
-    Q_INVOKABLE void endChat(const QString &contactId);
-    Q_INVOKABLE void sendMessage(const QString &contactId, const QString &message);
-    Q_INVOKABLE void acknowledgeMessages(const QString &contactId);
+    Q_INVOKABLE bool isChattingToContact(const QString &phoneNumber);
+    Q_INVOKABLE void startChat(const QString &phoneNumber);
+    Q_INVOKABLE void endChat(const QString &phoneNumber);
+    Q_INVOKABLE void sendMessage(const QString &phoneNumber, const QString &message);
+    Q_INVOKABLE void acknowledgeMessages(const QString &phoneNumber);
 
     QString activeChat() const;
     void setActiveChat(const QString &value);
 
     int unreadMessagesCount() const;
-    int unreadMessages(const QString &contactId);
+    int unreadMessages(const QString &phoneNumber);
 
 signals:
-    void chatReady(const QString &contactId);
-    void messageReceived(const QString &contactId, const QString &message, const QDateTime &timestamp);
-    void messageSent(const QString &contactId, const QString &message);
+    void chatReady(const QString &phoneNumber);
+    void messageReceived(const QString &phoneNumber, const QString &message, const QDateTime &timestamp);
+    void messageSent(const QString &phoneNumber, const QString &message);
     void activeChatChanged();
-    void unreadMessagesChanged(const QString &contactId);
+    void unreadMessagesChanged(const QString &phoneNumber);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
@@ -59,7 +59,7 @@ public Q_SLOTS:
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
 
 protected:
-    Tp::TextChannelPtr existingChat(const QString &contactId);
+    Tp::TextChannelPtr existingChat(const QString &phoneNumber);
 
 
 private:

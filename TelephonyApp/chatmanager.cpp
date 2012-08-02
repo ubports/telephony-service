@@ -35,35 +35,35 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
-bool ChatManager::isChattingToContact(const QString &contactId)
+bool ChatManager::isChattingToContact(const QString &phoneNumber)
 {
-    return !existingChat(contactId).isNull();
+    return !existingChat(phoneNumber).isNull();
 }
 
-void ChatManager::startChat(const QString &contactId)
+void ChatManager::startChat(const QString &phoneNumber)
 {
-    if (!isChattingToContact(contactId)) {
+    if (!isChattingToContact(phoneNumber)) {
         // Request the contact to start chatting to
         Tp::AccountPtr account = TelepathyHelper::instance()->account();
-        connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << contactId),
+        connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
                 SIGNAL(finished(Tp::PendingOperation*)),
                 SLOT(onContactsAvailable(Tp::PendingOperation*)));
     }
 }
 
-void ChatManager::endChat(const QString &contactId)
+void ChatManager::endChat(const QString &phoneNumber)
 {
     // if the chat we are ending was the current one, clear the property
-    if (ContactModel::instance()->comparePhoneNumbers(mActiveChat, contactId)) {
+    if (ContactModel::instance()->comparePhoneNumbers(mActiveChat, phoneNumber)) {
         setActiveChat("");
     }
 
-    Tp::TextChannelPtr channel = existingChat(contactId);
+    Tp::TextChannelPtr channel = existingChat(phoneNumber);
     if (channel.isNull()) {
         return;
     }
 
-    // the contactId might be formatted differently from the phone number used as the key
+    // the phoneNumber might be formatted differently from the phone number used as the key
     // so use the one from the channel to remove the entries.
     QString id = channel->targetContact()->id();
     channel->requestClose();
@@ -73,20 +73,20 @@ void ChatManager::endChat(const QString &contactId)
     emit unreadMessagesChanged(id);
 }
 
-void ChatManager::sendMessage(const QString &contactId, const QString &message)
+void ChatManager::sendMessage(const QString &phoneNumber, const QString &message)
 {
-    Tp::TextChannelPtr channel = existingChat(contactId);
+    Tp::TextChannelPtr channel = existingChat(phoneNumber);
     if (channel.isNull()) {
         return;
     }
 
     channel->send(message);
-    emit messageSent(contactId, message);
+    emit messageSent(phoneNumber, message);
 }
 
-void ChatManager::acknowledgeMessages(const QString &contactId)
+void ChatManager::acknowledgeMessages(const QString &phoneNumber)
 {
-    Tp::TextChannelPtr channel = existingChat(contactId);
+    Tp::TextChannelPtr channel = existingChat(phoneNumber);
     if (channel.isNull()) {
         return;
     }
@@ -118,9 +118,9 @@ int ChatManager::unreadMessagesCount() const
     return count;
 }
 
-int ChatManager::unreadMessages(const QString &contactId)
+int ChatManager::unreadMessages(const QString &phoneNumber)
 {
-    Tp::TextChannelPtr channel = existingChat(contactId);
+    Tp::TextChannelPtr channel = existingChat(phoneNumber);
     if (channel.isNull()) {
         return 0;
     }
@@ -162,11 +162,11 @@ void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
     emit unreadMessagesChanged(message.sender()->id());
 }
 
-Tp::TextChannelPtr ChatManager::existingChat(const QString &contactId)
+Tp::TextChannelPtr ChatManager::existingChat(const QString &phoneNumber)
 {
     Tp::TextChannelPtr channel;
     Q_FOREACH(const QString &key, mChannels.keys()) {
-        if (ContactModel::instance()->comparePhoneNumbers(key, contactId)) {
+        if (ContactModel::instance()->comparePhoneNumbers(key, phoneNumber)) {
             channel = mChannels[key];
             break;
         }
