@@ -108,7 +108,7 @@ void ChannelHandler::onTextChannelReady(Tp::PendingOperation *op)
 
     mReadyRequests.remove(pr);
 
-    emit textChannelAvailable(textChannel);
+    Q_EMIT textChannelAvailable(textChannel);
 }
 
 void ChannelHandler::onCallChannelReady(Tp::PendingOperation *op)
@@ -130,5 +130,5 @@ void ChannelHandler::onCallChannelReady(Tp::PendingOperation *op)
 
     mReadyRequests.remove(pr);
 
-    emit callChannelAvailable(callChannel);
+    Q_EMIT callChannelAvailable(callChannel);
 }

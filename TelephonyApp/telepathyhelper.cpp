@@ -149,7 +149,7 @@ void TelepathyHelper::ensureAccountConnected()
     }
 
     if (mFirstTime) {
-        emit accountReady();
+        Q_EMIT accountReady();
         mFirstTime = false;
     }
 }

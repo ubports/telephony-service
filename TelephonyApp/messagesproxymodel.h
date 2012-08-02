@@ -69,7 +69,7 @@ public:
 private Q_SLOTS:
     void onResetView();
 
-signals:
+Q_SIGNALS:
     void ascendingChanged();
     void messagesModelChanged();
     void searchStringChanged();

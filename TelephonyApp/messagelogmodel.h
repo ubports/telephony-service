@@ -46,7 +46,7 @@ public:
                                    bool incoming,
                                    const QDateTime &timestamp = QDateTime::currentDateTime());
 
-public slots:
+public Q_SLOTS:
     void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp);
     void onMessageSent(const QString &number, const QString &message);
 

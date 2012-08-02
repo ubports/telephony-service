@@ -92,7 +92,7 @@ protected:
     virtual void handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     virtual void handleEvents(const Tpl::EventPtrList &events);
 
-protected slots:
+protected Q_SLOTS:
     void onPendingEntitiesFinished(Tpl::PendingOperation *op);
     void onPendingDatesFinished(Tpl::PendingOperation *op);
     void onPendingEventsFinished(Tpl::PendingOperation *op);

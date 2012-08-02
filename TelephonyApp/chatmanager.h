@@ -45,7 +45,7 @@ public:
     int unreadMessagesCount() const;
     int unreadMessages(const QString &contactId);
 
-signals:
+Q_SIGNALS:
     void chatReady(const QString &contactId);
     void messageReceived(const QString &contactId, const QString &message, const QDateTime &timestamp);
     void messageSent(const QString &contactId, const QString &message);

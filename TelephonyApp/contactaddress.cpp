@@ -41,8 +41,8 @@ void ContactAddress::setCountry(const QString &value)
 {
     if (value != country()) {
         mDetail.setValue(QContactAddress::FieldCountry, value);
-        emit changed();
-        emit countryChanged();
+        Q_EMIT changed();
+        Q_EMIT countryChanged();
     }
 }
 
@@ -55,8 +55,8 @@ void ContactAddress::setLocality(const QString &value)
 {
     if (value != locality()) {
         mDetail.setValue(QContactAddress::FieldLocality, value);
-        emit changed();
-        emit localityChanged();
+        Q_EMIT changed();
+        Q_EMIT localityChanged();
     }
 }
 
@@ -69,8 +69,8 @@ void ContactAddress::setPostOfficeBox(const QString &value)
 {
     if (value != postOfficeBox()) {
         mDetail.setValue(QContactAddress::FieldPostOfficeBox, value);
-        emit changed();
-        emit postOfficeBoxChanged();
+        Q_EMIT changed();
+        Q_EMIT postOfficeBoxChanged();
     }
 }
 
@@ -83,8 +83,8 @@ void ContactAddress::setPostcode(const QString &value)
 {
     if (value != postcode()) {
         mDetail.setValue(QContactAddress::FieldPostcode, value);
-        emit changed();
-        emit postcodeChanged();
+        Q_EMIT changed();
+        Q_EMIT postcodeChanged();
     }
 }
 
@@ -97,8 +97,8 @@ void ContactAddress::setRegion(const QString &value)
 {
     if (value != region()) {
         mDetail.setValue(QContactAddress::FieldRegion, value);
-        emit changed();
-        emit regionChanged();
+        Q_EMIT changed();
+        Q_EMIT regionChanged();
     }
 }
 
@@ -111,8 +111,8 @@ void ContactAddress::setStreet(const QString &value)
 {
     if (value != street()) {
         mDetail.setValue(QContactAddress::FieldStreet, value);
-        emit changed();
-        emit streetChanged();
+        Q_EMIT changed();
+        Q_EMIT streetChanged();
     }
 }
 
@@ -125,6 +125,6 @@ void ContactAddress::setSubTypes(const QVariant &value)
 {
     //FIXME: we are just setting this one all the time, maybe we should check if the list really changed
     mDetail.setValue(QContactAddress::FieldSubTypes, value.toStringList());
-    emit changed();
-    emit subTypesChanged();
+    Q_EMIT changed();
+    Q_EMIT subTypesChanged();
 }

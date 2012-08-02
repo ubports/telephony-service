@@ -44,7 +44,7 @@ public:
 
     explicit ConversationLogModel(QObject *parent = 0);
 
-public slots:
+public Q_SLOTS:
     void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp);
     void onMessageSent(const QString &number, const QString &message);
     void onUnreadMessagesChanged(const QString &number);

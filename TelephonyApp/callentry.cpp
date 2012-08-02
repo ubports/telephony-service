@@ -69,7 +69,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
         Q_EMIT callActive();
         break;
     case Tp::CallStateInitialised:
-        emit dialingChanged();
+        Q_EMIT dialingChanged();
     default:
         // accept the call if it was not accepted yet
         channel->accept();
@@ -78,7 +78,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
 
 void CallEntry::timerEvent(QTimerEvent *event)
 {
-    emit elapsedTimeChanged();
+    Q_EMIT elapsedTimeChanged();
 }
 
 bool CallEntry::dialing() const
@@ -137,7 +137,7 @@ void CallEntry::endCall()
     connect(mChannel->hangup(),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onCallHangupFinished(Tp::PendingOperation*)));
-    emit callEnded();
+    Q_EMIT callEnded();
 }
 
 bool CallEntry::isHeld() const
@@ -158,7 +158,7 @@ void CallEntry::onMutedChanged(uint state)
     // Replace this by a Mute interface method call when it
     // becomes available in telepathy-qt
     mLocalMuteState = (state == 1);
-    emit mutedChanged();
+    Q_EMIT mutedChanged();
 }
 
 bool CallEntry::isMuted() const
@@ -186,13 +186,13 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
     ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(mChannel->targetContact()->id());
     if (entry) {
         mContact = entry->contact();
-        emit contactAliasChanged();
-        emit contactAvatarChanged();
+        Q_EMIT contactAliasChanged();
+        Q_EMIT contactAvatarChanged();
     }
 
-    emit heldChanged();
-    emit phoneNumberChanged();
-    emit dialingChanged();
+    Q_EMIT heldChanged();
+    Q_EMIT phoneNumberChanged();
+    Q_EMIT dialingChanged();
 }
 
 void CallEntry::onCallStateChanged(Tp::CallState state)
@@ -202,9 +202,9 @@ void CallEntry::onCallStateChanged(Tp::CallState state)
     } else if (state == Tp::CallStateActive) {
         startTimer(1000);
         mElapsedTime.start();
-        emit callActive();
+        Q_EMIT callActive();
     }
-    emit dialingChanged();
+    Q_EMIT dialingChanged();
 }
 
 void CallEntry::onCallFlagsChanged(Tp::CallFlags flags)
@@ -220,7 +220,7 @@ void CallEntry::onCallHangupFinished(Tp::PendingOperation *op)
 void CallEntry::setVoicemail(bool voicemail)
 {
     mVoicemail = voicemail;
-    emit voicemailChanged();
+    Q_EMIT voicemailChanged();
 }
 
 bool CallEntry::isVoicemail() const

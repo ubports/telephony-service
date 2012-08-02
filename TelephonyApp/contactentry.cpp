@@ -97,7 +97,7 @@ void ContactEntry::setModified(bool value)
 {
     if (value != mModified) {
         mModified = value;
-        emit modifiedChanged();
+        Q_EMIT modifiedChanged();
     }
 }
 
@@ -120,7 +120,7 @@ void ContactEntry::setContact(const QContact &contact)
     setModified(false);
     loadDetails();
 
-    emit changed(this);
+    Q_EMIT changed(this);
 }
 
 QDeclarativeListProperty<ContactDetail> ContactEntry::addresses()
