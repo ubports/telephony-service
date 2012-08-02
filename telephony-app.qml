@@ -55,6 +55,7 @@ Item {
 
     function callNumber(number) {
         callManager.startCall(number);
+        callManager.speaker = true;
     }
 
     function startChat(customId, number, threadId) {
