@@ -29,6 +29,10 @@ MessagesProxyModel::MessagesProxyModel(QObject *parent) :
     setSortRole(AbstractLoggerModel::Timestamp);
     setDynamicSortFilter(true);
     updateSorting();
+
+    connect(ChatManager::instance(),
+            SIGNAL(unreadMessagesChanged(const QString&)),
+            SLOT(onUnreadMessagesChanged(const QString&)));
 }
 
 QString MessagesProxyModel::phoneNumber() const
