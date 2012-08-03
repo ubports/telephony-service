@@ -3,6 +3,8 @@ import "../Widgets"
 
 FocusScope {
     id: footer
+   
+    property bool validRecipient: false
 
     signal newMessage(string message)
 
@@ -52,9 +54,13 @@ FocusScope {
             anchors.top: entry.top
             anchors.bottom: entry.bottom
             width: 62
+            enabled: validRecipient
             color: "#37b301"
             text: "Send"
             onClicked: {
+                if(!validRecipient) {
+                    return;
+                }
                 footer.newMessage(entry.text)
                 entry.text = ""
             }
