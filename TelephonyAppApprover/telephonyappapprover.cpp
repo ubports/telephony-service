@@ -336,11 +336,7 @@ void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
         mChannels[hangupop] = callChannel;
         connect(hangupop, SIGNAL(finished(Tp::PendingOperation*)),
                 this, SLOT(onHangupFinished(Tp::PendingOperation*)));
-        return;
     }
-
-    mDispatchOps.removeAll(dispatchOperation(op));
-    mChannels.remove(op);
 }
 
 void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
@@ -350,6 +346,13 @@ void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
         // TODO do something
         return;
     }
+
+    // FIXME: we do not call requestClose() here because
+    // the channel will be forced to close without emiting the proper
+    // stateChanged() signals. This would cause the app 
+    // not to register call events as it would never receive the
+    // "ended" state. Better to check how other connection 
+    // managers deal with this case.
     mDispatchOps.removeAll(dispatchOperation(op));
     mChannels.remove(op);
 }
