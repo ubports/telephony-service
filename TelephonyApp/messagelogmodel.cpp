@@ -60,6 +60,9 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
     entry->phoneNumber = number;
     entry->message = message;
     entry->timestamp = timestamp;
+    // set the alias to the phone number as a fallback in case the contact is not known
+    entry->contactAlias = number;
+
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
     if (contact) {
         fillContactInfo(entry, contact);
