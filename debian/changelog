@@ -15,11 +15,13 @@ telephony-app (0.57) UNRELEASED; urgency=low
   * Filter out entities not used to fetch messages or call log. This should
     reduce the amount of data processed to get the events.
   * Do not use the emit, signals and slots keywords.
+  * Make sure the call log is not shown (not even briefly) when adding new contacts.
+    (LP: #1019040)
 
   [ Renato Araujo Oliveira Filho ]
   * Created new dbus method "CallNumber(s)"
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 09 Aug 2012 15:15:48 -0300
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 09 Aug 2012 17:09:05 -0300
 
 telephony-app (0.56) precise; urgency=low
 

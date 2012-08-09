@@ -34,6 +34,10 @@ class CallLogProxyModel : public QSortFilterProxyModel
                READ contactId
                WRITE setContactId
                NOTIFY contactIdChanged)
+    Q_PROPERTY(bool filterByContact
+               READ filterByContact
+               WRITE setFilterByContact
+               NOTIFY filterByContactChanged)
     Q_PROPERTY(QObject *logModel
                READ logModel
                WRITE setLogModel
@@ -43,16 +47,19 @@ public:
 
     bool onlyMissedCalls() const;
     QString contactId() const;
+    bool filterByContact() const;
     QObject *logModel() const;
 
 public Q_SLOTS:
     void setOnlyMissedCalls(bool value);
     void setContactId(QString id);
+    void setFilterByContact(bool value);
     void setLogModel(QObject *model);
 
 Q_SIGNALS:
     void onlyMissedCallsChanged();
     void contactIdChanged();
+    void filterByContactChanged();
     void logModelChanged();
 
 protected:
@@ -61,6 +68,7 @@ protected:
 private:
     bool mOnlyMissedCalls;
     QString mContactId;
+    bool mFilterByContact;
 };
 
 #endif // CALLLOGPROXYMODEL_H

@@ -210,6 +210,7 @@ FocusScope {
                 id: proxyModel
                 logModel: callLogModel
                 contactId: (contact) ? contact.id : "some string that won't match"
+                filterByContact: true
             }
             // FIXME: references to runtime and fake model need to be removed before final release
             model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel
