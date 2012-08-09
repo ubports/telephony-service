@@ -44,7 +44,7 @@ void ContactProxyModel::setModel(QObject *value)
     }
 
     setSourceModel(model);
-    emit modelChanged();
+    Q_EMIT modelChanged();
 }
 
 QString ContactProxyModel::filterText() const
@@ -57,7 +57,7 @@ void ContactProxyModel::setFilterText(const QString &value)
     if (value != mFilterText) {
         mFilterText = value;
         invalidateFilter();
-        emit filterTextChanged();
+        Q_EMIT filterTextChanged();
     }
 }
 

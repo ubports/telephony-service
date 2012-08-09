@@ -70,7 +70,7 @@ void ChatManager::endChat(const QString &phoneNumber)
     mChannels.remove(id);
     mContacts.remove(id);
 
-    emit unreadMessagesChanged(id);
+    Q_EMIT unreadMessagesChanged(id);
 }
 
 void ChatManager::sendMessage(const QString &phoneNumber, const QString &message)
@@ -81,7 +81,7 @@ void ChatManager::sendMessage(const QString &phoneNumber, const QString &message
     }
 
     channel->send(message);
-    emit messageSent(phoneNumber, message);
+    Q_EMIT messageSent(phoneNumber, message);
 }
 
 void ChatManager::acknowledgeMessages(const QString &phoneNumber)
@@ -104,7 +104,7 @@ void ChatManager::setActiveChat(const QString &value)
     if (value != mActiveChat) {
         mActiveChat = value;
         acknowledgeMessages(mActiveChat);
-        emit activeChatChanged();
+        Q_EMIT activeChatChanged();
     }
 }
 
@@ -140,26 +140,26 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
             SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
             SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
 
-    emit chatReady(channel->targetContact()->id());
-    emit unreadMessagesChanged(channel->targetContact()->id());
+    Q_EMIT chatReady(channel->targetContact()->id());
+    Q_EMIT unreadMessagesChanged(channel->targetContact()->id());
 }
 
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
-    emit messageReceived(message.sender()->id(), message.text(), message.received());
+    Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received());
 
     // if the message belongs to an active conversation, mark it as read
     if (ContactModel::instance()->comparePhoneNumbers(message.sender()->id(), mActiveChat)) {
         acknowledgeMessages(mActiveChat);
     }
 
-    emit unreadMessagesChanged(message.sender()->id());;
+    Q_EMIT unreadMessagesChanged(message.sender()->id());;
 }
 
 void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
 {
     // emit the signal saying the unread messages for a specific number has changed
-    emit unreadMessagesChanged(message.sender()->id());
+    Q_EMIT unreadMessagesChanged(message.sender()->id());
 }
 
 Tp::TextChannelPtr ChatManager::existingChat(const QString &phoneNumber)

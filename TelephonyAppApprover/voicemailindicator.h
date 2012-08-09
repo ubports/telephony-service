@@ -38,7 +38,7 @@ public:
 protected:
     void updateCounter();
 
-public slots:
+public Q_SLOTS:
     void onPropertiesChanged(const QString &interfaceName,
                              const QVariantMap &changedProperties,
                              const QStringList &invalidatedProperties);

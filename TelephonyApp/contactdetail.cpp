@@ -13,7 +13,7 @@ int ContactDetail::type() const
 void ContactDetail::setDetail(const QContactDetail &detail)
 {
     mDetail = detail;
-    emit detailChanged();
+    Q_EMIT detailChanged();
 }
 
 QContactDetail& ContactDetail::detail()
@@ -29,7 +29,7 @@ QVariant ContactDetail::contexts() const
 void ContactDetail::setContexts(const QVariant &contexts)
 {
     mDetail.setContexts(contexts.toStringList());
-    emit detailChanged();
+    Q_EMIT detailChanged();
 }
 
 QString ContactDetail::definitionName() const

@@ -45,12 +45,12 @@ public:
     QString contactId() const;
     QObject *logModel() const;
 
-public slots:
+public Q_SLOTS:
     void setOnlyMissedCalls(bool value);
     void setContactId(QString id);
     void setLogModel(QObject *model);
 
-signals:
+Q_SIGNALS:
     void onlyMissedCallsChanged();
     void contactIdChanged();
     void logModelChanged();

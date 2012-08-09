@@ -294,14 +294,14 @@ void AbstractLoggerModel::updateLogForContact(ContactEntry *contactEntry)
         if (!entry->customId.isEmpty()) {
             if (entry->customId == customId) {
                 fillContactInfo(entry, contactEntry);
-                emit dataChanged(index(i,0), index(i,0));
+                Q_EMIT dataChanged(index(i,0), index(i,0));
             }
         } else {
             // check if any of the contact's phone numbers match
             Q_FOREACH(const QContactPhoneNumber &number, contactEntry->contact().details<QContactPhoneNumber>()) {
                 if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number.number())) {
                     fillContactInfo(entry, contactEntry);
-                    emit dataChanged(index(i,0), index(i,0));
+                    Q_EMIT dataChanged(index(i,0), index(i,0));
                     continue;
                 }
             }
@@ -398,7 +398,7 @@ void AbstractLoggerModel::onContactRemoved(const QString &customId)
         LogEntry *entry = mLogEntries[i];
         if (entry->customId == customId) {
             clearContactInfo(entry);
-            emit dataChanged(index(i,0), index(i,0));
+            Q_EMIT dataChanged(index(i,0), index(i,0));
         }
     }
 }

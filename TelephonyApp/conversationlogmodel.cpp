@@ -77,7 +77,7 @@ void ConversationLogModel::onUnreadMessagesChanged(const QString &number)
                 continue;
             }
             conversationEntry->unreadCount = ChatManager::instance()->unreadMessages(number);
-            emit dataChanged(index(i, 0), index(i,0));
+            Q_EMIT dataChanged(index(i, 0), index(i,0));
         }
     }
 }
@@ -168,7 +168,7 @@ void ConversationLogModel::handleEvents(const Tpl::EventPtrList &events)
         entry->incoming = newestEvent->sender()->entityType() != Tpl::EntityTypeSelf;
         QModelIndex index = indexFromEntry(entry);
         if (index.isValid()) {
-            emit dataChanged(index, index);
+            Q_EMIT dataChanged(index, index);
         }
     } else {
         // if we didn't find an entry, append the message
@@ -194,7 +194,7 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
             entry->message = message;
             entry->incoming = incoming;
             entry->unreadCount = ChatManager::instance()->unreadMessages(number);
-            emit dataChanged(index(i,0), index(i,0));
+            Q_EMIT dataChanged(index(i,0), index(i,0));
             return;
         }
     }

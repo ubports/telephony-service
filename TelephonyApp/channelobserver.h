@@ -41,7 +41,7 @@ public:
                          const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
                          const Tp::AbstractClientObserver::ObserverInfo &observerInfo);
     
-signals:
+Q_SIGNALS:
     void callEnded(const Tp::CallChannelPtr &channel);
     
 protected Q_SLOTS:

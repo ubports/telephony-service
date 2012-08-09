@@ -48,7 +48,7 @@ void CallLogProxyModel::setOnlyMissedCalls(bool value)
 {
     if (value != mOnlyMissedCalls) {
         mOnlyMissedCalls = value;
-        emit onlyMissedCallsChanged();
+        Q_EMIT onlyMissedCallsChanged();
         invalidateFilter();
     }
 }
@@ -57,7 +57,7 @@ void CallLogProxyModel::setContactId(QString id)
 {
     if (id != mContactId) {
         mContactId = id;
-        emit contactIdChanged();
+        Q_EMIT contactIdChanged();
         invalidateFilter();
     }
 }
@@ -68,7 +68,7 @@ void CallLogProxyModel::setLogModel(QObject *obj)
 
     if (model) {
         setSourceModel(model);
-        emit logModelChanged();
+        Q_EMIT logModelChanged();
     }
 }
 

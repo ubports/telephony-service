@@ -20,7 +20,7 @@ public:
 private:
     void parseArgument(const QString &arg);
 
-private slots:
+private Q_SLOTS:
     void onMessageReceived(const QString &message);
     void onViewStatusChanged(QDeclarativeView::Status status);
     void onApplicationReady();

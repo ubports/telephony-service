@@ -38,7 +38,7 @@ public:
     QString emailAddress() const;
     void setEmailAddress(const QString &value);
 
-signals:
+Q_SIGNALS:
     void changed();
     
 };
