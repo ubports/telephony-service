@@ -1,3 +1,17 @@
+telephony-app (0.57) UNRELEASED; urgency=low
+
+  * Do not call requestClose() after hanging up a call.
+  * Validate the phone number before sending the message. (LP: #1029619)
+  * Change contactId to phoneNumber, as the variable name
+    "contactId" is used in another context.
+  * Try to find the customId in the current contact list before
+    asking android for it. (LP: #1030124)
+  * Enable speaker mode if the call was answered from ubuntu,
+    or if it was started from telephony-app. (LP: #1022752)
+  * Use callState() only after the feature is complete.
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Thu, 09 Aug 2012 07:13:09 -0700
+
 telephony-app (0.56) precise; urgency=low
 
   [ Olivier Tilloy ]
