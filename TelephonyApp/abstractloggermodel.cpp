@@ -299,7 +299,7 @@ void AbstractLoggerModel::updateLogForContact(ContactEntry *contactEntry)
         } else {
             // check if any of the contact's phone numbers match
             Q_FOREACH(const QContactPhoneNumber &number, contactEntry->contact().details<QContactPhoneNumber>()) {
-                if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number.number())) {
+                if (ContactModel::comparePhoneNumbers(entry->phoneNumber, number.number())) {
                     fillContactInfo(entry, contactEntry);
                     Q_EMIT dataChanged(index(i,0), index(i,0));
                     continue;

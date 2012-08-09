@@ -131,13 +131,13 @@ bool MessagesProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
             return true;
         } else {
             QString phoneNumber = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
-            return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phoneNumber);
+            return ContactModel::comparePhoneNumbers(mPhoneNumber, phoneNumber);
         }
     }
     
     if (!mPhoneNumber.isEmpty()) {
         QString phoneNumber = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
-        return ContactModel::instance()->comparePhoneNumbers(mPhoneNumber, phoneNumber);
+        return ContactModel::comparePhoneNumbers(mPhoneNumber, phoneNumber);
     }
 
     if (mSearchString.isEmpty()) {

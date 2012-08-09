@@ -54,7 +54,7 @@ void ChatManager::startChat(const QString &phoneNumber)
 void ChatManager::endChat(const QString &phoneNumber)
 {
     // if the chat we are ending was the current one, clear the property
-    if (ContactModel::instance()->comparePhoneNumbers(mActiveChat, phoneNumber)) {
+    if (ContactModel::comparePhoneNumbers(mActiveChat, phoneNumber)) {
         setActiveChat("");
     }
 
@@ -132,7 +132,7 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     QString id = channel->targetContact()->id();
     mChannels[id] = channel;
-    if (ContactModel::instance()->comparePhoneNumbers(id, mActiveChat)) {
+    if (ContactModel::comparePhoneNumbers(id, mActiveChat)) {
         acknowledgeMessages(id);
     }
 
@@ -149,7 +149,7 @@ void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
     Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received());
 
     // if the message belongs to an active conversation, mark it as read
-    if (ContactModel::instance()->comparePhoneNumbers(message.sender()->id(), mActiveChat)) {
+    if (ContactModel::comparePhoneNumbers(message.sender()->id(), mActiveChat)) {
         acknowledgeMessages(mActiveChat);
     }
 
@@ -166,7 +166,7 @@ Tp::TextChannelPtr ChatManager::existingChat(const QString &phoneNumber)
 {
     Tp::TextChannelPtr channel;
     Q_FOREACH(const QString &key, mChannels.keys()) {
-        if (ContactModel::instance()->comparePhoneNumbers(key, phoneNumber)) {
+        if (ContactModel::comparePhoneNumbers(key, phoneNumber)) {
             channel = mChannels[key];
             break;
         }

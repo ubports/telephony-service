@@ -295,7 +295,7 @@ void ContactModel::onContactRemoved()
     // removed and changed signals
 }
 
-bool ContactModel::comparePhoneNumbers(const QString &number1, const QString &number2) const
+bool ContactModel::comparePhoneNumbers(const QString &number1, const QString &number2)
 {
     return PhoneNumberUtils::compareLoosely(number1, number2);
 }
