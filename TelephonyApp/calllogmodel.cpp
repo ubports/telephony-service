@@ -20,6 +20,7 @@
 #include "calllogmodel.h"
 #include "contactmodel.h"
 #include "telepathyhelper.h"
+#include <TelepathyLoggerQt4/Entity>
 #include <TelepathyLoggerQt4/Event>
 #include <TelepathyLoggerQt4/CallEvent>
 #include <TelepathyQt/Contact>
@@ -45,7 +46,8 @@ CallLogModel::CallLogModel(QObject *parent) :
     roles[Missed] = "missed";
     setRoleNames(roles);
 
-    fetchLog(Tpl::EventTypeMaskCall);
+    fetchLog(Tpl::EventTypeMaskCall, EntityTypeList() << Tpl::EntityTypeContact
+                                                      << Tpl::EntityTypeSelf);
 }
 
 void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)

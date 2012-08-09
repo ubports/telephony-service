@@ -47,7 +47,7 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     roles[ThreadId] = "threadId";
     setRoleNames(roles);
 
-    fetchLog(Tpl::EventTypeMaskText);
+    fetchLog(Tpl::EventTypeMaskText, EntityTypeList() << Tpl::EntityTypeRoom);
 }
 
 void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming, const QDateTime &timestamp)

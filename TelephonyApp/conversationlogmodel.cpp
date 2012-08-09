@@ -52,7 +52,7 @@ ConversationLogModel::ConversationLogModel(QObject *parent) :
             SIGNAL(unreadMessagesChanged(const QString&)),
             SLOT(onUnreadMessagesChanged(const QString&)));
 
-    fetchLog(Tpl::EventTypeMaskText);
+    fetchLog(Tpl::EventTypeMaskText, EntityTypeList() << Tpl::EntityTypeRoom);
 }
 
 void ConversationLogModel::onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp)

@@ -1,5 +1,6 @@
 telephony-app (0.57) UNRELEASED; urgency=low
 
+  [ Tiago Salem Herrmann ]
   * Do not call requestClose() after hanging up a call.
   * Validate the phone number before sending the message. (LP: #1029619)
   * Change contactId to phoneNumber, as the variable name
@@ -10,7 +11,11 @@ telephony-app (0.57) UNRELEASED; urgency=low
     or if it was started from telephony-app. (LP: #1022752)
   * Use callState() only after the feature is complete.
 
- -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Thu, 09 Aug 2012 07:13:09 -0700
+  [ Gustavo Pichorim Boiko ]
+  * Filter out entities not used to fetch messages or call log. This should
+    reduce the amount of data processed to get the events.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 09 Aug 2012 14:48:03 -0300
 
 telephony-app (0.56) precise; urgency=low
 

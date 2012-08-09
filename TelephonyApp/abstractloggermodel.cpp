@@ -137,12 +137,20 @@ QString AbstractLoggerModel::customIdentifierFromId(const QString &id) const
     return id;
 }
 
-void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type)
+void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entityTypes)
 {
     Tpl::PendingEntities *pendingEntities = mLogManager->queryEntities(TelepathyHelper::instance()->account());
 
-    // store the type for the event fetching stage
+    if (entityTypes.isEmpty()) {
+        entityTypes << Tpl::EntityTypeContact
+                    << Tpl::EntityTypeRoom
+                    << Tpl::EntityTypeSelf
+                    << Tpl::EntityTypeUnknown;
+    }
+
+    // store the type and the entity types for the event fetching stage
     mType = type;
+    mEntityTypes = entityTypes;
 
     /* Fetching the log work like this:
        - Start by fetching the entities from the log
@@ -332,7 +340,15 @@ void AbstractLoggerModel::onPendingEntitiesFinished(Tpl::PendingOperation *op)
         return;
     }
 
-    handleEntities(pe->entities());
+    // filter out entities we are not interested in
+    Tpl::EntityPtrList filteredEntitites;
+    Q_FOREACH(const Tpl::EntityPtr &entity, pe->entities()) {
+        if (mEntityTypes.contains(entity->entityType())) {
+            filteredEntitites << entity;
+        }
+    }
+
+    handleEntities(filteredEntitites);
 }
 
 void AbstractLoggerModel::onPendingDatesFinished(Tpl::PendingOperation *op)
