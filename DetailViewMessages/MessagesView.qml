@@ -32,7 +32,7 @@ FocusScope {
         target: chatManager
 
         onChatReady: {
-            if (!contactModel.comparePhoneNumbers(contactId, number)) {
+            if (!contactModel.comparePhoneNumbers(phoneNumber, number)) {
                 return;
             }
 
