@@ -175,7 +175,7 @@ void CallEntry::onChannelReady(Tp::PendingOperation *op)
         Q_EMIT callActive();
         break;
     case Tp::CallStateInitialised:
-        emit dialingChanged();
+        Q_EMIT dialingChanged();
     default:
         // accept the call if it was not accepted yet
         mChannel->accept();
