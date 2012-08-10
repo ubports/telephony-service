@@ -27,6 +27,7 @@ public:
     QVariant data(int role) const;
     QString message;
     QString threadId;
+    QString messageId;
     bool isLatest;
 };
 
@@ -38,6 +39,7 @@ public:
         Message = AbstractLoggerModel::LastLogRole,
         Date,
         ThreadId,
+        MessageId,
         IsLatest,
         LastMessageRole
     };
@@ -47,16 +49,18 @@ public:
     Q_INVOKABLE void appendMessage(const QString &number,
                                    const QString &message,
                                    bool incoming,
-                                   const QDateTime &timestamp = QDateTime::currentDateTime());
+                                   const QDateTime &timestamp = QDateTime::currentDateTime(),
+                                   const QString &messageId = QString::null);
 
 public Q_SLOTS:
-    void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp);
+    void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp, const QString &messageId);
     void onMessageSent(const QString &number, const QString &message);
 
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
     void handleEvents(const Tpl::EventPtrList &events);
     void updateLatestMessages(const QString &phoneNumber);
+    MessageLogEntry *messageById(const QString &messageId);
 
 };
 

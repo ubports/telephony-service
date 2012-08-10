@@ -32,6 +32,8 @@ QVariant MessageLogEntry::data(int role) const
         return timestamp.date().toString(Qt::DefaultLocaleLongDate);
     case MessageLogModel::ThreadId:
         return threadId;
+    case MessageLogModel::MessageId:
+        return messageId;
     case MessageLogModel::IsLatest:
         return isLatest;
     default:
@@ -47,19 +49,25 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     roles[Message] = "message";
     roles[Date] = "date";
     roles[ThreadId] = "threadId";
+    roles[MessageId] = "messageId";
     roles[IsLatest] = "isLatest";
     setRoleNames(roles);
 
     fetchLog(Tpl::EventTypeMaskText, EntityTypeList() << Tpl::EntityTypeRoom);
 }
 
-void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming, const QDateTime &timestamp)
+void MessageLogModel::appendMessage(const QString &number,
+                                    const QString &message,
+                                    bool incoming,
+                                    const QDateTime &timestamp,
+                                    const QString &messageId)
 {
     MessageLogEntry *entry = new MessageLogEntry();
     entry->incoming = incoming;
     entry->phoneNumber = number;
     entry->message = message;
     entry->timestamp = timestamp;
+    entry->messageId = messageId;
     // set the alias to the phone number as a fallback in case the contact is not known
     entry->contactAlias = number;
 
@@ -72,9 +80,16 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
     updateLatestMessages(number);
 }
 
-void MessageLogModel::onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp)
+void MessageLogModel::onMessageReceived(const QString &number,
+                                        const QString &message,
+                                        const QDateTime &timestamp,
+                                        const QString &messageId)
 {
-    appendMessage(number, message, true, timestamp);
+    // check if the message is already in the model (it might have been loaded from logger)
+    if (messageById(messageId) != 0) {
+        return;
+    }
+    appendMessage(number, message, true, timestamp, messageId);
     // force the proxy model to reset to workaround a ListView bug
     Q_EMIT resetView();
 }
@@ -108,6 +123,11 @@ void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
     Q_FOREACH(const Tpl::EventPtr &event, events) {
         const Tpl::TextEventPtr textEvent = event.dynamicCast<Tpl::TextEvent>();
         if (!textEvent) {
+            continue;
+        }
+
+        // check if the message is already in the model (it might have been added by telepathy)
+        if (messageById(textEvent->messageToken()) != 0) {
             continue;
         }
 
@@ -178,5 +198,17 @@ void MessageLogModel::updateLatestMessages(const QString &phoneNumber)
     QModelIndex index = indexFromEntry(latestEntry);
     latestEntry->isLatest = true;
     Q_EMIT dataChanged(index, index);
+}
+
+MessageLogEntry *MessageLogModel::messageById(const QString &messageId)
+{
+    Q_FOREACH(LogEntry *entry, mLogEntries) {
+        if (entry->data(MessageId).toString() == messageId) {
+            MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
+            return messageEntry;
+        }
+    }
+
+    return 0;
 }
 

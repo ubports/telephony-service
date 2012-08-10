@@ -121,8 +121,8 @@ void Components::onAccountReady()
 
     mMessageLogModel = new MessageLogModel(this);
     mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
-    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&)),
-            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&)));
+    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&, const QString&)),
+            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&, const QString&)));
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 }
