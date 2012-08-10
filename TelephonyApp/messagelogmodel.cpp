@@ -110,6 +110,7 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
         qWarning() << "The event" << event << "is not a Tpl::TextEvent!";
     }
 
+    entry->messageId = textEvent->messageToken();
     entry->message = textEvent->message();
     entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
     entry->isLatest = false;
