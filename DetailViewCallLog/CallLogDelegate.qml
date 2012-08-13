@@ -68,6 +68,7 @@ Item {
         width: 1
         color: "black"
         opacity: 0.1
+        visible: phoneNumber != "-"
     }
 
     ListItem {
@@ -76,13 +77,16 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        width: phoneNumber != "-" ? height : 0
-        visible: phoneNumber != "-"
+        width: height
 
-        iconSource: "../assets/tab_icon_call_inactive.png"
+        iconSource: phoneNumber != "-" ? "../assets/tab_icon_call_inactive.png" : ""
         isIcon: true
         topSeparator: infoBox.topSeparator
         bottomSeparator: infoBox.bottomSeparator
-        onClicked: callItem.actionClicked(contactId, phoneNumber)
+        onClicked: {
+            if (phoneNumber != "-") {
+                callItem.actionClicked(contactId, phoneNumber)
+            }
+        }
     }
 }
