@@ -70,6 +70,8 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
     entry->contactAlias = entry->phoneNumber;
     if (contact) {
         fillContactInfo(entry, contact);
+    } else {
+        checkNonStandardNumbers(entry);
     }
 
     // fill the call info

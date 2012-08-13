@@ -10,6 +10,7 @@ telephony-app (0.57) UNRELEASED; urgency=low
   * Enable speaker mode if the call was answered from ubuntu,
     or if it was started from telephony-app. (LP: #1022752)
   * Use callState() only after the feature is complete.
+  * Show "Unknown number" and "Private number" instead of "#" and "-2" (LP: #1031949)
 
   [ Gustavo Pichorim Boiko ]
   * Filter out entities not used to fetch messages or call log. This should

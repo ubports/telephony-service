@@ -223,7 +223,13 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
 
     QString body;
     if (!contact->id().isEmpty()) {
-        body = QString("Calling from %1").arg(contact->id());
+        if (contact->id() == "-2") { 
+            body = QString("Calling from private number");
+        } else if (contact->id() == "#") {
+            body = QString("Calling from unknown number");
+        } else {
+            body = QString("Calling from %1").arg(contact->id());
+        }
     } else {
         body = "Caller number is not available";
     }
