@@ -39,9 +39,10 @@ Item {
 
     MessagesProxyModel {
         id: messagesProxyModel
-        messagesModel: conversationLogModel
+        messagesModel: messageLogModel
         searchString: search.text
         ascending: false
+        onlyLatest: true
     }
 
     MessagesList {

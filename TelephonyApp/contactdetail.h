@@ -47,7 +47,7 @@ public:
 
     QString definitionName() const;
     
-signals:
+Q_SIGNALS:
     void typeChanged();
     void detailChanged();
 

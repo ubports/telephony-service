@@ -21,6 +21,7 @@
 #define MESSAGESPROXYMODEL_H
 
 #include <QSortFilterProxyModel>
+#include "messagelogmodel.h"
 
 class MessagesProxyModel : public QSortFilterProxyModel
 {
@@ -45,8 +46,18 @@ class MessagesProxyModel : public QSortFilterProxyModel
                READ threadId
                WRITE setThreadId
                NOTIFY threadIdChanged)
+    Q_PROPERTY(bool onlyLatest
+               READ onlyLatest
+               WRITE setOnlyLatest
+               NOTIFY onlyLatestChanged)
+
+    Q_ENUMS(ModelRoles)
 
 public:
+    enum ModelRoles {
+        UnreadCount = MessageLogModel::LastMessageRole
+    };
+
     explicit MessagesProxyModel(QObject *parent = 0);
 
     QString phoneNumber() const;
@@ -64,26 +75,36 @@ public:
     QString searchString() const;
     void setSearchString(QString value);
 
+    bool onlyLatest() const;
+    void setOnlyLatest(bool value);
+
     void updateSorting();
+
+    virtual QVariant data(const QModelIndex &index, int role) const;
 
 private Q_SLOTS:
     void onResetView();
 
-signals:
+Q_SIGNALS:
     void ascendingChanged();
     void messagesModelChanged();
     void searchStringChanged();
     void phoneNumberChanged();
     void threadIdChanged();
+    void onlyLatestChanged();
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+
+protected Q_SLOTS:
+    void onUnreadMessagesChanged(const QString &number);
 
 private:
     bool mAscending;
     QString mSearchString;
     QString mPhoneNumber;
     QString mThreadId;
+    bool mOnlyLatest;
 };
 
 #endif // MESSAGESPROXYMODEL_H

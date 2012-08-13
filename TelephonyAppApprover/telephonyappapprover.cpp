@@ -28,6 +28,9 @@
 #include <TelepathyQt/TextChannel>
 
 #define TELEPHONY_APP_CLIENT TP_QT_IFACE_CLIENT + ".TelephonyApp"
+#define ANDROID_DBUS_ADDRESS "com.canonical.Android"
+#define ANDROID_TELEPHONY_DBUS_PATH "/com/canonical/android/telephony/Telephony"
+#define ANDROID_TELEPHONY_DBUS_IFACE "com.canonical.android.telephony.Telephony"
 
 TelephonyAppApprover::TelephonyAppApprover()
 : Tp::AbstractClientApprover(channelFilters()),
@@ -140,6 +143,10 @@ void action_accept(NotifyNotification* notification,
     if (NULL != approver) {
         approver->onApproved((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp,
                              (Tp::PendingReady *) eventData->pr);
+        QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
+                                 ANDROID_TELEPHONY_DBUS_PATH,
+                                 ANDROID_TELEPHONY_DBUS_IFACE);
+        androidIf.call("turnOnSpeaker", true, false);
     }
 }
 
@@ -336,14 +343,7 @@ void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
         mChannels[hangupop] = callChannel;
         connect(hangupop, SIGNAL(finished(Tp::PendingOperation*)),
                 this, SLOT(onHangupFinished(Tp::PendingOperation*)));
-        return;
     }
-
-    if (channel) {
-        channel->requestClose();
-    }
-    mDispatchOps.removeAll(dispatchOperation(op));
-    mChannels.remove(op);
 }
 
 void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
@@ -353,10 +353,13 @@ void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
         // TODO do something
         return;
     }
-    Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
-    if (channel) {
-        channel->requestClose();
-    }
+
+    // FIXME: we do not call requestClose() here because
+    // the channel will be forced to close without emiting the proper
+    // stateChanged() signals. This would cause the app 
+    // not to register call events as it would never receive the
+    // "ended" state. Better to check how other connection 
+    // managers deal with this case.
     mDispatchOps.removeAll(dispatchOperation(op));
     mChannels.remove(op);
 }

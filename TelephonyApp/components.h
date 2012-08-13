@@ -29,7 +29,6 @@
 class ChannelHandler;
 class ChannelObserver;
 class CallLogModel;
-class ConversationLogModel;
 class MessageLogModel;
 class ContactModel;
 
@@ -53,7 +52,6 @@ private Q_SLOTS:
 private:
     QDeclarativeContext *mRootContext;
     CallLogModel *mCallLogModel;
-    ConversationLogModel *mConversationLogModel;
     MessageLogModel *mMessageLogModel;
 };
 

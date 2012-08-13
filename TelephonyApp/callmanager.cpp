@@ -138,11 +138,11 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
             SIGNAL(backgroundCallChanged()));
 
     // FIXME: check which of those signals we really need to emit here
-    emit hasCallsChanged();
-    emit hasBackgroundCallChanged();
-    emit foregroundCallChanged();
-    emit backgroundCallChanged();
-    emit callReady();
+    Q_EMIT hasCallsChanged();
+    Q_EMIT hasBackgroundCallChanged();
+    Q_EMIT foregroundCallChanged();
+    Q_EMIT backgroundCallChanged();
+    Q_EMIT callReady();
 }
 
 void CallManager::onContactsAvailable(Tp::PendingOperation *op)
@@ -176,11 +176,11 @@ void CallManager::onCallEnded()
     // at this point the entry should be removed
     mCallEntries.removeAll(entry);
     entry->deleteLater();
-    emit callEnded();
-    emit hasCallsChanged();
-    emit hasBackgroundCallChanged();
-    emit foregroundCallChanged();
-    emit backgroundCallChanged();
+    Q_EMIT callEnded();
+    Q_EMIT hasCallsChanged();
+    Q_EMIT hasBackgroundCallChanged();
+    Q_EMIT foregroundCallChanged();
+    Q_EMIT backgroundCallChanged();
 }
 
 void CallManager::refreshProperties()

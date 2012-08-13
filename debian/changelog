@@ -1,3 +1,30 @@
+telephony-app (0.57) UNRELEASED; urgency=low
+
+  [ Tiago Salem Herrmann ]
+  * Do not call requestClose() after hanging up a call.
+  * Validate the phone number before sending the message. (LP: #1029619)
+  * Change contactId to phoneNumber, as the variable name
+    "contactId" is used in another context.
+  * Try to find the customId in the current contact list before
+    asking android for it. (LP: #1030124)
+  * Enable speaker mode if the call was answered from ubuntu,
+    or if it was started from telephony-app. (LP: #1022752)
+  * Use callState() only after the feature is complete.
+
+  [ Gustavo Pichorim Boiko ]
+  * Filter out entities not used to fetch messages or call log. This should
+    reduce the amount of data processed to get the events.
+  * Do not use the emit, signals and slots keywords.
+  * Make sure the call log is not shown (not even briefly) when adding new contacts.
+    (LP: #1019040)
+  * Make the comparePhoneNumbers function static.
+  * Search all messages instead of searching just the latest ones. (LP: #1015394)
+
+  [ Renato Araujo Oliveira Filho ]
+  * Created new dbus method "CallNumber(s)"
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 10 Aug 2012 10:00:30 -0300
+
 telephony-app (0.56) precise; urgency=low
 
   [ Olivier Tilloy ]

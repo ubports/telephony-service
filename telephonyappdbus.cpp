@@ -62,3 +62,9 @@ void TelephonyAppDBus::ShowVoicemail()
 {
     Q_EMIT request(QString("voicemail://"));
 }
+
+void
+TelephonyAppDBus::CallNumber(const QString &number)
+{
+    Q_EMIT request(QString("call://%1").arg(number));
+}

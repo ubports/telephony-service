@@ -41,8 +41,8 @@ void ContactName::setCustomLabel(const QString &value)
 {
     if (value != customLabel()) {
         mDetail.setValue(QContactName::FieldCustomLabel, value);
-        emit changed();
-        emit customLabelChanged();
+        Q_EMIT changed();
+        Q_EMIT customLabelChanged();
     }
 }
 
@@ -55,8 +55,8 @@ void ContactName::setFirstName(const QString &value)
 {
     if (value != firstName()) {
         mDetail.setValue(QContactName::FieldFirstName, value);
-        emit changed();
-        emit firstNameChanged();
+        Q_EMIT changed();
+        Q_EMIT firstNameChanged();
     }
 }
 
@@ -69,8 +69,8 @@ void ContactName::setLastName(const QString &value)
 {
     if (value != lastName()) {
         mDetail.setValue(QContactName::FieldLastName, value);
-        emit changed();
-        emit lastNameChanged();
+        Q_EMIT changed();
+        Q_EMIT lastNameChanged();
     }
 }
 
@@ -83,8 +83,8 @@ void ContactName::setMiddleName(const QString &value)
 {
     if (value != middleName()) {
         mDetail.setValue(QContactName::FieldMiddleName, value);
-        emit changed();
-        emit middleNameChanged();
+        Q_EMIT changed();
+        Q_EMIT middleNameChanged();
     }
 }
 
@@ -97,8 +97,8 @@ void ContactName::setPrefix(const QString &value)
 {
     if (value != prefix()) {
         mDetail.setValue(QContactName::FieldPrefix, value);
-        emit changed();
-        emit prefixChanged();
+        Q_EMIT changed();
+        Q_EMIT prefixChanged();
     }
 }
 
@@ -111,7 +111,7 @@ void ContactName::setSuffix(const QString &value)
 {
     if (value != suffix()) {
         mDetail.setValue(QContactName::FieldSuffix, value);
-        emit changed();
-        emit suffixChanged();
+        Q_EMIT changed();
+        Q_EMIT suffixChanged();
     }
 }

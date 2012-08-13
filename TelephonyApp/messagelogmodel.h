@@ -27,6 +27,7 @@ public:
     QVariant data(int role) const;
     QString message;
     QString threadId;
+    bool isLatest;
 };
 
 class MessageLogModel : public AbstractLoggerModel
@@ -36,7 +37,9 @@ public:
     enum MessageLogRoles {
         Message = AbstractLoggerModel::LastLogRole,
         Date,
-        ThreadId
+        ThreadId,
+        IsLatest,
+        LastMessageRole
     };
 
     explicit MessageLogModel(QObject *parent = 0);
@@ -46,13 +49,14 @@ public:
                                    bool incoming,
                                    const QDateTime &timestamp = QDateTime::currentDateTime());
 
-public slots:
+public Q_SLOTS:
     void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp);
     void onMessageSent(const QString &number, const QString &message);
 
 protected:
     LogEntry *createEntry(const Tpl::EventPtr &event);
     void handleEvents(const Tpl::EventPtrList &events);
+    void updateLatestMessages(const QString &phoneNumber);
 
 };
 

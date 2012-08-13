@@ -32,6 +32,8 @@ QVariant MessageLogEntry::data(int role) const
         return timestamp.date().toString(Qt::DefaultLocaleLongDate);
     case MessageLogModel::ThreadId:
         return threadId;
+    case MessageLogModel::IsLatest:
+        return isLatest;
     default:
         return LogEntry::data(role);
     }
@@ -45,9 +47,10 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     roles[Message] = "message";
     roles[Date] = "date";
     roles[ThreadId] = "threadId";
+    roles[IsLatest] = "isLatest";
     setRoleNames(roles);
 
-    fetchLog(Tpl::EventTypeMaskText);
+    fetchLog(Tpl::EventTypeMaskText, EntityTypeList() << Tpl::EntityTypeRoom);
 }
 
 void MessageLogModel::appendMessage(const QString &number, const QString &message, bool incoming, const QDateTime &timestamp)
@@ -57,25 +60,30 @@ void MessageLogModel::appendMessage(const QString &number, const QString &messag
     entry->phoneNumber = number;
     entry->message = message;
     entry->timestamp = timestamp;
+    // set the alias to the phone number as a fallback in case the contact is not known
+    entry->contactAlias = number;
+
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
     if (contact) {
         fillContactInfo(entry, contact);
     }
     appendEntry(entry);
+
+    updateLatestMessages(number);
 }
 
 void MessageLogModel::onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp)
 {
     appendMessage(number, message, true, timestamp);
     // force the proxy model to reset to workaround a ListView bug
-    emit resetView();
+    Q_EMIT resetView();
 }
 
 void MessageLogModel::onMessageSent(const QString &number, const QString &message)
 {
     appendMessage(number, message, false);
     // force the proxy model to reset to workaround a ListView bug
-    emit resetView();
+    Q_EMIT resetView();
 }
 
 LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
@@ -89,6 +97,7 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 
     entry->message = textEvent->message();
     entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
+    entry->isLatest = false;
     return entry;
 }
 
@@ -112,5 +121,62 @@ void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
     }
 
     AbstractLoggerModel::handleEvents(filteredEvents);
+
+    // now check for the latest message for each number in the events
+    QList<QString> phoneNumbers;
+    Q_FOREACH (const Tpl::EventPtr &event, events) {
+        // in ufa logger events, the alias of the receiver is always the phone number
+        QString phoneNumber = event->receiver()->alias();
+        if (!phoneNumbers.contains(phoneNumber)) {
+            phoneNumbers.append(phoneNumber);
+        }
+    }
+
+    Q_FOREACH (const QString &phoneNumber, phoneNumbers) {
+        updateLatestMessages(phoneNumber);
+    }
+}
+
+void MessageLogModel::updateLatestMessages(const QString &phoneNumber)
+{
+    if (mLogEntries.count() == 0) {
+        return;
+    }
+
+    MessageLogEntry *latestEntry = 0;
+
+    // go through the list of messages trying to find the latest one, and reset the latest flag on other items
+    Q_FOREACH (LogEntry *entry, mLogEntries) {
+        if (!ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, phoneNumber)) {
+            continue;
+        }
+
+        MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
+
+        // reset the isLatest flag
+        if (messageEntry->isLatest) {
+            QModelIndex index = indexFromEntry(messageEntry);
+            messageEntry->isLatest = false;
+            Q_EMIT dataChanged(index, index);
+        }
+
+        if (!latestEntry) {
+            latestEntry = messageEntry;
+            continue;
+        }
+
+        if (messageEntry->timestamp > latestEntry->timestamp) {
+            latestEntry = messageEntry;
+        }
+    }
+
+    if (!latestEntry) {
+        return;
+    }
+
+    // after finding the latest one, mark it as being so
+    QModelIndex index = indexFromEntry(latestEntry);
+    latestEntry->isLatest = true;
+    Q_EMIT dataChanged(index, index);
 }
 

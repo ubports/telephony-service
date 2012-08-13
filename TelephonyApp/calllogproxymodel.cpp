@@ -22,7 +22,7 @@
 #include <QDebug>
 
 CallLogProxyModel::CallLogProxyModel(QObject *parent) :
-    QSortFilterProxyModel(parent), mOnlyMissedCalls(false)
+    QSortFilterProxyModel(parent), mOnlyMissedCalls(false), mFilterByContact(false)
 {
     setDynamicSortFilter(true);
     setSortRole(AbstractLoggerModel::Timestamp);
@@ -39,6 +39,11 @@ QString CallLogProxyModel::contactId() const
     return mContactId;
 }
 
+bool CallLogProxyModel::filterByContact() const
+{
+    return mFilterByContact;
+}
+
 QObject *CallLogProxyModel::logModel() const
 {
     return sourceModel();
@@ -48,7 +53,7 @@ void CallLogProxyModel::setOnlyMissedCalls(bool value)
 {
     if (value != mOnlyMissedCalls) {
         mOnlyMissedCalls = value;
-        emit onlyMissedCallsChanged();
+        Q_EMIT onlyMissedCallsChanged();
         invalidateFilter();
     }
 }
@@ -57,7 +62,16 @@ void CallLogProxyModel::setContactId(QString id)
 {
     if (id != mContactId) {
         mContactId = id;
-        emit contactIdChanged();
+        Q_EMIT contactIdChanged();
+        invalidateFilter();
+    }
+}
+
+void CallLogProxyModel::setFilterByContact(bool value)
+{
+    if (value != mFilterByContact) {
+        mFilterByContact = value;
+        Q_EMIT filterByContactChanged();
         invalidateFilter();
     }
 }
@@ -68,7 +82,7 @@ void CallLogProxyModel::setLogModel(QObject *obj)
 
     if (model) {
         setSourceModel(model);
-        emit logModelChanged();
+        Q_EMIT logModelChanged();
     }
 }
 
@@ -77,8 +91,8 @@ bool CallLogProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     QModelIndex sourceIndex = sourceModel()->index(sourceRow, 0, sourceParent);
 
     // Filter the contact id, if set
-    if (!mContactId.isEmpty()) {
-        if (sourceIndex.data(CallLogModel::ContactId).toString() != mContactId) {
+    if (mFilterByContact) {
+        if (mContactId.isEmpty() || sourceIndex.data(CallLogModel::ContactId).toString() != mContactId) {
             return false;
         }
     }

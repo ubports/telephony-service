@@ -144,7 +144,7 @@ void ChannelObserver::onCallStateChanged(Tp::CallState state)
         break;
 
     case Tp::CallStateEnded:
-        emit callEnded(callChannel);
+        Q_EMIT callEnded(callChannel);
         break;
     default:
         break;

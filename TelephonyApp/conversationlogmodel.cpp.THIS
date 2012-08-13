@@ -52,7 +52,7 @@ ConversationLogModel::ConversationLogModel(QObject *parent) :
             SIGNAL(unreadMessagesChanged(const QString&)),
             SLOT(onUnreadMessagesChanged(const QString&)));
 
-    fetchLog(Tpl::EventTypeMaskText);
+    fetchLog(Tpl::EventTypeMaskText, EntityTypeList() << Tpl::EntityTypeRoom);
 }
 
 void ConversationLogModel::onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp)
@@ -71,13 +71,13 @@ void ConversationLogModel::onUnreadMessagesChanged(const QString &number)
     int count = mLogEntries.count();
     for (int i = 0; i < count; ++i) {
         LogEntry *entry = mLogEntries[i];
-        if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number)) {
+        if (ContactModel::comparePhoneNumbers(entry->phoneNumber, number)) {
             ConversationLogEntry *conversationEntry = dynamic_cast<ConversationLogEntry*>(entry);
             if (!conversationEntry) {
                 continue;
             }
             conversationEntry->unreadCount = ChatManager::instance()->unreadMessages(number);
-            emit dataChanged(index(i, 0), index(i,0));
+            Q_EMIT dataChanged(index(i, 0), index(i,0));
         }
     }
 }
@@ -168,7 +168,7 @@ void ConversationLogModel::handleEvents(const Tpl::EventPtrList &events)
         entry->incoming = newestEvent->sender()->entityType() != Tpl::EntityTypeSelf;
         QModelIndex index = indexFromEntry(entry);
         if (index.isValid()) {
-            emit dataChanged(index, index);
+            Q_EMIT dataChanged(index, index);
         }
     } else {
         // if we didn't find an entry, append the message
@@ -185,7 +185,7 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
             continue;
         }
 
-        if (ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, number)) {
+        if (ContactModel::comparePhoneNumbers(entry->phoneNumber, number)) {
             if (entry->timestamp > timestamp) {
                 return;
             }
@@ -194,7 +194,7 @@ void ConversationLogModel::updateLatestMessage(const QString &number, const QStr
             entry->message = message;
             entry->incoming = incoming;
             entry->unreadCount = ChatManager::instance()->unreadMessages(number);
-            emit dataChanged(index(i,0), index(i,0));
+            Q_EMIT dataChanged(index(i,0), index(i,0));
             return;
         }
     }
@@ -227,7 +227,7 @@ ConversationLogEntry *ConversationLogModel::findEntry(const QString &threadId, c
             continue;
         }
         if (entry->threadId == threadId ||
-            ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, phoneNumber)) {
+            ContactModel::comparePhoneNumbers(entry->phoneNumber, phoneNumber)) {
             return entry;
         }
     }

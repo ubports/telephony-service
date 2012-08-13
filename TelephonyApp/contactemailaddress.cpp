@@ -41,6 +41,6 @@ void ContactEmailAddress::setEmailAddress(const QString &value)
 {
     if (value != emailAddress()) {
         mDetail.setValue(QContactEmailAddress::FieldEmailAddress, value);
-        emit changed();
+        Q_EMIT changed();
     }
 }

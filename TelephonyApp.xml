@@ -25,6 +25,12 @@
                Request to open the voicemail tab.
             ]]></dox:d>
         </method>
+        <method name="CallNumber">
+            <dox:d><![CDATA[
+               Request to call the phone number.
+            ]]></dox:d>
+            <arg name="number" type="s" direction="in"/>
+        </method>
 
     </interface>
 </node>

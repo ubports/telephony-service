@@ -115,6 +115,15 @@ ContactEntry *ContactModel::contactFromCustomId(const QString &customId)
 
 QString ContactModel::customIdFromPhoneNumber(const QString &phoneNumber)
 {
+    // try to first iterate over the contacts we have
+    Q_FOREACH(ContactEntry *entry, mContactEntries) {
+        Q_FOREACH(const QContactPhoneNumber &storedPhoneNumber, entry->contact().details<QContactPhoneNumber>()) {
+            if (comparePhoneNumbers(storedPhoneNumber.number(), phoneNumber)) {
+                return entry->customId();
+            }
+        }
+    }
+
     // FIXME: replace this by something not relying specifically on android
     QDBusInterface contacts("com.canonical.Android",
                             "/com/canonical/android/contacts/Contacts",
@@ -158,7 +167,7 @@ void ContactModel::loadContactFromId(const QString &guid)
     // check if the contact is already there
     ContactEntry *entry = contactFromId(guid);
     if (entry) {
-        emit contactLoaded(entry);
+        Q_EMIT contactLoaded(entry);
     } else {
         // if it is not, save the guid for when it loads
         mPendingId = guid;
@@ -195,7 +204,7 @@ void ContactModel::addContacts(const QList<QContact> &contacts)
                 SIGNAL(changed(ContactEntry*)),
                 SLOT(onContactEntryChanged(ContactEntry*)));
         mContactEntries.append(entry);
-        emit contactAdded(entry);
+        Q_EMIT contactAdded(entry);
 
         // check if this entry is pending load
         if (entry->id() == mPendingId) {
@@ -206,7 +215,7 @@ void ContactModel::addContacts(const QList<QContact> &contacts)
     endInsertRows();
 
     if (pending != 0) {
-        emit contactLoaded(pending);
+        Q_EMIT contactLoaded(pending);
         mPendingId = "";
     }
 }
@@ -223,7 +232,7 @@ void ContactModel::removeContactFromModel(ContactEntry *entry)
     mContactEntries.removeAt(index);
     entry->deleteLater();
     endRemoveRows();
-    emit contactRemoved(entry->customId());
+    Q_EMIT contactRemoved(entry->customId());
 }
 
 void ContactModel::onContactsAdded(QList<QContactLocalId> ids)
@@ -253,8 +262,8 @@ void ContactModel::onContactsRemoved(QList<QContactLocalId> ids)
 void ContactModel::onContactEntryChanged(ContactEntry *entry)
 {
     QModelIndex entryIndex = index(mContactEntries.indexOf(entry), 0);
-    emit contactChanged(entry);
-    emit dataChanged(entryIndex, entryIndex);
+    Q_EMIT contactChanged(entry);
+    Q_EMIT dataChanged(entryIndex, entryIndex);
 }
 
 void ContactModel::onContactSaved()
@@ -269,7 +278,7 @@ void ContactModel::onContactSaved()
             QContact contact = request->contacts().first();
             QString id = contact.detail<QContactGuid>().guid();
             QString customId = contact.detail<ContactCustomId>().customId().split(":").last();
-            emit contactSaved(id, customId);
+            Q_EMIT contactSaved(id, customId);
         }
     }
 }
@@ -286,7 +295,7 @@ void ContactModel::onContactRemoved()
     // removed and changed signals
 }
 
-bool ContactModel::comparePhoneNumbers(const QString &number1, const QString &number2) const
+bool ContactModel::comparePhoneNumbers(const QString &number1, const QString &number2)
 {
     return PhoneNumberUtils::compareLoosely(number1, number2);
 }

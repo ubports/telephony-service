@@ -32,7 +32,7 @@ FocusScope {
         target: chatManager
 
         onChatReady: {
-            if (!contactModel.comparePhoneNumbers(contactId, number)) {
+            if (!contactModel.comparePhoneNumbers(phoneNumber, number)) {
                 return;
             }
 
@@ -153,6 +153,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         focus: true
+        validRecipient: (!view.newMessage || headerLoader.item.text.match("^[0-9+][0-9+-]*$") != null)
 
         onNewMessage: {
             // if the user didn't select a number from the new message header, just
