@@ -72,6 +72,14 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
         fillContactInfo(entry, contact);
     }
 
+    if (entry->phoneNumber == QLatin1String("-2")) {
+        entry->contactAlias = QLatin1String("Private number");
+        entry->phoneNumber = QLatin1String("-");
+    } else if (entry->phoneNumber == QLatin1String("-1") || entry->phoneNumber == QLatin1String("#")) {
+        entry->contactAlias = QLatin1String("Unknown number");
+        entry->phoneNumber = QLatin1String("-");
+    }
+
     // fill the call info
     entry->timestamp = channel->property("timestamp").toDateTime();
     bool isIncoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();

@@ -76,7 +76,8 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        width: height
+        width: phoneNumber != "-" ? height : 0
+        visible: phoneNumber != "-"
 
         iconSource: "../assets/tab_icon_call_inactive.png"
         isIcon: true

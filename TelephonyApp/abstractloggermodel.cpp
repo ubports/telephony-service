@@ -221,13 +221,22 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
         parseEntityId(remoteEntity, entry);
 
-        // set the alias from the entity as a fallback value in case the contact is not found.
-        entry->contactAlias = remoteEntity->alias();
+        // handle private numbers
+        if (entry->phoneNumber == QLatin1String("-2")) {
+            entry->contactAlias = QLatin1String("Private number");
+            entry->phoneNumber = QLatin1String("-");
+        } else if (entry->phoneNumber == QLatin1String("-1") || entry->phoneNumber == QLatin1String("#")) {
+            entry->contactAlias = QLatin1String("Unknown number");
+            entry->phoneNumber = QLatin1String("-");
+        } else {
+            // set the alias from the entity as a fallback value in case the contact is not found.
+            entry->contactAlias = remoteEntity->alias();
 
-        ContactEntry *contact = ContactModel::instance()->contactFromCustomId(entry->customId);
-        if (contact) {
-            // if more than one contact matches, use the first one
-            fillContactInfo(entry, contact);
+            ContactEntry *contact = ContactModel::instance()->contactFromCustomId(entry->customId);
+            if (contact) {
+                // if more than one contact matches, use the first one
+                fillContactInfo(entry, contact);
+            }
         }
 
         mLogEntries.append(entry);
