@@ -19,11 +19,13 @@ telephony-app (0.57) UNRELEASED; urgency=low
     (LP: #1019040)
   * Make the comparePhoneNumbers function static.
   * Search all messages instead of searching just the latest ones. (LP: #1015394)
+  * Add the message id to all messages and check for duplicates that might arrive
+    from both telepathy and logger. (LP: #1031905)
 
   [ Renato Araujo Oliveira Filho ]
   * Created new dbus method "CallNumber(s)"
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 10 Aug 2012 10:00:30 -0300
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 13 Aug 2012 14:55:50 -0300
 
 telephony-app (0.56) precise; urgency=low
 

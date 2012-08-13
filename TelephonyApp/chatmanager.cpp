@@ -146,7 +146,7 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
-    Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received());
+    Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken());
 
     // if the message belongs to an active conversation, mark it as read
     if (ContactModel::comparePhoneNumbers(message.sender()->id(), mActiveChat)) {
