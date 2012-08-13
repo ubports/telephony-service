@@ -70,14 +70,8 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
     entry->contactAlias = entry->phoneNumber;
     if (contact) {
         fillContactInfo(entry, contact);
-    }
-
-    if (entry->phoneNumber == QLatin1String("-2")) {
-        entry->contactAlias = QLatin1String("Private number");
-        entry->phoneNumber = QLatin1String("-");
-    } else if (entry->phoneNumber == QLatin1String("-1") || entry->phoneNumber == QLatin1String("#")) {
-        entry->contactAlias = QLatin1String("Unknown number");
-        entry->phoneNumber = QLatin1String("-");
+    } else {
+        checkNonStandardNumbers(entry);
     }
 
     // fill the call info

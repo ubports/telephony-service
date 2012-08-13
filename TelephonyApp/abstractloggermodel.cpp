@@ -206,6 +206,26 @@ void AbstractLoggerModel::clearContactInfo(LogEntry *entry)
     entry->contactAlias = "";
 }
 
+bool AbstractLoggerModel::checkNonStandardNumbers(LogEntry *entry)
+{
+    bool changed = false;
+
+    if (!entry) {
+        return changed;
+    }
+
+    if (entry->phoneNumber == QLatin1String("-2")) {
+        entry->contactAlias = QLatin1String("Private number");
+        entry->phoneNumber = QLatin1String("-");
+        changed = true;
+    } else if (entry->phoneNumber == QLatin1String("-1") || entry->phoneNumber == QLatin1String("#")) {
+        entry->contactAlias = QLatin1String("Unknown number");
+        entry->phoneNumber = QLatin1String("-");
+        changed = true;
+    }
+    return changed;
+}
+
 void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
 {
     // add the events to the list
@@ -221,14 +241,7 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
         parseEntityId(remoteEntity, entry);
 
-        // handle private numbers
-        if (entry->phoneNumber == QLatin1String("-2")) {
-            entry->contactAlias = QLatin1String("Private number");
-            entry->phoneNumber = QLatin1String("-");
-        } else if (entry->phoneNumber == QLatin1String("-1") || entry->phoneNumber == QLatin1String("#")) {
-            entry->contactAlias = QLatin1String("Unknown number");
-            entry->phoneNumber = QLatin1String("-");
-        } else {
+        if (!checkNonStandardNumbers(entry)) {
             // set the alias from the entity as a fallback value in case the contact is not found.
             entry->contactAlias = remoteEntity->alias();
 

@@ -93,6 +93,7 @@ protected:
     virtual void handleEntities(const Tpl::EntityPtrList &entities);
     virtual void handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     virtual void handleEvents(const Tpl::EventPtrList &events);
+    bool checkNonStandardNumbers(LogEntry *entry);
 
 protected Q_SLOTS:
     void onPendingEntitiesFinished(Tpl::PendingOperation *op);
