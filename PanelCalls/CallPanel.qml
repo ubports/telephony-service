@@ -8,7 +8,6 @@ Item {
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)
 
-    // FIXME: port to use the QtMobility contacts model
     ContactsSearchCombo {
         id: contactsSearchBox
 

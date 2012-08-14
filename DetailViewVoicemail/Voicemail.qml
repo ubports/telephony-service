@@ -6,8 +6,6 @@ Item {
     id: voicemail
 
     property string viewName: "voicemail"
-    // FIXME: better name that does not sound like a boolean; store it in the StopWatch but also alias it here
-    // FIXME: refactor StopWatch, Timer into StopWatch
     property variant contact
     property QtObject call: callManager.foregroundCall
     property string number: callManager.getVoicemailNumber()
