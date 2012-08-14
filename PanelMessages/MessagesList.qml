@@ -1,7 +1,6 @@
 import QtQuick 1.1
 import "../Widgets"
 
-// FIXME: the ListView could be the toplevel item
 Item {
     id: messageList
 
@@ -10,7 +9,6 @@ Item {
 
     ListView {
         id: listView
-        // FIXME: after moving the ListView to the toplevel, remove this anchor
         anchors.fill: parent
         clip: true
         // FIXME: No need for the extra item in the delegate
