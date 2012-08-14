@@ -52,6 +52,5 @@ Item {
         anchors.right: parent.right
         // FIXME: reference to fake model needs to be removed before final release
         model: typeof(runtime) != "undefined" ? fakeMessages : messagesProxyModel
-        filter: search.searchQuery
     }
 }
