@@ -5,7 +5,6 @@ Item {
     id: messageList
 
     property alias model: listView.model
-    property string filter
 
     ListView {
         id: listView
