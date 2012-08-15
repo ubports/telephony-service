@@ -3,12 +3,14 @@ import "../Widgets"
 
 Item {
     property int time: 0
+    property alias elapsed: count.text
+    property alias fontSize: count.fontSize
+    property alias color: count.color
 
     height: count.paintedHeight + 8 * 2
     width: count.paintedWidth + 22 * 2
 
     // FIXME: define all properties in one block
-    property alias elapsed: count.text
 
     function pad(text, length) {
         while (text.length < length) text = '0' + text;

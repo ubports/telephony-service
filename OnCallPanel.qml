@@ -107,14 +107,13 @@ AbstractButton {
     Item {
         id: duration
 
-        // FIXME: the visuals are correct but the backend is not yet connected
-        visible: false
+        visible: stopWatch.time > 0
         anchors.top: parent.top
         anchors.topMargin: 19
         anchors.right: parent.right
         anchors.rightMargin: 10
         height: 24
-        width: durationLabel.width + 14*2
+        width: stopWatch.width
 
         BorderImage {
             id: durationBackground
@@ -126,14 +125,13 @@ AbstractButton {
             border {left: 10; right: 10; top: 12; bottom: 12}
         }
 
-        TextCustom {
-            id: durationLabel
+        StopWatch {
+            id: stopWatch
 
             anchors.centerIn: parent
             fontSize: "medium"
-            elide: Text.ElideRight
             color: "#5d960f"
-            text: "00:21"
+            time: call ? call.elapsedTime : 0
         }
     }
 }
