@@ -13,19 +13,6 @@ FocusScope {
     height: editable ? Math.max(labelBox.height + labelBox.anchors.topMargin * 2, 82) : 82
     Behavior on height {StandardAnimation {}}
 
-    // FIXME: this function is used in two places, should be moved to one common place
-    function contactName() {
-        if (!contact)
-            return "";
-        if (contact.displayLabel)
-            return contact.displayLabel
-        if (contact.nickname && contact.nickname.nickname)
-            return contact.nickname.nickname;
-        else if (contact.presence && contact.presence.nickname)
-            return contact.presence.nickname;
-        else return "";
-    }
-
     function save() {
         name.save()
     }
