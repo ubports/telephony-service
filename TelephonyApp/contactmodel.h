@@ -37,8 +37,9 @@ public:
     };
 
     static ContactModel *instance();
+    void setContactManager(QContactManager *manager);
 
-    virtual int rowCount(const QModelIndex &parent) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
 
     Q_INVOKABLE ContactEntry *contactFromId(const QString &guid);

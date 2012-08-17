@@ -38,13 +38,31 @@ ContactModel *ContactModel::instance()
 }
 
 ContactModel::ContactModel(QObject *parent) :
-    QAbstractListModel(parent), mContactManager(new QContactManager("folks"))
+    QAbstractListModel(parent), mContactManager(0)
 {
     QHash<int, QByteArray> roles = roleNames();
     roles[ContactRole] = "contact";
     roles[InitialRole] = "initial";
     setRoleNames(roles);
 
+    setContactManager(new QContactManager("folks"));
+}
+
+void ContactModel::setContactManager(QContactManager *manager)
+{
+    if (mContactManager) {
+        //remove all the entries from the old manager, if any
+        if (mContactEntries.count() > 0) {
+            beginRemoveRows(QModelIndex(), 0, mContactEntries.count()-1);
+            qDeleteAll(mContactEntries);
+            mContactEntries.clear();
+            endRemoveRows();
+        }
+
+        delete mContactManager;
+    }
+
+    mContactManager = manager;
     connect(mContactManager,
             SIGNAL(contactsAdded(QList<QContactLocalId>)),
             SLOT(onContactsAdded(QList<QContactLocalId>)));

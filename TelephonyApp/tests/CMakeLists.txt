@@ -1,6 +1,7 @@
 include_directories(
     ${QT_QTTEST_INCLUDE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/TelephonyApp
     )
 
 macro(generate_tests)
@@ -21,5 +22,6 @@ endmacro(generate_tests)
 
 generate_tests(
     TemplateTest
+    ContactModelTest
     ModelSectionCounterTest
     )
