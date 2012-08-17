@@ -31,38 +31,25 @@
 #include <QDBusInterface>
 #include <QDBusReply>
 
-ContactModel *ContactModel::instance()
+ContactModel *ContactModel::instance(const QString &engine)
 {
-    static ContactModel *model = new ContactModel();
+    static ContactModel *model = new ContactModel(engine);
     return model;
 }
 
-ContactModel::ContactModel(QObject *parent) :
-    QAbstractListModel(parent), mContactManager(0)
+QContactManager *ContactModel::contactManager()
+{
+    return mContactManager;
+}
+
+ContactModel::ContactModel(const QString &engine, QObject *parent) :
+    QAbstractListModel(parent), mContactManager(new QContactManager(engine))
 {
     QHash<int, QByteArray> roles = roleNames();
     roles[ContactRole] = "contact";
     roles[InitialRole] = "initial";
     setRoleNames(roles);
 
-    setContactManager(new QContactManager("folks"));
-}
-
-void ContactModel::setContactManager(QContactManager *manager)
-{
-    if (mContactManager) {
-        //remove all the entries from the old manager, if any
-        if (mContactEntries.count() > 0) {
-            beginRemoveRows(QModelIndex(), 0, mContactEntries.count()-1);
-            qDeleteAll(mContactEntries);
-            mContactEntries.clear();
-            endRemoveRows();
-        }
-
-        delete mContactManager;
-    }
-
-    mContactManager = manager;
     connect(mContactManager,
             SIGNAL(contactsAdded(QList<QContactLocalId>)),
             SLOT(onContactsAdded(QList<QContactLocalId>)));

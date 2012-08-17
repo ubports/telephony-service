@@ -36,8 +36,13 @@ public:
         InitialRole,
     };
 
-    static ContactModel *instance();
-    void setContactManager(QContactManager *manager);
+    /**
+     * Returns a singleton instance of the ContactModel. If the engine to be
+     * used is not "folks", you need to call this function with a different manager the
+     * once before other pieces of code use it.
+     */
+    static ContactModel *instance(const QString &engine = QString("folks"));
+    QContactManager *contactManager();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
@@ -73,7 +78,7 @@ protected Q_SLOTS:
     void onContactRemoved();
 
 private:
-    explicit ContactModel(QObject *parent = 0);
+    explicit ContactModel(const QString &engine, QObject *parent = 0);
 
     QContactManager *mContactManager;
     QList<ContactEntry*> mContactEntries;
