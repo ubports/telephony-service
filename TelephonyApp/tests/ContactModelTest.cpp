@@ -17,6 +17,7 @@
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
 #include <QContact>
+#include <QContactAvatar>
 #include <QContactDetailDefinition>
 #include <QContactGuid>
 #include <QContactName>
@@ -38,6 +39,7 @@ private Q_SLOTS:
     void cleanupTestCase();
 
     void testRowCount();
+    void testData();
     void testContactAddedSignal();
     void testContactChangedSignal();
     void testContactRemovedSignal();
@@ -87,6 +89,39 @@ void ContactModelTest::testRowCount()
     // then remove the contact
     QVERIFY(contactManager->removeContact(contact.localId()));
     QCOMPARE(contactModel->rowCount(), rowCount);
+}
+
+void ContactModelTest::testData()
+{
+    QSignalSpy signalSpy(contactModel, SIGNAL(rowsInserted(QModelIndex, int, int)));
+
+    // insert a few contacts and make sure the data() method returns the correct information
+    for (int i = 0; i < 5; ++i) {
+        QContact contact;
+        QContactName nameDetail;
+        QContactAvatar avatarDetail;
+        nameDetail.setFirstName(QString("FirstName%1").arg(i));
+        nameDetail.setLastName(QString("LastName%1").arg(i));
+        nameDetail.setCustomLabel(QString("%1 %2").arg(nameDetail.firstName()).arg(nameDetail.lastName()));
+        QVERIFY(contact.saveDetail(&nameDetail));
+        avatarDetail.setImageUrl(QUrl::fromLocalFile(QString("/fake/path/for/contact/%1.png").arg(i)));
+        QVERIFY(contact.saveDetail(&avatarDetail));
+        QVERIFY(contactManager->saveContact(&contact));
+
+        QVERIFY(signalSpy.count() > i);
+        int row = signalSpy.last()[1].toInt();
+        QModelIndex index = contactModel->index(row);
+
+        QString displayLabel = contactModel->data(index, Qt::DisplayRole).toString();
+        QCOMPARE(displayLabel, contact.displayLabel());
+
+        QUrl avatarUrl = contactModel->data(index, Qt::DecorationRole).toUrl();
+        QCOMPARE(avatarUrl, avatarDetail.imageUrl());
+
+        ContactEntry *entry = qobject_cast<ContactEntry*>(contactModel->data(index, ContactModel::ContactRole).value<QObject*>());
+        QVERIFY(entry);
+        QCOMPARE(entry->contact(), contact);
+    }
 }
 
 void ContactModelTest::testContactAddedSignal()
