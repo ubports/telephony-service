@@ -38,7 +38,7 @@ public:
 
     /**
      * Returns a singleton instance of the ContactModel. If the engine to be
-     * used is not "folks", you need to call this function with a different manager the
+     * used is not "folks", you need to call this function with a different manager
      * once before other pieces of code use it.
      */
     static ContactModel *instance(const QString &engine = QString("folks"));
