@@ -44,6 +44,10 @@ private Q_SLOTS:
     void testContactFromId();
     void testContactFromCustomId();
     void testContactFromPhoneNumber();
+    void testCustomIdFromPhoneNumber();
+    void testComparePhoneNumbers_data();
+    void testComparePhoneNumbers();
+
     void testContactAddedSignal();
     void testContactChangedSignal();
     void testContactRemovedSignal();
@@ -171,6 +175,57 @@ void ContactModelTest::testContactFromPhoneNumber()
     QCOMPARE(entry->contact().detail<QContactPhoneNumber>().number(), phoneNumberDetail.number());
     QCOMPARE(entry->customId(), customId);
     QCOMPARE(entry->contact(), contact);
+
+    // remove the contact not to mess with other tests using phone numbers
+    QVERIFY(contactManager->removeContact(contact.localId()));
+}
+
+void ContactModelTest::testCustomIdFromPhoneNumber()
+{
+    QContact contact;
+    ContactCustomId customIdDetail;
+    QContactPhoneNumber phoneNumberDetail;
+    QString customId("testcustomidfromphonenumber");
+    customIdDetail.setCustomId(QString("anotherid:%1").arg(customId));
+    QVERIFY(contact.saveDetail(&customIdDetail));
+    phoneNumberDetail.setNumber("12345678");
+    QVERIFY(contact.saveDetail(&phoneNumberDetail));
+    QVERIFY(contactManager->saveContact(&contact));
+    QCOMPARE(contactModel->customIdFromPhoneNumber(phoneNumberDetail.number()), customId);
+
+    // remove the contact not to mess with other tests using phone numbers
+    QVERIFY(contactManager->removeContact(contact.localId()));
+}
+
+void ContactModelTest::testComparePhoneNumbers_data()
+{
+    QTest::addColumn<QString>("number1");
+    QTest::addColumn<QString>("number2");
+    QTest::addColumn<bool>("expectedResult");
+
+    QTest::newRow("string equal") << "12345678" << "12345678" << true;
+    QTest::newRow("number with dash") << "1234-5678" << "12345678" << true;
+    QTest::newRow("number with area code") << "12312345678" << "12345678" << true;
+    QTest::newRow("number with extension") << "12345678#123" << "12345678" << false;
+    QTest::newRow("both numbers with extension") << "(123)12345678#1" << "12345678#1" << true;
+    QTest::newRow("numbers with different extension") << "1234567#1" << "1234567#2" << false;
+    QTest::newRow("number with comma") << "33333333,1,1" << "33333333" << true;
+    QTest::newRow("both numbers with comma") << "22222222,1" << "22222222,2,1" << true;
+    QTest::newRow("number with semicolon") << "33333333;1" << "33333333" << true;
+    QTest::newRow("both numbers with semicolon") << "22222222;1" << "22222222;2" << true;
+    QTest::newRow("short/emergency numbers") << "190" << "190" << true;
+    QTest::newRow("different numbers") << "12345678" << "1234567" << false;
+    // FIXME: check what other cases we need to test here"
+}
+
+void ContactModelTest::testComparePhoneNumbers()
+{
+    QFETCH(QString, number1);
+    QFETCH(QString, number2);
+    QFETCH(bool, expectedResult);
+
+    bool result = ContactModel::comparePhoneNumbers(number1, number2);
+    QCOMPARE(result, expectedResult);
 }
 
 void ContactModelTest::testContactAddedSignal()
