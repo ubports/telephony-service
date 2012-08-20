@@ -47,7 +47,7 @@ private Q_SLOTS:
     void testCustomIdFromPhoneNumber();
     void testComparePhoneNumbers_data();
     void testComparePhoneNumbers();
-
+    void testRemoveContact();
     void testContactAddedSignal();
     void testContactChangedSignal();
     void testContactRemovedSignal();
@@ -229,6 +229,36 @@ void ContactModelTest::testComparePhoneNumbers()
 
     bool result = ContactModel::comparePhoneNumbers(number1, number2);
     QCOMPARE(result, expectedResult);
+}
+
+void ContactModelTest::testRemoveContact()
+{
+    QSignalSpy signalSpy(contactModel, SIGNAL(contactRemoved(QString)));
+
+    QContact contact;
+    ContactCustomId customIdDetail;
+    QString customId("testremovecontact");
+    customIdDetail.setCustomId(QString("anotherid:%1").arg(customId));
+    QVERIFY(contact.saveDetail(&customIdDetail));
+    QVERIFY(contactManager->saveContact(&contact));
+
+    ContactEntry *entry = contactModel->contactFromCustomId(customId);
+    QVERIFY(entry);
+
+    contactModel->removeContact(entry);
+    // the contact removal happens asynchronously so we need to wait a bit
+    // in case the operation is not yet finished
+    int tries = 0;
+    while (signalSpy.count() == 0) {
+        QTest::qWait(100);
+        tries++;
+        if (tries == 5) {
+            break;
+        }
+    }
+
+    QCOMPARE(signalSpy.count(), 1);
+    QCOMPARE(signalSpy[0][0].toString(), customId);
 }
 
 void ContactModelTest::testContactAddedSignal()
