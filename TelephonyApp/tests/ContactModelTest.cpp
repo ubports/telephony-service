@@ -129,6 +129,9 @@ void ContactModelTest::testData()
         ContactEntry *entry = qobject_cast<ContactEntry*>(contactModel->data(index, ContactModel::ContactRole).value<QObject*>());
         QVERIFY(entry);
         QCOMPARE(entry->contact(), contact);
+
+        QString initial = contactModel->data(index, ContactModel::InitialRole).toString();
+        QCOMPARE(entry->initial(), initial);
     }
 }
 
