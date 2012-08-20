@@ -81,6 +81,9 @@ void ContactModelTest::testRowCount()
     QVERIFY(contactManager->saveContact(&contact));
     QCOMPARE(contactModel->rowCount(), rowCount+1);
 
+    // the rowcount for child items needs to be zero
+    QCOMPARE(contactModel->rowCount(contactModel->index(0)), 0);
+
     // then remove the contact
     QVERIFY(contactManager->removeContact(contact.localId()));
     QCOMPARE(contactModel->rowCount(), rowCount);
