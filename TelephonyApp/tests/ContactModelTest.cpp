@@ -21,6 +21,7 @@
 #include <QContactDetailDefinition>
 #include <QContactGuid>
 #include <QContactName>
+#include <QContactPhoneNumber>
 #include "contactmodel.h"
 #include "contactentry.h"
 #include "contactcustomid.h"
@@ -40,6 +41,9 @@ private Q_SLOTS:
 
     void testRowCount();
     void testData();
+    void testContactFromId();
+    void testContactFromCustomId();
+    void testContactFromPhoneNumber();
     void testContactAddedSignal();
     void testContactChangedSignal();
     void testContactRemovedSignal();
@@ -122,6 +126,51 @@ void ContactModelTest::testData()
         QVERIFY(entry);
         QCOMPARE(entry->contact(), contact);
     }
+}
+
+void ContactModelTest::testContactFromId()
+{
+    QContact contact;
+    QContactGuid guidDetail;
+    guidDetail.setGuid("testcontactfromid");
+    QVERIFY(contact.saveDetail(&guidDetail));
+    QVERIFY(contactManager->saveContact(&contact));
+    ContactEntry *entry = contactModel->contactFromId(guidDetail.guid());
+    QVERIFY(entry);
+    QCOMPARE(entry->id(), guidDetail.guid());
+    QCOMPARE(entry->contact(), contact);
+}
+
+void ContactModelTest::testContactFromCustomId()
+{
+    QContact contact;
+    ContactCustomId customIdDetail;
+    QString customId("testcontactfromcustomid");
+    customIdDetail.setCustomId(QString("anotherid:%1").arg(customId));
+    QVERIFY(contact.saveDetail(&customIdDetail));
+    QVERIFY(contactManager->saveContact(&contact));
+    ContactEntry *entry = contactModel->contactFromCustomId(customId);
+    QVERIFY(entry);
+    QCOMPARE(entry->customId(), customId);
+    QCOMPARE(entry->contact(), contact);
+}
+
+void ContactModelTest::testContactFromPhoneNumber()
+{
+    QContact contact;
+    ContactCustomId customIdDetail;
+    QContactPhoneNumber phoneNumberDetail;
+    QString customId("testcontactfromphonenumber");
+    customIdDetail.setCustomId(QString("anotherid:%1").arg(customId));
+    QVERIFY(contact.saveDetail(&customIdDetail));
+    phoneNumberDetail.setNumber("12345678");
+    QVERIFY(contact.saveDetail(&phoneNumberDetail));
+    QVERIFY(contactManager->saveContact(&contact));
+    ContactEntry *entry = contactModel->contactFromPhoneNumber(phoneNumberDetail.number());
+    QVERIFY(entry);
+    QCOMPARE(entry->contact().detail<QContactPhoneNumber>().number(), phoneNumberDetail.number());
+    QCOMPARE(entry->customId(), customId);
+    QCOMPARE(entry->contact(), contact);
 }
 
 void ContactModelTest::testContactAddedSignal()
