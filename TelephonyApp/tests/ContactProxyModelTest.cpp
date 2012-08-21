@@ -34,7 +34,7 @@ class ContactProxyModelTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
-    void testFilterChanged();
+    void testFilterProperty();
     void testRowCountNoFilter();
     void testRowCountWithFilter();
     void testData();
@@ -75,10 +75,12 @@ void ContactProxyModelTest::cleanupTestCase()
     delete contactProxyModel;
 }
 
-void ContactProxyModelTest::testFilterChanged()
+void ContactProxyModelTest::testFilterProperty()
 {
+    QString randomFilterString("FilterString");
     QSignalSpy signalSpy(contactProxyModel, SIGNAL(filterTextChanged()));
-    contactProxyModel->setFilterText(QString("FilterString"));
+    contactProxyModel->setFilterText(randomFilterString);
+    QCOMPARE(randomFilterString, contactProxyModel->filterText());
     QCOMPARE(signalSpy.count(), 1);
 }
 
@@ -99,35 +101,31 @@ void ContactProxyModelTest::testRowCountWithFilter()
 
 void ContactProxyModelTest::testData()
 {
+    QString label;
     contactProxyModel->setFilterText("Jan");
-    ContactEntry *entry = qobject_cast<ContactEntry*>(contactProxyModel->data(contactProxyModel->index(0,0), ContactModel::ContactRole).value<QObject*>());
-    QVERIFY(entry);
-    QCOMPARE(entry->displayLabel(), QString("Jan"));
+    label = contactProxyModel->data(contactProxyModel->index(0,0), Qt::DisplayRole).toString();
+    QCOMPARE(label, QString("Jan"));
 
-    contactProxyModel->setFilterText("John");
-    entry = qobject_cast<ContactEntry*>(contactProxyModel->data(contactProxyModel->index(0,0), ContactModel::ContactRole).value<QObject*>());
-    QVERIFY(entry);
-    QCOMPARE(entry->displayLabel(), QString("John"));
+    contactProxyModel->setFilterText("john");
+    label = contactProxyModel->data(contactProxyModel->index(0,0), Qt::DisplayRole).toString();
+    QCOMPARE(label, QString("John"));
 
-    entry = qobject_cast<ContactEntry*>(contactProxyModel->data(contactProxyModel->index(1,0), ContactModel::ContactRole).value<QObject*>());
-    QVERIFY(entry);
-    QCOMPARE(entry->displayLabel(), QString("Johnny"));
+    label = contactProxyModel->data(contactProxyModel->index(1,0), Qt::DisplayRole).toString();
+    QCOMPARE(label, QString("Johnny"));
 }
 
 void ContactProxyModelTest::testDataSorted()
 {
+    QString label;
     contactProxyModel->setFilterText(QString());
-    ContactEntry *entry = qobject_cast<ContactEntry*>(contactProxyModel->data(contactProxyModel->index(0,0), ContactModel::ContactRole).value<QObject*>());
-    QVERIFY(entry);
-    QCOMPARE(entry->displayLabel(), QString("Abel"));
+    label = contactProxyModel->data(contactProxyModel->index(0,0), Qt::DisplayRole).toString();
+    QCOMPARE(label, QString("Abel"));
 
-    entry = qobject_cast<ContactEntry*>(contactProxyModel->data(contactProxyModel->index(1,0), ContactModel::ContactRole).value<QObject*>());
-    QVERIFY(entry);
-    QCOMPARE(entry->displayLabel(), QString("Álvaro"));
+    label = contactProxyModel->data(contactProxyModel->index(1,0), Qt::DisplayRole).toString();
+    QCOMPARE(label, QString("Álvaro"));
 
-    entry = qobject_cast<ContactEntry*>(contactProxyModel->data(contactProxyModel->index(2,0), ContactModel::ContactRole).value<QObject*>());
-    QVERIFY(entry);
-    QCOMPARE(entry->displayLabel(), QString("andrew"));
+    label = contactProxyModel->data(contactProxyModel->index(2,0), Qt::DisplayRole).toString();
+    QCOMPARE(label, QString("andrew"));
 }
 
 QTEST_MAIN(ContactProxyModelTest)
