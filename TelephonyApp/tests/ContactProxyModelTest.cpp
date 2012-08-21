@@ -34,9 +34,11 @@ class ContactProxyModelTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
+    void testFilterChanged();
     void testRowCountNoFilter();
     void testRowCountWithFilter();
     void testData();
+    void testDataSorted();
 
 private:
     QContactManager *contactManager;
@@ -47,8 +49,7 @@ private:
 
 void ContactProxyModelTest::initTestCase()
 {
-
-    contacts << "Sue" << "Jan" << "Johnny" << "John";
+    contacts << "Sue" << "Jan" << "Johnny" << "John" << "Álvaro" << "andrew" << "Abel";
     contactModel = ContactModel::instance("memory");
     contactManager = contactModel->contactManager();
 
@@ -72,6 +73,13 @@ void ContactProxyModelTest::cleanupTestCase()
 {
     delete contactManager;
     delete contactProxyModel;
+}
+
+void ContactProxyModelTest::testFilterChanged()
+{
+    QSignalSpy signalSpy(contactProxyModel, SIGNAL(filterTextChanged()));
+    contactProxyModel->setFilterText(QString("FilterString"));
+    QCOMPARE(signalSpy.count(), 1);
 }
 
 void ContactProxyModelTest::testRowCountNoFilter()
@@ -104,6 +112,22 @@ void ContactProxyModelTest::testData()
     entry = qobject_cast<ContactEntry*>(contactProxyModel->data(contactProxyModel->index(1,0), ContactModel::ContactRole).value<QObject*>());
     QVERIFY(entry);
     QCOMPARE(entry->displayLabel(), QString("Johnny"));
+}
+
+void ContactProxyModelTest::testDataSorted()
+{
+    contactProxyModel->setFilterText(QString());
+    ContactEntry *entry = qobject_cast<ContactEntry*>(contactProxyModel->data(contactProxyModel->index(0,0), ContactModel::ContactRole).value<QObject*>());
+    QVERIFY(entry);
+    QCOMPARE(entry->displayLabel(), QString("Abel"));
+
+    entry = qobject_cast<ContactEntry*>(contactProxyModel->data(contactProxyModel->index(1,0), ContactModel::ContactRole).value<QObject*>());
+    QVERIFY(entry);
+    QCOMPARE(entry->displayLabel(), QString("Álvaro"));
+
+    entry = qobject_cast<ContactEntry*>(contactProxyModel->data(contactProxyModel->index(2,0), ContactModel::ContactRole).value<QObject*>());
+    QVERIFY(entry);
+    QCOMPARE(entry->displayLabel(), QString("andrew"));
 }
 
 QTEST_MAIN(ContactProxyModelTest)
