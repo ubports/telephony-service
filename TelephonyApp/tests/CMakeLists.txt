@@ -23,6 +23,7 @@ endmacro(generate_tests)
 generate_tests(
     TemplateTest
     ContactModelTest
+    ContactEntryTest
     ContactProxyModelTest
     ModelSectionCounterTest
     )
