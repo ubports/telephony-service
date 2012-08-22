@@ -43,6 +43,7 @@ class ContactEntryTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void testConstructor();
+    void testLocalId();
     void testId();
     void testCustomId();
     void testDisplayLabel();
@@ -55,6 +56,10 @@ private Q_SLOTS:
     void testEmails();
     void testOnlineAccounts();
     void testPhoneNumbers();
+    void testContact();
+    void testAddDetail();
+    void testRemoveDetail();
+    void testRevertChanges();
 
 private:
     ContactModel *contactModel;
@@ -70,6 +75,13 @@ void ContactEntryTest::testConstructor()
     QContact contact;
     ContactEntry entry(contact);
     QCOMPARE(entry.contact(), contact);
+}
+
+void ContactEntryTest::testLocalId()
+{
+    QContact contact;
+    ContactEntry entry(contact);
+    QCOMPARE(entry.localId(), contact.localId());
 }
 
 void ContactEntryTest::testId()
@@ -271,6 +283,100 @@ void ContactEntryTest::testPhoneNumbers()
         QVERIFY(phoneNumber);
         QCOMPARE(phoneNumber->number(), QString("12345-%1").arg(i));
     }
+}
+
+void ContactEntryTest::testContact()
+{
+    QContact contact;
+    ContactEntry entry(contact);
+    QCOMPARE(entry.contact(), contact);
+}
+
+void ContactEntryTest::testAddDetail()
+{
+    // test one detail of each type
+    ContactEntry entry;
+    ContactPhoneNumber phoneNumber;
+    ContactAddress address;
+    ContactOnlineAccount onlineAccount;
+    QSignalSpy signalSpy(&entry, SIGNAL(modifiedChanged()));
+
+    QVERIFY(entry.addDetail(&phoneNumber));
+    QCOMPARE(signalSpy.count(), 1);
+    QVERIFY(entry.modified());
+    QDeclarativeListProperty<ContactDetail> phoneNumbers = entry.phoneNumbers();
+    QCOMPARE(entry.detailCount(&phoneNumbers), 1);
+    QCOMPARE(entry.detailAt(&phoneNumbers, 0)->detail(), phoneNumber.detail());
+
+    QVERIFY(entry.addDetail(&address));
+    QDeclarativeListProperty<ContactDetail> addresses = entry.addresses();
+    QCOMPARE(entry.detailCount(&addresses), 1);
+    QCOMPARE(entry.detailAt(&addresses, 0)->detail(), address.detail());
+
+    QVERIFY(entry.addDetail(&onlineAccount));
+    QDeclarativeListProperty<ContactDetail> onlineAccounts = entry.onlineAccounts();
+    QCOMPARE(entry.detailCount(&onlineAccounts), 1);
+    QCOMPARE(entry.detailAt(&onlineAccounts, 0)->detail(), onlineAccount.detail());
+}
+
+void ContactEntryTest::testRemoveDetail()
+{
+    // test one detail of each type
+    // the details are only removed from the QContact object, but they are kept in the
+    // ContactEntry detail list because QML items can still use them to animate the removal.
+    QContact contact;
+    QContactPhoneNumber phoneNumber;
+    QContactAddress address;
+    QContactOnlineAccount onlineAccount;
+    QVERIFY(contact.saveDetail(&phoneNumber));
+    QVERIFY(contact.saveDetail(&address));
+    QVERIFY(contact.saveDetail(&onlineAccount));
+
+    ContactEntry entry(contact);
+    QSignalSpy signalSpy(&entry, SIGNAL(modifiedChanged()));
+
+    QDeclarativeListProperty<ContactDetail> phoneNumbers = entry.phoneNumbers();
+    QVERIFY(entry.removeDetail(entry.detailAt(&phoneNumbers, 0)));
+    QCOMPARE(signalSpy.count(), 1);
+    QVERIFY(entry.modified());
+    QCOMPARE(entry.detailCount(&phoneNumbers), 1);
+    QCOMPARE(entry.contact().details<QContactPhoneNumber>().count(), 0);
+
+    QDeclarativeListProperty<ContactDetail> addresses = entry.addresses();
+    QVERIFY(entry.removeDetail(entry.detailAt(&addresses, 0)));
+    QCOMPARE(entry.detailCount(&addresses), 1);
+    QCOMPARE(entry.contact().details<QContactAddress>().count(), 0);
+
+    QDeclarativeListProperty<ContactDetail> onlineAccounts = entry.onlineAccounts();
+    QVERIFY(entry.removeDetail(entry.detailAt(&onlineAccounts, 0)));
+    QCOMPARE(entry.detailCount(&onlineAccounts), 1);
+    QCOMPARE(entry.contact().details<QContactOnlineAccount>().count(), 0);
+}
+
+void ContactEntryTest::testRevertChanges()
+{
+    ContactEntry entry;
+    ContactPhoneNumber phoneNumber;
+    ContactAddress address;
+    ContactOnlineAccount onlineAccount;
+    phoneNumber.setNumber("12345");
+    address.setStreet("Some Street");
+    onlineAccount.setAccountUri("someaccount@someservice");
+    QVERIFY(entry.addDetail(&phoneNumber));
+    QVERIFY(entry.addDetail(&address));
+    QVERIFY(entry.addDetail(&onlineAccount));
+    contactModel->saveContact(&entry);
+
+    QModelIndex index = contactModel->index(0);
+    ContactEntry *savedEntry = qobject_cast<ContactEntry*>(contactModel->data(index, ContactModel::ContactRole).value<QObject*>());
+    QVERIFY(savedEntry);
+    int detailCount = savedEntry->contact().details().count();
+    QVERIFY(savedEntry->removeDetail(&phoneNumber));
+    QVERIFY(savedEntry->removeDetail(&address));
+    QVERIFY(savedEntry->removeDetail(&onlineAccount));
+    QVERIFY(savedEntry->contact().details().count() < detailCount);
+    savedEntry->revertChanges();
+    QCOMPARE(savedEntry->contact().details().count(), detailCount);
 }
 
 QTEST_MAIN(ContactEntryTest)
