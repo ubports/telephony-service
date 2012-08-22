@@ -24,5 +24,6 @@ generate_tests(
     TemplateTest
     ContactModelTest
     ContactProxyModelTest
+    ContactDetailsTest
     ModelSectionCounterTest
     )
