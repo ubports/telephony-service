@@ -43,7 +43,7 @@ private:
 
 void ContactDetailsTest::initTestCase()
 {
-    mTestValue = QLatin1String("testValue");
+    mTestValue = QString("testValue");
 }
 
 void ContactDetailsTest::testContactAddress()
@@ -74,6 +74,25 @@ void ContactDetailsTest::testContactAddress()
     QCOMPARE(address.subTypes(), QVariant(mTestValue));
 
     QCOMPARE(signalSpy.count(), 7);
+
+    QContactAddress qcontactaddress;
+    qcontactaddress.setCountry(mTestValue);
+    qcontactaddress.setLocality(mTestValue);
+    qcontactaddress.setPostOfficeBox(mTestValue);
+    qcontactaddress.setPostcode(mTestValue);
+    qcontactaddress.setRegion(mTestValue);
+    qcontactaddress.setStreet(mTestValue);
+    qcontactaddress.setSubTypes(mTestValue);
+
+    ContactAddress address2(qcontactaddress);
+    QCOMPARE(address2.country(), mTestValue);
+    QCOMPARE(address2.locality(), mTestValue);
+    QCOMPARE(address2.postOfficeBox(), mTestValue);
+    QCOMPARE(address2.postcode(), mTestValue);
+    QCOMPARE(address2.region(), mTestValue);
+    QCOMPARE(address2.street(), mTestValue);
+    QCOMPARE(address2.subTypes(), QVariant(mTestValue));
+
 }
 
 void ContactDetailsTest::testContactCustomId()
@@ -94,6 +113,12 @@ void ContactDetailsTest::testContactEmailAddress()
     QCOMPARE(email.emailAddress(), mTestValue);
 
     QCOMPARE(signalSpy.count(), 1);
+
+    QContactEmailAddress qcontactemailaddress;
+    qcontactemailaddress.setEmailAddress(mTestValue);
+
+    ContactEmailAddress email2(qcontactemailaddress);
+    QCOMPARE(email2.emailAddress(), mTestValue);
 }
 
 void ContactDetailsTest::testContactName()
@@ -121,6 +146,24 @@ void ContactDetailsTest::testContactName()
     QCOMPARE(name.suffix(), mTestValue);
 
     QCOMPARE(signalSpy.count(), 6);
+
+    QContactName qcontactname;
+
+    qcontactname.setCustomLabel(mTestValue);
+    qcontactname.setFirstName(mTestValue);
+    qcontactname.setLastName(mTestValue);
+    qcontactname.setMiddleName(mTestValue);
+    qcontactname.setPrefix(mTestValue);
+    qcontactname.setSuffix(mTestValue);
+
+    ContactName name2(qcontactname);
+
+    QCOMPARE(name2.customLabel(), mTestValue);
+    QCOMPARE(name2.firstName(), mTestValue);
+    QCOMPARE(name2.lastName(), mTestValue);
+    QCOMPARE(name2.middleName(), mTestValue);
+    QCOMPARE(name2.prefix(), mTestValue);
+    QCOMPARE(name2.suffix(), mTestValue);
 }
 
 void ContactDetailsTest::testContactOnlineAccount()
@@ -142,6 +185,19 @@ void ContactDetailsTest::testContactOnlineAccount()
     QCOMPARE(onlineAccount.serviceProvider(), mTestValue);
 
     QCOMPARE(signalSpy.count(), 4);
+
+    QContactOnlineAccount qcontactonlineaccount;
+
+    qcontactonlineaccount.setAccountUri(mTestValue);
+    qcontactonlineaccount.setCapabilities(QStringList(mTestValue));
+    qcontactonlineaccount.setProtocol(mTestValue);
+    qcontactonlineaccount.setServiceProvider(mTestValue);
+
+    ContactOnlineAccount onlineAccount2(qcontactonlineaccount);
+    QCOMPARE(onlineAccount2.accountUri(), mTestValue);
+    QCOMPARE(onlineAccount2.capabilities(), QVariant(mTestValue));
+    QCOMPARE(onlineAccount2.protocol(), mTestValue);
+    QCOMPARE(onlineAccount2.serviceProvider(), mTestValue);
 }
 
 void ContactDetailsTest::testContactPhoneNumber()
@@ -157,6 +213,15 @@ void ContactDetailsTest::testContactPhoneNumber()
     QCOMPARE(phoneNumber.subTypes(), QVariant(mTestValue));
 
     QCOMPARE(signalSpy.count(), 2);
+
+    QContactPhoneNumber qcontactphonenumber;
+    qcontactphonenumber.setNumber(mTestValue);
+    qcontactphonenumber.setSubTypes(mTestValue);
+
+    ContactPhoneNumber phoneNumber2(qcontactphonenumber);
+
+    QCOMPARE(phoneNumber2.number(), mTestValue);
+    QCOMPARE(phoneNumber2.subTypes(), QVariant(mTestValue));
 }
 
 QTEST_MAIN(ContactDetailsTest)
