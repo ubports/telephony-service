@@ -44,17 +44,17 @@ private Q_SLOTS:
     void testContactPhoneNumber();
 private:
     QString mTestValue;
-    int mInteger;
+    int mCount;
 };
 
 void ContactDetailsTest::resetTestValue()
 {
-    mInteger = 0;
+    mCount = 0;
 }
 
 QString ContactDetailsTest::newTestValue()
 {
-    mTestValue = QString("testValue%1").arg(++mInteger);
+    mTestValue = QString("testValue%1").arg(++mCount);
     return mTestValue;
 }
 
@@ -65,7 +65,7 @@ QString ContactDetailsTest::currentTestValue()
 
 void ContactDetailsTest::initTestCase()
 {
-    mInteger = 0;
+    mCount = 0;
 }
 
 void ContactDetailsTest::testContactAddress()
@@ -151,13 +151,11 @@ void ContactDetailsTest::testContactEmailAddress()
 
     QCOMPARE(signalSpy.count(), 1);
 
-    resetTestValue();
     QContactEmailAddress qcontactemailaddress;
     qcontactemailaddress.setEmailAddress(newTestValue());
 
-    resetTestValue();
     ContactEmailAddress email2(qcontactemailaddress);
-    QCOMPARE(email2.emailAddress(), newTestValue());
+    QCOMPARE(email2.emailAddress(), currentTestValue());
 }
 
 void ContactDetailsTest::testContactName()
