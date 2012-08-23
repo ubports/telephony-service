@@ -52,6 +52,14 @@ void ContactDetailsTest::testContactAddress()
 
     QSignalSpy signalSpy(&address, SIGNAL(changed()));
 
+    QSignalSpy countryChangedSignalSpy(&address, SIGNAL(countryChanged()));
+    QSignalSpy localityChangedSignalSpy(&address, SIGNAL(localityChanged()));
+    QSignalSpy postOfficeBoxChangedSignalSpy(&address, SIGNAL(postOfficeBoxChanged()));
+    QSignalSpy postcodeChangedSignalSpy(&address, SIGNAL(postcodeChanged()));
+    QSignalSpy regionChangedSignalSpy(&address, SIGNAL(regionChanged()));
+    QSignalSpy streetChangedSignalSpy(&address, SIGNAL(streetChanged()));
+    QSignalSpy subTypesChangedSignalSpy(&address, SIGNAL(subTypesChanged()));
+
     address.setCountry(mTestValue);
     QCOMPARE(address.country(), mTestValue);
 
@@ -74,6 +82,14 @@ void ContactDetailsTest::testContactAddress()
     QCOMPARE(address.subTypes(), QVariant(mTestValue));
 
     QCOMPARE(signalSpy.count(), 7);
+
+    QCOMPARE(countryChangedSignalSpy.count(), 1);
+    QCOMPARE(localityChangedSignalSpy.count(), 1);
+    QCOMPARE(postOfficeBoxChangedSignalSpy.count(), 1);
+    QCOMPARE(postcodeChangedSignalSpy.count(), 1);
+    QCOMPARE(regionChangedSignalSpy.count(), 1);
+    QCOMPARE(streetChangedSignalSpy.count(), 1);
+    QCOMPARE(subTypesChangedSignalSpy.count(), 1);
 
     QContactAddress qcontactaddress;
     qcontactaddress.setCountry(mTestValue);
@@ -126,6 +142,13 @@ void ContactDetailsTest::testContactName()
     ContactName name;
 
     QSignalSpy signalSpy(&name, SIGNAL(changed()));
+    
+    QSignalSpy customLabelChangedSignalSpy(&name, SIGNAL(customLabelChanged()));
+    QSignalSpy firstNameChangedSignalSpy(&name, SIGNAL(firstNameChanged()));
+    QSignalSpy lastNameChangedSignalSpy(&name, SIGNAL(lastNameChanged()));
+    QSignalSpy middleNameChangedSignalSpy(&name, SIGNAL(middleNameChanged()));
+    QSignalSpy prefixChangedSignalSpy(&name, SIGNAL(prefixChanged()));
+    QSignalSpy suffixChangedSignalSpy(&name, SIGNAL(suffixChanged()));
 
     name.setCustomLabel(mTestValue);
     QCOMPARE(name.customLabel(), mTestValue);
@@ -146,6 +169,13 @@ void ContactDetailsTest::testContactName()
     QCOMPARE(name.suffix(), mTestValue);
 
     QCOMPARE(signalSpy.count(), 6);
+
+    QCOMPARE(customLabelChangedSignalSpy.count(), 1);
+    QCOMPARE(firstNameChangedSignalSpy.count(), 1);
+    QCOMPARE(lastNameChangedSignalSpy.count(), 1);
+    QCOMPARE(middleNameChangedSignalSpy.count(), 1);
+    QCOMPARE(prefixChangedSignalSpy.count(), 1);
+    QCOMPARE(suffixChangedSignalSpy.count(), 1);
 
     QContactName qcontactname;
 
@@ -172,6 +202,12 @@ void ContactDetailsTest::testContactOnlineAccount()
 
     QSignalSpy signalSpy(&onlineAccount, SIGNAL(changed()));
 
+    QSignalSpy accountUriChangedSignalSpy(&onlineAccount, SIGNAL(accountUriChanged()));
+    QSignalSpy capabilitiesChangedSignalSpy(&onlineAccount, SIGNAL(capabilitiesChanged()));
+    QSignalSpy protocolChangedSignalSpy(&onlineAccount, SIGNAL(protocolChanged()));
+    QSignalSpy serviceProviderChangedSignalSpy(&onlineAccount, SIGNAL(serviceProviderChanged()));
+    QSignalSpy subTypesChangedSignalSpy(&onlineAccount, SIGNAL(subTypesChanged()));
+
     onlineAccount.setAccountUri(mTestValue);
     QCOMPARE(onlineAccount.accountUri(), mTestValue);
 
@@ -184,7 +220,16 @@ void ContactDetailsTest::testContactOnlineAccount()
     onlineAccount.setServiceProvider(mTestValue);
     QCOMPARE(onlineAccount.serviceProvider(), mTestValue);
 
-    QCOMPARE(signalSpy.count(), 4);
+    onlineAccount.setSubTypes(mTestValue);
+    QCOMPARE(onlineAccount.subTypes(), QVariant(mTestValue));
+
+    QCOMPARE(signalSpy.count(), 5);
+
+    QCOMPARE(accountUriChangedSignalSpy.count(), 1);
+    QCOMPARE(capabilitiesChangedSignalSpy.count(), 1);
+    QCOMPARE(protocolChangedSignalSpy.count(), 1);
+    QCOMPARE(serviceProviderChangedSignalSpy.count(), 1);
+    QCOMPARE(subTypesChangedSignalSpy.count(), 1);
 
     QContactOnlineAccount qcontactonlineaccount;
 
@@ -205,6 +250,9 @@ void ContactDetailsTest::testContactPhoneNumber()
     ContactPhoneNumber phoneNumber;
 
     QSignalSpy signalSpy(&phoneNumber, SIGNAL(changed()));
+    
+    QSignalSpy numberChangedSignalSpy(&phoneNumber, SIGNAL(numberChanged()));
+    QSignalSpy subTypesChangedSignalSpy(&phoneNumber, SIGNAL(subTypesChanged()));
 
     phoneNumber.setNumber(mTestValue);
     QCOMPARE(phoneNumber.number(), mTestValue);
@@ -213,6 +261,9 @@ void ContactDetailsTest::testContactPhoneNumber()
     QCOMPARE(phoneNumber.subTypes(), QVariant(mTestValue));
 
     QCOMPARE(signalSpy.count(), 2);
+    
+    QCOMPARE(numberChangedSignalSpy.count(), 1);
+    QCOMPARE(subTypesChangedSignalSpy.count(), 1);
 
     QContactPhoneNumber qcontactphonenumber;
     qcontactphonenumber.setNumber(mTestValue);
