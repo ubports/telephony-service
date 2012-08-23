@@ -25,5 +25,6 @@ generate_tests(
     ContactModelTest
     ContactEntryTest
     ContactProxyModelTest
+    ContactDetailsTest
     ModelSectionCounterTest
     )
