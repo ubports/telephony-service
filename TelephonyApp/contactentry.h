@@ -71,6 +71,8 @@ class ContactEntry : public QObject
 public:
     explicit ContactEntry(const QContact &contact = QContact(), ContactModel *parent = 0);
 
+    explicit ContactEntry(const ContactEntry &other);
+
     /**
      * The Local ID is a numeric value that uniquely identifies a QContact in a QContactManager.
      * This value has no relation to any identifiers the contact might have in the backend engine.
@@ -97,7 +99,7 @@ public:
     bool modified() const;
     void setModified(bool value);
 
-    QContact& contact();
+    QContact contact() const;
     void setContact(const QContact &contact);
 
     QDeclarativeListProperty<ContactDetail> addresses();

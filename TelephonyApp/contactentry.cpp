@@ -38,13 +38,12 @@ ContactEntry::ContactEntry(const QContact &contact, ContactModel *parent) :
     QObject(parent), mModel(parent)
 {
     setContact(contact);
+}
 
-    // FIXME: we are explicitelly splitting the id as it comes formatted from EDS
-    // check how to handle that for telepathy contacts
-    QStringList ids = mContact.detail<ContactCustomId>().customId().split(":");
-    if (ids.count() >= 2) {
-        mCustomId = ids.last();
-    }
+ContactEntry::ContactEntry(const ContactEntry &other)
+{
+    setContact(other.contact());
+    mModel = other.mModel;
 }
 
 QContactLocalId ContactEntry::localId() const
@@ -101,7 +100,7 @@ void ContactEntry::setModified(bool value)
     }
 }
 
-QContact& ContactEntry::contact()
+QContact ContactEntry::contact() const
 {
     return mContact;
 }
@@ -119,6 +118,13 @@ void ContactEntry::setContact(const QContact &contact)
 
     setModified(false);
     loadDetails();
+
+    // FIXME: we are explicitelly splitting the id as it comes formatted from EDS
+    // check how to handle that for telepathy contacts
+    QStringList ids = mContact.detail<ContactCustomId>().customId().split(":");
+    if (ids.count() >= 2) {
+        mCustomId = ids.last();
+    }
 
     Q_EMIT changed(this);
 }

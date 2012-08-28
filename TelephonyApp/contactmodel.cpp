@@ -31,14 +31,19 @@
 #include <QDBusInterface>
 #include <QDBusReply>
 
-ContactModel *ContactModel::instance()
+ContactModel *ContactModel::instance(const QString &engine)
 {
-    static ContactModel *model = new ContactModel();
+    static ContactModel *model = new ContactModel(engine);
     return model;
 }
 
-ContactModel::ContactModel(QObject *parent) :
-    QAbstractListModel(parent), mContactManager(new QContactManager("folks"))
+QContactManager *ContactModel::contactManager()
+{
+    return mContactManager;
+}
+
+ContactModel::ContactModel(const QString &engine, QObject *parent) :
+    QAbstractListModel(parent), mContactManager(new QContactManager(engine))
 {
     QHash<int, QByteArray> roles = roleNames();
     roles[ContactRole] = "contact";
