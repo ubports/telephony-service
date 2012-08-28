@@ -105,15 +105,6 @@ void TelepathyHelper::registerClients()
     initializeTelepathyClients();
 }
 
-void TelepathyHelper::createAccount()
-{
-    QVariantMap props;
-    props["org.freedesktop.Telepathy.Account.Icon"] = "im-ufa";
-    connect(mAccountManager->createAccount("ufa", "ufa", "ufa", QVariantMap(), props),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onAccountCreated(Tp::PendingOperation*)));
-}
-
 void TelepathyHelper::initializeAccount()
 {
     // watch for account state and connection changes
@@ -160,11 +151,13 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     registerClients();
 
+    // FIXME: instead of looking up for a ufa account, check for accounts that support phone
+    // numbers, as this is more generic.
     Tp::AccountSetPtr accountSet = mAccountManager->accountsByProtocol("ufa");
 
     // if we have no ufa account, create one
     if (!accountSet->accounts().count()) {
-        createAccount();
+        qCritical() << "No compatible telepathy account found!";
         return;
     }
 
@@ -174,24 +167,6 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
     }
 
     mAccount = accountSet->accounts()[0];
-    initializeAccount();
-}
-
-void TelepathyHelper::onAccountCreated(Tp::PendingOperation *op)
-{
-    Tp::PendingAccount *pa = qobject_cast<Tp::PendingAccount*>(op);
-
-    if (!pa) {
-        qCritical() << "The pending object is not a Tp::PendingAccount";
-        return;
-    }
-
-    if (pa->isError()) {
-        qCritical() << "Error creating an ufa account";
-        return;
-    }
-
-    mAccount = pa->account();
     initializeAccount();
 }
 
