@@ -22,7 +22,6 @@ pkg_check_modules(INDICATE_QT REQUIRED indicate-qt)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${QT_INCLUDE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/qtsingleapplication
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
@@ -50,7 +49,6 @@ target_link_libraries(${TELEPHONY_APP}
     ${QT_QTNETWORK_LIBRARIES}
     ${QT_QTDECLARATIVE_LIBRARIES}
     ${QT_QTDBUS_LIBRARIES}
-    qtsingleapplication
     )
 
 install(TARGETS ${TELEPHONY_APP}
@@ -106,7 +104,6 @@ install(FILES ${TELEPHONY_APP}.desktop
 
 enable_testing()
 
-add_subdirectory(qtsingleapplication)
 add_subdirectory(TelephonyApp)
 add_subdirectory(TelephonyAppApprover)
 add_subdirectory(icons)

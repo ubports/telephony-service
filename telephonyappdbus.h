@@ -41,6 +41,7 @@ public Q_SLOTS:
     Q_NOREPLY void NewMessage();
     Q_NOREPLY void ShowVoicemail();
     Q_NOREPLY void CallNumber(const QString &number);
+    Q_NOREPLY void SendAppMessage(const QString &message);
 
 Q_SIGNALS:
     void request(const QString &message);

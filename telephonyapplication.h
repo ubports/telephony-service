@@ -3,11 +3,11 @@
 
 #include <QtCore/QObject>
 #include <QtDeclarative/QDeclarativeView>
-#include <QtSingleApplication>
+#include <QtGui/QApplication>
 
 class TelephonyAppDBus;
 
-class TelephonyApplication : public QtSingleApplication
+class TelephonyApplication : public QApplication
 {
     Q_OBJECT
 
