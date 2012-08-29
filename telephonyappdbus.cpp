@@ -68,3 +68,8 @@ TelephonyAppDBus::CallNumber(const QString &number)
 {
     Q_EMIT request(QString("call://%1").arg(number));
 }
+
+void TelephonyAppDBus::SendAppMessage(const QString &message)
+{
+    Q_EMIT request(message);
+}

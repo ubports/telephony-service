@@ -8,7 +8,9 @@
 #include <QtDeclarative/QDeclarativeComponent>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeView>
-
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
+#include <QtDBus/QDBusConnectionInterface>
 #include "config.h"
 #include "telephonyappdbus.h"
 
@@ -23,7 +25,7 @@ static void printUsage(const QStringList& arguments)
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
-    : QtSingleApplication(argc, argv), m_view(0), m_applicationIsReady(false)
+    : QApplication(argc, argv), m_view(0), m_applicationIsReady(false)
 {
     m_dbus = new TelephonyAppDBus(this);
 }
@@ -54,7 +56,13 @@ bool TelephonyApplication::setup()
         }
     }
 
-    if (sendMessage(m_arg)) {
+    // check if the app is already running, if it is, send the message to the running instance
+    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered("com.canonical.TelephonyApp");
+    if (reply.isValid() && reply.value()) {
+        QDBusInterface appInterface("com.canonical.TelephonyApp",
+                                    "/com/canonical/TelephonyApp",
+                                    "com.canonical.TelephonyApp");
+        appInterface.call("SendAppMessage", m_arg);
         return false;
     }
 
@@ -72,8 +80,6 @@ bool TelephonyApplication::setup()
     QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
     m_view->setSource(source);
     m_view->show();
-
-    setActivationWindow(m_view);
 
     QObject::connect(m_dbus, SIGNAL(request(QString)), this, SLOT(onMessageReceived(QString)));
     QObject::connect(this, SIGNAL(messageReceived(QString)), this, SLOT(onMessageReceived(QString)));
@@ -169,6 +175,7 @@ void TelephonyApplication::onMessageReceived(const QString &message)
     if (m_applicationIsReady) {
         parseArgument(message);
         m_arg.clear();
+        m_view->activateWindow();
     } else {
         m_arg = message;
     }

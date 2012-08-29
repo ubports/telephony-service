@@ -31,6 +31,11 @@
             ]]></dox:d>
             <arg name="number" type="s" direction="in"/>
         </method>
-
+        <method name="SendAppMessage">
+            <dox:d><![CDATA[
+                Send a message to the running application.
+            ]]></dox:d>
+            <arg name="message" type="s" direction="in"/>
+        </method>
     </interface>
 </node>
