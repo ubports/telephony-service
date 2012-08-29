@@ -82,7 +82,6 @@ bool TelephonyApplication::setup()
     m_view->show();
 
     QObject::connect(m_dbus, SIGNAL(request(QString)), this, SLOT(onMessageReceived(QString)));
-    QObject::connect(this, SIGNAL(messageReceived(QString)), this, SLOT(onMessageReceived(QString)));
     return true;
 }
 
