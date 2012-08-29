@@ -23,6 +23,8 @@ telephony-app (0.57) UNRELEASED; urgency=low
   * Add the message id to all messages and check for duplicates that might arrive
     from both telepathy and logger. (LP: #1031905)
   * Add unit tests to check ContactModel functionality.
+  * Check if another instance of the telephony-app is running using DBus instead
+    of using qtsingleapplication.
 
   [ Renato Araujo Oliveira Filho ]
   * Created new dbus method "CallNumber(s)"
