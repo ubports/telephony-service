@@ -45,12 +45,12 @@ bool TelephonyApplication::setup()
     QStringList arguments = this->arguments();
     if (arguments.size() > 2) {
         printUsage(arguments);
-        return 1;
+        return false;
     } else if (arguments.size() == 2) {
         QUrl uri(arguments.at(1));
         if (!validSchemes.contains(uri.scheme())) {
             printUsage(arguments);
-            return 1;
+            return false;
         } else {
             m_arg = arguments.at(1);
         }
