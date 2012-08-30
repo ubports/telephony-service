@@ -16,7 +16,6 @@ Item {
     property variant contact: null
     property string phoneNumber 
     property string contactId
-    property bool __unknownContact: false
 
     Component.onCompleted: __checkContact()
 
@@ -25,12 +24,9 @@ Item {
             contact = contactModel.contactFromId(contactId);
             return;
         }
-        // try to fill the contactId and avoid future queries.
-        // in some cases only phoneNumber is set, but this contact
-        // has a contactId, so in order to avoid calling contactFromPhoneNumber()
-        // many times, we cache the contactId and wait for this contact to
-        // appear in the model.
-        if (phoneNumber && (!contactId || contactId == "") && !__unknownContact) {
+        // try to fill the contactId. In some cases only phoneNumber 
+        // is set, but this contact has a contactId already.
+        if (phoneNumber && (!contactId || contactId == "")) {
             contact = contactModel.contactFromPhoneNumber(phoneNumber);
             if (contact) {
                 contactId = contact.id
@@ -39,21 +35,19 @@ Item {
             if(contactId && contactId != "") {
                 return;
             } else {
-                __unknownContact = true;
                 contact = null;
                 return;
             }
         }
-        // if this contact does not exist on database, 
-        // dont waste time asking the backend about it.
-        if (phoneNumber && !__unknownContact) {
+
+        if (phoneNumber) {
             contact = contactModel.contactFromPhoneNumber(phoneNumber);
         }
     }
 
     function __checkContactAdded(newContact) {
         // check if we hold an instance of a contact already
-        if (contact || __unknownContact) {
+        if (contact) {
             return;
         }
         
@@ -85,12 +79,10 @@ Item {
 
     onPhoneNumberChanged: {
         contactId = ""; 
-        __unknownContact = false; 
         __checkContact();
     }
 
     onContactIdChanged: {
-        __unknownContact = false; 
         __checkContact();
     }
 }
