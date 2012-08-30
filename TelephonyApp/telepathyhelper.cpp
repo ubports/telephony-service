@@ -105,6 +105,14 @@ void TelepathyHelper::registerClients()
     initializeTelepathyClients();
 }
 
+QStringList TelepathyHelper::supportedProtocols() const
+{
+    QStringList protocols;
+    protocols << "ufa"
+              << "tel";
+    return protocols;
+}
+
 void TelepathyHelper::initializeAccount()
 {
     // watch for account state and connection changes
@@ -151,22 +159,27 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     registerClients();
 
-    // FIXME: instead of looking up for a ufa account, check for accounts that support phone
-    // numbers, as this is more generic.
-    Tp::AccountSetPtr accountSet = mAccountManager->accountsByProtocol("ufa");
+    Tp::AccountSetPtr accountSet;
+    // try to find an account of the one of supported protocols
+    Q_FOREACH(const QString &protocol, supportedProtocols()) {
+        accountSet = mAccountManager->accountsByProtocol(protocol);
+        if (accountSet->accounts().count() > 0) {
+            break;
+        }
+    }
 
-    // if we have no ufa account, create one
-    if (!accountSet->accounts().count()) {
+    if (accountSet->accounts().count() == 0) {
         qCritical() << "No compatible telepathy account found!";
         return;
     }
 
-    // in case we have two accounts, the first one to show on the list is going to be used
+    mAccount = accountSet->accounts()[0];
+
+    // in case we have more than one account, the first one to show on the list is going to be used
     if (accountSet->accounts().count() > 1) {
-        qWarning() << "There are more than just one account of type ufa/ufa";
+        qWarning() << "There are more than just one account of type" << mAccount->protocolName();
     }
 
-    mAccount = accountSet->accounts()[0];
     initializeAccount();
 }
 

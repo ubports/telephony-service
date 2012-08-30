@@ -54,6 +54,7 @@ public Q_SLOTS:
     void registerClients(void);
 
 protected:
+    QStringList supportedProtocols() const;
     void initializeAccount();
     void ensureAccountEnabled();
     void ensureAccountConnected();
