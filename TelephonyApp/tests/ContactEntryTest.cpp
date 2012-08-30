@@ -26,7 +26,6 @@
 #include <QContactOnlineAccount>
 #include <QContactPhoneNumber>
 #include "contactaddress.h"
-#include "contactcustomid.h"
 #include "contactemailaddress.h"
 #include "contactentry.h"
 #include "contactmodel.h"
@@ -45,7 +44,6 @@ private Q_SLOTS:
     void testConstructor();
     void testLocalId();
     void testId();
-    void testCustomId();
     void testDisplayLabel();
     void testInitial_data();
     void testInitial();
@@ -92,17 +90,6 @@ void ContactEntryTest::testId()
     QVERIFY(contact.saveDetail(&guidDetail));
     ContactEntry entry(contact);
     QCOMPARE(entry.id(), guidDetail.guid());
-}
-
-void ContactEntryTest::testCustomId()
-{
-    QContact contact;
-    ContactCustomId customIdDetail;
-    QString customId("testcustomid");
-    customIdDetail.setCustomId(QString("anotherid:%1").arg(customId));
-    QVERIFY(contact.saveDetail(&customIdDetail));
-    ContactEntry entry(contact);
-    QCOMPARE(entry.customId(), customId);
 }
 
 void ContactEntryTest::testDisplayLabel()

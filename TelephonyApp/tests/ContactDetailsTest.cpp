@@ -17,7 +17,6 @@
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
 #include "contactaddress.h"
-#include "contactcustomid.cpp"
 #include "contactemailaddress.cpp"
 #include "contactname.cpp"
 #include "contactonlineaccount.cpp"
@@ -37,7 +36,6 @@ private:
 private Q_SLOTS:
     void initTestCase();
     void testContactAddress();
-    void testContactCustomId();
     void testContactEmailAddress();
     void testContactName();
     void testContactOnlineAccount();
@@ -130,14 +128,6 @@ void ContactDetailsTest::testContactAddress()
     QCOMPARE(address2.region(), newTestValue());
     QCOMPARE(address2.street(), newTestValue());
     QCOMPARE(address2.subTypes(), QVariant(newTestValue()));
-}
-
-void ContactDetailsTest::testContactCustomId()
-{
-    ContactCustomId customId;
-
-    customId.setCustomId(newTestValue());
-    QCOMPARE(customId.customId(), currentTestValue());
 }
 
 void ContactDetailsTest::testContactEmailAddress()

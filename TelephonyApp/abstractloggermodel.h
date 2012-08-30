@@ -39,7 +39,6 @@ public:
 
     // for simplicity keep the members as public
     QString contactId;
-    QString customId;
     QString contactAlias;
     QUrl avatar;
     QString phoneNumber;
@@ -54,7 +53,6 @@ class AbstractLoggerModel : public QAbstractListModel
 public:
     enum LogRoles {
         ContactId = Qt::UserRole,
-        CustomId,
         ContactAlias,
         Avatar,
         PhoneNumber,
@@ -75,7 +73,6 @@ Q_SIGNALS:
 protected:
     QString phoneNumberFromId(const QString &id) const;
     QString threadIdFromIdentifier(const QString &id) const;
-    QString customIdentifierFromId(const QString &id) const;
     void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny, EntityTypeList entityTypes = EntityTypeList());
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
     void requestEventsForDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
@@ -100,10 +97,10 @@ protected Q_SLOTS:
     void onPendingDatesFinished(Tpl::PendingOperation *op);
     void onPendingEventsFinished(Tpl::PendingOperation *op);
 
-    // QContactManager related slots
+    // ContactModel related slots
     void onContactAdded(ContactEntry *contact);
     void onContactChanged(ContactEntry *contact);
-    void onContactRemoved(const QString &customId);
+    void onContactRemoved(const QString &contactId);
 
 protected:
     void parseEntityId(const Tpl::EntityPtr &entity, LogEntry *entry);

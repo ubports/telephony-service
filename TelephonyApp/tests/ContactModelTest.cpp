@@ -24,7 +24,6 @@
 #include <QContactPhoneNumber>
 #include "contactmodel.h"
 #include "contactentry.h"
-#include "contactcustomid.h"
 
 using namespace QtMobility;
 
@@ -42,9 +41,7 @@ private Q_SLOTS:
     void testRowCount();
     void testData();
     void testContactFromId();
-    void testContactFromCustomId();
     void testContactFromPhoneNumber();
-    void testCustomIdFromPhoneNumber();
     void testComparePhoneNumbers_data();
     void testComparePhoneNumbers();
     void testRemoveContact();
@@ -63,15 +60,6 @@ void ContactModelTest::initTestCase()
 {
     contactModel = ContactModel::instance("memory");
     contactManager = contactModel->contactManager();
-
-    // register the ContactCustomId detail definition
-    QContactDetailDefinition definition;
-    definition.setName("CustomId");
-
-    QContactDetailFieldDefinition fieldDefinition;
-    fieldDefinition.setDataType(QVariant::String);
-    definition.insertField(ContactCustomId::FieldCustomId, fieldDefinition);
-    QVERIFY(contactManager->saveDetailDefinition(definition));
 
     qRegisterMetaType<ContactEntry>();
     qRegisterMetaType<ContactEntry*>();
@@ -148,53 +136,17 @@ void ContactModelTest::testContactFromId()
     QCOMPARE(entry->contact(), contact);
 }
 
-void ContactModelTest::testContactFromCustomId()
-{
-    QContact contact;
-    ContactCustomId customIdDetail;
-    QString customId("testcontactfromcustomid");
-    customIdDetail.setCustomId(QString("anotherid:%1").arg(customId));
-    QVERIFY(contact.saveDetail(&customIdDetail));
-    QVERIFY(contactManager->saveContact(&contact));
-    ContactEntry *entry = contactModel->contactFromCustomId(customId);
-    QVERIFY(entry);
-    QCOMPARE(entry->customId(), customId);
-    QCOMPARE(entry->contact(), contact);
-}
-
 void ContactModelTest::testContactFromPhoneNumber()
 {
     QContact contact;
-    ContactCustomId customIdDetail;
     QContactPhoneNumber phoneNumberDetail;
-    QString customId("testcontactfromphonenumber");
-    customIdDetail.setCustomId(QString("anotherid:%1").arg(customId));
-    QVERIFY(contact.saveDetail(&customIdDetail));
     phoneNumberDetail.setNumber("12345678");
     QVERIFY(contact.saveDetail(&phoneNumberDetail));
     QVERIFY(contactManager->saveContact(&contact));
     ContactEntry *entry = contactModel->contactFromPhoneNumber(phoneNumberDetail.number());
     QVERIFY(entry);
     QCOMPARE(entry->contact().detail<QContactPhoneNumber>().number(), phoneNumberDetail.number());
-    QCOMPARE(entry->customId(), customId);
     QCOMPARE(entry->contact(), contact);
-
-    // remove the contact not to mess with other tests using phone numbers
-    QVERIFY(contactManager->removeContact(contact.localId()));
-}
-
-void ContactModelTest::testCustomIdFromPhoneNumber()
-{
-    QContact contact;
-    ContactCustomId customIdDetail;
-    QContactPhoneNumber phoneNumberDetail;
-    QString customId("testcustomidfromphonenumber");
-    customIdDetail.setCustomId(QString("anotherid:%1").arg(customId));
-    QVERIFY(contact.saveDetail(&customIdDetail));
-    phoneNumberDetail.setNumber("12345678");
-    QVERIFY(contact.saveDetail(&phoneNumberDetail));
-    QVERIFY(contactManager->saveContact(&contact));
-    QCOMPARE(contactModel->customIdFromPhoneNumber(phoneNumberDetail.number()), customId);
 
     // remove the contact not to mess with other tests using phone numbers
     QVERIFY(contactManager->removeContact(contact.localId()));
@@ -236,13 +188,13 @@ void ContactModelTest::testRemoveContact()
     QSignalSpy signalSpy(contactModel, SIGNAL(contactRemoved(QString)));
 
     QContact contact;
-    ContactCustomId customIdDetail;
-    QString customId("testremovecontact");
-    customIdDetail.setCustomId(QString("anotherid:%1").arg(customId));
-    QVERIFY(contact.saveDetail(&customIdDetail));
+    QContactGuid guidDetail;
+    QString id("testremovecontact");
+    guidDetail.setGuid(id);
+    QVERIFY(contact.saveDetail(&guidDetail));
     QVERIFY(contactManager->saveContact(&contact));
 
-    ContactEntry *entry = contactModel->contactFromCustomId(customId);
+    ContactEntry *entry = contactModel->contactFromId(id);
     QVERIFY(entry);
 
     contactModel->removeContact(entry);
@@ -258,7 +210,7 @@ void ContactModelTest::testRemoveContact()
     }
 
     QCOMPARE(signalSpy.count(), 1);
-    QCOMPARE(signalSpy[0][0].toString(), customId);
+    QCOMPARE(signalSpy[0][0].toString(), id);
 }
 
 void ContactModelTest::testContactAddedSignal()
@@ -298,10 +250,10 @@ void ContactModelTest::testContactRemovedSignal()
 
     QString id("contact1");
     QContact contact;
-    ContactCustomId customId;
+    QContactGuid guid;
     // the custom id details holds all the backend IDs, but we are just using the last one
-    customId.setCustomId("anotherid:" + id);
-    contact.saveDetail(&customId);
+    guid.setGuid(id);
+    contact.saveDetail(&guid);
     QVERIFY(contactManager->saveContact(&contact));
     QVERIFY(contactManager->removeContact(contact.localId()));
 
@@ -342,15 +294,11 @@ void ContactModelTest::testContactSavedSignal()
 {
     QSignalSpy signalSpy(contactModel, SIGNAL(contactSaved(QString,QString)));
     QString guid("contactsavedguid");
-    QString customId("contactsavedcustomid");
 
     QContact contact;
     QContactGuid guidDetail;
     guidDetail.setGuid(guid);
-    ContactCustomId customIdDetail;
-    customIdDetail.setCustomId("anotherid:" + customId);
     QVERIFY(contact.saveDetail(&guidDetail));
-    QVERIFY(contact.saveDetail(&customIdDetail));
 
     ContactEntry entry(contact);
     entry.setModified(true);
@@ -369,9 +317,7 @@ void ContactModelTest::testContactSavedSignal()
 
     QCOMPARE(signalSpy.count(), 1);
     QString savedGuid = signalSpy.at(0).at(0).toString();
-    QString savedCustomId = signalSpy.at(0).at(1).toString();
     QCOMPARE(savedGuid, guid);
-    QCOMPARE(savedCustomId, customId);
 }
 
 QTEST_MAIN(ContactModelTest)
