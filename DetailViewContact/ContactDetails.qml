@@ -44,7 +44,7 @@ FocusScope {
             // because for added contacts, we need the newly created ContactEntry instead of the one
             // we were using before.
             contactWatcher.contact = null;
-            contactWatcher.customId = customId;
+            contactWatcher.contactId = contactId;
         }
 
         onContactRemoved: {
@@ -157,7 +157,7 @@ FocusScope {
                             onActionClicked: {
                                 switch(modelData.type) {
                                 case ContactDetail.PhoneNumber:
-                                    telephony.startChat(contact.customId, modelData.number, "");
+                                    telephony.startChat(contact.id, modelData.number, "");
                                     break;
                                 case ContactDetail.EmailAddress:
                                     Qt.openUrlExternally("mailto:" + modelData.emailAddress);

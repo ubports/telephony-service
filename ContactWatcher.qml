@@ -4,9 +4,9 @@ import TelephonyApp 0.1
 
 /*
  * ContactWatcher in an element used to track changes to a specific
- * contact, based on its customId or phone number.
+ * contact, based on its contactId or phone number.
  * Pieces of code interested in a specific contact should create
- * an instance of ContactWatcher and set either "phoneNumber" or "customId".
+ * an instance of ContactWatcher and set either "phoneNumber" or "contactId".
  * If the contact is not available yet, this element will track the
  * contacts model events and populate the local "contact" property
  * when it becomes available.
@@ -15,24 +15,28 @@ import TelephonyApp 0.1
 Item {
     property variant contact: null
     property string phoneNumber 
-    property string customId
+    property string contactId
     property bool __unknownContact: false
 
     Component.onCompleted: __checkContact()
 
     function __checkContact() {
-        if (customId && customId != "") {
-            contact = contactModel.contactFromCustomId(customId);
+        if (contactId && contactId != "") {
+            contact = contactModel.contactFromId(contactId);
             return;
         }
-        // try to fill the customId and avoid future queries.
+        // try to fill the contactId and avoid future queries.
         // in some cases only phoneNumber is set, but this contact
-        // has a customId, so in order to avoid calling contactFromPhoneNumber()
-        // many times, we cache the customId and wait for this contact to
+        // has a contactId, so in order to avoid calling contactFromPhoneNumber()
+        // many times, we cache the contactId and wait for this contact to
         // appear in the model.
-        if (phoneNumber && (!customId || customId == "") && !__unknownContact) {
-            customId = contactModel.customIdFromPhoneNumber(phoneNumber);
-            if(customId && customId != "") {
+        if (phoneNumber && (!contactId || contactId == "") && !__unknownContact) {
+            contact = contactModel.contactFromPhoneNumber(phoneNumber);
+            if (contact) {
+                contactId = contact.id
+            }
+
+            if(contactId && contactId != "") {
                 return;
             } else {
                 __unknownContact = true;
@@ -53,21 +57,21 @@ Item {
             return;
         }
         
-        if (customId && customId != "" && newContact.customId == customId) {
+        if (contactId && contactId != "" && newContact.id == contactId) {
             contact = newContact;
             return;
         }
         __checkContact()
     }
  
-    function __checkContactRemoved(removedCustomId) {
+    function __checkContactRemoved(removedContactId) {
         // check if we hold an instance of a contact already
         if (!contact) {
             return;
         }
 
         // check if we got removed
-        if (customId == removedCustomId) {
+        if (contactId == removedContactId) {
             contact = null
             return;
         }
@@ -76,16 +80,16 @@ Item {
     Connections {
         target: contactModel
         onContactAdded: __checkContactAdded(contact)
-        onContactRemoved: __checkContactRemoved(customId)
+        onContactRemoved: __checkContactRemoved(contactId)
     }
 
     onPhoneNumberChanged: {
-        customId = ""; 
+        contactId = ""; 
         __unknownContact = false; 
         __checkContact();
     }
 
-    onCustomIdChanged: {
+    onContactIdChanged: {
         __unknownContact = false; 
         __checkContact();
     }

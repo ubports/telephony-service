@@ -58,10 +58,12 @@ Item {
         callManager.speaker = true;
     }
 
-    function startChat(customId, number, threadId) {
+    function startChat(contactId, number, threadId) {
         messages.load()
         view.number = number
-        view.customId = customId
+        if (contactId) {
+            view.contactId = contactId
+        }
         view.threadId = threadId
         view.newMessage = false
     }

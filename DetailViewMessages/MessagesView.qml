@@ -9,7 +9,7 @@ FocusScope {
     property string viewName: "messages"
     property alias contact: contactWatcher.contact
     property alias number: contactWatcher.phoneNumber
-    property alias customId: contactWatcher.customId
+    property alias contactId: contactWatcher.contactId
     property bool newMessage: false
     property string threadId
 
