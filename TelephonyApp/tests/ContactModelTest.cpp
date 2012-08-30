@@ -292,7 +292,7 @@ void ContactModelTest::testContactLoadedSignal()
 
 void ContactModelTest::testContactSavedSignal()
 {
-    QSignalSpy signalSpy(contactModel, SIGNAL(contactSaved(QString,QString)));
+    QSignalSpy signalSpy(contactModel, SIGNAL(contactSaved(QString)));
     QString guid("contactsavedguid");
 
     QContact contact;
