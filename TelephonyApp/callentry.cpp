@@ -28,7 +28,11 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/Connection>
 
-#define TP_UFA_DBUS_MUTE_FACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
+#define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
+#define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
+#define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
+#define PROPERTY_HARDWARESTREAMING "HardwareStreaming"
+#define PROPERTY_SPEAKERMODE "SpeakerMode"
 
 CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     QObject(parent),
@@ -36,8 +40,11 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mVoicemail(false),
     mLocalMuteState(false),
     mElapsedTime(QTime::currentTime()),
-    mMuteInterface(channel->busName(), channel->objectPath(), TP_UFA_DBUS_MUTE_FACE),
-    mChannelReady(false)
+    mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE),
+    mSpeakerInterface(channel->busName(), channel->objectPath(), TELEPATHY_CALL_IFACE),
+    mChannelReady(false),
+    mIsUfa(false),
+    mSpeakerMode(false)
 {
     connect(mChannel->becomeReady(Tp::Features()
                                   << Tp::CallChannel::FeatureCore
@@ -60,11 +67,40 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     connect(&mMuteInterface,
             SIGNAL(MuteStateChanged(uint)),
             SLOT(onMutedChanged(uint)));
+
+    refreshProperties();
+
+    mIsUfa = isHardwareStreaming();
+    if (mIsUfa) {
+        connect(&mSpeakerInterface, SIGNAL(SpeakerChanged(bool)), SLOT(onSpeakerChanged(bool)));
+    }
+}
+
+void CallEntry::onSpeakerChanged(bool active)
+{
+    mSpeakerMode = active;
+    emit speakerChanged();
 }
 
 void CallEntry::timerEvent(QTimerEvent *event)
 {
     Q_EMIT elapsedTimeChanged();
+}
+
+void CallEntry::refreshProperties()
+{
+     QDBusInterface callChannelIface(mChannel->busName(), mChannel->objectPath(), DBUS_PROPERTIES_IFACE);
+     QDBusMessage reply = callChannelIface.call("GetAll", TELEPATHY_CALL_IFACE);
+     QVariantList args = reply.arguments();
+     QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
+     mProperties.clear();
+     QMapIterator<QString, QVariant> i(map);
+     while(i.hasNext()) {
+         i.next();
+         mProperties[i.key()] = i.value();
+     }
+
+     onSpeakerChanged(mProperties[PROPERTY_SPEAKERMODE].toBool());
 }
 
 bool CallEntry::dialing() const
@@ -236,5 +272,24 @@ int CallEntry::elapsedTime() const
 bool CallEntry::isActive() const
 {
     return (mChannel->callState() == Tp::CallStateActive);
+}
+
+bool CallEntry::isHardwareStreaming()
+{
+    return mProperties[PROPERTY_HARDWARESTREAMING].toBool();
+}
+
+bool CallEntry::isSpeakerOn()
+{
+    if (mIsUfa) {
+        return mSpeakerMode;
+    }
+}
+
+void CallEntry::setSpeaker(bool speaker)
+{
+    if (mIsUfa) {
+        mSpeakerInterface.call("turnOnSpeaker", speaker);
+    }
 }
 

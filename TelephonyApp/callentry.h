@@ -64,6 +64,10 @@ class CallEntry : public QObject
     Q_PROPERTY(bool dialing
                READ dialing
                NOTIFY dialingChanged)
+    Q_PROPERTY(bool speaker
+               READ isSpeakerOn
+               WRITE setSpeaker
+               NOTIFY speakerChanged)
 
 public:
     explicit CallEntry(const Tp::CallChannelPtr &channel, QObject *parent = 0);
@@ -81,6 +85,9 @@ public:
     int elapsedTime() const;
     bool isActive() const;
 
+    bool isSpeakerOn();
+    Q_INVOKABLE void setSpeaker(bool speaker);
+
     bool dialing() const;
     QString phoneNumber() const;
     QString contactAlias() const;
@@ -95,6 +102,7 @@ protected Q_SLOTS:
     void onCallFlagsChanged(Tp::CallFlags flags);
     void onCallHangupFinished(Tp::PendingOperation *op);
     void onMutedChanged(uint state);
+    void onSpeakerChanged(bool active);
 
 Q_SIGNALS:
     void callEnded();
@@ -108,15 +116,23 @@ Q_SIGNALS:
     void contactAliasChanged();
     void contactAvatarChanged();
     void elapsedTimeChanged();
+    void speakerChanged();
     
 private:
+    void refreshProperties();
+    bool isHardwareStreaming();
+
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
+    QDBusInterface mSpeakerInterface;
+    QMap<QString, QVariant> mProperties;
     QContact mContact;
     bool mVoicemail;
     bool mLocalMuteState;
     QTime mElapsedTime;
     bool mChannelReady;
+    bool mIsUfa;
+    bool mSpeakerMode;
 };
 
 #endif // CALLENTRY_H

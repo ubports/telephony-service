@@ -37,10 +37,8 @@ typedef QMap<QString, QVariant> dbusQMap;
 Q_DECLARE_METATYPE(dbusQMap)
 
 CallManager::CallManager(QObject *parent)
-: QObject(parent),
-  mAndroidInterface(ANDROID_DBUS_ADDRESS, ANDROID_TELEPHONY_DBUS_PATH, ANDROID_TELEPHONY_DBUS_IFACE)
+: QObject(parent)
 {
-    connect(&mAndroidInterface, SIGNAL(SpeakerSetChanged()), SIGNAL(speakerChanged()));
     refreshProperties();
 }
 
@@ -58,22 +56,6 @@ void CallManager::startCall(const QString &phoneNumber)
     connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
-}
-
-bool CallManager::isSpeakerOn() const
-{
-    QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
-                             ANDROID_TELEPHONY_DBUS_PATH, 
-                             ANDROID_TELEPHONY_DBUS_IFACE);
-    return androidIf.call("isSpeakerOn").arguments()[0].toBool();
-}
-
-void CallManager::setSpeaker(bool speaker)
-{
-    QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
-                             ANDROID_TELEPHONY_DBUS_PATH, 
-                             ANDROID_TELEPHONY_DBUS_IFACE);
-    androidIf.call("turnOnSpeaker", speaker, false);
 }
 
 QObject *CallManager::foregroundCall() const
@@ -126,6 +108,11 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
     if (entry->phoneNumber() == getVoicemailNumber()) {
         entry->setVoicemail(true);
     }
+
+    if (channel->isRequested()) {
+        entry->setSpeaker(true);
+    }
+
     mCallEntries.append(entry);
     connect(entry,
             SIGNAL(callEnded()),

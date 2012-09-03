@@ -28,9 +28,8 @@
 #include <TelepathyQt/TextChannel>
 
 #define TELEPHONY_APP_CLIENT TP_QT_IFACE_CLIENT + ".TelephonyApp"
-#define ANDROID_DBUS_ADDRESS "com.canonical.Android"
-#define ANDROID_TELEPHONY_DBUS_PATH "/com/canonical/android/telephony/Telephony"
-#define ANDROID_TELEPHONY_DBUS_IFACE "com.canonical.android.telephony.Telephony"
+#define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
+
 
 TelephonyAppApprover::TelephonyAppApprover()
 : Tp::AbstractClientApprover(channelFilters()),
@@ -141,12 +140,10 @@ void action_accept(NotifyNotification* notification,
     EventData* eventData = (EventData*) data;
     TelephonyAppApprover* approver = (TelephonyAppApprover*) eventData->self;
     if (NULL != approver) {
+        QDBusInterface channelIf(eventData->channel->busName(), eventData->channel->objectPath(), TELEPATHY_CALL_IFACE);
+        channelIf.call("turnOnSpeaker", true);
         approver->onApproved((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp,
                              (Tp::PendingReady *) eventData->pr);
-        QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
-                                 ANDROID_TELEPHONY_DBUS_PATH,
-                                 ANDROID_TELEPHONY_DBUS_IFACE);
-        androidIf.call("turnOnSpeaker", true, false);
     }
 }
 
