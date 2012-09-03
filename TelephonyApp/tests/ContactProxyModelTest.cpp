@@ -49,7 +49,7 @@ private:
 
 void ContactProxyModelTest::initTestCase()
 {
-    contacts << "Sue" << "Jan" << "Johnny" << "John" << QString::fromUtf8("Álvaro") << "andrew" << "Abel";
+    contacts << "Sue" << "Jan" << "Johnny" << "John" << "Alvaro" << "andrew" << "Abel";
     contactModel = ContactModel::instance("memory");
     contactManager = contactModel->contactManager();
 
@@ -122,7 +122,7 @@ void ContactProxyModelTest::testDataSorted()
     QCOMPARE(label, QString("Abel"));
 
     label = contactProxyModel->data(contactProxyModel->index(1,0), Qt::DisplayRole).toString();
-    QCOMPARE(label, QString::fromUtf8("Álvaro"));
+    QCOMPARE(label, QString::fromUtf8("Alvaro"));
 
     label = contactProxyModel->data(contactProxyModel->index(2,0), Qt::DisplayRole).toString();
     QCOMPARE(label, QString("andrew"));
