@@ -26,5 +26,5 @@ generate_tests(
     ContactEntryTest
     ContactProxyModelTest
     ContactDetailsTest
-    ModelSectionCounterTest
+#    ModelSectionCounterTest --> disabled due to bug #1046821
     )
