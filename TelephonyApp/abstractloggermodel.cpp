@@ -98,30 +98,6 @@ QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
     return mLogEntries[index.row()]->data(role);
 }
 
-QString AbstractLoggerModel::phoneNumberFromId(const QString &id) const
-{
-    QStringList splittedId = id.split(":");
-    if (splittedId.count() == 2) {
-        return splittedId[1];
-    } else {
-        qWarning() << "The ID from logger is not using the format contactId:phoneNumber" << id;
-    }
-
-    return id;
-}
-
-QString AbstractLoggerModel::threadIdFromIdentifier(const QString &id) const
-{
-    QStringList splittedId = id.split(":");
-    if (splittedId.count() == 2) {
-        return splittedId[1];
-    } else {
-        qWarning() << "The ID from logger is not using the format contactId:threadId" << id;
-    }
-
-    return id;
-}
-
 void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entityTypes)
 {
     Tpl::PendingEntities *pendingEntities = mLogManager->queryEntities(TelepathyHelper::instance()->account());
@@ -222,7 +198,7 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         entry->timestamp = event->timestamp();
 
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
-        parseEntityId(remoteEntity, entry);
+        entry->phoneNumber = remoteEntity->identifier();
 
         if (!checkNonStandardNumbers(entry)) {
             // set the alias from the entity as a fallback value in case the contact is not found.
@@ -230,7 +206,6 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
 
             ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(entry->phoneNumber);
             if (contact) {
-                // if more than one contact matches, use the first one
                 fillContactInfo(entry, contact);
             }
         }
@@ -399,13 +374,3 @@ void AbstractLoggerModel::onContactRemoved(const QString &contactId)
         }
     }
 }
-
-void AbstractLoggerModel::parseEntityId(const Tpl::EntityPtr &entity, LogEntry *entry)
-{
-    if (entity->entityType() == Tpl::EntityTypeRoom) {
-        entry->phoneNumber = entity->alias();
-    } else {
-        entry->phoneNumber = phoneNumberFromId(entity->identifier());
-    }
-}
-

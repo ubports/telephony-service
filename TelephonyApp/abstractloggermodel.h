@@ -71,8 +71,6 @@ Q_SIGNALS:
     void resetView();
     
 protected:
-    QString phoneNumberFromId(const QString &id) const;
-    QString threadIdFromIdentifier(const QString &id) const;
     void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny, EntityTypeList entityTypes = EntityTypeList());
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
     void requestEventsForDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
@@ -103,8 +101,6 @@ protected Q_SLOTS:
     void onContactRemoved(const QString &contactId);
 
 protected:
-    void parseEntityId(const Tpl::EntityPtr &entity, LogEntry *entry);
-
     Tpl::LogManagerPtr mLogManager;
     QList<LogEntry*> mLogEntries;
     Tpl::EventTypeMask mType;

@@ -26,7 +26,6 @@ class MessageLogEntry : public LogEntry {
 public:
     QVariant data(int role) const;
     QString message;
-    QString threadId;
     QString messageId;
     bool isLatest;
 };
@@ -38,7 +37,6 @@ public:
     enum MessageLogRoles {
         Message = AbstractLoggerModel::LastLogRole,
         Date,
-        ThreadId,
         MessageId,
         IsLatest,
         LastMessageRole
