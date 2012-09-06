@@ -16,6 +16,7 @@
 
 import QtQuick 1.1
 import TelephonyApp 0.1
+import Ubuntu.Components 0.1
 
 /*!
     \qmlclass Button
