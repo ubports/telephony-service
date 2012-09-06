@@ -23,8 +23,8 @@ QtObject {
 
     function load() {
         // select the correct tab for the view
-        if (telephony.currentTab != tab) {
-            telephony.currentTab = tab;
+        if (telephony.selectedTabIndex != tab) {
+            telephony.selectedTabIndex = tab;
         }
 
         // To keep this simple we rely on the fact that setting source to a

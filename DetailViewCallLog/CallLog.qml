@@ -29,43 +29,34 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: 7
         anchors.left: parent.left
-        anchors.leftMargin: 10
         anchors.right: parent.right
-        anchors.rightMargin: 10
 
-        model: [
-            {
-                "text": "All"
-            },
-            {
-                "text": "Missed"
-            }
-        ]
-        buttonsExpanded: false
-        onCurrentTabChanged: proxyModel.onlyMissedCalls = (model[currentTab]["text"] == "Missed")
-    }
+        separator: Rectangle {
+            height: 1
+            color: "white"
+            opacity: 0.65
+        }
 
-    Rectangle {
-        id: separator
+        Page {
+            title: "All"
+        }
 
-        anchors.top: buttonGroup.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 1
-        color: "white"
-        opacity: 0.65
+        Page {
+            id: missedCallsTab
+            title: "Missed"
+        }
     }
 
     CallLogProxyModel {
         id: proxyModel
         logModel: callLogModel
-        onlyMissedCalls: false
+        onlyMissedCalls: missedCallsTab.selected
     }
 
     Item {
         id: logBackground
 
-        anchors.top: separator.bottom
+        anchors.top: buttonGroup.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
