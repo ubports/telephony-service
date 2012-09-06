@@ -16,86 +16,52 @@
 
 import QtQuick 1.1
 
-AbstractButton {
+/*!
+    \qmlclass tabButton
+    \inqmlmodule Ubuntu.Components 0.1
+    \brief Button used in Tab bars.
+*/
+ButtonWithForeground {
     id: tabButton
 
-    property int count
-    property alias iconSource: icon.source
-    property alias text: label.text
-    property alias textSize: label.fontSize
-    property alias textColor: label.color
-    property bool selected
-    property bool isFirst
-    property bool isLast
-    property int contentWidth: text != "" ? invisibleLabel.paintedWidth : icon.paintedWidth
-    property int horizontalPadding
-    property int overlayCounter: 0
+    /*!
+      \preliminary
+      True if the tab is selected.
+      This value is automatically updated by the Tabs object.
+     */
+    property bool selected: false;
 
-    anchors.top: parent.top
-    anchors.bottom: parent.bottom
+    height: parent ? parent.height : 50
+    textColor: "#757373"
+
+    /*!
+       \internal
+       These properties keep track on whether the tab button is the first or the
+       last in the current row or tabs. This changes their appearance (rounded
+       borders vs. straight corners for tabButtons that are not first or last).
+     */
+    property bool __isFirst: false
+    /*!
+      \internal
+     */
+    property bool __isLast: false
+
 
     BorderImage {
         id: background
+        z: -1
+
+        property Item allTabs: tabButton.parent
 
         anchors.fill: parent
         source: {
-            if (isFirst) {
-                return selected ? "artwork/TabLeftSelected.png" : "artwork/TabLeftUnselected.png"
-            } else if (isLast) {
-                return selected ? "artwork/TabRightSelected.png" : "artwork/TabRightUnselected.png"
+            if (tabButton.__isFirst) {
+                return tabButton.selected ? "artwork/TabLeftSelected.sci" : "artwork/TabLeftUnselected.sci"
+            } else if (tabButton.__isLast) {
+                return tabButton.selected ? "artwork/TabRightSelected.sci" : "artwork/TabRightUnselected.sci"
             } else {
-                return selected ? "artwork/TabMiddleSelected.png" : "artwork/TabMiddleUnselected.png"
+                return tabButton.selected ? "artwork/TabMiddleSelected.sci" : "artwork/TabMiddleUnselected.sci"
             }
         }
-
-        border { left: isFirst ? 9 : 1; top: isFirst || isLast ? 9 : 2; right: isLast ? 10 : 2; bottom: 0 } // FIXME: take into account isFirst, isLast
-        horizontalTileMode: BorderImage.Stretch
-        verticalTileMode: BorderImage.Stretch
-    }
-
-    Image {
-        id: icon
-
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.topMargin: 6
-        anchors.bottomMargin: 4
-
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: isFirst ? 2 : 0
-        fillMode: Image.PreserveAspectFit
-        source: selected ? modelData.iconSelected : modelData.iconUnselected
-    }
-
-    TextCustom {
-        id: label
-
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.margins: tabButton.horizontalPadding
-        horizontalAlignment: Text.AlignHCenter
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -1
-        fontSize: "large"
-        text: modelData.text ? modelData.text : ""
-        elide: Text.ElideRight
-    }
-
-    /* Invisible label that is used for width computations */
-    TextCustom {
-        id: invisibleLabel
-
-        visible: false
-        text: label.text
-        fontSize: label.fontSize
-    }
-
-    TabCountOverlay {
-        id: overlay
-        selected: parent.selected
-        count: tabButton.overlayCounter
-        anchors.top: parent.top
-        anchors.topMargin: 2
-        anchors.horizontalCenter: icon.left
     }
 }
