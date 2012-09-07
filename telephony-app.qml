@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import "Widgets"
+import Ubuntu.Components 0.1
 
 Item {
     id: telephony
