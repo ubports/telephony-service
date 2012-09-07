@@ -5,6 +5,8 @@ import "../Widgets"
 Item {
     id: messageList
 
+    anchors.fill: parent
+
     SearchEntry {
         id: search
 
