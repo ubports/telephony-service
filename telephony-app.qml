@@ -9,7 +9,7 @@ Item {
 
     property alias viewLoader: rightPaneLoaders.currentLoader
     property alias view: rightPaneLoaders.currentItem
-    property alias currentTab: tabs.currentTab
+    property alias selectedTabIndex: tabs.selectedTabIndex
     property QtObject call: callManager.foregroundCall
 
     property string contactId: contactKey
@@ -99,7 +99,7 @@ Item {
     }
 
     function resetView() {
-        viewLoader.source = tabs.model[tabs.currentTab].pane
+        viewLoader.source = tabs.model[tabs.selectedTabIndex].pane
     }
 
     Item {
@@ -121,54 +121,28 @@ Item {
             id: tabs
             anchors.top: parent.top
             anchors.topMargin: 7
-            anchors.left: parent.left
-            anchors.leftMargin: 10
-            anchors.right: parent.right
-            anchors.rightMargin: 10
-
-            model: [
-                {
-                    "iconUnselected": "../assets/tab_icon_call_inactive.png",
-                    "iconSelected": "../assets/tab_icon_call_active.png",
-                    "panel": "PanelCalls/CallPanel.qml",
-                    "pane": "Panes/CallEndedPane.qml",
-                    "eventCountSource": "0"
-                },
-                {
-                    "iconUnselected": "../assets/tab_icon_messaging_inactive.png",
-                    "iconSelected": "../assets/tab_icon_messaging_active.png",
-                    "panel": "PanelMessages/MessagesPanel.qml",
-                    "pane": "Panes/SelectMessagePane.qml",
-                    "eventCountSource": "chatManager.unreadMessagesCount"
-                },
-                {
-                    "iconUnselected": "../assets/tab_icon_contacts_inactive.png",
-                    "iconSelected": "../assets/tab_icon_contacts_active.png",
-                    "panel": "PanelContacts/ContactsPanel.qml",
-                    "pane": "Panes/SelectContactPane.qml",
-                    "eventCountSource": "0"
-                }
-            ]
-        }
-
-        Rectangle {
-            id: separator
-
-            anchors.top: tabs.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 1
-            color: "white"
-        }
-
-        Loader {
-            id: leftPaneContent
-
-            anchors.top: separator.bottom
             anchors.bottom: leftPane.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-            source: tabs.model[tabs.currentTab].panel
+            buttonsExpanded: true
+
+            Page {
+                iconSource: "assets/tab_icon_call_inactive.png" // FIXME: selected ? "../assets/tab_icon_call_active.png"
+                contentsSource: "PanelCalls/CallPanel.qml"
+                property string pane: "Panes/CallEndedPane.qml"
+            }
+
+            Page {
+                iconSource: "assets/tab_icon_messaging_inactive.png" // FIXME: selected ? "../assets/tab_icon_messaging_active.png"
+                contentsSource: "PanelMessages/MessagesPanel.qml"
+                property string pane: "Panes/SelectMessagePane.qml"
+            }
+
+            Page {
+                iconSource: "assets/tab_icon_contacts_inactive.png" // FIXME: selected ? "../assets/tab_icon_contacts_active.png"
+                contentsSource: "PanelContacts/ContactsPanel.qml"
+                property string pane: "Panes/SelectContactPane.qml"
+            }
         }
 
         Rectangle {
@@ -226,16 +200,15 @@ Item {
         Item {
             id: rightPaneLoaders
 
-            property variant currentLoader: children[children.length - 1 - tabs.currentTab]
+            property variant currentLoader: children[tabs.selectedTabIndex]
             property variant currentItem: currentLoader != undefined ? currentLoader.item : undefined
             anchors.fill: parent
         }
 
         Repeater {
-            model: tabs.model
+            model: tabs.children
             delegate: Loader {
-                property bool isCurrent: index == tabs.currentTab
-                parent: rightPaneLoaders
+                property bool isCurrent: index == tabs.selectedTabIndex
                 anchors.fill: parent
                 source: modelData.pane
                 visible: isCurrent
@@ -243,6 +216,7 @@ Item {
 
                 onLoaded: item.focus = isCurrent
             }
+            onItemAdded: item.parent = rightPaneLoaders
         }
 
         Image {
