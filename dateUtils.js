@@ -28,6 +28,6 @@ function formatLogDate(timestamp) {
     if (areSameDay(today, date)) {
         return Qt.formatTime(timestamp, Qt.DefaultLocaleShortDate)
     } else {
-        return Qt.formatDate(timestamp, Qt.DefaultLocaleShortDate)
+        return Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
     }
 }
