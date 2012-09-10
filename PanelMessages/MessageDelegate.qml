@@ -1,5 +1,6 @@
 import QtQuick 1.1
 import "../Widgets"
+import "../dateUtils.js" as DateUtils
 
 ListItem {
     id: messageDelegate
@@ -24,7 +25,6 @@ ListItem {
         style: Text.Raised
         styleColor: "white"
         opacity: messageDelegate.enabled ? 1.0 : 0.5
-        // FIXME: show time if today otherwise date without year
-        text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
+        text: DateUtils.formatLogDate(timestamp)
     }
 }
