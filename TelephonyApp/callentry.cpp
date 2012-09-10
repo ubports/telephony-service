@@ -31,7 +31,6 @@
 #define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
 #define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
 #define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
-#define PROPERTY_HARDWARESTREAMING "HardwareStreaming"
 #define PROPERTY_SPEAKERMODE "SpeakerMode"
 
 CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
@@ -43,7 +42,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE),
     mSpeakerInterface(channel->busName(), channel->objectPath(), TELEPATHY_CALL_IFACE),
     mChannelReady(false),
-    mIsUfa(false),
+    mHasSpeakerProperty(false),
     mSpeakerMode(false)
 {
     connect(mChannel->becomeReady(Tp::Features()
@@ -70,10 +69,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
 
     refreshProperties();
 
-    mIsUfa = isHardwareStreaming();
-    if (mIsUfa) {
-        connect(&mSpeakerInterface, SIGNAL(SpeakerChanged(bool)), SLOT(onSpeakerChanged(bool)));
-    }
+    mHasSpeakerProperty = connect(&mSpeakerInterface, SIGNAL(SpeakerChanged(bool)), SLOT(onSpeakerChanged(bool)));
 }
 
 void CallEntry::onSpeakerChanged(bool active)
@@ -274,21 +270,16 @@ bool CallEntry::isActive() const
     return (mChannel->callState() == Tp::CallStateActive);
 }
 
-bool CallEntry::isHardwareStreaming()
-{
-    return mProperties[PROPERTY_HARDWARESTREAMING].toBool();
-}
-
 bool CallEntry::isSpeakerOn()
 {
-    if (mIsUfa) {
+    if (mHasSpeakerProperty) {
         return mSpeakerMode;
     }
 }
 
 void CallEntry::setSpeaker(bool speaker)
 {
-    if (mIsUfa) {
+    if (mHasSpeakerProperty) {
         mSpeakerInterface.call("turnOnSpeaker", speaker);
     }
 }

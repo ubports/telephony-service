@@ -120,7 +120,6 @@ Q_SIGNALS:
     
 private:
     void refreshProperties();
-    bool isHardwareStreaming();
 
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
@@ -131,7 +130,7 @@ private:
     bool mLocalMuteState;
     QTime mElapsedTime;
     bool mChannelReady;
-    bool mIsUfa;
+    bool mHasSpeakerProperty;
     bool mSpeakerMode;
 };
 
