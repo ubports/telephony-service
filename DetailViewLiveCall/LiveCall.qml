@@ -235,7 +235,9 @@ Item {
                         iconSource: selected ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
                         selected: liveCall.isSpeaker
                         onClicked: {
-                            call.speaker = !selected
+                            if (call) {
+                                call.speaker = !selected
+                            }
                         }
                     }
 
