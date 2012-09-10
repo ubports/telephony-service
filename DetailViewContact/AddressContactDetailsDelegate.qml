@@ -35,7 +35,7 @@ BaseContactDetailsDelegate {
             anchors.left: parent.left
             anchors.right: subTypeText.left
             anchors.rightMargin: 10
-            fontSize: "large"
+            fontSize: "medium"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised
@@ -59,7 +59,7 @@ BaseContactDetailsDelegate {
             anchors.top: parent.top
             horizontalAlignment: Text.AlignRight
             text: DetailUtils.getDetailSubType(detail)
-            fontSize: "medium"
+            fontSize: "small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised

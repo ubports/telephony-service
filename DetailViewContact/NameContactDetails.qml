@@ -49,7 +49,7 @@ FocusScope {
         anchors.rightMargin: 10
         height: paintedHeight
 
-        fontSize: "x-large"
+        fontSize: "large"
         elide: Text.ElideRight
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised

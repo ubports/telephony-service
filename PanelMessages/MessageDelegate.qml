@@ -9,6 +9,7 @@ ListItem {
     text: contactAlias
     subtext: message
     textBold: unreadCount > 0
+    height: 60
 
     TextCustom {
         id: subsublabel
@@ -18,7 +19,7 @@ ListItem {
         anchors.right: parent.right
         anchors.rightMargin: messageDelegate.__padding
         horizontalAlignment: Text.AlignRight
-        fontSize: "small"
+        fontSize: "x-small"
 
         color: messageDelegate.__textColor
         style: Text.Raised

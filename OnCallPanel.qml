@@ -74,7 +74,7 @@ AbstractButton {
             anchors.right: parent.right
 
             text: "On Call"
-            fontSize: "medium"
+            fontSize: "small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised
@@ -96,7 +96,7 @@ AbstractButton {
                     ""
                 }
             }
-            fontSize: "x-large"
+            fontSize: "large"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised
@@ -129,7 +129,7 @@ AbstractButton {
             id: stopWatch
 
             anchors.centerIn: parent
-            fontSize: "medium"
+            fontSize: "small"
             color: "#5d960f"
             time: call ? call.elapsedTime : 0
         }

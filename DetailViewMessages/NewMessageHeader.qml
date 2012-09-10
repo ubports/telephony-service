@@ -39,7 +39,7 @@ BaseMessageHeader {
         TextCustom {
             id: toText
             text: "To:"
-            fontSize: "medium"
+            fontSize: "small"
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             anchors {
                 verticalCenter: parent.verticalCenter
