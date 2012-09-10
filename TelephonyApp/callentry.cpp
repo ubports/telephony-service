@@ -69,7 +69,10 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
 
     refreshProperties();
 
-    mHasSpeakerProperty = connect(&mSpeakerInterface, SIGNAL(SpeakerChanged(bool)), SLOT(onSpeakerChanged(bool)));
+    mHasSpeakerProperty = mProperties.contains(PROPERTY_SPEAKERMODE);
+    if (mHasSpeakerProperty) {
+        connect(&mSpeakerInterface, SIGNAL(SpeakerChanged(bool)), SLOT(onSpeakerChanged(bool)));
+    }
 }
 
 void CallEntry::onSpeakerChanged(bool active)
