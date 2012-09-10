@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 import "../Widgets"
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Item {
     id: messageList
@@ -22,7 +23,7 @@ Item {
         onLeftIconClicked: text = ""
     }
 
-    ListItem {
+    ListItem.Standard {
         id: newMessage
 
         anchors.top: search.bottom
@@ -30,13 +31,13 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        topSeparator: true
-        isIcon: true
-        iconSource: "../assets/add_new_message_icon.png"
-        text: "New Message"
-        // FIXME: maybe use a signal and handle in the instance
-        onClicked: telephony.startNewMessage()
-        selected: telephony.messages.loaded && telephony.view.newMessage
+        control: PanelButton {
+            iconSource: "../assets/add_new_message_icon.png"
+            text: "New Message"
+            // FIXME: maybe use a signal and handle in the instance
+            onClicked: telephony.startNewMessage()
+            selected: telephony.messages.loaded && telephony.view.newMessage
+        }
     }
 
     MessagesProxyModel {

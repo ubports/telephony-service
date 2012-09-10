@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 import "../Widgets"
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Item {
     id: contactsPanel
@@ -47,48 +48,49 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        ListItem {
+        ListItem.Standard {
+            anchors.left: parent.left
+            anchors.right: parent.right
 
-            function getIconSource() {
-                if (callManager.hasCalls && !telephony.isVoicemailActive()) {
-                    return selected ? "../assets/call_icon_livecall_active.png" : "../assets/call_icon_livecall_inactive.png"
-                } else {
-                    return selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
+            control: PanelButton {
+                function getIconSource() {
+                    if (callManager.hasCalls && !telephony.isVoicemailActive()) {
+                        return selected ? "../assets/call_icon_livecall_active.png" : "../assets/call_icon_livecall_inactive.png"
+                    } else {
+                        return selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
+                    }
                 }
+
+                iconSource: getIconSource()
+                text: callManager.hasCalls && !telephony.isVoicemailActive() ? "On Call" : "Keypad"
+                onClicked: callManager.hasCalls && !telephony.isVoicemailActive() ? telephony.showLiveCall() : telephony.showKeypad();
+                selected: telephony.liveCall.loaded || telephony.keypad.loaded
             }
-
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            topSeparator: true
-            isIcon: true
-            iconSource: getIconSource()
-            text: callManager.hasCalls && !telephony.isVoicemailActive() ? "On Call" : "Keypad"
-            onClicked: callManager.hasCalls && !telephony.isVoicemailActive() ? telephony.showLiveCall() : telephony.showKeypad();
-            selected: telephony.liveCall.loaded || telephony.keypad.loaded
         }
 
-        ListItem {
+        ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-
-            isIcon: true
-            iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
-            text: "Voicemail"
             visible: callManager.getVoicemailNumber() != ""
-            onClicked: telephony.showVoicemail()
-            selected: telephony.voicemail.loaded
+
+            control: PanelButton {
+                iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
+                text: "Voicemail"
+                onClicked: telephony.showVoicemail()
+                selected: telephony.voicemail.loaded
+            }
         }
 
-        ListItem {
+        ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            isIcon: true
-            iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
-            text: "Call Log"
-            onClicked: telephony.showCallLog();
-            selected: telephony.callLog.loaded
+            control: PanelButton {
+                iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
+                text: "Call Log"
+                onClicked: telephony.showCallLog();
+                selected: telephony.callLog.loaded
+            }
         }
     }
 }

@@ -3,6 +3,8 @@ import TelephonyApp 0.1
 import ".."
 import "../Widgets"
 import "../fontUtils.js" as Font
+import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Item {
     id: contactsPanel
@@ -28,20 +30,21 @@ Item {
         onLeftIconClicked: text = ""
     }
 
-    ListItem {
+    ListItem.Standard {
         id: newContact
 
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: contactsSearchBox.bottom
-        anchors.topMargin: 10
 
-        topSeparator: true
-        isIcon: true
-        iconSource: "../assets/add_contacts_icon.png"
-        text: "Add a new contact"
-        onClicked: telephony.createNewContact()
-        selected: telephony.contactDetails.loaded && telephony.view.added
+        control: PanelButton {
+            text: "Add a new contact"
+            iconSource: "../assets/add_contacts_icon.png"
+            anchors.fill: parent
+            onClicked: telephony.createNewContact()
+        }
+
+//        selected: telephony.contactDetails.loaded && telephony.view.added
     }
 
     ContactProxyModel {
