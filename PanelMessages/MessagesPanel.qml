@@ -30,14 +30,14 @@ Item {
         anchors.topMargin: 10
         anchors.left: parent.left
         anchors.right: parent.right
+        height: 30
 
-        control: PanelButton {
-            iconSource: "../assets/add_new_message_icon.png"
-            text: "New Message"
-            // FIXME: maybe use a signal and handle in the instance
-            onClicked: telephony.startNewMessage()
-            selected: telephony.messages.loaded && telephony.view.newMessage
-        }
+        iconSource: "../assets/add_new_message_icon.png"
+        iconFrame: false
+        text: "New Message"
+        // FIXME: maybe use a signal and handle in the instance
+        onClicked: telephony.startNewMessage()
+        selected: telephony.messages.loaded && telephony.view.newMessage
     }
 
     MessagesProxyModel {

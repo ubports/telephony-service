@@ -36,13 +36,13 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: contactsSearchBox.bottom
+        anchors.topMargin: 10
+        height: 30
 
-        control: PanelButton {
-            text: "Add a new contact"
-            iconSource: "../assets/add_contacts_icon.png"
-            anchors.fill: parent
-            onClicked: telephony.createNewContact()
-        }
+        text: "Add a new contact"
+        iconSource: "../assets/add_contacts_icon.png"
+        iconFrame: false
+        onClicked: telephony.createNewContact()
 
 //        selected: telephony.contactDetails.loaded && telephony.view.added
     }

@@ -51,46 +51,46 @@ Item {
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
+            height: 30
 
-            control: PanelButton {
-                function getIconSource() {
-                    if (callManager.hasCalls && !telephony.isVoicemailActive()) {
-                        return selected ? "../assets/call_icon_livecall_active.png" : "../assets/call_icon_livecall_inactive.png"
-                    } else {
-                        return selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
-                    }
+            function getIconSource() {
+                if (callManager.hasCalls && !telephony.isVoicemailActive()) {
+                    return selected ? "../assets/call_icon_livecall_active.png" : "../assets/call_icon_livecall_inactive.png"
+                } else {
+                    return selected ? "../assets/call_icon_keypad_active.png" : "../assets/call_icon_keypad_inactive.png"
                 }
-
-                iconSource: getIconSource()
-                text: callManager.hasCalls && !telephony.isVoicemailActive() ? "On Call" : "Keypad"
-                onClicked: callManager.hasCalls && !telephony.isVoicemailActive() ? telephony.showLiveCall() : telephony.showKeypad();
-                selected: telephony.liveCall.loaded || telephony.keypad.loaded
             }
+
+            iconSource: getIconSource()
+            iconFrame: false
+            text: callManager.hasCalls && !telephony.isVoicemailActive() ? "On Call" : "Keypad"
+            onClicked: callManager.hasCalls && !telephony.isVoicemailActive() ? telephony.showLiveCall() : telephony.showKeypad();
+            selected: telephony.liveCall.loaded || telephony.keypad.loaded
         }
 
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
+            height: 30
             visible: callManager.getVoicemailNumber() != ""
 
-            control: PanelButton {
-                iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
-                text: "Voicemail"
-                onClicked: telephony.showVoicemail()
-                selected: telephony.voicemail.loaded
-            }
+            iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
+            iconFrame: false
+            text: "Voicemail"
+            onClicked: telephony.showVoicemail()
+            selected: telephony.voicemail.loaded
         }
 
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
+            height: 30
 
-            control: PanelButton {
-                iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
-                text: "Call Log"
-                onClicked: telephony.showCallLog();
-                selected: telephony.callLog.loaded
-            }
+            iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
+            iconFrame: false
+            text: "Call Log"
+            onClicked: telephony.showCallLog();
+            selected: telephony.callLog.loaded
         }
     }
 }
