@@ -157,7 +157,7 @@ FocusScope {
                             onActionClicked: {
                                 switch(modelData.type) {
                                 case ContactDetail.PhoneNumber:
-                                    telephony.startChat(contact.id, modelData.number, "");
+                                    telephony.startChat(contact.id, modelData.number);
                                     break;
                                 case ContactDetail.EmailAddress:
                                     Qt.openUrlExternally("mailto:" + modelData.emailAddress);

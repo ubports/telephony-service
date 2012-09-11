@@ -30,8 +30,6 @@ QVariant MessageLogEntry::data(int role) const
         return message;
     case MessageLogModel::Date:
         return timestamp.date().toString(Qt::DefaultLocaleLongDate);
-    case MessageLogModel::ThreadId:
-        return threadId;
     case MessageLogModel::MessageId:
         return messageId;
     case MessageLogModel::IsLatest:
@@ -48,12 +46,11 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     QHash<int, QByteArray> roles = roleNames();
     roles[Message] = "message";
     roles[Date] = "date";
-    roles[ThreadId] = "threadId";
     roles[MessageId] = "messageId";
     roles[IsLatest] = "isLatest";
     setRoleNames(roles);
 
-    fetchLog(Tpl::EventTypeMaskText, EntityTypeList() << Tpl::EntityTypeRoom);
+    fetchLog(Tpl::EventTypeMaskText);
 }
 
 void MessageLogModel::appendMessage(const QString &number,
@@ -112,7 +109,6 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 
     entry->messageId = textEvent->messageToken();
     entry->message = textEvent->message();
-    entry->threadId = threadIdFromIdentifier(textEvent->receiver()->identifier());
     entry->isLatest = false;
     return entry;
 }
@@ -120,6 +116,7 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
 {
     Tpl::EventPtrList filteredEvents;
+    QStringList phoneNumbers;
 
     Q_FOREACH(const Tpl::EventPtr &event, events) {
         const Tpl::TextEventPtr textEvent = event.dynamicCast<Tpl::TextEvent>();
@@ -138,21 +135,18 @@ void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
         bool outgoing = textEvent->sender()->entityType() == Tpl::EntityTypeSelf;
         if (outgoing || textEvent->editTimestamp().toTime_t() > 0) {
             filteredEvents.append(event);
+            // add the number to the phone numbers list
+            QString phoneNumber = outgoing ? textEvent->receiver()->identifier() :
+                                             textEvent->sender()->identifier();
+            if (!phoneNumbers.contains(phoneNumber)) {
+                phoneNumbers.append(phoneNumber);
+            }
         }
     }
 
     AbstractLoggerModel::handleEvents(filteredEvents);
 
-    // now check for the latest message for each number in the events
-    QList<QString> phoneNumbers;
-    Q_FOREACH (const Tpl::EventPtr &event, events) {
-        // in ufa logger events, the alias of the receiver is always the phone number
-        QString phoneNumber = event->receiver()->alias();
-        if (!phoneNumbers.contains(phoneNumber)) {
-            phoneNumbers.append(phoneNumber);
-        }
-    }
-
+    // update the latest messages for the numbers we loaded
     Q_FOREACH (const QString &phoneNumber, phoneNumbers) {
         updateLatestMessages(phoneNumber);
     }

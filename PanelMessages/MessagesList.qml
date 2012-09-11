@@ -21,12 +21,11 @@ Item {
                 if (contact) {
                     id = contact.id
                 }
-                telephony.startChat(id, phoneNumber, threadId)
+                telephony.startChat(id, phoneNumber)
             }
             selected: telephony.messages.loaded
                       && !telephony.view.newMessage
-                      && (threadId != "" && (telephony.view.threadId == threadId)
-                      || contactModel.comparePhoneNumbers(telephony.view.number, phoneNumber))
+                      && contactModel.comparePhoneNumbers(telephony.view.number, phoneNumber)
         }
     }
 

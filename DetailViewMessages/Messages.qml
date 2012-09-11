@@ -6,7 +6,6 @@ Item {
     id: messages
     property variant contact
     property string number
-    property string threadId
 
     clip: true
 
@@ -57,7 +56,6 @@ Item {
         messagesModel: messageLogModel
         ascending: true;
         phoneNumber: messages.number
-        threadId: messages.threadId
     }
 
     ListView {
