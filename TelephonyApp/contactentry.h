@@ -37,9 +37,6 @@ class ContactEntry : public QObject
     Q_PROPERTY(QString id
                READ id
                NOTIFY changed)
-    Q_PROPERTY(QString customId
-               READ customId
-               NOTIFY changed)
     Q_PROPERTY(QString displayLabel
                READ displayLabel
                NOTIFY changed)
@@ -84,12 +81,6 @@ public:
      * that contains the libfolks persona ID in the manager we use.
      */
     QString id() const;
-
-    /**
-     * The Custom ID field was customly created and added in QtFolks to hold the Android contact id that is
-     * used to match contact information in call logs, messages and phone lookups.
-     */
-    QString customId() const;
 
     QString displayLabel() const;
     QString initial() const;
@@ -141,7 +132,6 @@ private:
     bool mModified;
     QMap<ContactDetail::DetailType, QList<ContactDetail*> > mDetails;
     ContactModel *mModel;
-    QString mCustomId;
 };
 
 #endif // CONTACTENTRY_H

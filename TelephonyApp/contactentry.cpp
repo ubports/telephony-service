@@ -18,7 +18,6 @@
  */
 
 #include "contactaddress.h"
-#include "contactcustomid.h"
 #include "contactemailaddress.h"
 #include "contactentry.h"
 #include "contactname.h"
@@ -54,11 +53,6 @@ QContactLocalId ContactEntry::localId() const
 QString ContactEntry::id() const
 {
     return mContact.detail<QContactGuid>().guid();
-}
-
-QString ContactEntry::customId() const
-{
-    return mCustomId;
 }
 
 QString ContactEntry::displayLabel() const
@@ -118,13 +112,6 @@ void ContactEntry::setContact(const QContact &contact)
 
     setModified(false);
     loadDetails();
-
-    // FIXME: we are explicitelly splitting the id as it comes formatted from EDS
-    // check how to handle that for telepathy contacts
-    QStringList ids = mContact.detail<ContactCustomId>().customId().split(":");
-    if (ids.count() >= 2) {
-        mCustomId = ids.last();
-    }
 
     Q_EMIT changed(this);
 }

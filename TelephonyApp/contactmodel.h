@@ -48,9 +48,7 @@ public:
     virtual QVariant data(const QModelIndex &index, int role) const;
 
     Q_INVOKABLE ContactEntry *contactFromId(const QString &guid);
-    Q_INVOKABLE ContactEntry *contactFromCustomId(const QString &customId);
     Q_INVOKABLE ContactEntry *contactFromPhoneNumber(const QString &phoneNumber);
-    Q_INVOKABLE QString customIdFromPhoneNumber(const QString &phoneNumber);
     Q_INVOKABLE static bool comparePhoneNumbers(const QString &phoneNumber1, const QString &phoneNumber2);
     Q_INVOKABLE void saveContact(ContactEntry *entry);
     Q_INVOKABLE void loadContactFromId(const QString &guid);
@@ -62,8 +60,8 @@ Q_SIGNALS:
     void contactLoaded(ContactEntry *contact);
     void contactAdded(ContactEntry *contact);
     void contactChanged(ContactEntry *contact);
-    void contactRemoved(const QString &customId);
-    void contactSaved(const QString &contactId, const QString &customId);
+    void contactRemoved(const QString &contactId);
+    void contactSaved(const QString &contactId);
 
 protected:
     void addContacts(const QList<QContact> &contacts);

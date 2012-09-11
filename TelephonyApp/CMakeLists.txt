@@ -5,7 +5,6 @@ set(plugin_SRCS
     calllogmodel.cpp
     calllogproxymodel.cpp
     contactaddress.cpp
-    contactcustomid.cpp
     contactdetail.cpp
     contactemailaddress.cpp
     contactentry.cpp
