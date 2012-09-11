@@ -14,6 +14,7 @@ Item {
 
         anchors.left: parent.left
         anchors.right: separator.left
+        height: 60
         iconSource: (avatar != "") ? avatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
@@ -28,7 +29,7 @@ Item {
         anchors.rightMargin: 8
         anchors.bottom: infoBox.bottom
         anchors.bottomMargin: 5
-        fontSize: "medium"
+        fontSize: "small"
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised
         styleColor: "white"
@@ -42,7 +43,7 @@ Item {
         anchors.left: timeLabel.left
         anchors.right: timeLabel.right
         anchors.bottom: timeLabel.top
-        anchors.bottomMargin: 2
+        anchors.bottomMargin: 3
 
         Image {
             source: {

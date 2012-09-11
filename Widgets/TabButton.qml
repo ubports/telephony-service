@@ -76,7 +76,7 @@ AbstractButton {
         horizontalAlignment: Text.AlignHCenter
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -1
-        fontSize: "large"
+        fontSize: "medium"
         text: modelData.text ? modelData.text : ""
         elide: Text.ElideRight
     }

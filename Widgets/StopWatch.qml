@@ -32,6 +32,6 @@ Item {
 
             return "%1:%2".arg(pad(minutes, 2)).arg(pad(seconds, 2));
         }
-        fontSize: "x-large"
+        fontSize: "large"
     }
 }

@@ -54,7 +54,7 @@ AbstractButton {
         anchors.verticalCenterOffset: -3
         anchors.horizontalCenterOffset: 1
         horizontalAlignment: Text.AlignHCenter
-        fontSize: "x-large"
+        fontSize: "large"
         color: "#e3e5e8"
         style: Text.Sunken
         styleColor: "#2e2e2e"
@@ -67,7 +67,7 @@ AbstractButton {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.horizontalCenterOffset: 1
         horizontalAlignment: Text.AlignHCenter
-        fontSize: "small"
+        fontSize: "x-small"
         color: "#e3e5e8"
         style: Text.Sunken
         styleColor: "#2e2e2e"
