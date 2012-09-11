@@ -129,14 +129,7 @@ QString ContactModel::customIdFromPhoneNumber(const QString &phoneNumber)
         }
     }
 
-    // FIXME: replace this by something not relying specifically on android
-    QDBusInterface contacts("com.canonical.Android",
-                            "/com/canonical/android/contacts/Contacts",
-                            "com.canonical.android.contacts.Contacts");
-    QDBusReply<QString> reply = contacts.call("getContactKeyForNumber", phoneNumber);
-    QString id = reply.value();
-    return id;
-
+    return QString();
 }
 
 ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)

@@ -105,13 +105,12 @@ void TelepathyHelper::registerClients()
     initializeTelepathyClients();
 }
 
-void TelepathyHelper::createAccount()
+QStringList TelepathyHelper::supportedProtocols() const
 {
-    QVariantMap props;
-    props["org.freedesktop.Telepathy.Account.Icon"] = "im-ufa";
-    connect(mAccountManager->createAccount("ufa", "ufa", "ufa", QVariantMap(), props),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onAccountCreated(Tp::PendingOperation*)));
+    QStringList protocols;
+    protocols << "ufa"
+              << "tel";
+    return protocols;
 }
 
 void TelepathyHelper::initializeAccount()
@@ -160,38 +159,27 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     registerClients();
 
-    Tp::AccountSetPtr accountSet = mAccountManager->accountsByProtocol("ufa");
-
-    // if we have no ufa account, create one
-    if (!accountSet->accounts().count()) {
-        createAccount();
-        return;
+    Tp::AccountSetPtr accountSet;
+    // try to find an account of the one of supported protocols
+    Q_FOREACH(const QString &protocol, supportedProtocols()) {
+        accountSet = mAccountManager->accountsByProtocol(protocol);
+        if (accountSet->accounts().count() > 0) {
+            break;
+        }
     }
 
-    // in case we have two accounts, the first one to show on the list is going to be used
-    if (accountSet->accounts().count() > 1) {
-        qWarning() << "There are more than just one account of type ufa/ufa";
+    if (accountSet->accounts().count() == 0) {
+        qCritical() << "No compatible telepathy account found!";
+        return;
     }
 
     mAccount = accountSet->accounts()[0];
-    initializeAccount();
-}
 
-void TelepathyHelper::onAccountCreated(Tp::PendingOperation *op)
-{
-    Tp::PendingAccount *pa = qobject_cast<Tp::PendingAccount*>(op);
-
-    if (!pa) {
-        qCritical() << "The pending object is not a Tp::PendingAccount";
-        return;
+    // in case we have more than one account, the first one to show on the list is going to be used
+    if (accountSet->accounts().count() > 1) {
+        qWarning() << "There are more than just one account of type" << mAccount->protocolName();
     }
 
-    if (pa->isError()) {
-        qCritical() << "Error creating an ufa account";
-        return;
-    }
-
-    mAccount = pa->account();
     initializeAccount();
 }
 
