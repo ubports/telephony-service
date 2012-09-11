@@ -104,7 +104,7 @@ FocusScope {
                 anchors.leftMargin: 5
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: -1
-                fontSize: "small"
+                fontSize: "x-small"
                 font.italic: true
                 elide: Text.ElideRight
                 color: Qt.rgba(0.4, 0.4, 0.4, 1.0)

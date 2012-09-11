@@ -5,7 +5,7 @@ Item {
     id: delegate
 
     property string fontColor: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-    property string fontSize: "large"
+    property string fontSize: "medium"
     property bool isLast: false
 
     signal contactClicked(variant contact, string number)

@@ -13,7 +13,7 @@ BaseMessageHeader {
         anchors.left: parent.left
         anchors.leftMargin: 13
         anchors.verticalCenter: parent.verticalCenter
-        fontSize: "x-large"
+        fontSize: "large"
         elide: Text.ElideRight
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised
@@ -72,7 +72,7 @@ BaseMessageHeader {
             anchors.left: parent.left
             anchors.right: parent.right
             horizontalAlignment: Text.AlignRight
-            fontSize: "medium"
+            fontSize: "small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised
@@ -88,7 +88,7 @@ BaseMessageHeader {
             anchors.left: parent.left
             anchors.right: parent.right
             horizontalAlignment: Text.AlignRight
-            fontSize: "small"
+            fontSize: "x-small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised

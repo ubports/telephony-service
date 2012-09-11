@@ -131,7 +131,7 @@ FocusScope {
             horizontalAlignment: Text.AlignLeft
 
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-            font.pixelSize: FontUtils.sizeToPixels("medium")
+            font.pixelSize: FontUtils.sizeToPixels("small")
             focus: true
             selectByMouse: true
             cursorDelegate: cursor
@@ -196,7 +196,7 @@ FocusScope {
                 //horizontalAlignment: Utils.isRightToLeft() ? Text.AlignRight : Text.AlignLeft
 
                 color: Qt.rgba(0.7, 0.7, 0.7, 1.0)
-                fontSize: "medium"
+                fontSize: "small"
                 font.italic: true
                 text: {
                     if(searchInput.text || searchInput.inputMethodComposing)

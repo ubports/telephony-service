@@ -32,7 +32,7 @@ FocusScope {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        fontSize: "large"
+        fontSize: "medium"
         color: Qt.rgba(0.7, 0.7, 0.7, 1.0)
         font.italic: true
         opacity: input.text == "" ? 1.0 : 0.0
@@ -44,7 +44,7 @@ FocusScope {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        font.pixelSize: FontUtils.sizeToPixels("large")
+        font.pixelSize: FontUtils.sizeToPixels("medium")
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         selectByMouse: true
         focus: true

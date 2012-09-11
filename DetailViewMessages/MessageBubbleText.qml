@@ -57,7 +57,7 @@ Item {
 
         lineHeight: 1.3
         wrapMode: Text.WordWrap
-        fontSize: "medium"
+        fontSize: "small"
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         text: "Test text over multiple lines. Lorem Ipsum bla bla bla bla."
     }

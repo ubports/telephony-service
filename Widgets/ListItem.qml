@@ -5,7 +5,7 @@ AbstractButton {
     id: listItem
 
     width: 250
-    height: (isIcon && !__hasSubLabel ? 30 : 54) + topSeparatorLine.height + bottomSeparatorLine.height
+    height: (isIcon && !__hasSubLabel ? 30 : 48) + topSeparatorLine.height + bottomSeparatorLine.height
 
     property bool isIcon: false // FIXME: not nice
     property alias iconSource: icon.source // FIXME: think of a way to have the selected state done automatically
@@ -82,7 +82,7 @@ AbstractButton {
 
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: 1
-                width: listItem.isIcon ? 16 : 36
+                width: listItem.isIcon ? 16 : 38
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
                 opacity: listItem.enabled ? 1.0 : 0.5
@@ -118,7 +118,7 @@ AbstractButton {
             anchors.right: parent.right
             anchors.rightMargin: listItem.__padding
             anchors.verticalCenter: centered ? parent.verticalCenter : undefined
-            fontSize: "large"
+            fontSize: "medium"
             font.bold: textBold
             elide: Text.ElideRight
 
@@ -137,7 +137,7 @@ AbstractButton {
             anchors.topMargin: 1
             anchors.right: parent.right
             anchors.rightMargin: listItem.__padding
-            fontSize: "medium"
+            fontSize: "small"
             font.bold: textBold
             elide: Text.ElideRight
 

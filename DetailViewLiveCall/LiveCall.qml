@@ -110,7 +110,7 @@ Item {
                 color: "white"
                 style: Text.Sunken
                 styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
-                fontSize: "x-large"
+                fontSize: "large"
             }
 
             TextCustom {
@@ -123,7 +123,7 @@ Item {
                 color: "#a0a0a2"
                 style: Text.Sunken
                 styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
-                fontSize: "large"
+                fontSize: "medium"
             }
 
             TextCustom {
@@ -137,7 +137,7 @@ Item {
                 color: "#a0a0a2"
                 style: Text.Sunken
                 styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
-                fontSize: "large"
+                fontSize: "medium"
             }
 
             TextCustom {
@@ -151,7 +151,7 @@ Item {
                 color: "#a0a0a2"
                 style: Text.Sunken
                 styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
-                fontSize: "large"
+                fontSize: "medium"
                 opacity: (call && call.dialing) ? 1.0 : 0.0
             }
 

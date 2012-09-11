@@ -46,7 +46,7 @@ Item {
             anchors.leftMargin: 5
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: -1
-            fontSize: "small"
+            fontSize: "x-small"
             font.italic: true
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
@@ -118,7 +118,7 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 15
-                    fontSize: "medium"
+                    fontSize: "small"
                     elide: Text.ElideRight
                     color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
                     style: Text.Raised
