@@ -27,9 +27,6 @@
 #include <TelepathyQt/Connection>
 #include <TelepathyQt/ConnectionManager>
 #include <TelepathyQt/Types>
-#include "channelhandler.h"
-#include "channelobserver.h"
-#include "callmanager.h"
 
 class TelepathyHelper : public QObject
 {
@@ -39,29 +36,23 @@ public:
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
-    CallManager *callManager() const;
     Tp::AccountPtr account() const;
-    ChannelHandler *channelHandler() const;
-    ChannelObserver *channelObserver() const;
 
 Q_SIGNALS:
-    void channelHandlerCreated(ChannelHandler *handler);
-    void channelObserverCreated(ChannelObserver *observer);
     void accountReady();
-    void connectionChanged();
 
 public Q_SLOTS:
-    void initializeTelepathyClients();
     void registerClients(void);
 
 protected:
-    QStringList supportedProtocols() const;
+    void createAccount();
     void initializeAccount();
     void ensureAccountEnabled();
     void ensureAccountConnected();
 
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);
+    void onAccountCreated(Tp::PendingOperation *op);
     void onAccountEnabled(Tp::PendingOperation *op);
     void onAccountStateChanged(bool enabled);
     void onAccountConnectionChanged(const Tp::ConnectionPtr &connection);
@@ -75,9 +66,6 @@ private:
     Tp::Features mConnectionFeatures;
     Tp::ClientRegistrarPtr mClientRegistrar;
     Tp::AccountPtr mAccount;
-    ChannelHandler *mChannelHandler;
-    ChannelObserver *mChannelObserver;
-    CallManager *mCallManager;
     bool mFirstTime;
 };
 

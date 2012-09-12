@@ -75,7 +75,7 @@ Item {
             isIcon: true
             iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
             text: "Voicemail"
-            visible: callManager.getVoicemailNumber() != ""
+            visible: callManager.voicemailNumber != ""
             onClicked: telephony.showVoicemail()
             selected: telephony.voicemail.loaded
         }

@@ -19,7 +19,6 @@
  */
 
 #include "telepathyhelper.h"
-#include "chatmanager.h"
 
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ClientRegistrar>
@@ -28,12 +27,8 @@
 
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
-      mChannelHandler(0),
-      mChannelObserver(0),
       mFirstTime(true)
 {
-    mCallManager = new CallManager(this);
-
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
                      << Tp::Contact::FeatureCapabilities;
@@ -61,40 +56,9 @@ TelepathyHelper *TelepathyHelper::instance()
     return helper;
 }
 
-CallManager *TelepathyHelper::callManager() const
-{
-    return mCallManager;
-}
-
 Tp::AccountPtr TelepathyHelper::account() const
 {
     return mAccount;
-}
-
-ChannelHandler *TelepathyHelper::channelHandler() const
-{
-    return mChannelHandler;
-}
-
-ChannelObserver *TelepathyHelper::channelObserver() const
-{
-    return mChannelObserver;
-}
-
-void TelepathyHelper::initializeTelepathyClients()
-{
-    mChannelHandler = new ChannelHandler(this);
-    mClientRegistrar->registerClient(Tp::AbstractClientPtr(mChannelHandler), "TelephonyApp");
-    Q_EMIT channelHandlerCreated(mChannelHandler);
-
-    mChannelObserver = new ChannelObserver(this);
-    mClientRegistrar->registerClient(Tp::AbstractClientPtr(mChannelObserver), "TelephonyAppObserver");
-    Q_EMIT channelObserverCreated(mChannelObserver);
-
-    connect(mChannelHandler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
-            ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
-    connect(mChannelHandler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
-            mCallManager, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
 }
 
 void TelepathyHelper::registerClients()
@@ -102,15 +66,15 @@ void TelepathyHelper::registerClients()
     Tp::ChannelFactoryPtr channelFactory = Tp::ChannelFactoryPtr::constCast(mAccountManager->channelFactory());
     channelFactory->addCommonFeatures(Tp::Channel::FeatureCore);
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
-    initializeTelepathyClients();
 }
 
-QStringList TelepathyHelper::supportedProtocols() const
+void TelepathyHelper::createAccount()
 {
-    QStringList protocols;
-    protocols << "ufa"
-              << "tel";
-    return protocols;
+    QVariantMap props;
+    props["org.freedesktop.Telepathy.Account.Icon"] = "im-ufa";
+    connect(mAccountManager->createAccount("ufa", "ufa", "ufa", QVariantMap(), props),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onAccountCreated(Tp::PendingOperation*)));
 }
 
 void TelepathyHelper::initializeAccount()
@@ -159,27 +123,38 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     registerClients();
 
-    Tp::AccountSetPtr accountSet;
-    // try to find an account of the one of supported protocols
-    Q_FOREACH(const QString &protocol, supportedProtocols()) {
-        accountSet = mAccountManager->accountsByProtocol(protocol);
-        if (accountSet->accounts().count() > 0) {
-            break;
-        }
-    }
+    Tp::AccountSetPtr accountSet = mAccountManager->accountsByProtocol("ufa");
 
-    if (accountSet->accounts().count() == 0) {
-        qCritical() << "No compatible telepathy account found!";
+    // if we have no ufa account, create one
+    if (!accountSet->accounts().count()) {
+        createAccount();
         return;
     }
 
-    mAccount = accountSet->accounts()[0];
-
-    // in case we have more than one account, the first one to show on the list is going to be used
+    // in case we have two accounts, the first one to show on the list is going to be used
     if (accountSet->accounts().count() > 1) {
-        qWarning() << "There are more than just one account of type" << mAccount->protocolName();
+        qWarning() << "There are more than just one account of type ufa/ufa";
     }
 
+    mAccount = accountSet->accounts()[0];
+    initializeAccount();
+}
+
+void TelepathyHelper::onAccountCreated(Tp::PendingOperation *op)
+{
+    Tp::PendingAccount *pa = qobject_cast<Tp::PendingAccount*>(op);
+
+    if (!pa) {
+        qCritical() << "The pending object is not a Tp::PendingAccount";
+        return;
+    }
+
+    if (pa->isError()) {
+        qCritical() << "Error creating an ufa account";
+        return;
+    }
+
+    mAccount = pa->account();
     initializeAccount();
 }
 
@@ -201,5 +176,4 @@ void TelepathyHelper::onAccountConnectionChanged(const Tp::ConnectionPtr &connec
     if (connection.isNull()) {
         ensureAccountConnected();
     }
-    Q_EMIT connectionChanged();
 }
