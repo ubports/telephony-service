@@ -2,13 +2,14 @@ import QtQuick 1.1
 import TelephonyApp 0.1
 import "../Widgets"
 import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Components 0.1
 
 Item {
     id: messageList
 
     anchors.fill: parent
 
-    SearchEntry {
+    TextField {
         id: search
 
         anchors.top: parent.top
@@ -18,9 +19,19 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 10
 
-        leftIconSource: text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
-        hint: "Search messages"
-        onLeftIconClicked: text = ""
+        placeholderText: "Search messages"
+        Keys.onEscapePressed: text = ""
+
+        primaryItem: AbstractButton {
+            width: 20
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            Image {
+                anchors.centerIn: parent
+                source: search.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
+            }
+            onClicked: search.text = ""
+        }
     }
 
     ListItem.Standard {

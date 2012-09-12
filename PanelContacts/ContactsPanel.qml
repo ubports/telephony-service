@@ -9,13 +9,13 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 Item {
     id: contactsPanel
 
-    property alias searchQuery : contactsSearchBox.searchQuery
+    property alias searchQuery : contactsSearchBox.text
 
     anchors.fill: parent
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)
 
-    SearchEntry {
+    TextField {
         id: contactsSearchBox
 
         anchors.top: parent.top
@@ -25,9 +25,19 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 10
 
-        leftIconSource: text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
-        hint: "Search contacts"
-        onLeftIconClicked: text = ""
+        placeholderText: "Search contacts"
+        Keys.onEscapePressed: text = ""
+
+        primaryItem: AbstractButton {
+            width: 20
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            Image {
+                anchors.centerIn: parent
+                source: contactsSearchBox.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
+            }
+            onClicked: contactsSearchBox.text = ""
+        }
     }
 
     ListItem.Standard {
