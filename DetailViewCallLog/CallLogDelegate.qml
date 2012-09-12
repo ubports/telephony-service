@@ -1,8 +1,9 @@
 import QtQuick 1.1
 import "../Widgets"
 import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
-Item {
+ListItem.Base {
     id: callItem
 
     signal clicked(string contactId)
@@ -10,7 +11,7 @@ Item {
 
     height: infoBox.height
 
-    ListItem {
+    CustomListItemBase {
         id: infoBox
 
         anchors.left: parent.left
@@ -21,6 +22,7 @@ Item {
         text: contactAlias
         subtext: phoneNumber
         onClicked: callItem.clicked(contactId)
+        selected: callItem.selected
     }
 
     TextCustom {
@@ -73,18 +75,17 @@ Item {
         visible: phoneNumber != "-"
     }
 
-    ListItem {
+    CustomListItemBase {
         id: actionBox
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
         width: height
+        selected: callItem.selected
 
         iconSource: phoneNumber != "-" ? "../assets/tab_icon_call_inactive.png" : ""
         isIcon: true
-        topSeparator: infoBox.topSeparator
-        bottomSeparator: infoBox.bottomSeparator
         onClicked: {
             if (phoneNumber != "-") {
                 callItem.actionClicked(contactId, phoneNumber)
