@@ -57,11 +57,12 @@ Item {
         callManager.startCall(number);
     }
 
-    function startChat(customId, number, threadId) {
+    function startChat(contactId, number) {
         messages.load()
         view.number = number
-        view.customId = customId
-        view.threadId = threadId
+        if (contactId) {
+            view.contactId = contactId
+        }
         view.newMessage = false
     }
 

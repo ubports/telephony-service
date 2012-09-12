@@ -15,11 +15,17 @@ Item {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            onClicked: telephony.startChat(customId, phoneNumber, threadId)
+            onClicked: {
+                var contact = contactModel.contactFromPhoneNumber(phoneNumber)
+                var id
+                if (contact) {
+                    id = contact.id
+                }
+                telephony.startChat(id, phoneNumber)
+            }
             selected: telephony.messages.loaded
                       && !telephony.view.newMessage
-                      && (threadId != "" && (telephony.view.threadId == threadId)
-                      || contactModel.comparePhoneNumbers(telephony.view.number, phoneNumber))
+                      && contactModel.comparePhoneNumbers(telephony.view.number, phoneNumber)
         }
     }
 

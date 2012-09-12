@@ -19,7 +19,6 @@
 
 #include "contactmodel.h"
 #include "contactentry.h"
-#include "contactcustomid.h"
 #include "phoneutils.h"
 #include <QContactDetailFilter>
 #include <QContactGuid>
@@ -103,50 +102,17 @@ ContactEntry *ContactModel::contactFromId(const QString &guid)
     return 0;
 }
 
-ContactEntry *ContactModel::contactFromCustomId(const QString &customId)
+ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
 {
-    if (customId.isEmpty()) {
-        return 0;
-    }
-
-    Q_FOREACH(ContactEntry *entry, mContactEntries) {
-        if (entry->customId() == customId) {
-            return entry;
-        }
-    }
-
-    return 0;
-}
-
-QString ContactModel::customIdFromPhoneNumber(const QString &phoneNumber)
-{
-    // try to first iterate over the contacts we have
     Q_FOREACH(ContactEntry *entry, mContactEntries) {
         Q_FOREACH(const QContactPhoneNumber &storedPhoneNumber, entry->contact().details<QContactPhoneNumber>()) {
             if (comparePhoneNumbers(storedPhoneNumber.number(), phoneNumber)) {
-                return entry->customId();
+                return entry;
             }
         }
     }
 
-    // FIXME: replace this by something not relying specifically on android
-    QDBusInterface contacts("com.canonical.Android",
-                            "/com/canonical/android/contacts/Contacts",
-                            "com.canonical.android.contacts.Contacts");
-    QDBusReply<QString> reply = contacts.call("getContactKeyForNumber", phoneNumber);
-    QString id = reply.value();
-    return id;
-
-}
-
-ContactEntry *ContactModel::contactFromPhoneNumber(const QString &phoneNumber)
-{
-    QString id = customIdFromPhoneNumber(phoneNumber);
-    if (id.isEmpty()) {
-        return 0;
-    }
-
-    return contactFromCustomId(id);
+    return 0;
 }
 
 void ContactModel::saveContact(ContactEntry *entry)
@@ -237,7 +203,7 @@ void ContactModel::removeContactFromModel(ContactEntry *entry)
     mContactEntries.removeAt(index);
     entry->deleteLater();
     endRemoveRows();
-    Q_EMIT contactRemoved(entry->customId());
+    Q_EMIT contactRemoved(entry->id());
 }
 
 void ContactModel::onContactsAdded(QList<QContactLocalId> ids)
@@ -282,8 +248,7 @@ void ContactModel::onContactSaved()
             // each request contains just one contact as we just ask one contact to be saved at a time
             QContact contact = request->contacts().first();
             QString id = contact.detail<QContactGuid>().guid();
-            QString customId = contact.detail<ContactCustomId>().customId().split(":").last();
-            Q_EMIT contactSaved(id, customId);
+            Q_EMIT contactSaved(id);
         }
     }
 }

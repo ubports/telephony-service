@@ -43,7 +43,7 @@ AbstractButton {
             anchors.right: expander.left
             anchors.rightMargin: 10
             elide: Text.ElideRight
-            fontSize: "medium"
+            fontSize: "small"
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             text: {
                 // Use first allowed subtype as default in case there's no detail or no subType
@@ -122,7 +122,7 @@ AbstractButton {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.margins: 15
-                    fontSize: "medium"
+                    fontSize: "small"
                     elide: Text.ElideRight
                     color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
                     style: Text.Raised

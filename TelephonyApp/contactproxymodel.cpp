@@ -85,3 +85,11 @@ bool ContactProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     return false;
 }
 
+bool ContactProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+{
+    QString leftString = left.data().toString();
+    QString rightString = right.data().toString();
+
+    return leftString.toLower().localeAwareCompare(rightString.toLower()) < 0;
+}
+

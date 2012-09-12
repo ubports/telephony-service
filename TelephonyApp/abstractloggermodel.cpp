@@ -35,8 +35,6 @@ QVariant LogEntry::data(int role) const
     switch (role) {
     case AbstractLoggerModel::ContactId:
         return contactId;
-    case AbstractLoggerModel::CustomId:
-        return customId;
     case AbstractLoggerModel::ContactAlias:
     case Qt::DisplayRole:
         return contactAlias;
@@ -62,7 +60,6 @@ AbstractLoggerModel::AbstractLoggerModel(QObject *parent) :
     // set the role names
     QHash<int, QByteArray> roles;
     roles[ContactId] = "contactId";
-    roles[CustomId] = "customId";
     roles[ContactAlias] = "contactAlias";
     roles[Avatar] = "avatar";
     roles[PhoneNumber] = "phoneNumber";
@@ -99,42 +96,6 @@ QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
     }
 
     return mLogEntries[index.row()]->data(role);
-}
-
-QString AbstractLoggerModel::phoneNumberFromId(const QString &id) const
-{
-    QStringList splittedId = id.split(":");
-    if (splittedId.count() == 2) {
-        return splittedId[1];
-    } else {
-        qWarning() << "The ID from logger is not using the format contactId:phoneNumber" << id;
-    }
-
-    return id;
-}
-
-QString AbstractLoggerModel::threadIdFromIdentifier(const QString &id) const
-{
-    QStringList splittedId = id.split(":");
-    if (splittedId.count() == 2) {
-        return splittedId[1];
-    } else {
-        qWarning() << "The ID from logger is not using the format contactId:threadId" << id;
-    }
-
-    return id;
-}
-
-QString AbstractLoggerModel::customIdentifierFromId(const QString &id) const
-{
-    QStringList splittedId = id.split(":");
-    if (splittedId.count() == 2) {
-        return splittedId[0];
-    } else {
-        qWarning() << "The ID from logger is not using the format contactId:phoneNumber" << id;
-    }
-
-    return id;
 }
 
 void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entityTypes)
@@ -193,7 +154,6 @@ void AbstractLoggerModel::requestEventsForDates(const Tpl::EntityPtr &entity, co
 void AbstractLoggerModel::fillContactInfo(LogEntry *entry, ContactEntry *contact)
 {
     entry->contactId = contact->id();
-    entry->customId = contact->customId();
     entry->avatar = contact->avatar();
     entry->contactAlias = contact->displayLabel();
 }
@@ -202,7 +162,6 @@ void AbstractLoggerModel::clearContactInfo(LogEntry *entry)
 {
     entry->avatar = "";
     entry->contactId = "";
-    entry->customId = "";
     entry->contactAlias = "";
 }
 
@@ -239,15 +198,14 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         entry->timestamp = event->timestamp();
 
         Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
-        parseEntityId(remoteEntity, entry);
+        entry->phoneNumber = remoteEntity->identifier();
 
         if (!checkNonStandardNumbers(entry)) {
             // set the alias from the entity as a fallback value in case the contact is not found.
             entry->contactAlias = remoteEntity->alias();
 
-            ContactEntry *contact = ContactModel::instance()->contactFromCustomId(entry->customId);
+            ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(entry->phoneNumber);
             if (contact) {
-                // if more than one contact matches, use the first one
                 fillContactInfo(entry, contact);
             }
         }
@@ -310,22 +268,14 @@ void AbstractLoggerModel::updateLogForContact(ContactEntry *contactEntry)
 {
     // now we need to iterate over the events to look for contacts matching
     int count = mLogEntries.count();
-    QString customId = contactEntry->customId();
     for (int i = 0; i < count; ++i) {
         LogEntry *entry = mLogEntries[i];
-        if (!entry->customId.isEmpty()) {
-            if (entry->customId == customId) {
+        // check if any of the contact's phone numbers match
+        Q_FOREACH(const QContactPhoneNumber &number, contactEntry->contact().details<QContactPhoneNumber>()) {
+            if (ContactModel::comparePhoneNumbers(entry->phoneNumber, number.number())) {
                 fillContactInfo(entry, contactEntry);
                 Q_EMIT dataChanged(index(i,0), index(i,0));
-            }
-        } else {
-            // check if any of the contact's phone numbers match
-            Q_FOREACH(const QContactPhoneNumber &number, contactEntry->contact().details<QContactPhoneNumber>()) {
-                if (ContactModel::comparePhoneNumbers(entry->phoneNumber, number.number())) {
-                    fillContactInfo(entry, contactEntry);
-                    Q_EMIT dataChanged(index(i,0), index(i,0));
-                    continue;
-                }
+                continue;
             }
         }
     }
@@ -413,25 +363,14 @@ void AbstractLoggerModel::onContactChanged(ContactEntry *contact)
     updateLogForContact(contact);
 }
 
-void AbstractLoggerModel::onContactRemoved(const QString &customId)
+void AbstractLoggerModel::onContactRemoved(const QString &contactId)
 {
     int count = mLogEntries.count();
     for (int i = 0; i < count; ++i) {
         LogEntry *entry = mLogEntries[i];
-        if (entry->customId == customId) {
+        if (entry->contactId == contactId) {
             clearContactInfo(entry);
             Q_EMIT dataChanged(index(i,0), index(i,0));
         }
     }
 }
-
-void AbstractLoggerModel::parseEntityId(const Tpl::EntityPtr &entity, LogEntry *entry)
-{
-    entry->customId = customIdentifierFromId(entity->identifier());
-    if (entity->entityType() == Tpl::EntityTypeRoom) {
-        entry->phoneNumber = entity->alias();
-    } else {
-        entry->phoneNumber = phoneNumberFromId(entity->identifier());
-    }
-}
-

@@ -31,7 +31,7 @@ FocusScope {
         height: font.pixelSize
         horizontalAlignment: TextInput.AlignRight
         text: ""
-        font.pixelSize: Font.sizeToPixels("x-large")
+        font.pixelSize: Font.sizeToPixels("large")
         color: "#e3e5e8"
         focus: true
     }

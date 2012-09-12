@@ -37,7 +37,7 @@ BaseContactDetailsDelegate {
             anchors.left: parent.left
             anchors.right: time.left
             anchors.rightMargin: 10
-            fontSize: "medium"
+            fontSize: "small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised
@@ -51,7 +51,7 @@ BaseContactDetailsDelegate {
             anchors.top: parent.top
             anchors.right: indicators.left
             anchors.rightMargin: 10
-            fontSize: "medium"
+            fontSize: "small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised

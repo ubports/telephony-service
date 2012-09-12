@@ -9,9 +9,8 @@ FocusScope {
     property string viewName: "messages"
     property alias contact: contactWatcher.contact
     property alias number: contactWatcher.phoneNumber
-    property alias customId: contactWatcher.customId
+    property alias contactId: contactWatcher.contactId
     property bool newMessage: false
-    property string threadId
 
     property string pendingMessage
 
@@ -89,13 +88,11 @@ FocusScope {
             onContactSelected: {
                 view.number = number;
                 view.newMessage = false;
-                view.threadId = ""
             }
 
             onNumberSelected: {
                 view.number = number;
                 view.newMessage = false;
-                view.threadId = ""
             }
         }
     }
@@ -141,7 +138,6 @@ FocusScope {
             id: messages
             width: view.width
             height: view.height - footer.height - headerLoader.height
-            threadId: view.threadId
             number: view.number
         }
     }
@@ -162,7 +158,6 @@ FocusScope {
                 var phoneNumber = headerLoader.item.text;
                 view.number = phoneNumber
                 view.newMessage = false;
-                view.threadId = ""
             }
 
             if (chatManager.isChattingToContact(number)) {

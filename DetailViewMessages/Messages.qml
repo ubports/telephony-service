@@ -6,7 +6,6 @@ Item {
     id: messages
     property variant contact
     property string number
-    property string threadId
 
     clip: true
 
@@ -22,7 +21,7 @@ Item {
                 anchors.left: parent.left
                 anchors.leftMargin: 18
                 text: section
-                fontSize: "medium"
+                fontSize: "small"
                 elide: Text.ElideRight
                 color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
                 style: Text.Raised
@@ -57,7 +56,6 @@ Item {
         messagesModel: messageLogModel
         ascending: true;
         phoneNumber: messages.number
-        threadId: messages.threadId
     }
 
     ListView {
