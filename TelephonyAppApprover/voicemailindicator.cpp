@@ -45,46 +45,79 @@ VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
             SIGNAL(display(QIndicate::Indicator*)),
             SLOT(onIndicatorDisplay(QIndicate::Indicator*)));
 
-    if(!TelepathyHelper::instance()->account()) {
+    if(!checkConnected()) {
         connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onAccountReady()));
+        connect(TelepathyHelper::instance(), SIGNAL(connectionChanged()), SLOT(onAccountReady()));
     } else {
         onAccountReady();
     }
 }
 
+bool VoiceMailIndicator::checkConnected()
+{
+    return TelepathyHelper::instance()->account() && TelepathyHelper::instance()->account()->connection();
+}
+
 void VoiceMailIndicator::onAccountReady()
 {
+    if (!checkConnected()) {
+        return;
+    }
+
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    qDebug() << mConnection.connect(busName, objectPath, TP_QT_IFACE_CONNECTION, QLatin1String("VoicemailCountChanged"),
+    mConnection.connect(busName, objectPath, TP_QT_IFACE_CONNECTION, QLatin1String("VoicemailCountChanged"),
                         this, SLOT(onVoicemailCountChanged(int)));
+
+    mConnection.connect(busName, objectPath, TP_QT_IFACE_CONNECTION, QLatin1String("VoicemailIndicatorChanged"),
+                        this, SLOT(onVoicemailIndicatorChanged(bool)));
 
     onVoicemailCountChanged(voicemailCount());
 }
 
+void VoiceMailIndicator::onVoicemailIndicatorChanged(bool active)
+{
+    if (active) {
+        mIndicator->setCountProperty(voicemailCount());
+        mIndicator->show();
+        mIndicator->setDrawAttentionProperty(true);
+    } else {
+        mIndicator->hide();
+        mIndicator->setDrawAttentionProperty(false);
+    }
+}
+
 bool VoiceMailIndicator::voicemailIndicatorVisible()
 {
+    if (!checkConnected()) {
+        return false;
+    }
+
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface connIface(busName, objectPath, TP_QT_IFACE_CONNECTION);
-    QDBusReply<QVariant> reply = connIface.call("VoicemailIndicator");
+    QDBusReply<bool> reply = connIface.call("VoicemailIndicator");
     if (reply.isValid()) {
-        return reply.value().toBool();
+        return reply.value();
     }
     return false;
 }
 
 int VoiceMailIndicator::voicemailCount()
 {
+    if (!checkConnected()) {
+        return 0;
+    }
+
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface connIface(busName, objectPath, TP_QT_IFACE_CONNECTION);
-    QDBusReply<QVariant> reply = connIface.call("VoicemailCount");
+    QDBusReply<int> reply = connIface.call("VoicemailCount");
     if (reply.isValid()) {
-        return reply.value().toInt();
+        return reply.value();
     }
     return false;
 }

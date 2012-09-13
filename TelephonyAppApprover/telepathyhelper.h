@@ -40,6 +40,7 @@ public:
 
 Q_SIGNALS:
     void accountReady();
+    void connectionChanged();
 
 public Q_SLOTS:
     void registerClients(void);

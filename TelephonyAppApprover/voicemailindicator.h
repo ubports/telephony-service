@@ -37,12 +37,14 @@ public:
 
 public Q_SLOTS:
     void onVoicemailCountChanged(int count);
+    void onVoicemailIndicatorChanged(bool active);
     void onIndicatorDisplay(QIndicate::Indicator *indicator);
     void onAccountReady();
 
 private:
     bool voicemailIndicatorVisible();
     int voicemailCount();
+    bool checkConnected();
     QDBusConnection mConnection;
     QIndicate::Server *mIndicateServer;
     QIndicate::Indicator *mIndicator;

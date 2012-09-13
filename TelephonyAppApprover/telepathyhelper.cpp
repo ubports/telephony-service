@@ -176,4 +176,5 @@ void TelepathyHelper::onAccountConnectionChanged(const Tp::ConnectionPtr &connec
     if (connection.isNull()) {
         ensureAccountConnected();
     }
+    Q_EMIT connectionChanged();
 }
