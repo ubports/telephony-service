@@ -42,18 +42,14 @@ Q_SIGNALS:
     void accountReady();
     void connectionChanged();
 
-public Q_SLOTS:
-    void registerClients(void);
-
 protected:
-    void createAccount();
+    QStringList supportedProtocols() const;
     void initializeAccount();
     void ensureAccountEnabled();
     void ensureAccountConnected();
 
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);
-    void onAccountCreated(Tp::PendingOperation *op);
     void onAccountEnabled(Tp::PendingOperation *op);
     void onAccountStateChanged(bool enabled);
     void onAccountConnectionChanged(const Tp::ConnectionPtr &connection);
@@ -65,7 +61,6 @@ private:
     Tp::Features mAccountFeatures;
     Tp::Features mContactFeatures;
     Tp::Features mConnectionFeatures;
-    Tp::ClientRegistrarPtr mClientRegistrar;
     Tp::AccountPtr mAccount;
     bool mFirstTime;
 };
