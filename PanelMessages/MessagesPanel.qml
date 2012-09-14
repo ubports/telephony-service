@@ -27,7 +27,9 @@ Item {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             Image {
-                anchors.centerIn: parent
+                anchors.left: parent.left
+                anchors.leftMargin: 6
+                anchors.verticalCenter: parent.verticalCenter
                 source: search.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
             }
             onClicked: search.text = ""
