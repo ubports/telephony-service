@@ -38,7 +38,7 @@ Item {
         id: newMessage
 
         anchors.top: search.bottom
-        anchors.topMargin: 10
+        anchors.topMargin: 14
         anchors.left: parent.left
         anchors.right: parent.right
         height: 30
