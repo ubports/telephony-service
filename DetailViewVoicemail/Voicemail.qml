@@ -135,13 +135,13 @@ Item {
                     id: speakerButton
                     width: 64
                     visible: isVoicemailActive()
-                    iconSource: callManager.speaker ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
+                    iconSource: call && call.speaker ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
                     color: "#565656"
                     darkBorder: true
-                    state: callManager.speaker ? "pressed" : ""
+                    state: call && call.speaker ? "pressed" : ""
                     onClicked: {
                         if (call) {
-                            callManager.speaker = !callManager.speaker
+                            call.speaker = !call.speaker
                         }
                     }
                 }

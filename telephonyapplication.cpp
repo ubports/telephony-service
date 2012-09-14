@@ -151,7 +151,7 @@ void TelephonyApplication::parseArgument(const QString &arg)
                 method.invoke(telephony);
             }
         } else {
-            int index = mo->indexOfMethod("startChat(QVariant,QVariant,QVariant)");
+            int index = mo->indexOfMethod("startChat(QVariant,QVariant)");
             if (index != -1) {
                 QMetaMethod method = mo->method(index);
                 method.invoke(telephony,

@@ -43,16 +43,11 @@ class CallManager : public QObject
     Q_PROPERTY(bool hasBackgroundCall
                READ hasBackgroundCall
                NOTIFY hasBackgroundCallChanged)
-    Q_PROPERTY(bool speaker
-               READ isSpeakerOn
-               WRITE setSpeaker
-               NOTIFY speakerChanged)
 
 public:
     explicit CallManager(QObject *parent = 0);
     
     Q_INVOKABLE void startCall(const QString &phoneNumber);
-    Q_INVOKABLE void setSpeaker(bool speaker);
     Q_INVOKABLE QString getVoicemailNumber();
     Q_INVOKABLE int getVoicemailCount();
 
@@ -60,7 +55,6 @@ public:
     QObject *backgroundCall() const;
     bool hasCalls() const;
     bool hasBackgroundCall() const;
-    bool isSpeakerOn() const;
 
 Q_SIGNALS:
     void callReady();
@@ -69,7 +63,6 @@ Q_SIGNALS:
     void backgroundCallChanged();
     void hasCallsChanged();
     void hasBackgroundCallChanged();
-    void speakerChanged();
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
@@ -82,7 +75,6 @@ private:
     QList<CallEntry*> mCallEntries;
     QMap<QString, Tp::ContactPtr> mContacts;
     QMap<QString, QVariant> mProperties;
-    QDBusInterface mAndroidInterface;
 };
 
 #endif // CALLMANAGER_H

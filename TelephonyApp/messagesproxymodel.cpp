@@ -47,20 +47,7 @@ void MessagesProxyModel::setPhoneNumber(const QString &value)
     Q_EMIT phoneNumberChanged();
     // when the filter changes we also have to reset the model as the
     // ListView element seems to not behave correctly when rows
-    // are changed. The same is done for setThreadId().
-    reset();
-}
-
-QString MessagesProxyModel::threadId() const
-{
-    return mThreadId;
-}
-
-void MessagesProxyModel::setThreadId(const QString &value)
-{
-    mThreadId = value;
-    invalidateFilter();
-    Q_EMIT threadIdChanged();
+    // are changed.
     reset();
 }
 
@@ -169,13 +156,13 @@ bool MessagesProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
     /* So this is how filtering is done:
      * - If there is a search term, onlyLatest is used to return just one result
      *   for contact alias and phone number matching, but individual messages are also returned.
-     *   If threadId and phoneNumber are set, they are used as a filtering criteria,
+     *   If phoneNumber is set, it is used as a filtering criteria,
      *   so if an entry doesn't match a non-empty search string, we return false.
      *
-     * - If onlyLatest is true, phoneNumber and threadId have no effect and only the latest
-     *   message of each thread is returned.
+     * - If onlyLatest is true, phoneNumber has no effect and only the latest
+     *   message of each conversation is returned.
      *
-     * - If threadId or phoneNumber are set, they are used to filter which messages will be
+     * - If phoneNumber is set, it is used to filter which messages will be
      *   displayed.
      */
 
@@ -205,7 +192,7 @@ bool MessagesProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
     } else if (mOnlyLatest) {
         // search string is empty, so check for onlyLatest
         // at this point we can just return true or false, no need
-        // to further check for threadId and phone number
+        // to further check for phone number
         return sourceIndex.data(MessageLogModel::IsLatest).toBool();
     } else {
         // no specific criteria, consider all items matching for further evaluation
@@ -217,22 +204,15 @@ bool MessagesProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sour
         return false;
     }
 
-    // after checking for all the conditions above, if the item match either the
-    // threadId or the phoneNumber, we can display it.
-    if (!mThreadId.isEmpty()) {
-        QString value = sourceIndex.data(MessageLogModel::ThreadId).toString();
-        if (value == mThreadId) {
-            return true;
-        }
-    }
-    
+    // after checking for all the conditions above, if the item match the
+    // phoneNumber, we can display it.
     if (!mPhoneNumber.isEmpty()) {
         QString phoneNumber = sourceIndex.data(AbstractLoggerModel::PhoneNumber).toString();
         return ContactModel::comparePhoneNumbers(mPhoneNumber, phoneNumber);
     }
 
-    // if both mThreadId and mPhoneNumber are empty at this point all items can be displayed.
-    return mPhoneNumber.isEmpty() && mThreadId.isEmpty();
+    // if mPhoneNumber is empty at this point all items can be displayed.
+    return true;
 }
 
 void MessagesProxyModel::onUnreadMessagesChanged(const QString &number)

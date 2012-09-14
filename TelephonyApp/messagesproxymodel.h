@@ -42,10 +42,6 @@ class MessagesProxyModel : public QSortFilterProxyModel
                READ phoneNumber
                WRITE setPhoneNumber
                NOTIFY phoneNumberChanged)
-    Q_PROPERTY(QString threadId
-               READ threadId
-               WRITE setThreadId
-               NOTIFY threadIdChanged)
     Q_PROPERTY(bool onlyLatest
                READ onlyLatest
                WRITE setOnlyLatest
@@ -62,9 +58,6 @@ public:
 
     QString phoneNumber() const;
     void setPhoneNumber(const QString &value);
-
-    QString threadId() const;
-    void setThreadId(const QString &value);
 
     bool ascending() const;
     void setAscending(bool value);
@@ -90,7 +83,6 @@ Q_SIGNALS:
     void messagesModelChanged();
     void searchStringChanged();
     void phoneNumberChanged();
-    void threadIdChanged();
     void onlyLatestChanged();
 
 protected:
@@ -103,7 +95,6 @@ private:
     bool mAscending;
     QString mSearchString;
     QString mPhoneNumber;
-    QString mThreadId;
     bool mOnlyLatest;
 };
 
