@@ -25,9 +25,9 @@ ListItem.Base {
         id: subsublabel
 
         anchors.baseline: parent.bottom
-        anchors.baselineOffset: -baseInfo.padding + 2
+        anchors.baselineOffset: -baseInfo.padding + 4
         anchors.right: parent.right
-        anchors.rightMargin: baseInfo.padding
+        anchors.rightMargin: baseInfo.padding - 2
         horizontalAlignment: Text.AlignRight
         fontSize: "x-small"
 
