@@ -83,7 +83,7 @@ void MessageLogModel::onMessageReceived(const QString &number,
                                         const QString &messageId)
 {
     // check if the message is already in the model (it might have been loaded from logger)
-    if (messageById(messageId) != 0) {
+    if (!messageId.isEmpty() && messageById(messageId) != 0) {
         return;
     }
     appendMessage(number, message, true, timestamp, messageId);
@@ -125,7 +125,7 @@ void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
         }
 
         // check if the message is already in the model (it might have been added by telepathy)
-        if (messageById(textEvent->messageToken()) != 0) {
+        if (!textEvent->messageToken().isEmpty() && messageById(textEvent->messageToken()) != 0) {
             continue;
         }
 
@@ -133,14 +133,12 @@ void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
         // be appended to the model.
         // Also, if the message is outgoing, it should also be appeneded to the model
         bool outgoing = textEvent->sender()->entityType() == Tpl::EntityTypeSelf;
-        if (outgoing || textEvent->editTimestamp().toTime_t() > 0) {
-            filteredEvents.append(event);
-            // add the number to the phone numbers list
-            QString phoneNumber = outgoing ? textEvent->receiver()->identifier() :
-                                             textEvent->sender()->identifier();
-            if (!phoneNumbers.contains(phoneNumber)) {
-                phoneNumbers.append(phoneNumber);
-            }
+        filteredEvents.append(event);
+        // add the number to the phone numbers list
+        QString phoneNumber = outgoing ? textEvent->receiver()->identifier() :
+                                         textEvent->sender()->identifier();
+        if (!phoneNumbers.contains(phoneNumber)) {
+            phoneNumbers.append(phoneNumber);
         }
     }
 
