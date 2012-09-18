@@ -1,5 +1,6 @@
 import QtQuick 1.1
 import "../Widgets"
+import "../dateUtils.js" as DateUtils
 
 Item {
     id: callItem
@@ -33,8 +34,7 @@ Item {
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised
         styleColor: "white"
-        // FIXME: show time if today otherwise date without year
-        text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
+        text: DateUtils.formatLogDate(timestamp)
     }
 
     Row {
