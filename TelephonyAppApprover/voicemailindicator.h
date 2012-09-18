@@ -35,20 +35,19 @@ class VoiceMailIndicator : public QObject
 public:
     explicit VoiceMailIndicator(QObject *parent = 0);
 
-protected:
-    void updateCounter();
-
 public Q_SLOTS:
-    void onPropertiesChanged(const QString &interfaceName,
-                             const QVariantMap &changedProperties,
-                             const QStringList &invalidatedProperties);
+    void onVoicemailCountChanged(int count);
+    void onVoicemailIndicatorChanged(bool active);
     void onIndicatorDisplay(QIndicate::Indicator *indicator);
+    void onAccountReady();
 
 private:
+    bool voicemailIndicatorVisible();
+    int voicemailCount();
+    bool checkConnected();
     QDBusConnection mConnection;
     QIndicate::Server *mIndicateServer;
     QIndicate::Indicator *mIndicator;
-    QDBusInterface mInterface;
 };
 
 #endif // VOICEMAILINDICATOR_H

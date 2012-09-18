@@ -25,13 +25,7 @@
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 
-#define ANDROID_DBUS_ADDRESS "com.canonical.Android"
-#define ANDROID_TELEPHONY_DBUS_PATH "/com/canonical/android/telephony/Telephony"
-#define ANDROID_TELEPHONY_DBUS_IFACE "com.canonical.android.telephony.Telephony"
-#define ANDROID_TELEPHONY_PROPERTIES_DBUS_IFACE "org.freedesktop.DBus.Properties"
-
-#define PROPERTY_VOICEMAILNUMBER "VoiceMailNumber"
-#define PROPERTY_VOICEMAILCOUNT "VMessageCount"
+#define CANONICAL_IFACE_TELEPHONY "com.canonical.Telephony"
 
 typedef QMap<QString, QVariant> dbusQMap;
 Q_DECLARE_METATYPE(dbusQMap)
@@ -39,7 +33,14 @@ Q_DECLARE_METATYPE(dbusQMap)
 CallManager::CallManager(QObject *parent)
 : QObject(parent)
 {
-    refreshProperties();
+    // we cannot use TelepathyHelper::instance() as we might create a loop
+    mTelepathyHelper = qobject_cast<TelepathyHelper*>(parent);
+    if (mTelepathyHelper) {
+        // track when the account becomes available
+        connect(mTelepathyHelper, SIGNAL(accountReady()), SLOT(onAccountReady()));
+        // track when the connection becomes available
+        connect(mTelepathyHelper, SIGNAL(connectionChanged()), SLOT(onAccountReady()));
+    }
 }
 
 void CallManager::startCall(const QString &phoneNumber)
@@ -56,6 +57,25 @@ void CallManager::startCall(const QString &phoneNumber)
     connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
+}
+
+void CallManager::onAccountReady()
+{
+    if (!mTelepathyHelper || !mTelepathyHelper->account() || !mTelepathyHelper->account()->connection()) {
+        mVoicemailNumber = QString();
+        Q_EMIT voicemailNumberChanged();
+        return;
+    }
+
+    Tp::ConnectionPtr conn(mTelepathyHelper->account()->connection());
+    QString busName = conn->busName();
+    QString objectPath = conn->objectPath();
+    QDBusInterface connIface(busName, objectPath, CANONICAL_IFACE_TELEPHONY);
+    QDBusReply<QString> replyNumber = connIface.call("VoicemailNumber");
+    if (replyNumber.isValid()) {
+        mVoicemailNumber = replyNumber.value();
+        Q_EMIT voicemailNumberChanged();
+    }
 }
 
 QObject *CallManager::foregroundCall() const
@@ -170,28 +190,7 @@ void CallManager::onCallEnded()
     Q_EMIT backgroundCallChanged();
 }
 
-void CallManager::refreshProperties()
-{
-     QDBusInterface androidIf(ANDROID_DBUS_ADDRESS,
-                             ANDROID_TELEPHONY_DBUS_PATH, 
-                             ANDROID_TELEPHONY_PROPERTIES_DBUS_IFACE);
-     QDBusMessage reply = androidIf.call("GetAll", ANDROID_TELEPHONY_DBUS_IFACE);
-     QVariantList args = reply.arguments();
-     QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
-     mProperties.clear();
-     QMapIterator<QString, QVariant> i(map);
-     while(i.hasNext()) {
-         i.next();
-         mProperties[i.key()] = i.value();
-     }
-}
-
 QString CallManager::getVoicemailNumber()
 {
-    return mProperties[PROPERTY_VOICEMAILNUMBER].toString();
-}
-
-int CallManager::getVoicemailCount()
-{
-    return mProperties[PROPERTY_VOICEMAILCOUNT].toInt();
+    return mVoicemailNumber;
 }

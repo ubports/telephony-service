@@ -27,6 +27,7 @@
 #include <TelepathyQt/ReceivedMessage>
 
 class CallEntry;
+class TelepathyHelper;
 
 class CallManager : public QObject
 {
@@ -43,13 +44,15 @@ class CallManager : public QObject
     Q_PROPERTY(bool hasBackgroundCall
                READ hasBackgroundCall
                NOTIFY hasBackgroundCallChanged)
+    Q_PROPERTY(QString voicemailNumber
+               READ getVoicemailNumber
+               NOTIFY voicemailNumberChanged)
 
 public:
     explicit CallManager(QObject *parent = 0);
     
     Q_INVOKABLE void startCall(const QString &phoneNumber);
     Q_INVOKABLE QString getVoicemailNumber();
-    Q_INVOKABLE int getVoicemailCount();
 
     QObject *foregroundCall() const;
     QObject *backgroundCall() const;
@@ -63,18 +66,22 @@ Q_SIGNALS:
     void backgroundCallChanged();
     void hasCallsChanged();
     void hasBackgroundCallChanged();
+    void speakerChanged();
+    void voicemailNumberChanged();
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
     void onContactsAvailable(Tp::PendingOperation *op);
     void onCallEnded();
+    void onAccountReady();
 
 private:
     void refreshProperties();
 
     QList<CallEntry*> mCallEntries;
     QMap<QString, Tp::ContactPtr> mContacts;
-    QMap<QString, QVariant> mProperties;
+    QString mVoicemailNumber;
+    TelepathyHelper *mTelepathyHelper;
 };
 
 #endif // CALLMANAGER_H

@@ -19,7 +19,6 @@
  */
 
 #include "telepathyhelper.h"
-#include "chatmanager.h"
 
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ClientRegistrar>
@@ -28,12 +27,8 @@
 
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
-      mChannelHandler(0),
-      mChannelObserver(0),
       mFirstTime(true)
 {
-    mCallManager = new CallManager(this);
-
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
                      << Tp::Contact::FeatureCapabilities;
@@ -61,48 +56,9 @@ TelepathyHelper *TelepathyHelper::instance()
     return helper;
 }
 
-CallManager *TelepathyHelper::callManager() const
-{
-    return mCallManager;
-}
-
 Tp::AccountPtr TelepathyHelper::account() const
 {
     return mAccount;
-}
-
-ChannelHandler *TelepathyHelper::channelHandler() const
-{
-    return mChannelHandler;
-}
-
-ChannelObserver *TelepathyHelper::channelObserver() const
-{
-    return mChannelObserver;
-}
-
-void TelepathyHelper::initializeTelepathyClients()
-{
-    mChannelHandler = new ChannelHandler(this);
-    mClientRegistrar->registerClient(Tp::AbstractClientPtr(mChannelHandler), "TelephonyApp");
-    Q_EMIT channelHandlerCreated(mChannelHandler);
-
-    mChannelObserver = new ChannelObserver(this);
-    mClientRegistrar->registerClient(Tp::AbstractClientPtr(mChannelObserver), "TelephonyAppObserver");
-    Q_EMIT channelObserverCreated(mChannelObserver);
-
-    connect(mChannelHandler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
-            ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
-    connect(mChannelHandler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
-            mCallManager, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
-}
-
-void TelepathyHelper::registerClients()
-{
-    Tp::ChannelFactoryPtr channelFactory = Tp::ChannelFactoryPtr::constCast(mAccountManager->channelFactory());
-    channelFactory->addCommonFeatures(Tp::Channel::FeatureCore);
-    mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
-    initializeTelepathyClients();
 }
 
 QStringList TelepathyHelper::supportedProtocols() const
@@ -156,8 +112,6 @@ void TelepathyHelper::ensureAccountConnected()
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 {
     Q_UNUSED(op)
-
-    registerClients();
 
     Tp::AccountSetPtr accountSet;
     // try to find an account of the one of supported protocols
