@@ -127,21 +127,21 @@ Item {
             anchors.right: parent.right
             buttonsExpanded: true
 
-            Page {
+            Tab {
                 iconSource: "assets/tab_icon_call_inactive.png" // FIXME: selected ? "../assets/tab_icon_call_active.png"
-                contentsSource: "PanelCalls/CallPanel.qml"
+                page: Qt.resolvedUrl("PanelCalls/CallPanel.qml")
                 property string pane: "Panes/CallEndedPane.qml"
             }
 
-            Page {
+            Tab {
                 iconSource: "assets/tab_icon_messaging_inactive.png" // FIXME: selected ? "../assets/tab_icon_messaging_active.png"
-                contentsSource: "PanelMessages/MessagesPanel.qml"
+                page: Qt.resolvedUrl("PanelMessages/MessagesPanel.qml")
                 property string pane: "Panes/SelectMessagePane.qml"
             }
 
-            Page {
+            Tab {
                 iconSource: "assets/tab_icon_contacts_inactive.png" // FIXME: selected ? "../assets/tab_icon_contacts_active.png"
-                contentsSource: "PanelContacts/ContactsPanel.qml"
+                page: Qt.resolvedUrl("PanelContacts/ContactsPanel.qml")
                 property string pane: "Panes/SelectContactPane.qml"
             }
         }

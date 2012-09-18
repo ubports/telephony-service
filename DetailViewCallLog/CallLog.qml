@@ -38,11 +38,11 @@ Item {
             opacity: 0.65
         }
 
-        Page {
+        Tab {
             title: "All"
         }
 
-        Page {
+        Tab {
             id: missedCallsTab
             title: "Missed"
         }
