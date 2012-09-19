@@ -221,7 +221,6 @@ TelephonyPage {
                 anchors.right: (parent) ? parent.right : undefined
                 bottomSeparator: true
 
-                onClicked: telephony.showContactDetailsFromId(contactId)
                 onActionClicked: telephony.callNumber(phoneNumber)
             }
         }

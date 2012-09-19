@@ -38,11 +38,16 @@ Item {
         onContactLoaded: telephony.showContactDetails(contact);
     }
 
-    function showLiveCall() {
+    function showLiveCall(clear) {
+        if (clear) {
+            viewLoader.clear();
+        }
+
         liveCall.load()
     }
 
     function showVoicemail() {
+        viewLoader.clear();
         voicemail.load()
     }
 
@@ -58,11 +63,15 @@ Item {
         callManager.startCall(number);
     }
 
-    function startChat(contactId, phoneNumber) {
+    function startChat(contactId, phoneNumber, clear) {
         var properties = { number: phoneNumber, newMessage: false };
         if (contactId) {
             properties["contactId"] = contactId;
         }
+        if (clear) {
+            viewLoader.clear();
+        }
+
         messages.load(properties);
     }
 
@@ -72,8 +81,12 @@ Item {
         }
     }
 
-    function showContactDetails(contact) {
+    function showContactDetails(contact, clear) {
         var properties = { contact: contact, added: false }
+        if (clear) {
+            viewLoader.clear();
+        }
+
         contactDetails.load(properties)
     }
 
@@ -82,24 +95,28 @@ Item {
     }
 
     function createNewContact() {
+        viewLoader.clear();
         contactDetails.load()
         view.createNewContact()
     }
 
     function startNewMessage() {
+        viewLoader.clear();
         messages.load({ newMessage: true })
     }
 
     function showKeypad() {
+        viewLoader.clear();
         keypad.load()
     }
 
     function showCallLog() {
+        viewLoader.clear();
         callLog.load()
     }
 
     function resetView() {
-        viewLoader.source = tabs.model[tabs.selectedTabIndex].pane
+        viewLoader.clear();
     }
 
     Item {
