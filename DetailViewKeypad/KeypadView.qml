@@ -5,6 +5,7 @@ TelephonyPage {
     anchors.fill: parent
     FocusScope {
         anchors.fill: parent
+        focus: true
 
         Rectangle {
             id: background
