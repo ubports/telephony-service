@@ -1,5 +1,6 @@
 import QtQuick 1.1
 import "../Widgets"
+import "../dateUtils.js" as DateUtils
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
@@ -34,8 +35,8 @@ ListItem.Base {
         color: baseInfo.__textColor
         style: Text.Raised
         styleColor: "white"
-        opacity: baseInfo.enabled ? 1.0 : 0.5
-        // FIXME: show time if today otherwise date without year
-        text: Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
+        opacity: messageDelegate.enabled ? 1.0 : 0.5
+        text: DateUtils.formatLogDate(timestamp)
+
     }
 }

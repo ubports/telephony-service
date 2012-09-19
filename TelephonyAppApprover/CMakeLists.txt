@@ -1,6 +1,6 @@
 
-set(qt_SRCS telephonyappapprover.cpp textchannelobserver.cpp voicemailindicator.cpp)
-set(qt_HDRS telephonyappapprover.h textchannelobserver.h voicemailindicator.h)
+set(qt_SRCS telephonyappapprover.cpp textchannelobserver.cpp voicemailindicator.cpp telepathyhelper.cpp)
+set(qt_HDRS telephonyappapprover.h textchannelobserver.h voicemailindicator.h telepathyhelper.h)
 set(approver_SRCS main.cpp ${qt_SRCS})
 set(approver_HDRS ${qt_HDRS})
 set(desktop_FILES telephony-app-sms.desktop telephony-app-phone.desktop)

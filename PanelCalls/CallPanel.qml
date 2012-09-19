@@ -72,11 +72,12 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 30
-            visible: callManager.getVoicemailNumber() != ""
+            visible: callManager.voicemailNumber != ""
 
             iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
             iconFrame: false
             text: "Voicemail"
+
             onClicked: telephony.showVoicemail()
             selected: telephony.voicemail.loaded
         }

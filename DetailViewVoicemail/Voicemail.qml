@@ -9,7 +9,7 @@ Item {
     property string viewName: "voicemail"
     property variant contact
     property QtObject call: callManager.foregroundCall
-    property string number: callManager.getVoicemailNumber()
+    property string number: callManager.voicemailNumber
 
     function isVoicemailActive() {
         return telephony.isVoicemailActive();
