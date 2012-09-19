@@ -1,11 +1,11 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import TelephonyApp 0.1
+import Ubuntu.Components 0.1
 import "../"
 
-FocusScope {
+Page {
     id: view
-
     property string viewName: "messages"
     property alias contact: contactWatcher.contact
     property alias number: contactWatcher.phoneNumber
@@ -169,4 +169,3 @@ FocusScope {
         }
     }
 }
-

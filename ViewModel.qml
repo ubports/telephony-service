@@ -22,11 +22,6 @@ QtObject {
     property bool loaded: telephony.viewLoader != undefined && String(telephony.viewLoader.source).indexOf(source) != -1
 
     function load() {
-        // select the correct tab for the view
-        if (telephony.selectedTabIndex != tab) {
-            telephony.selectedTabIndex = tab;
-        }
-
         // To keep this simple we rely on the fact that setting source to a
         // local file will immediately make the item available.
         telephony.viewLoader.source = source

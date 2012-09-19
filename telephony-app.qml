@@ -202,20 +202,22 @@ Item {
             id: rightPaneLoaders
 
             property variant currentLoader: children[tabs.selectedTabIndex]
-            property variant currentItem: currentLoader != undefined ? currentLoader.item : undefined
+            property variant currentItem: currentLoader != undefined ? currentLoader.currentPage : undefined
             anchors.fill: parent
         }
 
         Repeater {
             model: tabs.children
-            delegate: Loader {
+            delegate: PageStack {
+                id: stack
+                property string source: modelData.pane
                 property bool isCurrent: index == tabs.selectedTabIndex
                 anchors.fill: parent
-                source: modelData.pane
                 visible: isCurrent
-                focus: isCurrent
-
-                onLoaded: item.focus = isCurrent
+                onSourceChanged: {
+                    console.log(source)
+                    stack.push(Qt.resolvedUrl(source))
+                }
             }
             onItemAdded: item.parent = rightPaneLoaders
         }

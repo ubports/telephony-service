@@ -1,10 +1,11 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
+import Ubuntu.Components 0.1
 import "../Widgets"
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes
 
-FocusScope {
+Page {
     id: contactDetails
 
     property string viewName: "contacts"
