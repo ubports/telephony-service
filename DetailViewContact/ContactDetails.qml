@@ -7,7 +7,6 @@ import "DetailTypeUtilities.js" as DetailTypes
 TelephonyPage {
     id: contactDetails
 
-    property string viewName: "contacts"
     property bool editable: false
     property alias contact: contactWatcher.contact
     property variant contactId: (contact) ? contact.id : null

@@ -4,8 +4,6 @@ import "../Widgets"
 TelephonyPage {
     anchors.fill: parent
     FocusScope {
-        property string viewName: "keypad"
-
         anchors.fill: parent
 
         Rectangle {

@@ -6,7 +6,6 @@ import "../"
 
 TelephonyPage {
     id: view
-    property string viewName: "messages"
     property alias contact: contactWatcher.contact
     property alias number: contactWatcher.phoneNumber
     property alias contactId: contactWatcher.contactId

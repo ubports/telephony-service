@@ -6,7 +6,6 @@ import "../"
 TelephonyPage {
     id: liveCall
 
-    property string viewName: "livecall"
     property alias contact: contactWatcher.contact
     property QtObject call: callManager.foregroundCall
     property alias number: contactWatcher.phoneNumber

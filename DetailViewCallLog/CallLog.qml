@@ -4,8 +4,6 @@ import Ubuntu.Components 0.1
 import "../Widgets"
 
 TelephonyPage {
-    property string viewName: "callLog"
-
     Item {
         id: background
 

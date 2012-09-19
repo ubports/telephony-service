@@ -5,7 +5,6 @@ import "../DetailViewKeypad"
 TelephonyPage {
     id: voicemail
 
-    property string viewName: "voicemail"
     property variant contact
     property QtObject call: callManager.foregroundCall
     property string number: callManager.voicemailNumber
