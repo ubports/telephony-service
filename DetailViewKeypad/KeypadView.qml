@@ -1,7 +1,7 @@
 import QtQuick 1.1
-import Ubuntu.Components 0.1
+import "../Widgets"
 
-Page {
+TelephonyPage {
     anchors.fill: parent
     FocusScope {
         property string viewName: "keypad"

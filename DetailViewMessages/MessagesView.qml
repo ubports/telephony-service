@@ -1,10 +1,10 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import TelephonyApp 0.1
-import Ubuntu.Components 0.1
+import "../Widgets"
 import "../"
 
-Page {
+TelephonyPage {
     id: view
     property string viewName: "messages"
     property alias contact: contactWatcher.contact

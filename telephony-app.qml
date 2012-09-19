@@ -58,23 +58,23 @@ Item {
         callManager.startCall(number);
     }
 
-    function startChat(contactId, number) {
-        messages.load()
-        view.number = number
+    function startChat(contactId, phoneNumber) {
+        var properties = { number: phoneNumber, newMessage: false };
         if (contactId) {
-            view.contactId = contactId
+            properties["contactId"] = contactId;
         }
-        view.newMessage = false
+        messages.load(properties);
     }
 
     function endCall() {
-        callEnded.load()
+        if (liveCall.loaded) {
+            viewLoader.pop();
+        }
     }
 
     function showContactDetails(contact) {
-        contactDetails.load()
-        view.contact = contact
-        view.added = false
+        var properties = { contact: contact, added: false }
+        contactDetails.load(properties)
     }
 
     function showContactDetailsFromId(contactId) {
@@ -87,8 +87,7 @@ Item {
     }
 
     function startNewMessage() {
-        messages.load()
-        view.newMessage = true
+        messages.load({ newMessage: true })
     }
 
     function showKeypad() {

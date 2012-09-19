@@ -1,9 +1,8 @@
 import QtQuick 1.0
 import "../Widgets"
 import "../DetailViewKeypad"
-import Ubuntu.Components 0.1
 
-Item {
+TelephonyPage {
     id: voicemail
 
     property string viewName: "voicemail"

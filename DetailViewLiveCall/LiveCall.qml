@@ -2,9 +2,8 @@ import QtQuick 1.0
 import "../Widgets"
 import "../DetailViewKeypad"
 import "../"
-import Ubuntu.Components 0.1
 
-Item {
+TelephonyPage {
     id: liveCall
 
     property string viewName: "livecall"
