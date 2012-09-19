@@ -215,7 +215,6 @@ Item {
                 anchors.fill: parent
                 visible: isCurrent
                 onSourceChanged: {
-                    console.log(source)
                     stack.push(Qt.resolvedUrl(source))
                 }
             }
