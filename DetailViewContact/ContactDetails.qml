@@ -18,6 +18,7 @@ TelephonyPage {
 
     onContactChanged: editable = false
 
+    title: "Contact Details"
     width: 400
     height: 600
 

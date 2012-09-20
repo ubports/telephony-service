@@ -15,6 +15,8 @@ TelephonyPage {
     property bool isMuted: call ? call.muted : false
     property bool isDtmf: false
 
+    title: "On Call"
+
     function endCall() {
         if (call) {
             call.endCall();

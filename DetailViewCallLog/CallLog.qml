@@ -4,6 +4,7 @@ import Ubuntu.Components 0.1
 import "../Widgets"
 
 TelephonyPage {
+    title: "Call Log"
     Item {
         id: background
 

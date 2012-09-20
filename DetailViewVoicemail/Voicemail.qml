@@ -10,6 +10,8 @@ TelephonyPage {
     property QtObject call: callManager.foregroundCall
     property string number: callManager.voicemailNumber
 
+    title: "Voicemail"
+
     function isVoicemailActive() {
         return telephony.isVoicemailActive();
     }

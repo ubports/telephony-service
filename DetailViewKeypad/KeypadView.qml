@@ -2,6 +2,7 @@ import QtQuick 1.1
 import "../Widgets"
 
 TelephonyPage {
+    title: "Keypad"
     anchors.fill: parent
     FocusScope {
         anchors.fill: parent

@@ -13,6 +13,7 @@ TelephonyPage {
 
     property string pendingMessage
 
+    title: "Conversation"
     ContactWatcher {
         id: contactWatcher
     }
