@@ -8,8 +8,8 @@ Item {
     height: 487
 
     property bool singlePane: state == "singlePane"
-    property alias viewLoader: rightPaneLoaders.currentLoader
-    property alias view: rightPaneLoaders.currentItem
+    property alias viewStack: rightPaneStacks.currentStack
+    property alias view: rightPaneStacks.currentItem
     property alias selectedTabIndex: tabs.selectedTabIndex
     property QtObject call: callManager.foregroundCall
 
@@ -106,7 +106,7 @@ Item {
 
     function endCall() {
         if (liveCall.loaded) {
-            viewLoader.pop();
+            viewStack.pop();
         }
     }
 
@@ -146,11 +146,11 @@ Item {
 
     function resetView() {
         if (singlePane) {
-            while (viewLoader.depth > 1) {
-                viewLoader.pop();
+            while (viewStack.depth > 1) {
+                viewStack.pop();
             }
         } else {
-            viewLoader.clear();
+            viewStack.clear();
         }
     }
 
@@ -253,16 +253,16 @@ Item {
             color: "#ebebeb"
         }
 
-        /* Instantiate a Loader per tab and keep its loaded content alive.
+        /* Instantiate a PageStack per tab and keep its loaded content alive.
            That makes the application stateful.
            Ref.: https://bugs.launchpad.net/newyork/+bug/1017659
         */
         Item {
-            id: rightPaneLoaders
+            id: rightPaneStacks
 
-            property variant currentLoader: singlePane ? mainStack : children[tabs.selectedTabIndex]
+            property variant currentStack: singlePane ? mainStack : children[tabs.selectedTabIndex]
             property variant currentItem: singlePane ? mainStack.currentPage :
-                                                       (currentLoader != undefined ? currentLoader.currentPage : undefined)
+                                                       (currentStack != undefined ? currentStack.currentPage : undefined)
             anchors.fill: parent
         }
 
@@ -278,7 +278,7 @@ Item {
                     stack.push(Qt.resolvedUrl(source))
                 }
             }
-            onItemAdded: item.parent = rightPaneLoaders
+            onItemAdded: item.parent = rightPaneStacks
         }
 
         Image {

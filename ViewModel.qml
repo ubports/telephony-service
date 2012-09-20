@@ -26,6 +26,6 @@ QtObject {
             properties = {};
         }
         properties["source"] = source;
-        telephony.viewLoader.push(Qt.resolvedUrl(source), properties);
+        telephony.viewStack.push(Qt.resolvedUrl(source), properties);
     }
 }
