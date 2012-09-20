@@ -7,7 +7,7 @@ Item {
     width: singlePane ? 250 : 570
     height: 487
 
-    property bool singlePane: false
+    property bool singlePane: state == "singlePane"
     property alias viewLoader: rightPaneLoaders.currentLoader
     property alias view: rightPaneLoaders.currentItem
     property alias selectedTabIndex: tabs.selectedTabIndex
@@ -43,16 +43,6 @@ Item {
             name: "dualPane"
 
             PropertyChanges {
-                target: telephony
-                singlePane: false
-            }
-
-            PropertyChanges {
-                target: mainStack
-                visible: false
-            }
-
-            PropertyChanges {
                 target: leftPane
                 parent: telephony
                 width: 250
@@ -67,11 +57,6 @@ Item {
 
         State {
             name: "singlePane"
-
-            PropertyChanges {
-                target: telephony
-                singlePane: true
-            }
 
             StateChangeScript {
                 script: {
@@ -172,7 +157,6 @@ Item {
     PageStack {
         id: mainStack
         anchors.fill: parent
-
         visible: singlePane
     }
 
