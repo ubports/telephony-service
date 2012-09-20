@@ -1,13 +1,13 @@
 import QtQuick 1.1
-import QtMobility.contacts 1.1
 import "Widgets"
 import Ubuntu.Components 0.1
 
 Item {
     id: telephony
-    width: 570
+    width: singlePane ? 250 : 570
     height: 487
 
+    property bool singlePane: false
     property alias viewLoader: rightPaneLoaders.currentLoader
     property alias view: rightPaneLoaders.currentItem
     property alias selectedTabIndex: tabs.selectedTabIndex
@@ -38,16 +38,65 @@ Item {
         onContactLoaded: telephony.showContactDetails(contact);
     }
 
+    states: [
+        State {
+            name: "dualPane"
+
+            PropertyChanges {
+                target: telephony
+                singlePane: false
+            }
+
+            PropertyChanges {
+                target: mainStack
+                visible: false
+            }
+
+            PropertyChanges {
+                target: leftPane
+                parent: telephony
+                width: 250
+            }
+
+            StateChangeScript {
+                script: {
+                    mainStack.clear();
+                }
+            }
+        },
+
+        State {
+            name: "singlePane"
+
+            PropertyChanges {
+                target: telephony
+                singlePane: true
+            }
+
+            PropertyChanges {
+                target: leftPane
+                parent: mainStack
+            }
+
+            StateChangeScript {
+                script: {
+                    mainStack.clear();
+                    mainStack.push(leftPane);
+                }
+            }
+        }
+    ]
+
     function showLiveCall(clear) {
         if (clear) {
-            viewLoader.clear();
+            resetView();
         }
 
         liveCall.load()
     }
 
     function showVoicemail() {
-        viewLoader.clear();
+        resetView();
         voicemail.load()
     }
 
@@ -69,7 +118,7 @@ Item {
             properties["contactId"] = contactId;
         }
         if (clear) {
-            viewLoader.clear();
+            resetView();
         }
 
         messages.load(properties);
@@ -84,7 +133,7 @@ Item {
     function showContactDetails(contact, clear) {
         var properties = { contact: contact, added: false }
         if (clear) {
-            viewLoader.clear();
+            resetView();
         }
 
         contactDetails.load(properties)
@@ -95,28 +144,41 @@ Item {
     }
 
     function createNewContact() {
-        viewLoader.clear();
+        resetView();
         contactDetails.load()
         view.createNewContact()
     }
 
     function startNewMessage() {
-        viewLoader.clear();
+        resetView();
         messages.load({ newMessage: true })
     }
 
     function showKeypad() {
-        viewLoader.clear();
+        resetView();
         keypad.load()
     }
 
     function showCallLog() {
-        viewLoader.clear();
+        resetView();
         callLog.load()
     }
 
     function resetView() {
-        viewLoader.clear();
+        if (singlePane) {
+            while (viewLoader.depth > 1) {
+                viewLoader.pop();
+            }
+        } else {
+            viewLoader.clear();
+        }
+    }
+
+    PageStack {
+        id: mainStack
+        anchors.fill: parent
+
+        visible: singlePane
     }
 
     Item {
@@ -124,6 +186,7 @@ Item {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        anchors.right: singlePane ? parent.right : undefined
         width: 250
 
         Image {
@@ -204,6 +267,7 @@ Item {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        visible: !singlePane
 
         Rectangle {
             anchors.fill: parent
@@ -217,8 +281,9 @@ Item {
         Item {
             id: rightPaneLoaders
 
-            property variant currentLoader: children[tabs.selectedTabIndex]
-            property variant currentItem: currentLoader != undefined ? currentLoader.currentPage : undefined
+            property variant currentLoader: singlePane ? mainStack : children[tabs.selectedTabIndex]
+            property variant currentItem: singlePane ? mainStack.currentPage :
+                                                       (currentLoader != undefined ? currentLoader.currentPage : undefined)
             anchors.fill: parent
         }
 
