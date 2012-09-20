@@ -44,7 +44,7 @@ FocusScope {
             anchors.verticalCenter: parent.verticalCenter
             focus: true
             // send message if return was pressed
-            Keys.onEnterPressed: sendButton.clicked()
+            Keys.onReturnPressed: sendButton.clicked()
             Keys.onEscapePressed: text = ""
         }
 
