@@ -34,7 +34,7 @@ TelephonyApplication::TelephonyApplication(int &argc, char **argv)
 bool TelephonyApplication::setup()
 {
     static QList<QString> validSchemes;
-    bool singleView = false;
+    bool singlePanel = false;
 
     if (validSchemes.isEmpty()) {
         validSchemes << "contact";
@@ -47,7 +47,7 @@ bool TelephonyApplication::setup()
     QStringList arguments = this->arguments();
     if (arguments.contains("--single-panel")) {
         arguments.removeAll("--single-panel");
-        singleView = true;
+        singlePanel = true;
     }
 
     if (arguments.size() > 2) {
@@ -84,7 +84,7 @@ bool TelephonyApplication::setup()
     m_view->rootContext()->setContextProperty("application", this);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     m_view->rootContext()->setContextProperty("dbus", m_dbus);
-    m_view->rootContext()->setContextProperty("appLayout", singleView ? "singlePane" : "dualPane" );
+    m_view->rootContext()->setContextProperty("appLayout", singlePanel ? "singlePane" : "dualPane" );
     QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
     m_view->setSource(source);
     m_view->show();
