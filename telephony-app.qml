@@ -7,6 +7,7 @@ Item {
     width: singlePane ? 250 : 570
     height: 487
 
+    state: appLayout
     property bool singlePane: state == "singlePane"
     property alias viewStack: rightPaneStacks.currentStack
     property alias view: rightPaneStacks.currentItem
