@@ -73,11 +73,6 @@ Item {
                 singlePane: true
             }
 
-            PropertyChanges {
-                target: leftPane
-                parent: mainStack
-            }
-
             StateChangeScript {
                 script: {
                     mainStack.clear();
