@@ -1,4 +1,5 @@
 import QtQuick 1.0
+import Ubuntu.Components 0.1
 import "../Widgets"
 import "../DetailViewKeypad"
 
