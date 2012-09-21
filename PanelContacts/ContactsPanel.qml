@@ -75,7 +75,7 @@ Item {
 
         delegate: ContactDelegate {
             onClicked: contactsPanel.contactClicked(contact)
-            selected: telephony.view.contact && telephony.view.contact == contact
+            selected: telephony.view.contact ? (telephony.view.contact == contact) : false
         }
 
         section.property: "initial"
