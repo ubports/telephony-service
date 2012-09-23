@@ -34,9 +34,9 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
         """Clicking inside the searbox must give it the focus."""
     	searchbox = self.get_messages_searchbox()
     	self.mouse.move_to_object(searchbox)
-    	self.mouse.click()   
+    	self.mouse.click()
 
-		self.assertThat(searchbox.activeFocus, Equals(True))
+        self.assertThat(searchbox.activeFocus, Equals(True))
 
     def test_searchbox_entry(self):
         """Ensures that typing inside the main searchbox works."""
@@ -148,11 +148,3 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
 
     	self.assertThat(message_box.searchQuery, Eventually(Equals("test")))
 
-
-
-
-
-
-
-        
-       

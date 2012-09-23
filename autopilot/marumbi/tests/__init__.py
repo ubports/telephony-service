@@ -30,3 +30,4 @@ class MarumbiTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
         qdi = qdv_qgs.select_many("QDeclarativeItem")[0].select_many("QDeclarativeItem")[0]
         tabs = qdi.select_single("Tabs").select_many("QDeclarativeRow")[0]
         return tabs.select_many("TabButton")
+

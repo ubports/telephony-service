@@ -76,7 +76,3 @@ class TestContactsPanel(ContactsPanel, MarumbiTestCase):
 
     	self.assertThat(new_contact_item.selected, Eventually(Equals(True)))
 
-
-
-
-		
