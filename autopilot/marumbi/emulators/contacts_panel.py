@@ -26,5 +26,3 @@ class ContactsPanel(MarumbiTestCase):
         qdl_qdi = qdi.select_many("QDeclarativeLoader")[0].select_many("ContactsPanel")[0]
         return qdl_qdi.select_single("ListItem")
 
-
-
