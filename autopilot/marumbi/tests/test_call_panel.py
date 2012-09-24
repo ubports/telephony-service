@@ -17,11 +17,11 @@ from marumbi.emulators.call_panel import CallPanel
 
 class TestCallPanel(CallPanel, MarumbiTestCase):
     """Tests for the Call panel."""
-    
+
     def test_main_tab_focus(self):
         """Ensures call panel tab is pre-selected when the app is started."""
         call_tab = self.get_main_view_tabs()[0]
-        
+
         self.assertThat(call_tab.selected, Equals(True))
 
     def test_searchbox_focus(self):
@@ -37,14 +37,14 @@ class TestCallPanel(CallPanel, MarumbiTestCase):
         searchbox = self.get_searchbox()
 
         self.keyboard.type("test")
-        
+
         self.assertThat(searchbox.searchQuery, Eventually(Equals("test")))
 
     def test_keypad_view_active(self):
         """Click the 'Keypad' list item must show the keypad."""
         self.click_keypad_list_item()
         keypad_view = self.get_keypad_view()
-        
+
         self.assertThat(keypad_view.activeFocus, Eventually(Equals(True)))
 
     def test_keypad_click(self):
@@ -68,7 +68,7 @@ class TestCallPanel(CallPanel, MarumbiTestCase):
         self.keyboard.type("911")
 
         self.mouse.move_to_object(delete_button)
-        
+
         self.mouse.click()
         self.assertThat(entry.value, Eventually(Equals("91")))
         self.mouse.click()
@@ -82,7 +82,7 @@ class TestCallPanel(CallPanel, MarumbiTestCase):
         entry = self.get_keypad_entry()
 
         self.keyboard.type("911")
-        
+
         self.assertThat(entry.value, Eventually(Equals("911")))
 
     def test_call_log_first_tab_focus(self):

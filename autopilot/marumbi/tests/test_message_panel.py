@@ -27,7 +27,7 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
     def test_main_tab_focus(self):
         """Clicking on the 'messages' tab must give it the focus."""
         messages_tab = self.get_main_view_tabs()[1]
-        
+
         self.assertThat(messages_tab.selected, Equals(True))
 
     def test_searchbox_focus(self):
@@ -42,7 +42,7 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
         """Ensures that typing inside the main searchbox works."""
     	searchbox = self.get_messages_searchbox()
     	self.mouse.move_to_object(searchbox)
-    	self.mouse.click()   
+    	self.mouse.click()
 
     	self.keyboard.type("test")
 
@@ -52,7 +52,7 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
         """clicking the cross icon must clear the searchbox."""
     	searchbox = self.get_messages_searchbox()
     	self.mouse.move_to_object(searchbox)
-    	self.mouse.click()   
+    	self.mouse.click()
 
     	self.keyboard.type("test")
 
@@ -108,7 +108,7 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
         """Typing a number into the 'sendto' box must enable the Send button."""
     	self.click_new_message_list_item()
     	send_button = self.get_message_send_button()
-     	
+
      	self.keyboard.type("911")
 
      	self.assertThat(send_button.state, Eventually(Equals("idle")))
@@ -117,7 +117,7 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
         """Removing the number from the 'sendto' box must disable the Send button."""
      	self.click_new_message_list_item()
     	send_button = self.get_message_send_button()
-     	
+
      	self.keyboard.type("911")
      	self.keyboard.press_and_release("Ctrl+a")
      	self.keyboard.press_and_release("Delete")

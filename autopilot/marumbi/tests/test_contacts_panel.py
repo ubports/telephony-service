@@ -13,7 +13,7 @@ from testtools.matchers import Equals
 from autopilot.matchers import Eventually
 
 from marumbi.tests import MarumbiTestCase
-from marumbi.emulators.contacts_panel import ContactsPanel 
+from marumbi.emulators.contacts_panel import ContactsPanel
 
 class TestContactsPanel(ContactsPanel, MarumbiTestCase):
 
@@ -26,7 +26,7 @@ class TestContactsPanel(ContactsPanel, MarumbiTestCase):
     def test_main_tab_focus(self):
         """Clicking on the 'contacts' tab must give it the focus."""
         contacts_tab = self.get_main_view_tabs()[2]
-        
+
         self.assertThat(contacts_tab.selected, Equals(True))
 
     def test_searchbox_focus(self):
@@ -41,17 +41,17 @@ class TestContactsPanel(ContactsPanel, MarumbiTestCase):
         """Ensures that typing inside the main searchbox works."""
     	searchbox = self.get_contacts_searchbox()
     	self.mouse.move_to_object(searchbox)
-    	self.mouse.click()   
+    	self.mouse.click()
 
     	self.keyboard.type("test")
 
     	self.assertThat(searchbox.searchQuery, Eventually(Equals("test")))
 
     def test_searchbox_clear_button(self):
-        """clicking the cross icon must clear the searchbox.""" 
+        """clicking the cross icon must clear the searchbox."""
     	searchbox = self.get_contacts_searchbox()
     	self.mouse.move_to_object(searchbox)
-    	self.mouse.click()   
+    	self.mouse.click()
 
     	self.keyboard.type("test")
 
