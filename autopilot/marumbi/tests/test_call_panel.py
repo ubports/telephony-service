@@ -15,6 +15,7 @@ from autopilot.matchers import Eventually
 from marumbi.tests import MarumbiTestCase
 from marumbi.emulators.call_panel import CallPanel
 
+
 class TestCallPanel(CallPanel, MarumbiTestCase):
     """Tests for the Call panel."""
 

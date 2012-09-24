@@ -9,6 +9,7 @@ from __future__ import absolute_import
 
 from marumbi.tests import MarumbiTestCase
 
+
 class MessagesPanel(MarumbiTestCase):
     """An emulator class that makes it easy to interact with the messages panel."""
 
@@ -47,12 +48,12 @@ class MessagesPanel(MarumbiTestCase):
     def get_message_send_button(self):
         """Returns the send button."""
         messages_view = self.get_messages_view()
-        mf_qdi =  messages_view.select_single("MessagesFooter").select_many("QDeclarativeItem")[0]
+        mf_qdi = messages_view.select_single("MessagesFooter").select_many("QDeclarativeItem")[0]
         return mf_qdi.select_many("Button")[0]
 
     def get_new_message_text_box(self):
         """Returns main message box for sending an sms."""
         messages_view = self.get_messages_view()
-        mf_qdi =  messages_view.select_single("MessagesFooter").select_many("QDeclarativeItem")[0]
+        mf_qdi = messages_view.select_single("MessagesFooter").select_many("QDeclarativeItem")[0]
         return mf_qdi.select_many("SearchEntry")[1]
 

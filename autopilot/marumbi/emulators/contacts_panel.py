@@ -9,6 +9,7 @@ from __future__ import absolute_import
 
 from marumbi.tests import MarumbiTestCase
 
+
 class ContactsPanel(MarumbiTestCase):
     """An emulator class that makes it easy to interact with the contacts panel."""
 

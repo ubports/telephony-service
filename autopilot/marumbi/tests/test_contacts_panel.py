@@ -15,6 +15,7 @@ from autopilot.matchers import Eventually
 from marumbi.tests import MarumbiTestCase
 from marumbi.emulators.contacts_panel import ContactsPanel
 
+
 class TestContactsPanel(ContactsPanel, MarumbiTestCase):
 
     def setUp(self):
@@ -59,8 +60,8 @@ class TestContactsPanel(ContactsPanel, MarumbiTestCase):
 
         # I am not able to find anything about the 'clear' icon
         # so moving the mouse exactly to that icon with some calculations
-        tx = x + w/12
-        ty = y + h/2
+        tx = x + (w / 12)
+        ty = y + (h / 2)
 
         self.mouse.move(tx, ty)
         self.mouse.click()

@@ -15,6 +15,7 @@ from autopilot.matchers import Eventually
 from marumbi.tests import MarumbiTestCase
 from marumbi.emulators.message_panel import MessagesPanel
 
+
 class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
     """Tests for the messages panel."""
 
@@ -61,8 +62,8 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
 
         # I am not able to find anything about the clear icon
         # so moving the mouse exactly to that icon with some calculations
-        tx = x + w/12
-        ty = y + h/2
+        tx = x + (w / 12)
+        ty = y + (h / 2)
 
         self.mouse.move(tx, ty)
         self.mouse.click()
