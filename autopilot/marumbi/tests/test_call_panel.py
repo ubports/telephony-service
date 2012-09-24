@@ -11,7 +11,6 @@ from __future__ import absolute_import
 
 from testtools.matchers import Equals
 from autopilot.matchers import Eventually
-from time import sleep
 
 from marumbi.tests import MarumbiTestCase
 from marumbi.emulators.call_panel import CallPanel

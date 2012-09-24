@@ -107,7 +107,6 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
     def test_send_button_active(self):
         """Typing a number into the 'sendto' box must enable the Send button."""
     	self.click_new_message_list_item()
-    	sendto_box = self.get_new_message_send_to_box()
     	send_button = self.get_message_send_button()
      	
      	self.keyboard.type("911")
@@ -117,7 +116,6 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
     def test_send_button_disable_on_clear(self):
         """Removing the number from the 'sendto' box must disable the Send button."""
      	self.click_new_message_list_item()
-    	sendto_box = self.get_new_message_send_to_box()
     	send_button = self.get_message_send_button()
      	
      	self.keyboard.type("911")
