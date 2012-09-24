@@ -12,7 +12,7 @@ from marumbi.tests import MarumbiTestCase
 class ContactsPanel(MarumbiTestCase):
     """An emulator class that makes it easy to interact with the contacts panel."""
 
-	def get_contacts_searchbox(self):
+    def get_contacts_searchbox(self):
         """Returns the main searchbox attached to the contacts panel."""
         qdv_qgs = self.app.select_single("QDeclarativeView").select_single("QGraphicsScene")
         qdi = qdv_qgs.select_many("QDeclarativeItem")[0].select_many("QDeclarativeItem")[0]
