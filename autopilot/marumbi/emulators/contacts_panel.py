@@ -27,4 +27,4 @@ class ContactsPanel(MarumbiTestCase):
         return qdl_qdi.select_single("ListItem")
 
 
-        
+

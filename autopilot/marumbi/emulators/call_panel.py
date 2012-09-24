@@ -87,5 +87,4 @@ class CallPanel(MarumbiTestCase):
         self.mouse.move_to_object(call_log_item)
         self.mouse.click()
 
-
-        
+              
