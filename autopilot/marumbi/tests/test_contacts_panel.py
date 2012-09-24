@@ -28,7 +28,7 @@ class TestContactsPanel(ContactsPanel, MarumbiTestCase):
         """Clicking on the 'contacts' tab must give it the focus."""
         contacts_tab = self.get_main_view_tabs()[2]
 
-        self.assertThat(contacts_tab.selected, Equals(True))
+        self.assertThat(contacts_tab.selected, Eventually(Equals(True)))
 
     def test_searchbox_focus(self):
         """Clicking inside the searbox must give it the focus."""
@@ -36,7 +36,7 @@ class TestContactsPanel(ContactsPanel, MarumbiTestCase):
         self.mouse.move_to_object(searchbox)
         self.mouse.click()
 
-        self.assertThat(searchbox.activeFocus, Equals(True))
+        self.assertThat(searchbox.activeFocus, Eventually(Equals(True)))
 
     def test_searchbox_entry(self):
         """Ensures that typing inside the main searchbox works."""

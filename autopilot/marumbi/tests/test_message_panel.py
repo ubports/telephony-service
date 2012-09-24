@@ -29,7 +29,7 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
         """Clicking on the 'messages' tab must give it the focus."""
         messages_tab = self.get_main_view_tabs()[1]
 
-        self.assertThat(messages_tab.selected, Equals(True))
+        self.assertThat(messages_tab.selected, Eventually(Equals(True)))
 
     def test_searchbox_focus(self):
         """Clicking inside the searbox must give it the focus."""
@@ -37,7 +37,7 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
         self.mouse.move_to_object(searchbox)
         self.mouse.click()
 
-        self.assertThat(searchbox.activeFocus, Equals(True))
+        self.assertThat(searchbox.activeFocus, Eventually(Equals(True)))
 
     def test_searchbox_entry(self):
         """Ensures that typing inside the main searchbox works."""
@@ -93,7 +93,7 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
         self.click_new_message_list_item()
         sendto_box = self.get_new_message_send_to_box()
 
-        self.assertThat(sendto_box.activeFocus, Equals(True))
+        self.assertThat(sendto_box.activeFocus, Eventually(Equals(True)))
 
     def test_message_send_to_entry(self):
         """Ensures that number can be typed into the 'sendto' box."""

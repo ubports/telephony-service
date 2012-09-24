@@ -23,14 +23,14 @@ class TestCallPanel(CallPanel, MarumbiTestCase):
         """Ensures call panel tab is pre-selected when the app is started."""
         call_tab = self.get_main_view_tabs()[0]
 
-        self.assertThat(call_tab.selected, Equals(True))
+        self.assertThat(call_tab.selected, Eventually(Equals(True)))
 
     def test_searchbox_focus(self):
         """Clicking inside the searbox must give it the focus."""
         self.click_inside_searchbox()
         searchbox = self.get_searchbox()
 
-        self.assertThat(searchbox.activeFocus, Equals(True))
+        self.assertThat(searchbox.activeFocus, Eventually(Equals(True)))
 
     def test_searchbox_entry(self):
         """Ensures that typing inside the main searchbox works."""
@@ -91,7 +91,7 @@ class TestCallPanel(CallPanel, MarumbiTestCase):
         self.click_call_log_list_item()
         first_call_log_tab = self.get_call_log_view_tabs()[3]
 
-        self.assertThat(first_call_log_tab.selected, Equals(True))
+        self.assertThat(first_call_log_tab.selected, Eventually(Equals(True)))
 
     def test_call_log_second_tab_focus(self):
         """Clicking on the 'Missed' tab must switch to it."""
@@ -101,4 +101,4 @@ class TestCallPanel(CallPanel, MarumbiTestCase):
         self.mouse.move_to_object(second_call_log_tab)
         self.mouse.click()
 
-        self.assertThat(second_call_log_tab.selected, Equals(True))
+        self.assertThat(second_call_log_tab.selected, Eventually(Equals(True)))
