@@ -56,4 +56,3 @@ class MessagesPanel(MarumbiTestCase):
         messages_view = self.get_messages_view()
         mf_qdi = messages_view.select_single("MessagesFooter").select_many("QDeclarativeItem")[0]
         return mf_qdi.select_many("SearchEntry")[1]
-

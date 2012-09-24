@@ -57,7 +57,6 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
 
         self.keyboard.type("test")
 
-
         (x, y, w, h) = searchbox.globalRect
 
         # I am not able to find anything about the clear icon
@@ -146,4 +145,3 @@ class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
         self.keyboard.type("test")
 
         self.assertThat(message_box.searchQuery, Eventually(Equals("test")))
-

@@ -102,4 +102,3 @@ class TestCallPanel(CallPanel, MarumbiTestCase):
         self.mouse.click()
 
         self.assertThat(second_call_log_tab.selected, Equals(True))
-
