@@ -11,7 +11,6 @@ class ContactsPanel(object):
     panel.
 
     """
-
     def __init__(self, app):
         self.app = app
 

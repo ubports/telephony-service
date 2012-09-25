@@ -20,7 +20,6 @@ class MarumbiTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
     Marumbi tests.
 
     """
-
     def setUp(self):
         super(MarumbiTestCase, self).setUp()
         self.launch_test_qml()
