@@ -33,7 +33,7 @@ class MessagesPanel(object):
         qdi = parent_qdi.select_many("QDeclarativeItem")[0]
         qdl = qdi.select_many("QDeclarativeLoader")[0]
         qdi_2 = qdl.select_many("QDeclarativeItem")[0]
-        return qdi_2.select_single("ListItem")
+        return qdi_2.select_many("ListItem")[0]
 
     def get_messages_view(self):
         """Returns the MessagesView."""

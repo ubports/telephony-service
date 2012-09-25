@@ -33,4 +33,4 @@ class ContactsPanel(object):
         qdi = parent_qdi.select_many("QDeclarativeItem")[0]
         qdl = qdi.select_many("QDeclarativeLoader")[0]
         cp = qdl.select_many("ContactsPanel")[0]
-        return cp.select_single("ListItem")
+        return cp.select_many("ListItem")[0]
