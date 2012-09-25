@@ -5,13 +5,12 @@
 # under the terms of the GNU General Public License version 3, as published
 # by the Free Software Foundation.
 
-from __future__ import absolute_import
 
-from marumbi.tests import MarumbiTestCase
-
-
-class CallPanel(MarumbiTestCase):
+class CallPanel(object):
     """An emulator class that makes it easy to interact with the call panel."""
+
+    def __init__(self, app):
+        self.app = app
 
     def get_searchbox(self):
         """Returns the main searchbox attached to the call panel."""

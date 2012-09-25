@@ -16,7 +16,7 @@ from marumbi.tests import MarumbiTestCase
 from marumbi.emulators.call_panel import CallPanel
 
 
-class TestCallPanel(CallPanel, MarumbiTestCase):
+class TestCallPanel(MarumbiTestCase, CallPanel):
     """Tests for the Call panel."""
 
     def test_main_tab_focus(self):

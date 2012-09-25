@@ -16,7 +16,7 @@ from marumbi.tests import MarumbiTestCase
 from marumbi.emulators.message_panel import MessagesPanel
 
 
-class TestMessagesPanel(MessagesPanel, MarumbiTestCase):
+class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
     """Tests for the messages panel."""
 
     def setUp(self):

@@ -16,7 +16,7 @@ from marumbi.tests import MarumbiTestCase
 from marumbi.emulators.contacts_panel import ContactsPanel
 
 
-class TestContactsPanel(ContactsPanel, MarumbiTestCase):
+class TestContactsPanel(MarumbiTestCase, ContactsPanel):
 
     def setUp(self):
         super(TestContactsPanel, self).setUp()
