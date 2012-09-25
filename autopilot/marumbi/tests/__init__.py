@@ -12,8 +12,10 @@ from autopilot.testcase import AutopilotTestCase
 
 
 class MarumbiTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
+    """A common test case class that provides several useful methods for
+    Marumbi tests.
 
-    """A common test case class that provides several useful methods for Marumbi tests."""
+    """
 
     def setUp(self):
         super(MarumbiTestCase, self).setUp()
@@ -25,7 +27,9 @@ class MarumbiTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
 
     def get_main_view_tabs(self):
         """Returns a list of tabs on the main window."""
-        qdv_qgs = self.app.select_single("QDeclarativeView").select_single("QGraphicsScene")
-        qdi = qdv_qgs.select_many("QDeclarativeItem")[0].select_many("QDeclarativeItem")[0]
-        tabs = qdi.select_single("Tabs").select_many("QDeclarativeRow")[0]
+        qdv = self.app.select_single("QDeclarativeView")
+        qgs = qdv.select_single("QGraphicsScene")
+        qdi = qgs.select_many("QDeclarativeItem")[0]
+        qdi_2 = qdi.select_many("QDeclarativeItem")[0]
+        tabs = qdi_2.select_single("Tabs").select_many("QDeclarativeRow")[0]
         return tabs.select_many("TabButton")

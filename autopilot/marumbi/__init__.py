@@ -6,4 +6,3 @@
 # by the Free Software Foundation.
 
 """Marumbi autopilot tests and emulators - top level package."""
-

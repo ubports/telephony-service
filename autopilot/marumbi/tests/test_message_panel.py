@@ -79,7 +79,10 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
         self.assertThat(new_message_item.selected, Eventually(Equals(True)))
 
     def test_message_view_visible(self):
-        """Clicking on the 'New Message' list item must show the message view."""
+        """Clicking on the 'New Message' list item must show the
+        message view.
+
+        """
         new_message_item = self.get_new_message_list_item()
         self.mouse.move_to_object(new_message_item)
         self.mouse.click()
@@ -89,7 +92,10 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
         self.assertThat(message_view.visible, Eventually(Equals(True)))
 
     def test_message_send_to_focus(self):
-        """Clicking the 'New Message' list item must give focus to the 'sendto' box."""
+        """Clicking the 'New Message' list item must give focus to the
+        'sendto' box.
+
+        """
         self.click_new_message_list_item()
         sendto_box = self.get_new_message_send_to_box()
 
@@ -105,7 +111,10 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
         self.assertThat(sendto_box.text, Eventually(Equals("911")))
 
     def test_send_button_active(self):
-        """Typing a number into the 'sendto' box must enable the Send button."""
+        """Typing a number into the 'sendto' box must enable the Send
+        button.
+
+        """
         self.click_new_message_list_item()
         send_button = self.get_message_send_button()
 
@@ -114,7 +123,10 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
         self.assertThat(send_button.state, Eventually(Equals("idle")))
 
     def test_send_button_disable_on_clear(self):
-        """Removing the number from the 'sendto' box must disable the Send button."""
+        """Removing the number from the 'sendto' box must disable the
+        Send button.
+
+        """
         self.click_new_message_list_item()
         send_button = self.get_message_send_button()
 

@@ -49,7 +49,10 @@ class TestCallPanel(MarumbiTestCase, CallPanel):
         self.assertThat(keypad_view.activeFocus, Eventually(Equals(True)))
 
     def test_keypad_click(self):
-        """Clicking on the dialpad keys must show the numbers associated to the keys."""
+        """Clicking on the dialpad keys must show the numbers associated to
+        the keys.
+
+        """
         self.click_keypad_list_item()
         keypad_keys = self.get_keypad_keys()
         entry = self.get_keypad_entry()
@@ -87,7 +90,10 @@ class TestCallPanel(MarumbiTestCase, CallPanel):
         self.assertThat(entry.value, Eventually(Equals("911")))
 
     def test_call_log_first_tab_focus(self):
-        """Ensures that 'All' tab is pre-selected when 'Call Log' view is shown."""
+        """Ensures that 'All' tab is pre-selected when 'Call Log' view
+        is shown.
+
+        """
         self.click_call_log_list_item()
         first_call_log_tab = self.get_call_log_view_tabs()[3]
 

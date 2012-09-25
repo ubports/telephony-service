@@ -19,51 +19,66 @@ class CallPanel(object):
     def get_call_log_view_tabs(self):
         """Returns tabs inside call log item."""
         call_log_view = self.get_call_log_view()
-        return call_log_view.select_many("Tabs")[0].select_many("QDeclarativeRow")[0].select_many("TabButton")
+        tbs = call_log_view.select_many("Tabs")[0]
+        qdr = tbs.select_many("QDeclarativeRow")[0]
+        return qdr.select_many("TabButton")
+
+    def get_parent_q_declarative_item(self):
+        qdv = self.app.select_single("QDeclarativeView")
+        qgs = qdv.select_single("QGraphicsScene")
+        return qgs.select_many("QDeclarativeItem")[0]
 
     def get_call_panel(self):
         """Returns the CallPanel."""
-        qdv_qgs = self.app.select_single("QDeclarativeView").select_single("QGraphicsScene")
-        qdi = qdv_qgs.select_many("QDeclarativeItem")[0].select_many("QDeclarativeItem")[0]
-        return qdi.select_many("QDeclarativeLoader")[0].select_single("CallPanel")
+        parent_qdi = self.get_parent_q_declarative_item()
+        qdi = parent_qdi.select_many("QDeclarativeItem")[0]
+        qdl = qdi.select_many("QDeclarativeLoader")[0]
+        return qdl.select_single("CallPanel")
 
     def get_keypad_view(self):
         """Returns the KeypadView."""
-        qdv_qgs = self.app.select_single("QDeclarativeView").select_single("QGraphicsScene")
-        qdi = qdv_qgs.select_many("QDeclarativeItem")[0].select_many("QDeclarativeItem")[1]
-        return qdi.select_many("QDeclarativeLoader")[0].select_single("KeypadView")
+        parent_qdi = self.get_parent_q_declarative_item()
+        qdi = parent_qdi.select_many("QDeclarativeItem")[1]
+        qdl = qdi.select_many("QDeclarativeLoader")[0]
+        return qdl.select_single("KeypadView")
 
     def get_call_log_view(self):
         """Returns the CallLog view."""
-        qdv_qgs = self.app.select_single("QDeclarativeView").select_single("QGraphicsScene")
-        qdi = qdv_qgs.select_many("QDeclarativeItem")[0].select_many("QDeclarativeItem")[1]
-        return qdi.select_many("QDeclarativeLoader")[0].select_single("CallLog")
+        parent_qdi = self.get_parent_q_declarative_item()
+        qdi = parent_qdi.select_many("QDeclarativeItem")[1]
+        qdl = qdi.select_many("QDeclarativeLoader")[0]
+        return qdl.select_single("CallLog")
 
     def get_keypad_list_item(self):
         """Returns "Keypad" list item."""
         call_panel = self.get_call_panel()
-        return call_panel.select_many("QDeclarativeColumn")[0].select_many("ListItem")[0]
+        qdc = call_panel.select_many("QDeclarativeColumn")[0]
+        return qdc.select_many("ListItem")[0]
 
     def get_voicemail_list_item(self):
         """Returns "Voicemail" list item."""
         call_panel = self.get_call_panel()
-        return call_panel.select_many("QDeclarativeColumn")[0].select_many("ListItem")[1]
+        qdc = call_panel.select_many("QDeclarativeColumn")[0]
+        return qdc.select_many("ListItem")[1]
 
     def get_call_log_list_item(self):
         """Returns 'Call Log' list item."""
         call_panel = self.get_call_panel()
-        return call_panel.select_many("QDeclarativeColumn")[0].select_many("ListItem")[2]
+        qdc = call_panel.select_many("QDeclarativeColumn")[0]
+        return qdc.select_many("ListItem")[2]
 
     def get_keypad_entry(self):
         """Returns keypad's input box."""
         keypad_view = self.get_keypad_view()
-        return keypad_view.select_many("QDeclarativeItem")[0].select_single("KeypadEntry")
+        qdi = keypad_view.select_many("QDeclarativeItem")[0]
+        return qdi.select_single("KeypadEntry")
 
     def get_keypad_keys(self):
         """Returns list of dialpad keys."""
         keypad_view = self.get_keypad_view()
-        qdi_ke = keypad_view.select_many("QDeclarativeItem")[0].select_single("Keypad")
-        return qdi_ke.select_single("QDeclarativeGrid").select_many("KeypadButton")
+        qdi = keypad_view.select_many("QDeclarativeItem")[0]
+        kp_qdg = qdi.select_single("Keypad").select_single("QDeclarativeGrid")
+        return kp_qdg.select_many("KeypadButton")
 
     def click_inside_searchbox(self):
         """Click inside the searchbox of the call panel."""
@@ -73,14 +88,20 @@ class CallPanel(object):
         self.mouse.click()
 
     def click_keypad_list_item(self):
-        """Moves the mouse over 'Keypad' item in the call panel and activates it."""
+        """Moves the mouse over 'Keypad' item in the call panel
+        and activates it.
+
+        """
         keypad_item = self.get_keypad_list_item()
 
         self.mouse.move_to_object(keypad_item)
         self.mouse.click()
 
     def click_call_log_list_item(self):
-        """Moves the mouse over 'Call Log' item in the call panel and activates it."""
+        """Moves the mouse over 'Call Log' item in the call panel and
+        activates it.
+
+        """
         call_log_item = self.get_call_log_list_item()
 
         self.mouse.move_to_object(call_log_item)
