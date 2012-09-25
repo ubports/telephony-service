@@ -13,10 +13,9 @@ from testtools.matchers import Equals
 from autopilot.matchers import Eventually
 
 from marumbi.tests import MarumbiTestCase
-from marumbi.emulators.message_panel import MessagesPanel
 
 
-class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
+class TestMessagesPanel(MarumbiTestCase):
     """Tests for the messages panel."""
 
     def setUp(self):
@@ -25,15 +24,21 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
         self.mouse.move_to_object(messages_tab)
         self.mouse.click()
 
+    def click_new_message_list_item(self):
+        new_message_item = self.messages_panel.get_new_message_list_item()
+
+        self.mouse.move_to_object(new_message_item)
+        self.mouse.click()
+
     def test_main_tab_focus(self):
         """Clicking on the 'messages' tab must give it the focus."""
-        messages_tab = self.get_main_view_tabs()[1]
+        messages_tab = self.messages_panel.get_main_view_tabs()[1]
 
         self.assertThat(messages_tab.selected, Eventually(Equals(True)))
 
     def test_searchbox_focus(self):
         """Clicking inside the searbox must give it the focus."""
-        searchbox = self.get_messages_searchbox()
+        searchbox = self.messages_panel.get_messages_searchbox()
         self.mouse.move_to_object(searchbox)
         self.mouse.click()
 
@@ -41,7 +46,7 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
 
     def test_searchbox_entry(self):
         """Ensures that typing inside the main searchbox works."""
-        searchbox = self.get_messages_searchbox()
+        searchbox = self.messages_panel.get_messages_searchbox()
         self.mouse.move_to_object(searchbox)
         self.mouse.click()
 
@@ -51,7 +56,7 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
 
     def test_searchbox_clear_button(self):
         """clicking the cross icon must clear the searchbox."""
-        searchbox = self.get_messages_searchbox()
+        searchbox = self.messages_panel.get_messages_searchbox()
         self.mouse.move_to_object(searchbox)
         self.mouse.click()
 
@@ -71,7 +76,7 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
 
     def test_new_message_list_item_select(self):
         """Clicking on the 'New Message' list item must highlight it."""
-        new_message_item = self.get_new_message_list_item()
+        new_message_item = self.messages_panel.get_new_message_list_item()
 
         self.mouse.move_to_object(new_message_item)
         self.mouse.click()
@@ -83,7 +88,7 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
         message view.
 
         """
-        new_message_item = self.get_new_message_list_item()
+        new_message_item = self.messages_panel.get_new_message_list_item()
         self.mouse.move_to_object(new_message_item)
         self.mouse.click()
 
@@ -97,14 +102,14 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
 
         """
         self.click_new_message_list_item()
-        sendto_box = self.get_new_message_send_to_box()
+        sendto_box = self.messages_panel.get_new_message_send_to_box()
 
         self.assertThat(sendto_box.activeFocus, Eventually(Equals(True)))
 
     def test_message_send_to_entry(self):
         """Ensures that number can be typed into the 'sendto' box."""
         self.click_new_message_list_item()
-        sendto_box = self.get_new_message_send_to_box()
+        sendto_box = self.messages_panel.get_new_message_send_to_box()
 
         self.keyboard.type("911")
 
@@ -116,7 +121,7 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
 
         """
         self.click_new_message_list_item()
-        send_button = self.get_message_send_button()
+        send_button = self.messages_panel.get_message_send_button()
 
         self.keyboard.type("911")
 
@@ -128,7 +133,7 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
 
         """
         self.click_new_message_list_item()
-        send_button = self.get_message_send_button()
+        send_button = self.messages_panel.get_message_send_button()
 
         self.keyboard.type("911")
         self.keyboard.press_and_release("Ctrl+a")
@@ -139,7 +144,7 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
     def test_new_message_box_focus(self):
         """Clicking inside the main message box must give it the focus."""
         self.click_new_message_list_item()
-        message_box = self.get_new_message_text_box()
+        message_box = self.messages_panel.get_new_message_text_box()
 
         self.mouse.move_to_object(message_box)
         self.mouse.click()
@@ -149,7 +154,7 @@ class TestMessagesPanel(MarumbiTestCase, MessagesPanel):
     def test_new_message_box_entry(self):
         """Ensures that typing inside the main message box works."""
         self.click_new_message_list_item()
-        message_box = self.get_new_message_text_box()
+        message_box = self.messages_panel.get_new_message_text_box()
 
         self.mouse.move_to_object(message_box)
         self.mouse.click()

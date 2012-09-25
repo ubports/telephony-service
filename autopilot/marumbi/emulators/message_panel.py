@@ -36,16 +36,6 @@ class MessagesPanel(object):
         qdi_2 = qdl.select_many("QDeclarativeItem")[0]
         return qdi_2.select_single("ListItem")
 
-    def click_new_message_list_item(self):
-        """Moves the mouse over 'New Message' item in the call panel and
-        activates it.
-
-        """
-        new_message_item = self.get_new_message_list_item()
-
-        self.mouse.move_to_object(new_message_item)
-        self.mouse.click()
-
     def get_messages_view(self):
         """Returns the MessagesView."""
         parent_qdi = self.get_parent_q_declarative_item()

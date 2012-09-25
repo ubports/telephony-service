@@ -13,10 +13,9 @@ from testtools.matchers import Equals
 from autopilot.matchers import Eventually
 
 from marumbi.tests import MarumbiTestCase
-from marumbi.emulators.contacts_panel import ContactsPanel
 
 
-class TestContactsPanel(MarumbiTestCase, ContactsPanel):
+class TestContactsPanel(MarumbiTestCase):
 
     def setUp(self):
         super(TestContactsPanel, self).setUp()
@@ -32,7 +31,7 @@ class TestContactsPanel(MarumbiTestCase, ContactsPanel):
 
     def test_searchbox_focus(self):
         """Clicking inside the searbox must give it the focus."""
-        searchbox = self.get_contacts_searchbox()
+        searchbox = self.contacts_panel.get_contacts_searchbox()
         self.mouse.move_to_object(searchbox)
         self.mouse.click()
 
@@ -40,7 +39,7 @@ class TestContactsPanel(MarumbiTestCase, ContactsPanel):
 
     def test_searchbox_entry(self):
         """Ensures that typing inside the main searchbox works."""
-        searchbox = self.get_contacts_searchbox()
+        searchbox = self.contacts_panel.get_contacts_searchbox()
         self.mouse.move_to_object(searchbox)
         self.mouse.click()
 
@@ -50,7 +49,7 @@ class TestContactsPanel(MarumbiTestCase, ContactsPanel):
 
     def test_searchbox_clear_button(self):
         """clicking the cross icon must clear the searchbox."""
-        searchbox = self.get_contacts_searchbox()
+        searchbox = self.contacts_panel.get_contacts_searchbox()
         self.mouse.move_to_object(searchbox)
         self.mouse.click()
 
@@ -70,7 +69,7 @@ class TestContactsPanel(MarumbiTestCase, ContactsPanel):
 
     def test_add_new_contact_list_item_select(self):
         """Clicking on the 'Add a new contact' list item must highlight it."""
-        new_contact_item = self.get_add_contact_list_item()
+        new_contact_item = self.contacts_panel.get_add_contact_list_item()
 
         self.mouse.move_to_object(new_contact_item)
         self.mouse.click()

@@ -10,6 +10,10 @@
 from autopilot.introspection.qt import QtIntrospectionTestMixin
 from autopilot.testcase import AutopilotTestCase
 
+from marumbi.emulators.call_panel import CallPanel
+from marumbi.emulators.message_panel import MessagesPanel
+from marumbi.emulators.contacts_panel import ContactsPanel
+
 
 class MarumbiTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
     """A common test case class that provides several useful methods for
@@ -33,3 +37,15 @@ class MarumbiTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
         qdi_2 = qdi.select_many("QDeclarativeItem")[0]
         tabs = qdi_2.select_single("Tabs").select_many("QDeclarativeRow")[0]
         return tabs.select_many("TabButton")
+
+    @property
+    def call_panel(self):
+        return CallPanel(self.app)
+
+    @property
+    def messages_panel(self):
+        return MessagesPanel(self.app)
+
+    @property
+    def contacts_panel(self):
+        return ContactsPanel(self.app)

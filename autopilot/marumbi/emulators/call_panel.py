@@ -79,30 +79,3 @@ class CallPanel(object):
         qdi = keypad_view.select_many("QDeclarativeItem")[0]
         kp_qdg = qdi.select_single("Keypad").select_single("QDeclarativeGrid")
         return kp_qdg.select_many("KeypadButton")
-
-    def click_inside_searchbox(self):
-        """Click inside the searchbox of the call panel."""
-        csc = self.get_call_panel().select_single("ContactsSearchCombo")
-
-        self.mouse.move_to_object(csc)
-        self.mouse.click()
-
-    def click_keypad_list_item(self):
-        """Moves the mouse over 'Keypad' item in the call panel
-        and activates it.
-
-        """
-        keypad_item = self.get_keypad_list_item()
-
-        self.mouse.move_to_object(keypad_item)
-        self.mouse.click()
-
-    def click_call_log_list_item(self):
-        """Moves the mouse over 'Call Log' item in the call panel and
-        activates it.
-
-        """
-        call_log_item = self.get_call_log_list_item()
-
-        self.mouse.move_to_object(call_log_item)
-        self.mouse.click()
