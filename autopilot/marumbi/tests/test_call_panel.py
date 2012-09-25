@@ -19,19 +19,19 @@ class TestCallPanel(MarumbiTestCase):
     """Tests for the Call panel."""
 
     def click_inside_searchbox(self):
-        csc = self.get_call_panel().select_single("ContactsSearchCombo")
+        csc = self.call_panel.get_call_panel().select_single("ContactsSearchCombo")
 
         self.mouse.move_to_object(csc)
         self.mouse.click()
 
     def click_keypad_list_item(self):
-        keypad_item = self.get_keypad_list_item()
+        keypad_item = self.call_panel.get_keypad_list_item()
 
         self.mouse.move_to_object(keypad_item)
         self.mouse.click()
 
     def click_call_log_list_item(self):
-        call_log_item = self.get_call_log_list_item()
+        call_log_item = self.call_panel.get_call_log_list_item()
 
         self.mouse.move_to_object(call_log_item)
         self.mouse.click()

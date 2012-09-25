@@ -32,7 +32,7 @@ class TestMessagesPanel(MarumbiTestCase):
 
     def test_main_tab_focus(self):
         """Clicking on the 'messages' tab must give it the focus."""
-        messages_tab = self.messages_panel.get_main_view_tabs()[1]
+        messages_tab = self.get_main_view_tabs()[1]
 
         self.assertThat(messages_tab.selected, Eventually(Equals(True)))
 
@@ -92,7 +92,7 @@ class TestMessagesPanel(MarumbiTestCase):
         self.mouse.move_to_object(new_message_item)
         self.mouse.click()
 
-        message_view = self.get_messages_view()
+        message_view = self.messages_panel.get_messages_view()
 
         self.assertThat(message_view.visible, Eventually(Equals(True)))
 
