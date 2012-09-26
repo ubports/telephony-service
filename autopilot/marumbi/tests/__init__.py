@@ -30,12 +30,7 @@ class MarumbiTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
 
     def get_main_view_tabs(self):
         """Returns a list of tabs on the main window."""
-        qdv = self.app.select_single("QDeclarativeView")
-        qgs = qdv.select_single("QGraphicsScene")
-        qdi = qgs.select_many("QDeclarativeItem")[0]
-        qdi_2 = qdi.select_many("QDeclarativeItem")[0]
-        tabs = qdi_2.select_single("Tabs").select_many("QDeclarativeRow")[0]
-        return tabs.select_many("TabButton")
+        return self.app.select_many("TabButton")
 
     @property
     def call_panel(self):
