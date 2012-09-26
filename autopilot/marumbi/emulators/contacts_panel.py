@@ -14,23 +14,15 @@ class ContactsPanel(object):
     def __init__(self, app):
         self.app = app
 
-    def get_parent_q_declarative_item(self):
-        qdv = self.app.select_single("QDeclarativeView")
-        qgs = qdv.select_single("QGraphicsScene")
-        return qgs.select_many("QDeclarativeItem")[0]
-
     def get_contacts_searchbox(self):
         """Returns the main searchbox attached to the contacts panel."""
-        parent_qdi = self.get_parent_q_declarative_item()
-        qdi = parent_qdi.select_many("QDeclarativeItem")[0]
-        qdl = qdi.select_many("QDeclarativeLoader")[0]
-        qdi_2 = qdl.select_many("QDeclarativeItem")[0]
-        return qdi_2.select_many("SearchEntry")[0]
+        return self.app.select_many("SearchEntry")[0]
+
+    def get_contacts_panel(self):
+        """Returns the ContactsPanel."""
+        return self.app.select_single("ContactsPanel")
 
     def get_add_contact_list_item(self):
         """Returns the 'Add a new contact' list item."""
-        parent_qdi = self.get_parent_q_declarative_item()
-        qdi = parent_qdi.select_many("QDeclarativeItem")[0]
-        qdl = qdi.select_many("QDeclarativeLoader")[0]
-        cp = qdl.select_many("ContactsPanel")[0]
-        return cp.select_many("ListItem")[0]
+        contacts_panel = self.get_contacts_panel()
+        return contacts_panel.select_many("ListItem")[0]
