@@ -20,8 +20,7 @@ class MessagesPanel(object):
 
     def get_new_message_list_item(self):
         """Returns 'New Message' list item."""
-        messages_view = self.get_messages_view()
-        return messages_view.select_many("ListItem")[0]
+        return self.app.select_single("ListItem", text='New Message')
 
     def get_messages_view(self):
         """Returns the MessagesView."""

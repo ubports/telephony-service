@@ -24,5 +24,4 @@ class ContactsPanel(object):
 
     def get_add_contact_list_item(self):
         """Returns the 'Add a new contact' list item."""
-        contacts_panel = self.get_contacts_panel()
-        return contacts_panel.select_many("ListItem")[0]
+        return self.app.select_single("ListItem", text='Add a new contact')
