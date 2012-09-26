@@ -32,8 +32,7 @@ class MessagesPanel(object):
 
     def get_message_send_button(self):
         """Returns the send button."""
-        messages_view = self.get_messages_view()
-        return messages_view.select_many("Button")[0]
+        return self.app.select_single("Button", text='Send')
 
     def get_new_message_text_box(self):
         """Returns main message box for sending an sms."""
