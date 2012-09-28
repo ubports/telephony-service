@@ -21,7 +21,7 @@ BaseMessageHeader {
         text: contact ? contact.displayLabel : "Unknown Contact"
     }
 
-    Image {
+    FramedImage {
         id: icon
 
         anchors.right: parent.right
@@ -30,25 +30,8 @@ BaseMessageHeader {
         anchors.verticalCenterOffset: -1
         width: 28
         height: width
-        sourceSize.width: width
-        fillMode: Image.PreserveAspectFit
-        source: contact ? contact.avatar : "../assets/avatar_messaging.png"
-        onStatusChanged: if (status == Image.Error) source = "../assets/avatar_messaging.png"
-        asynchronous: true
-    }
-
-    BorderImage {
-        id: iconFrame
-
-        source: "../Widgets/artwork/ListItemFrame.png"
-        anchors.fill: icon
-        anchors.bottomMargin: -1
-        border.left: 3
-        border.right: 3
-        border.top: 3
-        border.bottom: 3
-        horizontalTileMode: BorderImage.Stretch
-        verticalTileMode: BorderImage.Stretch
+        source: contact ? contact.avatar : fallbackSource
+        fallbackSource: "../assets/avatar_messaging.png"
     }
 
     AbstractButton {
