@@ -48,10 +48,12 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
+        ListItem.ThinDivider {}
+
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 30
+            height: 32
 
             function getIconSource() {
                 if (callManager.hasCalls && !telephony.isVoicemailActive()) {
@@ -71,7 +73,7 @@ Item {
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 30
+            height: 32
             visible: callManager.voicemailNumber != ""
 
             iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
@@ -85,7 +87,7 @@ Item {
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 30
+            height: 32
 
             iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
             iconFrame: false

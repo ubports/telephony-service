@@ -24,8 +24,6 @@ Item {
 
         primaryItem: AbstractButton {
             width: 20
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
             Image {
                 anchors.left: parent.left
                 anchors.leftMargin: 6
@@ -36,21 +34,28 @@ Item {
         }
     }
 
-    ListItem.Standard {
-        id: newMessage
-
+    Column {
+        id: buttons
         anchors.top: search.bottom
         anchors.topMargin: 14
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 30
 
-        iconSource: "../assets/add_new_message_icon.png"
-        iconFrame: false
-        text: "New Message"
-        // FIXME: maybe use a signal and handle in the instance
-        onClicked: telephony.startNewMessage()
-        selected: telephony.messages.loaded && telephony.view.newMessage
+        ListItem.ThinDivider {}
+
+        ListItem.Standard {
+            id: newMessage
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 32
+
+            iconSource: "../assets/add_new_message_icon.png"
+            iconFrame: false
+            text: "New Message"
+            // FIXME: maybe use a signal and handle in the instance
+            onClicked: telephony.startNewMessage()
+            selected: telephony.messages.loaded && telephony.view.newMessage
+        }
     }
 
     MessagesProxyModel {
@@ -62,7 +67,7 @@ Item {
     }
 
     MessagesList {
-        anchors.top: newMessage.bottom
+        anchors.top: buttons.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
