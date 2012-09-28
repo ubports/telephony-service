@@ -5,7 +5,6 @@ AbstractButton {
     id: listItem
 
     width: 250
-    height: (isIcon && !__hasSubLabel ? 30 : 48)
 
     property bool isIcon: false
     property alias iconSource: icon.source
@@ -18,15 +17,6 @@ AbstractButton {
 
     property bool __hasSubLabel: subtext != ""
     property color __textColor: (selected || textBold) ? "#f37505" : Qt.rgba(0.4, 0.4, 0.4, 1.0)
-
-    Rectangle {
-        id: background
-
-        visible: listItem.selected
-        anchors.fill: body
-        color: "white"
-        opacity: 0.7
-    }
 
     Item {
         id: body

@@ -10,10 +10,8 @@ ListItem.Base {
 
     CustomListItemBase {
         id: baseInfo
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
 
+        anchors.fill: parent
         iconSource: (avatar != "") ? avatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
