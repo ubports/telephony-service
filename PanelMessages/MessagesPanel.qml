@@ -48,6 +48,8 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 32
+            __leftIconMargin: 19
+            __rightIconMargin: 14
 
             iconSource: "../assets/add_new_message_icon.png"
             iconFrame: false

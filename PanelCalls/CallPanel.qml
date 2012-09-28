@@ -54,6 +54,8 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 32
+            __leftIconMargin: 19
+            __rightIconMargin: 14
 
             function getIconSource() {
                 if (callManager.hasCalls && !telephony.isVoicemailActive()) {
@@ -74,6 +76,8 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 32
+            __leftIconMargin: 19
+            __rightIconMargin: 14
             visible: callManager.voicemailNumber != ""
 
             iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
@@ -88,6 +92,8 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             height: 32
+            __leftIconMargin: 19
+            __rightIconMargin: 14
 
             iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
             iconFrame: false
