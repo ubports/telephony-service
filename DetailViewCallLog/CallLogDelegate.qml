@@ -30,9 +30,9 @@ ListItem.Base {
         id: timeLabel
 
         anchors.right: separator.left
-        anchors.rightMargin: 8
+        anchors.rightMargin: 10
         anchors.bottom: infoBox.bottom
-        anchors.bottomMargin: 5
+        anchors.bottomMargin: 4
         fontSize: "small"
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised
@@ -81,6 +81,8 @@ ListItem.Base {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
+        anchors.rightMargin: 2
+        anchors.topMargin: 1
         width: height
         selected: callItem.selected
 
