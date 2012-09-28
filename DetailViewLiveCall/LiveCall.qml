@@ -1,5 +1,5 @@
 import QtQuick 1.0
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import "../DetailViewKeypad"
 import "../"
 import Ubuntu.Components 0.1
@@ -155,7 +155,7 @@ Item {
                 opacity: (call && call.dialing) ? 1.0 : 0.0
             }
 
-            StopWatch {
+            LocalWidgets.StopWatch {
                 id: stopWatch
                 time: call ? call.elapsedTime : 0
 
@@ -272,7 +272,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 5
 
-                Button {
+                LocalWidgets.Button {
                     id: hangupButton
 
                     iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
@@ -282,7 +282,7 @@ Item {
                     onClicked: endCall()
                 }
 
-                Button {
+                LocalWidgets.Button {
                     id: addToContactsButton
 
                     iconSource: "../assets/incall_keypad_addcaller_unselected.png"

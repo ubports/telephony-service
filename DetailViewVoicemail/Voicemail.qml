@@ -1,5 +1,5 @@
 import QtQuick 1.0
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import "../DetailViewKeypad"
 import Ubuntu.Components 0.1
 
@@ -90,7 +90,7 @@ Item {
                 opacity: (call && call.voicemail && call.dialing) ? 1.0 : 0.0
             }
 
-            StopWatch {
+            LocalWidgets.StopWatch {
                 id: stopWatch
                 time: call && call.voicemail ? call.elapsedTime : 0
 
@@ -117,7 +117,7 @@ Item {
                 anchors.topMargin: 20
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 5
-                Button {
+                LocalWidgets.Button {
                     id: dialhangupButton
                     iconSource: isVoicemailActive() ? "../assets/incall_keypad_endcallbutton_icon.png" : "../assets/voicemail_icon.png"
                     width: isVoicemailActive() ? 64 : 128
@@ -131,7 +131,7 @@ Item {
                     }
                 }
 
-                Button {
+                LocalWidgets.Button {
                     id: speakerButton
                     width: 64
                     visible: isVoicemailActive()

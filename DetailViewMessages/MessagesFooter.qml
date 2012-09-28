@@ -1,6 +1,6 @@
 import QtQuick 1.1
 import Ubuntu.Components 0.1
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 
 FocusScope {
     id: footer
@@ -48,7 +48,7 @@ FocusScope {
             Keys.onEscapePressed: text = ""
         }
 
-        Button {
+        LocalWidgets.Button {
             id: sendButton
 
             anchors.right: parent.right
