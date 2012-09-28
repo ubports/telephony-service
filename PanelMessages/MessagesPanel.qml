@@ -26,7 +26,7 @@ Item {
             width: 20
             Image {
                 anchors.left: parent.left
-                anchors.leftMargin: 6
+                anchors.leftMargin: 5
                 anchors.verticalCenter: parent.verticalCenter
                 source: search.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
             }
@@ -37,7 +37,7 @@ Item {
     Column {
         id: buttons
         anchors.top: search.bottom
-        anchors.topMargin: 14
+        anchors.topMargin: 10
         anchors.left: parent.left
         anchors.right: parent.right
 

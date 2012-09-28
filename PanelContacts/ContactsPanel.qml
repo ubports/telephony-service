@@ -31,7 +31,9 @@ Item {
         primaryItem: AbstractButton {
             width: 20
             Image {
-                anchors.centerIn: parent
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: 5
                 source: contactsSearchBox.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
             }
             onClicked: contactsSearchBox.text = ""
