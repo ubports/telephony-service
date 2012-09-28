@@ -8,4 +8,6 @@ ListItem.Standard {
     // FIXME: this function is used in two places, should be moved to one common place
     text: display
     iconSource: (decoration != "") ? decoration : "../assets/avatar_contacts_list.png"
+    __leftIconMargin: 8
+    __rightIconMargin: 4
 }
