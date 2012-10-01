@@ -109,7 +109,8 @@ QStringList TelepathyHelper::supportedProtocols() const
 {
     QStringList protocols;
     protocols << "ufa"
-              << "tel";
+              << "tel"
+              << "ofono";
     return protocols;
 }
 
