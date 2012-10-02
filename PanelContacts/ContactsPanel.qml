@@ -55,8 +55,8 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             __height: 30
-            __leftIconMargin: 19
-            __rightIconMargin: 14
+            __leftIconMargin: 20
+            __rightIconMargin: 17
 
             text: "Add a new contact"
             icon: Qt.resolvedUrl("../assets/add_contacts_icon.png")

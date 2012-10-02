@@ -4,7 +4,7 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 
 ListItem.Standard {
     width: (parent) ? parent.width : undefined
-    __height: 54
+    __height: 48
     showDivider: true
 
     // FIXME: this function is used in two places, should be moved to one common place

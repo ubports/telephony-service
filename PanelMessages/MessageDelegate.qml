@@ -6,7 +6,7 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 
 ListItem.Base {
     id: messageDelegate
-    __height: 60
+    __height: 58
     showDivider: true
 
     CustomListItemBase {
@@ -29,7 +29,7 @@ ListItem.Base {
         anchors.baseline: parent.bottom
         anchors.baselineOffset: -baseInfo.padding + 4
         anchors.right: parent.right
-        anchors.rightMargin: baseInfo.padding - 2
+        anchors.rightMargin: baseInfo.padding - 1
         horizontalAlignment: Text.AlignRight
         fontSize: "x-small"
 
