@@ -54,12 +54,12 @@ Item {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 32
+            __height: 30
             __leftIconMargin: 19
             __rightIconMargin: 14
 
             text: "Add a new contact"
-            iconSource: "../assets/add_contacts_icon.png"
+            icon: Qt.resolvedUrl("../assets/add_contacts_icon.png")
             iconFrame: false
             onClicked: telephony.createNewContact()
 

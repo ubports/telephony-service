@@ -10,7 +10,8 @@ ListItem.Base {
     signal clicked(string contactId)
     signal actionClicked(string contactId, string phoneNumber)
 
-    height: infoBox.height
+    __height: infoBox.height
+    showDivider: true
 
     CustomListItemBase {
         id: infoBox

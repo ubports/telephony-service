@@ -10,7 +10,7 @@ FocusScope {
        the layout. We also need to set the height to zero to make them completely go away.
        There is a 2 pixels vertical spacing between fields in edit mode.
     */
-    height: (deleted) ? 0 : (((editable) ? editableGroup.height + 2 : readOnlyGroup.height) + bottomSeparatorLine.height)
+    height: (deleted) ? 0 : (((editable) ? editableGroup.height + 2 : readOnlyGroup.height) + bottomSeparatorLine.height - 1)
     opacity: (deleted) ? 0.0 : 1.0
 
     state: "read"

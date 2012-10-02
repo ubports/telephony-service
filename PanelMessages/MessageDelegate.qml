@@ -6,7 +6,8 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 
 ListItem.Base {
     id: messageDelegate
-    height: 60
+    __height: 60
+    showDivider: true
 
     CustomListItemBase {
         id: baseInfo

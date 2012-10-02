@@ -47,11 +47,11 @@ Item {
             id: newMessage
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 32
+            __height: 30
             __leftIconMargin: 19
             __rightIconMargin: 14
 
-            iconSource: "../assets/add_new_message_icon.png"
+            icon: Qt.resolvedUrl("../assets/add_new_message_icon.png")
             iconFrame: false
             text: "New Message"
             // FIXME: maybe use a signal and handle in the instance
