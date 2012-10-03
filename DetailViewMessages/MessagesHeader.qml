@@ -12,6 +12,8 @@ BaseMessageHeader {
 
         anchors.left: parent.left
         anchors.leftMargin: 13
+        anchors.right: icon.left
+        anchors.rightMargin: 10
         anchors.verticalCenter: parent.verticalCenter
         fontSize: "large"
         elide: Text.ElideRight
