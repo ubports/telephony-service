@@ -63,7 +63,7 @@ Item {
             iconFrame: false
             onClicked: telephony.createNewContact()
 
-    //        selected: telephony.contactDetails.loaded && telephony.view.added
+            selected: telephony.contactDetails.loaded && telephony.view.added
         }
     }
 
