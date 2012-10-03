@@ -100,7 +100,7 @@ Item {
     }
 
     function resetView() {
-        viewLoader.source = tabs.model[tabs.selectedTabIndex].pane
+        viewLoader.source = tabs.children[tabs.selectedTabIndex].pane
     }
 
     Item {
