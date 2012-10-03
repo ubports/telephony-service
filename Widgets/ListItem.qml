@@ -76,32 +76,16 @@ AbstractButton {
             anchors.left: parent.left
             width: 54
 
-            Image {
+            FramedImage {
                 id: icon
 
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: 1
                 width: listItem.isIcon ? 16 : 38
-                sourceSize.width: width
-                fillMode: Image.PreserveAspectFit
+                height: width
+                fallbackSource: listItem.placeholderIconSource
+                frameVisible: !listItem.isIcon
                 opacity: listItem.enabled ? 1.0 : 0.5
-                onStatusChanged: if (status == Image.Error && listItem.placeholderIconSource) source = listItem.placeholderIconSource
-                asynchronous: true
-            }
-
-            BorderImage {
-                id: frame
-
-                visible: !listItem.isIcon
-                source: "artwork/ListItemFrame.png"
-                anchors.fill: icon
-                anchors.bottomMargin: -1
-                border.left: 3
-                border.right: 3
-                border.top: 3
-                border.bottom: 3
-                horizontalTileMode: BorderImage.Stretch
-                verticalTileMode: BorderImage.Stretch
             }
         }
 

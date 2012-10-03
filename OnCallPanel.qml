@@ -29,26 +29,14 @@ AbstractButton {
         width: 38
         height: 38
 
-        Image {
+        FramedImage {
             id: avatarIcon
 
-            anchors.fill: avatarFrame
+            anchors.fill: parent
             anchors.margins: 1
-            fillMode: Image.PreserveAspectCrop
-            smooth: true
-            source: (call && call.contactAvatar != "") ? call.contactAvatar : "assets/avatar_contacts_list.png"
-            onStatusChanged: if (status == Image.Error) source = "assets/avatar_contacts_list.png"
-            asynchronous: true
-        }
-
-        BorderImage {
-            id: avatarFrame
-
-            source: "assets/oncall_picture_frame.png"
-
-            border {top: 3; bottom: 1; left: 2; right: 2}
-            horizontalTileMode: BorderImage.Stretch
-            verticalTileMode: BorderImage.Stretch
+            source: call ? call.contactAvatar : fallbackSource
+            fallbackSource: "assets/avatar_contacts_list.png"
+            frameSource: "assets/oncall_picture_frame.sci"
         }
 
         Image {
