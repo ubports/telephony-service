@@ -13,4 +13,6 @@ ListItem.Standard {
     fallbackIconSource: "../assets/avatar_contacts_list.png"
     __leftIconMargin: 8
     __rightIconMargin: 4
+    __iconHeight: 38
+    __iconWidth: 38
 }
