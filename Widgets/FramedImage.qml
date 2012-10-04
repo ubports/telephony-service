@@ -67,7 +67,7 @@ Item {
         property int borderSize: big ? 6 : 3
 
         source: {
-            if (framedImage.frameSource) {
+            if (framedImage.frameSource != "") {
                 return framedImage.frameSource
             }
 
