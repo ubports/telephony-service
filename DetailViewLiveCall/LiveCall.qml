@@ -4,7 +4,7 @@ import "../Widgets" as LocalWidgets
 import "../DetailViewKeypad"
 import "../"
 
-TelephonyPage {
+LocalWidgets.TelephonyPage {
     id: liveCall
 
     property alias contact: contactWatcher.contact

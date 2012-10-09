@@ -3,7 +3,7 @@ import Ubuntu.Components 0.1
 import "../Widgets" as LocalWidgets
 import "../DetailViewKeypad"
 
-TelephonyPage {
+LocalWidgets.TelephonyPage {
     id: voicemail
 
     property variant contact
