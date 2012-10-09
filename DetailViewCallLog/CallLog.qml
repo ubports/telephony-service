@@ -50,7 +50,7 @@ TelephonyPage {
     CallLogProxyModel {
         id: proxyModel
         logModel: callLogModel
-        onlyMissedCalls: missedCallsTab.selected
+        onlyMissedCalls: buttonGroup.selectedTabIndex == 1
     }
 
     Item {

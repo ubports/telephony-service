@@ -24,11 +24,9 @@ Item {
 
         primaryItem: AbstractButton {
             width: 20
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
             Image {
                 anchors.left: parent.left
-                anchors.leftMargin: 6
+                anchors.leftMargin: 5
                 anchors.verticalCenter: parent.verticalCenter
                 source: search.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
             }
@@ -36,21 +34,30 @@ Item {
         }
     }
 
-    ListItem.Standard {
-        id: newMessage
-
+    Column {
+        id: buttons
         anchors.top: search.bottom
-        anchors.topMargin: 14
+        anchors.topMargin: 10
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 30
 
-        iconSource: "../assets/add_new_message_icon.png"
-        iconFrame: false
-        text: "New Message"
-        // FIXME: maybe use a signal and handle in the instance
-        onClicked: telephony.startNewMessage()
-        selected: telephony.messages.loaded && telephony.view.newMessage
+        ListItem.ThinDivider {}
+
+        ListItem.Standard {
+            id: newMessage
+            anchors.left: parent.left
+            anchors.right: parent.right
+            __height: 30
+            __leftIconMargin: 19
+            __rightIconMargin: 14
+
+            icon: Qt.resolvedUrl("../assets/add_new_message_icon.png")
+            iconFrame: false
+            text: "New Message"
+            // FIXME: maybe use a signal and handle in the instance
+            onClicked: telephony.startNewMessage()
+            selected: telephony.messages.loaded && telephony.view.newMessage
+        }
     }
 
     MessagesProxyModel {
@@ -62,7 +69,7 @@ Item {
     }
 
     MessagesList {
-        anchors.top: newMessage.bottom
+        anchors.top: buttons.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right

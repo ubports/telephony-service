@@ -48,10 +48,14 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
+        ListItem.ThinDivider {}
+
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 30
+            __height: 30
+            __leftIconMargin: 19
+            __rightIconMargin: 14
 
             function getIconSource() {
                 if (callManager.hasCalls && !telephony.isVoicemailActive()) {
@@ -61,7 +65,7 @@ Item {
                 }
             }
 
-            iconSource: getIconSource()
+            icon: Qt.resolvedUrl(getIconSource())
             iconFrame: false
             text: callManager.hasCalls && !telephony.isVoicemailActive() ? "On Call" : "Keypad"
             onClicked: callManager.hasCalls && !telephony.isVoicemailActive() ? telephony.showLiveCall() : telephony.showKeypad();
@@ -71,10 +75,12 @@ Item {
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 30
+            __height: 30
+            __leftIconMargin: 19
+            __rightIconMargin: 14
             visible: callManager.voicemailNumber != ""
 
-            iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
+            icon: Qt.resolvedUrl(selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png")
             iconFrame: false
             text: "Voicemail"
 
@@ -85,9 +91,11 @@ Item {
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 30
+            __height: 30
+            __leftIconMargin: 19
+            __rightIconMargin: 14
 
-            iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
+            icon: Qt.resolvedUrl(selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png")
             iconFrame: false
             text: "Call Log"
             onClicked: telephony.showCallLog();

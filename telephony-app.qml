@@ -187,19 +187,19 @@ Item {
             buttonsExpanded: true
 
             Tab {
-                iconSource: "assets/tab_icon_call_inactive.png" // FIXME: selected ? "../assets/tab_icon_call_active.png"
+                iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
                 page: Qt.resolvedUrl("PanelCalls/CallPanel.qml")
                 property string pane: "Panes/CallEndedPane.qml"
             }
 
             Tab {
-                iconSource: "assets/tab_icon_messaging_inactive.png" // FIXME: selected ? "../assets/tab_icon_messaging_active.png"
+                iconSource: (tabs.selectedTabIndex != 1) ? "assets/tab_icon_messaging_inactive.png" : "assets/tab_icon_messaging_active.png"
                 page: Qt.resolvedUrl("PanelMessages/MessagesPanel.qml")
                 property string pane: "Panes/SelectMessagePane.qml"
             }
 
             Tab {
-                iconSource: "assets/tab_icon_contacts_inactive.png" // FIXME: selected ? "../assets/tab_icon_contacts_active.png"
+                iconSource: (tabs.selectedTabIndex != 2) ? "assets/tab_icon_contacts_inactive.png" : "assets/tab_icon_contacts_active.png"
                 page: Qt.resolvedUrl("PanelContacts/ContactsPanel.qml")
                 property string pane: "Panes/SelectContactPane.qml"
             }

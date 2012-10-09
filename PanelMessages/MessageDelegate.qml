@@ -6,14 +6,13 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 
 ListItem.Base {
     id: messageDelegate
-    height: 60
+    __height: 58
+    showDivider: true
 
     CustomListItemBase {
         id: baseInfo
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
 
+        anchors.fill: parent
         iconSource: (avatar != "") ? avatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
@@ -30,7 +29,7 @@ ListItem.Base {
         anchors.baseline: parent.bottom
         anchors.baselineOffset: -baseInfo.padding + 4
         anchors.right: parent.right
-        anchors.rightMargin: baseInfo.padding - 2
+        anchors.rightMargin: baseInfo.padding - 1
         horizontalAlignment: Text.AlignRight
         fontSize: "x-small"
 

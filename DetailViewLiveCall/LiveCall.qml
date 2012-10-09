@@ -1,6 +1,6 @@
 import QtQuick 1.0
 import Ubuntu.Components 0.1
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import "../DetailViewKeypad"
 import "../"
 
@@ -70,35 +70,15 @@ TelephonyPage {
             width: childrenRect.width
             height: childrenRect.height
 
-            Image {
+            LocalWidgets.FramedImage {
                 id: picture
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 140
                 height: 140
-                sourceSize.width: width
-                fillMode: Image.PreserveAspectFit
-                source: (contact && contact.avatar != "") ? contact.avatar : "../assets/avatar_incall_rightpane.png"
-                onStatusChanged: if (status == Image.Error) source = "../assets/avatar_incall_rightpane.png"
-                asynchronous: true
-                smooth: true
-            }
-
-            BorderImage {
-                id: pictureFrame
-
-                source: "../assets/incall_picture_frame.png"
-                anchors.fill: picture
-                anchors.topMargin: -1
-                anchors.bottomMargin: -2
-                anchors.leftMargin: -1
-                anchors.rightMargin: -1
-                border.left: 5
-                border.right: 5
-                border.top: 6
-                border.bottom: 5
-                horizontalTileMode: BorderImage.Stretch
-                verticalTileMode: BorderImage.Stretch
+                source: contact ? contact.avatar : fallbackSource
+                fallbackSource: "../assets/avatar_incall_rightpane.png"
+                darkBorder: true
             }
 
             TextCustom {
@@ -106,7 +86,7 @@ TelephonyPage {
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 15
-                anchors.top: pictureFrame.bottom
+                anchors.top: picture.bottom
                 text: contact ? contact.displayLabel : "Unknown Contact"
                 color: "white"
                 style: Text.Sunken
@@ -156,7 +136,7 @@ TelephonyPage {
                 opacity: (call && call.dialing) ? 1.0 : 0.0
             }
 
-            StopWatch {
+            LocalWidgets.StopWatch {
                 id: stopWatch
                 time: call ? call.elapsedTime : 0
 
@@ -273,7 +253,7 @@ TelephonyPage {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 5
 
-                Button {
+                LocalWidgets.Button {
                     id: hangupButton
 
                     iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
@@ -283,7 +263,7 @@ TelephonyPage {
                     onClicked: endCall()
                 }
 
-                Button {
+                LocalWidgets.Button {
                     id: addToContactsButton
 
                     iconSource: "../assets/incall_keypad_addcaller_unselected.png"

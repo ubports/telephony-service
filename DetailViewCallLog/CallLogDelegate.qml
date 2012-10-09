@@ -10,14 +10,15 @@ ListItem.Base {
     signal clicked(string contactId)
     signal actionClicked(string contactId, string phoneNumber)
 
-    height: infoBox.height
+    __height: infoBox.height
+    showDivider: true
 
     CustomListItemBase {
         id: infoBox
 
         anchors.left: parent.left
         anchors.right: separator.left
-        height: 60
+        height: 58
         iconSource: (avatar != "") ? avatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
@@ -30,9 +31,9 @@ ListItem.Base {
         id: timeLabel
 
         anchors.right: separator.left
-        anchors.rightMargin: 8
+        anchors.rightMargin: 9
         anchors.bottom: infoBox.bottom
-        anchors.bottomMargin: 5
+        anchors.bottomMargin: 3
         fontSize: "small"
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised
@@ -46,7 +47,7 @@ ListItem.Base {
         anchors.left: timeLabel.left
         anchors.right: timeLabel.right
         anchors.bottom: timeLabel.top
-        anchors.bottomMargin: 3
+        anchors.bottomMargin: 2
 
         Image {
             source: {
@@ -81,6 +82,8 @@ ListItem.Base {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
+        anchors.rightMargin: 2
+        anchors.topMargin: 1
         width: height
         selected: callItem.selected
 

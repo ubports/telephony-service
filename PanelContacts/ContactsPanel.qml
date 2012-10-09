@@ -30,31 +30,41 @@ Item {
 
         primaryItem: AbstractButton {
             width: 20
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
             Image {
-                anchors.centerIn: parent
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: 5
                 source: contactsSearchBox.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
             }
             onClicked: contactsSearchBox.text = ""
         }
     }
 
-    ListItem.Standard {
-        id: newContact
-
+    Column {
+        id: buttons
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: contactsSearchBox.bottom
         anchors.topMargin: 10
-        height: 30
 
-        text: "Add a new contact"
-        iconSource: "../assets/add_contacts_icon.png"
-        iconFrame: false
-        onClicked: telephony.createNewContact()
+        ListItem.ThinDivider {}
 
-//        selected: telephony.contactDetails.loaded && telephony.view.added
+        ListItem.Standard {
+            id: newContact
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            __height: 30
+            __leftIconMargin: 20
+            __rightIconMargin: 17
+
+            text: "Add a new contact"
+            icon: Qt.resolvedUrl("../assets/add_contacts_icon.png")
+            iconFrame: false
+            onClicked: telephony.createNewContact()
+
+            selected: telephony.contactDetails.loaded && telephony.view.added
+        }
     }
 
     ContactProxyModel {
@@ -65,7 +75,7 @@ Item {
 
     ListView {
         id: contactsList
-        anchors.top: newContact.bottom
+        anchors.top: buttons.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
