@@ -7,21 +7,29 @@ include(GNUInstallDirs)
 
 set(TELEPHONY_APP_DIR ${CMAKE_INSTALL_DATADIR}/telephony-app)
 
+# Instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
-find_package(Qt4 REQUIRED)
+find_package(Qt5Core)
+find_package(Qt5Contacts)
+find_package(Qt5DBus)
+find_package(Qt5DBusTools)
+find_package(Qt5Gui)
+find_package(Qt5Qml)
+find_package(Qt5Quick)
+find_package(Qt5Widgets)
 find_package(PkgConfig REQUIRED)
-find_package(QtMobility COMPONENTS Contacts REQUIRED)
 
-pkg_check_modules(TP_QT4 REQUIRED TelepathyQt4)
-pkg_check_modules(TPL_QT4 REQUIRED TelepathyLoggerQt4)
+pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
+pkg_check_modules(TPL_QT5 REQUIRED TelepathyLoggerQt5)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
 pkg_check_modules(INDICATE_QT REQUIRED indicate-qt)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${QT_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
@@ -36,19 +44,19 @@ set(telephony_app_SRCS
     telephonyappdbus.cpp
     main.cpp)
 
-qt4_add_dbus_adaptor(telephony_app_SRCS TelephonyApp.xml telephonyappdbus.h TelephonyAppDBus)
-qt4_wrap_cpp(telephonyapplication_MOC_SRCS ${telephony_app_HDRS})
+QT5_ADD_DBUS_ADAPTOR(telephony_app_SRCS TelephonyApp.xml telephonyappdbus.h TelephonyAppDBus)
 add_executable(${TELEPHONY_APP}
-    ${telephonyapplication_MOC_SRCS}
     ${telephony_app_SRCS}
     )
+qt5_use_modules(${TELEPHONY_APP} Core DBus Gui Qml Quick Widgets)
 
 target_link_libraries(${TELEPHONY_APP}
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTGUI_LIBRARIES}
-    ${QT_QTNETWORK_LIBRARIES}
-    ${QT_QTDECLARATIVE_LIBRARIES}
-    ${QT_QTDBUS_LIBRARIES}
+    ${Qt5Core_LIBRARIES}
+    ${Qt5DBus_LIBRARIES}
+    ${Qt5Gui_LIBRARIES}
+    ${Qt5Qml_LIBRARIES}
+    ${Qt5Quick_LIBRARIES}
+    ${Qt5Widgets_LIBRARIES}
     )
 
 install(TARGETS ${TELEPHONY_APP}
@@ -104,6 +112,6 @@ install(FILES ${TELEPHONY_APP}.desktop
 
 enable_testing()
 
-add_subdirectory(TelephonyApp)
-add_subdirectory(TelephonyAppApprover)
-add_subdirectory(icons)
+#add_subdirectory(TelephonyApp)
+#add_subdirectory(TelephonyAppApprover)
+#add_subdirectory(icons)
