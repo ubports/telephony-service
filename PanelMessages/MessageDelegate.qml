@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2
 import "../Widgets"
 import "../dateUtils.js" as DateUtils
 import Ubuntu.Components 0.1

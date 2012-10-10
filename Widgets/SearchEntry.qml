@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 1.1
+import QtQuick 2
 import "../fontUtils.js" as FontUtils
 import Ubuntu.Components 0.1
 
@@ -41,7 +41,8 @@ FocusScope {
     signal leftIconClicked
     signal rightIconClicked
 
-    Accessible.name: "Search Entry"
+    // FIXME: check why it is not working.
+    //Accessible.name: "Search Entry"
 
     /* Delete search when set in-active */
     onActiveChanged: if (!active) searchInput.text = ""
@@ -79,8 +80,9 @@ FocusScope {
             fillMode: Image.PreserveAspectFit
 
             MouseArea {
-                Accessible.name: "Left Icon"
-                Accessible.role: Accessible.PushButton
+                // FIXME: check why it is not working.
+                //Accessible.name: "Left Icon"
+                //Accessible.role: Accessible.PushButton
                 anchors.fill: parent
 
                 onClicked: {
@@ -104,8 +106,9 @@ FocusScope {
             smooth: true
 
             MouseArea {
-                Accessible.name: "Right Icon"
-                Accessible.role: Accessible.PushButton
+                // FIXME: check why it is not working.
+                //Accessible.name: "Right Icon"
+                //Accessible.role: Accessible.PushButton
                 anchors.fill: parent
 
                 onClicked: {
@@ -120,8 +123,9 @@ FocusScope {
             property bool forceCursorVisible: false
             property bool anyKeypressGivesFocus: false
 
-            Accessible.name: searchInstructions.text
-            Accessible.role: Accessible.EditableText
+            // FIXME: check why it is not working.
+            //Accessible.name: searchInstructions.text
+            //Accessible.role: Accessible.EditableText
 
             anchors.left: leftIcon.source != "" ? leftIcon.right : parent.left
             anchors.leftMargin: 5
