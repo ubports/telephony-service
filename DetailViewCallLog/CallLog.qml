@@ -84,7 +84,7 @@ TelephonyPage {
 
         delegate: CallLogDelegate {
             width: parent.width
-            onClicked: telephony.showContactDetailsFromId(contactId)
+            onContactClicked: telephony.showContactDetailsFromId(contactId)
             onActionClicked: telephony.callNumber(phoneNumber)
         }
     }

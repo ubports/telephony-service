@@ -7,7 +7,7 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 ListItem.Base {
     id: callItem
 
-    signal clicked(string contactId)
+    signal contactClicked(string contactId)
     signal actionClicked(string contactId, string phoneNumber)
 
     __height: infoBox.height

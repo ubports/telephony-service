@@ -27,6 +27,7 @@ Item {
         anchors.fill: keys
         source: "../assets/keypad_div_tile.png"
         fillMode: Image.Tile
+        verticalAlignment: Image.AlignTop
     }
 
     Grid {

@@ -1,5 +1,6 @@
 import QtQuick 2
 import TelephonyApp 0.1
+import Ubuntu.Components 0.1
 import "../Widgets"
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes

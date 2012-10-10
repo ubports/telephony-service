@@ -1,5 +1,4 @@
 import QtQuick 2
-import QtMobility.contacts 1.1
 import TelephonyApp 0.1
 
 /*

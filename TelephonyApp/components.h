@@ -32,10 +32,6 @@ class CallLogModel;
 class MessageLogModel;
 class ContactModel;
 
-namespace QtMobility {
-    class QContactManager;
-}
-
 class Components : public QQmlExtensionPlugin
 {
     Q_OBJECT

@@ -15,6 +15,7 @@
  */
 
 import QtQuick 2
+import Ubuntu.Components 0.1
 
 Button {
     width: 65

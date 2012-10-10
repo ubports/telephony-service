@@ -107,6 +107,6 @@ void Components::onAccountReady()
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 
     qDebug() << "Populating the models";
-    mCallLogModel->populate();
-    mMessageLogModel->populate();
+    //mCallLogModel->populate();
+    //mMessageLogModel->populate();
 }
