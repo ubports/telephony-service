@@ -23,16 +23,13 @@ QContactDetail& ContactDetail::detail()
 
 QVariant ContactDetail::contexts() const
 {
-    return mDetail.contexts();
+    // FIXME: contexts is not a QStringList anymore, it is a QList<int> in Qt5
+    return QVariant();//mDetail.contexts();
 }
 
 void ContactDetail::setContexts(const QVariant &contexts)
 {
-    mDetail.setContexts(contexts.toStringList());
+    // FIXME: contexts is not a QStringList anymore, it is a QList<int> in Qt5
+    //mDetail.setContexts(contexts.toStringList());
     Q_EMIT detailChanged();
-}
-
-QString ContactDetail::definitionName() const
-{
-    return mDetail.definitionName();
 }

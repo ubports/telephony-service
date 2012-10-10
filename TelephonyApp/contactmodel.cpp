@@ -50,14 +50,14 @@ ContactModel::ContactModel(const QString &engine, QObject *parent) :
     setRoleNames(roles);
 
     connect(mContactManager,
-            SIGNAL(contactsAdded(QList<QContactLocalId>)),
-            SLOT(onContactsAdded(QList<QContactLocalId>)));
+            SIGNAL(contactsAdded(QList<QContactId>)),
+            SLOT(onContactsAdded(QList<QContactId>)));
     connect(mContactManager,
-            SIGNAL(contactsChanged(QList<QContactLocalId>)),
-            SLOT(onContactsChanged(QList<QContactLocalId>)));
+            SIGNAL(contactsChanged(QList<QContactId>)),
+            SLOT(onContactsChanged(QList<QContactId>)));
     connect(mContactManager,
-            SIGNAL(contactsRemoved(QList<QContactLocalId>)),
-            SLOT(onContactsRemoved(QList<QContactLocalId>)));
+            SIGNAL(contactsRemoved(QList<QContactId>)),
+            SLOT(onContactsRemoved(QList<QContactId>)));
 
     addContacts(mContactManager->contacts());
 }
@@ -91,10 +91,10 @@ QVariant ContactModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-ContactEntry *ContactModel::contactFromId(const QString &guid)
+ContactEntry *ContactModel::contactFromId(const QString &id)
 {
     Q_FOREACH(ContactEntry *entry, mContactEntries) {
-        if (entry->id() == guid) {
+        if (entry->id().toString() == id) {
             return entry;
         }
     }
@@ -121,10 +121,9 @@ void ContactModel::saveContact(ContactEntry *entry)
         return;
     }
 
-    QContact contact = mContactManager->compatibleContact(entry->contact());
     QContactSaveRequest *request = new QContactSaveRequest(this);
     request->setManager(mContactManager);
-    request->setContact(contact);
+    request->setContact(entry->contact());
 
     connect(request,
             SIGNAL(stateChanged(QContactAbstractRequest::State)),
@@ -149,7 +148,7 @@ void ContactModel::removeContact(ContactEntry *entry)
 {
     QContactRemoveRequest *request = new QContactRemoveRequest(this);
     request->setManager(mContactManager);
-    request->setContactId(entry->localId());
+    request->setContactId(entry->id());
 
     connect(request,
             SIGNAL(stateChanged(QContactAbstractRequest::State)),
@@ -160,7 +159,7 @@ void ContactModel::removeContact(ContactEntry *entry)
 
 void ContactModel::updateContact(ContactEntry *entry)
 {
-    entry->setContact(mContactManager->contact(entry->localId()));
+    entry->setContact(mContactManager->contact(entry->id()));
 }
 
 void ContactModel::addContacts(const QList<QContact> &contacts)
@@ -178,7 +177,7 @@ void ContactModel::addContacts(const QList<QContact> &contacts)
         Q_EMIT contactAdded(entry);
 
         // check if this entry is pending load
-        if (entry->id() == mPendingId) {
+        if (entry->id().toString() == mPendingId) {
             pending = entry;
         }
     }
@@ -203,28 +202,28 @@ void ContactModel::removeContactFromModel(ContactEntry *entry)
     mContactEntries.removeAt(index);
     entry->deleteLater();
     endRemoveRows();
-    Q_EMIT contactRemoved(entry->id());
+    Q_EMIT contactRemoved(entry->id().toString());
 }
 
-void ContactModel::onContactsAdded(QList<QContactLocalId> ids)
+void ContactModel::onContactsAdded(QList<QContactId> ids)
 {
     addContacts(mContactManager->contacts(ids));
 }
 
-void ContactModel::onContactsChanged(QList<QContactLocalId> ids)
+void ContactModel::onContactsChanged(QList<QContactId> ids)
 {
     Q_FOREACH(ContactEntry *entry, mContactEntries) {
-        if (ids.contains(entry->localId())) {
+        if (ids.contains(entry->id())) {
             // the changed signal is going to be emitted by the entry
-            entry->setContact(mContactManager->contact(entry->localId()));
+            entry->setContact(mContactManager->contact(entry->id()));
         }
     }
 }
 
-void ContactModel::onContactsRemoved(QList<QContactLocalId> ids)
+void ContactModel::onContactsRemoved(QList<QContactId> ids)
 {
     Q_FOREACH(ContactEntry *entry, mContactEntries) {
-        if (ids.contains(entry->localId())) {
+        if (ids.contains(entry->id())) {
             removeContactFromModel(entry);
         }
     }

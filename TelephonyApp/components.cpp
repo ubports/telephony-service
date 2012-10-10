@@ -36,17 +36,17 @@
 #include "contactphonenumber.h"
 #include "messagelogmodel.h"
 #include "messagesproxymodel.h"
-#include "buttonmaskeffect.h"
-#include "modelsectioncounter.h"
+// FIXME: uncomment this after ModelSectionCounter gets ported to Qt5
+//#include "modelsectioncounter.h"
 
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/qdeclarative.h>
+#include <QQmlEngine>
+#include <qqml.h>
 #include <TelepathyQt/Debug>
-#include <TelepathyLoggerQt4/Init>
+#include <TelepathyLoggerQt/Init>
 
 #include <glib-object.h>
 
-void Components::initializeEngine(QDeclarativeEngine *engine, const char *uri)
+void Components::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     Q_ASSERT(engine);
 
@@ -95,8 +95,8 @@ void Components::registerTypes(const char *uri)
     qmlRegisterType<ContactName>(uri, 0, 1, "ContactName");
     qmlRegisterType<ContactOnlineAccount>(uri, 0, 1, "ContactOnlineAccount");
     qmlRegisterType<ContactPhoneNumber>(uri, 0, 1, "ContactPhoneNumber");
-    qmlRegisterType<ButtonMaskEffect>(uri, 0, 1, "ButtonMaskEffect");
-    qmlRegisterType<ModelSectionCounter>(uri, 0, 1, "ModelSectionCounter");
+    // FIXME: uncomment this after ModelSectionCounter gets ported to Qt5
+    //qmlRegisterType<ModelSectionCounter>(uri, 0, 1, "ModelSectionCounter");
 }
 
 void Components::onChannelHandlerCreated(ChannelHandler *handler)
@@ -126,5 +126,3 @@ void Components::onAccountReady()
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 }
-
-Q_EXPORT_PLUGIN2(components, Components)

@@ -1,10 +1,11 @@
 #ifndef CONTACTDETAIL_H
 #define CONTACTDETAIL_H
 
+#include <QString>
 #include <QObject>
 #include <QContactDetail>
 
-using namespace QtMobility;
+QTCONTACTS_USE_NAMESPACE
 
 class ContactDetail : public QObject
 {
@@ -15,9 +16,6 @@ class ContactDetail : public QObject
     Q_PROPERTY(QVariant contexts
                READ contexts
                WRITE setContexts
-               NOTIFY detailChanged)
-    Q_PROPERTY(QString definitionName
-               READ definitionName
                NOTIFY detailChanged)
     Q_ENUMS(DetailType)
 
@@ -44,8 +42,6 @@ public:
      */
     QVariant contexts() const;
     void setContexts(const QVariant &contexts);
-
-    QString definitionName() const;
     
 Q_SIGNALS:
     void typeChanged();

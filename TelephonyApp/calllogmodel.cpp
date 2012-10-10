@@ -20,9 +20,9 @@
 #include "calllogmodel.h"
 #include "contactmodel.h"
 #include "telepathyhelper.h"
-#include <TelepathyLoggerQt4/Entity>
-#include <TelepathyLoggerQt4/Event>
-#include <TelepathyLoggerQt4/CallEvent>
+#include <TelepathyLoggerQt/Entity>
+#include <TelepathyLoggerQt/Event>
+#include <TelepathyLoggerQt/CallEvent>
 #include <TelepathyQt/Contact>
 
 QVariant CallLogEntry::data(int role) const

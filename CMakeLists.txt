@@ -19,14 +19,18 @@ find_package(Qt5DBusTools)
 find_package(Qt5Gui)
 find_package(Qt5Qml)
 find_package(Qt5Quick)
+find_package(Qt5Test)
 find_package(Qt5Widgets)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
 pkg_check_modules(TPL_QT5 REQUIRED TelepathyLoggerQt5)
+pkg_check_modules(QTGLIB REQUIRED QtGLib-2.0)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
 pkg_check_modules(INDICATE_QT REQUIRED indicate-qt)
+
+add_definitions(-DQT_NO_KEYWORDS)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -112,6 +116,6 @@ install(FILES ${TELEPHONY_APP}.desktop
 
 enable_testing()
 
-#add_subdirectory(TelephonyApp)
-#add_subdirectory(TelephonyAppApprover)
-#add_subdirectory(icons)
+add_subdirectory(TelephonyApp)
+add_subdirectory(TelephonyAppApprover)
+add_subdirectory(icons)

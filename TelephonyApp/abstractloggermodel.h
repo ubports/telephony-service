@@ -21,9 +21,9 @@
 #define ABSTRACTLOGGERMODEL_H
 
 #include <QAbstractListModel>
-#include <TelepathyLoggerQt4/PendingOperation>
-#include <TelepathyLoggerQt4/Types>
-#include <TelepathyLoggerQt4/LogManager>
+#include <TelepathyLoggerQt/PendingOperation>
+#include <TelepathyLoggerQt/Types>
+#include <TelepathyLoggerQt/LogManager>
 #include <QDateTime>
 #include <QList>
 #include <QMap>

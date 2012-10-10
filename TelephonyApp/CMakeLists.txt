@@ -22,64 +22,34 @@ set(plugin_SRCS
     messagelogmodel.cpp
     messagesproxymodel.cpp
     telepathyhelper.cpp
-    buttonmaskeffect.cpp
-    modelsectioncounter.cpp
+    #modelsectioncounter.cpp
     )
-
-set(plugin_HDRS
-    abstractloggermodel.h
-    calllogmodel.h
-    calllogproxymodel.h
-    contactaddress.h
-    contactdetail.h
-    contactemailaddress.h
-    contactentry.h
-    contactmodel.h
-    contactname.h
-    contactonlineaccount.h
-    contactphonenumber.h
-    contactproxymodel.h
-    components.h
-    channelhandler.h
-    channelobserver.h
-    chatmanager.h
-    callentry.h
-    callmanager.h
-    messagelogmodel.h
-    messagesproxymodel.h
-    telepathyhelper.h
-    buttonmaskeffect.h
-    modelsectioncounter.h
-    )
-
-qt4_wrap_cpp(plugin_MOC_SRCS ${plugin_HDRS})
 
 include_directories(
-    ${QT_QTCORE_INCLUDE_DIR}
-    ${QT_QTGUI_INCLUDE_DIR}
-    ${QT_QTDECLARATIVE_INCLUDE_DIR}
-    ${QTMOBILITY_CONTACTS_INCLUDE_DIR}
-    ${QTMOBILITY_INCLUDE_DIR}
-    ${TP_QT4_INCLUDE_DIRS}
-    ${TPL_QT4_INCLUDE_DIRS}
+    ${TP_QT5_INCLUDE_DIRS}
+    ${TPL_QT5_INCLUDE_DIRS}
+    ${QTGLIB_INCLUDE_DIRS}
     ${GLIB_INCLUDE_DIRS}
     )
 
-add_library(telephony-qml SHARED ${plugin_SRCS} ${plugin_HDRS} ${plugin_MOC_SRCS})
+add_library(telephony-qml SHARED ${plugin_SRCS} ${plugin_HDRS})
+
+qt5_use_modules(telephony-qml Contacts Core Qml)
 
 target_link_libraries(telephony-qml
-    ${QT_QTCORE_LIBRARIES}
-    ${QT_QTDECLARATIVE_LIBRARIES}
-    ${QTMOBILITY_CONTACTS_LIBRARY}
-    ${TP_QT4_LIBRARIES}
-    ${TPL_QT4_LIBRARIES}
+    ${Qt5Contacts_LIBRARIES}
+    ${Qt5Core_LIBRARIES}
+    ${Qt5Qml_LIBRARIES}
+    ${TP_QT5_LIBRARIES}
+    ${TPL_QT5_LIBRARIES}
     ${GLIB_LIBRARIES}
     )
 
+# FIXME: check how to detect that using cmake
+set(QT_IMPORTS_DIR /opt/qt5/imports)
 set(PLUGIN_DIR ${QT_IMPORTS_DIR}/TelephonyApp)
 install(TARGETS telephony-qml DESTINATION ${PLUGIN_DIR})
 install(FILES qmldir DESTINATION ${PLUGIN_DIR})
 
-# deactivated unit tests until they pass in a clean chroot
 add_subdirectory(tests)
 

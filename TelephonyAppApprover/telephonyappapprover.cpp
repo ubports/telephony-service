@@ -72,7 +72,7 @@ Tp::ChannelDispatchOperationPtr TelephonyAppApprover::dispatchOperation(Tp::Pend
 {
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
     QString accountId = channel->property("accountId").toString();
-    foreach (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
+    Q_FOREACH (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
         if (dispatchOperation->account()->uniqueIdentifier() == accountId) {
             return dispatchOperation;
         }
@@ -86,7 +86,7 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
     bool willHandle = false;
 
     QList<Tp::ChannelPtr> channels = dispatchOperation->channels();
-    foreach (Tp::ChannelPtr channel, channels) {
+    Q_FOREACH (Tp::ChannelPtr channel, channels) {
 
         // Call Channel
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);

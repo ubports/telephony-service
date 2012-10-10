@@ -19,9 +19,9 @@
 
 #include "messagelogmodel.h"
 #include "contactmodel.h"
-#include <TelepathyLoggerQt4/Event>
-#include <TelepathyLoggerQt4/TextEvent>
-#include <TelepathyLoggerQt4/Entity>
+#include <TelepathyLoggerQt/Event>
+#include <TelepathyLoggerQt/TextEvent>
+#include <TelepathyLoggerQt/Entity>
 
 QVariant MessageLogEntry::data(int role) const
 {

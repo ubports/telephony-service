@@ -34,7 +34,7 @@ int ContactEmailAddress::type() const
 
 QString ContactEmailAddress::emailAddress() const
 {
-    return mDetail.value(QContactEmailAddress::FieldEmailAddress);
+    return mDetail.value(QContactEmailAddress::FieldEmailAddress).toString();
 }
 
 void ContactEmailAddress::setEmailAddress(const QString &value)
