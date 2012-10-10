@@ -73,12 +73,10 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
     mRootContext->setContextProperty("contactModel", ContactModel::instance());
 
-    connect(TelepathyHelper::instance(),
-            SIGNAL(channelHandlerCreated(ChannelHandler*)),
-            SLOT(onChannelHandlerCreated(ChannelHandler*)));
-    connect(TelepathyHelper::instance(),
-            SIGNAL(channelObserverCreated(ChannelObserver*)),
-            SLOT(onChannelObserverCreated(ChannelObserver*)));
+    mCallLogModel = new CallLogModel(this);
+    mRootContext->setContextProperty("callLogModel", mCallLogModel);
+    mMessageLogModel = new MessageLogModel(this);
+    mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
 }
 
 void Components::registerTypes(const char *uri)
@@ -99,30 +97,16 @@ void Components::registerTypes(const char *uri)
     //qmlRegisterType<ModelSectionCounter>(uri, 0, 1, "ModelSectionCounter");
 }
 
-void Components::onChannelHandlerCreated(ChannelHandler *handler)
-{
-    // register the context property
-    mRootContext->setContextProperty("channelHandler", handler);
-}
-
-void Components::onChannelObserverCreated(ChannelObserver *observer)
-{
-    // register the context property
-    mRootContext->setContextProperty("channelObserver", observer);
-}
-
 void Components::onAccountReady()
 {
-    // create the log models just when the telepathy helper signals the account is ready
-    mCallLogModel = new CallLogModel(this);
-    mRootContext->setContextProperty("callLogModel", mCallLogModel);
     connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callEnded(const Tp::CallChannelPtr&)),
             mCallLogModel, SLOT(onCallEnded(const Tp::CallChannelPtr&)));
-
-    mMessageLogModel = new MessageLogModel(this);
-    mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
     connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&, const QString&)),
             mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&, const QString&)));
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
+
+    qDebug() << "Populating the models";
+    mCallLogModel->populate();
+    mMessageLogModel->populate();
 }

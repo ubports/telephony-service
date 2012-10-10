@@ -49,8 +49,6 @@ MessageLogModel::MessageLogModel(QObject *parent) :
     roles[MessageId] = "messageId";
     roles[IsLatest] = "isLatest";
     setRoleNames(roles);
-
-    fetchLog(Tpl::EventTypeMaskText);
 }
 
 void MessageLogModel::appendMessage(const QString &number,
@@ -75,6 +73,11 @@ void MessageLogModel::appendMessage(const QString &number,
     appendEntry(entry);
 
     updateLatestMessages(number);
+}
+
+void MessageLogModel::populate()
+{
+     fetchLog(Tpl::EventTypeMaskText);
 }
 
 void MessageLogModel::onMessageReceived(const QString &number,

@@ -46,8 +46,6 @@ public:
     void registerTypes(const char *uri);
 
 private Q_SLOTS:
-    void onChannelHandlerCreated(ChannelHandler *handler);
-    void onChannelObserverCreated(ChannelObserver *observer);
     void onAccountReady();
 
 private:

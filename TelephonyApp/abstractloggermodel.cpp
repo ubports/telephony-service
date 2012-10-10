@@ -98,6 +98,11 @@ QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
     return mLogEntries[index.row()]->data(role);
 }
 
+void AbstractLoggerModel::populate()
+{
+    fetchLog();
+}
+
 void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entityTypes)
 {
     Tpl::PendingEntities *pendingEntities = mLogManager->queryEntities(TelepathyHelper::instance()->account());

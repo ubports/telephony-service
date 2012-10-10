@@ -45,7 +45,10 @@ CallLogModel::CallLogModel(QObject *parent) :
     roles[Duration] = "duration";
     roles[Missed] = "missed";
     setRoleNames(roles);
+}
 
+void CallLogModel::populate()
+{
     fetchLog(Tpl::EventTypeMaskCall, EntityTypeList() << Tpl::EntityTypeContact
                                                       << Tpl::EntityTypeSelf);
 }
