@@ -194,6 +194,8 @@ LocalWidgets.TelephonyPage {
                     anchors.rightMargin: 1
                     source: "../assets/livecall_keypad_div_tile.png"
                     fillMode: Image.Tile
+                    verticalAlignment: Image.AlignTop
+                    horizontalAlignment: Image.AlignLeft
                 }
 
                 Grid {
