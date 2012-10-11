@@ -20,7 +20,7 @@ ListItem.Base {
         textBold: unreadCount > 0
         selected: messageDelegate.selected
 
-        onClicked: messageDelegate.clicked()
+        onClicked: messageDelegate.clicked(mouse)
     }
 
     TextCustom {
