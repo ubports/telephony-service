@@ -253,7 +253,7 @@ LocalWidgets.TelephonyPage {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 5
 
-                LocalWidgets.Button {
+                Button {
                     id: hangupButton
 
                     iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
@@ -263,7 +263,7 @@ LocalWidgets.TelephonyPage {
                     onClicked: endCall()
                 }
 
-                LocalWidgets.Button {
+                Button {
                     id: addToContactsButton
 
                     iconSource: "../assets/incall_keypad_addcaller_unselected.png"
