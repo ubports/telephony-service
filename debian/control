@@ -5,10 +5,10 @@ Maintainer: The Newyork team <newyork@lists.canonical.com>
 XSBC-Original-Maintainer: Tiago Salem Herrmann <tiago.herrmann@canonical.com>
 Build-Depends: debhelper (>= 8.0.0),
                cmake,
-               libqt4-dev,
-               libtelepathy-qt4-dev,
-               qtmobility-dev,
-               libtelepathy-logger-qt4-dev,
+               qtbase (>= 5.0),
+               qtpim (>= 5.0),
+               libtelepathy-qt5-dev,
+               libtelepathy-logger-qt5-dev,
                libqtgstreamer-dev,
                pkg-config,
                libnotify-dev,
@@ -24,10 +24,9 @@ Depends: ${shlibs:Depends},
          libdeclarative-contacts,
          libqtfolks1,
          telepathy-mission-control-5,
-         libqt4-declarative-shaders,
          libnotify4,
          notify-osd,
          libicu48,
-         qt-components-ubuntu (<= 0.1+bzr101)
+         qt-components-ubuntu (> 0.1+bzr101)
 Description: An application to execute telephony tasks such as calling and messaging
  An application to execute telephony tasks such as calling and messaging
