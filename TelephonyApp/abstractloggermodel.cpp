@@ -125,7 +125,8 @@ void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entit
      */
     connect(pendingEntities,
             SIGNAL(finished(Tpl::PendingOperation*)),
-            SLOT(onPendingEntitiesFinished(Tpl::PendingOperation*)));
+            SLOT(onPendingEntitiesFinished(Tpl::PendingOperation*)),
+            Qt::DirectConnection);
     mActiveOperations.append(pendingEntities);
 }
 
@@ -138,7 +139,8 @@ void AbstractLoggerModel::requestDatesForEntities(const Tpl::EntityPtrList &enti
 
         connect(pendingDates,
                 SIGNAL(finished(Tpl::PendingOperation*)),
-                SLOT(onPendingDatesFinished(Tpl::PendingOperation*)));
+                SLOT(onPendingDatesFinished(Tpl::PendingOperation*)),
+                Qt::DirectConnection);
         mActiveOperations.append(pendingDates);
     }
 }
@@ -151,7 +153,8 @@ void AbstractLoggerModel::requestEventsForDates(const Tpl::EntityPtr &entity, co
         Tpl::PendingEvents *pendingEvents = mLogManager->queryEvents(account, entity, mType, date);
         connect(pendingEvents,
                 SIGNAL(finished(Tpl::PendingOperation*)),
-                SLOT(onPendingEventsFinished(Tpl::PendingOperation*)));
+                SLOT(onPendingEventsFinished(Tpl::PendingOperation*)),
+                Qt::DirectConnection);
         mActiveOperations.append(pendingEvents);
     }
 }
