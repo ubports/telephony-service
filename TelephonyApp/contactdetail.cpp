@@ -23,11 +23,11 @@ QContactDetail& ContactDetail::detail()
 
 QVariant ContactDetail::contexts() const
 {
-    return QVariant::fromValue(mDetail.contexts());
+    return mDetail.value<QVariant>(QContactDetail::FieldContext);
 }
 
 void ContactDetail::setContexts(const QVariant &contexts)
 {
-    mDetail.setContexts(contexts.value<QList<int> >());
+    mDetail.setValue(QContactDetail::FieldContext, contexts);
     Q_EMIT detailChanged();
 }
