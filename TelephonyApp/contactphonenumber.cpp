@@ -28,11 +28,6 @@ ContactPhoneNumber::ContactPhoneNumber(const QContactDetail &detail, QObject *pa
             SIGNAL(changed()));
 }
 
-int ContactPhoneNumber::type() const
-{
-    return mDetail.type();
-}
-
 QString ContactPhoneNumber::number() const
 {
     return mDetail.value(QContactPhoneNumber::FieldNumber).toString();

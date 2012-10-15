@@ -37,8 +37,6 @@ class ContactPhoneNumber : public ContactDetail
 public:
     explicit ContactPhoneNumber(const QContactDetail &detail = QContactPhoneNumber(), QObject *parent = 0);
     
-    int type() const;
-
     QString number() const;
     void setNumber(const QString &value);
 

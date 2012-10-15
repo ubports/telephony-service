@@ -35,8 +35,6 @@ class ContactName : public ContactDetail
 public:
     explicit ContactName(const QContactDetail &detail = QContactName(), QObject *parent = 0);
 
-    int type() const;
-
     QString firstName() const;
     void setFirstName(const QString &value);
 

@@ -7,7 +7,7 @@ ContactDetail::ContactDetail(const QContactDetail &detail, QObject *parent) :
 
 int ContactDetail::type() const
 {
-    return Unknown;
+    return mDetail.type();
 }
 
 void ContactDetail::setDetail(const QContactDetail &detail)

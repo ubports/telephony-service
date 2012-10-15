@@ -27,11 +27,6 @@ ContactName::ContactName(const QContactDetail &detail, QObject *parent) :
             SIGNAL(changed()));
 }
 
-int ContactName::type() const
-{
-    return Name;
-}
-
 QString ContactName::firstName() const
 {
     return mDetail.value(QContactName::FieldFirstName).toString();

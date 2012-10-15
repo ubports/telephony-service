@@ -27,11 +27,6 @@ ContactOnlineAccount::ContactOnlineAccount(const QContactDetail &detail, QObject
             SIGNAL(changed()));
 }
 
-int ContactOnlineAccount::type() const
-{
-    return InstantMessaging;
-}
-
 QString ContactOnlineAccount::accountUri() const
 {
     return mDetail.value(QContactOnlineAccount::FieldAccountUri).toString();

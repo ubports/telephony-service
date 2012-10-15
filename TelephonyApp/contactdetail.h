@@ -23,15 +23,15 @@ public:
     explicit ContactDetail(const QContactDetail &detail = QContactDetail(), QObject *parent = 0);
 
     enum DetailType {
-        Name,
-        PhoneNumber,
-        EmailAddress,
-        Address,
-        InstantMessaging,
-        Unknown
+        Name = QContactDetail::TypeName,
+        PhoneNumber = QContactDetail::TypePhoneNumber,
+        EmailAddress = QContactDetail::TypeEmailAddress,
+        Address = QContactDetail::TypeAddress,
+        InstantMessaging = QContactDetail::TypeOnlineAccount,
+        Unknown = QContactDetail::TypeUndefined
     };
 
-    virtual int type() const;
+    int type() const;
     void setDetail(const QContactDetail &detail);
 
     QContactDetail& detail();

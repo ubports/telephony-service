@@ -27,11 +27,6 @@ ContactAddress::ContactAddress(const QContactDetail &detail, QObject *parent) :
             SIGNAL(changed()));
 }
 
-int ContactAddress::type() const
-{
-    return Address;
-}
-
 QString ContactAddress::country() const
 {
     return mDetail.value(QContactAddress::FieldCountry).toString();
