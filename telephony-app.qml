@@ -278,6 +278,10 @@ Item {
                 onSourceChanged: {
                     stack.push(Qt.resolvedUrl(source))
                 }
+
+                Component.onCompleted: {
+                    stack.push(Qt.resolvedUrl(source))
+                }
             }
             onItemAdded: item.parent = rightPaneStacks
         }
