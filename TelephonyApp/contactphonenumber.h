@@ -34,7 +34,25 @@ class ContactPhoneNumber : public ContactDetail
                READ subTypes
                WRITE setSubTypes
                NOTIFY subTypesChanged)
+
+    Q_ENUMS(SubType)
+
 public:
+    enum SubType {
+        Landline = QContactPhoneNumber::SubTypeLandline,
+        Mobile = QContactPhoneNumber::SubTypeMobile,
+        Fax = QContactPhoneNumber::SubTypeFax,
+        Pager = QContactPhoneNumber::SubTypePager,
+        Voice = QContactPhoneNumber::SubTypeVoice,
+        Modem = QContactPhoneNumber::SubTypeModem,
+        Video = QContactPhoneNumber::SubTypeVideo,
+        Car = QContactPhoneNumber::SubTypeCar,
+        BulletinBoardSystem = QContactPhoneNumber::SubTypeBulletinBoardSystem,
+        MessagingCapable = QContactPhoneNumber::SubTypeMessagingCapable,
+        Assistant = QContactPhoneNumber::SubTypeAssistant,
+        DtmfMenu = QContactPhoneNumber::SubTypeDtmfMenu
+    };
+
     explicit ContactPhoneNumber(const QContactDetail &detail = QContactPhoneNumber(), QObject *parent = 0);
     
     QString number() const;

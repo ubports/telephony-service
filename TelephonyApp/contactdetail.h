@@ -18,6 +18,7 @@ class ContactDetail : public QObject
                WRITE setContexts
                NOTIFY detailChanged)
     Q_ENUMS(DetailType)
+    Q_ENUMS(Context)
 
 public:
     explicit ContactDetail(const QContactDetail &detail = QContactDetail(), QObject *parent = 0);
@@ -29,6 +30,12 @@ public:
         Address = QContactDetail::TypeAddress,
         InstantMessaging = QContactDetail::TypeOnlineAccount,
         Unknown = QContactDetail::TypeUndefined
+    };
+
+    enum Context {
+        ContextHome = QContactDetail::ContextHome,
+        ContextWork = QContactDetail::ContextWork,
+        ContextOther = QContactDetail::ContextOther
     };
 
     int type() const;
