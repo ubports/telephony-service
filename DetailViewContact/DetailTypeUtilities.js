@@ -1,5 +1,25 @@
 .pragma library
 
+var CONTEXT_TYPE_HOME       = 0
+var CONTEXT_TYPE_WORK       = 1
+var CONTEXT_TYPE_OTHER      = 2
+
+var DETAIL_TYPE_ADDRESS       = 1
+var DETAIL_TYPE_ONLINEACCOUNT = 18
+var DETAIL_TYPE_PHONENUMBER   = 20
+
+var PHONENUMBER_SUBTYPE_LANDLINE  = 0
+var PHONENUMBER_SUBTYPE_MOBILE    = 1
+var PHONENUMBER_SUBTYPE_FAX = 2
+var PHONENUMBER_SUBTYPE_PAGER = 3
+var PHONENUMBER_SUBTYPE_VOICE = 4
+var PHONENUMBER_SUBTYPE_MODEM = 5
+var PHONENUMBER_SUBTYPE_VIDEO = 6
+var PHONENUMBER_SUBTYPE_CAR = 7
+var PHONENUMBER_SUBTYPE_BULLETINBOARDSYSTEM = 8
+var PHONENUMBER_SUBTYPE_MESSAGINGCAPABLE = 9
+var PHONENUMBER_SUBTYPE_ASSISTANT = 10
+var PHONENUMBER_SUBTYPE_DTMFMENU = 11
 
 var PROTOCOL_LABEL_AIM      = "AIM";
 var PROTOCOL_LABEL_MSN      = "Windows Live";
@@ -24,10 +44,6 @@ var PROTOCOL_TYPE_OTHER     = "other";
 var ADDRESS_LABEL_HOME      = "Home";
 var ADDRESS_LABEL_WORK      = "Work";
 var ADDRESS_LABEL_OTHER     = "Other";
-
-var ADDRESS_TYPE_HOME       = "home";
-var ADDRESS_TYPE_WORK       = "work";
-var ADDRESS_TYPE_OTHER      = "other";
 
 var phoneSubTypes = [ "Mobile", "Home", "Work", "Work Fax", "Home Fax", "Pager", "Other" ];
 
@@ -109,27 +125,27 @@ function getDetailSubType(detail) {
         return "";
     }
     /* Phone numbers have a special field for the subType */
-    if (detail.definitionName == "PhoneNumber") {
-        if (detail.subTypes.indexOf("home") > -1) {
-            if (detail.subTypes.indexOf("voice") > -1) {
+    if (detail.type == DETAIL_TYPE_PHONENUMBER) {
+        if (detail.contexts.indexOf(CONTEXT_TYPE_HOME) > -1) {
+            if (detail.subTypes.indexOf(PHONENUMBER_SUBTYPE_VOICE) > -1 || detail.subTypes.isEmpty) {
                 return "Home";
-            } else if (detail.subTypes.indexOf("fax") > -1) {
+            } else if (detail.subTypes.indexOf(PHONENUMBER_SUBTYPE_FAX) > -1) {
                 return "Home Fax";
             }
-        } else if (detail.subTypes.indexOf("work") > -1) {
-            if (detail.subTypes.indexOf("voice") > -1) {
+        } else if (detail.contexts.indexOf(CONTEXT_TYPE_WORK) > -1) {
+            if (detail.subTypes.indexOf(PHONENUMBER_SUBTYPE_VOICE) > -1 || detail.subTypes.isEmpty) {
                 return "Work";
-            } else if (detail.subTypes.indexOf("fax") > -1) {
+            } else if (detail.subTypes.indexOf(PHONENUMBER_SUBTYPE_FAX) > -1) {
                 return "Work Fax";
             }
-        } else if (detail.subTypes.indexOf("cell") > -1) {
+        } else if (detail.subTypes.indexOf(PHONENUMBER_SUBTYPE_MOBILE) > -1) {
             return "Mobile";
-        } else if (detail.subTypes.indexOf("pager") > -1) {
+        } else if (detail.subTypes.indexOf(PHONENUMBER_SUBTYPE_PAGER) > -1) {
             return "Pager";
         }
 
         return "Other";
-    } else if (detail.definitionName == "OnlineAccount") {
+    } else if (detail.type == DETAIL_TYPE_ONLINEACCOUNT) {
         var protocol = detail.protocol;
         if (protocol == PROTOCOL_TYPE_CUSTOM) {
             if (detail.contexts.indexOf("PROTOCOL=QQ") > -1) {
@@ -155,11 +171,11 @@ function getDetailSubType(detail) {
             console.log("Invalid protocol: " + protocol);
             return PROTOCOL_LABEL_OTHER;
         }
-    } else if (detail.definitionName == "Address") {
-        var subTypes = detail.subTypes
-        if (subTypes.indexOf(ADDRESS_TYPE_HOME) > -1) {
+    } else if (detail.type == DETAIL_TYPE_ADDRESS) {
+        var contexts = detail.contexts
+        if (contexts.indexOf(CONTEXT_TYPE_HOME) > -1) {
             return ADDRESS_LABEL_HOME;
-        } else if (subTypes.indexOf(ADDRESS_TYPE_WORK) > -1) {
+        } else if (contexts.indexOf(CONTEXT_TYPE_WORK) > -1) {
             return ADDRESS_LABEL_WORK;
         } else {
             return ADDRESS_LABEL_OTHER;
@@ -167,21 +183,22 @@ function getDetailSubType(detail) {
     } else {
         // The backend supports multiple types but we can just handle one,
         // so let's pick just the first
-        var type = "";
+        var context = -1;
         for (var i = 0; i < detail.contexts.length; i++) {
-            if (detail.contexts[i].indexOf("type=") == 0) {
-                type = detail.contexts[i].substring(5);
-                break;
-            }
+            context = detail.contexts[i];
+            break;
+        }
+        var subType = -1;
+        for (var i = 0; i < detail.subTypes.length; i++) {
+            subType = detail.subTypes[i];
+            break;
         }
 
-        if (type == "home") {
+        if (context == CONTEXT_TYPE_HOME) {
             return "Home";
-        } else if (type == "work") {
+        } else if (context == CONTEXT_TYPE_WORK) {
             return "Work";
-        } else if (type == "internet") {
-            return "Mobile";
-        } else {
+        } else if (subType == CONTEXT_TYPE_OTHER) {
             return "Other";
         }
     }
@@ -189,21 +206,10 @@ function getDetailSubType(detail) {
     return "";
 }
 
-function updateContext(detail, key, values) {
+function updateContext(detail, context) {
     // We need a copy because QML list properties can't
     // be directly modified, they need to be reassigned a modified copy.
-    var contexts = detail.contexts;
-    for (var i = 0; i < contexts.length; i++) {
-        if (contexts[i].indexOf(key) == 0) {
-            // Modify the first value in the list, since we only check for the
-            // first value during the parse phase.
-            contexts[i] = key + values;
-            detail.contexts = contexts;
-            return;
-        }
-    }
-    contexts.push(key + values);
-    detail.contexts = contexts;
+    detail.contexts = context;
 }
 
 function setDetailSubType(detail, newSubType) {
@@ -212,23 +218,30 @@ function setDetailSubType(detail, newSubType) {
     }
 
     /* Phone numbers have a special field for the subType */
-    if (detail.definitionName == "PhoneNumber") {
+    if (detail.type == DETAIL_TYPE_PHONENUMBER) {
         if (newSubType == "Home") {
-            detail.subTypes = [ "home", "voice" ];
+            detail.contexts = [ CONTEXT_TYPE_HOME ];
+            detail.subTypes = [ PHONENUMBER_SUBTYPE_VOICE ];
         } else if (newSubType == "Work") {
-            detail.subTypes = [ "work", "voice" ];
+            detail.contexts = [ CONTEXT__TYPE_WORK ];
+            detail.subTypes = [ PHONENUMBER_SUBTYPE_VOICE ];
         } else if (newSubType == "Work Fax") {
-            detail.subTypes = [ "work", "fax" ];
+            detail.contexts = [ CONTEXT_TYPE_WORK ];
+            detail.subTypes = [ PHONENUMBER_SUBTYPE_FAX ];
         } else if (newSubType == "Home Fax") {
-            detail.subTypes = [ "home", "fax" ];
+            detail.contexts = [ CONTEXT_TYPE_HOME ];
+            detail.subTypes = [ PHONENUMBER_SUBTYPE_FAX ];
         } else if (newSubType == "Mobile") {
-            detail.subTypes = [ "cell" ];
+            detail.contexts = [ ];
+            detail.subTypes = [ PHONENUMBER_SUBTYPE_MOBILE ];
         } else if (newSubType == "Pager") {
-            detail.subTypes = [ "pager" ];
+            detail.contexts = [ ];
+            detail.subTypes = [ PHONENUMBER_SUBTYPE_PAGER ];
         } else {
-            detail.subTypes = [ "other" ];
+            detail.contexts = [ CONTEXT_TYPE_OTHER ];
+            detail.subTypes = [ ];
         }
-    } else if (detail.definitionName == "OnlineAccount") {
+    } else if (detail.type == DETAIL_TYPE_ONLINEACCOUNT) {
         var protocol = newSubType;
         if (protocol == PROTOCOL_LABEL_AIM) {
             detail.protocol = PROTOCOL_TYPE_AIM;
@@ -240,7 +253,7 @@ function setDetailSubType(detail, newSubType) {
             detail.protocol = PROTOCOL_TYPE_SKYPE;
         } else if (protocol == PROTOCOL_LABEL_QQ) {
             detail.protocol = PROTOCOL_TYPE_CUSTOM;
-            updateContext(detail, "PROTOCOL=", "QQ");
+            updateContext(detail, "QQ");
         } else if (protocol == PROTOCOL_LABEL_GTALK) {
             detail.protocol = PROTOCOL_TYPE_GTALK;
         } else if (protocol == PROTOCOL_LABEL_ICQ) {
@@ -251,27 +264,25 @@ function setDetailSubType(detail, newSubType) {
             console.log("Invalid protocol: " + protocol);
             detail.protocol = PROTOCOL_TYPE_OTHER;
         }
-    } else if (detail.definitionName == "Address") {
+    } else if (detail.type == DETAIL_TYPE_ADDRESS) {
         if (newSubType == ADDRESS_LABEL_HOME) {
-            detail.subTypes = [ ADDRESS_TYPE_HOME ];
+            detail.contexts = [ CONTEXT_TYPE_HOME ];
         } else if (newSubType == ADDRESS_LABEL_WORK) {
-            detail.subTypes = [ ADDRESS_TYPE_WORK ];
+            detail.contexts = [ CONTEXT_TYPE_WORK ];
         } else {
-            detail.subTypes = [ ADDRESS_TYPE_OTHER ];
+            detail.contexts = [ CONTEXT_TYPE_OTHER ];
         }
     } else {
-        var types = ""
+        var context = -1
         if (newSubType == "Home") {
-            types = "home";
+            context = CONTEXT_TYPE_HOME;
         } else if (newSubType == "Work") {
-            types = "work";
-        } else if (newSubType == "Mobile") {
-            types = "internet";
+            context = CONTEXT_TYPE_WORK;
         } else {
-            types = "other";
+            context = CONTEXT_TYPE_OTHER;
         }
 
-        updateContext(detail, "type=", types);
+        updateContext(detail, context);
     }
 }
 

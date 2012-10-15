@@ -18,7 +18,7 @@ FocusScope {
         return (string && string.length != 0);
     }
 
-    function formatCustomLabel() {
+    function formatDisplayLabel() {
         // Concatenate all the non empty strings
         return (detail) ?
            [detail.prefix, detail.firstName, detail.middleName, detail.lastName, detail.suffix].filter(isNotEmptyString).join(" ") :
@@ -31,7 +31,8 @@ FocusScope {
         detail.lastName = editor.lastName
         detail.prefix = editor.prefix
         detail.suffix = editor.suffix
-        detail.customLabel = formatCustomLabel()
+        // TODO: displayLabel is a detail in qt5
+        //detail.displayLabel = formatDisplayLabel()
     }
 
     onEditableChanged: if (editable) {
@@ -58,7 +59,7 @@ FocusScope {
 
         opacity: !editable ? 1.0 : 0.0
         Behavior on opacity {StandardAnimation {}}
-        text: (detail && detail.customLabel && detail.customLabel.length > 0) ? detail.customLabel : formatCustomLabel()
+        text: (detail && detail.displayLabel && detail.displayLabel.length > 0) ? detail.displayLabel : formatDisplayLabel()
     }
 
     NameContactDetailsEditor {

@@ -30,7 +30,7 @@ ContactPhoneNumber::ContactPhoneNumber(const QContactDetail &detail, QObject *pa
 
 int ContactPhoneNumber::type() const
 {
-    return PhoneNumber;
+    return mDetail.type();
 }
 
 QString ContactPhoneNumber::number() const
@@ -49,18 +49,13 @@ void ContactPhoneNumber::setNumber(const QString &value)
 
 QVariant ContactPhoneNumber::subTypes() const
 {
-    // FIXME: subTypes are not strings anymore in Qt5. Port this code.
-    //return mDetail.value<QStringList>(QContactPhoneNumber::FieldSubTypes);
-    return QVariant();
+    return mDetail.value<QVariant>(QContactPhoneNumber::FieldSubTypes);
 }
 
 void ContactPhoneNumber::setSubTypes(const QVariant &value)
 {
     //FIXME: we are just setting this one all the time, maybe we should check if the list really changed
-    // FIXME: subTypes are not strings anymore in Qt5. Port this code.
-#if 0
-    mDetail.setValue(QContactPhoneNumber::FieldSubTypes, value.toStringList());
+    mDetail.setValue(QContactPhoneNumber::FieldSubTypes, value);
     Q_EMIT changed();
     Q_EMIT subTypesChanged();
-#endif
 }
