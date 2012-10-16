@@ -18,7 +18,13 @@
  */
 
 #include "modelsectioncounter.h"
-#include "qdeclarativevisualitemmodel_p.h"
+// We are building telephony-app using NO_KEYWORDS but the Qt private header
+// included here still uses "emit", so we temporarily define it.
+#define emit Q_EMIT
+// TODO: use this include when we get proper Qt5 packages
+//#include <QtQuick/private/qquickvisualitemmodel_p.h>
+#include "qquickvisualitemmodel_p.h"
+#undef emit
 
 ModelSectionCounter::ModelSectionCounter(QObject *parent) :
     QObject(parent),
@@ -63,12 +69,12 @@ void ModelSectionCounter::setSectionProperty(const QString &sectionProperty)
     updateSectionCount();
 }
 
-QDeclarativeVisualModel* ModelSectionCounter::model() const
+QQuickVisualModel* ModelSectionCounter::model() const
 {
     return m_model;
 }
 
-void ModelSectionCounter::setModel(QDeclarativeVisualModel* model)
+void ModelSectionCounter::setModel(QQuickVisualModel* model)
 {
     if (model == m_model) {
         return;
@@ -82,11 +88,9 @@ void ModelSectionCounter::setModel(QDeclarativeVisualModel* model)
     watchSectionPropertyRole();
 
     if (model != NULL) {
-        connect(model, SIGNAL(itemsMoved(int,int,int)), SLOT(updateSectionCount()));
-        connect(model, SIGNAL(itemsChanged(int,int)), SLOT(updateSectionCount()));
+        connect(model, SIGNAL(modelUpdated(const QQuickChangeSet&, bool)), SLOT(updateSectionCount()));
         connect(model, SIGNAL(countChanged()), SLOT(updateSectionCount()));
-        connect(model, SIGNAL(modelReset()), SLOT(updateSectionCount()));
-        connect(model, SIGNAL(createdItem(int,QDeclarativeItem*)), SLOT(updateSectionCount()));
+        connect(model, SIGNAL(createdItem(int,QQuickItem*)), SLOT(updateSectionCount()));
     }
 
     Q_EMIT modelChanged();
@@ -109,14 +113,14 @@ QString ModelSectionCounter::sectionString(const QString &value)
 
 void ModelSectionCounter::updateSectionCount()
 {
-    unsigned int sectionCount = 0;
+    int sectionCount = 0;
 
     if (m_model != NULL) {
         int rowCount = m_model->count();
         QString previousRowString;
         QString currentRowString;
 
-        for (unsigned int i=0; i<rowCount; i++) {
+        for (int i=0; i<rowCount; i++) {
             currentRowString = sectionString(m_model->stringValue(i, m_sectionProperty));
             if (currentRowString != previousRowString || i == 0) {
                 sectionCount++;
@@ -133,7 +137,7 @@ void ModelSectionCounter::updateSectionCount()
 
 void ModelSectionCounter::watchSectionPropertyRole()
 {
-    /* Necessary to have QDeclarativeVisualModel::itemsChanged
+    /* Necessary to have QQuickVisualModel::itemsChanged
        emitted when the value of the section property changes.
        The code is identical to what ListView does internally.
     */

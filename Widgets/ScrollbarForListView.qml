@@ -90,7 +90,7 @@ ScrollbarForFlickable {
        Qt Quick Components did the same and had bugs reported:
        https://bugreports.qt-project.org/browse/QTCOMPONENTS-1169
     */
-    property int __delegateHeight: __getHeightFromComponent(view.delegate) //sectionCounter.sectionCount > 0 ? __getHeightFromComponent(view.delegate) : 0
+    property int __delegateHeight: sectionCounter.sectionCount > 0 ? __getHeightFromComponent(view.delegate) : 0
     property int __sectionHeaderHeight: __getHeightFromComponent(view.section.delegate)
 
     function __getHeightFromComponent(component) {
@@ -110,10 +110,10 @@ ScrollbarForFlickable {
         delegate: Item {}
     }
 
-    /*ModelSectionCounter {
+    ModelSectionCounter {
         id: sectionCounter
         model: workaroundSectionHeightBug && view.section.delegate != undefined ? visualModel : undefined
         sectionProperty: view.section.property
         sectionCriteria: view.section.criteria
-    }*/
+    }
 }

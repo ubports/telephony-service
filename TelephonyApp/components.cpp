@@ -36,8 +36,7 @@
 #include "contactphonenumber.h"
 #include "messagelogmodel.h"
 #include "messagesproxymodel.h"
-// FIXME: uncomment this after ModelSectionCounter gets ported to Qt5
-//#include "modelsectioncounter.h"
+#include "modelsectioncounter.h"
 
 #include <QQmlEngine>
 #include <qqml.h>
@@ -93,8 +92,7 @@ void Components::registerTypes(const char *uri)
     qmlRegisterType<ContactName>(uri, 0, 1, "ContactName");
     qmlRegisterType<ContactOnlineAccount>(uri, 0, 1, "ContactOnlineAccount");
     qmlRegisterType<ContactPhoneNumber>(uri, 0, 1, "ContactPhoneNumber");
-    // FIXME: uncomment this after ModelSectionCounter gets ported to Qt5
-    //qmlRegisterType<ModelSectionCounter>(uri, 0, 1, "ModelSectionCounter");
+    qmlRegisterType<ModelSectionCounter>(uri, 0, 1, "ModelSectionCounter");
 }
 
 void Components::onAccountReady()
