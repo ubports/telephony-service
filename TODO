@@ -9,3 +9,6 @@ Contact integration items:
 Qt5 porting pendencies:
 - The count overlay on tabs needs to be reimplemented.
 - ModelSectionCounter is not working, needs investigation.
+- ContactOnlineAccount's protocols are not strings anymore, this needs to be ported.
+- Check for code on tests that was disabled in the porting to Qt5
+- Check how to test QContactId stuff
