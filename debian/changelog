@@ -1,4 +1,15 @@
-telephony-app (0.57) UNRELEASED; urgency=low
+telephony-app (0.58) quantal; urgency=low
+
+  [ Ugo Riboni ]
+  * Use components from the SDK.
+
+  [ Gustavo Pichorim Boiko ]
+  * Use the PageStack component and add support for a single panel view mode.
+  * Port to Qt5.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 16 Oct 2012 17:10:27 -0300
+
+telephony-app (0.57) quantal; urgency=low
 
   [ Tiago Salem Herrmann ]
   * Do not call requestClose() after hanging up a call.
@@ -29,7 +40,7 @@ telephony-app (0.57) UNRELEASED; urgency=low
   [ Renato Araujo Oliveira Filho ]
   * Created new dbus method "CallNumber(s)"
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 28 Aug 2012 10:31:30 -0300
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 16 Oct 2012 17:10:07 -0300
 
 telephony-app (0.56) precise; urgency=low
 

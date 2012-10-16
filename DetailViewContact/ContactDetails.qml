@@ -49,10 +49,6 @@ TelephonyPage {
         }
 
         onContactRemoved: {
-            // When android syncs contacts to a google account, it removes the local contact
-            // and adds a new one with a different id. So in order to keep the app in a consistent
-            // state, we close the view when the original contact is removed.
-            // (see http://pad.lv/1021473)
             if (contactId == contactDetails.contactId) {
                 contactDetails.contact = null;
                 telephony.resetView();
