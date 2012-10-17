@@ -14,18 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 1.1
+import Ubuntu.Components 0.1
 
-QtObject {
-    property url source
-    property int tab
-    property bool loaded: telephony.view != undefined && telephony.view.source == source
-
-    function load(properties) {
-        if (properties == undefined) {
-            properties = {};
-        }
-        properties["source"] = source;
-        telephony.viewStack.push(Qt.resolvedUrl(source), properties);
-    }
+// define a source property to hold the source URL that was used to create this page
+Page {
+    property string source: undefined
 }

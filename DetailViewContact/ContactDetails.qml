@@ -4,10 +4,9 @@ import "../Widgets"
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes
 
-FocusScope {
+TelephonyPage {
     id: contactDetails
 
-    property string viewName: "contacts"
     property bool editable: false
     property alias contact: contactWatcher.contact
     property variant contactId: (contact) ? contact.id : null
@@ -19,6 +18,7 @@ FocusScope {
 
     onContactChanged: editable = false
 
+    title: "Contact Details"
     width: 400
     height: 600
 
@@ -221,7 +221,6 @@ FocusScope {
                 anchors.right: (parent) ? parent.right : undefined
                 bottomSeparator: true
 
-                onClicked: telephony.showContactDetailsFromId(contactId)
                 onActionClicked: telephony.callNumber(phoneNumber)
             }
         }

@@ -21,7 +21,7 @@ Item {
                 if (contact) {
                     id = contact.id
                 }
-                telephony.startChat(id, phoneNumber)
+                telephony.startChat(id, phoneNumber, true)
             }
             selected: telephony.messages.loaded
                       && !telephony.view.newMessage

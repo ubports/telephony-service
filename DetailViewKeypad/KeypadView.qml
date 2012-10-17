@@ -1,49 +1,53 @@
 import QtQuick 1.1
+import "../Widgets"
 
-FocusScope {
-    property string viewName: "keypad"
-
+TelephonyPage {
+    title: "Keypad"
     anchors.fill: parent
-
-    Rectangle {
-        id: background
-
+    FocusScope {
         anchors.fill: parent
-        color: "#3a3c41"
-    }
+        focus: true
 
-    Item {
-        width: keypad.width
-        height: childrenRect.height
+        Rectangle {
+            id: background
 
-        anchors.centerIn: parent
-        anchors.verticalCenterOffset: -26
-
-        KeypadEntry {
-            id: keypadEntry
-
-            anchors.left: keypad.left
-            anchors.right: keypad.right
-            anchors.leftMargin: -2
-            anchors.rightMargin: -2
-            focus: true
-            Keys.forwardTo: [callButton]
+            anchors.fill: parent
+            color: "#3a3c41"
         }
 
-        Keypad {
-            id: keypad
+        Item {
+            width: keypad.width
+            height: childrenRect.height
 
-            anchors.top: keypadEntry.bottom
-            onKeyPressed: keypadEntry.value += label
-        }
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: -26
 
-        CallButton {
-            id: callButton
+            KeypadEntry {
+                id: keypadEntry
 
-            anchors.top: keypad.bottom
-            anchors.topMargin: 16
-            anchors.horizontalCenter: parent.horizontalCenter
-            onClicked: telephony.callNumber(keypadEntry.value)
+                anchors.left: keypad.left
+                anchors.right: keypad.right
+                anchors.leftMargin: -2
+                anchors.rightMargin: -2
+                focus: true
+                Keys.forwardTo: [callButton]
+            }
+
+            Keypad {
+                id: keypad
+
+                anchors.top: keypadEntry.bottom
+                onKeyPressed: keypadEntry.value += label
+            }
+
+            CallButton {
+                id: callButton
+
+                anchors.top: keypad.bottom
+                anchors.topMargin: 16
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: telephony.callNumber(keypadEntry.value)
+            }
         }
     }
 }

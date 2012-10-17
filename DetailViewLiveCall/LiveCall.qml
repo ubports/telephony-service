@@ -1,13 +1,12 @@
 import QtQuick 1.0
+import Ubuntu.Components 0.1
 import "../Widgets" as LocalWidgets
 import "../DetailViewKeypad"
 import "../"
-import Ubuntu.Components 0.1
 
-Item {
+LocalWidgets.TelephonyPage {
     id: liveCall
 
-    property string viewName: "livecall"
     property alias contact: contactWatcher.contact
     property QtObject call: callManager.foregroundCall
     property alias number: contactWatcher.phoneNumber
@@ -15,6 +14,8 @@ Item {
     property bool isSpeaker: call ? call.speaker : false
     property bool isMuted: call ? call.muted : false
     property bool isDtmf: false
+
+    title: "On Call"
 
     function endCall() {
         if (call) {

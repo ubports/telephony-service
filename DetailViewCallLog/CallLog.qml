@@ -1,11 +1,10 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
-import "../Widgets"
 import Ubuntu.Components 0.1
+import "../Widgets"
 
-Item {
-    property string viewName: "callLog"
-
+TelephonyPage {
+    title: "Call Log"
     Item {
         id: background
 

@@ -13,7 +13,7 @@ Item {
 
     anchors.fill: parent
     signal contactClicked(variant contact)
-    onContactClicked: telephony.showContactDetails(contact)
+    onContactClicked: telephony.showContactDetails(contact, true)
 
     TextField {
         id: contactsSearchBox
@@ -85,7 +85,7 @@ Item {
 
         delegate: ContactDelegate {
             onClicked: contactsPanel.contactClicked(contact)
-            selected: telephony.contactDetails.loaded && telephony.view.contact == contact
+            selected: telephony.view.contact ? (telephony.view.contact == contact) : false
         }
 
         section.property: "initial"

@@ -1,12 +1,11 @@
 import QtQuick 1.1
 import QtMobility.contacts 1.1
 import TelephonyApp 0.1
+import "../Widgets"
 import "../"
 
-FocusScope {
+TelephonyPage {
     id: view
-
-    property string viewName: "messages"
     property alias contact: contactWatcher.contact
     property alias number: contactWatcher.phoneNumber
     property alias contactId: contactWatcher.contactId
@@ -14,6 +13,7 @@ FocusScope {
 
     property string pendingMessage
 
+    title: "Conversation"
     ContactWatcher {
         id: contactWatcher
     }
@@ -169,4 +169,3 @@ FocusScope {
         }
     }
 }
-

@@ -1,15 +1,16 @@
 import QtQuick 1.0
+import Ubuntu.Components 0.1
 import "../Widgets" as LocalWidgets
 import "../DetailViewKeypad"
-import Ubuntu.Components 0.1
 
-Item {
+LocalWidgets.TelephonyPage {
     id: voicemail
 
-    property string viewName: "voicemail"
     property variant contact
     property QtObject call: callManager.foregroundCall
     property string number: callManager.voicemailNumber
+
+    title: "Voicemail"
 
     function isVoicemailActive() {
         return telephony.isVoicemailActive();
