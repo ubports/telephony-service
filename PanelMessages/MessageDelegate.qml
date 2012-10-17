@@ -1,5 +1,5 @@
 import QtQuick 2
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import "../dateUtils.js" as DateUtils
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
@@ -9,7 +9,7 @@ ListItem.Base {
     __height: 58
     showDivider: true
 
-    CustomListItemBase {
+    LocalWidgets.CustomListItemBase {
         id: baseInfo
 
         anchors.fill: parent

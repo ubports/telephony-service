@@ -1,5 +1,5 @@
 import QtQuick 2
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 
 FocusScope {
     id: contactDetailsHeader
@@ -11,13 +11,13 @@ FocusScope {
     width: parent.width
     // ensure that there is equal padding at the top and bottom of labelBox
     height: editable ? Math.max(labelBox.height + labelBox.anchors.topMargin * 2, 82) : 82
-    Behavior on height {StandardAnimation {}}
+    Behavior on height { LocalWidgets.StandardAnimation {}}
 
     function save() {
         name.save()
     }
 
-    FramedImage {
+    LocalWidgets.FramedImage {
         id: icon
 
         anchors.left: parent.left

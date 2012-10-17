@@ -16,7 +16,6 @@
 
 import QtQuick 2
 import Ubuntu.Components 0.1
-import "../Widgets"
 import "../dateUtils.js" as DateUtils
 
 BaseContactDetailsDelegate {

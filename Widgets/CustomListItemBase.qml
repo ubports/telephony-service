@@ -68,7 +68,7 @@ AbstractButton {
         TextCustom {
             id: sublabel
 
-            anchors.left: label.anchors.left
+            anchors.left: label.left
             anchors.leftMargin: label.anchors.leftMargin
             anchors.top: label.bottom
             anchors.topMargin: 1

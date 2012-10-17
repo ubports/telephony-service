@@ -1,6 +1,6 @@
 import QtQuick 2
 import "../fontUtils.js" as Font
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 
 BaseMessageHeader {
@@ -11,7 +11,7 @@ BaseMessageHeader {
 
     property alias text: contactsSearchEntry.text
 
-    ContactsSearchCombo {
+    LocalWidgets.ContactsSearchCombo {
         id: contactsSearchEntry
 
         anchors {

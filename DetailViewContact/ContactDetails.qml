@@ -1,11 +1,11 @@
 import QtQuick 2
 import TelephonyApp 0.1
 import Ubuntu.Components 0.1
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes
 
-TelephonyPage {
+LocalWidgets.TelephonyPage {
     id: contactDetails
 
     property bool editable: false
@@ -199,7 +199,7 @@ TelephonyPage {
             anchors.left: parent.left
             anchors.right: parent.right
             opacity: (contactDetails.editable) ? 0.0 : 1.0
-            Behavior on opacity {StandardAnimation {}}
+            Behavior on opacity { LocalWidgets.StandardAnimation {}}
 
             detailTypeInfo: { return { name: "Call Log" } }
 
@@ -249,7 +249,7 @@ TelephonyPage {
         }
     }
 
-    ScrollbarForFlickable {
+    LocalWidgets.ScrollbarForFlickable {
         flickable: scrollArea
     }
 
@@ -286,7 +286,7 @@ TelephonyPage {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            ButtonSmall {
+            LocalWidgets.ButtonSmall {
                 id: deleteButton
 
                 anchors.verticalCenter: parent.verticalCenter
@@ -302,7 +302,7 @@ TelephonyPage {
                 }
             }
 
-            ButtonSmall {
+            LocalWidgets.ButtonSmall {
                 id: cancelButton
 
                 anchors.verticalCenter: parent.verticalCenter
@@ -320,7 +320,7 @@ TelephonyPage {
                 }
             }
 
-            ButtonSmall {
+            LocalWidgets.ButtonSmall {
                 id: editSaveButton
 
                 anchors.verticalCenter: parent.verticalCenter

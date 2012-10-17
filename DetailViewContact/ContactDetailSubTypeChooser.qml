@@ -1,5 +1,4 @@
 import QtQuick 2
-import "../Widgets"
 import Ubuntu.Components 0.1
 import "DetailTypeUtilities.js" as DetailUtils
 

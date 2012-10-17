@@ -1,5 +1,4 @@
 import QtQuick 2
-import "../Widgets"
 import "../fontUtils.js" as FontUtils
 
 TextInput {

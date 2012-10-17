@@ -1,8 +1,8 @@
 import QtQuick 2
 import TelephonyApp 0.1
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 
-DropDownSearch {
+LocalWidgets.DropDownSearch {
     id: search
 
     signal contactSelected(variant contact, string number)

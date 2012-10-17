@@ -1,9 +1,9 @@
 import QtQuick 2
 import TelephonyApp 0.1
 import Ubuntu.Components 0.1
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 
-TelephonyPage {
+LocalWidgets.TelephonyPage {
     title: "Call Log"
     Item {
         id: background
@@ -89,7 +89,7 @@ TelephonyPage {
         }
     }
 
-    ScrollbarForListView {
+    LocalWidgets.ScrollbarForListView {
         view: callLogView
     }
 }

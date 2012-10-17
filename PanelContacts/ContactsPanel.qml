@@ -1,7 +1,7 @@
 import QtQuick 2
 import TelephonyApp 0.1
 import ".."
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import "../fontUtils.js" as Font
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
@@ -90,13 +90,13 @@ Item {
 
         section.property: "initial"
         section.criteria: ViewSection.FullString
-        section.delegate: ListSectionHeader {
+        section.delegate: LocalWidgets.ListSectionHeader {
             width: parent.width
             text: section
         }
     }
 
-    ScrollbarForListView {
+    LocalWidgets.ScrollbarForListView {
         view: contactsList
     }
 }

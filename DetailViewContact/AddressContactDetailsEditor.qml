@@ -1,5 +1,4 @@
 import QtQuick 2
-import "../Widgets"
 
 FocusScope {
     id: editor

@@ -1,5 +1,5 @@
 import QtQuick 2
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 import "DetailTypeUtilities.js" as DetailUtils
 
@@ -24,7 +24,7 @@ FocusScope {
         }
     ]
     transitions: Transition {
-        StandardAnimation { property: "height" }
+        LocalWidgets.StandardAnimation { property: "height" }
     }
 
     property variant detail
@@ -91,7 +91,7 @@ FocusScope {
         // center contentBox vertically
         height: contentBox.height + 2*contentBox.anchors.topMargin
         opacity: editable ? 0.0 : 1.0
-        Behavior on opacity {StandardAnimation {}}
+        Behavior on opacity {LocalWidgets.StandardAnimation {}}
 
         AbstractButton {
             id: contentBox
@@ -154,7 +154,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.top: parent.top
         opacity: editable ? 1.0 : 0.0
-        Behavior on opacity {StandardAnimation {}}
+        Behavior on opacity {LocalWidgets.StandardAnimation {}}
 
         Item {
             parent: editableGroup.leftBox

@@ -1,5 +1,5 @@
 import QtQuick 2
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 
 FocusScope {
@@ -58,7 +58,7 @@ FocusScope {
         styleColor: "white"
 
         opacity: !editable ? 1.0 : 0.0
-        Behavior on opacity {StandardAnimation {}}
+        Behavior on opacity { LocalWidgets.StandardAnimation {}}
         text: (detail && detail.displayLabel && detail.displayLabel.length > 0) ? detail.displayLabel : formatDisplayLabel()
     }
 
@@ -68,7 +68,7 @@ FocusScope {
         anchors.left: parent.left
         anchors.right: parent.right
         opacity: editable ? 1.0 : 0.0
-        Behavior on opacity {StandardAnimation {}}
+        Behavior on opacity { LocalWidgets.StandardAnimation {}}
 
         detail: name.detail
         focus: true

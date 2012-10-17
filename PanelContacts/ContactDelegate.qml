@@ -1,5 +1,4 @@
 import QtQuick 2
-import "../Widgets"
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
 ListItem.Standard {

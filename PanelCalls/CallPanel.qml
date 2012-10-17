@@ -1,6 +1,6 @@
 import QtQuick 2
 import TelephonyApp 0.1
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Item {
@@ -9,7 +9,7 @@ Item {
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)
 
-    ContactsSearchCombo {
+    LocalWidgets.ContactsSearchCombo {
         id: contactsSearchBox
 
         anchors.top: parent.top
