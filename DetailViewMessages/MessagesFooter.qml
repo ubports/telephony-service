@@ -1,5 +1,6 @@
 import QtQuick 1.1
-import "../Widgets"
+import Ubuntu.Components 0.1
+import "../Widgets" as LocalWidgets
 
 FocusScope {
     id: footer
@@ -32,8 +33,8 @@ FocusScope {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        // FIXME: do not use SearchEntry for a simple input field
-        SearchEntry {
+        // FIXME: do not use TextField for a simple input field
+        TextField {
             id: entry
 
             anchors.left: parent.left
@@ -43,10 +44,11 @@ FocusScope {
             anchors.verticalCenter: parent.verticalCenter
             focus: true
             // send message if return was pressed
-            onActivateFirstResult: sendButton.clicked()
+            Keys.onReturnPressed: sendButton.clicked()
+            Keys.onEscapePressed: text = ""
         }
 
-        Button {
+        LocalWidgets.Button {
             id: sendButton
 
             anchors.right: parent.right

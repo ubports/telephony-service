@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 import "../Widgets"
+import Ubuntu.Components 0.1
 
 Item {
     property string viewName: "callLog"
@@ -29,43 +30,34 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: 7
         anchors.left: parent.left
-        anchors.leftMargin: 10
         anchors.right: parent.right
-        anchors.rightMargin: 10
 
-        model: [
-            {
-                "text": "All"
-            },
-            {
-                "text": "Missed"
-            }
-        ]
-        buttonsExpanded: false
-        onCurrentTabChanged: proxyModel.onlyMissedCalls = (model[currentTab]["text"] == "Missed")
-    }
+        separator: Rectangle {
+            height: 1
+            color: "white"
+            opacity: 0.65
+        }
 
-    Rectangle {
-        id: separator
+        Tab {
+            title: "All"
+        }
 
-        anchors.top: buttonGroup.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 1
-        color: "white"
-        opacity: 0.65
+        Tab {
+            id: missedCallsTab
+            title: "Missed"
+        }
     }
 
     CallLogProxyModel {
         id: proxyModel
         logModel: callLogModel
-        onlyMissedCalls: false
+        onlyMissedCalls: buttonGroup.selectedTabIndex == 1
     }
 
     Item {
         id: logBackground
 
-        anchors.top: separator.bottom
+        anchors.top: buttonGroup.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom

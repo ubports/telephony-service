@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import "../fontUtils.js" as Font
 import "../Widgets"
+import Ubuntu.Components 0.1
 
 BaseMessageHeader {
     id: header

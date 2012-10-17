@@ -1,11 +1,15 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 import "../Widgets"
+import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Components 0.1
 
 Item {
     id: messageList
 
-    SearchEntry {
+    anchors.fill: parent
+
+    TextField {
         id: search
 
         anchors.top: parent.top
@@ -15,26 +19,45 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 10
 
-        leftIconSource: text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
-        hint: "Search messages"
-        onLeftIconClicked: text = ""
+        placeholderText: "Search messages"
+        Keys.onEscapePressed: text = ""
+
+        primaryItem: AbstractButton {
+            width: 20
+            Image {
+                anchors.left: parent.left
+                anchors.leftMargin: 5
+                anchors.verticalCenter: parent.verticalCenter
+                source: search.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
+            }
+            onClicked: search.text = ""
+        }
     }
 
-    ListItem {
-        id: newMessage
-
+    Column {
+        id: buttons
         anchors.top: search.bottom
         anchors.topMargin: 10
         anchors.left: parent.left
         anchors.right: parent.right
 
-        topSeparator: true
-        isIcon: true
-        iconSource: "../assets/add_new_message_icon.png"
-        text: "New Message"
-        // FIXME: maybe use a signal and handle in the instance
-        onClicked: telephony.startNewMessage()
-        selected: telephony.messages.loaded && telephony.view.newMessage
+        ListItem.ThinDivider {}
+
+        ListItem.Standard {
+            id: newMessage
+            anchors.left: parent.left
+            anchors.right: parent.right
+            __height: 30
+            __leftIconMargin: 19
+            __rightIconMargin: 14
+
+            icon: Qt.resolvedUrl("../assets/add_new_message_icon.png")
+            iconFrame: false
+            text: "New Message"
+            // FIXME: maybe use a signal and handle in the instance
+            onClicked: telephony.startNewMessage()
+            selected: telephony.messages.loaded && telephony.view.newMessage
+        }
     }
 
     MessagesProxyModel {
@@ -46,7 +69,7 @@ Item {
     }
 
     MessagesList {
-        anchors.top: newMessage.bottom
+        anchors.top: buttons.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right

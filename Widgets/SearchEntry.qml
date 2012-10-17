@@ -18,7 +18,7 @@
 
 import QtQuick 1.1
 import "../fontUtils.js" as FontUtils
-//import "utils.js" as Utils
+import Ubuntu.Components 0.1
 
 FocusScope {
     id: searchEntry

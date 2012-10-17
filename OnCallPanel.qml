@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
-import "Widgets"
+import "Widgets" as LocalWidgets
+import Ubuntu.Components 0.1
 
 AbstractButton {
     id: onCallPanel
@@ -29,7 +30,7 @@ AbstractButton {
         width: 38
         height: 38
 
-        FramedImage {
+        LocalWidgets.FramedImage {
             id: avatarIcon
 
             anchors.fill: parent
@@ -113,7 +114,7 @@ AbstractButton {
             border {left: 10; right: 10; top: 12; bottom: 12}
         }
 
-        StopWatch {
+        LocalWidgets.StopWatch {
             id: stopWatch
 
             anchors.centerIn: parent

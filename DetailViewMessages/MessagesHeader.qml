@@ -1,5 +1,6 @@
 import QtQuick 1.1
-import "../Widgets"
+import Ubuntu.Components 0.1
+import "../Widgets" as LocalWidgets
 
 BaseMessageHeader {
     id: header
@@ -21,7 +22,7 @@ BaseMessageHeader {
         text: contact ? contact.displayLabel : "Unknown Contact"
     }
 
-    FramedImage {
+    LocalWidgets.FramedImage {
         id: icon
 
         anchors.right: parent.right

@@ -1,6 +1,7 @@
 import QtQuick 1.1
 import TelephonyApp 0.1
 import "../Widgets"
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Item {
     id: contactsPanel
@@ -47,7 +48,14 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        ListItem {
+        ListItem.ThinDivider {}
+
+        ListItem.Standard {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            __height: 30
+            __leftIconMargin: 19
+            __rightIconMargin: 14
 
             function getIconSource() {
                 if (callManager.hasCalls && !telephony.isVoicemailActive()) {
@@ -57,35 +65,38 @@ Item {
                 }
             }
 
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            topSeparator: true
-            isIcon: true
-            iconSource: getIconSource()
+            icon: Qt.resolvedUrl(getIconSource())
+            iconFrame: false
             text: callManager.hasCalls && !telephony.isVoicemailActive() ? "On Call" : "Keypad"
             onClicked: callManager.hasCalls && !telephony.isVoicemailActive() ? telephony.showLiveCall() : telephony.showKeypad();
             selected: telephony.liveCall.loaded || telephony.keypad.loaded
         }
 
-        ListItem {
+        ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-
-            isIcon: true
-            iconSource: selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png"
-            text: "Voicemail"
+            __height: 30
+            __leftIconMargin: 19
+            __rightIconMargin: 14
             visible: callManager.voicemailNumber != ""
+
+            icon: Qt.resolvedUrl(selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png")
+            iconFrame: false
+            text: "Voicemail"
+
             onClicked: telephony.showVoicemail()
             selected: telephony.voicemail.loaded
         }
 
-        ListItem {
+        ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
+            __height: 30
+            __leftIconMargin: 19
+            __rightIconMargin: 14
 
-            isIcon: true
-            iconSource: selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png"
+            icon: Qt.resolvedUrl(selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png")
+            iconFrame: false
             text: "Call Log"
             onClicked: telephony.showCallLog();
             selected: telephony.callLog.loaded

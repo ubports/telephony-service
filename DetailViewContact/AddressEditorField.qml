@@ -15,7 +15,7 @@
  */
 
 import QtQuick 1.1
-import "../Widgets"
+import Ubuntu.Components 0.1
 import "../fontUtils.js" as FontUtils
 
 FocusScope {

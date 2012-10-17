@@ -3,17 +3,19 @@ import TelephonyApp 0.1
 import ".."
 import "../Widgets"
 import "../fontUtils.js" as Font
+import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Item {
     id: contactsPanel
 
-    property alias searchQuery : contactsSearchBox.searchQuery
+    property alias searchQuery : contactsSearchBox.text
 
     anchors.fill: parent
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)
 
-    SearchEntry {
+    TextField {
         id: contactsSearchBox
 
         anchors.top: parent.top
@@ -23,25 +25,46 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: 10
 
-        leftIconSource: text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
-        hint: "Search contacts"
-        onLeftIconClicked: text = ""
+        placeholderText: "Search contacts"
+        Keys.onEscapePressed: text = ""
+
+        primaryItem: AbstractButton {
+            width: 20
+            Image {
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.leftMargin: 5
+                source: contactsSearchBox.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
+            }
+            onClicked: contactsSearchBox.text = ""
+        }
     }
 
-    ListItem {
-        id: newContact
-
+    Column {
+        id: buttons
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: contactsSearchBox.bottom
         anchors.topMargin: 10
 
-        topSeparator: true
-        isIcon: true
-        iconSource: "../assets/add_contacts_icon.png"
-        text: "Add a new contact"
-        onClicked: telephony.createNewContact()
-        selected: telephony.contactDetails.loaded && telephony.view.added
+        ListItem.ThinDivider {}
+
+        ListItem.Standard {
+            id: newContact
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            __height: 30
+            __leftIconMargin: 20
+            __rightIconMargin: 17
+
+            text: "Add a new contact"
+            icon: Qt.resolvedUrl("../assets/add_contacts_icon.png")
+            iconFrame: false
+            onClicked: telephony.createNewContact()
+
+            selected: telephony.contactDetails.loaded && telephony.view.added
+        }
     }
 
     ContactProxyModel {
@@ -52,7 +75,7 @@ Item {
 
     ListView {
         id: contactsList
-        anchors.top: newContact.bottom
+        anchors.top: buttons.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right

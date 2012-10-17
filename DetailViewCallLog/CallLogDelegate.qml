@@ -1,35 +1,39 @@
 import QtQuick 1.1
 import "../Widgets"
 import "../dateUtils.js" as DateUtils
+import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
-Item {
+ListItem.Base {
     id: callItem
 
     signal clicked(string contactId)
     signal actionClicked(string contactId, string phoneNumber)
 
-    height: infoBox.height
+    __height: infoBox.height
+    showDivider: true
 
-    ListItem {
+    CustomListItemBase {
         id: infoBox
 
         anchors.left: parent.left
         anchors.right: separator.left
-        height: 60
+        height: 58
         iconSource: (avatar != "") ? avatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
         subtext: phoneNumber
         onClicked: callItem.clicked(contactId)
+        selected: callItem.selected
     }
 
     TextCustom {
         id: timeLabel
 
         anchors.right: separator.left
-        anchors.rightMargin: 8
+        anchors.rightMargin: 9
         anchors.bottom: infoBox.bottom
-        anchors.bottomMargin: 5
+        anchors.bottomMargin: 3
         fontSize: "small"
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised
@@ -43,7 +47,7 @@ Item {
         anchors.left: timeLabel.left
         anchors.right: timeLabel.right
         anchors.bottom: timeLabel.top
-        anchors.bottomMargin: 3
+        anchors.bottomMargin: 2
 
         Image {
             source: {
@@ -72,18 +76,19 @@ Item {
         visible: phoneNumber != "-"
     }
 
-    ListItem {
+    CustomListItemBase {
         id: actionBox
 
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
+        anchors.rightMargin: 2
+        anchors.topMargin: 1
         width: height
+        selected: callItem.selected
 
         iconSource: phoneNumber != "-" ? "../assets/tab_icon_call_inactive.png" : ""
         isIcon: true
-        topSeparator: infoBox.topSeparator
-        bottomSeparator: infoBox.bottomSeparator
         onClicked: {
             if (phoneNumber != "-") {
                 callItem.actionClicked(contactId, phoneNumber)

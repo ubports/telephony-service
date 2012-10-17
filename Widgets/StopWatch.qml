@@ -1,5 +1,5 @@
 import QtQuick 1.0
-import "../Widgets"
+import Ubuntu.Components 0.1
 
 Item {
     property int time: 0
