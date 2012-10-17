@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2
+import QtQuick 2.0
 import "../fontUtils.js" as FontUtils
 import Ubuntu.Components 0.1
 

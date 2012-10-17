@@ -1,4 +1,4 @@
-import QtQuick 2
+import QtQuick 2.0
 import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 
