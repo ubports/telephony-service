@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import "../Widgets"
+import QtQuick 2.0
+import "../Widgets" as LocalWidgets
 
 Item {
     id: messageList
@@ -29,7 +29,7 @@ Item {
         }
     }
 
-    ScrollbarForListView {
+    LocalWidgets.ScrollbarForListView {
         view: listView
     }
 }

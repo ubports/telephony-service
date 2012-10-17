@@ -78,7 +78,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
 void CallEntry::onSpeakerChanged(bool active)
 {
     mSpeakerMode = active;
-    emit speakerChanged();
+    Q_EMIT speakerChanged();
 }
 
 void CallEntry::timerEvent(QTimerEvent *event)
@@ -123,7 +123,7 @@ QString CallEntry::phoneNumber() const
 
 QString CallEntry::contactAlias() const
 {
-    return mContact.displayLabel();
+    return mContact.detail<QContactDisplayLabel>().label();
 }
 
 QString CallEntry::contactAvatar() const
@@ -134,7 +134,7 @@ QString CallEntry::contactAvatar() const
 
 void CallEntry::sendDTMF(const QString &key)
 {
-    foreach(const Tp::CallContentPtr &content, mChannel->contents()) {
+    Q_FOREACH(const Tp::CallContentPtr &content, mChannel->contents()) {
         if (content->supportsDTMF()) {
             bool ok;
             Tp::DTMFEvent event = (Tp::DTMFEvent)key.toInt(&ok);

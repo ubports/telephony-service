@@ -42,6 +42,8 @@ public:
 
     explicit CallLogModel(QObject *parent = 0);
 
+    void populate();
+
 public Q_SLOTS:
     void onCallEnded(const Tp::CallChannelPtr &channel);
     

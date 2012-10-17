@@ -50,6 +50,8 @@ public:
                                    const QDateTime &timestamp = QDateTime::currentDateTime(),
                                    const QString &messageId = QString::null);
 
+    void populate();
+
 public Q_SLOTS:
     void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp, const QString &messageId);
     void onMessageSent(const QString &number, const QString &message);

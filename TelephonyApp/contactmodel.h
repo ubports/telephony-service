@@ -25,7 +25,7 @@
 
 class ContactEntry;
 
-using namespace QtMobility;
+QTCONTACTS_USE_NAMESPACE
 
 class ContactModel : public QAbstractListModel
 {
@@ -47,7 +47,7 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
 
-    Q_INVOKABLE ContactEntry *contactFromId(const QString &guid);
+    Q_INVOKABLE ContactEntry *contactFromId(const QString &id);
     Q_INVOKABLE ContactEntry *contactFromPhoneNumber(const QString &phoneNumber);
     Q_INVOKABLE static bool comparePhoneNumbers(const QString &phoneNumber1, const QString &phoneNumber2);
     Q_INVOKABLE void saveContact(ContactEntry *entry);
@@ -68,9 +68,9 @@ protected:
     void removeContactFromModel(ContactEntry *entry);
 
 protected Q_SLOTS:
-    void onContactsAdded(QList<QContactLocalId> ids);
-    void onContactsChanged(QList<QContactLocalId> ids);
-    void onContactsRemoved(QList<QContactLocalId> ids);
+    void onContactsAdded(QList<QContactId> ids);
+    void onContactsChanged(QList<QContactId> ids);
+    void onContactsRemoved(QList<QContactId> ids);
     void onContactEntryChanged(ContactEntry *entry);
     void onContactSaved();
     void onContactRemoved();

@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 2.0
 import Ubuntu.Components 0.1
 import "../Widgets" as LocalWidgets
 import "../DetailViewKeypad"
@@ -118,7 +118,7 @@ LocalWidgets.TelephonyPage {
                 anchors.topMargin: 20
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 5
-                LocalWidgets.Button {
+                Button {
                     id: dialhangupButton
                     iconSource: isVoicemailActive() ? "../assets/incall_keypad_endcallbutton_icon.png" : "../assets/voicemail_icon.png"
                     width: isVoicemailActive() ? 64 : 128
@@ -132,7 +132,7 @@ LocalWidgets.TelephonyPage {
                     }
                 }
 
-                LocalWidgets.Button {
+                Button {
                     id: speakerButton
                     width: 64
                     visible: isVoicemailActive()

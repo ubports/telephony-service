@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 1.1
+import QtQuick 2.0
 import TelephonyApp 0.1
 
 /*
@@ -106,13 +106,13 @@ ScrollbarForFlickable {
 
     VisualDataModel {
         id: visualModel
-        model: workaroundSectionHeightBug && view.section.delegate != undefined ? scrollbar.view.model : undefined
+        model: workaroundSectionHeightBug && view.section.delegate != undefined ? scrollbar.view.model : null
         delegate: Item {}
     }
 
     ModelSectionCounter {
         id: sectionCounter
-        model: workaroundSectionHeightBug && view.section.delegate != undefined ? visualModel : undefined
+        model: workaroundSectionHeightBug && view.section.delegate != undefined ? visualModel : null
         sectionProperty: view.section.property
         sectionCriteria: view.section.criteria
     }

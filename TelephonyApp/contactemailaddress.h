@@ -33,8 +33,6 @@ class ContactEmailAddress : public ContactDetail
 public:
     explicit ContactEmailAddress(const QContactDetail &detail = QContactEmailAddress(), QObject *parent = 0);
     
-    int type() const;
-
     QString emailAddress() const;
     void setEmailAddress(const QString &value);
 

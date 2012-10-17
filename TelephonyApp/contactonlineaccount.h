@@ -35,8 +35,6 @@ class ContactOnlineAccount : public ContactDetail
 public:
     explicit ContactOnlineAccount(const QContactDetail &detail = QContactOnlineAccount(), QObject *parent = 0);
 
-    int type() const;
-
     QString accountUri() const;
     void setAccountUri(const QString &value);
 

@@ -1,10 +1,9 @@
-import QtQuick 1.1
-import QtMobility.contacts 1.1
+import QtQuick 2.0
 import TelephonyApp 0.1
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import "../"
 
-TelephonyPage {
+LocalWidgets.TelephonyPage {
     id: view
     property alias contact: contactWatcher.contact
     property alias number: contactWatcher.phoneNumber

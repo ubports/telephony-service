@@ -1,5 +1,6 @@
 .pragma library
 
+.import TelephonyApp 0.1 as TelApp
 
 var PROTOCOL_LABEL_AIM      = "AIM";
 var PROTOCOL_LABEL_MSN      = "Windows Live";
@@ -24,10 +25,6 @@ var PROTOCOL_TYPE_OTHER     = "other";
 var ADDRESS_LABEL_HOME      = "Home";
 var ADDRESS_LABEL_WORK      = "Work";
 var ADDRESS_LABEL_OTHER     = "Other";
-
-var ADDRESS_TYPE_HOME       = "home";
-var ADDRESS_TYPE_WORK       = "work";
-var ADDRESS_TYPE_OTHER      = "other";
 
 var phoneSubTypes = [ "Mobile", "Home", "Work", "Work Fax", "Home Fax", "Pager", "Other" ];
 
@@ -108,28 +105,29 @@ function getDetailSubType(detail) {
     if (!detail) {
         return "";
     }
+
     /* Phone numbers have a special field for the subType */
-    if (detail.definitionName == "PhoneNumber") {
-        if (detail.subTypes.indexOf("home") > -1) {
-            if (detail.subTypes.indexOf("voice") > -1) {
+    if (detail.type == TelApp.ContactDetail.PhoneNumber) {
+        if (detail.contexts.indexOf(TelApp.ContactDetail.ContextHome) > -1) {
+            if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Voice) > -1 || detail.subTypes.isEmpty) {
                 return "Home";
-            } else if (detail.subTypes.indexOf("fax") > -1) {
+            } else if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Fax) > -1) {
                 return "Home Fax";
             }
-        } else if (detail.subTypes.indexOf("work") > -1) {
-            if (detail.subTypes.indexOf("voice") > -1) {
+        } else if (detail.contexts.indexOf(TelApp.ContactDetail.ContextWork) > -1) {
+            if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Voice) > -1 || detail.subTypes.isEmpty) {
                 return "Work";
-            } else if (detail.subTypes.indexOf("fax") > -1) {
+            } else if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Fax) > -1) {
                 return "Work Fax";
             }
-        } else if (detail.subTypes.indexOf("cell") > -1) {
+        } else if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Mobile) > -1) {
             return "Mobile";
-        } else if (detail.subTypes.indexOf("pager") > -1) {
+        } else if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Pager) > -1) {
             return "Pager";
         }
 
         return "Other";
-    } else if (detail.definitionName == "OnlineAccount") {
+    } else if (detail.type == TelApp.ContactDetail.InstantMessaging) {
         var protocol = detail.protocol;
         if (protocol == PROTOCOL_TYPE_CUSTOM) {
             if (detail.contexts.indexOf("PROTOCOL=QQ") > -1) {
@@ -155,11 +153,11 @@ function getDetailSubType(detail) {
             console.log("Invalid protocol: " + protocol);
             return PROTOCOL_LABEL_OTHER;
         }
-    } else if (detail.definitionName == "Address") {
-        var subTypes = detail.subTypes
-        if (subTypes.indexOf(ADDRESS_TYPE_HOME) > -1) {
+    } else if (detail.type == TelApp.ContactDetail.Address) {
+        var contexts = detail.contexts
+        if (contexts.indexOf(TelApp.ContactDetail.ContextHome) > -1) {
             return ADDRESS_LABEL_HOME;
-        } else if (subTypes.indexOf(ADDRESS_TYPE_WORK) > -1) {
+        } else if (contexts.indexOf(TelApp.ContactDetail.ContextWork) > -1) {
             return ADDRESS_LABEL_WORK;
         } else {
             return ADDRESS_LABEL_OTHER;
@@ -167,21 +165,25 @@ function getDetailSubType(detail) {
     } else {
         // The backend supports multiple types but we can just handle one,
         // so let's pick just the first
-        var type = "";
+        var context = -1;
         for (var i = 0; i < detail.contexts.length; i++) {
-            if (detail.contexts[i].indexOf("type=") == 0) {
-                type = detail.contexts[i].substring(5);
+            context = detail.contexts[i];
+            break;
+        }
+        var subType = -1;
+        // not all details have subTypes
+        if (detail.subTypes) {
+            for (var i = 0; i < detail.subTypes.length; i++) {
+                subType = detail.subTypes[i];
                 break;
             }
         }
 
-        if (type == "home") {
+        if (context == TelApp.ContactDetail.ContextHome) {
             return "Home";
-        } else if (type == "work") {
+        } else if (context == TelApp.ContactDetail.ContextWork) {
             return "Work";
-        } else if (type == "internet") {
-            return "Mobile";
-        } else {
+        } else if (subType == TelApp.ContactDetail.ContextOther) {
             return "Other";
         }
     }
@@ -189,21 +191,10 @@ function getDetailSubType(detail) {
     return "";
 }
 
-function updateContext(detail, key, values) {
+function updateContext(detail, context) {
     // We need a copy because QML list properties can't
     // be directly modified, they need to be reassigned a modified copy.
-    var contexts = detail.contexts;
-    for (var i = 0; i < contexts.length; i++) {
-        if (contexts[i].indexOf(key) == 0) {
-            // Modify the first value in the list, since we only check for the
-            // first value during the parse phase.
-            contexts[i] = key + values;
-            detail.contexts = contexts;
-            return;
-        }
-    }
-    contexts.push(key + values);
-    detail.contexts = contexts;
+    detail.contexts = context;
 }
 
 function setDetailSubType(detail, newSubType) {
@@ -212,23 +203,30 @@ function setDetailSubType(detail, newSubType) {
     }
 
     /* Phone numbers have a special field for the subType */
-    if (detail.definitionName == "PhoneNumber") {
+    if (detail.type == TelApp.ContactDetail.PhoneNumber) {
         if (newSubType == "Home") {
-            detail.subTypes = [ "home", "voice" ];
+            detail.contexts = [ TelApp.ContactDetail.ContextHome ];
+            detail.subTypes = [ TelApp.ContactPhoneNumber.Voice ];
         } else if (newSubType == "Work") {
-            detail.subTypes = [ "work", "voice" ];
+            detail.contexts = [ TelApp.ContactDetail.ContextWork ];
+            detail.subTypes = [ TelApp.ContactPhoneNumber.Voice ];
         } else if (newSubType == "Work Fax") {
-            detail.subTypes = [ "work", "fax" ];
+            detail.contexts = [ TelApp.ContactDetail.ContextWork ];
+            detail.subTypes = [ TelApp.ContactPhoneNumber.Fax ];
         } else if (newSubType == "Home Fax") {
-            detail.subTypes = [ "home", "fax" ];
+            detail.contexts = [ TelApp.ContactDetail.ContextHome ];
+            detail.subTypes = [ TelApp.ContactPhoneNumber.Fax ];
         } else if (newSubType == "Mobile") {
-            detail.subTypes = [ "cell" ];
+            detail.contexts = [ ];
+            detail.subTypes = [ TelApp.ContactPhoneNumber.Mobile ];
         } else if (newSubType == "Pager") {
-            detail.subTypes = [ "pager" ];
+            detail.contexts = [ ];
+            detail.subTypes = [ TelApp.ContactPhoneNumber.Pager ];
         } else {
-            detail.subTypes = [ "other" ];
+            detail.contexts = [ TelApp.ContactDetail.ContextOther ];
+            detail.subTypes = [ ];
         }
-    } else if (detail.definitionName == "OnlineAccount") {
+    } else if (detail.type == TelApp.ContactDetail.InstantMessaging) {
         var protocol = newSubType;
         if (protocol == PROTOCOL_LABEL_AIM) {
             detail.protocol = PROTOCOL_TYPE_AIM;
@@ -240,7 +238,7 @@ function setDetailSubType(detail, newSubType) {
             detail.protocol = PROTOCOL_TYPE_SKYPE;
         } else if (protocol == PROTOCOL_LABEL_QQ) {
             detail.protocol = PROTOCOL_TYPE_CUSTOM;
-            updateContext(detail, "PROTOCOL=", "QQ");
+            updateContext(detail, "QQ");
         } else if (protocol == PROTOCOL_LABEL_GTALK) {
             detail.protocol = PROTOCOL_TYPE_GTALK;
         } else if (protocol == PROTOCOL_LABEL_ICQ) {
@@ -251,27 +249,25 @@ function setDetailSubType(detail, newSubType) {
             console.log("Invalid protocol: " + protocol);
             detail.protocol = PROTOCOL_TYPE_OTHER;
         }
-    } else if (detail.definitionName == "Address") {
+    } else if (detail.type == TelApp.ContactDetail.Address) {
         if (newSubType == ADDRESS_LABEL_HOME) {
-            detail.subTypes = [ ADDRESS_TYPE_HOME ];
+            detail.contexts = [ TelApp.ContactDetail.ContextHome ];
         } else if (newSubType == ADDRESS_LABEL_WORK) {
-            detail.subTypes = [ ADDRESS_TYPE_WORK ];
+            detail.contexts = [ TelApp.ContactDetail.ContextWork ];
         } else {
-            detail.subTypes = [ ADDRESS_TYPE_OTHER ];
+            detail.contexts = [ TelApp.ContactDetail.ContextOther ];
         }
     } else {
-        var types = ""
+        var context = -1
         if (newSubType == "Home") {
-            types = "home";
+            context = TelApp.ContactDetail.ContextHome;
         } else if (newSubType == "Work") {
-            types = "work";
-        } else if (newSubType == "Mobile") {
-            types = "internet";
+            context = TelApp.ContactDetail.ContextWork;
         } else {
-            types = "other";
+            context = TelApp.ContactDetail.ContextOther;
         }
 
-        updateContext(detail, "type=", types);
+        updateContext(detail, context);
     }
 }
 

@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import "Widgets"
+import QtQuick 2.0
+import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 
 Item {
@@ -221,7 +221,7 @@ Item {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.bottomMargin: shown ? 0 : -height
-            Behavior on anchors.bottomMargin {StandardAnimation {}}
+            Behavior on anchors.bottomMargin { LocalWidgets.StandardAnimation {}}
 
             property bool shown
             shown: {
@@ -276,6 +276,10 @@ Item {
                 anchors.fill: parent
                 visible: isCurrent
                 onSourceChanged: {
+                    stack.push(Qt.resolvedUrl(source))
+                }
+
+                Component.onCompleted: {
                     stack.push(Qt.resolvedUrl(source))
                 }
             }

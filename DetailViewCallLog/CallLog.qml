@@ -1,9 +1,9 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import TelephonyApp 0.1
 import Ubuntu.Components 0.1
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 
-TelephonyPage {
+LocalWidgets.TelephonyPage {
     title: "Call Log"
     Item {
         id: background
@@ -84,12 +84,12 @@ TelephonyPage {
 
         delegate: CallLogDelegate {
             width: parent.width
-            onClicked: telephony.showContactDetailsFromId(contactId)
+            onContactClicked: telephony.showContactDetailsFromId(contactId)
             onActionClicked: telephony.callNumber(phoneNumber)
         }
     }
 
-    ScrollbarForListView {
+    LocalWidgets.ScrollbarForListView {
         view: callLogView
     }
 }

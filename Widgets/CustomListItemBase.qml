@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import Ubuntu.Components 0.1
 
 AbstractButton {
@@ -68,7 +68,7 @@ AbstractButton {
         TextCustom {
             id: sublabel
 
-            anchors.left: label.anchors.left
+            anchors.left: label.left
             anchors.leftMargin: label.anchors.leftMargin
             anchors.top: label.bottom
             anchors.topMargin: 1

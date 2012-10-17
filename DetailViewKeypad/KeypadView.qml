@@ -1,7 +1,7 @@
-import QtQuick 1.1
-import "../Widgets"
+import QtQuick 2.0
+import "../Widgets" as LocalWidgets
 
-TelephonyPage {
+LocalWidgets.TelephonyPage {
     title: "Keypad"
     anchors.fill: parent
     FocusScope {

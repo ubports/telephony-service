@@ -1,7 +1,7 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import TelephonyApp 0.1
 import ".."
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import "../fontUtils.js" as Font
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
@@ -85,18 +85,20 @@ Item {
 
         delegate: ContactDelegate {
             onClicked: contactsPanel.contactClicked(contact)
-            selected: telephony.view.contact ? (telephony.view.contact == contact) : false
+            selected: (telephony.view && 
+                       telephony.view.contact && 
+                       typeof(contact) != "undefined") ? (telephony.view.contact == contact) : false
         }
 
         section.property: "initial"
         section.criteria: ViewSection.FullString
-        section.delegate: ListSectionHeader {
-            width: parent.width
-            text: section
+        section.delegate: LocalWidgets.ListSectionHeader {
+            width: parent ? parent.width : 0
+            text: typeof(section) != "undefined" ? section : ""
         }
     }
 
-    ScrollbarForListView {
+    LocalWidgets.ScrollbarForListView {
         view: contactsList
     }
 }

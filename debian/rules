@@ -10,3 +10,5 @@ override_dh_install:
 %:
 	dh $@ --parallel
 
+override_dh_auto_configure:
+	PKG_CONFIG_PATH=/opt/qt5/lib/pkgconfig/ PATH=/opt/qt5/bin:${PATH} CMAKE_MODULE_PATH=/opt/qt5/lib/cmake/ dh_auto_configure

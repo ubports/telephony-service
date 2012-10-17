@@ -1,16 +1,16 @@
 #include "telephonyapplication.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QUrl>
-#include <QtCore/QDebug>
-#include <QtCore/QStringList>
-#include <QtGui/QGraphicsObject>
-#include <QtDeclarative/QDeclarativeComponent>
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeView>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusReply>
-#include <QtDBus/QDBusConnectionInterface>
+#include <QDir>
+#include <QUrl>
+#include <QDebug>
+#include <QStringList>
+#include <QQuickItem>
+#include <QQmlComponent>
+#include <QQmlContext>
+#include <QQuickView>
+#include <QDBusInterface>
+#include <QDBusReply>
+#include <QDBusConnectionInterface>
 #include "config.h"
 #include "telephonyappdbus.h"
 
@@ -77,9 +77,9 @@ bool TelephonyApplication::setup()
         qWarning() << "Failed to expose com.canonical.TelephonyApp on DBUS.";
     }
 
-    m_view = new QDeclarativeView();
-    QObject::connect(m_view, SIGNAL(statusChanged(QDeclarativeView::Status)), this, SLOT(onViewStatusChanged(QDeclarativeView::Status)));
-    m_view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    m_view = new QQuickView();
+    QObject::connect(m_view, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onViewStatusChanged(QQuickView::Status)));
+    m_view->setResizeMode(QQuickView::SizeRootObjectToView);
     m_view->setWindowTitle("Telephony");
     m_view->rootContext()->setContextProperty("application", this);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
@@ -100,13 +100,13 @@ TelephonyApplication::~TelephonyApplication()
     }
 }
 
-void TelephonyApplication::onViewStatusChanged(QDeclarativeView::Status status)
+void TelephonyApplication::onViewStatusChanged(QQuickView::Status status)
 {
-    if (status != QDeclarativeView::Ready) {
+    if (status != QQuickView::Ready) {
         return;
     }
 
-    QGraphicsObject *telephony = m_view->rootObject();
+    QQuickItem *telephony = m_view->rootObject();
     if (telephony) {
         QObject::connect(telephony, SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
     }
@@ -134,7 +134,7 @@ void TelephonyApplication::parseArgument(const QString &arg)
     QString scheme = args[0];
     QString value = args[1];
 
-    QGraphicsObject *telephony = m_view->rootObject();
+    QQuickItem *telephony = m_view->rootObject();
     if (!telephony) {
         return;
     }
@@ -182,7 +182,7 @@ void TelephonyApplication::onMessageReceived(const QString &message)
     if (m_applicationIsReady) {
         parseArgument(message);
         m_arg.clear();
-        m_view->activateWindow();
+        m_view->requestActivateWindow();
     } else {
         m_arg = message;
     }

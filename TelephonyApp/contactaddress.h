@@ -37,8 +37,6 @@ class ContactAddress : public ContactDetail
 public:
     explicit ContactAddress(const QContactDetail &detail = QContactAddress(), QObject *parent = 0);
 
-    int type() const;
-
     QString country() const;
     void setCountry(const QString &value);
 

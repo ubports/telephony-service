@@ -27,28 +27,9 @@ ContactName::ContactName(const QContactDetail &detail, QObject *parent) :
             SIGNAL(changed()));
 }
 
-int ContactName::type() const
-{
-    return Name;
-}
-
-QString ContactName::customLabel() const
-{
-    return mDetail.value(QContactName::FieldCustomLabel);
-}
-
-void ContactName::setCustomLabel(const QString &value)
-{
-    if (value != customLabel()) {
-        mDetail.setValue(QContactName::FieldCustomLabel, value);
-        Q_EMIT changed();
-        Q_EMIT customLabelChanged();
-    }
-}
-
 QString ContactName::firstName() const
 {
-    return mDetail.value(QContactName::FieldFirstName);
+    return mDetail.value(QContactName::FieldFirstName).toString();
 }
 
 void ContactName::setFirstName(const QString &value)
@@ -62,7 +43,7 @@ void ContactName::setFirstName(const QString &value)
 
 QString ContactName::lastName() const
 {
-    return mDetail.value(QContactName::FieldLastName);
+    return mDetail.value(QContactName::FieldLastName).toString();
 }
 
 void ContactName::setLastName(const QString &value)
@@ -76,7 +57,7 @@ void ContactName::setLastName(const QString &value)
 
 QString ContactName::middleName() const
 {
-    return mDetail.value(QContactName::FieldMiddleName);
+    return mDetail.value(QContactName::FieldMiddleName).toString();
 }
 
 void ContactName::setMiddleName(const QString &value)
@@ -90,7 +71,7 @@ void ContactName::setMiddleName(const QString &value)
 
 QString ContactName::prefix() const
 {
-    return mDetail.value(QContactName::FieldPrefix);
+    return mDetail.value(QContactName::FieldPrefix).toString();
 }
 
 void ContactName::setPrefix(const QString &value)
@@ -104,7 +85,7 @@ void ContactName::setPrefix(const QString &value)
 
 QString ContactName::suffix() const
 {
-    return mDetail.value(QContactName::FieldSuffix);
+    return mDetail.value(QContactName::FieldSuffix).toString();
 }
 
 void ContactName::setSuffix(const QString &value)

@@ -1,6 +1,6 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import TelephonyApp 0.1
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 
 Item {
@@ -100,7 +100,7 @@ Item {
         }
     }
 
-    ScrollbarForListView {
+    LocalWidgets.ScrollbarForListView {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         view: messagesList

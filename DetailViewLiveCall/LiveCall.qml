@@ -1,4 +1,4 @@
-import QtQuick 1.0
+import QtQuick 2.0
 import Ubuntu.Components 0.1
 import "../Widgets" as LocalWidgets
 import "../DetailViewKeypad"
@@ -194,6 +194,8 @@ LocalWidgets.TelephonyPage {
                     anchors.rightMargin: 1
                     source: "../assets/livecall_keypad_div_tile.png"
                     fillMode: Image.Tile
+                    verticalAlignment: Image.AlignTop
+                    horizontalAlignment: Image.AlignLeft
                 }
 
                 Grid {
@@ -253,7 +255,7 @@ LocalWidgets.TelephonyPage {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 5
 
-                LocalWidgets.Button {
+                Button {
                     id: hangupButton
 
                     iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
@@ -263,7 +265,7 @@ LocalWidgets.TelephonyPage {
                     onClicked: endCall()
                 }
 
-                LocalWidgets.Button {
+                Button {
                     id: addToContactsButton
 
                     iconSource: "../assets/incall_keypad_addcaller_unselected.png"

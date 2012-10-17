@@ -7,7 +7,7 @@ ContactDetail::ContactDetail(const QContactDetail &detail, QObject *parent) :
 
 int ContactDetail::type() const
 {
-    return Unknown;
+    return mDetail.type();
 }
 
 void ContactDetail::setDetail(const QContactDetail &detail)
@@ -23,16 +23,11 @@ QContactDetail& ContactDetail::detail()
 
 QVariant ContactDetail::contexts() const
 {
-    return mDetail.contexts();
+    return mDetail.value<QVariant>(QContactDetail::FieldContext);
 }
 
 void ContactDetail::setContexts(const QVariant &contexts)
 {
-    mDetail.setContexts(contexts.toStringList());
+    mDetail.setValue(QContactDetail::FieldContext, contexts);
     Q_EMIT detailChanged();
-}
-
-QString ContactDetail::definitionName() const
-{
-    return mDetail.definitionName();
 }

@@ -1,1 +1,2 @@
+module TelephonyApp
 plugin telephony-qml
