@@ -4,12 +4,18 @@ Makefile
 cmake_install.cmake
 install_manifest.txt
 
+*.user
+telephony-app.cbp
+
 config.h
 
 telephony-app
 TelephonyAppApprover/telephony-app-approver
 
 moc_*.cxx
+moc_*.cpp
+*_automoc.cpp
+*.moc
 
 obj-*/
 debian/files
@@ -22,6 +28,7 @@ org.freedesktop.Telepathy.Client.TelephonyApp.service
 telephonyappadaptor.*
 
 Testing
+TelephonyApp/tests/ContactDetailsTest
 TelephonyApp/tests/ContactEntryTest
 TelephonyApp/tests/ContactEntryTest.moc
 TelephonyApp/tests/ContactModelTest
