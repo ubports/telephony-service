@@ -47,7 +47,7 @@ set(telephony_app_SRCS
     telephonyappdbus.cpp
     main.cpp)
 
-QT5_ADD_DBUS_ADAPTOR(telephony_app_SRCS TelephonyApp.xml telephonyappdbus.h TelephonyAppDBus)
+qt5_add_dbus_adaptor(telephony_app_SRCS TelephonyApp.xml telephonyappdbus.h TelephonyAppDBus)
 add_executable(${TELEPHONY_APP}
     ${telephony_app_SRCS}
     )
