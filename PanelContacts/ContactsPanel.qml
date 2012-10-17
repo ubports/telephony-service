@@ -91,8 +91,8 @@ Item {
         section.property: "initial"
         section.criteria: ViewSection.FullString
         section.delegate: LocalWidgets.ListSectionHeader {
-            width: parent.width
-            text: section
+            width: parent ? parent.width : 0
+            text: typeof(section) != "undefined" ? section : ""
         }
     }
 
