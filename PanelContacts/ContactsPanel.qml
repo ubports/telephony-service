@@ -85,7 +85,9 @@ Item {
 
         delegate: ContactDelegate {
             onClicked: contactsPanel.contactClicked(contact)
-            selected: telephony.view.contact ? (telephony.view.contact == contact) : false
+            selected: (telephony.view && 
+                       telephony.view.contact && 
+                       typeof(contact) != "undefined") ? (telephony.view.contact == contact) : false
         }
 
         section.property: "initial"
