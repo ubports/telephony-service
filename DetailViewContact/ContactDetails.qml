@@ -286,9 +286,10 @@ LocalWidgets.TelephonyPage {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            LocalWidgets.ButtonSmall {
+            Button {
                 id: deleteButton
 
+                height: 27
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 anchors.leftMargin: 10
@@ -302,9 +303,10 @@ LocalWidgets.TelephonyPage {
                 }
             }
 
-            LocalWidgets.ButtonSmall {
+            Button {
                 id: cancelButton
 
+                height: 27
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: editSaveButton.left
                 anchors.rightMargin: 10
@@ -320,9 +322,10 @@ LocalWidgets.TelephonyPage {
                 }
             }
 
-            LocalWidgets.ButtonSmall {
+            Button {
                 id: editSaveButton
 
+                height: 27
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 10
