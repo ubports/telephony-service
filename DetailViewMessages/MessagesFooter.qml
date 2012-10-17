@@ -33,7 +33,6 @@ FocusScope {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        // FIXME: do not use TextField for a simple input field
         TextField {
             id: entry
 
