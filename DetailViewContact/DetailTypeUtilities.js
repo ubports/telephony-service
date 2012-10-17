@@ -171,9 +171,12 @@ function getDetailSubType(detail) {
             break;
         }
         var subType = -1;
-        for (var i = 0; i < detail.subTypes.length; i++) {
-            subType = detail.subTypes[i];
-            break;
+        // not all details have subTypes
+        if (detail.subTypes) {
+            for (var i = 0; i < detail.subTypes.length; i++) {
+                subType = detail.subTypes[i];
+                break;
+            }
         }
 
         if (context == TelApp.ContactDetail.ContextHome) {
