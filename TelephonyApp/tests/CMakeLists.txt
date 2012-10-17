@@ -8,11 +8,6 @@ macro(generate_tests)
         add_executable(${test} ${test}.cpp)
         qt5_use_modules(${test} Contacts Core DBus Qml Test)
         target_link_libraries(${test}
-            ${Qt5Contacts_LIBRARIES}
-            ${Qt5Core_LIBRARIES}
-            ${Qt5DBus_LIBRARIES}
-            ${Qt5Qml_LIBRARIES}
-            ${Qt5Test_LIBRARIES}
             ${TPL_QT5_LIBRARIES}
             telephony-qml
             )

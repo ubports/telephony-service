@@ -13,10 +13,6 @@ add_executable(telephony-app-approver ${approver_SRCS} ${approver_HDRS})
 qt5_use_modules(telephony-app-approver Core Gui DBus Widgets)
 
 target_link_libraries(telephony-app-approver
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Gui_LIBRARIES}
-    ${Qt5DBus_LIBRARIES}
-    ${Qt5Widgets_LIBRARIES}
     ${TP_QT5_LIBRARIES}
     ${NOTIFY_LIBRARIES}
     ${INDICATE_QT_LIBRARIES}

@@ -39,9 +39,6 @@ add_library(telephony-qml SHARED ${plugin_SRCS} ${plugin_HDRS})
 qt5_use_modules(telephony-qml Contacts Core Qml Quick)
 
 target_link_libraries(telephony-qml
-    ${Qt5Contacts_LIBRARIES}
-    ${Qt5Core_LIBRARIES}
-    ${Qt5Qml_LIBRARIES}
     ${TP_QT5_LIBRARIES}
     ${TPL_QT5_LIBRARIES}
     ${GLIB_LIBRARIES}

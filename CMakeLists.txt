@@ -53,15 +53,6 @@ add_executable(${TELEPHONY_APP}
     )
 qt5_use_modules(${TELEPHONY_APP} Core DBus Gui Qml Quick Widgets)
 
-target_link_libraries(${TELEPHONY_APP}
-    ${Qt5Core_LIBRARIES}
-    ${Qt5DBus_LIBRARIES}
-    ${Qt5Gui_LIBRARIES}
-    ${Qt5Qml_LIBRARIES}
-    ${Qt5Quick_LIBRARIES}
-    ${Qt5Widgets_LIBRARIES}
-    )
-
 install(TARGETS ${TELEPHONY_APP}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
