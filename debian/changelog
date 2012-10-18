@@ -1,3 +1,11 @@
+telephony-app (0.58.3) quantal; urgency=low
+
+  * Workaround the application appearance on high res mobile screens by scaling
+    up the interface.
+  * Add a title to the main view of the app.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 18 Oct 2012 15:43:48 -0300
+
 telephony-app (0.58.2) quantal; urgency=low
 
   * Change the default size of the app to be 720x1280
