@@ -4,8 +4,8 @@ import Ubuntu.Components 0.1
 
 Item {
     id: telephony
-    width: singlePane ? 250 : 570
-    height: 487
+    width: singlePane ? 720 : 1280
+    height: 1280
 
     state: appLayout
     property bool singlePane: state == "singlePane"

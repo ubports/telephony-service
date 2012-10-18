@@ -24,6 +24,7 @@ Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          telepathy-mission-control-5,
+         telepathy-logger,
          libnotify4,
          notify-osd,
          libicu48,
