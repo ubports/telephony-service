@@ -79,7 +79,7 @@ bool TelephonyApplication::setup()
 
     m_view = new QQuickView();
     QObject::connect(m_view, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onViewStatusChanged(QQuickView::Status)));
-    m_view->setResizeMode(QQuickView::SizeRootObjectToView);
+    m_view->setResizeMode(QQuickView::SizeViewToRootObject);
     m_view->setWindowTitle("Telephony");
     m_view->rootContext()->setContextProperty("application", this);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
@@ -88,6 +88,13 @@ bool TelephonyApplication::setup()
     QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
     m_view->setSource(source);
     m_view->show();
+
+    // FIXME: remove this once the resolution independency stuff gets in.
+    if (singlePanel) {
+        m_view->resize(720,1280);
+    } else {
+        m_view->resize(1280,1280);
+    }
 
     QObject::connect(m_dbus, SIGNAL(request(QString)), this, SLOT(onMessageReceived(QString)));
     return true;
