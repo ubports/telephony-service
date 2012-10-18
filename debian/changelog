@@ -1,3 +1,10 @@
+telephony-app (0.58.2) quantal; urgency=low
+
+  * Change the default size of the app to be 720x1280
+  * Add missing dependency to telepathy-logger.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 18 Oct 2012 14:44:40 -0300
+
 telephony-app (0.58.1) quantal; urgency=low
 
   * Remove some obsolete dependencies.
