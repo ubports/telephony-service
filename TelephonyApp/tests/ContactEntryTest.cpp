@@ -93,6 +93,12 @@ void ContactEntryTest::testDisplayLabel()
     QVERIFY(contact.saveDetail(&labelDetail));
     ContactEntry entry(contact);
     QCOMPARE(entry.displayLabel(), labelDetail.label());
+
+    QSignalSpy signalSpy(&entry, SIGNAL(changed(ContactEntry*)));
+    QString testLabel("Another Display Label");
+    entry.setDisplayLabel(testLabel);
+    QCOMPARE(signalSpy.count(), 1);
+    QCOMPARE(entry.displayLabel(), testLabel);
 }
 
 void ContactEntryTest::testInitial_data()
