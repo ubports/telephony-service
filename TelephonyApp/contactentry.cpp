@@ -60,6 +60,16 @@ QString ContactEntry::displayLabel() const
     return mContact.detail<QContactDisplayLabel>().label();
 }
 
+void ContactEntry::setDisplayLabel(const QString &value)
+{
+    if (value != displayLabel()) {
+        QContactDisplayLabel label = mContact.detail<QContactDisplayLabel>();
+        label.setLabel(value);
+        mContact.saveDetail(&label);
+        Q_EMIT changed(this);
+    }
+}
+
 QString ContactEntry::initial() const
 {
     QString label = displayLabel();

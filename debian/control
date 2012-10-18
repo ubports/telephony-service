@@ -23,8 +23,6 @@ Package: telephony-app
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-         libdeclarative-contacts,
-         libqtfolks1,
          telepathy-mission-control-5,
          libnotify4,
          notify-osd,
