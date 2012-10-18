@@ -4,8 +4,13 @@ import Ubuntu.Components 0.1
 
 Item {
     id: telephony
-    width: singlePane ? 720 : 1280
-    height: 1280
+
+    width: singlePane ? 360 : 640
+    height: 640
+
+    // FIXME: remove this once the resolution independency stuff gets in.
+    scale: 2
+    transformOrigin: Item.TopLeft
 
     state: appLayout
     property bool singlePane: state == "singlePane"
@@ -59,10 +64,16 @@ Item {
         State {
             name: "singlePane"
 
+            PropertyChanges {
+                target: leftPane
+                parent: singlePanePage
+                width: 250
+            }
+
             StateChangeScript {
                 script: {
                     mainStack.clear();
-                    mainStack.push(leftPane);
+                    mainStack.push(singlePanePage);
                 }
             }
         }
@@ -161,8 +172,14 @@ Item {
         visible: singlePane
     }
 
+    Page {
+        id: singlePanePage
+        title: "Telephony"
+    }
+
     Item {
         id: leftPane
+
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
