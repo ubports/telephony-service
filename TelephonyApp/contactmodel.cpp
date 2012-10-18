@@ -42,8 +42,15 @@ QContactManager *ContactModel::contactManager()
 }
 
 ContactModel::ContactModel(const QString &engine, QObject *parent) :
-    QAbstractListModel(parent), mContactManager(new QContactManager(engine))
+    QAbstractListModel(parent)
 {
+    QString availableEngine = engine;
+    if (!QContactManager::availableManagers().contains(engine)) {
+        qDebug() << "ContactModel: using memory engine as folks is not available";
+        availableEngine = "memory";
+    }
+
+    mContactManager = new QContactManager(availableEngine);
     QHash<int, QByteArray> roles = roleNames();
     roles[ContactRole] = "contact";
     roles[InitialRole] = "initial";
