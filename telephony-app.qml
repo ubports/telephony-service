@@ -5,7 +5,7 @@ import Ubuntu.Components 0.1
 Item {
     id: telephony
 
-    width: singlePane ? 360 : 1280
+    width: singlePane ? 360 : 640
     height: 640
 
     // FIXME: remove this once the resolution independency stuff gets in.
