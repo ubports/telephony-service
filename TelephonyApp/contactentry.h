@@ -39,6 +39,7 @@ class ContactEntry : public QObject
                NOTIFY changed)
     Q_PROPERTY(QString displayLabel
                READ displayLabel
+               WRITE setDisplayLabel
                NOTIFY changed)
     Q_PROPERTY(QString initial
                READ initial
@@ -74,6 +75,8 @@ public:
     QString idString() const;
 
     QString displayLabel() const;
+    void setDisplayLabel(const QString &value);
+
     QString initial() const;
     QUrl avatar() const;
     ContactName *name() const;

@@ -31,8 +31,7 @@ FocusScope {
         detail.lastName = editor.lastName
         detail.prefix = editor.prefix
         detail.suffix = editor.suffix
-        // TODO: displayLabel is a detail in qt5
-        //detail.displayLabel = formatDisplayLabel()
+        contact.displayLabel = formatDisplayLabel()
     }
 
     onEditableChanged: if (editable) {
