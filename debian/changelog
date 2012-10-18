@@ -1,3 +1,11 @@
+telephony-app (0.58.1) quantal; urgency=low
+
+  * Remove some obsolete dependencies.
+  * Use the "memory" contacts backend when folks is not available.
+  * Save the contact display label properly.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 18 Oct 2012 10:08:57 -0300
+
 telephony-app (0.58) quantal; urgency=low
 
   [ Ugo Riboni ]
