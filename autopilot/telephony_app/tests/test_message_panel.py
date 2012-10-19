@@ -52,7 +52,7 @@ class TestMessagesPanel(TelephonyAppTestCase):
 
         self.keyboard.type("test")
 
-        self.assertThat(searchbox.searchQuery, Eventually(Equals("test")))
+        self.assertThat(searchbox.text, Eventually(Equals("test")))
 
     def test_searchbox_clear_button(self):
         """clicking the cross icon must clear the searchbox."""
@@ -66,13 +66,13 @@ class TestMessagesPanel(TelephonyAppTestCase):
 
         # I am not able to find anything about the clear icon
         # so moving the mouse exactly to that icon with some calculations
-        tx = x + (w / 12)
+        tx = x + (w * 11 / 12)
         ty = y + (h / 2)
 
         self.mouse.move(tx, ty)
         self.mouse.click()
 
-        self.assertThat(searchbox.searchQuery, Eventually(Equals("")))
+        self.assertThat(searchbox.text, Eventually(Equals("")))
 
     def test_new_message_list_item_select(self):
         """Clicking on the 'New Message' list item must highlight it."""
@@ -125,7 +125,7 @@ class TestMessagesPanel(TelephonyAppTestCase):
 
         self.keyboard.type("911")
 
-        self.assertThat(send_button.state, Eventually(Equals("idle")))
+        self.assertThat(send_button.enabled, Eventually(Equals(True)))
 
     def test_send_button_disable_on_clear(self):
         """Removing the number from the 'sendto' box must disable the
@@ -139,7 +139,7 @@ class TestMessagesPanel(TelephonyAppTestCase):
         self.keyboard.press_and_release("Ctrl+a")
         self.keyboard.press_and_release("Delete")
 
-        self.assertThat(send_button.state, Eventually(Equals("disabled")))
+        self.assertThat(send_button.enabled, Eventually(Equals(False)))
 
     def test_new_message_box_focus(self):
         """Clicking inside the main message box must give it the focus."""

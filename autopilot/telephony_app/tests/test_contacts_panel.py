@@ -14,6 +14,7 @@ from autopilot.matchers import Eventually
 
 from telephony_app.tests import TelephonyAppTestCase
 
+import time
 
 class TestContactsPanel(TelephonyAppTestCase):
     """Tests for the contacts panel."""
@@ -46,7 +47,7 @@ class TestContactsPanel(TelephonyAppTestCase):
 
         self.keyboard.type("test")
 
-        self.assertThat(searchbox.searchQuery, Eventually(Equals("test")))
+        self.assertThat(searchbox.text, Eventually(Equals("test")))
 
     def test_searchbox_clear_button(self):
         """clicking the cross icon must clear the searchbox."""
@@ -60,13 +61,13 @@ class TestContactsPanel(TelephonyAppTestCase):
 
         # I am not able to find anything about the 'clear' icon
         # so moving the mouse exactly to that icon with some calculations
-        tx = x + (w / 12)
+        tx = x + (w * 11 / 12)
         ty = y + (h / 2)
 
         self.mouse.move(tx, ty)
         self.mouse.click()
 
-        self.assertThat(searchbox.searchQuery, Eventually(Equals("")))
+        self.assertThat(searchbox.text, Eventually(Equals("")))
 
     def test_add_new_contact_list_item_select(self):
         """Clicking on the 'Add a new contact' list item must highlight it."""

@@ -16,7 +16,7 @@ class ContactsPanel(object):
 
     def get_contacts_searchbox(self):
         """Returns the main searchbox attached to the contacts panel."""
-        return self.app.select_many("SearchEntry")[0]
+        return self.app.select_single("TextField", placeholderText="Search contacts")
 
     def get_contacts_panel(self):
         """Returns the ContactsPanel."""
@@ -24,4 +24,4 @@ class ContactsPanel(object):
 
     def get_add_contact_list_item(self):
         """Returns the 'Add a new contact' list item."""
-        return self.app.select_single("ListItem", text='Add a new contact')
+        return self.app.select_single("LabelVisual", text='Add a new contact')

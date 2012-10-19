@@ -16,11 +16,11 @@ class MessagesPanel(object):
 
     def get_messages_searchbox(self):
         """Returns the main searchbox attached to the messages panel."""
-        return self.app.select_many("SearchEntry")[0]
+        return self.app.select_single("TextField", placeholderText="Search messages")
 
     def get_new_message_list_item(self):
         """Returns 'New Message' list item."""
-        return self.app.select_single("ListItem", text='New Message')
+        return self.app.select_single("LabelVisual", text='New Message')
 
     def get_messages_view(self):
         """Returns the MessagesView."""
