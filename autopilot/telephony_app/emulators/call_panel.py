@@ -34,15 +34,15 @@ class CallPanel(object):
 
     def get_keypad_list_item(self):
         """Returns "Keypad" list item."""
-        return self.app.select_single("ListItem", text='Keypad')
+        return self.app.select_single("LabelVisual", text='Keypad')
 
     def get_voicemail_list_item(self):
         """Returns "Voicemail" list item."""
-        return self.app.select_single("ListItem", text='Voicemail')
+        return self.app.select_single("LabelVisual", text='Voicemail')
 
     def get_call_log_list_item(self):
         """Returns 'Call Log' list item."""
-        return self.app.select_single("ListItem", text='Call Log')
+        return self.app.select_single("LabelVisual", text='Call Log')
 
     def get_keypad_entry(self):
         """Returns keypad's input box."""
