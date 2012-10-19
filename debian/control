@@ -23,6 +23,7 @@ Package: telephony-app
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
+         telepathy-ofono,
          telepathy-mission-control-5,
          telepathy-logger,
          libnotify4,
