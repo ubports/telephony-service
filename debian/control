@@ -23,11 +23,13 @@ Package: telephony-app
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
+         telepathy-ofono,
          telepathy-mission-control-5,
          telepathy-logger,
          libnotify4,
          notify-osd,
          libicu48,
-         qt-components-ubuntu (> 0.1+bzr101)
+         qt-components-ubuntu (> 0.1+bzr101),
+         dbus-x11
 Description: An application to execute telephony tasks such as calling and messaging
  An application to execute telephony tasks such as calling and messaging
