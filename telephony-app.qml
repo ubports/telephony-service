@@ -8,10 +8,6 @@ Item {
     width: singlePane ? units.dp(360) : units.dp(640)
     height: units.dp(640)
 
-    // FIXME: remove this once the resolution independency stuff gets in.
-    scale: 2
-    transformOrigin: Item.TopLeft
-
     state: appLayout
     property bool singlePane: state == "singlePane"
     property alias viewStack: rightPaneStacks.currentStack
