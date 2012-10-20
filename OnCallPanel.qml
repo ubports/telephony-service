@@ -13,6 +13,7 @@ AbstractButton {
     BorderImage {
         id: background
 
+        anchors.fill: parent
         source: "assets/oncall_background.png"
         horizontalTileMode: BorderImage.Repeat
         verticalTileMode: BorderImage.Repeat

@@ -13,6 +13,7 @@ BaseMessageHeader {
 
         anchors.left: parent.left
         anchors.leftMargin: units.dp(13)
+        anchors.right: icon.left
         anchors.rightMargin: units.dp(10)
         anchors.verticalCenter: parent.verticalCenter
         fontSize: "large"
