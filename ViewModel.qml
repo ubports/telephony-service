@@ -14,21 +14,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 1.1
+import QtQuick 2.0
 
 QtObject {
     property url source
     property int tab
-    property bool loaded: telephony.viewLoader != undefined && String(telephony.viewLoader.source).indexOf(source) != -1
+    property bool loaded: telephony.view != undefined && telephony.view.source == source
 
-    function load() {
-        // select the correct tab for the view
-        if (telephony.selectedTabIndex != tab) {
-            telephony.selectedTabIndex = tab;
+    function load(properties) {
+        if (properties == undefined) {
+            properties = {};
         }
-
-        // To keep this simple we rely on the fact that setting source to a
-        // local file will immediately make the item available.
-        telephony.viewLoader.source = source
+        properties["source"] = source;
+        telephony.viewStack.push(Qt.resolvedUrl(source), properties);
     }
 }

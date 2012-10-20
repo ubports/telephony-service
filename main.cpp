@@ -18,11 +18,11 @@
  */
 
 // Qt
-#include <QtCore/QDebug>
-#include <QtCore/QString>
-#include <QtCore/QTemporaryFile>
-#include <QtCore/QTextStream>
-#include <QtGui/QApplication>
+#include <QDebug>
+#include <QString>
+#include <QTemporaryFile>
+#include <QTextStream>
+#include <QApplication>
 
 // libc
 #include <cerrno>

@@ -23,7 +23,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QAbstractListModel>
 
-class QDeclarativeVisualModel;
+class QQuickVisualModel;
 
 class ModelSectionCounter : public QObject
 {
@@ -31,7 +31,7 @@ class ModelSectionCounter : public QObject
 
     Q_PROPERTY(SectionCriteria sectionCriteria READ sectionCriteria WRITE setSectionCriteria NOTIFY sectionCriteriaChanged)
     Q_PROPERTY(QString sectionProperty READ sectionProperty WRITE setSectionProperty NOTIFY sectionPropertyChanged)
-    Q_PROPERTY(QDeclarativeVisualModel* model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(QQuickVisualModel* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(unsigned int sectionCount READ sectionCount NOTIFY sectionCountChanged)
 
     Q_ENUMS(SectionCriteria)
@@ -46,8 +46,8 @@ public:
     QString sectionProperty() const;
     void setSectionProperty(const QString &sectionProperty);
 
-    QDeclarativeVisualModel* model() const;
-    void setModel(QDeclarativeVisualModel* model);
+    QQuickVisualModel* model() const;
+    void setModel(QQuickVisualModel* model);
 
     unsigned int sectionCount() const;
 
@@ -67,7 +67,7 @@ protected:
 private:
     SectionCriteria m_sectionCriteria;
     QString m_sectionProperty;
-    QDeclarativeVisualModel* m_model;
+    QQuickVisualModel* m_model;
     unsigned int m_sectionCount;
 };
 

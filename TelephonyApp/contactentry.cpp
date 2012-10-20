@@ -45,19 +45,29 @@ ContactEntry::ContactEntry(const ContactEntry &other)
     mModel = other.mModel;
 }
 
-QContactLocalId ContactEntry::localId() const
+QContactId ContactEntry::id() const
 {
-    return mContact.localId();
+    return mContact.id();
 }
 
-QString ContactEntry::id() const
+QString ContactEntry::idString() const
 {
-    return mContact.detail<QContactGuid>().guid();
+    return id().toString();
 }
 
 QString ContactEntry::displayLabel() const
 {
-    return name()->customLabel();
+    return mContact.detail<QContactDisplayLabel>().label();
+}
+
+void ContactEntry::setDisplayLabel(const QString &value)
+{
+    if (value != displayLabel()) {
+        QContactDisplayLabel label = mContact.detail<QContactDisplayLabel>();
+        label.setLabel(value);
+        mContact.saveDetail(&label);
+        Q_EMIT changed(this);
+    }
 }
 
 QString ContactEntry::initial() const
@@ -104,40 +114,42 @@ void ContactEntry::setContact(const QContact &contact)
     mContact = contact;
 
     // remove invisible details created by folks
+    // FIXME: contexts are not strings anymore in Qt5
+#if 0
     Q_FOREACH(QContactDetail det, contact.details<QContactOnlineAccount>()) {
         if (det.contexts().contains("VISIBLE=FALSE", Qt::CaseInsensitive)) {
             mContact.removeDetail(&det);
         }
     }
-
+#endif
     setModified(false);
     loadDetails();
 
     Q_EMIT changed(this);
 }
 
-QDeclarativeListProperty<ContactDetail> ContactEntry::addresses()
+QQmlListProperty<ContactDetail> ContactEntry::addresses()
 {
     static int type = ContactDetail::Address;
-    return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
 }
 
-QDeclarativeListProperty<ContactDetail> ContactEntry::emails()
+QQmlListProperty<ContactDetail> ContactEntry::emails()
 {
     static int type = ContactDetail::EmailAddress;
-    return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
 }
 
-QDeclarativeListProperty<ContactDetail> ContactEntry::onlineAccounts()
+QQmlListProperty<ContactDetail> ContactEntry::onlineAccounts()
 {
     static int type = ContactDetail::InstantMessaging;
-    return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
 }
 
-QDeclarativeListProperty<ContactDetail> ContactEntry::phoneNumbers()
+QQmlListProperty<ContactDetail> ContactEntry::phoneNumbers()
 {
     static int type = ContactDetail::PhoneNumber;
-    return QDeclarativeListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
 }
 
 bool ContactEntry::addDetail(ContactDetail *detail)
@@ -207,7 +219,7 @@ void ContactEntry::onDetailChanged()
     }
 }
 
-void ContactEntry::detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail)
+void ContactEntry::detailAppend(QQmlListProperty<ContactDetail> *p, ContactDetail *detail)
 {
     ContactEntry *entry = qobject_cast<ContactEntry*>(p->object);
     if (!entry) {
@@ -218,7 +230,7 @@ void ContactEntry::detailAppend(QDeclarativeListProperty<ContactDetail> *p, Cont
     entry->addDetail(detail);
 }
 
-int ContactEntry::detailCount(QDeclarativeListProperty<ContactDetail> *p)
+int ContactEntry::detailCount(QQmlListProperty<ContactDetail> *p)
 {
     ContactEntry *entry = qobject_cast<ContactEntry*>(p->object);
     if (!entry) {
@@ -231,7 +243,7 @@ int ContactEntry::detailCount(QDeclarativeListProperty<ContactDetail> *p)
 
 }
 
-ContactDetail *ContactEntry::detailAt(QDeclarativeListProperty<ContactDetail> *p, int index)
+ContactDetail *ContactEntry::detailAt(QQmlListProperty<ContactDetail> *p, int index)
 {
     ContactEntry *entry = qobject_cast<ContactEntry*>(p->object);
     if (!entry) {

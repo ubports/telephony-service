@@ -26,7 +26,6 @@
 class ContactName : public ContactDetail
 {
     Q_OBJECT
-    Q_PROPERTY(QString customLabel READ customLabel WRITE setCustomLabel NOTIFY customLabelChanged)
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
     Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
     Q_PROPERTY(QString middleName READ middleName WRITE setMiddleName NOTIFY middleNameChanged)
@@ -35,11 +34,6 @@ class ContactName : public ContactDetail
 
 public:
     explicit ContactName(const QContactDetail &detail = QContactName(), QObject *parent = 0);
-
-    int type() const;
-
-    QString customLabel() const;
-    void setCustomLabel(const QString &value);
 
     QString firstName() const;
     void setFirstName(const QString &value);
@@ -58,7 +52,6 @@ public:
 
 Q_SIGNALS:
     void changed();
-    void customLabelChanged();
     void firstNameChanged();
     void lastNameChanged();
     void middleNameChanged();

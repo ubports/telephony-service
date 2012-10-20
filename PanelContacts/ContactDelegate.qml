@@ -1,5 +1,4 @@
-import QtQuick 1.1
-import "../Widgets"
+import QtQuick 2.0
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
 ListItem.Standard {
@@ -13,4 +12,6 @@ ListItem.Standard {
     fallbackIconSource: "../assets/avatar_contacts_list.png"
     __leftIconMargin: 8
     __rightIconMargin: 4
+    __iconHeight: 38
+    __iconWidth: 38
 }

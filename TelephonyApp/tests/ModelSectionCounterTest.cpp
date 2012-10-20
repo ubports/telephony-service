@@ -15,15 +15,15 @@
  */
 
 #include <QtCore/QObject>
+#include <QtCore/QStringListModel>
 #include <QtTest/QtTest>
-#include <QtGui/QStringListModel>
-#include <QtDeclarative/QDeclarativeComponent>
-#include <QtDeclarative/QDeclarativeEngine>
-#include <QtDeclarative/QDeclarativeContext>
+#include <QtQml/QQmlComponent>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlContext>
 
 #include "../modelsectioncounter.h"
 
-class QDeclarativeVisualModel;
+class QQuickVisualModel;
 
 class ModelSectionCounterTest : public QObject
 {
@@ -39,23 +39,26 @@ private Q_SLOTS:
     void testChangeItem();
 
 private:
-    QDeclarativeVisualModel* createVisualDataModel(QObject* list);
+    QQuickVisualModel* createVisualDataModel(QObject* list);
 };
 
 Q_DECLARE_METATYPE(QStringListModel*)
 Q_DECLARE_METATYPE(ModelSectionCounter::SectionCriteria)
 
-QDeclarativeVisualModel* ModelSectionCounterTest::createVisualDataModel(QObject* list)
+QQuickVisualModel* ModelSectionCounterTest::createVisualDataModel(QObject* list)
 {
     /* Instantiate VisualDataModel via a QML snippet because
-       QDeclarativeVisualDataModel is not exported by the QtDeclarative library
+       QDeclarativeVisualDataModel is not exported by the QtQml library
     */
-    QDeclarativeEngine* engine = new QDeclarativeEngine(list);
+    QQmlEngine* engine = new QQmlEngine(list);
     engine->rootContext()->setContextProperty("myModel", list);
-    QDeclarativeComponent component(engine);
-    component.setData("import QtQuick 1.0; VisualDataModel { model: myModel; delegate: Item {} }", QUrl());
+    QQmlComponent component(engine);
+    component.setData("import QtQuick 2; VisualDataModel { model: myModel; delegate: Item {} }", QUrl());
+    while (!component.isReady()) {
+        qApp->processEvents();
+    }
     QObject *instance = component.create();
-    return (QDeclarativeVisualModel*)instance;
+    return (QQuickVisualModel*)instance;
 }
 
 void ModelSectionCounterTest::testInitialCount_data()
@@ -102,7 +105,7 @@ void ModelSectionCounterTest::testInitialCount()
     QFETCH(QString, sectionProperty);
     QFETCH(ModelSectionCounter::SectionCriteria, sectionCriteria);
     QFETCH(int, sectionCount);
-    QDeclarativeVisualModel* model = createVisualDataModel(list);
+    QQuickVisualModel* model = createVisualDataModel(list);
 
     ModelSectionCounter counter;
     counter.setSectionProperty(sectionProperty);
@@ -117,7 +120,7 @@ void ModelSectionCounterTest::testModelReset()
     QStringList list;
     list << "My blabla" << "My blabla" << "Your blabla";
     QStringListModel listModel(list);
-    QDeclarativeVisualModel* model = createVisualDataModel(&listModel);
+    QQuickVisualModel* model = createVisualDataModel(&listModel);
 
     ModelSectionCounter counter;
     counter.setSectionProperty("display");
@@ -129,7 +132,7 @@ void ModelSectionCounterTest::testModelReset()
     list.clear();
     list << "Your blabla" << "Your blabla" << "Your blabla";
     QStringListModel anotherListModel(list);
-    QDeclarativeVisualModel* anotherModel = createVisualDataModel(&anotherListModel);
+    QQuickVisualModel* anotherModel = createVisualDataModel(&anotherListModel);
     counter.setModel(anotherModel);
 
     QCOMPARE(counter.sectionCount(), (unsigned int)1);
@@ -140,7 +143,7 @@ void ModelSectionCounterTest::testInsertItem()
     QStringList list;
     list << "My blabla" << "My blabla" << "Your blabla";
     QStringListModel listModel(list);
-    QDeclarativeVisualModel* model = createVisualDataModel(&listModel);
+    QQuickVisualModel* model = createVisualDataModel(&listModel);
 
     ModelSectionCounter counter;
     counter.setSectionProperty("display");
@@ -165,7 +168,7 @@ void ModelSectionCounterTest::testRemoveItem()
     QStringList list;
     list << "My blabla" << "My blabla" << "Your blabla";
     QStringListModel listModel(list);
-    QDeclarativeVisualModel* model = createVisualDataModel(&listModel);
+    QQuickVisualModel* model = createVisualDataModel(&listModel);
 
     ModelSectionCounter counter;
     counter.setSectionProperty("display");
@@ -199,7 +202,7 @@ void ModelSectionCounterTest::testChangeItem()
     QStringList list;
     list << "My blabla" << "My blabla" << "Your blabla";
     QStringListModel listModel(list);
-    QDeclarativeVisualModel* model = createVisualDataModel(&listModel);
+    QQuickVisualModel* model = createVisualDataModel(&listModel);
 
     ModelSectionCounter counter;
     counter.setSectionProperty("display");
@@ -216,11 +219,11 @@ void ModelSectionCounterTest::testChangeItem()
     listModel.setData(listModel.index(0), QVariant("Your blabla"), Qt::DisplayRole);
 
     /* The following test fails because QStringListModel::setData() does not
-       trigger the emission of QDeclarativeVisualModel::itemsChanged even
+       trigger the emission of QQuickVisualModel::itemsChanged even
        though QStringListModel::dataChanged is emitted. That is because
        QStringListModel does not set any roleNames to itself.
     */
-    QEXPECT_FAIL("", "Fails because QStringListModel::setData() does not trigger the emission of QDeclarativeVisualModel::itemsChanged. More explanation in the code.", Continue);
+    QEXPECT_FAIL("", "Fails because QStringListModel::setData() does not trigger the emission of QQuickVisualModel::itemsChanged. More explanation in the code.", Continue);
     QCOMPARE(counter.sectionCount(), (unsigned int)1);
 }
 

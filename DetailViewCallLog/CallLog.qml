@@ -1,11 +1,10 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import TelephonyApp 0.1
-import "../Widgets"
 import Ubuntu.Components 0.1
+import "../Widgets" as LocalWidgets
 
-Item {
-    property string viewName: "callLog"
-
+LocalWidgets.TelephonyPage {
+    title: "Call Log"
     Item {
         id: background
 
@@ -51,7 +50,7 @@ Item {
     CallLogProxyModel {
         id: proxyModel
         logModel: callLogModel
-        onlyMissedCalls: missedCallsTab.selected
+        onlyMissedCalls: buttonGroup.selectedTabIndex == 1
     }
 
     Item {
@@ -85,12 +84,12 @@ Item {
 
         delegate: CallLogDelegate {
             width: parent.width
-            onClicked: telephony.showContactDetailsFromId(contactId)
+            onContactClicked: telephony.showContactDetailsFromId(contactId)
             onActionClicked: telephony.callNumber(phoneNumber)
         }
     }
 
-    ScrollbarForListView {
+    LocalWidgets.ScrollbarForListView {
         view: callLogView
     }
 }

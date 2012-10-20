@@ -1,13 +1,13 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import TelephonyApp 0.1
-import "../Widgets"
+import Ubuntu.Components 0.1
+import "../Widgets" as LocalWidgets
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes
 
-FocusScope {
+LocalWidgets.TelephonyPage {
     id: contactDetails
 
-    property string viewName: "contacts"
     property bool editable: false
     property alias contact: contactWatcher.contact
     property variant contactId: (contact) ? contact.id : null
@@ -19,6 +19,7 @@ FocusScope {
 
     onContactChanged: editable = false
 
+    title: "Contact Details"
     width: 400
     height: 600
 
@@ -48,10 +49,6 @@ FocusScope {
         }
 
         onContactRemoved: {
-            // When android syncs contacts to a google account, it removes the local contact
-            // and adds a new one with a different id. So in order to keep the app in a consistent
-            // state, we close the view when the original contact is removed.
-            // (see http://pad.lv/1021473)
             if (contactId == contactDetails.contactId) {
                 contactDetails.contact = null;
                 telephony.resetView();
@@ -202,7 +199,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             opacity: (contactDetails.editable) ? 0.0 : 1.0
-            Behavior on opacity {StandardAnimation {}}
+            Behavior on opacity { LocalWidgets.StandardAnimation {}}
 
             detailTypeInfo: { return { name: "Call Log" } }
 
@@ -221,7 +218,6 @@ FocusScope {
                 anchors.right: (parent) ? parent.right : undefined
                 bottomSeparator: true
 
-                onClicked: telephony.showContactDetailsFromId(contactId)
                 onActionClicked: telephony.callNumber(phoneNumber)
             }
         }
@@ -253,7 +249,7 @@ FocusScope {
         }
     }
 
-    ScrollbarForFlickable {
+    LocalWidgets.ScrollbarForFlickable {
         flickable: scrollArea
     }
 
@@ -290,9 +286,10 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            ButtonSmall {
+            Button {
                 id: deleteButton
 
+                height: 27
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
                 anchors.leftMargin: 10
@@ -306,9 +303,10 @@ FocusScope {
                 }
             }
 
-            ButtonSmall {
+            Button {
                 id: cancelButton
 
+                height: 27
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: editSaveButton.left
                 anchors.rightMargin: 10
@@ -324,9 +322,10 @@ FocusScope {
                 }
             }
 
-            ButtonSmall {
+            Button {
                 id: editSaveButton
 
+                height: 27
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: 10

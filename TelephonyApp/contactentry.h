@@ -22,11 +22,11 @@
 
 #include <QObject>
 #include <QContact>
-#include <QDeclarativeListProperty>
+#include <QQmlListProperty>
 #include <QUrl>
 #include "contactdetail.h"
 
-using namespace QtMobility;
+QTCONTACTS_USE_NAMESPACE
 
 class ContactName;
 class ContactModel;
@@ -35,10 +35,11 @@ class ContactEntry : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString id
-               READ id
+               READ idString
                NOTIFY changed)
     Q_PROPERTY(QString displayLabel
                READ displayLabel
+               WRITE setDisplayLabel
                NOTIFY changed)
     Q_PROPERTY(QString initial
                READ initial
@@ -52,16 +53,16 @@ class ContactEntry : public QObject
     Q_PROPERTY(bool modified
                READ modified
                NOTIFY modifiedChanged)
-    Q_PROPERTY(QDeclarativeListProperty<ContactDetail> addresses
+    Q_PROPERTY(QQmlListProperty<ContactDetail> addresses
                READ addresses
                NOTIFY changed)
-    Q_PROPERTY(QDeclarativeListProperty<ContactDetail> emails
+    Q_PROPERTY(QQmlListProperty<ContactDetail> emails
                READ emails
                NOTIFY changed)
-    Q_PROPERTY(QDeclarativeListProperty<ContactDetail> onlineAccounts
+    Q_PROPERTY(QQmlListProperty<ContactDetail> onlineAccounts
                READ onlineAccounts
                NOTIFY changed)
-    Q_PROPERTY(QDeclarativeListProperty<ContactDetail> phoneNumbers
+    Q_PROPERTY(QQmlListProperty<ContactDetail> phoneNumbers
                READ phoneNumbers
                NOTIFY changed)
 
@@ -70,19 +71,12 @@ public:
 
     explicit ContactEntry(const ContactEntry &other);
 
-    /**
-     * The Local ID is a numeric value that uniquely identifies a QContact in a QContactManager.
-     * This value has no relation to any identifiers the contact might have in the backend engine.
-     */
-    QContactLocalId localId() const;
-
-    /**
-     * The ID is the unique identifier of the contact in its backend. It is mapped from the contact's guid
-     * that contains the libfolks persona ID in the manager we use.
-     */
-    QString id() const;
+    QContactId id() const;
+    QString idString() const;
 
     QString displayLabel() const;
+    void setDisplayLabel(const QString &value);
+
     QString initial() const;
     QUrl avatar() const;
     ContactName *name() const;
@@ -93,19 +87,19 @@ public:
     QContact contact() const;
     void setContact(const QContact &contact);
 
-    QDeclarativeListProperty<ContactDetail> addresses();
-    QDeclarativeListProperty<ContactDetail> emails();
-    QDeclarativeListProperty<ContactDetail> onlineAccounts();
-    QDeclarativeListProperty<ContactDetail> phoneNumbers();
+    QQmlListProperty<ContactDetail> addresses();
+    QQmlListProperty<ContactDetail> emails();
+    QQmlListProperty<ContactDetail> onlineAccounts();
+    QQmlListProperty<ContactDetail> phoneNumbers();
 
     Q_INVOKABLE bool addDetail(ContactDetail *detail);
     Q_INVOKABLE bool removeDetail(ContactDetail *detail);
     Q_INVOKABLE void revertChanges();
 
-    // QDeclarativeListProperty helpers
-    static void detailAppend(QDeclarativeListProperty<ContactDetail> *p, ContactDetail *detail);
-    static int  detailCount(QDeclarativeListProperty<ContactDetail> *p);
-    static ContactDetail* detailAt(QDeclarativeListProperty<ContactDetail> *p, int index);
+    // QQmlListProperty helpers
+    static void detailAppend(QQmlListProperty<ContactDetail> *p, ContactDetail *detail);
+    static int  detailCount(QQmlListProperty<ContactDetail> *p);
+    static ContactDetail* detailAt(QQmlListProperty<ContactDetail> *p, int index);
 
 Q_SIGNALS:
     void changed(ContactEntry *entry);

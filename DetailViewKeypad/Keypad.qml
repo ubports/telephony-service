@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 Item {
     id: keypad
@@ -27,6 +27,7 @@ Item {
         anchors.fill: keys
         source: "../assets/keypad_div_tile.png"
         fillMode: Image.Tile
+        verticalAlignment: Image.AlignTop
     }
 
     Grid {

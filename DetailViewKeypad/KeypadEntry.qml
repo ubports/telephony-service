@@ -1,5 +1,4 @@
-import QtQuick 1.1
-import "../Widgets"
+import QtQuick 2.0
 import "../fontUtils.js" as Font
 
 FocusScope {

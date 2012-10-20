@@ -1,6 +1,6 @@
-import QtQuick 1.1
+import QtQuick 2.0
 
 NotificationPane {
-    property string viewName: "callended"
+    title: "Calls"
     image: "../assets/pane_call_icon.png"
 }

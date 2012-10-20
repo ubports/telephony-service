@@ -1,9 +1,9 @@
 #ifndef TELEPHONYAPPLICATION_H
 #define TELEPHONYAPPLICATION_H
 
-#include <QtCore/QObject>
-#include <QtDeclarative/QDeclarativeView>
-#include <QtGui/QApplication>
+#include <QObject>
+#include <QQuickView>
+#include <QApplication>
 
 class TelephonyAppDBus;
 
@@ -22,11 +22,11 @@ private:
 
 private Q_SLOTS:
     void onMessageReceived(const QString &message);
-    void onViewStatusChanged(QDeclarativeView::Status status);
+    void onViewStatusChanged(QQuickView::Status status);
     void onApplicationReady();
 
 private:
-    QDeclarativeView *m_view;
+    QQuickView *m_view;
     TelephonyAppDBus *m_dbus;
     QString m_arg;
     bool m_applicationIsReady;

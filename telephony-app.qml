@@ -1,15 +1,21 @@
-import QtQuick 1.1
-import QtMobility.contacts 1.1
-import "Widgets"
+import QtQuick 2.0
+import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 
 Item {
     id: telephony
-    width: 570
-    height: 487
 
-    property alias viewLoader: rightPaneLoaders.currentLoader
-    property alias view: rightPaneLoaders.currentItem
+    width: singlePane ? 360 : 640
+    height: 640
+
+    // FIXME: remove this once the resolution independency stuff gets in.
+    scale: 2
+    transformOrigin: Item.TopLeft
+
+    state: appLayout
+    property bool singlePane: state == "singlePane"
+    property alias viewStack: rightPaneStacks.currentStack
+    property alias view: rightPaneStacks.currentItem
     property alias selectedTabIndex: tabs.selectedTabIndex
     property QtObject call: callManager.foregroundCall
 
@@ -38,11 +44,51 @@ Item {
         onContactLoaded: telephony.showContactDetails(contact);
     }
 
-    function showLiveCall() {
+    states: [
+        State {
+            name: "dualPane"
+
+            PropertyChanges {
+                target: leftPane
+                parent: telephony
+                width: 250
+            }
+
+            StateChangeScript {
+                script: {
+                    mainStack.clear();
+                }
+            }
+        },
+
+        State {
+            name: "singlePane"
+
+            PropertyChanges {
+                target: leftPane
+                parent: singlePanePage
+                width: 250
+            }
+
+            StateChangeScript {
+                script: {
+                    mainStack.clear();
+                    mainStack.push(singlePanePage);
+                }
+            }
+        }
+    ]
+
+    function showLiveCall(clear) {
+        if (clear) {
+            resetView();
+        }
+
         liveCall.load()
     }
 
     function showVoicemail() {
+        resetView();
         voicemail.load()
     }
 
@@ -58,23 +104,31 @@ Item {
         callManager.startCall(number);
     }
 
-    function startChat(contactId, number) {
-        messages.load()
-        view.number = number
+    function startChat(contactId, phoneNumber, clear) {
+        var properties = { number: phoneNumber, newMessage: false };
         if (contactId) {
-            view.contactId = contactId
+            properties["contactId"] = contactId;
         }
-        view.newMessage = false
+        if (clear) {
+            resetView();
+        }
+
+        messages.load(properties);
     }
 
     function endCall() {
-        callEnded.load()
+        if (liveCall.loaded) {
+            viewStack.pop();
+        }
     }
 
-    function showContactDetails(contact) {
-        contactDetails.load()
-        view.contact = contact
-        view.added = false
+    function showContactDetails(contact, clear) {
+        var properties = { contact: contact, added: false }
+        if (clear) {
+            resetView();
+        }
+
+        contactDetails.load(properties)
     }
 
     function showContactDetailsFromId(contactId) {
@@ -82,32 +136,54 @@ Item {
     }
 
     function createNewContact() {
+        resetView();
         contactDetails.load()
         view.createNewContact()
     }
 
     function startNewMessage() {
-        messages.load()
-        view.newMessage = true
+        resetView();
+        messages.load({ newMessage: true })
     }
 
     function showKeypad() {
+        resetView();
         keypad.load()
     }
 
     function showCallLog() {
+        resetView();
         callLog.load()
     }
 
     function resetView() {
-        viewLoader.source = tabs.model[tabs.selectedTabIndex].pane
+        if (singlePane) {
+            while (viewStack.depth > 1) {
+                viewStack.pop();
+            }
+        } else {
+            viewStack.clear();
+        }
+    }
+
+    PageStack {
+        id: mainStack
+        anchors.fill: parent
+        visible: singlePane
+    }
+
+    Page {
+        id: singlePanePage
+        title: "Telephony"
     }
 
     Item {
         id: leftPane
+
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        anchors.right: singlePane ? parent.right : undefined
         width: 250
 
         Image {
@@ -128,19 +204,19 @@ Item {
             buttonsExpanded: true
 
             Tab {
-                iconSource: "assets/tab_icon_call_inactive.png" // FIXME: selected ? "../assets/tab_icon_call_active.png"
+                iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
                 page: Qt.resolvedUrl("PanelCalls/CallPanel.qml")
                 property string pane: "Panes/CallEndedPane.qml"
             }
 
             Tab {
-                iconSource: "assets/tab_icon_messaging_inactive.png" // FIXME: selected ? "../assets/tab_icon_messaging_active.png"
+                iconSource: (tabs.selectedTabIndex != 1) ? "assets/tab_icon_messaging_inactive.png" : "assets/tab_icon_messaging_active.png"
                 page: Qt.resolvedUrl("PanelMessages/MessagesPanel.qml")
                 property string pane: "Panes/SelectMessagePane.qml"
             }
 
             Tab {
-                iconSource: "assets/tab_icon_contacts_inactive.png" // FIXME: selected ? "../assets/tab_icon_contacts_active.png"
+                iconSource: (tabs.selectedTabIndex != 2) ? "assets/tab_icon_contacts_inactive.png" : "assets/tab_icon_contacts_active.png"
                 page: Qt.resolvedUrl("PanelContacts/ContactsPanel.qml")
                 property string pane: "Panes/SelectContactPane.qml"
             }
@@ -162,7 +238,7 @@ Item {
             anchors.right: parent.right
             anchors.bottom: parent.bottom
             anchors.bottomMargin: shown ? 0 : -height
-            Behavior on anchors.bottomMargin {StandardAnimation {}}
+            Behavior on anchors.bottomMargin { LocalWidgets.StandardAnimation {}}
 
             property bool shown
             shown: {
@@ -188,36 +264,43 @@ Item {
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        visible: !singlePane
 
         Rectangle {
             anchors.fill: parent
             color: "#ebebeb"
         }
 
-        /* Instantiate a Loader per tab and keep its loaded content alive.
+        /* Instantiate a PageStack per tab and keep its loaded content alive.
            That makes the application stateful.
            Ref.: https://bugs.launchpad.net/newyork/+bug/1017659
         */
         Item {
-            id: rightPaneLoaders
+            id: rightPaneStacks
 
-            property variant currentLoader: children[tabs.selectedTabIndex]
-            property variant currentItem: currentLoader != undefined ? currentLoader.item : undefined
+            property variant currentStack: singlePane ? mainStack : children[tabs.selectedTabIndex]
+            property variant currentItem: singlePane ? mainStack.currentPage :
+                                                       (currentStack != undefined ? currentStack.currentPage : undefined)
             anchors.fill: parent
         }
 
         Repeater {
             model: tabs.children
-            delegate: Loader {
+            delegate: PageStack {
+                id: stack
+                property string source: modelData.pane
                 property bool isCurrent: index == tabs.selectedTabIndex
                 anchors.fill: parent
-                source: modelData.pane
                 visible: isCurrent
-                focus: isCurrent
+                onSourceChanged: {
+                    stack.push(Qt.resolvedUrl(source))
+                }
 
-                onLoaded: item.focus = isCurrent
+                Component.onCompleted: {
+                    stack.push(Qt.resolvedUrl(source))
+                }
             }
-            onItemAdded: item.parent = rightPaneLoaders
+            onItemAdded: item.parent = rightPaneStacks
         }
 
         Image {

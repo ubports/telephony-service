@@ -21,9 +21,9 @@
 #define ABSTRACTLOGGERMODEL_H
 
 #include <QAbstractListModel>
-#include <TelepathyLoggerQt4/PendingOperation>
-#include <TelepathyLoggerQt4/Types>
-#include <TelepathyLoggerQt4/LogManager>
+#include <TelepathyLoggerQt/PendingOperation>
+#include <TelepathyLoggerQt/Types>
+#include <TelepathyLoggerQt/LogManager>
 #include <QDateTime>
 #include <QList>
 #include <QMap>
@@ -66,6 +66,8 @@ public:
 
     int rowCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
+
+    virtual void populate();
 
 Q_SIGNALS:
     void resetView();

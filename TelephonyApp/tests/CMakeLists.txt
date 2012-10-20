@@ -1,19 +1,14 @@
 include_directories(
-    ${QT_QTTEST_INCLUDE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/TelephonyApp
     )
 
 macro(generate_tests)
     foreach(test ${ARGN})
-        qt4_generate_moc(${test}.cpp ${test}.moc)
-        add_executable(${test} ${test}.cpp ${test}.moc)
+        add_executable(${test} ${test}.cpp)
+        qt5_use_modules(${test} Contacts Core DBus Qml Test)
         target_link_libraries(${test}
-            ${QT_QTTEST_LIBRARIES}
-            ${QT_QTCORE_LIBRARIES}
-            ${QT_QTGUI_LIBRARIES}
-            ${QT_QTDBUS_LIBRARIES}
-            ${TPL_QT4_LIBRARIES}
+            ${TPL_QT5_LIBRARIES}
             telephony-qml
             )
         add_test(${test} ${CMAKE_CURRENT_BINARY_DIR}/${test})
@@ -26,5 +21,5 @@ generate_tests(
     ContactEntryTest
     ContactProxyModelTest
     ContactDetailsTest
-#    ModelSectionCounterTest --> disabled due to bug #1046821
+    #ModelSectionCounterTest# --> disabled due to bug #1046821 and because ModelSectionCounter is not working.
     )

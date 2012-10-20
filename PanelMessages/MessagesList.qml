@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import "../Widgets"
+import QtQuick 2.0
+import "../Widgets" as LocalWidgets
 
 Item {
     id: messageList
@@ -21,7 +21,7 @@ Item {
                 if (contact) {
                     id = contact.id
                 }
-                telephony.startChat(id, phoneNumber)
+                telephony.startChat(id, phoneNumber, true)
             }
             selected: telephony.messages.loaded
                       && !telephony.view.newMessage
@@ -29,7 +29,7 @@ Item {
         }
     }
 
-    ScrollbarForListView {
+    LocalWidgets.ScrollbarForListView {
         view: listView
     }
 }

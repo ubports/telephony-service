@@ -1,10 +1,11 @@
 #ifndef CONTACTDETAIL_H
 #define CONTACTDETAIL_H
 
+#include <QString>
 #include <QObject>
 #include <QContactDetail>
 
-using namespace QtMobility;
+QTCONTACTS_USE_NAMESPACE
 
 class ContactDetail : public QObject
 {
@@ -16,24 +17,28 @@ class ContactDetail : public QObject
                READ contexts
                WRITE setContexts
                NOTIFY detailChanged)
-    Q_PROPERTY(QString definitionName
-               READ definitionName
-               NOTIFY detailChanged)
     Q_ENUMS(DetailType)
+    Q_ENUMS(Context)
 
 public:
     explicit ContactDetail(const QContactDetail &detail = QContactDetail(), QObject *parent = 0);
 
     enum DetailType {
-        Name,
-        PhoneNumber,
-        EmailAddress,
-        Address,
-        InstantMessaging,
-        Unknown
+        Name = QContactDetail::TypeName,
+        PhoneNumber = QContactDetail::TypePhoneNumber,
+        EmailAddress = QContactDetail::TypeEmailAddress,
+        Address = QContactDetail::TypeAddress,
+        InstantMessaging = QContactDetail::TypeOnlineAccount,
+        Unknown = QContactDetail::TypeUndefined
     };
 
-    virtual int type() const;
+    enum Context {
+        ContextHome = QContactDetail::ContextHome,
+        ContextWork = QContactDetail::ContextWork,
+        ContextOther = QContactDetail::ContextOther
+    };
+
+    int type() const;
     void setDetail(const QContactDetail &detail);
 
     QContactDetail& detail();
@@ -44,8 +49,6 @@ public:
      */
     QVariant contexts() const;
     void setContexts(const QVariant &contexts);
-
-    QString definitionName() const;
     
 Q_SIGNALS:
     void typeChanged();

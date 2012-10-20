@@ -1,6 +1,6 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import TelephonyApp 0.1
-import "../Widgets"
+import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 import "DetailTypeUtilities.js" as DetailUtils
 
@@ -45,7 +45,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.top: parent.top
 
-        ListSectionHeader {
+        LocalWidgets.ListSectionHeader {
             anchors.left: parent.left
             anchors.right: parent.right
             text: detailTypeInfo.name
@@ -85,8 +85,8 @@ FocusScope {
             anchors.right: parent.right
             height: editable ? 32 : 0
             opacity: editable ? 1.0 : 0.0
-            Behavior on height {StandardAnimation {}}
-            Behavior on opacity {StandardAnimation {}}
+            Behavior on height { LocalWidgets.StandardAnimation {}}
+            Behavior on opacity { LocalWidgets.StandardAnimation {}}
 
             ButtonWithForeground {
                 id: addButton

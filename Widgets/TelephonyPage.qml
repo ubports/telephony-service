@@ -14,9 +14,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 1.1
+import Ubuntu.Components 0.1
 
-Button {
-    width: 65
-    height: 27
+// define a source property to hold the source URL that was used to create this page
+Page {
+    property string source: undefined
 }

@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import "../Widgets"
+import QtQuick 2.0
+import "../Widgets" as LocalWidgets
 import "../dateUtils.js" as DateUtils
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
@@ -7,13 +7,13 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 ListItem.Base {
     id: callItem
 
-    signal clicked(string contactId)
+    signal contactClicked(string contactId)
     signal actionClicked(string contactId, string phoneNumber)
 
     __height: infoBox.height
     showDivider: true
 
-    CustomListItemBase {
+    LocalWidgets.CustomListItemBase {
         id: infoBox
 
         anchors.left: parent.left
@@ -76,7 +76,7 @@ ListItem.Base {
         visible: phoneNumber != "-"
     }
 
-    CustomListItemBase {
+    LocalWidgets.CustomListItemBase {
         id: actionBox
 
         anchors.top: parent.top

@@ -26,7 +26,7 @@
 #include <QContact>
 #include <TelepathyQt/CallChannel>
 
-using namespace QtMobility;
+QTCONTACTS_USE_NAMESPACE
 
 class CallEntry : public QObject
 {

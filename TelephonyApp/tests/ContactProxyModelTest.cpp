@@ -22,7 +22,7 @@
 #include "contactproxymodel.h"
 #include "contactentry.h"
 
-using namespace QtMobility;
+QTCONTACTS_USE_NAMESPACE
 
 Q_DECLARE_METATYPE(ContactEntry)
 Q_DECLARE_METATYPE(ContactEntry*)
@@ -62,9 +62,9 @@ void ContactProxyModelTest::initTestCase()
     // fill model with dummy contacts
     Q_FOREACH(const QString &name, contacts) {
         QContact contact;
-        QContactName nameDetail;
-        nameDetail.setCustomLabel(name);
-        QVERIFY(contact.saveDetail(&nameDetail));
+        QContactDisplayLabel labelDetail;
+        labelDetail.setLabel(name);
+        QVERIFY(contact.saveDetail(&labelDetail));
         QVERIFY(contactManager->saveContact(&contact));
     }
 }

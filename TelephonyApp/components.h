@@ -23,8 +23,8 @@
 
 #include "channelhandler.h"
 
-#include <QtDeclarative/QDeclarativeContext>
-#include <QtDeclarative/QDeclarativeExtensionPlugin>
+#include <QQmlContext>
+#include <QQmlExtensionPlugin>
 
 class ChannelHandler;
 class ChannelObserver;
@@ -32,25 +32,20 @@ class CallLogModel;
 class MessageLogModel;
 class ContactModel;
 
-namespace QtMobility {
-    class QContactManager;
-}
-
-class Components : public QDeclarativeExtensionPlugin
+class Components : public QQmlExtensionPlugin
 {
     Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
 
 public:
-    void initializeEngine(QDeclarativeEngine *engine, const char *uri);
+    void initializeEngine(QQmlEngine *engine, const char *uri);
     void registerTypes(const char *uri);
 
 private Q_SLOTS:
-    void onChannelHandlerCreated(ChannelHandler *handler);
-    void onChannelObserverCreated(ChannelObserver *observer);
     void onAccountReady();
 
 private:
-    QDeclarativeContext *mRootContext;
+    QQmlContext *mRootContext;
     CallLogModel *mCallLogModel;
     MessageLogModel *mMessageLogModel;
 };

@@ -1,6 +1,5 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import Ubuntu.Components 0.1
-import "../Widgets" as LocalWidgets
 
 FocusScope {
     id: footer
@@ -33,7 +32,6 @@ FocusScope {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        // FIXME: do not use TextField for a simple input field
         TextField {
             id: entry
 
@@ -48,7 +46,7 @@ FocusScope {
             Keys.onEscapePressed: text = ""
         }
 
-        LocalWidgets.Button {
+        Button {
             id: sendButton
 
             anchors.right: parent.right

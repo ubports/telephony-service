@@ -27,14 +27,9 @@ ContactOnlineAccount::ContactOnlineAccount(const QContactDetail &detail, QObject
             SIGNAL(changed()));
 }
 
-int ContactOnlineAccount::type() const
-{
-    return InstantMessaging;
-}
-
 QString ContactOnlineAccount::accountUri() const
 {
-    return mDetail.value(QContactOnlineAccount::FieldAccountUri);
+    return mDetail.value(QContactOnlineAccount::FieldAccountUri).toString();
 }
 
 void ContactOnlineAccount::setAccountUri(const QString &value)
@@ -61,21 +56,26 @@ void ContactOnlineAccount::setCapabilities(const QVariant &value)
 
 QString ContactOnlineAccount::protocol() const
 {
-    return mDetail.value(QContactOnlineAccount::FieldProtocol);
+    // FIXME: onlineAccount protocols are not strings anymore in Qt5, port this code
+    //return mDetail.value(QContactOnlineAccount::FieldProtocol).toString();
+    return QString();
 }
 
 void ContactOnlineAccount::setProtocol(const QString &value)
 {
+    // FIXME: onlineAccount protocols are not strings anymore in Qt5, port this code
+#if 0
     if (value != protocol()) {
         mDetail.setValue(QContactOnlineAccount::FieldProtocol, value);
         Q_EMIT changed();
         Q_EMIT protocolChanged();
     }
+#endif
 }
 
 QString ContactOnlineAccount::serviceProvider() const
 {
-    return mDetail.value(QContactOnlineAccount::FieldServiceProvider);
+    return mDetail.value(QContactOnlineAccount::FieldServiceProvider).toString();
 }
 
 void ContactOnlineAccount::setServiceProvider(const QString &value)

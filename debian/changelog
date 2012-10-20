@@ -1,4 +1,46 @@
-telephony-app (0.57) UNRELEASED; urgency=low
+telephony-app (0.58.4) UNRELEASED; urgency=low
+
+  * Add a dependency on telepathy-ofono.
+  * Add a wrapper that starts DBus and creates an ofono account before launching
+    the app.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 19 Oct 2012 11:32:17 -0300
+
+telephony-app (0.58.3) quantal; urgency=low
+
+  * Workaround the application appearance on high res mobile screens by scaling
+    up the interface.
+  * Add a title to the main view of the app.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 18 Oct 2012 15:43:48 -0300
+
+telephony-app (0.58.2) quantal; urgency=low
+
+  * Change the default size of the app to be 720x1280
+  * Add missing dependency to telepathy-logger.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 18 Oct 2012 14:44:40 -0300
+
+telephony-app (0.58.1) quantal; urgency=low
+
+  * Remove some obsolete dependencies.
+  * Use the "memory" contacts backend when folks is not available.
+  * Save the contact display label properly.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 18 Oct 2012 10:08:57 -0300
+
+telephony-app (0.58) quantal; urgency=low
+
+  [ Ugo Riboni ]
+  * Use components from the SDK.
+
+  [ Gustavo Pichorim Boiko ]
+  * Use the PageStack component and add support for a single panel view mode.
+  * Port to Qt5.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 16 Oct 2012 17:10:27 -0300
+
+telephony-app (0.57) quantal; urgency=low
 
   [ Tiago Salem Herrmann ]
   * Do not call requestClose() after hanging up a call.
@@ -29,7 +71,7 @@ telephony-app (0.57) UNRELEASED; urgency=low
   [ Renato Araujo Oliveira Filho ]
   * Created new dbus method "CallNumber(s)"
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 28 Aug 2012 10:31:30 -0300
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 16 Oct 2012 17:10:07 -0300
 
 telephony-app (0.56) precise; urgency=low
 

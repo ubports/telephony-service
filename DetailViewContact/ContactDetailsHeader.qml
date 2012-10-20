@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import "../Widgets"
+import QtQuick 2.0
+import "../Widgets" as LocalWidgets
 
 FocusScope {
     id: contactDetailsHeader
@@ -11,13 +11,13 @@ FocusScope {
     width: parent.width
     // ensure that there is equal padding at the top and bottom of labelBox
     height: editable ? Math.max(labelBox.height + labelBox.anchors.topMargin * 2, 82) : 82
-    Behavior on height {StandardAnimation {}}
+    Behavior on height { LocalWidgets.StandardAnimation {}}
 
     function save() {
         name.save()
     }
 
-    Image {
+    LocalWidgets.FramedImage {
         id: icon
 
         anchors.left: parent.left
@@ -26,25 +26,8 @@ FocusScope {
         anchors.topMargin: 10
         width: 61
         height: width
-        sourceSize.width: width
-        fillMode: Image.PreserveAspectFit
-        source: (contact && contact.avatar != "") ? contact.avatar : "../assets/avatar_contacts_details.png"
-        onStatusChanged: if (status == Image.Error) source = "../assets/avatar_contacts_details.png"
-        asynchronous: true
-    }
-
-    BorderImage {
-        id: iconFrame
-
-        source: "../Widgets/artwork/ListItemFrame.png"
-        anchors.fill: icon
-        anchors.bottomMargin: -1
-        border.left: 3
-        border.right: 3
-        border.top: 3
-        border.bottom: 3
-        horizontalTileMode: BorderImage.Stretch
-        verticalTileMode: BorderImage.Stretch
+        source: contact ? contact.avatar : fallbackSource
+        fallbackSource: "../assets/avatar_contacts_details.png"
     }
 
     Item {

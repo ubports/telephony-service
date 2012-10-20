@@ -1,5 +1,5 @@
-import QtQuick 1.1
-import "../Widgets"
+import QtQuick 2.0
+import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 
 FocusScope {
@@ -23,7 +23,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.top: parent.top
         height: fields.height + 2 * fields.anchors.topMargin
-        Behavior on height {StandardAnimation {}}
+        Behavior on height { LocalWidgets.StandardAnimation {}}
 
         source: "../assets/edit_contact_mode_box.png"
         border {left: 1; right: 1; top: 2; bottom: 0}
@@ -40,7 +40,7 @@ FocusScope {
         anchors.rightMargin: 10
         spacing: 2
 
-        move: Transition {StandardAnimation {property: "y"}}
+        move: Transition { LocalWidgets.StandardAnimation {property: "y"}}
 
         EditBoxName {
             id: prefix

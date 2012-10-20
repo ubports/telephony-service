@@ -1,4 +1,4 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import Ubuntu.Components 0.1
 import "DetailTypeUtilities.js" as DetailUtils
 
@@ -41,7 +41,7 @@ BaseContactDetailsDelegate {
             style: Text.Raised
             styleColor: "white"
 
-            /* Render the address with the same style as in Android */
+            /* Render the address in a single field format */
             function nonEmpty(item) { return item && item.length > 0 }
             text: [
                 detail.street,

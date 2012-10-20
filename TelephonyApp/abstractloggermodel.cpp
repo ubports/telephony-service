@@ -21,12 +21,12 @@
 #include "telepathyhelper.h"
 #include "contactentry.h"
 #include "contactmodel.h"
-#include <TelepathyLoggerQt4/LogManager>
-#include <TelepathyLoggerQt4/PendingDates>
-#include <TelepathyLoggerQt4/PendingEntities>
-#include <TelepathyLoggerQt4/PendingEvents>
-#include <TelepathyLoggerQt4/Entity>
-#include <TelepathyLoggerQt4/Event>
+#include <TelepathyLoggerQt/LogManager>
+#include <TelepathyLoggerQt/PendingDates>
+#include <TelepathyLoggerQt/PendingEntities>
+#include <TelepathyLoggerQt/PendingEvents>
+#include <TelepathyLoggerQt/Entity>
+#include <TelepathyLoggerQt/Event>
 #include <QContact>
 #include <QContactPhoneNumber>
 
@@ -98,6 +98,11 @@ QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
     return mLogEntries[index.row()]->data(role);
 }
 
+void AbstractLoggerModel::populate()
+{
+    fetchLog();
+}
+
 void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entityTypes)
 {
     Tpl::PendingEntities *pendingEntities = mLogManager->queryEntities(TelepathyHelper::instance()->account());
@@ -120,7 +125,8 @@ void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entit
      */
     connect(pendingEntities,
             SIGNAL(finished(Tpl::PendingOperation*)),
-            SLOT(onPendingEntitiesFinished(Tpl::PendingOperation*)));
+            SLOT(onPendingEntitiesFinished(Tpl::PendingOperation*)),
+            Qt::DirectConnection);
     mActiveOperations.append(pendingEntities);
 }
 
@@ -128,12 +134,13 @@ void AbstractLoggerModel::requestDatesForEntities(const Tpl::EntityPtrList &enti
 {
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
 
-    foreach(Tpl::EntityPtr entity, entities) {
+    Q_FOREACH(Tpl::EntityPtr entity, entities) {
         Tpl::PendingDates *pendingDates = mLogManager->queryDates(account, entity, mType);
 
         connect(pendingDates,
                 SIGNAL(finished(Tpl::PendingOperation*)),
-                SLOT(onPendingDatesFinished(Tpl::PendingOperation*)));
+                SLOT(onPendingDatesFinished(Tpl::PendingOperation*)),
+                Qt::DirectConnection);
         mActiveOperations.append(pendingDates);
     }
 }
@@ -142,18 +149,19 @@ void AbstractLoggerModel::requestEventsForDates(const Tpl::EntityPtr &entity, co
 {
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
 
-    foreach(QDate date, dates) {
+    Q_FOREACH(QDate date, dates) {
         Tpl::PendingEvents *pendingEvents = mLogManager->queryEvents(account, entity, mType, date);
         connect(pendingEvents,
                 SIGNAL(finished(Tpl::PendingOperation*)),
-                SLOT(onPendingEventsFinished(Tpl::PendingOperation*)));
+                SLOT(onPendingEventsFinished(Tpl::PendingOperation*)),
+                Qt::DirectConnection);
         mActiveOperations.append(pendingEvents);
     }
 }
 
 void AbstractLoggerModel::fillContactInfo(LogEntry *entry, ContactEntry *contact)
 {
-    entry->contactId = contact->id();
+    entry->contactId = contact->id().toString();
     entry->avatar = contact->avatar();
     entry->contactAlias = contact->displayLabel();
 }
@@ -189,7 +197,7 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
 {
     // add the events to the list
     beginInsertRows(QModelIndex(), mLogEntries.count(), (mLogEntries.count() + events.count()-1));
-    foreach(Tpl::EventPtr event, events) {
+    Q_FOREACH(Tpl::EventPtr event, events) {
         LogEntry *entry = createEntry(event);
         if (!entry) {
             continue;

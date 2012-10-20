@@ -1,6 +1,6 @@
-import QtQuick 1.1
+import QtQuick 2.0
 import TelephonyApp 0.1
-import "Widgets"
+import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 
 AbstractButton {
@@ -31,27 +31,14 @@ AbstractButton {
         width: 38
         height: 38
 
-        Image {
+        LocalWidgets.FramedImage {
             id: avatarIcon
 
-            anchors.fill: avatarFrame
-            anchors.margins: 1
-            fillMode: Image.PreserveAspectCrop
-            smooth: true
-            source: (call && call.contactAvatar != "") ? call.contactAvatar : "assets/avatar_contacts_list.png"
-            onStatusChanged: if (status == Image.Error) source = "assets/avatar_contacts_list.png"
-            asynchronous: true
-        }
-
-        BorderImage {
-            id: avatarFrame
-
-            source: "assets/oncall_picture_frame.png"
-
             anchors.fill: parent
-            border {top: 3; bottom: 1; left: 2; right: 2}
-            horizontalTileMode: BorderImage.Stretch
-            verticalTileMode: BorderImage.Stretch
+            anchors.margins: 1
+            source: call ? call.contactAvatar : fallbackSource
+            fallbackSource: "assets/avatar_contacts_list.png"
+            frameSource: "assets/oncall_picture_frame.sci"
         }
 
         Image {
@@ -128,7 +115,7 @@ AbstractButton {
             border {left: 10; right: 10; top: 12; bottom: 12}
         }
 
-        StopWatch {
+        LocalWidgets.StopWatch {
             id: stopWatch
 
             anchors.centerIn: parent

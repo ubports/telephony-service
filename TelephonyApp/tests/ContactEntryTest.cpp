@@ -19,9 +19,7 @@
 #include <QContact>
 #include <QContactAddress>
 #include <QContactAvatar>
-#include <QContactDetailDefinition>
 #include <QContactEmailAddress>
-#include <QContactGuid>
 #include <QContactName>
 #include <QContactOnlineAccount>
 #include <QContactPhoneNumber>
@@ -33,7 +31,7 @@
 #include "contactonlineaccount.h"
 #include "contactphonenumber.h"
 
-using namespace QtMobility;
+QTCONTACTS_USE_NAMESPACE
 
 class ContactEntryTest : public QObject
 {
@@ -42,7 +40,6 @@ class ContactEntryTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void testConstructor();
-    void testLocalId();
     void testId();
     void testDisplayLabel();
     void testInitial_data();
@@ -75,31 +72,33 @@ void ContactEntryTest::testConstructor()
     QCOMPARE(entry.contact(), contact);
 }
 
-void ContactEntryTest::testLocalId()
-{
-    QContact contact;
-    ContactEntry entry(contact);
-    QCOMPARE(entry.localId(), contact.localId());
-}
-
 void ContactEntryTest::testId()
 {
+    // FIXME: check how to properly test contact ids
+#if 0
     QContact contact;
     QContactGuid guidDetail;
     guidDetail.setGuid("testcontactid");
     QVERIFY(contact.saveDetail(&guidDetail));
     ContactEntry entry(contact);
     QCOMPARE(entry.id(), guidDetail.guid());
+#endif
 }
 
 void ContactEntryTest::testDisplayLabel()
 {
     QContact contact;
-    QContactName nameDetail;
-    nameDetail.setCustomLabel("Test Display Label");
-    QVERIFY(contact.saveDetail(&nameDetail));
+    QContactDisplayLabel labelDetail;
+    labelDetail.setLabel("Test Display Label");
+    QVERIFY(contact.saveDetail(&labelDetail));
     ContactEntry entry(contact);
-    QCOMPARE(entry.displayLabel(), nameDetail.customLabel());
+    QCOMPARE(entry.displayLabel(), labelDetail.label());
+
+    QSignalSpy signalSpy(&entry, SIGNAL(changed(ContactEntry*)));
+    QString testLabel("Another Display Label");
+    entry.setDisplayLabel(testLabel);
+    QCOMPARE(signalSpy.count(), 1);
+    QCOMPARE(entry.displayLabel(), testLabel);
 }
 
 void ContactEntryTest::testInitial_data()
@@ -119,9 +118,9 @@ void ContactEntryTest::testInitial()
     QFETCH(QString, initial);
 
     QContact contact;
-    QContactName nameDetail;
-    nameDetail.setCustomLabel(name);
-    QVERIFY(contact.saveDetail(&nameDetail));
+    QContactDisplayLabel labelDetail;
+    labelDetail.setLabel(name);
+    QVERIFY(contact.saveDetail(&labelDetail));
     ContactEntry entry(contact);
     QCOMPARE(entry.initial(), initial);
 }
@@ -148,14 +147,12 @@ void ContactEntryTest::testName()
     QContactName nameDetail;
     nameDetail.setFirstName("First");
     nameDetail.setLastName("Last");
-    nameDetail.setCustomLabel("Custom Label");
     QVERIFY(contact.saveDetail(&nameDetail));
     ContactEntry entry(contact);
     ContactName *name = entry.name();
     QVERIFY(name);
     QCOMPARE(name->firstName(), nameDetail.firstName());
     QCOMPARE(name->lastName(), nameDetail.lastName());
-    QCOMPARE(name->customLabel(), nameDetail.customLabel());
 }
 
 void ContactEntryTest::testModified()
@@ -182,7 +179,7 @@ void ContactEntryTest::testAddresses()
     }
 
     ContactEntry entry(contact);
-    QDeclarativeListProperty<ContactDetail> addresses = entry.addresses();
+    QQmlListProperty<ContactDetail> addresses = entry.addresses();
     QCOMPARE(ContactEntry::detailCount(&addresses), 10);
 
     ContactAddress address;
@@ -207,7 +204,7 @@ void ContactEntryTest::testEmails()
     }
 
     ContactEntry entry(contact);
-    QDeclarativeListProperty<ContactDetail> emails = entry.emails();
+    QQmlListProperty<ContactDetail> emails = entry.emails();
     QCOMPARE(ContactEntry::detailCount(&emails), 10);
 
     ContactEmailAddress email;
@@ -232,7 +229,7 @@ void ContactEntryTest::testOnlineAccounts()
     }
 
     ContactEntry entry(contact);
-    QDeclarativeListProperty<ContactDetail> onlineAccounts = entry.onlineAccounts();
+    QQmlListProperty<ContactDetail> onlineAccounts = entry.onlineAccounts();
     QCOMPARE(ContactEntry::detailCount(&onlineAccounts), 10);
 
     ContactOnlineAccount onlineAccount;
@@ -257,7 +254,7 @@ void ContactEntryTest::testPhoneNumbers()
     }
 
     ContactEntry entry(contact);
-    QDeclarativeListProperty<ContactDetail> phoneNumbers = entry.phoneNumbers();
+    QQmlListProperty<ContactDetail> phoneNumbers = entry.phoneNumbers();
     QCOMPARE(ContactEntry::detailCount(&phoneNumbers), 10);
 
     ContactPhoneNumber phoneNumber;
@@ -291,17 +288,17 @@ void ContactEntryTest::testAddDetail()
     QVERIFY(entry.addDetail(&phoneNumber));
     QCOMPARE(signalSpy.count(), 1);
     QVERIFY(entry.modified());
-    QDeclarativeListProperty<ContactDetail> phoneNumbers = entry.phoneNumbers();
+    QQmlListProperty<ContactDetail> phoneNumbers = entry.phoneNumbers();
     QCOMPARE(entry.detailCount(&phoneNumbers), 1);
     QCOMPARE(entry.detailAt(&phoneNumbers, 0)->detail(), phoneNumber.detail());
 
     QVERIFY(entry.addDetail(&address));
-    QDeclarativeListProperty<ContactDetail> addresses = entry.addresses();
+    QQmlListProperty<ContactDetail> addresses = entry.addresses();
     QCOMPARE(entry.detailCount(&addresses), 1);
     QCOMPARE(entry.detailAt(&addresses, 0)->detail(), address.detail());
 
     QVERIFY(entry.addDetail(&onlineAccount));
-    QDeclarativeListProperty<ContactDetail> onlineAccounts = entry.onlineAccounts();
+    QQmlListProperty<ContactDetail> onlineAccounts = entry.onlineAccounts();
     QCOMPARE(entry.detailCount(&onlineAccounts), 1);
     QCOMPARE(entry.detailAt(&onlineAccounts, 0)->detail(), onlineAccount.detail());
 }
@@ -322,19 +319,19 @@ void ContactEntryTest::testRemoveDetail()
     ContactEntry entry(contact);
     QSignalSpy signalSpy(&entry, SIGNAL(modifiedChanged()));
 
-    QDeclarativeListProperty<ContactDetail> phoneNumbers = entry.phoneNumbers();
+    QQmlListProperty<ContactDetail> phoneNumbers = entry.phoneNumbers();
     QVERIFY(entry.removeDetail(entry.detailAt(&phoneNumbers, 0)));
     QCOMPARE(signalSpy.count(), 1);
     QVERIFY(entry.modified());
     QCOMPARE(entry.detailCount(&phoneNumbers), 1);
     QCOMPARE(entry.contact().details<QContactPhoneNumber>().count(), 0);
 
-    QDeclarativeListProperty<ContactDetail> addresses = entry.addresses();
+    QQmlListProperty<ContactDetail> addresses = entry.addresses();
     QVERIFY(entry.removeDetail(entry.detailAt(&addresses, 0)));
     QCOMPARE(entry.detailCount(&addresses), 1);
     QCOMPARE(entry.contact().details<QContactAddress>().count(), 0);
 
-    QDeclarativeListProperty<ContactDetail> onlineAccounts = entry.onlineAccounts();
+    QQmlListProperty<ContactDetail> onlineAccounts = entry.onlineAccounts();
     QVERIFY(entry.removeDetail(entry.detailAt(&onlineAccounts, 0)));
     QCOMPARE(entry.detailCount(&onlineAccounts), 1);
     QCOMPARE(entry.contact().details<QContactOnlineAccount>().count(), 0);

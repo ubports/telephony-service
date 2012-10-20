@@ -27,14 +27,9 @@ ContactAddress::ContactAddress(const QContactDetail &detail, QObject *parent) :
             SIGNAL(changed()));
 }
 
-int ContactAddress::type() const
-{
-    return Address;
-}
-
 QString ContactAddress::country() const
 {
-    return mDetail.value(QContactAddress::FieldCountry);
+    return mDetail.value(QContactAddress::FieldCountry).toString();
 }
 
 void ContactAddress::setCountry(const QString &value)
@@ -48,7 +43,7 @@ void ContactAddress::setCountry(const QString &value)
 
 QString ContactAddress::locality() const
 {
-    return mDetail.value(QContactAddress::FieldLocality);
+    return mDetail.value(QContactAddress::FieldLocality).toString();
 }
 
 void ContactAddress::setLocality(const QString &value)
@@ -62,7 +57,7 @@ void ContactAddress::setLocality(const QString &value)
 
 QString ContactAddress::postOfficeBox() const
 {
-    return mDetail.value(QContactAddress::FieldPostOfficeBox);
+    return mDetail.value(QContactAddress::FieldPostOfficeBox).toString();
 }
 
 void ContactAddress::setPostOfficeBox(const QString &value)
@@ -76,7 +71,7 @@ void ContactAddress::setPostOfficeBox(const QString &value)
 
 QString ContactAddress::postcode() const
 {
-    return mDetail.value(QContactAddress::FieldPostcode);
+    return mDetail.value(QContactAddress::FieldPostcode).toString();
 }
 
 void ContactAddress::setPostcode(const QString &value)
@@ -90,7 +85,7 @@ void ContactAddress::setPostcode(const QString &value)
 
 QString ContactAddress::region() const
 {
-    return mDetail.value(QContactAddress::FieldRegion);
+    return mDetail.value(QContactAddress::FieldRegion).toString();
 }
 
 void ContactAddress::setRegion(const QString &value)
@@ -104,7 +99,7 @@ void ContactAddress::setRegion(const QString &value)
 
 QString ContactAddress::street() const
 {
-    return mDetail.value(QContactAddress::FieldStreet);
+    return mDetail.value(QContactAddress::FieldStreet).toString();
 }
 
 void ContactAddress::setStreet(const QString &value)
@@ -118,13 +113,12 @@ void ContactAddress::setStreet(const QString &value)
 
 QVariant ContactAddress::subTypes() const
 {
-    return mDetail.value<QStringList>(QContactAddress::FieldSubTypes);
+    return mDetail.value<QVariant>(QContactAddress::FieldSubTypes);
 }
 
 void ContactAddress::setSubTypes(const QVariant &value)
 {
-    //FIXME: we are just setting this one all the time, maybe we should check if the list really changed
-    mDetail.setValue(QContactAddress::FieldSubTypes, value.toStringList());
+    mDetail.setValue(QContactAddress::FieldSubTypes,  QVariant::fromValue(value));
     Q_EMIT changed();
     Q_EMIT subTypesChanged();
 }

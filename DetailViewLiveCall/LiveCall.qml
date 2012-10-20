@@ -1,13 +1,12 @@
-import QtQuick 1.0
+import QtQuick 2.0
+import Ubuntu.Components 0.1
 import "../Widgets" as LocalWidgets
 import "../DetailViewKeypad"
 import "../"
-import Ubuntu.Components 0.1
 
-Item {
+LocalWidgets.TelephonyPage {
     id: liveCall
 
-    property string viewName: "livecall"
     property alias contact: contactWatcher.contact
     property QtObject call: callManager.foregroundCall
     property alias number: contactWatcher.phoneNumber
@@ -15,6 +14,8 @@ Item {
     property bool isSpeaker: call ? call.speaker : false
     property bool isMuted: call ? call.muted : false
     property bool isDtmf: false
+
+    title: "On Call"
 
     function endCall() {
         if (call) {
@@ -69,35 +70,15 @@ Item {
             width: childrenRect.width
             height: childrenRect.height
 
-            Image {
+            LocalWidgets.FramedImage {
                 id: picture
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: 140
                 height: 140
-                sourceSize.width: width
-                fillMode: Image.PreserveAspectFit
-                source: (contact && contact.avatar != "") ? contact.avatar : "../assets/avatar_incall_rightpane.png"
-                onStatusChanged: if (status == Image.Error) source = "../assets/avatar_incall_rightpane.png"
-                asynchronous: true
-                smooth: true
-            }
-
-            BorderImage {
-                id: pictureFrame
-
-                source: "../assets/incall_picture_frame.png"
-                anchors.fill: picture
-                anchors.topMargin: -1
-                anchors.bottomMargin: -2
-                anchors.leftMargin: -1
-                anchors.rightMargin: -1
-                border.left: 5
-                border.right: 5
-                border.top: 6
-                border.bottom: 5
-                horizontalTileMode: BorderImage.Stretch
-                verticalTileMode: BorderImage.Stretch
+                source: contact ? contact.avatar : fallbackSource
+                fallbackSource: "../assets/avatar_incall_rightpane.png"
+                darkBorder: true
             }
 
             TextCustom {
@@ -105,7 +86,7 @@ Item {
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 15
-                anchors.top: pictureFrame.bottom
+                anchors.top: picture.bottom
                 text: contact ? contact.displayLabel : "Unknown Contact"
                 color: "white"
                 style: Text.Sunken
@@ -213,6 +194,8 @@ Item {
                     anchors.rightMargin: 1
                     source: "../assets/livecall_keypad_div_tile.png"
                     fillMode: Image.Tile
+                    verticalAlignment: Image.AlignTop
+                    horizontalAlignment: Image.AlignLeft
                 }
 
                 Grid {
@@ -272,7 +255,7 @@ Item {
                 anchors.horizontalCenter: parent.horizontalCenter
                 spacing: 5
 
-                LocalWidgets.Button {
+                Button {
                     id: hangupButton
 
                     iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
@@ -282,7 +265,7 @@ Item {
                     onClicked: endCall()
                 }
 
-                LocalWidgets.Button {
+                Button {
                     id: addToContactsButton
 
                     iconSource: "../assets/incall_keypad_addcaller_unselected.png"
