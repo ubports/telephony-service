@@ -28,5 +28,5 @@ LocalWidgets.DropDownSearch {
         }
     }
 
-    listMaximumHeight: 300
+    listMaximumHeight: units.dp(300)
 }

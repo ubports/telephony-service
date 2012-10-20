@@ -1,11 +1,12 @@
 import QtQuick 2.0
+import Ubuntu.Components 0.1
 import ".."
 
 Rectangle {
-    width: 200
-    height: 400
+    width: units.dp(200)
+    height: units.dp(400)
     ContactsSearchCombo {
-        width: 200
-        height: 30
+        width: units.dp(200)
+        height: units.dp(30)
     }
 }

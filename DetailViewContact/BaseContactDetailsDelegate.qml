@@ -10,7 +10,7 @@ FocusScope {
        the layout. We also need to set the height to zero to make them completely go away.
        There is a 2 pixels vertical spacing between fields in edit mode.
     */
-    height: (deleted) ? 0 : (((editable) ? editableGroup.height + 2 : readOnlyGroup.height) + bottomSeparatorLine.height - 1)
+    height: (deleted) ? 0 : (((editable) ? editableGroup.height + units.dp(2) : readOnlyGroup.height) + bottomSeparatorLine.height - units.dp(1))
     opacity: (deleted) ? 0.0 : 1.0
 
     state: "read"
@@ -77,7 +77,7 @@ FocusScope {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        height: visible ? 2 : 0
+        height: visible ? units.dp(2) : 0
         source: "../Widgets/artwork/ListItemSeparator.png"
         visible: contactDetailsItem.bottomSeparator
     }
@@ -97,11 +97,11 @@ FocusScope {
             id: contentBox
 
             anchors.left: parent.left
-            anchors.leftMargin: 8
+            anchors.leftMargin: units.dp(8)
             anchors.right: readOnlySeparator.left
-            anchors.rightMargin: 7
+            anchors.rightMargin: units.dp(7)
             anchors.top: parent.top
-            anchors.topMargin: 9
+            anchors.topMargin: units.dp(9)
             height: childrenRect.height
 
             onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
@@ -122,7 +122,7 @@ FocusScope {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: actionBox.left
-            width: 1
+            width: units.dp(1)
             color: "black"
             opacity: 0.1
         }
@@ -130,7 +130,7 @@ FocusScope {
         AbstractButton {
             id: actionBox
 
-            width: 50
+            width: units.dp(50)
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
@@ -138,7 +138,7 @@ FocusScope {
 
             Image {
                 anchors.centerIn: parent
-                width: 16
+                width: units.dp(16)
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
 
@@ -166,9 +166,9 @@ FocusScope {
                 id: removeButton
 
                 anchors.left: parent.left
-                anchors.leftMargin: 10
+                anchors.leftMargin: units.dp(10)
                 anchors.verticalCenter: editableContentBox.verticalCenter
-                width: 12
+                width: units.dp(12)
                 iconSource: "../assets/edit_contact_mode_remove.png"
 
                 onClicked: {
@@ -182,8 +182,8 @@ FocusScope {
 
                 anchors.left: removeButton.right
                 anchors.right: parent.right
-                anchors.leftMargin: 5
-                anchors.rightMargin: 5
+                anchors.leftMargin: units.dp(5)
+                anchors.rightMargin: units.dp(5)
                 height: childrenRect.height
             }
         }
@@ -195,7 +195,7 @@ FocusScope {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            width: 90
+            width: units.dp(90)
             detailTypeInfo: contactDetailsItem.detailTypeInfo
             detail: contactDetailsItem.detail
         }

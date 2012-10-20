@@ -13,11 +13,11 @@ Item {
         id: contactsSearchBox
 
         anchors.top: parent.top
-        anchors.topMargin: 10
+        anchors.topMargin: units.dp(10)
         anchors.left: parent.left
-        anchors.leftMargin: 10
+        anchors.leftMargin: units.dp(10)
         anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.rightMargin: units.dp(10)
 
         rightIconSource: "../assets/call_icon.png"
         rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
@@ -44,7 +44,7 @@ Item {
     Column {
         id: buttonsGroup
         anchors.top: contactsSearchBox.bottom
-        anchors.topMargin: 10
+        anchors.topMargin: units.dp(10)
         anchors.left: parent.left
         anchors.right: parent.right
 
@@ -53,9 +53,9 @@ Item {
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-            __height: 30
-            __leftIconMargin: 19
-            __rightIconMargin: 14
+            height: units.dp(30)
+            __leftIconMargin: units.dp(19)
+            __rightIconMargin: units.dp(14)
 
             function getIconSource() {
                 if (callManager.hasCalls && !telephony.isVoicemailActive()) {
@@ -75,9 +75,9 @@ Item {
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-            __height: 30
-            __leftIconMargin: 19
-            __rightIconMargin: 14
+            height: units.dp(30)
+            __leftIconMargin: units.dp(19)
+            __rightIconMargin: units.dp(14)
             visible: callManager.voicemailNumber != ""
 
             icon: Qt.resolvedUrl(selected ? "../assets/call_icon_voicemail_active.png" : "../assets/call_icon_voicemail_inactive.png")
@@ -91,9 +91,9 @@ Item {
         ListItem.Standard {
             anchors.left: parent.left
             anchors.right: parent.right
-            __height: 30
-            __leftIconMargin: 19
-            __rightIconMargin: 14
+            height: units.dp(30)
+            __leftIconMargin: units.dp(19)
+            __rightIconMargin: units.dp(14)
 
             icon: Qt.resolvedUrl(selected ? "../assets/call_icon_call_log_active.png" : "../assets/call_icon_call_log_inactive.png")
             iconFrame: false

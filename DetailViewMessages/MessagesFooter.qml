@@ -8,7 +8,7 @@ FocusScope {
 
     signal newMessage(string message)
 
-    height: 36
+    height: units.dp(36)
 
     Rectangle {
         anchors.fill: parent
@@ -22,7 +22,7 @@ FocusScope {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 1
+        height: units.dp(1)
         color: "white"
     }
 
@@ -36,9 +36,9 @@ FocusScope {
             id: entry
 
             anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.leftMargin: units.dp(10)
             anchors.right: sendButton.left
-            anchors.rightMargin: 10
+            anchors.rightMargin: units.dp(10)
             anchors.verticalCenter: parent.verticalCenter
             focus: true
             // send message if return was pressed
@@ -50,10 +50,10 @@ FocusScope {
             id: sendButton
 
             anchors.right: parent.right
-            anchors.rightMargin: 10
+            anchors.rightMargin: units.dp(10)
             anchors.top: entry.top
             anchors.bottom: entry.bottom
-            width: 62
+            width: units.dp(62)
             enabled: validRecipient
             color: "#37b301"
             text: "Send"

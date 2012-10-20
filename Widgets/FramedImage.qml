@@ -15,6 +15,7 @@
  */
 
 import QtQuick 2.0
+import Ubuntu.Components 0.1
 
 Item {
     id: framedImage
@@ -63,7 +64,7 @@ Item {
     BorderImage {
         id: frame
 
-        property bool big: framedImage.width >= 100
+        property bool big: framedImage.width >= units.dp(100)
         property int borderSize: big ? 6 : 3
 
         source: {
@@ -79,10 +80,10 @@ Item {
         }
 
         anchors.fill: image
-        anchors.topMargin: big ? -1 : 0
-        anchors.bottomMargin: big ? -2 : -1
-        anchors.leftMargin: big ? -1 : 0
-        anchors.rightMargin: big ? -1 : 0
+        anchors.topMargin: big ? -units.dp(1) : 0
+        anchors.bottomMargin: big ? -units.dp(2) : -units.dp(1)
+        anchors.leftMargin: big ? -units.dp(1) : 0
+        anchors.rightMargin: big ? -units.dp(1) : 0
 
         border {
             left: borderSize

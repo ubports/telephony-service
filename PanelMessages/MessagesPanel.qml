@@ -12,20 +12,20 @@ Item {
         id: search
 
         anchors.top: parent.top
-        anchors.topMargin: 10
+        anchors.topMargin: units.dp(10)
         anchors.left: parent.left
-        anchors.leftMargin: 10
+        anchors.leftMargin: units.dp(10)
         anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.rightMargin: units.dp(10)
 
         placeholderText: "Search messages"
         Keys.onEscapePressed: text = ""
 
         primaryItem: AbstractButton {
-            width: 20
+            width: units.dp(20)
             Image {
                 anchors.left: parent.left
-                anchors.leftMargin: 5
+                anchors.leftMargin: units.dp(5)
                 anchors.verticalCenter: parent.verticalCenter
                 source: search.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
             }
@@ -36,7 +36,7 @@ Item {
     Column {
         id: buttons
         anchors.top: search.bottom
-        anchors.topMargin: 10
+        anchors.topMargin: units.dp(10)
         anchors.left: parent.left
         anchors.right: parent.right
 
@@ -46,9 +46,9 @@ Item {
             id: newMessage
             anchors.left: parent.left
             anchors.right: parent.right
-            __height: 30
-            __leftIconMargin: 19
-            __rightIconMargin: 14
+            height: units.dp(30)
+            __leftIconMargin: units.dp(19)
+            __rightIconMargin: units.dp(14)
 
             icon: Qt.resolvedUrl("../assets/add_new_message_icon.png")
             iconFrame: false

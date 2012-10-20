@@ -25,13 +25,13 @@ Item {
             Item {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: 35
+                height: units.dp(35)
 
                 BorderImage {
                     id: background
 
                     anchors.fill: parent
-                    anchors.bottomMargin: delegate.isLast ? -3 : 0
+                    anchors.bottomMargin: delegate.isLast ? units.dp(-3) : 0
                     source: delegate.isLast ? "../assets/input_field_autofill_bottom.sci" : "../assets/input_field_autofill_middle.sci"
                 }
 
@@ -39,9 +39,9 @@ Item {
                     id: labels
 
                     anchors.left: parent.left
-                    anchors.leftMargin: 12
+                    anchors.leftMargin: units.dp(12)
                     anchors.right: parent.right
-                    anchors.rightMargin: 12
+                    anchors.rightMargin: units.dp(12)
                     anchors.verticalCenter: parent.verticalCenter
                     height: childrenRect.height
 
@@ -58,7 +58,7 @@ Item {
 
                     TextCustom {
                         anchors.left: contactName.right
-                        anchors.leftMargin: 10
+                        anchors.leftMargin: units.dp(10)
                         anchors.right: parent.right
                         horizontalAlignment: Text.AlignRight
                         elide: Text.ElideRight

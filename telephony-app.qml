@@ -5,8 +5,8 @@ import Ubuntu.Components 0.1
 Item {
     id: telephony
 
-    width: singlePane ? 360 : 640
-    height: 640
+    width: singlePane ? units.dp(360) : units.dp(640)
+    height: units.dp(640)
 
     // FIXME: remove this once the resolution independency stuff gets in.
     scale: 2
@@ -51,7 +51,7 @@ Item {
             PropertyChanges {
                 target: leftPane
                 parent: telephony
-                width: 250
+                width: units.dp(250)
             }
 
             StateChangeScript {
@@ -67,7 +67,7 @@ Item {
             PropertyChanges {
                 target: leftPane
                 parent: singlePanePage
-                width: 250
+                width: units.dp(250)
             }
 
             StateChangeScript {
@@ -184,7 +184,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: singlePane ? parent.right : undefined
-        width: 250
+        width: units.dp(250)
 
         Image {
             id: background
@@ -197,7 +197,7 @@ Item {
         Tabs {
             id: tabs
             anchors.top: parent.top
-            anchors.topMargin: 7
+            anchors.topMargin: units.dp(7)
             anchors.bottom: leftPane.bottom
             anchors.left: parent.left
             anchors.right: parent.right
@@ -228,7 +228,7 @@ Item {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            width: 1
+            width: units.dp(1)
             color: "white"
             opacity: 0.3
         }

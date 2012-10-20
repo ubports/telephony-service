@@ -19,8 +19,8 @@ import QtQuick 2.0
 FocusScope {
     id: header
 
-    width: 575
-    height: 36
+    width: units.dp(575)
+    height: units.dp(36)
 
     Rectangle {
         anchors.fill: parent
@@ -32,7 +32,7 @@ FocusScope {
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        height: 1
+        height: units.dp(1)
         color: "white"
     }
 }

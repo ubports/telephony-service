@@ -19,21 +19,21 @@ Item {
         id: contactsSearchBox
 
         anchors.top: parent.top
-        anchors.topMargin: 10
+        anchors.topMargin: units.dp(10)
         anchors.left: parent.left
-        anchors.leftMargin: 10
+        anchors.leftMargin: units.dp(10)
         anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.rightMargin: units.dp(10)
 
         placeholderText: "Search contacts"
         Keys.onEscapePressed: text = ""
 
         primaryItem: AbstractButton {
-            width: 20
+            width: units.dp(20)
             Image {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.leftMargin: 5
+                anchors.leftMargin: units.dp(5)
                 source: contactsSearchBox.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
             }
             onClicked: contactsSearchBox.text = ""
@@ -45,7 +45,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: contactsSearchBox.bottom
-        anchors.topMargin: 10
+        anchors.topMargin: units.dp(10)
 
         ListItem.ThinDivider {}
 
@@ -54,9 +54,9 @@ Item {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            __height: 30
-            __leftIconMargin: 20
-            __rightIconMargin: 17
+            height: units.dp(30)
+            __leftIconMargin: units.dp(20)
+            __rightIconMargin: units.dp(17)
 
             text: "Add a new contact"
             icon: Qt.resolvedUrl("../assets/add_contacts_icon.png")

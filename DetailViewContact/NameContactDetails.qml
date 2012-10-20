@@ -47,7 +47,7 @@ FocusScope {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.rightMargin: units.dp(10)
         height: paintedHeight
 
         fontSize: "large"

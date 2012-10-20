@@ -16,11 +16,11 @@ Item {
         id: sectionDelegate
 
         Item {
-            height: childrenRect.height + 13
+            height: childrenRect.height + units.dp(13)
 
             TextCustom {
                 anchors.left: parent.left
-                anchors.leftMargin: 18
+                anchors.leftMargin: units.dp(18)
                 text: section
                 fontSize: "small"
                 elide: Text.ElideRight
@@ -36,7 +36,7 @@ Item {
 
         MessageBubbleImage {
             maximumWidth: messagesList.width - parent.anchors.leftMargin - parent.anchors.rightMargin
-            maximumHeight: 200
+            maximumHeight: units.dp(200)
 
             imageSource: parent.imageSource
             mirrored: !parent.incoming
@@ -63,9 +63,9 @@ Item {
         id: messagesList
 
         anchors.fill: parent
-        anchors.topMargin: 10
-        anchors.bottomMargin: 10
-        spacing: 24
+        anchors.topMargin: units.dp(10)
+        anchors.bottomMargin: units.dp(10)
+        spacing: units.dp(24)
         /* Necessary to force the instantiation of all the delegates in order
            for contentHeight to be accurate. That is required for
            ScrollbarForListView to operate properly */
@@ -89,8 +89,8 @@ Item {
             anchors.right: if (sourceComponent == messageTextDelegate) return parent.right
                           else return incoming ? undefined : parent.right
 
-            anchors.leftMargin: incoming ? 10 : 39
-            anchors.rightMargin: incoming ? 39 : 10
+            anchors.leftMargin: incoming ? units.dp(10) : units.dp(39)
+            anchors.rightMargin: incoming ? units.dp(39) : units.dp(10)
 
             sourceComponent: message != "" ? messageTextDelegate : messageImageDelegate
         }

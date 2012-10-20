@@ -20,15 +20,15 @@ LocalWidgets.TelephonyPage {
             height: childrenRect.height
 
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: -26
+            anchors.verticalCenterOffset: units.dp(-26)
 
             KeypadEntry {
                 id: keypadEntry
 
                 anchors.left: keypad.left
                 anchors.right: keypad.right
-                anchors.leftMargin: -2
-                anchors.rightMargin: -2
+                anchors.leftMargin: units.dp(-2)
+                anchors.rightMargin: units.dp(-2)
                 focus: true
                 Keys.forwardTo: [callButton]
             }
@@ -44,7 +44,7 @@ LocalWidgets.TelephonyPage {
                 id: callButton
 
                 anchors.top: keypad.bottom
-                anchors.topMargin: 16
+                anchors.topMargin: units.dp(16)
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: telephony.callNumber(keypadEntry.value)
             }

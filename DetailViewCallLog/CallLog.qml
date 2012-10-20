@@ -27,12 +27,12 @@ LocalWidgets.TelephonyPage {
         id: buttonGroup
 
         anchors.top: parent.top
-        anchors.topMargin: 7
+        anchors.topMargin: units.dp(7)
         anchors.left: parent.left
         anchors.right: parent.right
 
         separator: Rectangle {
-            height: 1
+            height: units.dp(1)
             color: "white"
             opacity: 0.65
         }

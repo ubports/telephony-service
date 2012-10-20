@@ -32,8 +32,8 @@ AbstractButton {
         id: current
 
         anchors.fill: parent
-        anchors.leftMargin: 10
-        anchors.rightMargin: 10
+        anchors.leftMargin: units.dp(10)
+        anchors.rightMargin: units.dp(10)
 
         TextCustom {
             id: currentText
@@ -41,7 +41,7 @@ AbstractButton {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.right: expander.left
-            anchors.rightMargin: 10
+            anchors.rightMargin: units.dp(10)
             elide: Text.ElideRight
             fontSize: "small"
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
@@ -58,7 +58,7 @@ AbstractButton {
 
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            width: 8
+            width: units.dp(8)
             source: chooser.opened ? "../assets/edit_contact_dropup_arrow.png" : "../assets/edit_contact_dropdown_arrow.png"
         }
     }
@@ -67,7 +67,7 @@ AbstractButton {
         id: optionsPositioner
 
         anchors.left: parent.left
-        anchors.leftMargin: -1
+        anchors.leftMargin: units.dp(-1)
         anchors.right: parent.right
         anchors.top: current.bottom
     }
@@ -99,7 +99,7 @@ AbstractButton {
             delegate: AbstractButton {
                 anchors.left: (parent) ? parent.left : undefined
                 anchors.right: (parent) ? parent.right : undefined
-                height: (opacity == 0.0) ? 0 : optionText.paintedHeight + 20
+                height: (opacity == 0.0) ? 0 : optionText.paintedHeight + units.dp(20)
                 opacity: (optionText == currentText.text) ? 0.0 : 1.0
 
                 onClicked: {
@@ -112,7 +112,7 @@ AbstractButton {
 
                     source: "../assets/combobox_item.png"
                     anchors.fill: parent
-                    border {top: 0; right: 2; bottom: 2; left: 3}
+                    border {top: 0; right: units.dp(2); bottom: units.dp(2); left: units.dp(3)}
                 }
 
                 TextCustom {
@@ -121,7 +121,7 @@ AbstractButton {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: 15
+                    anchors.margins: units.dp(15)
                     fontSize: "small"
                     elide: Text.ElideRight
                     color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
@@ -138,7 +138,7 @@ AbstractButton {
             anchors.left: parent.left
             anchors.right: parent.right
             source: "../assets/combobox_bottom_shadow.png"
-            border {top: 0; right: 0; bottom: 2; left: 2}
+            border {top: 0; right: 0; bottom: units.dp(2); left: units.dp(2)}
         }
     }
 }

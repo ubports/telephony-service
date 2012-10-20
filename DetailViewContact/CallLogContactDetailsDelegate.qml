@@ -37,7 +37,7 @@ BaseContactDetailsDelegate {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: time.left
-            anchors.rightMargin: 10
+            anchors.rightMargin: units.dp(10)
             fontSize: "small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
@@ -51,7 +51,7 @@ BaseContactDetailsDelegate {
 
             anchors.top: parent.top
             anchors.right: indicators.left
-            anchors.rightMargin: 10
+            anchors.rightMargin: units.dp(10)
             fontSize: "small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
@@ -64,7 +64,7 @@ BaseContactDetailsDelegate {
             id: indicators
 
             anchors.right: parent.right
-            anchors.rightMargin: 5
+            anchors.rightMargin: units.dp(5)
             anchors.bottom: time.baseline
 
             Image {

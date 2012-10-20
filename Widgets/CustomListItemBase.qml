@@ -4,7 +4,7 @@ import Ubuntu.Components 0.1
 AbstractButton {
     id: listItem
 
-    width: 250
+    width: units.dp(250)
 
     property bool isIcon: false
     property alias iconSource: icon.source
@@ -13,7 +13,7 @@ AbstractButton {
     property alias subtext: sublabel.text
     property bool selected: false
     property bool textBold: false
-    property int padding: 10
+    property int padding: units.dp(10)
 
     property bool __hasSubLabel: subtext != ""
     property color __textColor: (selected || textBold) ? "#f37505" : Qt.rgba(0.4, 0.4, 0.4, 1.0)
@@ -28,14 +28,14 @@ AbstractButton {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.left: parent.left
-            width: 54
+            width: units.dp(54)
 
             FramedImage {
                 id: icon
 
                 anchors.centerIn: parent
-                anchors.verticalCenterOffset: 1
-                width: listItem.isIcon ? 16 : 38
+                anchors.verticalCenterOffset: units.dp(1)
+                width: listItem.isIcon ? units.dp(16) : units.dp(38)
                 height: width
                 fallbackSource: listItem.placeholderIconSource
                 frameVisible: !listItem.isIcon
@@ -49,9 +49,9 @@ AbstractButton {
             property bool centered: !listItem.__hasSubLabel
 
             anchors.top: !centered ? parent.top : undefined
-            anchors.topMargin: !centered ? listItem.padding - 3 : 0
+            anchors.topMargin: !centered ? listItem.padding - units.dp(3) : 0
             anchors.left: iconContainer.right
-            anchors.leftMargin: 1
+            anchors.leftMargin: units.dp(1)
             anchors.right: parent.right
             anchors.rightMargin: listItem.padding
             anchors.verticalCenter: centered ? parent.verticalCenter : undefined
@@ -71,7 +71,7 @@ AbstractButton {
             anchors.left: label.left
             anchors.leftMargin: label.anchors.leftMargin
             anchors.top: label.bottom
-            anchors.topMargin: 1
+            anchors.topMargin: units.dp(1)
             anchors.right: parent.right
             anchors.rightMargin: listItem.padding
             fontSize: "small"

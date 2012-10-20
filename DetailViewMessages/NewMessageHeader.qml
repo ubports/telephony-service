@@ -16,11 +16,11 @@ BaseMessageHeader {
 
         anchors {
             left: parent.left
-            leftMargin: 10
+            leftMargin: units.dp(10)
             right: parent.right
-            rightMargin: 10
+            rightMargin: units.dp(10)
             verticalCenter: parent.verticalCenter
-            verticalCenterOffset: -1
+            verticalCenterOffset: units.dp(-1)
         }
         leftIconSource: "../assets/empty.png"
         onLeftIconClicked: text = ""
@@ -45,7 +45,7 @@ BaseMessageHeader {
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
-                leftMargin: 10
+                leftMargin: units.dp(10)
             }
         }
     }
