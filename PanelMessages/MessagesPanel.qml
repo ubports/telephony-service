@@ -1,10 +1,12 @@
 import QtQuick 2.0
 import TelephonyApp 0.1
+import "../Widgets" as LocalWidgets
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components 0.1
 
-Item {
+LocalWidgets.TelephonyPage {
     id: messageList
+    title: "Conversations"
 
     anchors.fill: parent
 
