@@ -18,5 +18,5 @@ import Ubuntu.Components 0.1
 
 // define a source property to hold the source URL that was used to create this page
 Page {
-    property string source: undefined
+    property string source
 }

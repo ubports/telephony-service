@@ -44,34 +44,16 @@ Item {
         onContactLoaded: telephony.showContactDetails(contact);
     }
 
-    function switchToCalls() {
-        if (singlePane) 
-            tabs.selectedTabIndex = 0
-    }
-
-    function switchToMessages() {
-        if (singlePane) 
-            tabs.selectedTabIndex = 1
-    }
-
-    function switchToContacts() {
-        if (singlePane) 
-            tabs.selectedTabIndex = 2
-    }
-
-
     function showLiveCall(clear) {
         if (clear) {
             resetView();
         }
 
-        switchToCalls();
         liveCall.load()
     }
 
     function showVoicemail() {
         resetView();
-        switchToCalls();
         voicemail.load()
     }
 
@@ -84,7 +66,6 @@ Item {
     }
 
     function callNumber(number) {
-        switchToCalls();
         callManager.startCall(number);
     }
 
@@ -97,8 +78,6 @@ Item {
             resetView();
         }
         
-        switchToMessages();
-
         messages.load(properties);
     }
 
@@ -114,8 +93,6 @@ Item {
             resetView();
         }
 
-        switchToContacts();
-
         contactDetails.load(properties)
     }
 
@@ -126,8 +103,6 @@ Item {
     function createNewContact() {
         resetView();
 
-        switchToContacts();
-
         contactDetails.load()
         view.createNewContact()
     }
@@ -135,23 +110,17 @@ Item {
     function startNewMessage() {
         resetView();
 
-        switchToMessages();
-
         messages.load({ newMessage: true })
     }
 
     function showKeypad() {
         resetView();
 
-        switchToCalls();
-
         keypad.load()
     }
 
     function showCallLog() {
         resetView();
-
-        switchToCalls();
 
         callLog.load()
     }

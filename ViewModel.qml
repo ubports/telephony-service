@@ -26,6 +26,7 @@ QtObject {
             properties = {};
         }
         properties["source"] = source;
+        telephony.selectedTabIndex = tab
         telephony.viewStack.push(Qt.resolvedUrl(source), properties);
     }
 }
