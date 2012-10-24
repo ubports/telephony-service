@@ -194,3 +194,13 @@ void TelephonyApplication::onMessageReceived(const QString &message)
         m_arg = message;
     }
 }
+
+void TelephonyApplication::activateWindow()
+{
+    if (m_view) {
+        m_view->setWindowState(Qt::WindowState(m_view->windowState() & ~Qt::WindowMinimized));
+        m_view->raise();
+        m_view->requestActivateWindow();
+    }
+}
+
