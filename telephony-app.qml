@@ -82,8 +82,9 @@ Item {
     }
 
     function endCall() {
-        if (liveCall.loaded) {
-            viewStack.pop();
+        var callStack = rightPaneStacks.children[liveCall.tab]
+        if (callStack.currentPage.source == liveCall.source) {
+            callStack.pop();
         }
     }
 
