@@ -36,7 +36,7 @@ include_directories(
 
 add_library(telephony-qml SHARED ${plugin_SRCS} ${plugin_HDRS})
 
-qt5_use_modules(telephony-qml Contacts Core Qml Quick)
+qt5_use_modules(telephony-qml Contacts Core Qml Quick Versit)
 
 target_link_libraries(telephony-qml
     ${TP_QT5_LIBRARIES}
