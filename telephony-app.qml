@@ -103,26 +103,22 @@ Item {
 
     function createNewContact() {
         resetView();
-
         contactDetails.load()
         view.createNewContact()
     }
 
     function startNewMessage() {
         resetView();
-
         messages.load({ newMessage: true })
     }
 
     function showKeypad() {
         resetView();
-
         keypad.load()
     }
 
     function showCallLog() {
         resetView();
-
         callLog.load()
     }
 
