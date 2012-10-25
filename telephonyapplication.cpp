@@ -194,3 +194,12 @@ void TelephonyApplication::onMessageReceived(const QString &message)
         m_arg = message;
     }
 }
+
+void TelephonyApplication::activateWindow()
+{
+    if (m_view) {
+        m_view->raise();
+        m_view->requestActivateWindow();
+    }
+}
+
