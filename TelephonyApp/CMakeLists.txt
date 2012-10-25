@@ -13,6 +13,8 @@ set(plugin_SRCS
     contactonlineaccount.cpp
     contactphonenumber.cpp
     contactproxymodel.cpp
+    conversationfeeditem.cpp
+    conversationfeedmodel.cpp
     components.cpp
     channelhandler.cpp
     channelobserver.cpp
