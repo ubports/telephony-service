@@ -1,0 +1,105 @@
+BEGIN:VCARD
+VERSION:3.0
+FN:Aaron Gates
+N:Gates;Aaron;;;
+NICKNAME:Aaron nickname
+EMAIL;TYPE=INTERNET:aaron@example.com
+EMAIL;TYPE=INTERNET:aaron_extra@example.com
+TEL;TYPE=WORK:33333
+TEL;TYPE=HOME:333331
+TEL;TYPE=HOME;TYPE=FAX:333332
+TEL;TYPE=PAGER:333333
+TEL;TYPE=CELL:333334
+ADR;WORK;POSTAL;CHARSET=UTF-8:PO Box;Extended Address;Work Street Address;Work Locality(Town);Work Region(State);Work Post Code;Work Country;Work City;Work State;Work PostCode;Work Country
+ADR;HOME;POSTAL;CHARSET=UTF-8:PO Box;Extended Address;Home Street Address;Home Locality(Town);Home Region(State);Home Post Code;Home Country;Work City;Work State;Work PostCode;Work Country
+LABEL;WORK;ENCODING=QUOTED-PRINTABLE:BusinessOffice=0D=0A=0D=0A,  =0D=0A
+LABEL;HOME;ENCODING=QUOTED-PRINTABLE:=0D=0A,  =0D=0A
+ORG:Example
+TITLE:Engineer
+BDAY:2009-01-01
+URL;TYPE=WORK:http://qt.nokia.com/logo.png
+URL;TYPE=HOME:http://qt.nokia.com/logo.png
+NOTE:Some notes are here
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Alexander Mcdonald
+N:Mcdonald;Alexander;;;
+EMAIL;TYPE=INTERNET:alex@example.com
+TEL;TYPE=WORK:111111111
+ADR;TYPE=WORK;POSTAL;CHARSET=UTF-8:PO Box;Extended Address;Work Street Address;Work Locality(Town);Work Region(State);Work Post Code;Work Country;Work City;Work State;Work PostCode;Work Country
+ADR;TYPE=HOME;POSTAL;CHARSET=UTF-8:PO Box;Extended Address;Home Street Address;Home Locality(Town);Home Region(State);Home Post Code;Home Country;Work City;Work State;Work PostCode;Work Country
+ORG:Example
+TITLE:Engineer
+BDAY:2010-02-02
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Andy Clark
+N:Clark;Andy;;;
+EMAIL;TYPE=INTERNET:andy@example.com
+TEL;TYPE=WORK:07-2342322
+ORG:Example
+TITLE:Engineer
+BDAY:2011-03-03
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Bill Chilton
+N:Chilton;Bill;;;
+EMAIL;TYPE=INTERNET:bill@example.com
+TEL;TYPE=WORK:564412232
+ORG:Example
+TITLE:Manager
+BDAY:2012-04-04
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Bob Green
+N:Green;Bob;;;
+EMAIL;TYPE=INTERNET:bob@example.com
+TEL;TYPE=WORK:07-3242325
+ORG:Example
+TITLE:Engineer
+BDAY:2013-05-05
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Charles Brows
+N:Brows;Charles;;;
+EMAIL;TYPE=INTERNET:charles@example.com
+TEL;TYPE=WORK:32324534233
+ORG:Example
+TITLE:Engineer
+BDAY:2015-07-07
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:David Edie
+N:Edie;David;;;
+EMAIL;TYPE=INTERNET:david@example.com
+TEL;TYPE=WORK:(07) 3245-2323
+ORG:Example
+TITLE:Manager
+BDAY:2015-08-08
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Jason Black
+N:Black;Jason;;;
+EMAIL;TYPE=INTERNET:jason@example.com
+TEL;TYPE=WORK:33333333333
+ORG:Example
+TITLE:Engineer
+BDAY:2016-09-09
+END:VCARD
+BEGIN:VCARD
+VERSION:3.0
+FN:Carol Eden
+N:Eden;Carol;;;
+EMAIL;TYPE=INTERNET:carol@example.com
+TEL;TYPE=WORK:2323242
+ORG:Example
+TITLE:Manager
+BDAY:2014-06-06
+END:VCARD

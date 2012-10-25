@@ -29,6 +29,11 @@
 #include <QUrl>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QVersitContactImporter>
+#include <QVersitReader>
+#include "config.h"
+
+QTVERSIT_USE_NAMESPACE
 
 ContactModel *ContactModel::instance(const QString &engine)
 {
@@ -45,12 +50,31 @@ ContactModel::ContactModel(const QString &engine, QObject *parent) :
     QAbstractListModel(parent)
 {
     QString availableEngine = engine;
+    bool useFakeData = false;
     if (!QContactManager::availableManagers().contains(engine)) {
         qDebug() << "ContactModel: using memory engine as folks is not available";
         availableEngine = "memory";
+        useFakeData = true;
     }
 
     mContactManager = new QContactManager(availableEngine);
+    if (useFakeData) {
+        // load some fake contacts to have the list populated
+        QFile file(telephonyAppDirectory() + "/dummydata/example.vcf");
+        if (file.open(QIODevice::ReadOnly)) {
+            QVersitReader reader(&file);
+            reader.startReading();
+            reader.waitForFinished();
+
+            QVersitContactImporter importer;
+            if (importer.importDocuments(reader.results())) {
+                QList<QContact> contacts = importer.contacts();
+                qDebug() << contacts;
+                mContactManager->saveContacts(&contacts);
+            }
+        }
+    }
+
     QHash<int, QByteArray> roles = roleNames();
     roles[ContactRole] = "contact";
     roles[InitialRole] = "initial";

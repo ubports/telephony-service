@@ -1,10 +1,11 @@
-telephony-app (0.58.4) UNRELEASED; urgency=low
+telephony-app (0.58.4ubuntu1) UNRELEASED; urgency=low
 
   * Add a dependency on telepathy-ofono.
   * Add a wrapper that starts DBus and creates an ofono account before launching
     the app.
+  * Load the contact model with some fake contacts when using the memory backend.
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 19 Oct 2012 11:32:17 -0300
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 25 Oct 2012 12:58:20 +0200
 
 telephony-app (0.58.3) quantal; urgency=low
 
