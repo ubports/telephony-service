@@ -69,7 +69,6 @@ ContactModel::ContactModel(const QString &engine, QObject *parent) :
             QVersitContactImporter importer;
             if (importer.importDocuments(reader.results())) {
                 QList<QContact> contacts = importer.contacts();
-                qDebug() << contacts;
                 mContactManager->saveContacts(&contacts);
             }
         }
