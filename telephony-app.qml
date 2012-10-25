@@ -77,7 +77,7 @@ Item {
         if (clear) {
             resetView();
         }
-        
+
         messages.load(properties);
     }
 
