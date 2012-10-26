@@ -15,6 +15,7 @@ set(plugin_SRCS
     contactproxymodel.cpp
     conversationfeeditem.cpp
     conversationfeedmodel.cpp
+    conversationaggregatormodel.cpp
     components.cpp
     channelhandler.cpp
     channelobserver.cpp
