@@ -3,7 +3,6 @@
 set(plugin_SRCS
     abstractloggermodel.cpp
     calllogmodel.cpp
-    calllogproxymodel.cpp
     contactaddress.cpp
     contactdetail.cpp
     contactemailaddress.cpp
@@ -16,6 +15,7 @@ set(plugin_SRCS
     conversationfeeditem.cpp
     conversationfeedmodel.cpp
     conversationaggregatormodel.cpp
+    conversationproxymodel.cpp
     components.cpp
     channelhandler.cpp
     channelobserver.cpp
@@ -23,7 +23,6 @@ set(plugin_SRCS
     callentry.cpp
     callmanager.cpp
     messagelogmodel.cpp
-    messagesproxymodel.cpp
     telepathyhelper.cpp
     modelsectioncounter.cpp
     )

@@ -24,7 +24,6 @@
 #include "channelobserver.h"
 #include "chatmanager.h"
 #include "calllogmodel.h"
-#include "calllogproxymodel.h"
 #include "contactmodel.h"
 #include "contactentry.h"
 #include "contactproxymodel.h"
@@ -35,8 +34,8 @@
 #include "contactonlineaccount.h"
 #include "contactphonenumber.h"
 #include "conversationaggregatormodel.h"
+#include "conversationproxymodel.h"
 #include "messagelogmodel.h"
-#include "messagesproxymodel.h"
 #include "modelsectioncounter.h"
 
 #include <QQmlEngine>
@@ -76,9 +75,8 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mCallLogModel = new CallLogModel(this);
     mMessageLogModel = new MessageLogModel(this);
     mConversationModel = new ConversationAggregatorModel(this);
-    // TODO: uncomment once those models get ported to ConversationFeedModel
-    //mConversationModel->addFeedModel(mCallLogModel);
-    //mConversationModel->addFeedModel(mMessageLogModel);
+    mConversationModel->addFeedModel(mCallLogModel);
+    mConversationModel->addFeedModel(mMessageLogModel);
     mRootContext->setContextProperty("conversationModel", mConversationModel);
 }
 
@@ -86,8 +84,7 @@ void Components::registerTypes(const char *uri)
 {
     // @uri TelephonyApp
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
-    qmlRegisterType<CallLogProxyModel>(uri, 0, 1, "CallLogProxyModel");
-    qmlRegisterType<MessagesProxyModel>(uri, 0, 1, "MessagesProxyModel");
+    qmlRegisterType<ConversationProxyModel>(uri, 0, 1, "ConversationProxyModel");
     qmlRegisterType<ContactEntry>(uri, 0, 1, "ContactEntry");
     qmlRegisterType<ContactProxyModel>(uri, 0, 1, "ContactProxyModel");
     qmlRegisterType<ContactDetail>(uri, 0, 1, "ContactDetail");

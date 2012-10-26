@@ -17,59 +17,69 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MESSAGESPROXYMODEL_H
-#define MESSAGESPROXYMODEL_H
+#ifndef CONVERSATIONPROXYMODEL_H
+#define CONVERSATIONPROXYMODEL_H
 
 #include <QSortFilterProxyModel>
 #include "messagelogmodel.h"
 
-class MessagesProxyModel : public QSortFilterProxyModel
+class ConversationGroup {
+public:
+    QMap<QString, int> eventCount;
+    QDateTime latestTime;
+    int displayedRow;
+};
+
+class ConversationProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
     Q_PROPERTY(bool ascending
                READ ascending
                WRITE setAscending
                NOTIFY ascendingChanged)
-    Q_PROPERTY(QObject *messagesModel
-               READ messagesModel
-               WRITE setMessagesModel
-               NOTIFY messagesModelChanged)
+    Q_PROPERTY(QObject *conversationModel
+               READ conversationModel
+               WRITE setConversationModel
+               NOTIFY conversationModelChanged)
     Q_PROPERTY (QString searchString
                 READ searchString
                 WRITE setSearchString
                 NOTIFY searchStringChanged)
-    Q_PROPERTY(QString phoneNumber
-               READ phoneNumber
-               WRITE setPhoneNumber
-               NOTIFY phoneNumberChanged)
-    Q_PROPERTY(bool onlyLatest
-               READ onlyLatest
-               WRITE setOnlyLatest
-               NOTIFY onlyLatestChanged)
+    Q_PROPERTY(QString filterValue
+               READ filterValue
+               WRITE setFilterValue
+               NOTIFY filterValueChanged)
+    Q_PROPERTY(QString filterProperty
+               READ filterProperty
+               WRITE setFilterProperty
+               NOTIFY filterPropertyChanged)
+    Q_PROPERTY(bool grouped
+               READ grouped
+               WRITE setGrouped
+               NOTIFY groupedChanged)
 
     Q_ENUMS(ModelRoles)
 
 public:
-    enum ModelRoles {
-        UnreadCount = MessageLogModel::LastMessageRole
-    };
+    explicit ConversationProxyModel(QObject *parent = 0);
 
-    explicit MessagesProxyModel(QObject *parent = 0);
+    QString filterValue() const;
+    void setFilterValue(const QString &value);
 
-    QString phoneNumber() const;
-    void setPhoneNumber(const QString &value);
+    QString filterProperty() const;
+    void setFilterProperty(const QString &value);
 
     bool ascending() const;
     void setAscending(bool value);
 
-    QObject *messagesModel() const;
-    void setMessagesModel(QObject *value);
+    QObject *conversationModel() const;
+    void setConversationModel(QObject *value);
 
     QString searchString() const;
     void setSearchString(QString value);
 
-    bool onlyLatest() const;
-    void setOnlyLatest(bool value);
+    bool grouped() const;
+    void setGrouped(bool value);
 
     void updateSorting();
 
@@ -80,22 +90,23 @@ private Q_SLOTS:
 
 Q_SIGNALS:
     void ascendingChanged();
-    void messagesModelChanged();
+    void conversationModelChanged();
     void searchStringChanged();
-    void phoneNumberChanged();
-    void onlyLatestChanged();
+    void filterValueChanged();
+    void filterPropertyChanged();
+    void groupedChanged();
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 
-protected Q_SLOTS:
-    void onUnreadMessagesChanged(const QString &number);
-
 private:
     bool mAscending;
     QString mSearchString;
-    QString mPhoneNumber;
-    bool mOnlyLatest;
+    QString mFilterValue;
+    QString mFilterProperty;
+    bool mGrouped;
+
+    QMap<QString, QMap<QString, ConversationGroup> > mGroupedEntries;
 };
 
-#endif // MESSAGESPROXYMODEL_H
+#endif // CONVERSATIONPROXYMODEL_H

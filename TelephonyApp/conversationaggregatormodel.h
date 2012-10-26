@@ -39,7 +39,9 @@ public:
     QModelIndex mapFromSource(const QModelIndex &index) const;
     QModelIndex mapToSource(const QModelIndex &index) const;
 
-    bool matchesSearch(const QString &searchTerm, const QModelIndex &index);
+    QString itemType(const QModelIndex &index) const;
+    bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
+    QString groupingKeyForIndex(const QModelIndex &index) const;
 
 private Q_SLOTS:
     void updateOffsets();

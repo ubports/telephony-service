@@ -22,15 +22,6 @@
 ConversationFeedModel::ConversationFeedModel(QObject *parent) :
     QAbstractListModel(parent)
 {
-    QHash<int, QByteArray> roles = roleNames();
-    roles[ContactId] = "contactId";
-    roles[ContactAlias] = "contactAlias";
-    roles[ContactAvatar] = "contactAvatar";
-    roles[Timestamp] = "timestamp";
-    roles[Incoming] = "incoming";
-    roles[ItemType] = "itemType";
-    roles[FeedItem] = "item";
-    setRoleNames(roles);
 }
 
 ConversationFeedModel::DisplayStrategy ConversationFeedModel::displayStrategy() const

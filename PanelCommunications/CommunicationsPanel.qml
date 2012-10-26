@@ -59,12 +59,12 @@ Item {
         }
     }
 
-    MessagesProxyModel {
-        id: messagesProxyModel
-        messagesModel: messageLogModel
+    ConversationProxyModel {
+        id: conversationProxyModel
+        conversationModel: conversationModel
         searchString: search.text
         ascending: false
-        onlyLatest: true
+        grouped: true
     }
 
     CommunicationsList {

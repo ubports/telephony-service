@@ -23,6 +23,15 @@
 ConversationAggregatorModel::ConversationAggregatorModel(QObject *parent) :
     QAbstractListModel(parent), mRowCount(0)
 {
+    QHash<int, QByteArray> roles = roleNames();
+    roles[ConversationFeedModel::ContactId] = "contactId";
+    roles[ConversationFeedModel::ContactAlias] = "contactAlias";
+    roles[ConversationFeedModel::ContactAvatar] = "contactAvatar";
+    roles[ConversationFeedModel::Timestamp] = "timestamp";
+    roles[ConversationFeedModel::Incoming] = "incoming";
+    roles[ConversationFeedModel::ItemType] = "itemType";
+    roles[ConversationFeedModel::FeedItem] = "item";
+    setRoleNames(roles);
 }
 
 void ConversationAggregatorModel::addFeedModel(ConversationFeedModel *model)
@@ -101,14 +110,16 @@ QModelIndex ConversationAggregatorModel::mapFromSource(const QModelIndex &index)
 QModelIndex ConversationAggregatorModel::mapToSource(const QModelIndex &index) const
 {
     ConversationFeedModel *model = static_cast<ConversationFeedModel*>(index.internalPointer());
-    if (!model) {
-        return QModelIndex();
-    }
-
     return model->index(index.row() - mModelOffsets[model]);
 }
 
-bool ConversationAggregatorModel::matchesSearch(const QString &searchTerm, const QModelIndex &index)
+QString ConversationAggregatorModel::itemType(const QModelIndex &index) const
+{
+    ConversationFeedModel *model = static_cast<ConversationFeedModel*>(index.internalPointer());
+    return model->itemType(mapToSource(index));
+}
+
+bool ConversationAggregatorModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
 {
     QModelIndex sourceIndex = mapToSource(index);
     if (!sourceIndex.isValid()) {
@@ -117,6 +128,12 @@ bool ConversationAggregatorModel::matchesSearch(const QString &searchTerm, const
 
     ConversationFeedModel *model = static_cast<ConversationFeedModel*>(index.internalPointer());
     return model->matchesSearch(searchTerm, index);
+}
+
+QString ConversationAggregatorModel::groupingKeyForIndex(const QModelIndex &index) const
+{
+    ConversationFeedModel *model = static_cast<ConversationFeedModel*>(index.internalPointer());
+    return model->groupingKeyForIndex(mapToSource(index));
 }
 
 void ConversationAggregatorModel::updateOffsets()

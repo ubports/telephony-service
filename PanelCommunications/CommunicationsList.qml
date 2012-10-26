@@ -56,14 +56,14 @@ Item {
         clip: true
         delegate: Loader {
             id: communicationsDelegate
-            /*source: {
+            source: {
                 switch (itemType) {
                 case "message":
                     return messageComponent;
                 case "call":
                     return callLogComponent;
                 }
-            }*/
+            }
         }
     }
 
