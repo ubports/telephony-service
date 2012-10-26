@@ -17,6 +17,15 @@ LocalWidgets.TelephonyPage {
 
     title: "On Call"
 
+    Component.onDestruction: {
+        // if this view was destroyed but we still have
+        // active calls, then it means it was manually removed
+        // from the stack
+        if (previousTab != -1 && callManager.hasCalls) {
+            telephony.selectedTabIndex = previousTab
+        }
+    }
+
     function endCall() {
         if (call) {
             call.endCall();
@@ -32,6 +41,9 @@ LocalWidgets.TelephonyPage {
         target: callManager
         onCallEnded: {
             if (!callManager.hasCalls) {
+                if (liveCall.visible && liveCall.previousTab != -1) {
+                    telephony.selectedTabIndex = liveCall.previousTab
+                }
                 telephony.endCall();
             }
         }

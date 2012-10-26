@@ -3,8 +3,9 @@ import TelephonyApp 0.1
 import "../Widgets" as LocalWidgets
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
-Item {
+LocalWidgets.TelephonyPage {
     id: contactsPanel
+    title: "Calls"
     anchors.fill: parent
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact)

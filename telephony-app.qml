@@ -44,41 +44,6 @@ Item {
         onContactLoaded: telephony.showContactDetails(contact);
     }
 
-    states: [
-        State {
-            name: "dualPane"
-
-            PropertyChanges {
-                target: leftPane
-                parent: telephony
-                width: 250
-            }
-
-            StateChangeScript {
-                script: {
-                    mainStack.clear();
-                }
-            }
-        },
-
-        State {
-            name: "singlePane"
-
-            PropertyChanges {
-                target: leftPane
-                parent: singlePanePage
-                width: 250
-            }
-
-            StateChangeScript {
-                script: {
-                    mainStack.clear();
-                    mainStack.push(singlePanePage);
-                }
-            }
-        }
-    ]
-
     function showLiveCall(clear) {
         if (clear) {
             resetView();
@@ -117,8 +82,9 @@ Item {
     }
 
     function endCall() {
-        if (liveCall.loaded) {
-            viewStack.pop();
+        var callStack = rightPaneStacks.children[liveCall.tab]
+        if (callStack.currentPage.source == liveCall.source) {
+            callStack.pop();
         }
     }
 
@@ -166,15 +132,33 @@ Item {
         }
     }
 
-    PageStack {
-        id: mainStack
-        anchors.fill: parent
-        visible: singlePane
-    }
+    Tabs {
+        id: tabs
+        anchors.topMargin: 7
+        anchors.fill: leftPane
+        parent: leftPane
+        buttonsExpanded: true
 
-    Page {
-        id: singlePanePage
-        title: "Telephony"
+        Tab {
+            iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
+            page: singlePane ? undefined : Qt.resolvedUrl(panel)
+            property string pane: "Panes/CallEndedPane.qml"
+            property string panel: "PanelCalls/CallPanel.qml"
+        }
+
+        Tab {
+            iconSource: (tabs.selectedTabIndex != 1) ? "assets/tab_icon_messaging_inactive.png" : "assets/tab_icon_messaging_active.png"
+            page: singlePane ? undefined : Qt.resolvedUrl(panel)
+            property string pane: "Panes/SelectMessagePane.qml"
+            property string panel: "PanelMessages/MessagesPanel.qml"
+        }
+
+        Tab {
+            iconSource: (tabs.selectedTabIndex != 2) ? "assets/tab_icon_contacts_inactive.png" : "assets/tab_icon_contacts_active.png"
+            page: singlePane ? undefined : Qt.resolvedUrl(panel)
+            property string pane: "Panes/SelectContactPane.qml"
+            property string panel: "PanelContacts/ContactsPanel.qml"
+        }
     }
 
     Item {
@@ -192,34 +176,6 @@ Item {
             anchors.fill: parent
             source: "assets/noise_tile.png"
             fillMode: Image.Tile
-        }
-
-        Tabs {
-            id: tabs
-            anchors.top: parent.top
-            anchors.topMargin: 7
-            anchors.bottom: leftPane.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            buttonsExpanded: true
-
-            Tab {
-                iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
-                page: Qt.resolvedUrl("PanelCalls/CallPanel.qml")
-                property string pane: "Panes/CallEndedPane.qml"
-            }
-
-            Tab {
-                iconSource: (tabs.selectedTabIndex != 1) ? "assets/tab_icon_messaging_inactive.png" : "assets/tab_icon_messaging_active.png"
-                page: Qt.resolvedUrl("PanelMessages/MessagesPanel.qml")
-                property string pane: "Panes/SelectMessagePane.qml"
-            }
-
-            Tab {
-                iconSource: (tabs.selectedTabIndex != 2) ? "assets/tab_icon_contacts_inactive.png" : "assets/tab_icon_contacts_active.png"
-                page: Qt.resolvedUrl("PanelContacts/ContactsPanel.qml")
-                property string pane: "Panes/SelectContactPane.qml"
-            }
         }
 
         Rectangle {
@@ -259,36 +215,23 @@ Item {
     }
 
     Item {
-        id: rightPane
-        anchors.left: leftPane.right
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        visible: !singlePane
+        id: rightPaneStacks
 
-        Rectangle {
-            anchors.fill: parent
-            color: "#ebebeb"
-        }
+        property variant currentStack: children[tabs.selectedTabIndex]
+        property variant currentItem: (currentStack != undefined ? currentStack.currentPage : undefined)
+        anchors.fill: parent
+        parent: singlePane ? tabs.children[tabs.selectedTabIndex] : rightPane
 
         /* Instantiate a PageStack per tab and keep its loaded content alive.
            That makes the application stateful.
            Ref.: https://bugs.launchpad.net/newyork/+bug/1017659
         */
-        Item {
-            id: rightPaneStacks
-
-            property variant currentStack: singlePane ? mainStack : children[tabs.selectedTabIndex]
-            property variant currentItem: singlePane ? mainStack.currentPage :
-                                                       (currentStack != undefined ? currentStack.currentPage : undefined)
-            anchors.fill: parent
-        }
 
         Repeater {
             model: tabs.children
             delegate: PageStack {
                 id: stack
-                property string source: modelData.pane
+                property string source: singlePane ? modelData.panel : modelData.pane
                 property bool isCurrent: index == tabs.selectedTabIndex
                 anchors.fill: parent
                 visible: isCurrent
@@ -300,7 +243,20 @@ Item {
                     stack.push(Qt.resolvedUrl(source))
                 }
             }
-            onItemAdded: item.parent = rightPaneStacks
+        }
+    }
+
+    Item {
+        id: rightPane
+        anchors.left: leftPane.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        visible: !singlePane
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#ebebeb"
         }
 
         Image {
