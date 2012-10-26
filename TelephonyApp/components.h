@@ -31,6 +31,7 @@ class ChannelObserver;
 class CallLogModel;
 class MessageLogModel;
 class ContactModel;
+class ConversationAggregatorModel;
 
 class Components : public QQmlExtensionPlugin
 {
@@ -46,6 +47,7 @@ private Q_SLOTS:
 
 private:
     QQmlContext *mRootContext;
+    ConversationAggregatorModel *mConversationModel;
     CallLogModel *mCallLogModel;
     MessageLogModel *mMessageLogModel;
 };

@@ -211,7 +211,7 @@ Item {
 
             Tab {
                 iconSource: (tabs.selectedTabIndex != 1) ? "assets/tab_icon_messaging_inactive.png" : "assets/tab_icon_messaging_active.png"
-                page: Qt.resolvedUrl("PanelMessages/MessagesPanel.qml")
+                page: Qt.resolvedUrl("PanelCommunications/CommunicationsPanel.qml")
                 property string pane: "Panes/SelectMessagePane.qml"
             }
 

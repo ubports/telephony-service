@@ -83,7 +83,7 @@ set(QML_DIRS
     LiveCallDetailView
     PanelCalls
     PanelContacts
-    PanelMessages
+    PanelCommunications
     Panes
     Widgets
     )

@@ -34,6 +34,7 @@
 #include "contactname.h"
 #include "contactonlineaccount.h"
 #include "contactphonenumber.h"
+#include "conversationaggregatormodel.h"
 #include "messagelogmodel.h"
 #include "messagesproxymodel.h"
 #include "modelsectioncounter.h"
@@ -73,9 +74,12 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("contactModel", ContactModel::instance());
 
     mCallLogModel = new CallLogModel(this);
-    mRootContext->setContextProperty("callLogModel", mCallLogModel);
     mMessageLogModel = new MessageLogModel(this);
-    mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
+    mConversationModel = new ConversationAggregatorModel(this);
+    // TODO: uncomment once those models get ported to ConversationFeedModel
+    //mConversationModel->addFeedModel(mCallLogModel);
+    //mConversationModel->addFeedModel(mMessageLogModel);
+    mRootContext->setContextProperty("conversationModel", mConversationModel);
 }
 
 void Components::registerTypes(const char *uri)
