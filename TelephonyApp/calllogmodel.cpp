@@ -118,5 +118,6 @@ bool CallLogModel::matchesSearch(const QString &searchTerm, const QModelIndex &i
 
 QString CallLogModel::itemType(const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     return "call";
 }

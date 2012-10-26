@@ -216,5 +216,6 @@ bool MessageLogModel::matchesSearch(const QString &searchTerm, const QModelIndex
 
 QString MessageLogModel::itemType(const QModelIndex &index) const
 {
+    Q_UNUSED(index);
     return "message";
 }
