@@ -143,7 +143,6 @@ bool AbstractLoggerModel::checkNonStandardNumbers(LoggerItem *entry)
 void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
 {
     // add the events to the list
-    beginInsertRows(QModelIndex(), mItems.count(), (mItems.count() + events.count()-1));
     Q_FOREACH(Tpl::EventPtr event, events) {
         LoggerItem *entry = createEntry(event);
         if (!entry) {
@@ -167,7 +166,6 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
 
         addItem(entry);
     }
-    endInsertRows();
     Q_EMIT resetView();
 }
 
