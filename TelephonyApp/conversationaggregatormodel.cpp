@@ -63,6 +63,7 @@ void ConversationAggregatorModel::removeFeedModel(ConversationFeedModel *model)
     beginRemoveRows(QModelIndex(), offset, offset + model->rowCount() - 1);
     mModelOffsets.remove(model);
     mFeedModels.removeOne(model);
+    disconnect(model);
     endRemoveRows();
 }
 
