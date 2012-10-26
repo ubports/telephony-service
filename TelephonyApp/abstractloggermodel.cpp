@@ -174,11 +174,6 @@ void AbstractLoggerModel::appendEntry(LoggerItem *entry)
     addItem(entry);
 }
 
-void AbstractLoggerModel::clear()
-{
-    ConversationFeedModel::clear();
-}
-
 void AbstractLoggerModel::invalidateRequests()
 {
     // clear the model

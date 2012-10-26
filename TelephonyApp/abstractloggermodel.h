@@ -71,7 +71,6 @@ protected:
     void clearContactInfo(LoggerItem *entry);
     void appendEvents(const Tpl::EventPtrList &events);
     void appendEntry(LoggerItem *entry);
-    void clear();
     void invalidateRequests();
     bool validateRequest(Tpl::PendingOperation *op);
     void updateLogForContact(ContactEntry *contactEntry);
