@@ -55,9 +55,6 @@ class AbstractLoggerModel : public ConversationFeedModel
 public:
     explicit AbstractLoggerModel(QObject *parent = 0);
 
-    int rowCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
-
     virtual void populate();
 
 Q_SIGNALS:
