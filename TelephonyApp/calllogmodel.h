@@ -50,6 +50,10 @@ public:
     explicit CallLogModel(QObject *parent = 0);
 
     void populate();
+    QString itemType(const QModelIndex &index) const;
+
+    bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
+
 
 public Q_SLOTS:
     void onCallEnded(const Tp::CallChannelPtr &channel);

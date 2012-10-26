@@ -185,3 +185,36 @@ MessageLogEntry *MessageLogModel::messageById(const QString &messageId)
     return 0;
 }
 
+bool MessageLogModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
+{
+    bool foundMatch = false;
+    MessageLogEntry *entry = dynamic_cast<MessageLogEntry*>(index.data(ConversationFeedModel::FeedItem).value<MessageLogEntry*>());
+    if (!entry) {
+        return false;
+    }
+
+    QString value = entry->contactAlias();
+    if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
+        // if onlyLatest option is set, we just return one contact alias match
+        foundMatch = displayStrategy() == ShowLatestEvents ? entry->isLatest() : true;
+    }
+
+    // Test the phone number
+    value = entry->phoneNumber();
+    if (ContactModel::instance()->comparePhoneNumbers(value, searchTerm)) {
+        // if onlyLatest option is set, we just return one contact alias match
+        foundMatch = displayStrategy() == ShowLatestEvents ? entry->isLatest() : true;
+    }
+
+    // Test the message text. Even if onlyLatest is set, we return all text entries that match
+    value = entry->message();
+    if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
+        foundMatch = true;
+    }
+    return foundMatch;
+}
+
+QString MessageLogModel::itemType(const QModelIndex &index) const
+{
+    return "message";
+}

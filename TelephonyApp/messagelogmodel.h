@@ -63,6 +63,8 @@ public:
                                    const QString &messageId = QString::null);
 
     void populate();
+    QString itemType(const QModelIndex &index) const;
+    bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
 
 public Q_SLOTS:
     void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp, const QString &messageId);

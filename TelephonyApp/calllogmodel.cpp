@@ -92,3 +92,31 @@ LoggerItem *CallLogModel::createEntry(const Tpl::EventPtr &event)
     entry->setDuration(callEvent->duration());
     return entry;
 }
+
+bool CallLogModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
+{
+    CallLogEntry *entry = dynamic_cast<CallLogEntry*>(index.data(ConversationFeedModel::FeedItem).value<CallLogEntry*>());
+    if (!entry) {
+        return false;
+    }
+
+    QString value = entry->contactAlias();
+    if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
+        // if onlyLatest option is set, we just return one contact alias match
+        return true;
+    }
+
+    // Test the phone number
+    value = entry->phoneNumber();
+    if (ContactModel::instance()->comparePhoneNumbers(value, searchTerm)) {
+        // if onlyLatest option is set, we just return one contact alias match
+        return true;
+    }
+
+    return false;
+}
+
+QString CallLogModel::itemType(const QModelIndex &index) const
+{
+    return "call";
+}
