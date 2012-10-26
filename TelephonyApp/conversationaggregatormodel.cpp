@@ -21,7 +21,7 @@
 #include "conversationfeedmodel.h"
 
 ConversationAggregatorModel::ConversationAggregatorModel(QObject *parent) :
-    QAbstractListModel(parent)
+    QAbstractListModel(parent), mRowCount(0)
 {
 }
 
