@@ -49,6 +49,9 @@ void ConversationAggregatorModel::addFeedModel(ConversationFeedModel *model)
             SIGNAL(rowsRemoved(QModelIndex,int,int)),
             SLOT(onRowsRemoved(QModelIndex,int,int)));
     connect(model,
+            SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            SLOT(onDataChanged(QModelIndex,QModelIndex)));
+    connect(model,
             SIGNAL(modelReset()),
             SLOT(onModelReset()));
 }
@@ -132,6 +135,15 @@ void ConversationAggregatorModel::onRowsRemoved(const QModelIndex &parent, int s
     beginRemoveRows(QModelIndex(), start + offset, end + offset);
     updateOffsets();
     endRemoveRows();
+}
+
+void ConversationAggregatorModel::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+    if (!topLeft.isValid() || !bottomRight.isValid()) {
+        return;
+    }
+
+    Q_EMIT dataChanged(mapFromSource(topLeft), mapFromSource(bottomRight));
 }
 
 void ConversationAggregatorModel::onModelReset()

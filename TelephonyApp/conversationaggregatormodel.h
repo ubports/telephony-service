@@ -43,6 +43,7 @@ private Q_SLOTS:
     void updateOffsets();
     void onRowsInserted(const QModelIndex &parent, int start, int end);
     void onRowsRemoved(const QModelIndex &parent, int start, int end);
+    void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void onModelReset();
 
 private:
