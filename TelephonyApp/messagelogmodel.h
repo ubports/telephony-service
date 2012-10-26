@@ -22,26 +22,38 @@
 
 #include "abstractloggermodel.h"
 
-class MessageLogEntry : public LogEntry {
+class MessageLogEntry : public LoggerItem {
+    Q_OBJECT
+    Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
+    Q_PROPERTY(QString messageId READ messageId WRITE setMessageId NOTIFY messageIdChanged)
+    Q_PROPERTY(QString date READ date)
+    Q_PROPERTY(bool isLatest READ isLatest WRITE setIsLatest NOTIFY isLatestChanged)
 public:
-    QVariant data(int role) const;
-    QString message;
-    QString messageId;
-    bool isLatest;
+    void setMessage(const QString &message) { mMessage = message; Q_EMIT messageChanged(); };
+    QString message() { return mMessage; };
+
+    void setMessageId(const QString &messageId) { mMessageId = messageId; Q_EMIT messageIdChanged(); };
+    QString messageId() { return mMessageId; };
+
+    void setIsLatest(bool isLatest) { mIsLatest = isLatest; Q_EMIT isLatestChanged(); };
+    bool isLatest() { return mIsLatest; };
+
+    QString date() { return timestamp().date().toString(Qt::DefaultLocaleLongDate); };
+Q_SIGNALS:
+    void messageChanged();
+    void messageIdChanged();
+    void isLatestChanged();
+
+public:
+    QString mMessage;
+    QString mMessageId;
+    bool mIsLatest;
 };
 
 class MessageLogModel : public AbstractLoggerModel
 {
     Q_OBJECT
 public:
-    enum MessageLogRoles {
-        Message = AbstractLoggerModel::LastLogRole,
-        Date,
-        MessageId,
-        IsLatest,
-        LastMessageRole
-    };
-
     explicit MessageLogModel(QObject *parent = 0);
 
     Q_INVOKABLE void appendMessage(const QString &number,
@@ -57,7 +69,7 @@ public Q_SLOTS:
     void onMessageSent(const QString &number, const QString &message);
 
 protected:
-    LogEntry *createEntry(const Tpl::EventPtr &event);
+    MessageLogEntry *createEntry(const Tpl::EventPtr &event);
     void handleEvents(const Tpl::EventPtrList &events);
     void updateLatestMessages(const QString &phoneNumber);
     MessageLogEntry *messageById(const QString &messageId);

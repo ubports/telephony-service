@@ -23,32 +23,9 @@
 #include <TelepathyLoggerQt/TextEvent>
 #include <TelepathyLoggerQt/Entity>
 
-QVariant MessageLogEntry::data(int role) const
-{
-    switch (role) {
-    case MessageLogModel::Message:
-        return message;
-    case MessageLogModel::Date:
-        return timestamp.date().toString(Qt::DefaultLocaleLongDate);
-    case MessageLogModel::MessageId:
-        return messageId;
-    case MessageLogModel::IsLatest:
-        return isLatest;
-    default:
-        return LogEntry::data(role);
-    }
-}
-
 MessageLogModel::MessageLogModel(QObject *parent) :
     AbstractLoggerModel(parent)
 {
-    // set the role names
-    QHash<int, QByteArray> roles = roleNames();
-    roles[Message] = "message";
-    roles[Date] = "date";
-    roles[MessageId] = "messageId";
-    roles[IsLatest] = "isLatest";
-    setRoleNames(roles);
 }
 
 void MessageLogModel::appendMessage(const QString &number,
@@ -58,13 +35,13 @@ void MessageLogModel::appendMessage(const QString &number,
                                     const QString &messageId)
 {
     MessageLogEntry *entry = new MessageLogEntry();
-    entry->incoming = incoming;
-    entry->phoneNumber = number;
-    entry->message = message;
-    entry->timestamp = timestamp;
-    entry->messageId = messageId;
+    entry->setIncoming(incoming);
+    entry->setPhoneNumber(number);
+    entry->setMessage(message);
+    entry->setTimestamp(timestamp);
+    entry->setMessageId(messageId);
     // set the alias to the phone number as a fallback in case the contact is not known
-    entry->contactAlias = number;
+    entry->setContactAlias(number);
 
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
     if (contact) {
@@ -101,7 +78,7 @@ void MessageLogModel::onMessageSent(const QString &number, const QString &messag
     Q_EMIT resetView();
 }
 
-LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
+MessageLogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 {
     MessageLogEntry *entry = new MessageLogEntry();
     Tpl::TextEventPtr textEvent = event.dynamicCast<Tpl::TextEvent>();
@@ -110,9 +87,9 @@ LogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
         qWarning() << "The event" << event << "is not a Tpl::TextEvent!";
     }
 
-    entry->messageId = textEvent->messageToken();
-    entry->message = textEvent->message();
-    entry->isLatest = false;
+    entry->setMessageId(textEvent->messageToken());
+    entry->setMessage(textEvent->message());
+    entry->setIsLatest(false);
     return entry;
 }
 
@@ -162,17 +139,16 @@ void MessageLogModel::updateLatestMessages(const QString &phoneNumber)
     MessageLogEntry *latestEntry = 0;
 
     // go through the list of messages trying to find the latest one, and reset the latest flag on other items
-    Q_FOREACH (LogEntry *entry, mLogEntries) {
-        if (!ContactModel::instance()->comparePhoneNumbers(entry->phoneNumber, phoneNumber)) {
+    Q_FOREACH (ConversationFeedItem *entry, mItems) {
+        MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
+        if (!messageEntry || !ContactModel::instance()->comparePhoneNumbers(messageEntry->phoneNumber(), phoneNumber)) {
             continue;
         }
 
-        MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
-
         // reset the isLatest flag
-        if (messageEntry->isLatest) {
+        if (messageEntry->isLatest()) {
             QModelIndex index = indexFromEntry(messageEntry);
-            messageEntry->isLatest = false;
+            messageEntry->setIsLatest(false);
             Q_EMIT dataChanged(index, index);
         }
 
@@ -181,7 +157,7 @@ void MessageLogModel::updateLatestMessages(const QString &phoneNumber)
             continue;
         }
 
-        if (messageEntry->timestamp > latestEntry->timestamp) {
+        if (messageEntry->timestamp() > latestEntry->timestamp()) {
             latestEntry = messageEntry;
         }
     }
@@ -192,15 +168,16 @@ void MessageLogModel::updateLatestMessages(const QString &phoneNumber)
 
     // after finding the latest one, mark it as being so
     QModelIndex index = indexFromEntry(latestEntry);
-    latestEntry->isLatest = true;
+    latestEntry->setIsLatest(true);
     Q_EMIT dataChanged(index, index);
 }
 
 MessageLogEntry *MessageLogModel::messageById(const QString &messageId)
 {
-    Q_FOREACH(LogEntry *entry, mLogEntries) {
-        if (entry->data(MessageId).toString() == messageId) {
-            MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
+
+    Q_FOREACH(ConversationFeedItem *entry, mItems) {
+        MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
+        if (messageEntry && messageEntry->messageId() == messageId) {
             return messageEntry;
         }
     }

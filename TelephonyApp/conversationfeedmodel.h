@@ -84,6 +84,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
 protected:
+    QModelIndex indexFromEntry(ConversationFeedItem *entry) const;
     void addItem(ConversationFeedItem *item);
     void removeItem(ConversationFeedItem *item);
     void clear();

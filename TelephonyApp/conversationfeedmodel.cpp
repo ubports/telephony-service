@@ -114,3 +114,15 @@ void ConversationFeedModel::clear()
     mItems.clear();
     endRemoveRows();
 }
+
+QModelIndex ConversationFeedModel::indexFromEntry(ConversationFeedItem *entry) const
+{
+    int pos = mItems.indexOf(entry);
+    if (pos < 0) {
+        return QModelIndex();
+    }
+
+    return index(pos, 0);
+}
+
+
