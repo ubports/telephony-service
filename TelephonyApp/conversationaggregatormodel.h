@@ -39,6 +39,8 @@ public:
     QModelIndex mapFromSource(const QModelIndex &index) const;
     QModelIndex mapToSource(const QModelIndex &index) const;
 
+    bool matchesSearch(const QString &searchTerm, const QModelIndex &index);
+
 private Q_SLOTS:
     void updateOffsets();
     void onRowsInserted(const QModelIndex &parent, int start, int end);

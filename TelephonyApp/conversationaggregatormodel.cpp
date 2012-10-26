@@ -108,6 +108,17 @@ QModelIndex ConversationAggregatorModel::mapToSource(const QModelIndex &index) c
     return model->index(index.row() - mModelOffsets[model]);
 }
 
+bool ConversationAggregatorModel::matchesSearch(const QString &searchTerm, const QModelIndex &index)
+{
+    QModelIndex sourceIndex = mapToSource(index);
+    if (!sourceIndex.isValid()) {
+        return false;
+    }
+
+    ConversationFeedModel *model = static_cast<ConversationFeedModel*>(index.internalPointer());
+    return model->matchesSearch(searchTerm, index);
+}
+
 void ConversationAggregatorModel::updateOffsets()
 {
     int offset = 0;
