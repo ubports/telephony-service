@@ -6,8 +6,9 @@ import "../fontUtils.js" as Font
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
-Item {
+LocalWidgets.TelephonyPage {
     id: contactsPanel
+    title: "Contacts"
 
     property alias searchQuery : contactsSearchBox.text
 

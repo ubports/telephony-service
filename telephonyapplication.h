@@ -17,6 +17,9 @@ public:
 
     bool setup();
 
+public Q_SLOTS:
+    void activateWindow();
+
 private:
     void parseArgument(const QString &arg);
 
