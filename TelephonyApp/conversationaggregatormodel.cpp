@@ -19,6 +19,7 @@
 
 #include "conversationaggregatormodel.h"
 #include "conversationfeedmodel.h"
+#include <QDebug>
 
 ConversationAggregatorModel::ConversationAggregatorModel(QObject *parent) :
     QAbstractListModel(parent), mRowCount(0)
@@ -93,6 +94,23 @@ int ConversationAggregatorModel::rowCount(const QModelIndex &parent) const
     return mRowCount;
 }
 
+QModelIndex ConversationAggregatorModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (row < 0 || row > rowCount()) {
+        return QModelIndex();
+    }
+
+    // find the model offset
+    Q_FOREACH(ConversationFeedModel *model, mFeedModels) {
+        // check if the row is in the range of this model
+        if (row < mModelOffsets[model] + model->rowCount()) {
+            return createIndex(row, column, (void*) model);
+        }
+    }
+
+    return QModelIndex();
+}
+
 QModelIndex ConversationAggregatorModel::mapFromSource(const QModelIndex &index) const
 {
     if (!index.isValid()) {
@@ -153,6 +171,7 @@ void ConversationAggregatorModel::updateOffsets()
 
 void ConversationAggregatorModel::onRowsInserted(const QModelIndex &parent, int start, int end)
 {
+    qDebug() << "Rows inserted" << start << end;
     ConversationFeedModel *model = qobject_cast<ConversationFeedModel*>(sender());
     int offset = mModelOffsets[model];
     beginInsertRows(QModelIndex(), start + offset, end + offset);
