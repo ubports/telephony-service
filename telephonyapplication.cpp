@@ -22,7 +22,8 @@ static void printUsage(const QStringList& arguments)
              << "[call://PHONE_NUMBER]"
              << "[message://PHONE_NUMBER]"
              << "[voicemail://]"
-             << "[--dual-panel]";
+             << "[--dual-panel]"
+             << "[--single-panel]";
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
@@ -48,6 +49,11 @@ bool TelephonyApplication::setup()
     if (arguments.contains("--dual-panel")) {
         arguments.removeAll("--dual-panel");
         singlePanel = false;
+    }
+
+    if (arguments.contains("--single-panel")) {
+        arguments.removeAll("--single-panel");
+        singlePanel = true;
     }
 
     if (arguments.size() > 2) {
