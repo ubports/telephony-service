@@ -12,8 +12,8 @@ Item {
         MessageDelegate {
             id: messageDelegate
 
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors.left: parent ? parent.left : undefined
+            anchors.right: parent ? parent.right : undefined
             onClicked: {
                 var contact = contactModel.contactFromPhoneNumber(phoneNumber)
                 var id
@@ -34,8 +34,8 @@ Item {
         CallLogDelegate {
             id: callLogDelegate
 
-            anchors.left: parent.left
-            anchors.right: parent.right
+            anchors.left: parent ? parent.left : undefined 
+            anchors.right: parent ? parent.right : undefined
             onClicked: {
                 var contact = contactModel.contactFromPhoneNumber(phoneNumber)
                 var id
@@ -56,7 +56,7 @@ Item {
         clip: true
         delegate: Loader {
             id: communicationsDelegate
-            source: {
+            sourceComponent: {
                 switch (itemType) {
                 case "message":
                     return messageComponent;
