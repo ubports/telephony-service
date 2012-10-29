@@ -65,7 +65,7 @@ Item {
         id: frame
 
         property bool big: framedImage.width >= units.gu(13)
-        property int borderSize: big ? 6 : 3
+        property int borderSize: big ? units.dp(6) : units.dp(3)
 
         source: {
             if (framedImage.frameSource != "") {
