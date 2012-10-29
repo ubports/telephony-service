@@ -109,6 +109,10 @@ QModelIndex ConversationAggregatorModel::mapFromSource(const QModelIndex &index)
 
 QModelIndex ConversationAggregatorModel::mapToSource(const QModelIndex &index) const
 {
+    if (!index.isValid()) {
+        return index;
+    }
+
     ConversationFeedModel *model = static_cast<ConversationFeedModel*>(index.internalPointer());
     return model->index(index.row() - mModelOffsets[model]);
 }
