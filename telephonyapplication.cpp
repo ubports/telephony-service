@@ -89,13 +89,6 @@ bool TelephonyApplication::setup()
     m_view->setSource(source);
     m_view->show();
 
-    // FIXME: remove this once the resolution independency stuff gets in.
-    if (singlePanel) {
-        m_view->resize(720,1280);
-    } else {
-        m_view->resize(1280,1280);
-    }
-
     QObject::connect(m_dbus, SIGNAL(request(QString)), this, SLOT(onMessageReceived(QString)));
     return true;
 }
