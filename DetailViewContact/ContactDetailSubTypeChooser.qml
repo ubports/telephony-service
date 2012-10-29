@@ -32,8 +32,8 @@ AbstractButton {
         id: current
 
         anchors.fill: parent
-        anchors.leftMargin: units.dp(10)
-        anchors.rightMargin: units.dp(10)
+        anchors.leftMargin: units.gu(1)
+        anchors.rightMargin: units.gu(1)
 
         TextCustom {
             id: currentText
@@ -41,7 +41,7 @@ AbstractButton {
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.right: expander.left
-            anchors.rightMargin: units.dp(10)
+            anchors.rightMargin: units.gu(1)
             elide: Text.ElideRight
             fontSize: "small"
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
@@ -58,7 +58,7 @@ AbstractButton {
 
             anchors.verticalCenter: parent.verticalCenter
             anchors.right: parent.right
-            width: units.dp(8)
+            width: units.gu(1)
             source: chooser.opened ? "../assets/edit_contact_dropup_arrow.png" : "../assets/edit_contact_dropdown_arrow.png"
         }
     }
@@ -99,7 +99,7 @@ AbstractButton {
             delegate: AbstractButton {
                 anchors.left: (parent) ? parent.left : undefined
                 anchors.right: (parent) ? parent.right : undefined
-                height: (opacity == 0.0) ? 0 : optionText.paintedHeight + units.dp(20)
+                height: (opacity == 0.0) ? 0 : optionText.paintedHeight + units.gu(3)
                 opacity: (optionText == currentText.text) ? 0.0 : 1.0
 
                 onClicked: {
@@ -121,7 +121,7 @@ AbstractButton {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: units.dp(15)
+                    anchors.margins: units.gu(2)
                     fontSize: "small"
                     elide: Text.ElideRight
                     color: Qt.rgba(0.4, 0.4, 0.4, 1.0)

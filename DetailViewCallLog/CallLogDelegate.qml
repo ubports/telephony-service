@@ -18,7 +18,7 @@ ListItem.Base {
 
         anchors.left: parent.left
         anchors.right: separator.left
-        height: units.dp(58)
+        height: units.gu(7)
         iconSource: (avatar != "") ? avatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
@@ -31,9 +31,9 @@ ListItem.Base {
         id: timeLabel
 
         anchors.right: separator.left
-        anchors.rightMargin: units.dp(9)
+        anchors.rightMargin: units.gu(1)
         anchors.bottom: infoBox.bottom
-        anchors.bottomMargin: units.dp(3)
+        anchors.bottomMargin: units.gu(0.5)
         fontSize: "small"
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised

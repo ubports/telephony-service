@@ -24,8 +24,8 @@ AbstractButton {
     property bool selected: false
     property int corner
 
-    width: units.dp(64)
-    height: units.dp(48)
+    width: units.gu(8)
+    height: units.gu(6)
 
     BorderImage {
         anchors.fill: parent

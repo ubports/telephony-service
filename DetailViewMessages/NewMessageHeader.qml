@@ -16,9 +16,9 @@ BaseMessageHeader {
 
         anchors {
             left: parent.left
-            leftMargin: units.dp(10)
+            leftMargin: units.gu(1)
             right: parent.right
-            rightMargin: units.dp(10)
+            rightMargin: units.gu(1)
             verticalCenter: parent.verticalCenter
             verticalCenterOffset: units.dp(-1)
         }
@@ -45,7 +45,7 @@ BaseMessageHeader {
             anchors {
                 verticalCenter: parent.verticalCenter
                 left: parent.left
-                leftMargin: units.dp(10)
+                leftMargin: units.gu(1)
             }
         }
     }

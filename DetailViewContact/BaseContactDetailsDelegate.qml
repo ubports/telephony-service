@@ -97,11 +97,11 @@ FocusScope {
             id: contentBox
 
             anchors.left: parent.left
-            anchors.leftMargin: units.dp(8)
+            anchors.leftMargin: units.gu(1)
             anchors.right: readOnlySeparator.left
-            anchors.rightMargin: units.dp(7)
+            anchors.rightMargin: units.gu(1)
             anchors.top: parent.top
-            anchors.topMargin: units.dp(9)
+            anchors.topMargin: units.gu(1)
             height: childrenRect.height
 
             onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
@@ -130,7 +130,7 @@ FocusScope {
         AbstractButton {
             id: actionBox
 
-            width: units.dp(50)
+            width: units.gu(6)
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
@@ -138,7 +138,7 @@ FocusScope {
 
             Image {
                 anchors.centerIn: parent
-                width: units.dp(16)
+                width: units.gu(2)
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
 
@@ -166,9 +166,9 @@ FocusScope {
                 id: removeButton
 
                 anchors.left: parent.left
-                anchors.leftMargin: units.dp(10)
+                anchors.leftMargin: units.gu(1)
                 anchors.verticalCenter: editableContentBox.verticalCenter
-                width: units.dp(12)
+                width: units.gu(2)
                 iconSource: "../assets/edit_contact_mode_remove.png"
 
                 onClicked: {
@@ -182,8 +182,8 @@ FocusScope {
 
                 anchors.left: removeButton.right
                 anchors.right: parent.right
-                anchors.leftMargin: units.dp(5)
-                anchors.rightMargin: units.dp(5)
+                anchors.leftMargin: units.gu(0.5)
+                anchors.rightMargin: units.gu(0.5)
                 height: childrenRect.height
             }
         }
@@ -195,7 +195,7 @@ FocusScope {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            width: units.dp(90)
+            width: units.gu(11)
             detailTypeInfo: contactDetailsItem.detailTypeInfo
             detail: contactDetailsItem.detail
         }

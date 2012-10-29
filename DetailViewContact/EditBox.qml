@@ -23,7 +23,7 @@ Item {
     property alias leftBox: leftBox
     property alias rightBox: rightBox
 
-    width: units.dp(300)
+    width: units.gu(38)
     // center leftBox vertically
     height: leftBox.height + 2 * leftBox.anchors.topMargin
 
@@ -41,7 +41,7 @@ Item {
         anchors.left: parent.left
         anchors.right: separator.left
         anchors.top: parent.top
-        anchors.topMargin: units.dp(9)
+        anchors.topMargin: units.gu(1)
         height: childrenRect.height
     }
 
@@ -60,7 +60,7 @@ Item {
         id: rightBox
 
         anchors.right: parent.right
-        width: units.dp(90)
+        width: units.gu(11)
         anchors.top: parent.top
         anchors.bottom: parent.bottom
     }

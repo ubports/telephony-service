@@ -11,7 +11,7 @@ FocusScope {
 
     width: parent.width
     // ensure that there is equal padding at the top and bottom of labelBox
-    height: editable ? Math.max(labelBox.height + labelBox.anchors.topMargin * 2, units.dp(82)) : units.dp(82)
+    height: editable ? Math.max(labelBox.height + labelBox.anchors.topMargin * 2, units.gu(10)) : units.gu(10)
     Behavior on height { LocalWidgets.StandardAnimation {}}
 
     function save() {
@@ -22,10 +22,10 @@ FocusScope {
         id: icon
 
         anchors.left: parent.left
-        anchors.leftMargin: units.dp(10)
+        anchors.leftMargin: units.gu(1)
         anchors.top: parent.top
-        anchors.topMargin: units.dp(10)
-        width: units.dp(61)
+        anchors.topMargin: units.gu(1)
+        width: units.gu(8)
         height: width
         source: contact ? contact.avatar : fallbackSource
         fallbackSource: "../assets/avatar_contacts_details.png"
@@ -35,10 +35,10 @@ FocusScope {
         id: labelBox
 
         anchors.left: icon.right
-        anchors.leftMargin: units.dp(10)
+        anchors.leftMargin: units.gu(1)
         anchors.right: parent.right
         anchors.top: parent.top
-        anchors.topMargin: units.dp(10)
+        anchors.topMargin: units.gu(1)
         height: childrenRect.height
 
         NameContactDetails {

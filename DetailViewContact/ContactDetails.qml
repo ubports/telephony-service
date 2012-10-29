@@ -20,8 +20,8 @@ LocalWidgets.TelephonyPage {
     onContactChanged: editable = false
 
     title: "Contact Details"
-    width: units.dp(400)
-    height: units.dp(600)
+    width: units.gu(50)
+    height: units.gu(75)
 
     function createNewContact() {
         contact = Qt.createQmlObject("import TelephonyApp 0.1; ContactEntry {}", contactModel);
@@ -116,7 +116,7 @@ LocalWidgets.TelephonyPage {
         boundsBehavior: Flickable.StopAtBounds
         clip: true
         contentHeight: detailsList.height + bottomSeparatorLine.height +
-                       (contactDetails.editable ? newDetailChooser.height + newDetailChooser.menuHeight + units.dp(10) : callLogSection.height)
+                       (contactDetails.editable ? newDetailChooser.height + newDetailChooser.menuHeight + units.gu(1) : callLogSection.height)
 
         Column {
             id: detailsList
@@ -233,7 +233,7 @@ LocalWidgets.TelephonyPage {
 
             opacity: (editable) ? 1.0 : 0.0
             contact: (editable) ? contactDetails.contact : null
-            height: (editable) ? units.dp(32) : 0
+            height: (editable) ? units.gu(4) : 0
 
             onSelected: {
                 for (var i = 0; i < detailsList.children.length; i++) {
@@ -260,7 +260,7 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        height: units.dp(36)
+        height: units.gu(5)
 
         Rectangle {
             anchors.fill: parent
@@ -289,10 +289,10 @@ LocalWidgets.TelephonyPage {
             Button {
                 id: deleteButton
 
-                height: units.dp(27)
+                height: units.gu(3)
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.left: parent.left
-                anchors.leftMargin: units.dp(10)
+                anchors.leftMargin: units.gu(1)
                 text: "Delete"
                 opacity: (editable && !added) ? 1.0 : 0.0
 
@@ -306,10 +306,10 @@ LocalWidgets.TelephonyPage {
             Button {
                 id: cancelButton
 
-                height: units.dp(27)
+                height: units.gu(3)
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: editSaveButton.left
-                anchors.rightMargin: units.dp(10)
+                anchors.rightMargin: units.gu(1)
                 text: "Cancel"
                 opacity: (editable) ? 1.0 : 0.0
                 onClicked: {
@@ -325,10 +325,10 @@ LocalWidgets.TelephonyPage {
             Button {
                 id: editSaveButton
 
-                height: units.dp(27)
+                height: units.gu(3)
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
-                anchors.rightMargin: units.dp(10)
+                anchors.rightMargin: units.gu(1)
                 color: editable ? "#dd4f22" : "#e3e5e8"
                 text: (editable) ? "Save" : "Edit"
                 enabled: !editable || header.contactNameValid

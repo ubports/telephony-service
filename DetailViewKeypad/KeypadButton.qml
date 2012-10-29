@@ -4,8 +4,8 @@ import Ubuntu.Components 0.1
 AbstractButton {
     id: button
 
-    width: units.dp(64)
-    height: units.dp(48)
+    width: units.gu(8)
+    height: units.gu(6)
 
     property alias label: labelItem.text
     property alias sublabel: sublabelItem.text
@@ -51,7 +51,7 @@ AbstractButton {
         id: labelItem
 
         anchors.centerIn: parent
-        anchors.verticalCenterOffset: units.dp(-3)
+        anchors.verticalCenterOffset: -units.gu(0.5)
         anchors.horizontalCenterOffset: units.dp(1)
         horizontalAlignment: Text.AlignHCenter
         fontSize: "large"

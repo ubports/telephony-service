@@ -8,7 +8,7 @@ AbstractButton {
 
     property QtObject call: callManager.foregroundCall
 
-    height: units.dp(61)
+    height: units.gu(8)
 
     BorderImage {
         id: background
@@ -25,11 +25,11 @@ AbstractButton {
         id: avatar
 
         anchors.top: parent.top
-        anchors.topMargin: units.dp(13)
+        anchors.topMargin: units.gu(2)
         anchors.left: parent.left
-        anchors.leftMargin: units.dp(9)
-        width: units.dp(38)
-        height: units.dp(38)
+        anchors.leftMargin: units.gu(1)
+        width: units.gu(5)
+        height: units.gu(5)
 
         LocalWidgets.FramedImage {
             id: avatarIcon
@@ -47,16 +47,16 @@ AbstractButton {
             source: "assets/oncall_phone_icon.png"
             anchors.top: parent.top
             anchors.left: parent.left
-            anchors.topMargin: units.dp(-4)
-            anchors.leftMargin: units.dp(-6)
+            anchors.topMargin: -units.gu(0.5)
+            anchors.leftMargin: -units.dp(1)
         }
     }
 
     Column {
         anchors.left: avatar.right
-        anchors.leftMargin: units.dp(8)
+        anchors.leftMargin: units.gu(1)
         anchors.right: parent.right
-        anchors.rightMargin: units.dp(5)
+        anchors.rightMargin: units.gu(0.5)
         anchors.verticalCenter: avatar.verticalCenter
 
         TextCustom {
@@ -99,10 +99,10 @@ AbstractButton {
 
         visible: stopWatch.time > 0
         anchors.top: parent.top
-        anchors.topMargin: units.dp(19)
+        anchors.topMargin: units.gu(2)
         anchors.right: parent.right
-        anchors.rightMargin: units.dp(10)
-        height: units.dp(24)
+        anchors.rightMargin: units.gu(1)
+        height: units.gu(3)
         width: stopWatch.width
 
         BorderImage {

@@ -27,7 +27,7 @@ BaseContactDetailsDelegate {
             anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: subTypeText.left
-            anchors.rightMargin: units.dp(10)
+            anchors.rightMargin: units.gu(1)
             fontSize: "medium"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)

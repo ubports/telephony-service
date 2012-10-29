@@ -7,7 +7,7 @@ FocusScope {
 
     property alias value: input.text
 
-    height: units.dp(49)
+    height: units.gu(6)
 
     BorderImage {
         id: background
@@ -23,9 +23,9 @@ FocusScope {
         id: input
 
         anchors.left: parent.left
-        anchors.leftMargin: units.dp(19)
+        anchors.leftMargin: units.gu(2)
         anchors.right: backspace.left
-        anchors.rightMargin: units.dp(10)
+        anchors.rightMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: units.dp(1)
         height: font.pixelSize
@@ -39,7 +39,7 @@ FocusScope {
     BackspaceButton {
         id: backspace
         anchors.right: parent.right
-        anchors.rightMargin: units.dp(19)
+        anchors.rightMargin: units.gu(2)
         anchors.verticalCenter: input.verticalCenter
         onClicked:  {
             if (input.cursorPosition != 0)  {

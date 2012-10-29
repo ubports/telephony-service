@@ -26,7 +26,7 @@ Item {
 
     property bool __scrollable: contentSize > 0.0 && pageSize > 0.0 && contentSize > pageSize
 
-    width: units.dp(30)
+    width: units.gu(4)
 
     opacity: __scrollable ? 1.0 : 0.0
     Behavior on opacity {NumberAnimation {duration: 100; easing.type: Easing.InOutQuad}}
@@ -75,7 +75,7 @@ Item {
     Rectangle {
         id: slider
 
-        property int minimalHeight: units.dp(40)
+        property int minimalHeight: units.gu(5)
 
         anchors.right: parent.right
         width: units.dp(2)
@@ -101,8 +101,8 @@ Item {
         anchors.right: slider.right
         anchors.top: isThumbAboveSlider ? thumb.top : slider.bottom
         anchors.bottom: isThumbAboveSlider ? slider.top : thumb.bottom
-        anchors.topMargin: isThumbAboveSlider ? units.dp(3) : 0
-        anchors.bottomMargin: isThumbAboveSlider ? 0 : units.dp(3)
+        anchors.topMargin: isThumbAboveSlider ? units.gu(0.5) : 0
+        anchors.bottomMargin: isThumbAboveSlider ? 0 : units.gu(0.5)
 
         color: "white"
         opacity: thumb.shown ? 1.0 : 0.0
@@ -145,7 +145,7 @@ Item {
         anchors.right: parent.right
         anchors.left: thumb.left
         /* Wider target area more tolerant to mistakes */
-        anchors.leftMargin: units.dp(-2)
+        anchors.leftMargin: -units.gu(0.5)
         enabled: __scrollable
         hoverEnabled: true
         onEntered: thumb.show()

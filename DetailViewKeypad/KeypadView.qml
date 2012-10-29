@@ -20,7 +20,7 @@ LocalWidgets.TelephonyPage {
             height: childrenRect.height
 
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: units.dp(-26)
+            anchors.verticalCenterOffset: -units.gu(3)
 
             KeypadEntry {
                 id: keypadEntry
@@ -44,7 +44,7 @@ LocalWidgets.TelephonyPage {
                 id: callButton
 
                 anchors.top: keypad.bottom
-                anchors.topMargin: units.dp(16)
+                anchors.topMargin: units.gu(2)
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: telephony.callNumber(keypadEntry.value)
             }

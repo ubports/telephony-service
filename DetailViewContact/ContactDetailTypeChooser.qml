@@ -33,9 +33,9 @@ Item {
         ButtonWithForeground {
             id: addButton
             anchors.left: parent.left
-            anchors.leftMargin: units.dp(10)
+            anchors.leftMargin: units.gu(1)
             anchors.verticalCenter: parent.verticalCenter
-            width: units.dp(12)
+            width: units.gu(2)
             iconSource: "../assets/edit_contact_mode_add.png"
         }
 
@@ -43,7 +43,7 @@ Item {
             id: addText
 
             anchors.left: addButton.right
-            anchors.leftMargin: units.dp(5)
+            anchors.leftMargin: units.gu(0.5)
             anchors.verticalCenter: parent.verticalCenter
             anchors.verticalCenterOffset: units.dp(-1)
             fontSize: "x-small"
@@ -96,7 +96,7 @@ Item {
             delegate: AbstractButton {
                 anchors.left: (parent) ? parent.left : undefined
                 anchors.right: (parent) ? parent.right : undefined
-                height: optionText.paintedHeight + units.dp(20)
+                height: optionText.paintedHeight + units.gu(3)
 
                 onClicked: {
                     selected(modelData)
@@ -117,7 +117,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: units.dp(15)
+                    anchors.margins: units.gu(2)
                     fontSize: "small"
                     elide: Text.ElideRight
                     color: Qt.rgba(0.4, 0.4, 0.4, 1.0)

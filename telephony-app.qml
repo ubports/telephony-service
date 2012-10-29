@@ -5,8 +5,8 @@ import Ubuntu.Components 0.1
 Item {
     id: telephony
 
-    width: singlePane ? units.dp(360) : units.dp(640)
-    height: units.dp(640)
+    width: singlePane ? units.gu(45) : units.gu(80)
+    height: units.gu(80)
 
     state: appLayout
     property bool singlePane: state == "singlePane"
@@ -164,7 +164,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: singlePane ? parent.right : undefined
-        width: units.dp(250)
+        width: units.gu(31)
 
         Image {
             id: background

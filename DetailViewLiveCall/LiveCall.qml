@@ -86,8 +86,8 @@ LocalWidgets.TelephonyPage {
                 id: picture
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: units.dp(140)
-                height: units.dp(140)
+                width: units.gu(18)
+                height: units.gu(18)
                 source: contact ? contact.avatar : fallbackSource
                 fallbackSource: "../assets/avatar_incall_rightpane.png"
                 darkBorder: true
@@ -97,7 +97,7 @@ LocalWidgets.TelephonyPage {
                 id: name
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: units.dp(15)
+                anchors.topMargin: units.gu(2)
                 anchors.top: picture.bottom
                 text: contact ? contact.displayLabel : "Unknown Contact"
                 color: "white"
@@ -137,7 +137,7 @@ LocalWidgets.TelephonyPage {
                 id: dialing
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: units.dp(15)
+                anchors.topMargin: units.gu(2)
                 anchors.top: location.text != "" ? location.bottom : number.bottom
 
                 text: "Dialing"
@@ -153,7 +153,7 @@ LocalWidgets.TelephonyPage {
                 time: call ? call.elapsedTime : 0
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: units.dp(15)
+                anchors.topMargin: units.gu(2)
                 anchors.top: location.text != "" ? location.bottom : number.bottom
                 opacity: (call && !call.dialing) ? 1.0 : 0.0
             }
@@ -164,7 +164,7 @@ LocalWidgets.TelephonyPage {
                 visible: false
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: mainButtonsContainer.top
-                anchors.bottomMargin: units.dp(10)
+                anchors.bottomMargin: units.gu(1)
                 onKeyPressed: {
                     if (call) {
                         call.sendDTMF(label)
@@ -263,15 +263,15 @@ LocalWidgets.TelephonyPage {
 
             Row {
                 anchors.top: mainButtonsContainer.bottom
-                anchors.topMargin: units.dp(20)
+                anchors.topMargin: units.gu(3)
                 anchors.horizontalCenter: parent.horizontalCenter
-                spacing: units.dp(5)
+                spacing: units.gu(0.5)
 
                 Button {
                     id: hangupButton
 
                     iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
-                    width: units.dp(64)
+                    width: units.gu(8)
                     color: "#bf400c"
                     darkBorder: true
                     onClicked: endCall()
@@ -281,7 +281,7 @@ LocalWidgets.TelephonyPage {
                     id: addToContactsButton
 
                     iconSource: "../assets/incall_keypad_addcaller_unselected.png"
-                    width: units.dp(64)
+                    width: units.gu(8)
                     color: "#666666"
                     darkBorder: true
                 }

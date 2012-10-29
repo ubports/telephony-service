@@ -33,11 +33,11 @@ FocusScope {
         id: fields
 
         anchors.top: background.top
-        anchors.topMargin: units.dp(5)
+        anchors.topMargin: units.gu(0.5)
         anchors.left: background.left
-        anchors.leftMargin: units.dp(10)
+        anchors.leftMargin: units.gu(1)
         anchors.right: background.right
-        anchors.rightMargin: units.dp(10)
+        anchors.rightMargin: units.gu(1)
         spacing: units.dp(2)
 
         move: Transition { LocalWidgets.StandardAnimation {property: "y"}}
@@ -98,12 +98,12 @@ FocusScope {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.rightMargin: units.dp(10)
-        width: units.dp(20)
+        anchors.rightMargin: units.gu(1)
+        width: units.gu(3)
 
         Image {
             anchors.top: parent.top
-            anchors.topMargin: units.dp(10)
+            anchors.topMargin: units.gu(1)
             anchors.right: parent.right
             source: editor.expanded ? "../assets/edit_contact_dropup_arrow.png" : "../assets/edit_contact_dropdown_arrow.png"
         }

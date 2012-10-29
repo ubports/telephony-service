@@ -18,8 +18,8 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 
 Item {
-    width: units.dp(100)
-    height: units.dp(16)
+    width: units.gu(13)
+    height: units.gu(2)
 
     property alias text: label.text
 
@@ -34,7 +34,7 @@ Item {
         id: label
 
         anchors.left: parent.left
-        anchors.leftMargin: units.dp(10)
+        anchors.leftMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: units.dp(-1)
         fontSize: "x-small"

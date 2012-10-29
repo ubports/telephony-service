@@ -27,7 +27,7 @@ LocalWidgets.TelephonyPage {
         id: buttonGroup
 
         anchors.top: parent.top
-        anchors.topMargin: units.dp(7)
+        anchors.topMargin: units.gu(1)
         anchors.left: parent.left
         anchors.right: parent.right
 

@@ -2,7 +2,7 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 
 Button {
-    width: units.dp(126)
+    width: units.gu(16)
     iconSource: "../assets/call_icon.png"
     color: "#37b301"
     darkBorder: true

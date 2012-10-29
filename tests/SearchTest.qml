@@ -3,10 +3,10 @@ import Ubuntu.Components 0.1
 import ".."
 
 Rectangle {
-    width: units.dp(200)
-    height: units.dp(400)
+    width: units.gu(25)
+    height: units.gu(50)
     ContactsSearchCombo {
-        width: units.dp(200)
-        height: units.dp(30)
+        width: units.gu(25)
+        height: units.gu(4)
     }
 }

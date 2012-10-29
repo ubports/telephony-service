@@ -9,7 +9,7 @@ FocusScope {
     property alias model: searchView.model
     property alias delegate: searchView.delegate
     property alias count: searchView.count
-    property int listMaximumHeight: units.dp(400)
+    property int listMaximumHeight: units.gu(50)
     property alias text: entry.text
     property int currentIndex: -1
     property alias hint: entry.hint

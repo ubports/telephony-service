@@ -23,8 +23,8 @@ Item {
 
     property alias imageSource: image.source
     property bool mirrored: false
-    property int maximumWidth: units.dp(400)
-    property int maximumHeight: units.dp(200)
+    property int maximumWidth: units.gu(50)
+    property int maximumHeight: units.gu(25)
 
     width: bubble.width
     height: bubble.height
@@ -51,10 +51,10 @@ Item {
     BorderImage {
         id: bubble
 
-        property int topPadding: units.dp(5)
-        property int bottomPadding: units.dp(6)
-        property int leftPadding: messageBubble.mirrored ? units.dp(6) : units.dp(14)
-        property int rightPadding: messageBubble.mirrored ? units.dp(14) : units.dp(6)
+        property int topPadding: units.gu(0.5)
+        property int bottomPadding: units.gu(1)
+        property int leftPadding: messageBubble.mirrored ? units.gu(1) : units.gu(2)
+        property int rightPadding: messageBubble.mirrored ? units.gu(2) : units.gu(1)
 
         width: image.paintedWidth + leftPadding + rightPadding
         height: image.paintedHeight + topPadding + bottomPadding
