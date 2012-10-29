@@ -24,8 +24,8 @@ AbstractButton {
     property bool selected: false
     property int corner
 
-    width: 64
-    height: 48
+    width: units.gu(8)
+    height: units.gu(6)
 
     BorderImage {
         anchors.fill: parent
@@ -44,7 +44,7 @@ AbstractButton {
                 return ""
             }
         }
-        border {right: 14; left: 14; top: 10; bottom: 10}
+        border {right: units.dp(14); left: units.dp(14); top: units.dp(10); bottom: units.dp(10)}
         horizontalTileMode: BorderImage.Stretch
         verticalTileMode: BorderImage.Stretch
     }
@@ -53,7 +53,7 @@ AbstractButton {
         id: icon
 
         anchors.centerIn: parent
-        anchors.horizontalCenterOffset: 1
+        anchors.horizontalCenterOffset: units.dp(1)
         fillMode: Image.PreserveAspectFit
     }
 }

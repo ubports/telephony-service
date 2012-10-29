@@ -50,8 +50,8 @@ FocusScope {
     /* Keys forwarded to the search entry are forwarded to the text input. */
     Keys.forwardTo: [searchInput]
 
-    height: 25
-    width: 100
+    height: units.gu(3)
+    width: units.gu(13)
 
     BorderImage {
         anchors.fill: parent
@@ -61,16 +61,16 @@ FocusScope {
 
     Item {
         anchors.fill: parent
-        anchors.leftMargin: 5
-        anchors.rightMargin: 5
-        anchors.topMargin: 5
-        anchors.bottomMargin: 5
+        anchors.leftMargin: units.gu(0.5)
+        anchors.rightMargin: units.gu(0.5)
+        anchors.topMargin: units.gu(0.5)
+        anchors.bottomMargin: units.gu(0.5)
 
         Image {
             id: leftIcon
 
             anchors.left: parent.left
-            anchors.leftMargin: 5
+            anchors.leftMargin: units.gu(0.5)
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             sourceSize.height: height
@@ -96,7 +96,7 @@ FocusScope {
             id: rightIcon
 
             anchors.right: parent.right
-            anchors.rightMargin: 5
+            anchors.rightMargin: units.gu(0.5)
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             sourceSize.height: height
@@ -128,9 +128,9 @@ FocusScope {
             //Accessible.role: Accessible.EditableText
 
             anchors.left: leftIcon.source != "" ? leftIcon.right : parent.left
-            anchors.leftMargin: 5
+            anchors.leftMargin: units.gu(0.5)
             anchors.right: rightIcon.source != "" ? rightIcon.left : parent.right
-            anchors.rightMargin: 5
+            anchors.rightMargin: units.gu(0.5)
             anchors.verticalCenter: parent.verticalCenter
             horizontalAlignment: Text.AlignLeft
 
@@ -175,9 +175,9 @@ FocusScope {
                     color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
-                    anchors.topMargin: 2
-                    anchors.bottomMargin: 2
-                    width: 1
+                    anchors.topMargin: units.dp(2)
+                    anchors.bottomMargin: units.dp(2)
+                    width: units.dp(1)
                     visible: (customCursor.parent.forceCursorVisible || parent.activeFocus) && timerShowCursor
                     Timer {
                         interval: 800; running: (customCursor.parent.forceCursorVisible || customCursor.parent.activeFocus); repeat: true

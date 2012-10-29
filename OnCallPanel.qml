@@ -8,15 +8,16 @@ AbstractButton {
 
     property QtObject call: callManager.foregroundCall
 
-    height: 61
+    height: units.gu(8)
 
     BorderImage {
         id: background
 
+        anchors.fill: parent
         source: "assets/oncall_background.png"
         horizontalTileMode: BorderImage.Repeat
         verticalTileMode: BorderImage.Repeat
-        border {top: 5; bottom: 0; left: 0; right: 0}
+        border {top: units.dp(5); bottom: 0; left: 0; right: 0}
     }
 
 
@@ -24,17 +25,17 @@ AbstractButton {
         id: avatar
 
         anchors.top: parent.top
-        anchors.topMargin: 13
+        anchors.topMargin: units.gu(2)
         anchors.left: parent.left
-        anchors.leftMargin: 9
-        width: 38
-        height: 38
+        anchors.leftMargin: units.gu(1)
+        width: units.gu(5)
+        height: units.gu(5)
 
         LocalWidgets.FramedImage {
             id: avatarIcon
 
             anchors.fill: parent
-            anchors.margins: 1
+            anchors.margins: units.dp(1)
             source: call ? call.contactAvatar : fallbackSource
             fallbackSource: "assets/avatar_contacts_list.png"
             frameSource: "assets/oncall_picture_frame.sci"
@@ -46,16 +47,16 @@ AbstractButton {
             source: "assets/oncall_phone_icon.png"
             anchors.top: parent.top
             anchors.left: parent.left
-            anchors.topMargin: -4
-            anchors.leftMargin: -6
+            anchors.topMargin: -units.gu(0.5)
+            anchors.leftMargin: -units.dp(1)
         }
     }
 
     Column {
         anchors.left: avatar.right
-        anchors.leftMargin: 8
+        anchors.leftMargin: units.gu(1)
         anchors.right: parent.right
-        anchors.rightMargin: 5
+        anchors.rightMargin: units.gu(0.5)
         anchors.verticalCenter: avatar.verticalCenter
 
         TextCustom {
@@ -98,10 +99,10 @@ AbstractButton {
 
         visible: stopWatch.time > 0
         anchors.top: parent.top
-        anchors.topMargin: 19
+        anchors.topMargin: units.gu(2)
         anchors.right: parent.right
-        anchors.rightMargin: 10
-        height: 24
+        anchors.rightMargin: units.gu(1)
+        height: units.gu(3)
         width: stopWatch.width
 
         BorderImage {
@@ -111,7 +112,7 @@ AbstractButton {
             anchors.fill: parent
             horizontalTileMode: BorderImage.Stretch
             verticalTileMode: BorderImage.Stretch
-            border {left: 10; right: 10; top: 12; bottom: 12}
+            border {left: units.dp(10); right: units.dp(10); top: units.dp(12); bottom: units.dp(12)}
         }
 
         LocalWidgets.StopWatch {

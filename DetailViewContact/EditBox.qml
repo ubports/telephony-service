@@ -15,6 +15,7 @@
  */
 
 import QtQuick 2.0
+import Ubuntu.Components 0.1
 
 Item {
     id: editBox
@@ -22,7 +23,7 @@ Item {
     property alias leftBox: leftBox
     property alias rightBox: rightBox
 
-    width: 300
+    width: units.gu(38)
     // center leftBox vertically
     height: leftBox.height + 2 * leftBox.anchors.topMargin
 
@@ -31,7 +32,7 @@ Item {
 
         anchors.fill: parent
         source: "../assets/edit_contact_mode_box.png"
-        border {left: 1; right: 1; top: 2; bottom: 0}
+        border {left: units.dp(1); right: units.dp(1); top: units.dp(2); bottom: 0}
     }
 
     Item {
@@ -40,7 +41,7 @@ Item {
         anchors.left: parent.left
         anchors.right: separator.left
         anchors.top: parent.top
-        anchors.topMargin: 9
+        anchors.topMargin: units.gu(1)
         height: childrenRect.height
     }
 
@@ -48,7 +49,7 @@ Item {
         id: separator
 
         anchors.right: rightBox.left
-        width: 1
+        width: units.dp(1)
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         color: "black"
@@ -59,7 +60,7 @@ Item {
         id: rightBox
 
         anchors.right: parent.right
-        width: 90
+        width: units.gu(11)
         anchors.top: parent.top
         anchors.bottom: parent.bottom
     }

@@ -4,8 +4,8 @@ import Ubuntu.Components 0.1
 AbstractButton {
     id: button
 
-    width: 64
-    height: 48
+    width: units.gu(8)
+    height: units.gu(6)
 
     property alias label: labelItem.text
     property alias sublabel: sublabelItem.text
@@ -17,15 +17,15 @@ AbstractButton {
         id: selectionOverlay
 
         anchors.fill: parent
-        anchors.bottomMargin: 1
+        anchors.bottomMargin: units.dp(1)
         visible: button.state == "pressed"
 
         BorderImage {
             anchors.fill: parent
             visible: button.isCorner && button.corner == Qt.BottomLeftCorner
             source: "../assets/keypad_select_bottom_left.png"
-            border.left: 14
-            border.bottom: 10
+            border.left: units.dp(14)
+            border.bottom: units.dp(10)
             horizontalTileMode: BorderImage.Stretch
             verticalTileMode: BorderImage.Stretch
         }
@@ -34,8 +34,8 @@ AbstractButton {
             anchors.fill: parent
             visible: button.isCorner && button.corner == Qt.BottomRightCorner
             source: "../assets/keypad_select_bottom_right.png"
-            border.left: 14
-            border.bottom: 10
+            border.left: units.dp(14)
+            border.bottom: units.dp(10)
             horizontalTileMode: BorderImage.Stretch
             verticalTileMode: BorderImage.Stretch
         }
@@ -51,8 +51,8 @@ AbstractButton {
         id: labelItem
 
         anchors.centerIn: parent
-        anchors.verticalCenterOffset: -3
-        anchors.horizontalCenterOffset: 1
+        anchors.verticalCenterOffset: -units.gu(0.5)
+        anchors.horizontalCenterOffset: units.dp(1)
         horizontalAlignment: Text.AlignHCenter
         fontSize: "large"
         color: "#e3e5e8"
@@ -65,7 +65,7 @@ AbstractButton {
 
         anchors.top: labelItem.bottom
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: 1
+        anchors.horizontalCenterOffset: units.dp(1)
         horizontalAlignment: Text.AlignHCenter
         fontSize: "x-small"
         color: "#e3e5e8"

@@ -26,19 +26,19 @@ FocusScope {
         Behavior on height { LocalWidgets.StandardAnimation {}}
 
         source: "../assets/edit_contact_mode_box.png"
-        border {left: 1; right: 1; top: 2; bottom: 0}
+        border {left: units.dp(1); right: units.dp(1); top: units.dp(2); bottom: 0}
     }
 
     Column {
         id: fields
 
         anchors.top: background.top
-        anchors.topMargin: 5
+        anchors.topMargin: units.gu(0.5)
         anchors.left: background.left
-        anchors.leftMargin: 10
+        anchors.leftMargin: units.gu(1)
         anchors.right: background.right
-        anchors.rightMargin: 10
-        spacing: 2
+        anchors.rightMargin: units.gu(1)
+        spacing: units.dp(2)
 
         move: Transition { LocalWidgets.StandardAnimation {property: "y"}}
 
@@ -98,12 +98,12 @@ FocusScope {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.rightMargin: 10
-        width: 20
+        anchors.rightMargin: units.gu(1)
+        width: units.gu(3)
 
         Image {
             anchors.top: parent.top
-            anchors.topMargin: 10
+            anchors.topMargin: units.gu(1)
             anchors.right: parent.right
             source: editor.expanded ? "../assets/edit_contact_dropup_arrow.png" : "../assets/edit_contact_dropdown_arrow.png"
         }

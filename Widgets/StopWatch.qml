@@ -7,8 +7,8 @@ Item {
     property alias fontSize: count.fontSize
     property alias color: count.color
 
-    height: count.paintedHeight + 8 * 2
-    width: count.paintedWidth + 22 * 2
+    height: count.paintedHeight + units.gu(1 * 2)
+    width: count.paintedWidth + units.gu(3 * 2)
 
     // FIXME: define all properties in one block
 

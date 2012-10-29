@@ -33,9 +33,9 @@ Item {
         ButtonWithForeground {
             id: addButton
             anchors.left: parent.left
-            anchors.leftMargin: 10
+            anchors.leftMargin: units.gu(1)
             anchors.verticalCenter: parent.verticalCenter
-            width: 12
+            width: units.gu(2)
             iconSource: "../assets/edit_contact_mode_add.png"
         }
 
@@ -43,9 +43,9 @@ Item {
             id: addText
 
             anchors.left: addButton.right
-            anchors.leftMargin: 5
+            anchors.leftMargin: units.gu(0.5)
             anchors.verticalCenter: parent.verticalCenter
-            anchors.verticalCenterOffset: -1
+            anchors.verticalCenterOffset: units.dp(-1)
             fontSize: "x-small"
             font.italic: true
             elide: Text.ElideRight
@@ -65,7 +65,7 @@ Item {
         id: optionsPositioner
 
         anchors.left: parent.left
-        anchors.leftMargin: -1
+        anchors.leftMargin: units.dp(-1)
         anchors.right: parent.right
         anchors.top: current.bottom
     }
@@ -96,7 +96,7 @@ Item {
             delegate: AbstractButton {
                 anchors.left: (parent) ? parent.left : undefined
                 anchors.right: (parent) ? parent.right : undefined
-                height: optionText.paintedHeight + 20
+                height: optionText.paintedHeight + units.gu(3)
 
                 onClicked: {
                     selected(modelData)
@@ -108,7 +108,7 @@ Item {
 
                     source: "../assets/combobox_item.png"
                     anchors.fill: parent
-                    border {top: 0; right: 2; bottom: 2; left: 3}
+                    border {top: 0; right: units.dp(2); bottom: units.dp(2); left: units.dp(3)}
                 }
 
                 TextCustom {
@@ -117,7 +117,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: 15
+                    anchors.margins: units.gu(2)
                     fontSize: "small"
                     elide: Text.ElideRight
                     color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
@@ -134,7 +134,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             source: "../assets/combobox_bottom_shadow.png"
-            border {top: 0; right: 0; bottom: 2; left: 2}
+            border {top: 0; right: 0; bottom: units.dp(2); left: units.dp(2)}
         }
     }
 }
