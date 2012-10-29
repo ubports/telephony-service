@@ -130,7 +130,7 @@ Item {
 
     Tabs {
         id: tabs
-        anchors.topMargin: 7
+        anchors.topMargin: units.gu(1)
         anchors.fill: leftPane
         parent: leftPane
         buttonsExpanded: true
