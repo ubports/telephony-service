@@ -41,6 +41,7 @@ Item {
             label: "1"
             keycode: Qt.Key_1
             onClicked: keypad.keyPressed(keycode, label)
+            onPressAndHold: telephony.callVoicemail()
         }
 
         KeypadButton {

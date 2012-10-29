@@ -22,7 +22,7 @@ static void printUsage(const QStringList& arguments)
              << "[call://PHONE_NUMBER]"
              << "[message://PHONE_NUMBER]"
              << "[voicemail://]"
-             << "[--single-panel]";
+             << "[--dual-panel]";
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
@@ -34,7 +34,7 @@ TelephonyApplication::TelephonyApplication(int &argc, char **argv)
 bool TelephonyApplication::setup()
 {
     static QList<QString> validSchemes;
-    bool singlePanel = false;
+    bool singlePanel = true;
 
     if (validSchemes.isEmpty()) {
         validSchemes << "contact";
@@ -45,9 +45,9 @@ bool TelephonyApplication::setup()
 
     QString contactKey;
     QStringList arguments = this->arguments();
-    if (arguments.contains("--single-panel")) {
-        arguments.removeAll("--single-panel");
-        singlePanel = true;
+    if (arguments.contains("--dual-panel")) {
+        arguments.removeAll("--dual-panel");
+        singlePanel = false;
     }
 
     if (arguments.size() > 2) {

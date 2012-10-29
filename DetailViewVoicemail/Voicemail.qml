@@ -12,6 +12,15 @@ LocalWidgets.TelephonyPage {
 
     title: "Voicemail"
 
+    Component.onDestruction: {
+        // if this view was destroyed but we still have
+        // active calls, then it means it was manually removed
+        // from the stack
+        if (previousTab != -1 && callManager.hasCalls) {
+            telephony.selectedTabIndex = previousTab
+        }
+    }
+
     function isVoicemailActive() {
         return telephony.isVoicemailActive();
     }
@@ -26,6 +35,9 @@ LocalWidgets.TelephonyPage {
         target: callManager
         onCallEnded: {
             if (!callManager.hasCalls) {
+                if (voicemail.visible && voicemail.previousTab != -1) {
+                    telephony.selectedTabIndex = voicemail.previousTab
+                }
                 telephony.endCall();
             }
         }
