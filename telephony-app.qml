@@ -22,6 +22,7 @@ Item {
     property ViewModel voicemail: ViewModel {source: "DetailViewVoicemail/Voicemail.qml"; tab: 0 }
     property ViewModel messages: ViewModel {source: "DetailViewMessages/MessagesView.qml"; tab: 1 }
     property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"; tab: 0 }
+    property ViewModel dialer: ViewModel {source: "PanelDialer/DialerView.qml"; tab: 0 }
     property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"; tab: 2 }
     property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"; tab: 0 }
 
@@ -65,6 +66,10 @@ Item {
     }
 
     function callNumber(number) {
+        var callStack = rightPaneStacks.children[dialer.tab]
+        if (callStack.currentPage.source == dialer.source) {
+            view.dialNumber = ""
+        }
         callManager.startCall(number);
     }
 
@@ -236,10 +241,12 @@ Item {
                 visible: isCurrent
                 onSourceChanged: {
                     stack.push(Qt.resolvedUrl(source))
+                    stack.currentPage.source = Qt.resolvedUrl(source);
                 }
 
                 Component.onCompleted: {
                     stack.push(Qt.resolvedUrl(source))
+                    stack.currentPage.source = Qt.resolvedUrl(source);
                 }
             }
         }

@@ -6,6 +6,7 @@ LocalWidgets.TelephonyPage {
     title: "Dialer"
     anchors.fill: parent
     property string voicemailNumber: callManager.voicemailNumber
+    property alias dialNumber: keypadEntry.value
 
     function isVoicemailActive() {
         return telephony.isVoicemailActive();
