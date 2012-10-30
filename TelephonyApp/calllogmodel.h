@@ -29,10 +29,10 @@ class CallLogEntry : public LoggerItem {
     Q_PROPERTY(QTime duration READ duration WRITE setDuration NOTIFY durationChanged)
     Q_PROPERTY(bool missed READ missed WRITE setMissed NOTIFY missedChanged)
 public:
-    void setDuration(const QTime &duration) { mDuration = duration; Q_EMIT durationChanged(); };
-    QTime duration() { return mDuration; };
-    void setMissed(bool missed) { mMissed = missed; Q_EMIT missedChanged(); };
-    bool missed() { return mMissed; };
+    void setDuration(const QTime &duration) { mDuration = duration; Q_EMIT durationChanged(); }
+    QTime duration() { return mDuration; }
+    void setMissed(bool missed) { mMissed = missed; Q_EMIT missedChanged(); }
+    bool missed() { return mMissed; }
 
 Q_SIGNALS:
     void durationChanged();

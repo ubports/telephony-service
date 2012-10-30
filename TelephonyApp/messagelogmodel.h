@@ -29,16 +29,16 @@ class MessageLogEntry : public LoggerItem {
     Q_PROPERTY(QString date READ date)
     Q_PROPERTY(bool isLatest READ isLatest WRITE setIsLatest NOTIFY isLatestChanged)
 public:
-    void setMessage(const QString &message) { mMessage = message; Q_EMIT messageChanged(); };
-    QString message() { return mMessage; };
+    void setMessage(const QString &message) { mMessage = message; Q_EMIT messageChanged(); }
+    QString message() { return mMessage; }
 
-    void setMessageId(const QString &messageId) { mMessageId = messageId; Q_EMIT messageIdChanged(); };
-    QString messageId() { return mMessageId; };
+    void setMessageId(const QString &messageId) { mMessageId = messageId; Q_EMIT messageIdChanged(); }
+    QString messageId() { return mMessageId; }
 
-    void setIsLatest(bool isLatest) { mIsLatest = isLatest; Q_EMIT isLatestChanged(); };
-    bool isLatest() { return mIsLatest; };
+    void setIsLatest(bool isLatest) { mIsLatest = isLatest; Q_EMIT isLatestChanged(); }
+    bool isLatest() { return mIsLatest; }
 
-    QString date() { return timestamp().date().toString(Qt::DefaultLocaleLongDate); };
+    QString date() { return timestamp().date().toString(Qt::DefaultLocaleLongDate); }
 Q_SIGNALS:
     void messageChanged();
     void messageIdChanged();
