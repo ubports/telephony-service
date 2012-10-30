@@ -20,7 +20,7 @@ Item {
     // Inventory of all the views in the application
     property ViewModel liveCall: ViewModel {source: "DetailViewLiveCall/LiveCall.qml"; tab: 0 }
     property ViewModel voicemail: ViewModel {source: "DetailViewVoicemail/Voicemail.qml"; tab: 0 }
-    property ViewModel messages: ViewModel {source: "DetailViewMessages/MessagesView.qml"; tab: 1 }
+    property ViewModel communication: ViewModel {source: "DetailViewCommunication/CommunicationView.qml"; tab: 1 }
     property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"; tab: 0 }
     property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"; tab: 2 }
     property ViewModel keypad: ViewModel {source: "DetailViewKeypad/KeypadView.qml"; tab: 0 }
@@ -74,7 +74,7 @@ Item {
             resetView();
         }
 
-        messages.load(properties);
+        communication.load(properties);
     }
 
     function endCall() {
@@ -105,7 +105,7 @@ Item {
 
     function startNewMessage() {
         resetView();
-        messages.load({ newMessage: true })
+        communication.load({ newMessage: true })
     }
 
     function showKeypad() {

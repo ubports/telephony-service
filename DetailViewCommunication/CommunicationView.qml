@@ -12,7 +12,7 @@ LocalWidgets.TelephonyPage {
 
     property string pendingMessage
 
-    title: "Conversation"
+    title: "Communication"
     ContactWatcher {
         id: contactWatcher
     }
