@@ -4,11 +4,8 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../Widgets" as LocalWidgets
 import "../dateUtils.js" as DateUtils
 
-ListItem.Base {
-    anchors.left: parent.left
-    anchors.right: parent.right
-    showDivider: true
-    __height: 58
+Item {
+    anchors.fill: parent
 
     LocalWidgets.CustomListItemBase {
         id: infoBox
@@ -37,6 +34,7 @@ ListItem.Base {
 
         // Calls
         Row {
+            id: callsRow
             width: childrenRect.width
             height: childrenRect.height
             visible: typeof(events.call) != "undefined"
@@ -46,7 +44,7 @@ ListItem.Base {
                 source: "../assets/contact_icon_phone.png"
             }
             TextCustom {
-                text: events.call
+                text: callsRow.visible ? events.call : ""
                 fontSize: "small"
                 color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
                 style: Text.Raised
@@ -56,6 +54,7 @@ ListItem.Base {
 
         // Messages
         Row {
+            id: messagesRow
             width: childrenRect.width
             height: childrenRect.height
             visible: typeof(events.message) != "undefined"
@@ -65,7 +64,7 @@ ListItem.Base {
                 source: "../assets/contact_icon_message.png"
             }
             TextCustom {
-                text: events.message
+                text: messagesRow.visible ? events.message : ""
                 fontSize: "small"
                 color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
                 style: Text.Raised

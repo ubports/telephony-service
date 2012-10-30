@@ -4,14 +4,8 @@ import "../dateUtils.js" as DateUtils
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
-ListItem.Base {
+Item {
     id: callItem
-
-    signal contactClicked(string contactId)
-    signal actionClicked(string contactId, string phoneNumber)
-
-    __height: infoBox.height
-    showDivider: true
 
     LocalWidgets.CustomListItemBase {
         id: infoBox
@@ -23,7 +17,6 @@ ListItem.Base {
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
         subtext: phoneNumber
-        onClicked: callItem.clicked(contactId)
         selected: callItem.selected
     }
 
