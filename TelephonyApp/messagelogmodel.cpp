@@ -195,15 +195,13 @@ bool MessageLogModel::matchesSearch(const QString &searchTerm, const QModelIndex
 
     QString value = entry->contactAlias();
     if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
-        // if onlyLatest option is set, we just return one contact alias match
-        foundMatch = displayStrategy() == ShowLatestEvents ? entry->isLatest() : true;
+        foundMatch = true;
     }
 
     // Test the phone number
     value = entry->phoneNumber();
     if (ContactModel::instance()->comparePhoneNumbers(value, searchTerm)) {
-        // if onlyLatest option is set, we just return one contact alias match
-        foundMatch = displayStrategy() == ShowLatestEvents ? entry->isLatest() : true;
+        foundMatch = true;
     }
 
     // Test the message text. Even if onlyLatest is set, we return all text entries that match

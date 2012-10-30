@@ -32,6 +32,7 @@ ConversationAggregatorModel::ConversationAggregatorModel(QObject *parent) :
     roles[ConversationFeedModel::Incoming] = "incoming";
     roles[ConversationFeedModel::ItemType] = "itemType";
     roles[ConversationFeedModel::FeedItem] = "item";
+    roles[ConversationFeedModel::GroupingProperty] = "groupingProperty";
     setRoleNames(roles);
 }
 
@@ -155,12 +156,6 @@ bool ConversationAggregatorModel::matchesSearch(const QString &searchTerm, const
 
     ConversationFeedModel *model = static_cast<ConversationFeedModel*>(index.internalPointer());
     return model->matchesSearch(searchTerm, index);
-}
-
-QString ConversationAggregatorModel::groupingKeyForIndex(const QModelIndex &index) const
-{
-    ConversationFeedModel *model = static_cast<ConversationFeedModel*>(index.internalPointer());
-    return model->groupingKeyForIndex(mapToSource(index));
 }
 
 void ConversationAggregatorModel::updateOffsets()

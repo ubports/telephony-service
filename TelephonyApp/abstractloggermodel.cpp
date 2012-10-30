@@ -21,6 +21,7 @@
 #include "telepathyhelper.h"
 #include "contactentry.h"
 #include "contactmodel.h"
+#include "conversationfeeditem.h"
 #include <TelepathyLoggerQt/LogManager>
 #include <TelepathyLoggerQt/PendingDates>
 #include <TelepathyLoggerQt/PendingEntities>
@@ -47,12 +48,6 @@ AbstractLoggerModel::AbstractLoggerModel(QObject *parent) :
 void AbstractLoggerModel::populate()
 {
     fetchLog();
-}
-
-QString AbstractLoggerModel::groupingKeyForIndex(const QModelIndex &index) const
-{
-    Q_UNUSED(index);
-    return "phoneNumber";
 }
 
 void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entityTypes)
@@ -144,6 +139,20 @@ bool AbstractLoggerModel::checkNonStandardNumbers(LoggerItem *entry)
     }
 
     return changed;
+}
+
+QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
+{
+    const ConversationFeedItem *item = entryFromIndex(index);
+
+    switch (role) {
+    case ConversationFeedModel::GroupingProperty:
+        if (item->contactId().isEmpty()) {
+            return "phoneNumber";
+        }
+    default:
+        return ConversationFeedModel::data(index, role);
+    }
 }
 
 void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)

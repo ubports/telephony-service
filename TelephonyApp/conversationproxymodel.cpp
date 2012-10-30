@@ -263,11 +263,7 @@ void ConversationProxyModel::processGrouping()
     for (int row = 0; row < count; ++row) {
         QModelIndex sourceIndex = model->index(row, 0, QModelIndex());
         ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
-        QString groupingProperty = "contactId";
-        if (item->contactId().isEmpty()) {
-            groupingProperty = model->groupingKeyForIndex(sourceIndex);
-        }
-
+        QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
         QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
         ConversationGroup &group = mGroupedEntries[groupingProperty][propertyValue];
         group.eventCount[model->itemType(sourceIndex)]++;
@@ -286,13 +282,8 @@ void ConversationProxyModel::processGrouping()
 
 ConversationGroup ConversationProxyModel::groupForSourceIndex(const QModelIndex &sourceIndex) const
 {
-    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
-    QString groupingProperty = "contactId";
-    if (item->contactId().isEmpty()) {
-        groupingProperty = model->groupingKeyForIndex(sourceIndex);
-    }
-
+    QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
     QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
     ConversationGroup group = mGroupedEntries[groupingProperty][propertyValue];
     return group;

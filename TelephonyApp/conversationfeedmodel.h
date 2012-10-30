@@ -37,34 +37,9 @@ public:
         Incoming,
         ItemType,
         FeedItem,
+        GroupingProperty,
         CustomRole
     };
-
-    /**
-     * The strategy used to define how this feed's items are going to be displayed by
-     * the aggregator.
-     */
-    enum DisplayStrategy {
-        ShowAllEvents, ///< Show all events from the feed
-        ShowLatestEvents, ///< Show only the latest event for each grouping key
-        ShowGroupedEvents ///< Group events that happened in sequence on time
-    };
-
-    /**
-     * Returns the display strategy that should be used by the feed.
-     *
-     * \sa DisplayStrategy
-     * @return
-     */
-    virtual DisplayStrategy displayStrategy() const;
-
-    /**
-     * Returns the key that should be used when grouping or showing only the
-     * latest events for a given id.
-     * @param index A valid index of the model.
-     * @return the key to use for grouping this index
-     */
-    virtual QString groupingKeyForIndex(const QModelIndex &index) const;
 
     /**
      * Reports if a given index matches the search term
@@ -86,6 +61,7 @@ public:
 
 protected:
     QModelIndex indexFromEntry(ConversationFeedItem *entry) const;
+    ConversationFeedItem *entryFromIndex(const QModelIndex &index) const;
     void addItem(ConversationFeedItem *item);
     void removeItem(ConversationFeedItem *item);
     void clear();

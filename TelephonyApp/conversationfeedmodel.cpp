@@ -24,16 +24,6 @@ ConversationFeedModel::ConversationFeedModel(QObject *parent) :
 {
 }
 
-ConversationFeedModel::DisplayStrategy ConversationFeedModel::displayStrategy() const
-{
-    return ShowAllEvents;
-}
-
-QString ConversationFeedModel::groupingKeyForIndex(const QModelIndex &index) const
-{
-    return QString::null;
-}
-
 bool ConversationFeedModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
 {
     // TODO: implement
@@ -68,6 +58,8 @@ QVariant ConversationFeedModel::data(const QModelIndex &index, int role) const
         return itemType(index);
     case FeedItem:
         return QVariant::fromValue(const_cast<QObject *>(static_cast<const QObject *>(item)));
+    case GroupingProperty:
+        return "contactId";
     }
 
     return QVariant();
@@ -114,6 +106,15 @@ QModelIndex ConversationFeedModel::indexFromEntry(ConversationFeedItem *entry) c
     }
 
     return index(pos, 0);
+}
+
+ConversationFeedItem *ConversationFeedModel::entryFromIndex(const QModelIndex &index) const
+{
+    if (!index.isValid() || index.row() >= mItems.count()) {
+        return 0;
+    }
+
+    return mItems[index.row()];
 }
 
 

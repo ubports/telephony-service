@@ -57,8 +57,6 @@ public:
 
     virtual void populate();
 
-    virtual QString groupingKeyForIndex(const QModelIndex &index) const;
-
 Q_SIGNALS:
     void resetView();
     
@@ -79,6 +77,8 @@ protected:
     virtual void handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     virtual void handleEvents(const Tpl::EventPtrList &events);
     bool checkNonStandardNumbers(LoggerItem *entry);
+
+    virtual QVariant data(const QModelIndex &index, int role) const;
 
 protected Q_SLOTS:
     void onPendingEntitiesFinished(Tpl::PendingOperation *op);

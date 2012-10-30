@@ -42,7 +42,6 @@ public:
 
     QString itemType(const QModelIndex &index) const;
     bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
-    QString groupingKeyForIndex(const QModelIndex &index) const;
 
 private Q_SLOTS:
     void updateOffsets();
