@@ -11,12 +11,12 @@ Item {
         id: infoBox
 
         anchors.left: parent.left
-        anchors.right: separator.left
+        anchors.right: parent.right
         height: units.gu(7)
-        iconSource: (avatar != "") ? avatar : placeholderIconSource
+        iconSource: (contactAvatar != "") ? contactAvatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
-        subtext: phoneNumber
+        subtext: item.phoneNumber
         selected: callItem.selected
 
         onClicked: callItem.parent.clicked(mouse)
@@ -25,7 +25,7 @@ Item {
     TextCustom {
         id: timeLabel
 
-        anchors.right: separator.left
+        anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
         anchors.bottom: infoBox.bottom
         anchors.bottomMargin: units.gu(0.5)
@@ -46,8 +46,8 @@ Item {
 
         Image {
             source: {
-                if(incoming) {
-                    if(missed) {
+                if(item.incoming) {
+                    if(item.missed) {
                         "../assets/missed_call.png"
                     } else {
                         "../assets/received_call.png"
@@ -55,38 +55,6 @@ Item {
                 } else {
                     "../assets/outgoing_call.png"
                 }
-            }
-        }
-    }
-
-    Rectangle {
-        id: separator
-
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: actionBox.left
-        width: units.dp(1)
-        color: "black"
-        opacity: 0.1
-        visible: phoneNumber != "-"
-    }
-
-    LocalWidgets.CustomListItemBase {
-        id: actionBox
-
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        anchors.rightMargin: units.dp(2)
-        anchors.topMargin: units.dp(1)
-        width: height
-        selected: callItem.selected
-
-        iconSource: phoneNumber != "-" ? "../assets/tab_icon_call_inactive.png" : ""
-        isIcon: true
-        onClicked: {
-            if (phoneNumber != "-") {
-                callItem.actionClicked(contactId, phoneNumber)
             }
         }
     }
