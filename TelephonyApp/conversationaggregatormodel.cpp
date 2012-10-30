@@ -53,6 +53,7 @@ void ConversationAggregatorModel::addFeedModel(ConversationFeedModel *model)
         updateOffsets();
         endInsertRows();
     } else {
+        mFeedModels.append(model);
         updateOffsets();
     }
 
