@@ -61,7 +61,7 @@ Item {
 
     ConversationProxyModel {
         id: conversationProxyModel
-        conversationModel: conversationModel
+        conversationModel: conversationAggregatorModel
         searchString: search.text
         ascending: false
         grouped: true
@@ -73,6 +73,6 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         // FIXME: reference to fake model needs to be removed before final release
-        model: typeof(runtime) != "undefined" ? fakeMessages : conversationModel
+        model: typeof(runtime) != "undefined" ? fakeMessages : conversationProxyModel
     }
 }
