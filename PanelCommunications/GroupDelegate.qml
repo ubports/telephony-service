@@ -29,17 +29,18 @@ ListItem.Base {
 
         anchors.right: parent.right
         anchors.bottom: parent.bottom
-        anchors.bottomMargin: 2
-        anchors.rightMargin: 10
+        anchors.bottomMargin: units.gu(0.5)
+        anchors.rightMargin: units.gu(1)
         width: childrenRect.width
         height: childrenRect.height
-        spacing: 10
+        spacing: units.gu(1)
 
         // Calls
         Row {
             width: childrenRect.width
             height: childrenRect.height
             visible: typeof(events.call) != "undefined"
+            spacing: units.gu(0.5)
 
             Image {
                 source: "../assets/contact_icon_phone.png"
@@ -58,6 +59,7 @@ ListItem.Base {
             width: childrenRect.width
             height: childrenRect.height
             visible: typeof(events.message) != "undefined"
+            spacing: units.gu(0.5)
 
             Image {
                 source: "../assets/contact_icon_message.png"
