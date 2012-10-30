@@ -47,10 +47,14 @@ void ConversationAggregatorModel::addFeedModel(ConversationFeedModel *model)
         offset = mModelOffsets[lastModel] + lastModel->rowCount();
     }
 
-    beginInsertRows(QModelIndex(), offset, offset + model->rowCount() - 1);
-    mFeedModels.append(model);
-    updateOffsets();
-    endInsertRows();
+    if (model->rowCount() > 0) {
+        beginInsertRows(QModelIndex(), offset, offset + model->rowCount() - 1);
+        mFeedModels.append(model);
+        updateOffsets();
+        endInsertRows();
+    } else {
+        updateOffsets();
+    }
 
     connect(model,
             SIGNAL(rowsInserted(QModelIndex,int,int)),
