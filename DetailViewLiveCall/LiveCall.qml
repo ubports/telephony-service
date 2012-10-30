@@ -90,7 +90,7 @@ LocalWidgets.TelephonyPage {
                 height: units.gu(18)
                 source: contact ? contact.avatar : fallbackSource
                 fallbackSource: "../assets/avatar_incall_rightpane.png"
-                darkBorder: true
+                ItemStyle.class: "dark-button"
             }
 
             TextCustom {
@@ -273,7 +273,7 @@ LocalWidgets.TelephonyPage {
                     iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
                     width: units.gu(8)
                     color: "#bf400c"
-                    darkBorder: true
+                    ItemStyle.class: "dark-button"
                     onClicked: endCall()
                 }
 
@@ -283,7 +283,7 @@ LocalWidgets.TelephonyPage {
                     iconSource: "../assets/incall_keypad_addcaller_unselected.png"
                     width: units.gu(8)
                     color: "#666666"
-                    darkBorder: true
+                    ItemStyle.class: "dark-button"
                 }
             }
         }
