@@ -41,6 +41,10 @@ class ContactEntry : public QObject
                READ displayLabel
                WRITE setDisplayLabel
                NOTIFY changed)
+    Q_PROPERTY(bool isFavorite
+               READ isFavorite
+               WRITE setFavorite
+               NOTIFY changed)
     Q_PROPERTY(QString initial
                READ initial
                NOTIFY changed)
@@ -76,6 +80,9 @@ public:
 
     QString displayLabel() const;
     void setDisplayLabel(const QString &value);
+
+    bool isFavorite() const;
+    void setFavorite(bool value);
 
     QString initial() const;
     QUrl avatar() const;

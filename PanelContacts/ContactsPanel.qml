@@ -74,6 +74,23 @@ LocalWidgets.TelephonyPage {
         model: contactModel
     }
 
+    ContactProxyModel {
+        id: favoriteContactProxyModel
+        filterText: contactsSearchBox.text
+        favoriteOnly: true
+        model: contactModel
+    }
+
+    Component {
+        id: contactDelegate
+        ContactDelegate {
+            onClicked: contactsPanel.contactClicked(contact)
+            selected: (telephony.view &&
+            telephony.view.contact &&
+            typeof(contact) != "undefined") ? (telephony.view.contact == contact) : false
+        }
+    }
+
     ListView {
         id: contactsList
         anchors.top: buttons.bottom
@@ -84,13 +101,32 @@ LocalWidgets.TelephonyPage {
         // FIXME: references to runtime and fake model need to be removed before final release
         model: typeof(runtime) != "undefined" ? fakeContacts : contactProxyModel
 
-        delegate: ContactDelegate {
-            onClicked: contactsPanel.contactClicked(contact)
-            selected: (telephony.view && 
-                       telephony.view.contact && 
-                       typeof(contact) != "undefined") ? (telephony.view.contact == contact) : false
-        }
+        header: Item {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: headerFavorite.height + favoriteContacts.height
+            visible: favoriteContacts.count > 0
 
+            LocalWidgets.ListSectionHeader {
+                id: headerFavorite
+                anchors.left: parent.left
+                anchors.right: parent.right
+                text: "Favorite"
+            }
+            
+           ListView {
+                id: favoriteContacts
+                model: typeof(runtime) != "undefined" ? fakeContacts : favoriteContactProxyModel
+                clip: true
+                interactive: false
+                anchors.top: headerFavorite.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: contentHeight
+                delegate: contactDelegate
+            }
+        }
+        delegate: contactDelegate
         section.property: "initial"
         section.criteria: ViewSection.FullString
         section.delegate: LocalWidgets.ListSectionHeader {

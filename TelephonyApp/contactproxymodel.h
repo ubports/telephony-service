@@ -33,6 +33,11 @@ class ContactProxyModel : public QSortFilterProxyModel
                READ filterText
                WRITE setFilterText
                NOTIFY filterTextChanged)
+    Q_PROPERTY(bool favoriteOnly
+               READ favoriteOnly
+               WRITE setFavoriteOnly
+               NOTIFY favoriteOnlyChanged)
+
 public:
     explicit ContactProxyModel(QObject *parent = 0);
     
@@ -41,6 +46,8 @@ public:
 
     QString filterText() const;
     void setFilterText(const QString &value);
+    void setFavoriteOnly(bool enable);
+    bool favoriteOnly();
 
 protected:
     virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
@@ -49,9 +56,11 @@ protected:
 Q_SIGNALS:
     void modelChanged();
     void filterTextChanged();
+    void favoriteOnlyChanged();
 
 private:
     QString mFilterText;
+    bool mFavoriteOnly;
     
 };
 
