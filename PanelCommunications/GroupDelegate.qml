@@ -5,6 +5,7 @@ import "../Widgets" as LocalWidgets
 import "../dateUtils.js" as DateUtils
 
 Item {
+    id: groupDelegate
     anchors.fill: parent
 
     LocalWidgets.CustomListItemBase {
@@ -17,7 +18,7 @@ Item {
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
         subtext: DateUtils.formatLogDate(timestamp)
-        //onClicked: callItem.clicked(contactId)
+        onClicked: groupDelegate.parent.clicked(mouse)
         //selected: callItem.selected
     }
 

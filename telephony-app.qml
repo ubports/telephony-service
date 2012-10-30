@@ -65,11 +65,8 @@ Item {
         callManager.startCall(number);
     }
 
-    function startChat(contactId, phoneNumber, clear) {
-        var properties = { number: phoneNumber, newMessage: false };
-        if (contactId) {
-            properties["contactId"] = contactId;
-        }
+    function showCommunication(prop, value, clear) {
+        var properties = { filterProperty: filterValue, newMessage: false };
         if (clear) {
             resetView();
         }

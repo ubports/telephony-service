@@ -18,6 +18,8 @@ Item {
         text: contactAlias
         subtext: phoneNumber
         selected: callItem.selected
+
+        onClicked: callItem.parent.clicked(mouse)
     }
 
     TextCustom {

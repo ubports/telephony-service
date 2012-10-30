@@ -17,6 +17,8 @@ Item {
         subtext: item.message
         //textBold: unreadCount > 0
         selected: messageDelegate.selected
+
+        onClicked: messageDelegate.parent.clicked(mouse)
     }
 
     TextCustom {

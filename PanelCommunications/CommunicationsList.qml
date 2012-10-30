@@ -45,13 +45,21 @@ Item {
         anchors.fill: parent
         clip: true
         delegate: ListItem.Base {
+            id: delegate
             anchors.left: parent.left
             anchors.right: parent.right
             showDivider: true
             __height: 58
 
+            onClicked: {
+                telephony.showCommunication(groupingProperty, item[groupingProperty]);
+            }
+
             Loader {
                 id: communicationsDelegate
+
+                signal clicked(variant mouse)
+                onClicked: delegate.clicked(mouse)
 
                 anchors.fill: parent
                 property string contactId: model ? model.contactId : ""
