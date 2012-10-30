@@ -23,7 +23,6 @@ Item {
     property ViewModel messages: ViewModel {source: "DetailViewMessages/MessagesView.qml"; tab: 1 }
     property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"; tab: 0 }
     property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"; tab: 2 }
-    property ViewModel keypad: ViewModel {source: "DetailViewKeypad/KeypadView.qml"; tab: 0 }
     property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"; tab: 0 }
 
     signal applicationReady
@@ -38,6 +37,10 @@ Item {
     Connections {
         target: contactModel
         onContactLoaded: telephony.showContactDetails(contact);
+    }
+
+    function switchToTab(index) {
+        selectedTabIndex = index
     }
 
     function showLiveCall(clear) {
@@ -65,6 +68,10 @@ Item {
         callManager.startCall(number);
     }
 
+    function callVoicemail(number) {
+        callNumber(callManager.voicemailNumber);
+    }
+
     function startChat(contactId, phoneNumber, clear) {
         var properties = { number: phoneNumber, newMessage: false };
         if (contactId) {
@@ -79,7 +86,7 @@ Item {
 
     function endCall() {
         var callStack = rightPaneStacks.children[liveCall.tab]
-        if (callStack.currentPage.source == liveCall.source) {
+        if (callStack.currentPage.source == liveCall.source || callStack.currentPage.source == voicemail.source) {
             callStack.pop();
         }
     }
@@ -108,11 +115,6 @@ Item {
         messages.load({ newMessage: true })
     }
 
-    function showKeypad() {
-        resetView();
-        keypad.load()
-    }
-
     function showCallLog() {
         resetView();
         callLog.load()
@@ -139,7 +141,7 @@ Item {
             iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
             page: singlePane ? undefined : Qt.resolvedUrl(panel)
             property string pane: "Panes/CallEndedPane.qml"
-            property string panel: "PanelCalls/CallPanel.qml"
+            property string panel: "PanelDialer/DialerView.qml"
         }
 
         Tab {
@@ -191,6 +193,7 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: shown ? 0 : -height
             Behavior on anchors.bottomMargin { LocalWidgets.StandardAnimation {}}
+            z: 1
 
             property bool shown
             shown: {
