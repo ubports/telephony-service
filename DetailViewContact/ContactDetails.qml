@@ -190,38 +190,6 @@ LocalWidgets.TelephonyPage {
             visible: !callLogSection.visible || callLogSection.opacity != 1.0
         }
 
-        // Call Log section
-        ContactDetailsSection {
-            id: callLogSection
-
-            editable: false
-            anchors.top: bottomSeparatorLine.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            opacity: (contactDetails.editable) ? 0.0 : 1.0
-            Behavior on opacity { LocalWidgets.StandardAnimation {}}
-
-            detailTypeInfo: { return { name: "Call Log" } }
-
-            CallLogProxyModel {
-                id: proxyModel
-                logModel: callLogModel
-                contactId: (contact) ? contact.id : "some string that won't match"
-                filterByContact: true
-            }
-            // FIXME: references to runtime and fake model need to be removed before final release
-            model: typeof(runtime) != "undefined" ? fakeCallLog : proxyModel
-
-            delegate: CallLogContactDetailsDelegate {
-                id: delegate
-                anchors.left: (parent) ? parent.left : undefined
-                anchors.right: (parent) ? parent.right : undefined
-                bottomSeparator: true
-
-                onActionClicked: telephony.callNumber(phoneNumber)
-            }
-        }
-
         ContactDetailTypeChooser {
             id: newDetailChooser
 
