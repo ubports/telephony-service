@@ -86,6 +86,13 @@ QObject *ConversationProxyModel::conversationModel() const
 
 void ConversationProxyModel::setConversationModel(QObject *value)
 {
+    // disconnect the previous model
+    ConversationAggregatorModel *oldModel = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+    if (oldModel) {
+        disconnect(oldModel);
+    }
+
+    // and handle the new one
     QAbstractItemModel *model = qobject_cast<QAbstractItemModel*>(value);
 
     if (model) {
@@ -96,8 +103,29 @@ void ConversationProxyModel::setConversationModel(QObject *value)
             connect(conversationModel, SIGNAL(resetView()), SLOT(onResetView()));
         }
 
+        connect(conversationModel,
+                SIGNAL(rowsInserted(QModelIndex,int,int)),
+                SLOT(processGrouping()));
+        connect(conversationModel,
+                SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
+                SLOT(processGrouping()));
+        connect(conversationModel,
+                SIGNAL(rowsRemoved(QModelIndex,int,int)),
+                SLOT(processGrouping()));
+        connect(conversationModel,
+                SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                SLOT(processGrouping()));
+        connect(conversationModel,
+                SIGNAL(modelReset()),
+                SLOT(processGrouping()));
         Q_EMIT conversationModelChanged();
     }
+
+    QHash<int, QByteArray> roles = roleNames();
+    roles[EventsRole] = "events";
+    setRoleNames(roles);
+
+    processGrouping();
 }
 
 void ConversationProxyModel::onResetView()
@@ -142,8 +170,42 @@ void ConversationProxyModel::updateSorting()
 
 QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
 {
-    // TODO: implement the event count roles
-    return QSortFilterProxyModel::data(index, role);
+    if (!index.isValid()) {
+        return QVariant();
+    }
+
+    QModelIndex sourceIndex = mapToSource(index);
+
+    switch (role) {
+    case EventsRole: {
+        if (!mGrouped) {
+            return QVariant();
+        }
+
+        ConversationGroup group = groupForSourceIndex(sourceIndex);
+
+        // convert the event count into QVariantMap
+        QVariantMap eventMap;
+        Q_FOREACH(const QString & key, group.eventCount.keys()) {
+            eventMap[key] = group.eventCount[key];
+        }
+
+        qDebug() << "Event map:" << eventMap;
+        return eventMap;
+    }
+    case ConversationFeedModel::Timestamp:
+        if (mGrouped) {
+            ConversationGroup group = groupForSourceIndex(sourceIndex);
+            return group.latestTime;
+        }
+        return QSortFilterProxyModel::data(index, role);
+    case ConversationFeedModel::ItemType:
+        if (mGrouped && mSearchString.isEmpty()) {
+            return "group";
+        }
+    default:
+        return QSortFilterProxyModel::data(index, role);
+    }
 }
 
 bool ConversationProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -155,7 +217,7 @@ bool ConversationProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
     }
 
     /* So this is how filtering is done:
-     * - If there is a search term, onlyLatest is used to return just one result
+     * - If there is a search term, grouped is used to return just one result
      *   for contact alias and phone number matching, but individual messages are also returned.
      *   If phoneNumber is set, it is used as a filtering criteria,
      *   so if an entry doesn't match a non-empty search string, we return false.
@@ -174,41 +236,64 @@ bool ConversationProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
     }
 
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
-    QString groupingProperty = "contactId";
-    // TODO: fix the code for grouping contacts
-    /*if (mGrouped) {
+    if (mGrouped) {
+        ConversationGroup group = groupForSourceIndex(sourceIndex);
+        return (group.displayedRow == sourceRow);
+    }
+
+    if (!mFilterProperty.isEmpty() && !mFilterValue.isEmpty()) {
+        QString propertyValue = item->property(mFilterProperty.toLatin1().data()).toString();
+        return (propertyValue == mFilterValue);
+    }
+
+    return true;
+}
+
+void ConversationProxyModel::processGrouping()
+{
+    if (!sourceModel()) {
+        return;
+    }
+
+    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+
+    mGroupedEntries.clear();
+
+    int count = model->rowCount();
+    for (int row = 0; row < count; ++row) {
+        QModelIndex sourceIndex = model->index(row, 0, QModelIndex());
+        ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+        QString groupingProperty = "contactId";
         if (item->contactId().isEmpty()) {
             groupingProperty = model->groupingKeyForIndex(sourceIndex);
         }
 
-        ConversationGroup group;
-        bool displayed = true;
-        char *property = groupingProperty.toLatin1().data();
-        if (mGroupedEntries[groupingProperty].contains(item->property(property).toString())) {
-            group = mGroupedEntries[groupingProperty][item->property(property).toString()];
-            if (item->timestamp() > group.latestTime) {
-                group.latestTime = item->timestamp();
-            }
-            displayed = false;
-        } else {
-            group.displayedRow = sourceIndex.row();
-            group.latestTime = item->timestamp();
-        }
+        QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
+        ConversationGroup &group = mGroupedEntries[groupingProperty][propertyValue];
         group.eventCount[model->itemType(sourceIndex)]++;
 
+        if (item->timestamp() > group.latestTime) {
+            group.latestTime = item->timestamp();
+        }
 
-        mGroupedEntries[groupingProperty][item->property(property).toString()] = group;
-        QModelIndex index = mapFromSource(model->index(group.displayedRow));
-        Q_EMIT dataChanged(index, index);
-
-        return displayed;
-    }*/
-
-    if (!mFilterProperty.isEmpty() && !mFilterValue.isEmpty()) {
-        char *property = mFilterProperty.toLatin1().data();
-        QString itemProperty = item->property(property).toString();
-        return (itemProperty == mFilterValue);
+        if (group.displayedRow < 0) {
+            group.displayedRow = row;
+        }
     }
 
-    return true;
+    invalidateFilter();
+}
+
+ConversationGroup ConversationProxyModel::groupForSourceIndex(const QModelIndex &sourceIndex) const
+{
+    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+    ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+    QString groupingProperty = "contactId";
+    if (item->contactId().isEmpty()) {
+        groupingProperty = model->groupingKeyForIndex(sourceIndex);
+    }
+
+    QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
+    ConversationGroup group = mGroupedEntries[groupingProperty][propertyValue];
+    return group;
 }

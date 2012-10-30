@@ -25,6 +25,7 @@
 
 class ConversationGroup {
 public:
+    ConversationGroup() : displayedRow(-1) {}
     QMap<QString, int> eventCount;
     QDateTime latestTime;
     int displayedRow;
@@ -61,6 +62,10 @@ class ConversationProxyModel : public QSortFilterProxyModel
     Q_ENUMS(ModelRoles)
 
 public:
+    enum CustomRoles {
+        EventsRole = ConversationFeedModel::CustomRole
+    };
+
     explicit ConversationProxyModel(QObject *parent = 0);
 
     QString filterValue() const;
@@ -85,9 +90,6 @@ public:
 
     virtual QVariant data(const QModelIndex &index, int role) const;
 
-private Q_SLOTS:
-    void onResetView();
-
 Q_SIGNALS:
     void ascendingChanged();
     void conversationModelChanged();
@@ -98,6 +100,11 @@ Q_SIGNALS:
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+    ConversationGroup groupForSourceIndex(const QModelIndex &sourceIndex) const;
+
+private Q_SLOTS:
+    void onResetView();
+    void processGrouping();
 
 private:
     bool mAscending;
