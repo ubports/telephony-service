@@ -1,10 +1,12 @@
 import QtQuick 2.0
 import TelephonyApp 0.1
+import "../Widgets" as LocalWidgets
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components 0.1
 
-Item {
+LocalWidgets.TelephonyPage {
     id: messageList
+    title: "Conversations"
 
     anchors.fill: parent
 
@@ -12,20 +14,20 @@ Item {
         id: search
 
         anchors.top: parent.top
-        anchors.topMargin: 10
+        anchors.topMargin: units.gu(1)
         anchors.left: parent.left
-        anchors.leftMargin: 10
+        anchors.leftMargin: units.gu(1)
         anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.rightMargin: units.gu(1)
 
         placeholderText: "Search messages"
         Keys.onEscapePressed: text = ""
 
         primaryItem: AbstractButton {
-            width: 20
+            width: units.gu(3)
             Image {
                 anchors.left: parent.left
-                anchors.leftMargin: 5
+                anchors.leftMargin: units.gu(0.5)
                 anchors.verticalCenter: parent.verticalCenter
                 source: search.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
             }
@@ -36,7 +38,7 @@ Item {
     Column {
         id: buttons
         anchors.top: search.bottom
-        anchors.topMargin: 10
+        anchors.topMargin: units.gu(1)
         anchors.left: parent.left
         anchors.right: parent.right
 
@@ -46,9 +48,9 @@ Item {
             id: newMessage
             anchors.left: parent.left
             anchors.right: parent.right
-            __height: 30
-            __leftIconMargin: 19
-            __rightIconMargin: 14
+            height: units.gu(4)
+            __leftIconMargin: units.gu(2)
+            __rightIconMargin: units.gu(2)
 
             icon: Qt.resolvedUrl("../assets/add_new_message_icon.png")
             iconFrame: false

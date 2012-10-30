@@ -83,7 +83,7 @@ FocusScope {
         Item {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: editable ? 32 : 0
+            height: editable ? units.gu(4) : 0
             opacity: editable ? 1.0 : 0.0
             Behavior on height { LocalWidgets.StandardAnimation {}}
             Behavior on opacity { LocalWidgets.StandardAnimation {}}
@@ -91,9 +91,9 @@ FocusScope {
             ButtonWithForeground {
                 id: addButton
                 anchors.left: parent.left
-                anchors.leftMargin: 10
+                anchors.leftMargin: units.gu(1)
                 anchors.verticalCenter: parent.verticalCenter
-                width: 12
+                width: units.gu(2)
                 iconSource: "../assets/edit_contact_mode_add.png"
             }
 
@@ -101,9 +101,9 @@ FocusScope {
                 id: addText
 
                 anchors.left: addButton.right
-                anchors.leftMargin: 5
+                anchors.leftMargin: units.gu(0.5)
                 anchors.verticalCenter: parent.verticalCenter
-                anchors.verticalCenterOffset: -1
+                anchors.verticalCenterOffset: units.dp(-1)
                 fontSize: "x-small"
                 font.italic: true
                 elide: Text.ElideRight

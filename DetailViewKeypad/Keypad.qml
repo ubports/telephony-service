@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import Ubuntu.Components 0.1
 
 Item {
     id: keypad
@@ -12,11 +13,11 @@ Item {
         id: background
 
         anchors.fill: keys
-        anchors.leftMargin: -2
-        anchors.rightMargin: -2
-        anchors.bottomMargin: -1
+        anchors.leftMargin: units.dp(-2)
+        anchors.rightMargin: units.dp(-2)
+        anchors.bottomMargin: units.dp(-1)
         source: "../assets/keypad_background.png"
-        border {left: 15; right: 15; top: 2; bottom: 15}
+        border {left: units.dp(15); right: units.dp(15); top: units.dp(2); bottom: units.dp(15)}
         horizontalTileMode: BorderImage.Stretch
         verticalTileMode: BorderImage.Stretch
     }
@@ -35,7 +36,7 @@ Item {
 
         rows: 4
         columns: 3
-        spacing: 1
+        spacing: units.dp(1)
 
         KeypadButton {
             label: "1"

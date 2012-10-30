@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import Ubuntu.Components 0.1
 
 // FIXME: BUG WHEN SEARCHING
 
@@ -8,7 +9,7 @@ FocusScope {
     property alias model: searchView.model
     property alias delegate: searchView.delegate
     property alias count: searchView.count
-    property int listMaximumHeight: 400
+    property int listMaximumHeight: units.gu(50)
     property alias text: entry.text
     property int currentIndex: -1
     property alias hint: entry.hint

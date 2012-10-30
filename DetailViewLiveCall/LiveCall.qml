@@ -17,6 +17,15 @@ LocalWidgets.TelephonyPage {
 
     title: "On Call"
 
+    Component.onDestruction: {
+        // if this view was destroyed but we still have
+        // active calls, then it means it was manually removed
+        // from the stack
+        if (previousTab != -1 && callManager.hasCalls) {
+            telephony.selectedTabIndex = previousTab
+        }
+    }
+
     function endCall() {
         if (call) {
             call.endCall();
@@ -32,6 +41,9 @@ LocalWidgets.TelephonyPage {
         target: callManager
         onCallEnded: {
             if (!callManager.hasCalls) {
+                if (liveCall.visible && liveCall.previousTab != -1) {
+                    telephony.selectedTabIndex = liveCall.previousTab
+                }
                 telephony.endCall();
             }
         }
@@ -74,18 +86,18 @@ LocalWidgets.TelephonyPage {
                 id: picture
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                width: 140
-                height: 140
+                width: units.gu(18)
+                height: units.gu(18)
                 source: contact ? contact.avatar : fallbackSource
                 fallbackSource: "../assets/avatar_incall_rightpane.png"
-                darkBorder: true
+                ItemStyle.class: "dark-button"
             }
 
             TextCustom {
                 id: name
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: 15
+                anchors.topMargin: units.gu(2)
                 anchors.top: picture.bottom
                 text: contact ? contact.displayLabel : "Unknown Contact"
                 color: "white"
@@ -99,7 +111,7 @@ LocalWidgets.TelephonyPage {
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: name.bottom
-                anchors.topMargin: 2
+                anchors.topMargin: units.dp(2)
                 text: liveCall.number
                 color: "#a0a0a2"
                 style: Text.Sunken
@@ -112,7 +124,7 @@ LocalWidgets.TelephonyPage {
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.top: number.bottom
-                anchors.topMargin: 2
+                anchors.topMargin: units.dp(2)
                 // FIXME: add back geo-location information to the ContactEntry model
                 text: contact ? contact.geoLocation.label : ""
                 color: "#a0a0a2"
@@ -125,7 +137,7 @@ LocalWidgets.TelephonyPage {
                 id: dialing
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: 15
+                anchors.topMargin: units.gu(2)
                 anchors.top: location.text != "" ? location.bottom : number.bottom
 
                 text: "Dialing"
@@ -141,7 +153,7 @@ LocalWidgets.TelephonyPage {
                 time: call ? call.elapsedTime : 0
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: 15
+                anchors.topMargin: units.gu(2)
                 anchors.top: location.text != "" ? location.bottom : number.bottom
                 opacity: (call && !call.dialing) ? 1.0 : 0.0
             }
@@ -152,7 +164,7 @@ LocalWidgets.TelephonyPage {
                 visible: false
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: mainButtonsContainer.top
-                anchors.bottomMargin: 10
+                anchors.bottomMargin: units.gu(1)
                 onKeyPressed: {
                     if (call) {
                         call.sendDTMF(label)
@@ -173,12 +185,12 @@ LocalWidgets.TelephonyPage {
                     id: mainButtonsBackground
 
                     anchors.fill: parent
-                    anchors.topMargin: -2
-                    anchors.bottomMargin: -2
-                    anchors.leftMargin: -3
-                    anchors.rightMargin: -2
+                    anchors.topMargin: units.dp(-2)
+                    anchors.bottomMargin: units.dp(-2)
+                    anchors.leftMargin: units.dp(-3)
+                    anchors.rightMargin: units.dp(-2)
                     source: "../assets/incall_keypad_background.png"
-                    border {right: 14; left: 14; top: 10; bottom: 10}
+                    border {right: units.dp(14); left: units.dp(14); top: units.dp(10); bottom: units.dp(10)}
                     horizontalTileMode: BorderImage.Stretch
                     verticalTileMode: BorderImage.Stretch
                     smooth: true
@@ -188,10 +200,10 @@ LocalWidgets.TelephonyPage {
                     id: mainButtonsSeparators
 
                     anchors.fill: mainButtonsBackground
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 2
-                    anchors.leftMargin: 2
-                    anchors.rightMargin: 1
+                    anchors.topMargin: units.dp(1)
+                    anchors.bottomMargin: units.dp(2)
+                    anchors.leftMargin: units.dp(2)
+                    anchors.rightMargin: units.dp(1)
                     source: "../assets/livecall_keypad_div_tile.png"
                     fillMode: Image.Tile
                     verticalAlignment: Image.AlignTop
@@ -251,17 +263,17 @@ LocalWidgets.TelephonyPage {
 
             Row {
                 anchors.top: mainButtonsContainer.bottom
-                anchors.topMargin: 20
+                anchors.topMargin: units.gu(3)
                 anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 5
+                spacing: units.gu(0.5)
 
                 Button {
                     id: hangupButton
 
                     iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
-                    width: 64
+                    width: units.gu(8)
                     color: "#bf400c"
-                    darkBorder: true
+                    ItemStyle.class: "dark-button"
                     onClicked: endCall()
                 }
 
@@ -269,9 +281,9 @@ LocalWidgets.TelephonyPage {
                     id: addToContactsButton
 
                     iconSource: "../assets/incall_keypad_addcaller_unselected.png"
-                    width: 64
+                    width: units.gu(8)
                     color: "#666666"
-                    darkBorder: true
+                    ItemStyle.class: "dark-button"
                 }
             }
         }

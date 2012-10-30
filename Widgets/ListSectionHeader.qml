@@ -18,8 +18,8 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 
 Item {
-    width: 100
-    height: 16
+    width: units.gu(13)
+    height: units.gu(2)
 
     property alias text: label.text
 
@@ -27,16 +27,16 @@ Item {
     BorderImage {
         anchors.fill: parent
         source: "artwork/section_header.png"
-        border {left: 0; right: 0; top: 1; bottom: 1}
+        border {left: 0; right: 0; top: units.dp(1); bottom: units.dp(1)}
     }
 
     TextCustom {
         id: label
 
         anchors.left: parent.left
-        anchors.leftMargin: 10
+        anchors.leftMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -1
+        anchors.verticalCenterOffset: units.dp(-1)
         fontSize: "x-small"
         font.italic: true
         elide: Text.ElideRight
