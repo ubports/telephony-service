@@ -102,6 +102,10 @@ int ConversationAggregatorModel::rowCount(const QModelIndex &parent) const
 
 QModelIndex ConversationAggregatorModel::index(int row, int column, const QModelIndex &parent) const
 {
+    if (parent.isValid()) {
+        return QModelIndex();
+    }
+
     if (row < 0 || row > rowCount()) {
         return QModelIndex();
     }
@@ -117,18 +121,19 @@ QModelIndex ConversationAggregatorModel::index(int row, int column, const QModel
     return QModelIndex();
 }
 
-QModelIndex ConversationAggregatorModel::mapFromSource(const QModelIndex &index) const
+QModelIndex ConversationAggregatorModel::mapFromSource(const QModelIndex &sourceIndex) const
 {
-    if (!index.isValid()) {
-        return index;
+    if (!sourceIndex.isValid()) {
+        return sourceIndex;
     }
 
-    ConversationFeedModel *model = const_cast<ConversationFeedModel*>(qobject_cast<const ConversationFeedModel*>(index.model()));
+    ConversationFeedModel *model;
+    model = const_cast<ConversationFeedModel*>(qobject_cast<const ConversationFeedModel*>(sourceIndex.model()));
     if (!model || !mFeedModels.contains(model)) {
         return QModelIndex();
     }
 
-    return createIndex(index.row() + mModelOffsets[model], 0, (void*)model);
+    return index(sourceIndex.row() + mModelOffsets[model], 0, QModelIndex());
 }
 
 QModelIndex ConversationAggregatorModel::mapToSource(const QModelIndex &index) const
@@ -155,7 +160,7 @@ bool ConversationAggregatorModel::matchesSearch(const QString &searchTerm, const
     }
 
     ConversationFeedModel *model = static_cast<ConversationFeedModel*>(index.internalPointer());
-    return model->matchesSearch(searchTerm, index);
+    return model->matchesSearch(searchTerm, sourceIndex);
 }
 
 void ConversationAggregatorModel::updateOffsets()

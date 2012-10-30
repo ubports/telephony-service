@@ -37,7 +37,7 @@ public:
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QModelIndex index(int row, int column, const QModelIndex &parent) const;
 
-    QModelIndex mapFromSource(const QModelIndex &index) const;
+    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
     QModelIndex mapToSource(const QModelIndex &index) const;
 
     QString itemType(const QModelIndex &index) const;

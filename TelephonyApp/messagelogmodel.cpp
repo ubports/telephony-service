@@ -198,6 +198,7 @@ bool MessageLogModel::matchesSearch(const QString &searchTerm, const QModelIndex
     if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
         foundMatch = true;
     }
+
     return foundMatch || AbstractLoggerModel::matchesSearch(searchTerm, index);
 }
 
