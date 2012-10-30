@@ -18,7 +18,7 @@ FocusScope {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        spacing: 1
+        spacing: units.dp(1)
 
         AddressEditorField {
             id: street

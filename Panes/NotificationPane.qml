@@ -26,7 +26,7 @@ Page {
         id: icon
 
         anchors.centerIn: parent
-        anchors.verticalCenterOffset: -20
+        anchors.verticalCenterOffset: -units.gu(3)
         fillMode: Image.PreserveAspectFit
     }
 }

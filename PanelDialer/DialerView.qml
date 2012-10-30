@@ -27,15 +27,15 @@ LocalWidgets.TelephonyPage {
             height: childrenRect.height
 
             anchors.centerIn: parent
-            anchors.verticalCenterOffset: -26
+            anchors.verticalCenterOffset: -units.gu(3)
 
             KeypadEntry {
                 id: keypadEntry
 
                 anchors.left: keypad.left
                 anchors.right: keypad.right
-                anchors.leftMargin: -2
-                anchors.rightMargin: -2
+                anchors.leftMargin: units.dp(-2)
+                anchors.rightMargin: units.dp(-2)
                 focus: true
                 Keys.forwardTo: [callButton]
             }
@@ -51,7 +51,7 @@ LocalWidgets.TelephonyPage {
                 id: callButton
 
                 anchors.top: keypad.bottom
-                anchors.topMargin: 16
+                anchors.topMargin: units.gu(2)
                 color: "#c53e10"
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: telephony.callNumber(keypadEntry.value)
@@ -64,7 +64,7 @@ LocalWidgets.TelephonyPage {
                 iconSource: "../assets/tab_icon_contacts_inactive.png"
                 width: 48
                 color: "#565656"
-                darkBorder: true
+                ItemStyle.class: "dark-button"
                 onClicked: {
                     telephony.switchToTab(telephony.contactDetails.tab)
                 }

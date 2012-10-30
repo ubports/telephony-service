@@ -24,7 +24,7 @@ Item {
     property alias text: label.text
     property bool mirrored: false
 
-    width: 269
+    width: units.gu(34)
     height: bubble.height
 
     BorderImage {
@@ -33,15 +33,15 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        property int topPadding: 12
-        property int bottomPadding: 13
-        property int leftPadding: messageBubble.mirrored ? 17 : 33
-        property int rightPadding: 19
+        property int topPadding: units.gu(2)
+        property int bottomPadding: units.gu(2)
+        property int leftPadding: messageBubble.mirrored ? units.gu(2) : units.gu(4)
+        property int rightPadding: units.gu(2)
         height: label.height + topPadding + bottomPadding
 
         smooth: true
         source: messageBubble.mirrored ? "../assets/bubble_right.png" : "../assets/bubble_left.png"
-        border {top: 17; bottom: 22; left: messageBubble.mirrored ? 15 : 24; right: messageBubble.mirrored ? 24 : 15}
+        border {top: units.dp(17); bottom: units.dp(22); left: messageBubble.mirrored ? units.dp(15) : units.dp(24); right: messageBubble.mirrored ? units.dp(24) : units.dp(15)}
     }
 
     TextCustom {

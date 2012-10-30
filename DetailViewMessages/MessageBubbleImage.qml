@@ -15,6 +15,7 @@
  */
 
 import QtQuick 2.0
+import Ubuntu.Components 0.1
 
 // FIXME: when image to small in height, arrow is cropped
 Item {
@@ -22,8 +23,8 @@ Item {
 
     property alias imageSource: image.source
     property bool mirrored: false
-    property int maximumWidth: 400
-    property int maximumHeight: 200
+    property int maximumWidth: units.gu(50)
+    property int maximumHeight: units.gu(25)
 
     width: bubble.width
     height: bubble.height
@@ -50,15 +51,15 @@ Item {
     BorderImage {
         id: bubble
 
-        property int topPadding: 5
-        property int bottomPadding: 6
-        property int leftPadding: messageBubble.mirrored ? 6 : 14
-        property int rightPadding: messageBubble.mirrored ? 14 : 6
+        property int topPadding: units.gu(0.5)
+        property int bottomPadding: units.gu(1)
+        property int leftPadding: messageBubble.mirrored ? units.gu(1) : units.gu(2)
+        property int rightPadding: messageBubble.mirrored ? units.gu(2) : units.gu(1)
 
         width: image.paintedWidth + leftPadding + rightPadding
         height: image.paintedHeight + topPadding + bottomPadding
         smooth: true
         source: messageBubble.mirrored ? "../assets/bubble_image_right.png" : "../assets/bubble_image_left.png"
-        border {top: 20; bottom: 24; left: messageBubble.mirrored ? 19 : 27; right: messageBubble.mirrored ? 27 : 19}
+        border {top: units.dp(20); bottom: units.dp(24); left: messageBubble.mirrored ? units.dp(19) : units.dp(27); right: messageBubble.mirrored ? units.dp(27) : units.dp(19)}
     }
 }

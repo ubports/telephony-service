@@ -194,6 +194,10 @@ void ContactModel::updateContact(ContactEntry *entry)
 
 void ContactModel::addContacts(const QList<QContact> &contacts)
 {
+    if (!contacts.count()) {
+        return;
+    }
+
     ContactEntry *pending = 0;
 
     beginInsertRows(QModelIndex(), mContactEntries.count(), mContactEntries.count()+contacts.count()-1);

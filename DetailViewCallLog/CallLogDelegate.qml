@@ -18,7 +18,7 @@ ListItem.Base {
 
         anchors.left: parent.left
         anchors.right: separator.left
-        height: 58
+        height: units.gu(7)
         iconSource: (avatar != "") ? avatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
@@ -31,9 +31,9 @@ ListItem.Base {
         id: timeLabel
 
         anchors.right: separator.left
-        anchors.rightMargin: 9
+        anchors.rightMargin: units.gu(1)
         anchors.bottom: infoBox.bottom
-        anchors.bottomMargin: 3
+        anchors.bottomMargin: units.gu(0.5)
         fontSize: "small"
         color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
         style: Text.Raised
@@ -47,7 +47,7 @@ ListItem.Base {
         anchors.left: timeLabel.left
         anchors.right: timeLabel.right
         anchors.bottom: timeLabel.top
-        anchors.bottomMargin: 2
+        anchors.bottomMargin: units.dp(2)
 
         Image {
             source: {
@@ -70,7 +70,7 @@ ListItem.Base {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: actionBox.left
-        width: 1
+        width: units.dp(1)
         color: "black"
         opacity: 0.1
         visible: phoneNumber != "-"
@@ -82,8 +82,8 @@ ListItem.Base {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        anchors.rightMargin: 2
-        anchors.topMargin: 1
+        anchors.rightMargin: units.dp(2)
+        anchors.topMargin: units.dp(1)
         width: height
         selected: callItem.selected
 

@@ -6,7 +6,7 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 
 ListItem.Base {
     id: messageDelegate
-    __height: 58
+    __height: units.gu(7)
     showDivider: true
 
     LocalWidgets.CustomListItemBase {
@@ -27,9 +27,9 @@ ListItem.Base {
         id: subsublabel
 
         anchors.baseline: parent.bottom
-        anchors.baselineOffset: -baseInfo.padding + 4
+        anchors.baselineOffset: -baseInfo.padding + units.gu(0.5)
         anchors.right: parent.right
-        anchors.rightMargin: baseInfo.padding - 1
+        anchors.rightMargin: baseInfo.padding - units.dp(1)
         horizontalAlignment: Text.AlignRight
         fontSize: "x-small"
 

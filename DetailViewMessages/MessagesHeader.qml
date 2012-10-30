@@ -12,7 +12,9 @@ BaseMessageHeader {
         id: name
 
         anchors.left: parent.left
-        anchors.leftMargin: 13
+        anchors.leftMargin: units.gu(2)
+        anchors.right: icon.left
+        anchors.rightMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
         fontSize: "large"
         elide: Text.ElideRight
@@ -26,10 +28,10 @@ BaseMessageHeader {
         id: icon
 
         anchors.right: parent.right
-        anchors.rightMargin: 10
+        anchors.rightMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -1
-        width: 28
+        anchors.verticalCenterOffset: units.dp(-1)
+        width: units.gu(4)
         height: width
         source: contact ? contact.avatar : fallbackSource
         fallbackSource: "../assets/avatar_messaging.png"
@@ -42,11 +44,11 @@ BaseMessageHeader {
 
     Item {
         anchors.right: icon.left
-        anchors.rightMargin: 5
+        anchors.rightMargin: units.gu(0.5)
         anchors.left: name.right
-        anchors.leftMargin: 10
+        anchors.leftMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: -1
+        anchors.verticalCenterOffset: units.dp(-1)
         height: childrenRect.height
 
         TextCustom {
@@ -68,7 +70,7 @@ BaseMessageHeader {
             id: sublabel
 
             anchors.top: label.bottom
-            anchors.topMargin: 1
+            anchors.topMargin: units.dp(1)
             anchors.left: parent.left
             anchors.right: parent.right
             horizontalAlignment: Text.AlignRight

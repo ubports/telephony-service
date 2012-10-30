@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import Ubuntu.Components 0.1
 import "../fontUtils.js" as Font
 
 FocusScope {
@@ -6,14 +7,14 @@ FocusScope {
 
     property alias value: input.text
 
-    height: 49
+    height: units.gu(6)
 
     BorderImage {
         id: background
 
         anchors.fill: parent
         source: "../assets/keypad_entry_background.png"
-        border {left: 15; right: 15; top: 18; bottom: 1}
+        border {left: units.dp(15); right: units.dp(15); top: units.dp(18); bottom: units.dp(1)}
         horizontalTileMode: BorderImage.Stretch
         verticalTileMode: BorderImage.Stretch
     }
@@ -22,11 +23,11 @@ FocusScope {
         id: input
 
         anchors.left: parent.left
-        anchors.leftMargin: 19
+        anchors.leftMargin: units.gu(2)
         anchors.right: backspace.left
-        anchors.rightMargin: 10
+        anchors.rightMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: 1
+        anchors.verticalCenterOffset: units.dp(1)
         height: font.pixelSize
         horizontalAlignment: TextInput.AlignRight
         text: ""
@@ -38,7 +39,7 @@ FocusScope {
     BackspaceButton {
         id: backspace
         anchors.right: parent.right
-        anchors.rightMargin: 19
+        anchors.rightMargin: units.gu(2)
         anchors.verticalCenter: input.verticalCenter
         onClicked:  {
             if (input.cursorPosition != 0)  {

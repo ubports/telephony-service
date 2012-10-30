@@ -5,12 +5,8 @@ import Ubuntu.Components 0.1
 Item {
     id: telephony
 
-    width: singlePane ? 360 : 640
-    height: 640
-
-    // FIXME: remove this once the resolution independency stuff gets in.
-    scale: 2
-    transformOrigin: Item.TopLeft
+    width: singlePane ? units.gu(45) : units.gu(80)
+    height: units.gu(80)
 
     state: appLayout
     property bool singlePane: state == "singlePane"
@@ -136,7 +132,7 @@ Item {
 
     Tabs {
         id: tabs
-        anchors.topMargin: 7
+        anchors.topMargin: units.gu(1)
         anchors.fill: leftPane
         parent: leftPane
         buttonsExpanded: true
@@ -170,7 +166,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: singlePane ? parent.right : undefined
-        width: 250
+        width: units.gu(31)
 
         Image {
             id: background
@@ -186,7 +182,7 @@ Item {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            width: 1
+            width: units.dp(1)
             color: "white"
             opacity: 0.3
         }

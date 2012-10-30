@@ -23,7 +23,8 @@
 #include <QDebug>
 
 ContactProxyModel::ContactProxyModel(QObject *parent) :
-    QSortFilterProxyModel(parent)
+    QSortFilterProxyModel(parent),
+    mFavoriteOnly(false)
 {
     setDynamicSortFilter(true);
     setSortLocaleAware(true);
@@ -61,6 +62,18 @@ void ContactProxyModel::setFilterText(const QString &value)
     }
 }
 
+bool ContactProxyModel::favoriteOnly()
+{
+    return mFavoriteOnly;
+}
+
+void ContactProxyModel::setFavoriteOnly(bool enable)
+{
+    mFavoriteOnly = enable;
+    invalidateFilter();
+    Q_EMIT favoriteOnlyChanged();
+}
+
 bool ContactProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     Q_UNUSED(sourceParent)
@@ -71,6 +84,11 @@ bool ContactProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     if (!entry) {
         qWarning() << "ContactRole did not return a valid entry!";
         return false;
+    }
+
+    if (mFavoriteOnly) {
+        if (!entry->isFavorite())
+            return false;
     }
 
     if (mFilterText.isEmpty()) {

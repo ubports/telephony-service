@@ -66,7 +66,7 @@ LocalWidgets.TelephonyPage {
                 id: name
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: 15
+                anchors.topMargin: units.gu(2)
                 anchors.bottom: number.top
                 text: "Voicemail"
                 color: "white"
@@ -80,7 +80,7 @@ LocalWidgets.TelephonyPage {
 
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.bottom: stopWatch.top
-                anchors.topMargin: 2
+                anchors.topMargin: units.gu(0.5)
                 text: voicemail.number
                 color: "#a0a0a2"
                 style: Text.Sunken
@@ -92,7 +92,7 @@ LocalWidgets.TelephonyPage {
                 id: dialing
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: 15
+                anchors.topMargin: units.gu(2)
                 anchors.top: number.bottom
 
                 text: "Dialing"
@@ -108,7 +108,7 @@ LocalWidgets.TelephonyPage {
                 time: call && call.voicemail ? call.elapsedTime : 0
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: 15
+                anchors.topMargin: units.gu(2)
                 anchors.bottom: keypad.top
                 opacity: (call && call.voicemail && !call.dialing) ? 1.0 : 0.0
             }
@@ -127,15 +127,15 @@ LocalWidgets.TelephonyPage {
 
             Row {
                 anchors.top: keypad.bottom
-                anchors.topMargin: 20
+                anchors.topMargin: units.gu(3)
                 anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 5
+                spacing: units.gu(0.5)
                 Button {
                     id: dialhangupButton
                     iconSource: isVoicemailActive() ? "../assets/incall_keypad_endcallbutton_icon.png" : "../assets/voicemail_icon.png"
-                    width: isVoicemailActive() ? 64 : 128
+                    width: isVoicemailActive() ? units.gu(8) : units.gu(16)
                     color: isVoicemailActive() ? "#bf400c" : "#268bd2"
-                    darkBorder: true
+                    ItemStyle.class: "dark-button"
                     onClicked: {
                         if(isVoicemailActive())
                             endCall()
@@ -146,11 +146,11 @@ LocalWidgets.TelephonyPage {
 
                 Button {
                     id: speakerButton
-                    width: 64
+                    width: units.gu(8)
                     visible: isVoicemailActive()
                     iconSource: call && call.speaker ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
                     color: "#565656"
-                    darkBorder: true
+                    ItemStyle.class: "dark-button"
                     state: call && call.speaker ? "pressed" : ""
                     onClicked: {
                         if (call) {
