@@ -190,7 +190,6 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
             eventMap[key] = group.eventCount[key];
         }
 
-        qDebug() << "Event map:" << eventMap;
         return eventMap;
     }
     case ConversationFeedModel::Timestamp:

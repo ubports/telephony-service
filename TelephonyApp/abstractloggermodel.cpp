@@ -155,6 +155,25 @@ QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
     }
 }
 
+bool AbstractLoggerModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
+{
+    LoggerItem *entry = dynamic_cast<LoggerItem*>(entryFromIndex(index));
+    bool foundMatch = false;
+
+    QString value = entry->contactAlias();
+    if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
+        foundMatch = true;
+    }
+
+    // Test the phone number
+    value = entry->phoneNumber();
+    if (ContactModel::instance()->comparePhoneNumbers(value, searchTerm)) {
+        foundMatch = true;
+    }
+
+    return foundMatch;
+}
+
 void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
 {
     // add the events to the list

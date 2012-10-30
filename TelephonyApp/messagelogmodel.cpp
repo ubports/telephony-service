@@ -188,28 +188,17 @@ MessageLogEntry *MessageLogModel::messageById(const QString &messageId)
 bool MessageLogModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
 {
     bool foundMatch = false;
-    MessageLogEntry *entry = dynamic_cast<MessageLogEntry*>(index.data(ConversationFeedModel::FeedItem).value<MessageLogEntry*>());
+    MessageLogEntry *entry = dynamic_cast<MessageLogEntry*>(entryFromIndex(index));
     if (!entry) {
         return false;
     }
 
-    QString value = entry->contactAlias();
-    if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
-        foundMatch = true;
-    }
-
-    // Test the phone number
-    value = entry->phoneNumber();
-    if (ContactModel::instance()->comparePhoneNumbers(value, searchTerm)) {
-        foundMatch = true;
-    }
-
     // Test the message text. Even if onlyLatest is set, we return all text entries that match
-    value = entry->message();
+    QString value = entry->message();
     if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
         foundMatch = true;
     }
-    return foundMatch;
+    return foundMatch || AbstractLoggerModel::matchesSearch(searchTerm, index);
 }
 
 QString MessageLogModel::itemType(const QModelIndex &index) const

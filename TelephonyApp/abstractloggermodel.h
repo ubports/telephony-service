@@ -80,6 +80,8 @@ protected:
 
     virtual QVariant data(const QModelIndex &index, int role) const;
 
+    virtual bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
+
 protected Q_SLOTS:
     void onPendingEntitiesFinished(Tpl::PendingOperation *op);
     void onPendingDatesFinished(Tpl::PendingOperation *op);
