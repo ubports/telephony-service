@@ -36,7 +36,8 @@ public:
         Timestamp,
         Incoming,
         ItemType,
-        FeedItem
+        FeedItem,
+        CustomRole
     };
 
     /**
