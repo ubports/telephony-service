@@ -49,6 +49,12 @@ void AbstractLoggerModel::populate()
     fetchLog();
 }
 
+QString AbstractLoggerModel::groupingKeyForIndex(const QModelIndex &index) const
+{
+    Q_UNUSED(index);
+    return "phoneNumber";
+}
+
 void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entityTypes)
 {
     Tpl::PendingEntities *pendingEntities = mLogManager->queryEntities(TelepathyHelper::instance()->account());
@@ -148,6 +154,11 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         if (!entry) {
             continue;
         }
+
+        // TODO: investigate why TelepathyLoggerQt is calling this method from another thread
+        // temporarily we are just moving the object to the correct thread.
+        entry->moveToThread(thread());
+
         entry->setIncoming(event->sender()->entityType() != Tpl::EntityTypeSelf);
         entry->setTimestamp(event->timestamp());
 
@@ -157,6 +168,9 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
         if (!checkNonStandardNumbers(entry)) {
             // set the alias from the entity as a fallback value in case the contact is not found.
             entry->setContactAlias(remoteEntity->alias());
+            if (entry->contactAlias().isEmpty()) {
+                entry->setContactAlias(entry->phoneNumber());
+            }
 
             ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(entry->phoneNumber());
             if (contact) {

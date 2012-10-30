@@ -57,6 +57,8 @@ public:
 
     virtual void populate();
 
+    virtual QString groupingKeyForIndex(const QModelIndex &index) const;
+
 Q_SIGNALS:
     void resetView();
     
