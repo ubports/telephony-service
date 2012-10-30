@@ -30,6 +30,7 @@
 #include <QContactEmailAddress>
 #include <QContactOnlineAccount>
 #include <QContactPhoneNumber>
+#include <QContactFavorite>
 #include <QDebug>
 #include <QLocale>
 
@@ -53,6 +54,21 @@ QContactId ContactEntry::id() const
 QString ContactEntry::idString() const
 {
     return id().toString();
+}
+
+bool ContactEntry::isFavorite() const
+{
+    return mContact.detail<QContactFavorite>().isFavorite();
+}
+
+void ContactEntry::setFavorite(bool value)
+{
+    if (value != isFavorite()) {
+        QContactFavorite favorite = mContact.detail<QContactFavorite>();
+        favorite.setFavorite(value);
+        mContact.saveDetail(&favorite);
+        Q_EMIT changed(this);
+    }
 }
 
 QString ContactEntry::displayLabel() const
