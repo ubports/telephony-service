@@ -77,7 +77,7 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mConversationModel = new ConversationAggregatorModel(this);
     mConversationModel->addFeedModel(mCallLogModel);
     mConversationModel->addFeedModel(mMessageLogModel);
-    mRootContext->setContextProperty("conversationModel", mConversationModel);
+    mRootContext->setContextProperty("conversationAggregatorModel", mConversationModel);
 }
 
 void Components::registerTypes(const char *uri)
