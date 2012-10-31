@@ -35,3 +35,6 @@ inline QString telephonyAppDirectory() {
     }
 }
 
+inline bool isTelephonyApplicationInstance() {
+    return QCoreApplication::applicationName() == "com.canonical.TelephonyApp";
+}
