@@ -13,6 +13,7 @@
 #include <QDBusConnectionInterface>
 #include "config.h"
 #include "telephonyappdbus.h"
+#include <QQmlEngine>
 
 static void printUsage(const QStringList& arguments)
 {
@@ -91,8 +92,8 @@ bool TelephonyApplication::setup()
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     m_view->rootContext()->setContextProperty("dbus", m_dbus);
     m_view->rootContext()->setContextProperty("appLayout", singlePanel ? "singlePane" : "dualPane" );
-    QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
-    m_view->setSource(source);
+    m_view->engine()->setBaseUrl(QUrl::fromLocalFile(telephonyAppDirectory()));
+    m_view->setSource(QUrl::fromLocalFile("telephony-app.qml"));
     m_view->show();
 
     QObject::connect(m_dbus, SIGNAL(request(QString)), this, SLOT(onMessageReceived(QString)));
