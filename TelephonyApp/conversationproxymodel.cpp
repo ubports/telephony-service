@@ -276,6 +276,14 @@ void ConversationProxyModel::processGrouping()
         }
     }
 
+    // notify changes for all items to make sure everything gets updated correctly
+    Q_FOREACH(const QString &prop, mGroupedEntries.keys()) {
+        Q_FOREACH(const ConversationGroup &group, mGroupedEntries[prop].values()) {
+            QModelIndex index = mapFromSource(model->index(group.displayedRow, 0, QModelIndex()));
+            Q_EMIT dataChanged(index, index);
+        }
+    }
+
     invalidateFilter();
 }
 
