@@ -22,8 +22,8 @@ Item {
     property ViewModel voicemail: ViewModel {source: "DetailViewVoicemail/Voicemail.qml"; tab: 0 }
     property ViewModel communication: ViewModel {source: "DetailViewCommunication/CommunicationView.qml"; tab: 1 }
     property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"; tab: 0 }
+    property ViewModel dialer: ViewModel {source: "PanelDialer/DialerView.qml"; tab: 0 }
     property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"; tab: 2 }
-    property ViewModel keypad: ViewModel {source: "DetailViewKeypad/KeypadView.qml"; tab: 0 }
     property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"; tab: 0 }
 
     signal applicationReady
@@ -38,6 +38,10 @@ Item {
     Connections {
         target: contactModel
         onContactLoaded: telephony.showContactDetails(contact);
+    }
+
+    function switchToTab(index) {
+        selectedTabIndex = index
     }
 
     function showLiveCall(clear) {
@@ -62,11 +66,23 @@ Item {
     }
 
     function callNumber(number) {
+        var callStack = rightPaneStacks.children[dialer.tab]
+        if (callStack.currentPage.source == dialer.source) {
+            view.dialNumber = ""
+        }
         callManager.startCall(number);
+    }
+
+    function callVoicemail(number) {
+        callNumber(callManager.voicemailNumber);
     }
 
     function showCommunication(prop, value, clear) {
         var properties = { filterProperty: filterValue, newMessage: false };
+        if (contactId) {
+            properties["contactId"] = contactId;
+        }
+
         if (clear) {
             resetView();
         }
@@ -76,7 +92,7 @@ Item {
 
     function endCall() {
         var callStack = rightPaneStacks.children[liveCall.tab]
-        if (callStack.currentPage.source == liveCall.source) {
+        if (callStack.currentPage.source == liveCall.source || callStack.currentPage.source == voicemail.source) {
             callStack.pop();
         }
     }
@@ -105,11 +121,6 @@ Item {
         communication.load({ newMessage: true })
     }
 
-    function showKeypad() {
-        resetView();
-        keypad.load()
-    }
-
     function showCallLog() {
         resetView();
         callLog.load()
@@ -136,7 +147,7 @@ Item {
             iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
             page: singlePane ? undefined : Qt.resolvedUrl(panel)
             property string pane: "Panes/CallEndedPane.qml"
-            property string panel: "PanelCalls/CallPanel.qml"
+            property string panel: "PanelDialer/DialerView.qml"
         }
 
         Tab {
@@ -188,6 +199,7 @@ Item {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: shown ? 0 : -height
             Behavior on anchors.bottomMargin { LocalWidgets.StandardAnimation {}}
+            z: 1
 
             property bool shown
             shown: {
@@ -230,10 +242,12 @@ Item {
                 visible: isCurrent
                 onSourceChanged: {
                     stack.push(Qt.resolvedUrl(source))
+                    stack.currentPage.source = Qt.resolvedUrl(source);
                 }
 
                 Component.onCompleted: {
                     stack.push(Qt.resolvedUrl(source))
+                    stack.currentPage.source = Qt.resolvedUrl(source);
                 }
             }
         }

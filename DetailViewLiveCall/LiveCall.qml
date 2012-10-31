@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 import "../Widgets" as LocalWidgets
-import "../DetailViewKeypad"
+import "../PanelDialer"
 import "../"
 
 LocalWidgets.TelephonyPage {

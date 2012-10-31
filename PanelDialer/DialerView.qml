@@ -1,9 +1,17 @@
 import QtQuick 2.0
+import Ubuntu.Components 0.1
 import "../Widgets" as LocalWidgets
 
 LocalWidgets.TelephonyPage {
-    title: "Keypad"
+    title: "Dialer"
     anchors.fill: parent
+    property string voicemailNumber: callManager.voicemailNumber
+    property alias dialNumber: keypadEntry.value
+
+    function isVoicemailActive() {
+        return telephony.isVoicemailActive();
+    }
+
     FocusScope {
         anchors.fill: parent
         focus: true
@@ -45,8 +53,22 @@ LocalWidgets.TelephonyPage {
 
                 anchors.top: keypad.bottom
                 anchors.topMargin: units.gu(2)
+                color: "#c53e10"
                 anchors.horizontalCenter: parent.horizontalCenter
                 onClicked: telephony.callNumber(keypadEntry.value)
+            }
+
+            Button {
+                id: contactListButton
+                anchors.left: callButton.right
+                anchors.verticalCenter: callButton.verticalCenter
+                iconSource: "../assets/tab_icon_contacts_inactive.png"
+                width: 48
+                color: "#565656"
+                ItemStyle.class: "dark-button"
+                onClicked: {
+                    telephony.switchToTab(telephony.contactDetails.tab)
+                }
             }
         }
     }

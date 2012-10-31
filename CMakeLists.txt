@@ -76,12 +76,11 @@ install(FILES ${QML_JS_FILES}
 set(QML_DIRS
     DetailViewCallLog
     DetailViewContact
-    DetailViewKeypad
     DetailViewLiveCall
     DetailViewVoicemail
     DetailViewCommunication
     LiveCallDetailView
-    PanelCalls
+    PanelDialer
     PanelContacts
     PanelCommunications
     Panes
