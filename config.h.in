@@ -20,6 +20,9 @@
 // Qt
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusReply>
 
 inline bool isRunningInstalled() {
     static bool installed = (QCoreApplication::applicationDirPath() ==
@@ -37,4 +40,12 @@ inline QString telephonyAppDirectory() {
 
 inline bool isTelephonyApplicationInstance() {
     return QCoreApplication::applicationName() == "com.canonical.TelephonyApp";
+}
+
+inline bool isTelephonyApplicationRunning() {
+    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered("com.canonical.TelephonyApp");
+    if (reply.isValid()) {
+        return reply.value();
+    }
+    return false;
 }

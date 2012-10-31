@@ -20,6 +20,7 @@
 #include "chatmanager.h"
 #include "contactmodel.h"
 #include "telepathyhelper.h"
+#include "config.h"
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
@@ -37,6 +38,15 @@ ChatManager *ChatManager::instance()
 
 bool ChatManager::isChattingToContact(const QString &phoneNumber)
 {
+    // if this is not running in the telephony application instance,
+    // we only send messages directly if the app is not running
+
+    // if it is running, we assume we can chat to a contact directly
+    if (!isTelephonyApplicationInstance() &&
+        isTelephonyApplicationRunning()) {
+        return true;
+    }
+
     return !existingChat(phoneNumber).isNull();
 }
 
@@ -75,6 +85,18 @@ void ChatManager::endChat(const QString &phoneNumber)
 
 void ChatManager::sendMessage(const QString &phoneNumber, const QString &message)
 {
+    // if the telephony-app is running, just send a message using it
+    if (!isTelephonyApplicationInstance() &&
+        isTelephonyApplicationRunning()) {
+        QDBusInterface telephonyApp("com.canonical.TelephonyApp",
+                                    "/com/canonical/TelephonyApp",
+                                    "com.canonical.TelephonyApp");
+
+        telephonyApp.call("SendMessage", phoneNumber, message);
+        Q_EMIT messageSent(phoneNumber, message);
+        return;
+    }
+
     Tp::TextChannelPtr channel = existingChat(phoneNumber);
     if (channel.isNull()) {
         return;

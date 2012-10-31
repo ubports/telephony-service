@@ -58,6 +58,11 @@ void TelephonyAppDBus::NewMessage()
     Q_EMIT request(QString("message://"));
 }
 
+void TelephonyAppDBus::SendMessage(const QString &number, const QString &message)
+{
+    Q_EMIT messageSendRequested(number, message);
+}
+
 void TelephonyAppDBus::ShowVoicemail()
 {
     Q_EMIT request(QString("voicemail://"));

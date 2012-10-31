@@ -20,6 +20,13 @@
                Request to open the messages tab to send a new message.
             ]]></dox:d>
         </method>
+        <method name="SendMessage">
+            <dox:d><![CDATA[
+               Request to send a message to a contact.
+            ]]></dox:d>
+            <arg name="number" type="s" direction="in"/>
+            <arg name="message" type="s" direction="in"/>
+        </method>
         <method name="ShowVoicemail">
             <dox:d><![CDATA[
                Request to open the voicemail tab.

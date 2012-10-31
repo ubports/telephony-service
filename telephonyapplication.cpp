@@ -96,7 +96,13 @@ bool TelephonyApplication::setup()
     m_view->setSource(source);
     m_view->show();
 
-    QObject::connect(m_dbus, SIGNAL(request(QString)), this, SLOT(onMessageReceived(QString)));
+    connect(m_dbus,
+            SIGNAL(request(QString)),
+            SLOT(onMessageReceived(QString)));
+    connect(m_dbus,
+            SIGNAL(messageSendRequested(QString,QString)),
+            SLOT(onMessageSendRequested(QString,QString)));
+
     return true;
 }
 
@@ -125,6 +131,22 @@ void TelephonyApplication::onApplicationReady()
     m_applicationIsReady = true;
     parseArgument(m_arg);
     m_arg.clear();
+}
+
+void TelephonyApplication::onMessageSendRequested(const QString &phoneNumber, const QString &message)
+{
+    QQuickItem *telephony = m_view->rootObject();
+    if (!telephony) {
+        return;
+    }
+    const QMetaObject *mo = telephony->metaObject();
+    int index = mo->indexOfMethod("sendMessage(QVariant,QVariant)");
+    if (index != -1) {
+        QMetaMethod method = mo->method(index);
+        method.invoke(telephony,
+                      Q_ARG(QVariant, QVariant(phoneNumber)),
+                      Q_ARG(QVariant, QVariant(message)));
+    }
 }
 
 void TelephonyApplication::parseArgument(const QString &arg)
@@ -202,4 +224,3 @@ void TelephonyApplication::activateWindow()
         m_view->requestActivateWindow();
     }
 }
-

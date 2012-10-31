@@ -27,6 +27,7 @@ private Q_SLOTS:
     void onMessageReceived(const QString &message);
     void onViewStatusChanged(QQuickView::Status status);
     void onApplicationReady();
+    void onMessageSendRequested(const QString &phoneNumber, const QString &message);
 
 private:
     QQuickView *m_view;
