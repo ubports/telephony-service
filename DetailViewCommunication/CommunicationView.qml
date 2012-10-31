@@ -2,6 +2,7 @@ import QtQuick 2.0
 import TelephonyApp 0.1
 import "../Widgets" as LocalWidgets
 import "../"
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 LocalWidgets.TelephonyPage {
     id: view
@@ -9,6 +10,8 @@ LocalWidgets.TelephonyPage {
     property alias number: contactWatcher.phoneNumber
     property alias contactId: contactWatcher.contactId
     property bool newMessage: false
+    property alias filterProperty: conversationProxyModel.filterProperty
+    property alias filterValue: conversationProxyModel.filterValue
 
     property string pendingMessage
 
@@ -58,6 +61,14 @@ LocalWidgets.TelephonyPage {
         view.contact = contactModel.contactFromPhoneNumber(number);
 
         updateActiveChat();
+    }
+
+    ConversationProxyModel {
+        id: conversationProxyModel
+        conversationModel: conversationAggregatorModel
+        //searchString: search.text
+        ascending: false
+        grouped: false
     }
 
     Item {
@@ -126,18 +137,61 @@ LocalWidgets.TelephonyPage {
     Loader {
         id: messagesLoader
 
-        sourceComponent: view.newMessage ? undefined : messagesComponent
+        sourceComponent: view.newMessage ? undefined : conversationComponent
         anchors.top: headerLoader.bottom
         anchors.bottom: footer.top
     }
 
     Component {
-        id: messagesComponent
-        Messages {
-            id: messages
+        id: messageComponent
+        MessageItemDelegate {
+            id: messageItemDelegate
+        }
+    }
+
+    Component {
+        id: callComponent
+        CallItemDelegate {
+            id: callItemDelegate
+        }
+    }
+
+    Component {
+        id: conversationComponent
+        ListView {
             width: view.width
             height: view.height - footer.height - headerLoader.height
-            number: view.number
+            model: conversationProxyModel
+            clip: true
+            delegate: ListItem.Base {
+                id: delegate
+                anchors.left: parent.left
+                anchors.right: parent.right
+                showDivider: true
+                __height: 58
+
+                Loader {
+                    property string contactId: model ? model.contactId : ""
+                    property string contactAlias: model ? model.contactAlias : ""
+                    property url contactAvatar: model ? model.contactAvatar : ""
+                    property variant timestamp: model ? model.timestamp : null
+                    property bool incoming: model ? model.incoming : false
+                    property string itemType: model ? model.itemType : "none"
+                    property QtObject item: model ? model.item : null
+                    property variant events: model ? model.events : null
+                    anchors.fill: parent
+                    sourceComponent: {
+                        switch (itemType) {
+                        case "message":
+                            messageComponent;
+                            break;
+                        case "call":
+                            callComponent;
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 

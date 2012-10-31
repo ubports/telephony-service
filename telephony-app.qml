@@ -68,7 +68,7 @@ Item {
     function callNumber(number) {
         var callStack = rightPaneStacks.children[dialer.tab]
         if (callStack.currentPage.source == dialer.source) {
-            view.dialNumber = ""
+            callStack.currentPage.dialNumber = ""
         }
         callManager.startCall(number);
     }
@@ -78,10 +78,7 @@ Item {
     }
 
     function showCommunication(prop, value, clear) {
-        var properties = { filterProperty: filterValue, newMessage: false };
-        if (contactId) {
-            properties["contactId"] = contactId;
-        }
+        var properties = { filterProperty: prop, filterValue: value, newMessage: false };
 
         if (clear) {
             resetView();

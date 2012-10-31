@@ -11,9 +11,9 @@ BaseMessageHeader {
     TextCustom {
         id: name
 
-        anchors.left: parent.left
+        anchors.left: icon.right
         anchors.leftMargin: units.gu(2)
-        anchors.right: icon.left
+        anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
         fontSize: "large"
