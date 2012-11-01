@@ -53,7 +53,7 @@ Item {
             }
 
             if (pendingMessage != "") {
-                chatManager.sendMessage(number, pendingMessage);
+                chatManager.sendMessage(pendingNumber, pendingMessage);
                 pendingMessage = "";
                 pendingNumber = "";
             }
