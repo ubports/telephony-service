@@ -20,6 +20,7 @@
 #include "chatmanager.h"
 #include "contactmodel.h"
 #include "telepathyhelper.h"
+#include "config.h"
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
@@ -37,6 +38,15 @@ ChatManager *ChatManager::instance()
 
 bool ChatManager::isChattingToContact(const QString &phoneNumber)
 {
+    // if this is not running in the telephony application instance,
+    // we only send messages directly if the app is not running
+
+    // if it is running, we assume we can chat to a contact directly
+    if (!isTelephonyApplicationInstance() &&
+        isTelephonyApplicationRunning()) {
+        return true;
+    }
+
     return !existingChat(phoneNumber).isNull();
 }
 
@@ -75,13 +85,26 @@ void ChatManager::endChat(const QString &phoneNumber)
 
 void ChatManager::sendMessage(const QString &phoneNumber, const QString &message)
 {
+    // if the telephony-app is running, just send a message using it
+    if (!isTelephonyApplicationInstance() &&
+        isTelephonyApplicationRunning()) {
+        QDBusInterface telephonyApp("com.canonical.TelephonyApp",
+                                    "/com/canonical/TelephonyApp",
+                                    "com.canonical.TelephonyApp");
+
+        telephonyApp.call("SendMessage", phoneNumber, message);
+        Q_EMIT messageSent(phoneNumber, message);
+        return;
+    }
+
     Tp::TextChannelPtr channel = existingChat(phoneNumber);
     if (channel.isNull()) {
         return;
     }
 
-    channel->send(message);
-    Q_EMIT messageSent(phoneNumber, message);
+    connect(channel->send(message),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
 void ChatManager::acknowledgeMessages(const QString &phoneNumber)
@@ -162,6 +185,22 @@ void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
     Q_EMIT unreadMessagesChanged(message.sender()->id());
 }
 
+void ChatManager::onMessageSent(Tp::PendingOperation *op)
+{
+    Tp::PendingSendMessage *psm = qobject_cast<Tp::PendingSendMessage*>(op);
+    if(!psm) {
+        qWarning() << "The pending object was not a pending operation:" << op;
+        return;
+    }
+
+    if (psm->isError()) {
+        qWarning() << "Error sending message:" << psm->errorName() << psm->errorMessage();
+        return;
+    }
+
+    Q_EMIT messageSent(psm->channel()->targetContact()->id(), psm->message().text());
+}
+
 Tp::TextChannelPtr ChatManager::existingChat(const QString &phoneNumber)
 {
     Tp::TextChannelPtr channel;
@@ -188,7 +227,8 @@ void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
 
     // start chatting to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        account->ensureTextChat(contact, QDateTime::currentDateTime(), "org.freedesktop.Telepathy.Client.TelephonyApp");
+        QString handler = TelepathyHelper::instance()->channelHandler()->property("clientName").toString();
+        account->ensureTextChat(contact, QDateTime::currentDateTime(), handler);
 
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;

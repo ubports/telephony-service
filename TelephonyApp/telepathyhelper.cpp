@@ -20,6 +20,7 @@
 
 #include "telepathyhelper.h"
 #include "chatmanager.h"
+#include "config.h"
 
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ClientRegistrar>
@@ -83,12 +84,22 @@ ChannelObserver *TelepathyHelper::channelObserver() const
 
 void TelepathyHelper::initializeTelepathyClients()
 {
+    // check if this instance is running on the main telephony application
+    // or if it is just the plugin imported somewhere else
+    QString handlerName = "TelephonyApp";
+    QString observerName = "TelephonyAppObserver";
+
+    if (!isTelephonyApplicationInstance()) {
+        handlerName = "TelephonyPlugin";
+        observerName = "TelephonyPluginObserver";
+    }
+
     mChannelHandler = new ChannelHandler(this);
-    mClientRegistrar->registerClient(Tp::AbstractClientPtr(mChannelHandler), "TelephonyApp");
+    registerClient(mChannelHandler, handlerName);
     Q_EMIT channelHandlerCreated(mChannelHandler);
 
     mChannelObserver = new ChannelObserver(this);
-    mClientRegistrar->registerClient(Tp::AbstractClientPtr(mChannelObserver), "TelephonyAppObserver");
+    registerClient(mChannelObserver, observerName);
     Q_EMIT channelObserverCreated(mChannelObserver);
 
     connect(mChannelHandler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
@@ -151,6 +162,30 @@ void TelepathyHelper::ensureAccountConnected()
     if (mFirstTime) {
         Q_EMIT accountReady();
         mFirstTime = false;
+    }
+}
+
+void TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
+{
+    Tp::AbstractClientPtr clientPtr(client);
+    bool succeeded = mClientRegistrar->registerClient(clientPtr, name);
+    if (!succeeded) {
+        name.append("%1");
+        int count = 0;
+        // limit the number of registered clients to 20, that should be a safe margin
+        while (!succeeded && count < 20) {
+            succeeded = mClientRegistrar->registerClient(clientPtr, name.arg(++count));
+            if (succeeded) {
+                name = name.arg(count);
+            }
+        }
+    }
+
+    if (succeeded) {
+        QObject *object = dynamic_cast<QObject*>(client);
+        if (object) {
+            object->setProperty("clientName", TP_QT_IFACE_CLIENT + "." + name );
+        }
     }
 }
 
