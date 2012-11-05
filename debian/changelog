@@ -1,4 +1,4 @@
-telephony-app (0.58.4) UNRELEASED; urgency=low
+telephony-app (0.58.4) quantal; urgency=low
 
   * Add a dependency on telepathy-ofono.
   * Add a wrapper that starts DBus and creates an ofono account before launching
