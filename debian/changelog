@@ -1,4 +1,4 @@
-telephony-app (0.58.4) UNRELEASED; urgency=low
+telephony-app (0.58.4ubuntu1) UNRELEASED; urgency=low
 
   * Add a dependency on telepathy-ofono.
   * Add a wrapper that starts DBus and creates an ofono account before launching
@@ -8,8 +8,9 @@ telephony-app (0.58.4) UNRELEASED; urgency=low
   * Change layout to use one PageStack per tab.
   * Make it possible to use the TelephonyApp plugin outside the app, and also make
     it possible to have multiple instances of it running at the same time.
+  * Do not start a dbus session when calling the app wrapper.
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 31 Oct 2012 17:09:46 +0100
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 05 Nov 2012 19:29:57 -0200
 
 telephony-app (0.58.3) quantal; urgency=low
 
