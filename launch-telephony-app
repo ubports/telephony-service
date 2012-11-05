@@ -9,4 +9,4 @@ if [ $? -eq 1 ]; then
         mc-tool enable ofono/ofono/account0
 fi
 
-exec telephony-app --single-panel
+exec telephony-app
