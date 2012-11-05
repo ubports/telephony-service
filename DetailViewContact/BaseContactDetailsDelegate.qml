@@ -162,7 +162,7 @@ FocusScope {
             anchors.right: parent.right
             height: editableContentBox.height
 
-            ButtonWithForeground {
+            Button {
                 id: removeButton
 
                 anchors.left: parent.left
@@ -170,6 +170,7 @@ FocusScope {
                 anchors.verticalCenter: editableContentBox.verticalCenter
                 width: units.gu(2)
                 iconSource: "../assets/edit_contact_mode_remove.png"
+                ItemStyle.class: "transparent-button"
 
                 onClicked: {
                     deleted = true;
