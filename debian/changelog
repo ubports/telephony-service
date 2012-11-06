@@ -1,3 +1,9 @@
+telephony-app (0.58.5) quantal; urgency=low
+
+  * new release with launch-app-telephony change 
+
+ -- Bill Filler <bill.filler@canonical.com>  Tue, 06 Nov 2012 09:06:12 -0500
+
 telephony-app (0.58.4) quantal; urgency=low
 
   * Add a dependency on telepathy-ofono.
