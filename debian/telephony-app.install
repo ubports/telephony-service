@@ -1,0 +1,13 @@
+opt/qt5/imports/TelephonyApp
+etc/xdg/autostart/telephony-app-approver.desktop
+usr/share/icons/hicolor/*/apps/telephony-app.png
+usr/share/icons/ubuntu-mono-dark/status/*/indicator-call.svg
+usr/share/applications/telephony-app*.desktop
+usr/share/dbus-1/services/*TelephonyApp*.service
+usr/share/notify-osd/icons/gnome/scalable/status/notification-unknown-call.svg
+usr/share/notify-osd/icons/gnome/scalable/status/notification-unavailable-image-call.svg
+usr/share/notify-osd/icons/gnome/scalable/status/notification-group-call.svg
+usr/share/icons/ubuntu-mono-light/status/*/indicator-call.svg
+usr/share/telephony-app
+usr/share/telepathy/clients/TelephonyApp*.client
+usr/bin/*telephony-app*
