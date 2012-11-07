@@ -62,7 +62,7 @@ bool TelephonyApplication::setup()
 
     if (arguments.contains("--fullscreen")) {
         arguments.removeAll("--fullscreen");
-        fullscreen = true;
+        fullScreen = true;
     }
 
     if (arguments.size() > 2) {
