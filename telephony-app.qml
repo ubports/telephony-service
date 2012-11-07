@@ -6,8 +6,8 @@ import TelephonyApp 0.1
 Item {
     id: telephony
 
-    width: singlePane ? units.gu(45) : units.gu(80)
-    height: units.gu(80)
+    width: singlePane ? units.gu(40) : units.gu(80)
+    height: units.gu(71)
 
     state: appLayout
     property bool singlePane: state == "singlePane"
