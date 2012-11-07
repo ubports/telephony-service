@@ -33,3 +33,13 @@ Depends: ${shlibs:Depends},
          dbus-x11
 Description: An application to execute telephony tasks such as calling and messaging
  An application to execute telephony tasks such as calling and messaging
+
+Package: telephony-app-dbg
+Architecture: any
+Section: debug
+Priority: extra
+Depends:
+    telephony-app (= ${binary:Version}),
+    ${misc:Depends}
+Description: debugging symbols for telephony-app
+ This package contains the debugging symbols for telephony-app
