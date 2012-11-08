@@ -72,9 +72,9 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
     mRootContext->setContextProperty("contactModel", ContactModel::instance());
 
-    mCallLogModel = new CallLogModel(this);
+    mCallLogModel = new CallLogModel(mRootContext);
     mRootContext->setContextProperty("callLogModel", mCallLogModel);
-    mMessageLogModel = new MessageLogModel(this);
+    mMessageLogModel = new MessageLogModel(mRootContext);
     mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
 }
 
