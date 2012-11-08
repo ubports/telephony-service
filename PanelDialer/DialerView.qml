@@ -50,7 +50,7 @@ LocalWidgets.TelephonyPage {
 
             CallButton {
                 id: callButton
-
+                objectName: "callButton"
                 anchors.top: keypad.bottom
                 anchors.topMargin: units.gu(2)
                 color: "#c53e10"
@@ -60,6 +60,7 @@ LocalWidgets.TelephonyPage {
 
             Button {
                 id: contactListButton
+                objectName: contactListButton
                 anchors.left: callButton.right
                 anchors.verticalCenter: callButton.verticalCenter
                 iconSource: "../assets/tab_icon_contacts_inactive.png"

@@ -26,7 +26,7 @@ class TelephonyAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
 
     def launch_test_qml(self):
             self.app = self.launch_test_application(
-                "telephony-app")
+                "launch-telephony-app")
 
     def get_main_view_tabs(self):
         """Returns a list of tabs on the main window."""
