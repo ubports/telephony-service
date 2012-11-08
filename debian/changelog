@@ -6,6 +6,9 @@ telephony-app (0.58.6) UNRELEASED; urgency=low
   [ Michael Zanetti ]
   * Added code coverage measurement to cmake files
 
+  [ Tiago Salem Herrmann ]
+  * use the right height for gu == 18
+
  -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 06 Nov 2012 19:19:05 -0200
 
 telephony-app (0.58.5) quantal; urgency=low
