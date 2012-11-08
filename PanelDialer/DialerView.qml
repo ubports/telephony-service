@@ -60,7 +60,7 @@ LocalWidgets.TelephonyPage {
 
             Button {
                 id: contactListButton
-                objectName: contactListButton
+                objectName: "contactListButton"
                 anchors.left: callButton.right
                 anchors.verticalCenter: callButton.verticalCenter
                 iconSource: "../assets/tab_icon_contacts_inactive.png"
