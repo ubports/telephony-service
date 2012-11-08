@@ -53,7 +53,7 @@ FocusScope {
             anchors.rightMargin: units.gu(1)
             anchors.top: entry.top
             anchors.bottom: entry.bottom
-            width: units.gu(8)
+            width: units.gu(9)
             enabled: validRecipient
             color: "#37b301"
             text: "Send"
