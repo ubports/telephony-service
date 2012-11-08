@@ -1,4 +1,4 @@
-telephony-app (0.58.6) UNRELEASED; urgency=low
+telephony-app (0.58.6) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
   * Add a debug package for telephony-app
@@ -9,7 +9,10 @@ telephony-app (0.58.6) UNRELEASED; urgency=low
   [ Tiago Salem Herrmann ]
   * use the right height for gu == 18
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 06 Nov 2012 19:19:05 -0200
+  [ Bill Filler ]
+  * modified launch-telephony-app to launch fullscreen 
+
+ -- Bill Filler <bill.filler@canonical.com>  Thu, 08 Nov 2012 16:12:24 -0500
 
 telephony-app (0.58.5) quantal; urgency=low
 
