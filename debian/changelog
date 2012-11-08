@@ -3,6 +3,9 @@ telephony-app (0.58.6) UNRELEASED; urgency=low
   [ Gustavo Pichorim Boiko ]
   * Add a debug package for telephony-app
 
+  [ Michael Zanetti ]
+  * Added code coverage measurement to cmake files
+
   [ Tiago Salem Herrmann ]
   * use the right width and height for gu == 18
 
