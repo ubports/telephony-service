@@ -25,7 +25,8 @@ static void printUsage(const QStringList& arguments)
              << "[voicemail://]"
              << "[--dual-panel]"
              << "[--single-panel]"
-             << "[--fullscreen]";
+             << "[--fullscreen]"
+             << "[--test-contacts]";
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
@@ -40,6 +41,7 @@ bool TelephonyApplication::setup()
     static QList<QString> validSchemes;
     bool singlePanel = true;
     bool fullScreen = false;
+    QString contactEngine = "folks";
 
     if (validSchemes.isEmpty()) {
         validSchemes << "contact";
@@ -63,6 +65,11 @@ bool TelephonyApplication::setup()
     if (arguments.contains("--fullscreen")) {
         arguments.removeAll("--fullscreen");
         fullScreen = true;
+    }
+
+    if (arguments.contains("--test-contacts")) {
+        arguments.removeAll("--test-contacts");
+        contactEngine = "memory";
     }
 
     if (arguments.size() > 2) {
@@ -100,6 +107,7 @@ bool TelephonyApplication::setup()
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     m_view->rootContext()->setContextProperty("dbus", m_dbus);
     m_view->rootContext()->setContextProperty("appLayout", singlePanel ? "singlePane" : "dualPane" );
+    m_view->rootContext()->setContextProperty("contactEngine", contactEngine);
     m_view->engine()->setBaseUrl(QUrl::fromLocalFile(telephonyAppDirectory()));
     m_view->setSource(QUrl::fromLocalFile("telephony-app.qml"));
     if (fullScreen) {
