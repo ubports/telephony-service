@@ -76,7 +76,7 @@ install(TARGETS ${TELEPHONY_APP}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
-install(FILES launch-telephony-app 
+install(PROGRAMS launch-telephony-app
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 

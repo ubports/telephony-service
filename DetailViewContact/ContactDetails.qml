@@ -292,6 +292,7 @@ LocalWidgets.TelephonyPage {
 
             Button {
                 id: editSaveButton
+                objectName: "editSaveButton"
 
                 height: units.gu(3)
                 anchors.verticalCenter: parent.verticalCenter

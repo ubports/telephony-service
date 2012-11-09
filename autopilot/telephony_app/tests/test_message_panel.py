@@ -57,19 +57,17 @@ class TestMessagesPanel(TelephonyAppTestCase):
     def test_searchbox_clear_button(self):
         """clicking the cross icon must clear the searchbox."""
         searchbox = self.messages_panel.get_messages_searchbox()
+        clear_button = self.messages_panel.get_messages_searchbox_clear_button()
+        #tx = clear_button.globalRect[0]
+        #ty = clear_button.globalRect[1]
+        
         self.mouse.move_to_object(searchbox)
         self.mouse.click()
 
         self.keyboard.type("test")
-
-        (x, y, w, h) = searchbox.globalRect
-
-        # I am not able to find anything about the clear icon
-        # so moving the mouse exactly to that icon with some calculations
-        tx = x + (w * 11 / 12)
-        ty = y + (h / 2)
-
-        self.mouse.move(tx, ty)
+        self.assertThat(searchbox.text, Eventually(Equals("test")))
+        
+        self.mouse.move_to_object(clear_button)
         self.mouse.click()
 
         self.assertThat(searchbox.text, Eventually(Equals("")))
@@ -161,4 +159,4 @@ class TestMessagesPanel(TelephonyAppTestCase):
 
         self.keyboard.type("test")
 
-        self.assertThat(message_box.searchQuery, Eventually(Equals("test")))
+        self.assertThat(message_box.text, Eventually(Equals("test")))
