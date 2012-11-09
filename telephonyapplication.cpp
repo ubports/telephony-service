@@ -13,6 +13,7 @@
 #include <QDBusConnectionInterface>
 #include "config.h"
 #include "telephonyappdbus.h"
+#include <QQmlEngine>
 
 static void printUsage(const QStringList& arguments)
 {
@@ -23,12 +24,14 @@ static void printUsage(const QStringList& arguments)
              << "[message://PHONE_NUMBER]"
              << "[voicemail://]"
              << "[--dual-panel]"
-             << "[--single-panel]";
+             << "[--single-panel]"
+             << "[--fullscreen]";
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
     : QApplication(argc, argv), m_view(0), m_applicationIsReady(false)
 {
+    setApplicationName("com.canonical.TelephonyApp");
     m_dbus = new TelephonyAppDBus(this);
 }
 
@@ -36,6 +39,7 @@ bool TelephonyApplication::setup()
 {
     static QList<QString> validSchemes;
     bool singlePanel = true;
+    bool fullScreen = false;
 
     if (validSchemes.isEmpty()) {
         validSchemes << "contact";
@@ -54,6 +58,11 @@ bool TelephonyApplication::setup()
     if (arguments.contains("--single-panel")) {
         arguments.removeAll("--single-panel");
         singlePanel = true;
+    }
+
+    if (arguments.contains("--fullscreen")) {
+        arguments.removeAll("--fullscreen");
+        fullScreen = true;
     }
 
     if (arguments.size() > 2) {
@@ -85,17 +94,27 @@ bool TelephonyApplication::setup()
 
     m_view = new QQuickView();
     QObject::connect(m_view, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onViewStatusChanged(QQuickView::Status)));
-    m_view->setResizeMode(QQuickView::SizeViewToRootObject);
+    m_view->setResizeMode(QQuickView::SizeRootObjectToView);
     m_view->setWindowTitle("Telephony");
     m_view->rootContext()->setContextProperty("application", this);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     m_view->rootContext()->setContextProperty("dbus", m_dbus);
     m_view->rootContext()->setContextProperty("appLayout", singlePanel ? "singlePane" : "dualPane" );
-    QUrl source(telephonyAppDirectory() + "/telephony-app.qml");
-    m_view->setSource(source);
-    m_view->show();
+    m_view->engine()->setBaseUrl(QUrl::fromLocalFile(telephonyAppDirectory()));
+    m_view->setSource(QUrl::fromLocalFile("telephony-app.qml"));
+    if (fullScreen) {
+        m_view->showFullScreen();
+    } else {
+        m_view->show();
+    }
 
-    QObject::connect(m_dbus, SIGNAL(request(QString)), this, SLOT(onMessageReceived(QString)));
+    connect(m_dbus,
+            SIGNAL(request(QString)),
+            SLOT(onMessageReceived(QString)));
+    connect(m_dbus,
+            SIGNAL(messageSendRequested(QString,QString)),
+            SLOT(onMessageSendRequested(QString,QString)));
+
     return true;
 }
 
@@ -124,6 +143,22 @@ void TelephonyApplication::onApplicationReady()
     m_applicationIsReady = true;
     parseArgument(m_arg);
     m_arg.clear();
+}
+
+void TelephonyApplication::onMessageSendRequested(const QString &phoneNumber, const QString &message)
+{
+    QQuickItem *telephony = m_view->rootObject();
+    if (!telephony) {
+        return;
+    }
+    const QMetaObject *mo = telephony->metaObject();
+    int index = mo->indexOfMethod("sendMessage(QVariant,QVariant)");
+    if (index != -1) {
+        QMetaMethod method = mo->method(index);
+        method.invoke(telephony,
+                      Q_ARG(QVariant, QVariant(phoneNumber)),
+                      Q_ARG(QVariant, QVariant(message)));
+    }
 }
 
 void TelephonyApplication::parseArgument(const QString &arg)
@@ -201,4 +236,3 @@ void TelephonyApplication::activateWindow()
         m_view->requestActivateWindow();
     }
 }
-

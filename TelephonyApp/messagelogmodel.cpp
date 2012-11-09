@@ -132,7 +132,7 @@ void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
 
 void MessageLogModel::updateLatestMessages(const QString &phoneNumber)
 {
-    if (mLogEntries.count() == 0) {
+    if (mItems.count() == 0) {
         return;
     }
 

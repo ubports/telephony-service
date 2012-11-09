@@ -30,13 +30,14 @@ Item {
         id: current
         anchors.fill: parent
 
-        ButtonWithForeground {
+        Button {
             id: addButton
             anchors.left: parent.left
             anchors.leftMargin: units.gu(1)
             anchors.verticalCenter: parent.verticalCenter
             width: units.gu(2)
             iconSource: "../assets/edit_contact_mode_add.png"
+            ItemStyle.class: "transparent-button"
         }
 
         TextCustom {

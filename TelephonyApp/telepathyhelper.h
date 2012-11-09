@@ -59,6 +59,7 @@ protected:
     void initializeAccount();
     void ensureAccountEnabled();
     void ensureAccountConnected();
+    void registerClient(Tp::AbstractClient *client, QString name);
 
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);

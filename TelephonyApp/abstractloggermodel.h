@@ -94,7 +94,6 @@ protected Q_SLOTS:
 
 protected:
     Tpl::LogManagerPtr mLogManager;
-    QList<LoggerItem*> mLogEntries;
     Tpl::EventTypeMask mType;
     EntityTypeList mEntityTypes;
     QList<Tpl::PendingOperation*> mActiveOperations;

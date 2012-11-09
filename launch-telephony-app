@@ -1,7 +1,5 @@
 #!/bin/sh
 
-eval $(dbus-launch --sh-syntax)
-
 # check if there is a tp-ofono account already
 mc-tool show ofono/ofono/account0 2>&1 > /dev/null
 
@@ -11,4 +9,4 @@ if [ $? -eq 1 ]; then
         mc-tool enable ofono/ofono/account0
 fi
 
-exec telephony-app --single-panel
+exec telephony-app --fullscreen

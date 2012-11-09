@@ -57,6 +57,7 @@ public Q_SLOTS:
     void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
+    void onMessageSent(Tp::PendingOperation *op);
 
 protected:
     Tp::TextChannelPtr existingChat(const QString &phoneNumber);

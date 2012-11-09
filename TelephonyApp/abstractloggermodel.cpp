@@ -244,7 +244,7 @@ void AbstractLoggerModel::updateLogForContact(ContactEntry *contactEntry)
     // now we need to iterate over the events to look for contacts matching
     int count = mItems.count();
     for (int i = 0; i < count; ++i) {
-        LoggerItem *entry = dynamic_cast<LoggerItem*>(mLogEntries[i]);
+        LoggerItem *entry = dynamic_cast<LoggerItem*>(mItems[i]);
         // check if any of the contact's phone numbers match
         Q_FOREACH(const QContactPhoneNumber &number, contactEntry->contact().details<QContactPhoneNumber>()) {
             if (ContactModel::comparePhoneNumbers(entry->phoneNumber(), number.number())) {

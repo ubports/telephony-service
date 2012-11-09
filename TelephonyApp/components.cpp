@@ -72,9 +72,9 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
     mRootContext->setContextProperty("contactModel", ContactModel::instance());
 
-    mCallLogModel = new CallLogModel(this);
-    mMessageLogModel = new MessageLogModel(this);
-    mConversationModel = new ConversationAggregatorModel(this);
+    mCallLogModel = new CallLogModel(mRootContext);
+    mMessageLogModel = new MessageLogModel(mRootContext);
+    mConversationModel = new ConversationAggregatorModel(mRootContext);
     mConversationModel->addFeedModel(mCallLogModel);
     mConversationModel->addFeedModel(mMessageLogModel);
     mRootContext->setContextProperty("conversationAggregatorModel", mConversationModel);

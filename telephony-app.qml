@@ -1,12 +1,13 @@
 import QtQuick 2.0
 import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
+import TelephonyApp 0.1
 
 Item {
     id: telephony
 
-    width: singlePane ? units.gu(45) : units.gu(80)
-    height: units.gu(80)
+    width: singlePane ? units.gu(40) : units.gu(80)
+    height: units.gu(71)
 
     state: appLayout
     property bool singlePane: state == "singlePane"
@@ -16,6 +17,9 @@ Item {
     property QtObject call: callManager.foregroundCall
 
     property string contactId: contactKey
+
+    property string pendingMessage: ""
+    property string pendingNumber: ""
 
     // Inventory of all the views in the application
     property ViewModel liveCall: ViewModel {source: "DetailViewLiveCall/LiveCall.qml"; tab: 0 }
@@ -38,6 +42,22 @@ Item {
     Connections {
         target: contactModel
         onContactLoaded: telephony.showContactDetails(contact);
+    }
+
+    Connections {
+        target: chatManager
+
+        onChatReady: {
+            if (!contactModel.comparePhoneNumbers(phoneNumber, pendingNumber)) {
+                return;
+            }
+
+            if (pendingMessage != "") {
+                chatManager.sendMessage(pendingNumber, pendingMessage);
+                pendingMessage = "";
+                pendingNumber = "";
+            }
+        }
     }
 
     function switchToTab(index) {
@@ -116,6 +136,16 @@ Item {
     function startNewMessage() {
         resetView();
         communication.load({ newMessage: true })
+    }
+
+    function sendMessage(number, message) {
+        if (chatManager.isChattingToContact(number)) {
+            chatManager.sendMessage(number, message);
+        } else {
+            pendingMessage = message;
+            pendingNumber = number;
+            chatManager.startChat(number);
+        }
     }
 
     function showCallLog() {

@@ -20,6 +20,9 @@
 // Qt
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusReply>
 
 inline bool isRunningInstalled() {
     static bool installed = (QCoreApplication::applicationDirPath() ==
@@ -29,9 +32,20 @@ inline bool isRunningInstalled() {
 
 inline QString telephonyAppDirectory() {
     if (isRunningInstalled()) {
-        return QString("@CMAKE_INSTALL_PREFIX@/@TELEPHONY_APP_DIR@");
+        return QString("@CMAKE_INSTALL_PREFIX@/@TELEPHONY_APP_DIR@/");
     } else {
-        return QString("@CMAKE_SOURCE_DIR@");
+        return QString("@CMAKE_SOURCE_DIR@/");
     }
 }
 
+inline bool isTelephonyApplicationInstance() {
+    return QCoreApplication::applicationName() == "com.canonical.TelephonyApp";
+}
+
+inline bool isTelephonyApplicationRunning() {
+    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered("com.canonical.TelephonyApp");
+    if (reply.isValid()) {
+        return reply.value();
+    }
+    return false;
+}

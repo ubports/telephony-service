@@ -1,4 +1,26 @@
-telephony-app (0.58.4) UNRELEASED; urgency=low
+telephony-app (0.58.6) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Add a debug package for telephony-app
+
+  [ Michael Zanetti ]
+  * Added code coverage measurement to cmake files
+
+  [ Tiago Salem Herrmann ]
+  * use the right height for gu == 18
+
+  [ Bill Filler ]
+  * modified launch-telephony-app to launch fullscreen 
+
+ -- Bill Filler <bill.filler@canonical.com>  Thu, 08 Nov 2012 16:12:24 -0500
+
+telephony-app (0.58.5) quantal; urgency=low
+
+  * new release with launch-app-telephony change 
+
+ -- Bill Filler <bill.filler@canonical.com>  Tue, 06 Nov 2012 09:06:12 -0500
+
+telephony-app (0.58.4) quantal; urgency=low
 
   * Add a dependency on telepathy-ofono.
   * Add a wrapper that starts DBus and creates an ofono account before launching
@@ -6,9 +28,11 @@ telephony-app (0.58.4) UNRELEASED; urgency=low
   * Load the contact model with some fake contacts when using the memory backend.
   * add activateWindow() method to rise the app when necessary.
   * Change layout to use one PageStack per tab.
-  * Group the messages and call log views into the new "Communications" view.
+  * Make it possible to use the TelephonyApp plugin outside the app, and also make
+    it possible to have multiple instances of it running at the same time.
+  * Do not start a dbus session when calling the app wrapper.
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 31 Oct 2012 17:36:43 +0100
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 05 Nov 2012 19:29:57 -0200
 
 telephony-app (0.58.3) quantal; urgency=low
 
