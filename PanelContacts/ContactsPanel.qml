@@ -93,6 +93,8 @@ LocalWidgets.TelephonyPage {
 
     ListView {
         id: contactsList
+        objectName: "contactsList"
+
         anchors.top: buttons.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
