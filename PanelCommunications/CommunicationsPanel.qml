@@ -6,6 +6,7 @@ import Ubuntu.Components 0.1
 
 LocalWidgets.TelephonyPage {
     id: messageList
+    objectName: "communicationPanel"
     title: "Communication"
 
     anchors.fill: parent
@@ -20,7 +21,7 @@ LocalWidgets.TelephonyPage {
         anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
 
-        placeholderText: "Search messages"
+        placeholderText: "Search communication"
         Keys.onEscapePressed: text = ""
 
         primaryItem: AbstractButton {

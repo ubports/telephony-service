@@ -6,6 +6,7 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 
 LocalWidgets.TelephonyPage {
     id: view
+    objectName: "communicationView"
     property alias contact: contactWatcher.contact
     property alias number: contactWatcher.phoneNumber
     property alias contactId: contactWatcher.contactId
