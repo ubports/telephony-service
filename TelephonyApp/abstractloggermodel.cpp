@@ -183,10 +183,6 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
             continue;
         }
 
-        // TODO: investigate why TelepathyLoggerQt is calling this method from another thread
-        // temporarily we are just moving the object to the correct thread.
-        entry->moveToThread(thread());
-
         entry->setIncoming(event->sender()->entityType() != Tpl::EntityTypeSelf);
         entry->setTimestamp(event->timestamp());
 
