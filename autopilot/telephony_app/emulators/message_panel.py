@@ -18,6 +18,10 @@ class MessagesPanel(object):
         """Returns the main searchbox attached to the messages panel."""
         return self.app.select_single("TextField", placeholderText="Search messages")
 
+    def get_messages_searchbox_clear_button(self):
+        """Returns the clear button in the main searchbox attached to the messages panel."""
+        return self.get_messages_searchbox().get_children_by_type("QQuickBorderImage")[0].get_children_by_type("Button")[0]
+
     def get_new_message_list_item(self):
         """Returns 'New Message' list item."""
         return self.app.select_single("LabelVisual", text='New Message')
@@ -36,4 +40,4 @@ class MessagesPanel(object):
 
     def get_new_message_text_box(self):
         """Returns main message box for sending an sms."""
-        return self.app.select_many("SearchEntry")[1]
+        return self.app.select_single("TextField", objectName="newMessageText")

@@ -35,6 +35,7 @@ FocusScope {
         TextField {
             id: entry
 
+            objectName: "newMessageText"
             anchors.left: parent.left
             anchors.leftMargin: units.gu(1)
             anchors.right: sendButton.left
