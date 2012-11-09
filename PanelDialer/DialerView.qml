@@ -64,7 +64,7 @@ LocalWidgets.TelephonyPage {
                 anchors.left: callButton.right
                 anchors.verticalCenter: callButton.verticalCenter
                 iconSource: "../assets/tab_icon_contacts_inactive.png"
-                width: 48
+                width: units.gu(5)
                 color: "#565656"
                 ItemStyle.class: "dark-button"
                 onClicked: {
