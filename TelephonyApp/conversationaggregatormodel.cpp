@@ -176,7 +176,8 @@ void ConversationAggregatorModel::updateOffsets()
 
 void ConversationAggregatorModel::onRowsInserted(const QModelIndex &parent, int start, int end)
 {
-    qDebug() << "Rows inserted" << start << end;
+    Q_UNUSED(parent)
+
     ConversationFeedModel *model = qobject_cast<ConversationFeedModel*>(sender());
     int offset = mModelOffsets[model];
     beginInsertRows(QModelIndex(), start + offset, end + offset);

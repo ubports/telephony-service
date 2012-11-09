@@ -38,7 +38,7 @@ Item {
             id: callsRow
             width: childrenRect.width
             height: childrenRect.height
-            visible: typeof(events.call) != "undefined"
+            visible: (typeof(events) != "undefined") && (typeof(events.call) != "undefined")
             spacing: units.gu(0.5)
 
             Image {
@@ -58,7 +58,7 @@ Item {
             id: messagesRow
             width: childrenRect.width
             height: childrenRect.height
-            visible: typeof(events.message) != "undefined"
+            visible: (typeof(events) != "undefined") && (typeof(events.message) != "undefined")
             spacing: units.gu(0.5)
 
             Image {

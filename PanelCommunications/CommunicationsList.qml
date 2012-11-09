@@ -62,14 +62,14 @@ Item {
                 onClicked: delegate.clicked(mouse)
 
                 anchors.fill: parent
-                property string contactId: model ? model.contactId : ""
-                property string contactAlias: model ? model.contactAlias : ""
-                property url contactAvatar: model ? model.contactAvatar : ""
-                property variant timestamp: model ? model.timestamp : null
-                property bool incoming: model ? model.incoming : false
-                property string itemType: model ? model.itemType : "none"
-                property QtObject item: model ? model.item : null
-                property variant events: model ? model.events : null
+                property string contactId: (model && model.contactId) ? model.contactId : ""
+                property string contactAlias: (model && model.contactAlias) ? model.contactAlias : ""
+                property url contactAvatar: (model && model.contactAvatar) ? model.contactAvatar : ""
+                property variant timestamp: (model && model.timestamp) ? model.timestamp : null
+                property bool incoming: (model && model.incoming) ? model.incoming : false
+                property string itemType: (model && model.itemType) ? model.itemType : "none"
+                property QtObject item: (model && model.item) ? model.item : null
+                property variant events: (model && model.events) ? model.events : null
 
                 sourceComponent: {
                     switch (itemType) {
