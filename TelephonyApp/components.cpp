@@ -70,7 +70,13 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", ChatManager::instance());
     mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
-    mRootContext->setContextProperty("contactModel", ContactModel::instance());
+
+    // check which contact engine to use
+    QString contactEngine = mRootContext->contextProperty("contactEngine").toString();
+    if (contactEngine.isNull()) {
+        contactEngine = "folks";
+    }
+    mRootContext->setContextProperty("contactModel", ContactModel::instance(contactEngine));
 
     mCallLogModel = new CallLogModel(mRootContext);
     mRootContext->setContextProperty("callLogModel", mCallLogModel);

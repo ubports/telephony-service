@@ -44,6 +44,7 @@ FocusScope {
 
         EditBoxName {
             id: prefix
+            objectName: "prefix"
 
             anchors.left: parent.left
             anchors.right: parent.right
@@ -54,6 +55,7 @@ FocusScope {
 
         EditBoxName {
             id: firstName
+            objectName: "firstName"
 
             anchors.left: parent.left
             anchors.right: parent.right
@@ -64,6 +66,7 @@ FocusScope {
 
         EditBoxName {
             id: middleName
+            objectName: "middleName"
 
             anchors.left: parent.left
             anchors.right: parent.right
@@ -74,6 +77,7 @@ FocusScope {
 
         EditBoxName {
             id: lastName
+            objectName: "lastName"
 
             anchors.left: parent.left
             anchors.right: parent.right
@@ -83,6 +87,7 @@ FocusScope {
 
         EditBoxName {
             id: suffix
+            objectName: "suffix"
 
             anchors.left: parent.left
             anchors.right: parent.right
