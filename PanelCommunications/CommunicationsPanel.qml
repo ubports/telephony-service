@@ -6,7 +6,7 @@ import Ubuntu.Components 0.1
 
 LocalWidgets.TelephonyPage {
     id: messageList
-    title: "Conversations"
+    title: "Communication"
 
     anchors.fill: parent
 

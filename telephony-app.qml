@@ -97,8 +97,8 @@ Item {
         callNumber(callManager.voicemailNumber);
     }
 
-    function showCommunication(prop, value, clear) {
-        var properties = { filterProperty: prop, filterValue: value, newMessage: false };
+    function showCommunication(prop, value, id, clear) {
+        var properties = { filterProperty: prop, filterValue: value, newMessage: false, contactId: id };
 
         if (clear) {
             resetView();

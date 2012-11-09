@@ -52,7 +52,7 @@ Item {
             __height: 58
 
             onClicked: {
-                telephony.showCommunication(groupingProperty, item[groupingProperty]);
+                telephony.showCommunication(groupingProperty, item[groupingProperty], model.contactId);
             }
 
             Loader {
