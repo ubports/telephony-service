@@ -70,10 +70,10 @@ void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entit
        - Once you get the entities, fetch the available dates
        - After you get the dates, fetch the events themselves
      */
+
     connect(pendingEntities,
             SIGNAL(finished(Tpl::PendingOperation*)),
-            SLOT(onPendingEntitiesFinished(Tpl::PendingOperation*)),
-            Qt::DirectConnection);
+            SLOT(onPendingEntitiesFinished(Tpl::PendingOperation*)));
     mActiveOperations.append(pendingEntities);
 }
 
@@ -86,8 +86,7 @@ void AbstractLoggerModel::requestDatesForEntities(const Tpl::EntityPtrList &enti
 
         connect(pendingDates,
                 SIGNAL(finished(Tpl::PendingOperation*)),
-                SLOT(onPendingDatesFinished(Tpl::PendingOperation*)),
-                Qt::DirectConnection);
+                SLOT(onPendingDatesFinished(Tpl::PendingOperation*)));
         mActiveOperations.append(pendingDates);
     }
 }
@@ -100,8 +99,7 @@ void AbstractLoggerModel::requestEventsForDates(const Tpl::EntityPtr &entity, co
         Tpl::PendingEvents *pendingEvents = mLogManager->queryEvents(account, entity, mType, date);
         connect(pendingEvents,
                 SIGNAL(finished(Tpl::PendingOperation*)),
-                SLOT(onPendingEventsFinished(Tpl::PendingOperation*)),
-                Qt::DirectConnection);
+                SLOT(onPendingEventsFinished(Tpl::PendingOperation*)));
         mActiveOperations.append(pendingEvents);
     }
 }
@@ -255,7 +253,7 @@ void AbstractLoggerModel::updateLogForContact(ContactEntry *contactEntry)
 LoggerItem *AbstractLoggerModel::createEntry(const Tpl::EventPtr &event)
 {
     Q_UNUSED(event);
-    return new LoggerItem();
+    return new LoggerItem(this);
 }
 
 void AbstractLoggerModel::handleEntities(const Tpl::EntityPtrList &entities)

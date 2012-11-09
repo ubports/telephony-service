@@ -105,6 +105,6 @@ void Components::onAccountReady()
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 
-    mCallLogModel->populate();
-    mMessageLogModel->populate();
+    QTimer::singleShot(0, mCallLogModel, SLOT(populate()));
+    QTimer::singleShot(0, mMessageLogModel, SLOT(populate()));
 }

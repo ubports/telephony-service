@@ -41,6 +41,7 @@ class LoggerItem : public ConversationFeedItem {
     Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
 
 public:
+    explicit LoggerItem(QObject *parent = 0) : ConversationFeedItem(parent) { }
     void setPhoneNumber(const QString &phone) { mPhoneNumber = phone; Q_EMIT contactIdChanged(); };
     QString phoneNumber() { return mPhoneNumber; };
 Q_SIGNALS:
@@ -55,6 +56,7 @@ class AbstractLoggerModel : public ConversationFeedModel
 public:
     explicit AbstractLoggerModel(QObject *parent = 0);
 
+public Q_SLOTS:
     virtual void populate();
 
 Q_SIGNALS:

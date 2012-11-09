@@ -44,7 +44,7 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
         return;
     }
 
-    CallLogEntry *entry = new CallLogEntry();
+    CallLogEntry *entry = new CallLogEntry(this);
     // FIXME: handle conference call
     Q_FOREACH(const Tp::ContactPtr &contact, contacts) {
         entry->setPhoneNumber(contact->id());
@@ -81,7 +81,7 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
 
 LoggerItem *CallLogModel::createEntry(const Tpl::EventPtr &event)
 {
-    CallLogEntry *entry = new CallLogEntry();
+    CallLogEntry *entry = new CallLogEntry(this);
     Tpl::CallEventPtr callEvent = event.dynamicCast<Tpl::CallEvent>();
 
     if (callEvent.isNull()) {

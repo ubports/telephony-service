@@ -34,7 +34,7 @@ void MessageLogModel::appendMessage(const QString &number,
                                     const QDateTime &timestamp,
                                     const QString &messageId)
 {
-    MessageLogEntry *entry = new MessageLogEntry();
+    MessageLogEntry *entry = new MessageLogEntry(this);
     entry->setIncoming(incoming);
     entry->setPhoneNumber(number);
     entry->setMessage(message);
@@ -80,7 +80,7 @@ void MessageLogModel::onMessageSent(const QString &number, const QString &messag
 
 MessageLogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 {
-    MessageLogEntry *entry = new MessageLogEntry();
+    MessageLogEntry *entry = new MessageLogEntry(this);
     Tpl::TextEventPtr textEvent = event.dynamicCast<Tpl::TextEvent>();
 
     if (!textEvent) {

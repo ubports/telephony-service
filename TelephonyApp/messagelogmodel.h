@@ -29,6 +29,7 @@ class MessageLogEntry : public LoggerItem {
     Q_PROPERTY(QString date READ date)
     Q_PROPERTY(bool isLatest READ isLatest WRITE setIsLatest NOTIFY isLatestChanged)
 public:
+    explicit MessageLogEntry(QObject *parent = 0) : LoggerItem(parent) { }
     void setMessage(const QString &message) { mMessage = message; Q_EMIT messageChanged(); }
     QString message() { return mMessage; }
 
@@ -62,11 +63,11 @@ public:
                                    const QDateTime &timestamp = QDateTime::currentDateTime(),
                                    const QString &messageId = QString::null);
 
-    void populate();
     QString itemType(const QModelIndex &index) const;
     bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
 
 public Q_SLOTS:
+    void populate();
     void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp, const QString &messageId);
     void onMessageSent(const QString &number, const QString &message);
 
