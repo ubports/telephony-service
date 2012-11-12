@@ -142,6 +142,8 @@ LocalWidgets.TelephonyPage {
         sourceComponent: view.newMessage ? undefined : conversationComponent
         anchors.top: headerLoader.bottom
         anchors.bottom: footer.top
+        anchors.left: parent.left
+        anchors.right: parent.right
     }
 
     Component {
@@ -162,7 +164,7 @@ LocalWidgets.TelephonyPage {
         id: conversationComponent
         ListView {
             width: view.width
-            height: view.height - footer.height - headerLoader.height
+            anchors.fill: parent
             model: conversationProxyModel
             clip: true
             delegate: ListItem.Base {
@@ -205,6 +207,7 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        height: visible ? units.gu(5) : 0
         visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
         validRecipient: (!view.newMessage || headerLoader.item.text.match("^[0-9+][0-9+-]*$") != null)
