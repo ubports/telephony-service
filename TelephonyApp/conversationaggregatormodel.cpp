@@ -83,6 +83,7 @@ void ConversationAggregatorModel::removeFeedModel(ConversationFeedModel *model)
     mModelOffsets.remove(model);
     mFeedModels.removeOne(model);
     disconnect(model);
+    updateOffsets();
     endRemoveRows();
 }
 
