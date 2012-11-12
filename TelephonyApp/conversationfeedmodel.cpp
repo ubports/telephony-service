@@ -78,6 +78,12 @@ int ConversationFeedModel::rowCount(const QModelIndex &parent) const
 void ConversationFeedModel::addItem(ConversationFeedItem *item)
 {
     beginInsertRows(QModelIndex(), mItems.count(), mItems.count());
+
+    connect(item, SIGNAL(contactAliasChanged()), SLOT(onItemChanged()));
+    connect(item, SIGNAL(contactAvatarChanged()), SLOT(onItemChanged()));
+    connect(item, SIGNAL(contactIdChanged()), SLOT(onItemChanged()));
+    connect(item, SIGNAL(incomingChanged()), SLOT(onItemChanged()));
+    connect(item, SIGNAL(timestampChanged()), SLOT(onItemChanged()));
     mItems.append(item);
     endInsertRows();
 }
@@ -91,6 +97,7 @@ void ConversationFeedModel::removeItem(ConversationFeedItem *item)
 
     beginRemoveRows(QModelIndex(), index, index);
     mItems.removeAt(index);
+    disconnect(item);
     delete item;
     endRemoveRows();
 }
@@ -101,6 +108,13 @@ void ConversationFeedModel::clear()
     qDeleteAll(mItems);
     mItems.clear();
     endRemoveRows();
+}
+
+void ConversationFeedModel::onItemChanged()
+{
+    ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sender());
+    QModelIndex index = indexFromEntry(item);
+    Q_EMIT dataChanged(index, index);
 }
 
 QModelIndex ConversationFeedModel::indexFromEntry(ConversationFeedItem *entry) const

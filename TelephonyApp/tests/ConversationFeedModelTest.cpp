@@ -34,6 +34,7 @@ private Q_SLOTS:
     void testIndexFromEntry();
     void testEntryFromIndex();
     void testData();
+    void testDataChanged();
 
 private:
     QList<ConversationFeedItem*> populateWithItems(int count);
@@ -231,6 +232,53 @@ void ConversationFeedModelTest::testData()
         QCOMPARE(feedModel->data(index, ConversationFeedModel::Incoming).toBool(), item->incoming());
         QCOMPARE(feedModel->data(index, ConversationFeedModel::Timestamp).toDateTime(), item->timestamp());
     }
+
+    feedModel->clear();
+}
+
+void ConversationFeedModelTest::testDataChanged()
+{
+    int count = 80;
+    QList<ConversationFeedItem*> addedItems = populateWithItems(count);
+    QSignalSpy signalSpy(feedModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+
+    // Try to access 15 items at random
+    for (int i = 0; i < 15; ++i) {
+        int pos = qrand() % count;
+
+        // change the properties of the item and check if the dataChanged signal is emitted
+        ConversationFeedItem *item = addedItems[pos];
+
+        int emitCount = 0;
+        item->setContactId("AnotherContactId");
+        QCOMPARE(signalSpy.count(), ++emitCount);
+        QCOMPARE(signalSpy[emitCount-1][0].value<QModelIndex>().row(), pos);
+        QCOMPARE(signalSpy[emitCount-1][1].value<QModelIndex>().row(), pos);
+
+        item->setContactAlias("AnotherContactAlias");
+        QCOMPARE(signalSpy.count(), ++emitCount);
+        QCOMPARE(signalSpy[emitCount-1][0].value<QModelIndex>().row(), pos);
+        QCOMPARE(signalSpy[emitCount-1][1].value<QModelIndex>().row(), pos);
+
+        item->setContactAvatar(QUrl("/AnotherContactAvatar"));
+        QCOMPARE(signalSpy.count(), ++emitCount);
+        QCOMPARE(signalSpy[emitCount-1][0].value<QModelIndex>().row(), pos);
+        QCOMPARE(signalSpy[emitCount-1][1].value<QModelIndex>().row(), pos);
+
+        item->setIncoming(true);
+        QCOMPARE(signalSpy.count(), ++emitCount);
+        QCOMPARE(signalSpy[emitCount-1][0].value<QModelIndex>().row(), pos);
+        QCOMPARE(signalSpy[emitCount-1][1].value<QModelIndex>().row(), pos);
+
+        item->setTimestamp(QDateTime::currentDateTime());
+        QCOMPARE(signalSpy.count(), ++emitCount);
+        QCOMPARE(signalSpy[emitCount-1][0].value<QModelIndex>().row(), pos);
+        QCOMPARE(signalSpy[emitCount-1][1].value<QModelIndex>().row(), pos);
+
+        signalSpy.clear();
+    }
+
+    feedModel->clear();
 }
 
 QTEST_MAIN(ConversationFeedModelTest)

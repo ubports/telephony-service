@@ -65,6 +65,9 @@ public:
     void removeItem(ConversationFeedItem *item);
     void clear();
 
+private Q_SLOTS:
+    void onItemChanged();
+
 protected:
     QList<ConversationFeedItem*> mItems;
 };
