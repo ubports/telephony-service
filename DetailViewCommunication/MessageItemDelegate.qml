@@ -11,7 +11,7 @@ Item {
         id: baseInfo
 
         anchors.fill: parent
-        iconSource: (contactAvatar != "") ? contactvatar : placeholderIconSource
+        iconSource: (contactAvatar != "") ? contactAvatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
         subtext: item.message
