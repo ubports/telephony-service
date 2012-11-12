@@ -59,12 +59,13 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
-protected:
     QModelIndex indexFromEntry(ConversationFeedItem *entry) const;
     ConversationFeedItem *entryFromIndex(const QModelIndex &index) const;
     void addItem(ConversationFeedItem *item);
     void removeItem(ConversationFeedItem *item);
     void clear();
+
+protected:
     QList<ConversationFeedItem*> mItems;
 };
 
