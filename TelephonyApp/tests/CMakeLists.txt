@@ -21,5 +21,6 @@ generate_tests(
     ContactEntryTest
     ContactProxyModelTest
     ContactDetailsTest
+    ConversationFeedModelTest
     #ModelSectionCounterTest# --> disabled due to bug #1046821 and because ModelSectionCounter is not working.
     )
