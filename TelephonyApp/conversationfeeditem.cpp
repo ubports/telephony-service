@@ -20,7 +20,7 @@
 #include "conversationfeeditem.h"
 
 ConversationFeedItem::ConversationFeedItem(QObject *parent) :
-    QObject(parent)
+    QObject(parent), mIncoming(false)
 {
 }
 
