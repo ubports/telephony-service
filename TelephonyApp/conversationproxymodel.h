@@ -103,7 +103,6 @@ protected:
     ConversationGroup groupForSourceIndex(const QModelIndex &sourceIndex) const;
 
 private Q_SLOTS:
-    void onResetView();
     void processGrouping();
 
 private:

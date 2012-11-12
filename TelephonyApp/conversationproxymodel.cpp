@@ -99,10 +99,6 @@ void ConversationProxyModel::setConversationModel(QObject *value)
         setSourceModel(model);
 
         ConversationAggregatorModel *conversationModel = qobject_cast<ConversationAggregatorModel*>(value);
-        if (conversationModel) {
-            connect(conversationModel, SIGNAL(resetView()), SLOT(onResetView()));
-        }
-
         connect(conversationModel,
                 SIGNAL(rowsInserted(QModelIndex,int,int)),
                 SLOT(processGrouping()));
@@ -126,11 +122,6 @@ void ConversationProxyModel::setConversationModel(QObject *value)
     setRoleNames(roles);
 
     processGrouping();
-}
-
-void ConversationProxyModel::onResetView()
-{
-    reset();
 }
 
 QString ConversationProxyModel::searchString() const
