@@ -279,6 +279,10 @@ void ConversationAggregatorModelTest::testRowsRemoved()
     Q_FOREACH(ConversationFeedModel *model, feedModels) {
         // remove a few items from each model
         for (int i = 0; i < 5; ++i) {
+            if (model->rowCount() == 0) {
+                break;
+            }
+
             int sourceRow = qrand() % model->rowCount();
             int destinationRow = sourceRow + offset;
 
