@@ -173,7 +173,7 @@ void ConversationFeedModelTest::testRemoveItem()
 void ConversationFeedModelTest::testIndexFromEntry()
 {
     // insert some
-    int count = 100;
+    int count = 45;
 
     QList<ConversationFeedItem*> addedItems = populateWithItems(count);
 
@@ -194,7 +194,7 @@ void ConversationFeedModelTest::testIndexFromEntry()
 void ConversationFeedModelTest::testEntryFromIndex()
 {
     // insert some
-    int count = 100;
+    int count = 40;
 
     QList<ConversationFeedItem*> addedItems = populateWithItems(count);
 
@@ -231,6 +231,10 @@ void ConversationFeedModelTest::testData()
         QCOMPARE(feedModel->data(index, ConversationFeedModel::ContactId).toString(), item->contactId());
         QCOMPARE(feedModel->data(index, ConversationFeedModel::Incoming).toBool(), item->incoming());
         QCOMPARE(feedModel->data(index, ConversationFeedModel::Timestamp).toDateTime(), item->timestamp());
+        QCOMPARE(feedModel->data(index, ConversationFeedModel::ItemType).toString(), feedModel->itemType(index));
+
+        ConversationFeedItem *returnedItem = qobject_cast<ConversationFeedItem*>(feedModel->data(index, ConversationFeedModel::FeedItem).value<QObject*>());
+        QCOMPARE(returnedItem, item);
     }
 
     feedModel->clear();
@@ -238,7 +242,7 @@ void ConversationFeedModelTest::testData()
 
 void ConversationFeedModelTest::testDataChanged()
 {
-    int count = 80;
+    int count = 30;
     QList<ConversationFeedItem*> addedItems = populateWithItems(count);
     QSignalSpy signalSpy(feedModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
 
