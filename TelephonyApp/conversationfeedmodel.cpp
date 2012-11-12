@@ -67,6 +67,11 @@ QVariant ConversationFeedModel::data(const QModelIndex &index, int role) const
 
 int ConversationFeedModel::rowCount(const QModelIndex &parent) const
 {
+    // this model is not a tree, so for any valid index, rowCount should be zero
+    if (parent.isValid()) {
+        return 0;
+    }
+
     return mItems.count();
 }
 
