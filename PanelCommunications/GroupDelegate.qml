@@ -19,7 +19,7 @@ Item {
         text: contactAlias
         subtext: DateUtils.formatLogDate(timestamp)
         onClicked: groupDelegate.parent.clicked(mouse)
-        //selected: callItem.selected
+        selected: groupDelegate.parent.selected
     }
 
     Row {

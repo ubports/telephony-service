@@ -55,6 +55,8 @@ Item {
                 telephony.showCommunication(groupingProperty, item[groupingProperty], model.contactId, true);
             }
 
+            selected: communicationsDelegate.selected
+
             Loader {
                 id: communicationsDelegate
 
@@ -70,6 +72,20 @@ Item {
                 property string itemType: (model && model.itemType) ? model.itemType : "none"
                 property QtObject item: (model && model.item) ? model.item : null
                 property variant events: (model && model.events) ? model.events : null
+                property bool selected: isSelected()
+
+                function isSelected() {
+                    if (!model || !model.groupingProperty) {
+                        return false;
+                    }
+
+                    if (!telephony.view || !telephony.view.filterProperty) {
+                        return false;
+                    }
+
+                    return (telephony.view.filterProperty == model.groupingProperty) &&
+                            (telephony.view.filterValue == model.item[model.groupingProperty]);
+                }
 
                 sourceComponent: {
                     switch (itemType) {
