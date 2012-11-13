@@ -191,11 +191,6 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
     Q_EMIT resetView();
 }
 
-void AbstractLoggerModel::appendEntry(LoggerItem *entry)
-{
-    addItem(entry);
-}
-
 void AbstractLoggerModel::invalidateRequests()
 {
     // clear the model

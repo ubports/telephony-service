@@ -76,7 +76,7 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
     }
 
     // and finally add the entry
-    appendEntry(entry);
+    addItem(entry);
 }
 
 LoggerItem *CallLogModel::createEntry(const Tpl::EventPtr &event)

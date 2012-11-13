@@ -47,7 +47,7 @@ void MessageLogModel::appendMessage(const QString &number,
     if (contact) {
         fillContactInfo(entry, contact);
     }
-    appendEntry(entry);
+    addItem(entry);
 
     updateLatestMessages(number);
 }

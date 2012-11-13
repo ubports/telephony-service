@@ -65,7 +65,6 @@ protected:
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
     void requestEventsForDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     void appendEvents(const Tpl::EventPtrList &events);
-    void appendEntry(LoggerItem *entry);
     void invalidateRequests();
     bool validateRequest(Tpl::PendingOperation *op);
     void updateLogForContact(ContactEntry *contactEntry);
