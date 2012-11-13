@@ -116,7 +116,7 @@ LocalWidgets.TelephonyPage {
         boundsBehavior: Flickable.StopAtBounds
         clip: true
         contentHeight: detailsList.height + bottomSeparatorLine.height +
-                       (contactDetails.editable ? newDetailChooser.height + newDetailChooser.menuHeight + units.gu(1) : callLogSection.height)
+                       (contactDetails.editable ? newDetailChooser.height + newDetailChooser.menuHeight + units.gu(1) : 0)
 
         Column {
             id: detailsList
@@ -187,7 +187,6 @@ LocalWidgets.TelephonyPage {
             anchors.right: parent.right
             height: visible ? units.dp(2) : 0
             source: "../Widgets/artwork/ListItemSeparator.png"
-            visible: !callLogSection.visible || callLogSection.opacity != 1.0
         }
 
         ContactDetailTypeChooser {
