@@ -13,10 +13,6 @@ Item {
 
         MessageDelegate {
             id: messageDelegate
-
-            /*selected: telephony.messages.loaded
-                      && !telephony.view.newMessage
-                      && contactModel.comparePhoneNumbers(telephony.view.number, phoneNumber)*/
         }
     }
 
@@ -33,10 +29,6 @@ Item {
 
         CallLogDelegate {
             id: callLogDelegate
-
-            /*selected: telephony.messages.loaded
-                      && !telephony.view.newMessage
-                      && contactModel.comparePhoneNumbers(telephony.view.number, phoneNumber)*/
         }
     }
 

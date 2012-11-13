@@ -16,7 +16,7 @@ Item {
         text: contactAlias
         subtext: item.message
         //textBold: unreadCount > 0
-        //selected: messageDelegate.selected
+        selected: messageDelegate.parent ? messageDelegate.parent.selected : false
 
         onClicked: messageDelegate.parent.clicked(mouse)
     }

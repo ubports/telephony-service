@@ -17,7 +17,7 @@ Item {
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
         subtext: item.phoneNumber
-        selected: callItem.selected
+        selected: callItem.parent ? callItem.parent.selected : false
 
         onClicked: callItem.parent.clicked(mouse)
     }
