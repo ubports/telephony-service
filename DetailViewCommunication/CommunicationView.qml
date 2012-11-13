@@ -171,7 +171,7 @@ LocalWidgets.TelephonyPage {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 showDivider: true
-                __height: 58
+                __height: units.gu(7)
 
                 Loader {
                     signal clicked

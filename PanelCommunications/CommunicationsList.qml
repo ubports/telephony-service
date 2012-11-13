@@ -41,7 +41,7 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             showDivider: true
-            __height: 58
+            __height: units.gu(7)
 
             onClicked: {
                 telephony.showCommunication(groupingProperty, item[groupingProperty], model.contactId, true);
