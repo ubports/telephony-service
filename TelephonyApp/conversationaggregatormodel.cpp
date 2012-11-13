@@ -79,12 +79,17 @@ void ConversationAggregatorModel::removeFeedModel(ConversationFeedModel *model)
     }
 
     int offset = mModelOffsets[model];
-    beginRemoveRows(QModelIndex(), offset, offset + model->rowCount() - 1);
+    int rowCount = model->rowCount();
+    if (rowCount > 0) {
+        beginRemoveRows(QModelIndex(), offset, offset + rowCount - 1);
+    }
     mModelOffsets.remove(model);
     mFeedModels.removeOne(model);
     disconnect(model);
     updateOffsets();
-    endRemoveRows();
+    if (rowCount > 0) {
+        endRemoveRows();
+    }
 }
 
 QVariant ConversationAggregatorModel::data(const QModelIndex &index, int role) const
