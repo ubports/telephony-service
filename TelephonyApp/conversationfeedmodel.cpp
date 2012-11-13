@@ -18,6 +18,7 @@
  */
 
 #include "conversationfeedmodel.h"
+#include "contactentry.h"
 
 ConversationFeedModel::ConversationFeedModel(QObject *parent) :
     QAbstractListModel(parent)
@@ -108,6 +109,20 @@ void ConversationFeedModel::clear()
     qDeleteAll(mItems);
     mItems.clear();
     endRemoveRows();
+}
+
+void ConversationFeedModel::fillContactInfo(ConversationFeedItem *entry, ContactEntry *contact)
+{
+    entry->setContactId(contact->id().toString());
+    entry->setContactAvatar(contact->avatar());
+    entry->setContactAlias(contact->displayLabel());
+}
+
+void ConversationFeedModel::clearContactInfo(ConversationFeedItem *entry)
+{
+    entry->setContactAvatar(QUrl(""));
+    entry->setContactId("");
+    entry->setContactAlias("");
 }
 
 void ConversationFeedModel::onItemChanged()

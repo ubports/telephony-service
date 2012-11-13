@@ -104,20 +104,6 @@ void AbstractLoggerModel::requestEventsForDates(const Tpl::EntityPtr &entity, co
     }
 }
 
-void AbstractLoggerModel::fillContactInfo(LoggerItem *entry, ContactEntry *contact)
-{
-    entry->setContactId(contact->id().toString());
-    entry->setContactAvatar(contact->avatar());
-    entry->setContactAlias(contact->displayLabel());
-}
-
-void AbstractLoggerModel::clearContactInfo(LoggerItem *entry)
-{
-    entry->setContactAvatar(QUrl(""));
-    entry->setContactId("");
-    entry->setContactAlias("");
-}
-
 bool AbstractLoggerModel::checkNonStandardNumbers(LoggerItem *entry)
 {
     bool changed = false;

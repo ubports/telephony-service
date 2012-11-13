@@ -32,8 +32,6 @@
 #include "conversationfeedmodel.h"
 #include "conversationfeeditem.h"
 
-class ContactEntry;
-
 typedef QList<Tpl::EntityType> EntityTypeList;
 
 class LoggerItem : public ConversationFeedItem {
@@ -66,8 +64,6 @@ protected:
     void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny, EntityTypeList entityTypes = EntityTypeList());
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
     void requestEventsForDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
-    void fillContactInfo(LoggerItem *entry, ContactEntry *contact);
-    void clearContactInfo(LoggerItem *entry);
     void appendEvents(const Tpl::EventPtrList &events);
     void appendEntry(LoggerItem *entry);
     void invalidateRequests();

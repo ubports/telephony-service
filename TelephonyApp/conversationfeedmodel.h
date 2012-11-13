@@ -23,6 +23,8 @@
 #include <QAbstractListModel>
 #include "conversationfeeditem.h"
 
+class ContactEntry;
+
 class ConversationFeedModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -64,6 +66,9 @@ public:
     void addItem(ConversationFeedItem *item);
     void removeItem(ConversationFeedItem *item);
     void clear();
+
+    void fillContactInfo(ConversationFeedItem *entry, ContactEntry *contact);
+    void clearContactInfo(ConversationFeedItem *entry);
 
 private Q_SLOTS:
     void onItemChanged();
