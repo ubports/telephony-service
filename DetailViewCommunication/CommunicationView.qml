@@ -2,17 +2,22 @@ import QtQuick 2.0
 import TelephonyApp 0.1
 import "../Widgets" as LocalWidgets
 import "../"
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 LocalWidgets.TelephonyPage {
     id: view
+    objectName: "communicationView"
     property alias contact: contactWatcher.contact
     property alias number: contactWatcher.phoneNumber
     property alias contactId: contactWatcher.contactId
     property bool newMessage: false
+    property alias filterProperty: conversationProxyModel.filterProperty
+    property alias filterValue: conversationProxyModel.filterValue
+    property string phoneNumber: ""
 
     property string pendingMessage
 
-    title: "Conversation"
+    title: "Communication"
     ContactWatcher {
         id: contactWatcher
     }
@@ -20,7 +25,7 @@ LocalWidgets.TelephonyPage {
     function updateActiveChat() {
         // acknowledge messages as read just when the view is visible
         if (visible) {
-            chatManager.activeChat = number;
+            chatManager.activeChat = view.phoneNumber;
         } else {
             chatManager.activeChat = "";
         }
@@ -30,12 +35,12 @@ LocalWidgets.TelephonyPage {
         target: chatManager
 
         onChatReady: {
-            if (!contactModel.comparePhoneNumbers(phoneNumber, number)) {
+            if (!contactModel.comparePhoneNumbers(phoneNumber, view.phoneNumber)) {
                 return;
             }
 
             if (pendingMessage != "") {
-                chatManager.sendMessage(number, pendingMessage);
+                chatManager.sendMessage(view.phoneNumber, pendingMessage);
                 pendingMessage = "";
             }
         }
@@ -58,6 +63,13 @@ LocalWidgets.TelephonyPage {
         view.contact = contactModel.contactFromPhoneNumber(number);
 
         updateActiveChat();
+    }
+
+    ConversationProxyModel {
+        id: conversationProxyModel
+        conversationModel: conversationAggregatorModel
+        ascending: false
+        grouped: false
     }
 
     Item {
@@ -126,18 +138,65 @@ LocalWidgets.TelephonyPage {
     Loader {
         id: messagesLoader
 
-        sourceComponent: view.newMessage ? undefined : messagesComponent
+        sourceComponent: view.newMessage ? undefined : conversationComponent
         anchors.top: headerLoader.bottom
         anchors.bottom: footer.top
+        anchors.left: parent.left
+        anchors.right: parent.right
     }
 
     Component {
-        id: messagesComponent
-        Messages {
-            id: messages
+        id: messageComponent
+        MessageItemDelegate {
+            id: messageItemDelegate
+        }
+    }
+
+    Component {
+        id: callComponent
+        CallItemDelegate {
+            id: callItemDelegate
+        }
+    }
+
+    Component {
+        id: conversationComponent
+        ListView {
             width: view.width
-            height: view.height - footer.height - headerLoader.height
-            number: view.number
+            anchors.fill: parent
+            model: conversationProxyModel
+            clip: true
+            delegate: ListItem.Base {
+                id: delegate
+                anchors.left: parent.left
+                anchors.right: parent.right
+                showDivider: true
+                __height: 58
+
+                Loader {
+                    signal clicked
+                    property string contactId: model ? model.contactId : ""
+                    property string contactAlias: model ? model.contactAlias : ""
+                    property url contactAvatar: model ? model.contactAvatar : ""
+                    property variant timestamp: model ? model.timestamp : null
+                    property bool incoming: model ? model.incoming : false
+                    property string itemType: model ? model.itemType : "none"
+                    property QtObject item: model ? model.item : null
+                    property variant events: model ? model.events : null
+                    anchors.fill: parent
+                    onClicked: view.phoneNumber = item.phoneNumber
+                    sourceComponent: {
+                        switch (itemType) {
+                        case "message":
+                            messageComponent;
+                            break;
+                        case "call":
+                            callComponent;
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -147,6 +206,8 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        height: visible ? units.gu(5) : 0
+        visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
         validRecipient: (!view.newMessage || headerLoader.item.text.match("^[0-9+][0-9+-]*$") != null)
 
@@ -156,14 +217,15 @@ LocalWidgets.TelephonyPage {
             if (view.newMessage) {
                 var phoneNumber = headerLoader.item.text;
                 view.number = phoneNumber
+                view.phoneNumber = phoneNumber
                 view.newMessage = false;
             }
 
-            if (chatManager.isChattingToContact(number)) {
-                chatManager.sendMessage(number, message);
+            if (chatManager.isChattingToContact(view.phoneNumber)) {
+                chatManager.sendMessage(view.phoneNumber, message);
             } else {
                 view.pendingMessage = message;
-                chatManager.startChat(number);
+                chatManager.startChat(view.phoneNumber);
             }
         }
     }

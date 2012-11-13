@@ -6,7 +6,8 @@ import Ubuntu.Components 0.1
 
 LocalWidgets.TelephonyPage {
     id: messageList
-    title: "Conversations"
+    objectName: "communicationPanel"
+    title: "Communication"
 
     anchors.fill: parent
 
@@ -20,7 +21,7 @@ LocalWidgets.TelephonyPage {
         anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
 
-        placeholderText: "Search messages"
+        placeholderText: "Search communication"
         Keys.onEscapePressed: text = ""
 
         primaryItem: AbstractButton {
@@ -57,24 +58,24 @@ LocalWidgets.TelephonyPage {
             text: "New Message"
             // FIXME: maybe use a signal and handle in the instance
             onClicked: telephony.startNewMessage()
-            selected: telephony.messages.loaded && telephony.view.newMessage
+            selected: telephony.communication.loaded && telephony.view.newMessage
         }
     }
 
-    MessagesProxyModel {
-        id: messagesProxyModel
-        messagesModel: messageLogModel
+    ConversationProxyModel {
+        id: conversationProxyModel
+        conversationModel: conversationAggregatorModel
         searchString: search.text
         ascending: false
-        onlyLatest: true
+        grouped: true
     }
 
-    MessagesList {
+    CommunicationsList {
         anchors.top: buttons.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         // FIXME: reference to fake model needs to be removed before final release
-        model: typeof(runtime) != "undefined" ? fakeMessages : messagesProxyModel
+        model: typeof(runtime) != "undefined" ? fakeMessages : conversationProxyModel
     }
 }

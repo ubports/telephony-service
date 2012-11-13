@@ -21,6 +21,7 @@
 #include "telepathyhelper.h"
 #include "contactentry.h"
 #include "contactmodel.h"
+#include "conversationfeeditem.h"
 #include <TelepathyLoggerQt/LogManager>
 #include <TelepathyLoggerQt/PendingDates>
 #include <TelepathyLoggerQt/PendingEntities>
@@ -30,44 +31,9 @@
 #include <QContact>
 #include <QContactPhoneNumber>
 
-QVariant LogEntry::data(int role) const
-{
-    switch (role) {
-    case AbstractLoggerModel::ContactId:
-        return contactId;
-    case AbstractLoggerModel::ContactAlias:
-    case Qt::DisplayRole:
-        return contactAlias;
-    case AbstractLoggerModel::Avatar:
-    case Qt::DecorationRole:
-        return avatar;
-    case AbstractLoggerModel::PhoneNumber:
-        return phoneNumber;
-    case AbstractLoggerModel::PhoneType:
-        return phoneType;
-    case AbstractLoggerModel::Timestamp:
-        return timestamp;
-    case AbstractLoggerModel::Incoming:
-        return incoming;
-    default:
-        return QVariant();
-    }
-}
-
 AbstractLoggerModel::AbstractLoggerModel(QObject *parent) :
-    QAbstractListModel(parent), mType(Tpl::EventTypeMaskAny), mLogManager(Tpl::LogManager::instance())
+    ConversationFeedModel(parent), mType(Tpl::EventTypeMaskAny), mLogManager(Tpl::LogManager::instance())
 {
-    // set the role names
-    QHash<int, QByteArray> roles;
-    roles[ContactId] = "contactId";
-    roles[ContactAlias] = "contactAlias";
-    roles[Avatar] = "avatar";
-    roles[PhoneNumber] = "phoneNumber";
-    roles[PhoneType] = "phoneType";
-    roles[Timestamp] = "timestamp";
-    roles[Incoming] = "incoming";
-    setRoleNames(roles);
-
     connect(ContactModel::instance(),
             SIGNAL(contactAdded(ContactEntry*)),
             SLOT(onContactAdded(ContactEntry*)));
@@ -77,25 +43,6 @@ AbstractLoggerModel::AbstractLoggerModel(QObject *parent) :
     connect(ContactModel::instance(),
             SIGNAL(contactRemoved(const QString&)),
             SLOT(onContactRemoved(const QString&)));
-}
-
-int AbstractLoggerModel::rowCount(const QModelIndex &parent) const
-{
-    // no child items
-    if (parent.isValid()) {
-        return 0;
-    }
-
-    return mLogEntries.count();
-}
-
-QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
-{
-    if (!index.isValid() || index.row() >= mLogEntries.count()) {
-        return QVariant();
-    }
-
-    return mLogEntries[index.row()]->data(role);
 }
 
 void AbstractLoggerModel::populate()
@@ -123,10 +70,10 @@ void AbstractLoggerModel::fetchLog(Tpl::EventTypeMask type, EntityTypeList entit
        - Once you get the entities, fetch the available dates
        - After you get the dates, fetch the events themselves
      */
+
     connect(pendingEntities,
             SIGNAL(finished(Tpl::PendingOperation*)),
-            SLOT(onPendingEntitiesFinished(Tpl::PendingOperation*)),
-            Qt::DirectConnection);
+            SLOT(onPendingEntitiesFinished(Tpl::PendingOperation*)));
     mActiveOperations.append(pendingEntities);
 }
 
@@ -139,8 +86,7 @@ void AbstractLoggerModel::requestDatesForEntities(const Tpl::EntityPtrList &enti
 
         connect(pendingDates,
                 SIGNAL(finished(Tpl::PendingOperation*)),
-                SLOT(onPendingDatesFinished(Tpl::PendingOperation*)),
-                Qt::DirectConnection);
+                SLOT(onPendingDatesFinished(Tpl::PendingOperation*)));
         mActiveOperations.append(pendingDates);
     }
 }
@@ -153,27 +99,12 @@ void AbstractLoggerModel::requestEventsForDates(const Tpl::EntityPtr &entity, co
         Tpl::PendingEvents *pendingEvents = mLogManager->queryEvents(account, entity, mType, date);
         connect(pendingEvents,
                 SIGNAL(finished(Tpl::PendingOperation*)),
-                SLOT(onPendingEventsFinished(Tpl::PendingOperation*)),
-                Qt::DirectConnection);
+                SLOT(onPendingEventsFinished(Tpl::PendingOperation*)));
         mActiveOperations.append(pendingEvents);
     }
 }
 
-void AbstractLoggerModel::fillContactInfo(LogEntry *entry, ContactEntry *contact)
-{
-    entry->contactId = contact->id().toString();
-    entry->avatar = contact->avatar();
-    entry->contactAlias = contact->displayLabel();
-}
-
-void AbstractLoggerModel::clearContactInfo(LogEntry *entry)
-{
-    entry->avatar = "";
-    entry->contactId = "";
-    entry->contactAlias = "";
-}
-
-bool AbstractLoggerModel::checkNonStandardNumbers(LogEntry *entry)
+bool AbstractLoggerModel::checkNonStandardNumbers(LoggerItem *entry)
 {
     bool changed = false;
 
@@ -181,62 +112,83 @@ bool AbstractLoggerModel::checkNonStandardNumbers(LogEntry *entry)
         return changed;
     }
 
-    if (entry->phoneNumber == QLatin1String("-2")) {
-        entry->contactAlias = QLatin1String("Private number");
-        entry->phoneNumber = QLatin1String("-");
+    if (entry->phoneNumber() == QLatin1String("-2")) {
+        entry->setContactAlias(QLatin1String("Private number"));
+        entry->setPhoneNumber(QLatin1String("-"));
         changed = true;
-    } else if (entry->phoneNumber == QLatin1String("-1") || entry->phoneNumber == QLatin1String("#")) {
-        entry->contactAlias = QLatin1String("Unknown number");
-        entry->phoneNumber = QLatin1String("-");
+    } else if (entry->phoneNumber() == QLatin1String("-1") || entry->phoneNumber() == QLatin1String("#")) {
+        entry->setContactAlias(QLatin1String("Unknown number"));
+        entry->setPhoneNumber(QLatin1String("-"));
         changed = true;
     }
+
     return changed;
+}
+
+QVariant AbstractLoggerModel::data(const QModelIndex &index, int role) const
+{
+    const ConversationFeedItem *item = entryFromIndex(index);
+
+    switch (role) {
+    case ConversationFeedModel::GroupingProperty:
+        if (item->contactId().isEmpty()) {
+            return "phoneNumber";
+        }
+    default:
+        return ConversationFeedModel::data(index, role);
+    }
+}
+
+bool AbstractLoggerModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
+{
+    LoggerItem *entry = dynamic_cast<LoggerItem*>(entryFromIndex(index));
+    bool foundMatch = false;
+
+    QString value = entry->contactAlias();
+    if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
+        foundMatch = true;
+    }
+
+    // Test the phone number
+    value = entry->phoneNumber();
+    if (ContactModel::instance()->comparePhoneNumbers(value, searchTerm)) {
+        foundMatch = true;
+    }
+
+    return foundMatch;
 }
 
 void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
 {
     // add the events to the list
-    beginInsertRows(QModelIndex(), mLogEntries.count(), (mLogEntries.count() + events.count()-1));
     Q_FOREACH(Tpl::EventPtr event, events) {
-        LogEntry *entry = createEntry(event);
+        LoggerItem *entry = createEntry(event);
         if (!entry) {
             continue;
         }
-        entry->incoming = (event->sender()->entityType() != Tpl::EntityTypeSelf);
-        entry->timestamp = event->timestamp();
 
-        Tpl::EntityPtr remoteEntity = entry->incoming ? event->sender() : event->receiver();
-        entry->phoneNumber = remoteEntity->identifier();
+        entry->setIncoming(event->sender()->entityType() != Tpl::EntityTypeSelf);
+        entry->setTimestamp(event->timestamp());
+
+        Tpl::EntityPtr remoteEntity = entry->incoming() ? event->sender() : event->receiver();
+        entry->setPhoneNumber(remoteEntity->identifier());
 
         if (!checkNonStandardNumbers(entry)) {
             // set the alias from the entity as a fallback value in case the contact is not found.
-            entry->contactAlias = remoteEntity->alias();
+            entry->setContactAlias(remoteEntity->alias());
+            if (entry->contactAlias().isEmpty()) {
+                entry->setContactAlias(entry->phoneNumber());
+            }
 
-            ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(entry->phoneNumber);
+            ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(entry->phoneNumber());
             if (contact) {
                 fillContactInfo(entry, contact);
             }
         }
 
-        mLogEntries.append(entry);
+        addItem(entry);
     }
-    endInsertRows();
     Q_EMIT resetView();
-}
-
-void AbstractLoggerModel::appendEntry(LogEntry *entry)
-{
-    beginInsertRows(QModelIndex(), mLogEntries.count(), mLogEntries.count());
-    mLogEntries.append(entry);
-    endInsertRows();
-}
-
-void AbstractLoggerModel::clear()
-{
-    beginRemoveRows(QModelIndex(), 0, mLogEntries.count()-1);
-    qDeleteAll(mLogEntries);
-    mLogEntries.clear();
-    endRemoveRows();
 }
 
 void AbstractLoggerModel::invalidateRequests()
@@ -262,25 +214,15 @@ bool AbstractLoggerModel::validateRequest(Tpl::PendingOperation *op)
     return false;
 }
 
-QModelIndex AbstractLoggerModel::indexFromEntry(LogEntry *entry) const
-{
-    int pos = mLogEntries.indexOf(entry);
-    if (pos < 0) {
-        return QModelIndex();
-    }
-
-    return index(pos, 0);
-}
-
 void AbstractLoggerModel::updateLogForContact(ContactEntry *contactEntry)
 {
     // now we need to iterate over the events to look for contacts matching
-    int count = mLogEntries.count();
+    int count = mItems.count();
     for (int i = 0; i < count; ++i) {
-        LogEntry *entry = mLogEntries[i];
+        LoggerItem *entry = dynamic_cast<LoggerItem*>(mItems[i]);
         // check if any of the contact's phone numbers match
         Q_FOREACH(const QContactPhoneNumber &number, contactEntry->contact().details<QContactPhoneNumber>()) {
-            if (ContactModel::comparePhoneNumbers(entry->phoneNumber, number.number())) {
+            if (ContactModel::comparePhoneNumbers(entry->phoneNumber(), number.number())) {
                 fillContactInfo(entry, contactEntry);
                 Q_EMIT dataChanged(index(i,0), index(i,0));
                 continue;
@@ -289,10 +231,10 @@ void AbstractLoggerModel::updateLogForContact(ContactEntry *contactEntry)
     }
 }
 
-LogEntry *AbstractLoggerModel::createEntry(const Tpl::EventPtr &event)
+LoggerItem *AbstractLoggerModel::createEntry(const Tpl::EventPtr &event)
 {
     Q_UNUSED(event);
-    return new LogEntry();
+    return new LoggerItem(this);
 }
 
 void AbstractLoggerModel::handleEntities(const Tpl::EntityPtrList &entities)
@@ -373,10 +315,10 @@ void AbstractLoggerModel::onContactChanged(ContactEntry *contact)
 
 void AbstractLoggerModel::onContactRemoved(const QString &contactId)
 {
-    int count = mLogEntries.count();
+    int count = mItems.count();
     for (int i = 0; i < count; ++i) {
-        LogEntry *entry = mLogEntries[i];
-        if (entry->contactId == contactId) {
+        LoggerItem *entry = dynamic_cast<LoggerItem*>(mItems[i]);
+        if (entry->contactId() == contactId) {
             clearContactInfo(entry);
             Q_EMIT dataChanged(index(i,0), index(i,0));
         }

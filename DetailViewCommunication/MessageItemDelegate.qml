@@ -4,23 +4,20 @@ import "../dateUtils.js" as DateUtils
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
-ListItem.Base {
+Item {
     id: messageDelegate
-    __height: units.gu(7)
-    showDivider: true
 
     LocalWidgets.CustomListItemBase {
         id: baseInfo
 
         anchors.fill: parent
-        iconSource: (avatar != "") ? avatar : placeholderIconSource
+        iconSource: (contactAvatar != "") ? contactAvatar : placeholderIconSource
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
-        subtext: message
-        textBold: unreadCount > 0
-        selected: messageDelegate.selected
+        subtext: item.message
+        //textBold: unreadCount > 0
 
-        onClicked: messageDelegate.clicked(mouse)
+        onClicked: messageDelegate.parent.clicked(mouse)
     }
 
     TextCustom {

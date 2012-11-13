@@ -14,6 +14,8 @@ AbstractButton {
     property bool selected: false
     property bool textBold: false
     property int padding: units.gu(1)
+    property bool incoming: true
+    property alias content: contentContainer
 
     property bool __hasSubLabel: subtext != ""
     property color __textColor: (selected || textBold) ? "#f37505" : Qt.rgba(0.4, 0.4, 0.4, 1.0)
@@ -27,7 +29,8 @@ AbstractButton {
 
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            anchors.left: parent.left
+            anchors.left: incoming ? parent.left : undefined
+            anchors.right: !incoming ? parent.right : undefined
             width: units.gu(7)
 
             FramedImage {
@@ -43,45 +46,55 @@ AbstractButton {
             }
         }
 
-        TextCustom {
-            id: label
+        Item {
+            id: contentContainer
+            anchors.right: incoming ? parent.right : iconContainer.left
+            anchors.left: incoming ? iconContainer.right : parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
 
-            property bool centered: !listItem.__hasSubLabel
+            TextCustom {
+                id: label
 
-            anchors.top: !centered ? parent.top : undefined
-            anchors.topMargin: !centered ? listItem.padding - units.gu(0.5) : 0
-            anchors.left: iconContainer.right
-            anchors.leftMargin: units.dp(1)
-            anchors.right: parent.right
-            anchors.rightMargin: listItem.padding
-            anchors.verticalCenter: centered ? parent.verticalCenter : undefined
-            fontSize: "medium"
-            font.bold: textBold
-            elide: Text.ElideRight
+                property bool centered: !listItem.__hasSubLabel
 
-            color: listItem.__textColor
-            style: Text.Raised
-            styleColor: "white"
-            opacity: listItem.enabled ? 1.0 : 0.5
-        }
+                anchors.top: !centered ? parent.top : undefined
+                anchors.topMargin: !centered ? listItem.padding - units.gu(0.5) : 0
+                anchors.left: parent.left
+                anchors.leftMargin: units.dp(1)
+                anchors.right: parent.right
+                anchors.rightMargin: listItem.padding
+                anchors.verticalCenter: centered ? parent.verticalCenter : undefined
+                fontSize: "medium"
+                font.bold: textBold
+                horizontalAlignment: !incoming ? Text.AlignRight : Text.AlignLeft
+                elide: Text.ElideRight
 
-        TextCustom {
-            id: sublabel
+                color: listItem.__textColor
+                style: Text.Raised
+                styleColor: "white"
+                opacity: listItem.enabled ? 1.0 : 0.5
+            }
 
-            anchors.left: label.left
-            anchors.leftMargin: label.anchors.leftMargin
-            anchors.top: label.bottom
-            anchors.topMargin: units.dp(1)
-            anchors.right: parent.right
-            anchors.rightMargin: listItem.padding
-            fontSize: "small"
-            font.bold: textBold
-            elide: Text.ElideRight
+            TextCustom {
+                id: sublabel
 
-            color: listItem.__textColor
-            style: Text.Raised
-            styleColor: "white"
-            opacity: listItem.enabled ? 1.0 : 0.5
+                anchors.left: label.left
+                anchors.leftMargin: label.anchors.leftMargin
+                anchors.top: label.bottom
+                anchors.topMargin: units.dp(1)
+                anchors.right: parent.right
+                anchors.rightMargin: listItem.padding
+                fontSize: "small"
+                font.bold: textBold
+                elide: Text.ElideRight
+                horizontalAlignment: !incoming ? Text.AlignRight : Text.AlignLeft
+
+                color: listItem.__textColor
+                style: Text.Raised
+                styleColor: "white"
+                opacity: listItem.enabled ? 1.0 : 0.5
+            }
         }
     }
 }

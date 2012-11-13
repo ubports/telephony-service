@@ -24,7 +24,7 @@ Item {
     // Inventory of all the views in the application
     property ViewModel liveCall: ViewModel {source: "DetailViewLiveCall/LiveCall.qml"; tab: 0 }
     property ViewModel voicemail: ViewModel {source: "DetailViewVoicemail/Voicemail.qml"; tab: 0 }
-    property ViewModel messages: ViewModel {source: "DetailViewMessages/MessagesView.qml"; tab: 1 }
+    property ViewModel communication: ViewModel {source: "DetailViewCommunication/CommunicationView.qml"; tab: 1 }
     property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"; tab: 0 }
     property ViewModel dialer: ViewModel {source: "PanelDialer/DialerView.qml"; tab: 0 }
     property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"; tab: 2 }
@@ -88,7 +88,7 @@ Item {
     function callNumber(number) {
         var callStack = rightPaneStacks.children[dialer.tab]
         if (callStack.currentPage.source == dialer.source) {
-            view.dialNumber = ""
+            callStack.currentPage.dialNumber = ""
         }
         callManager.startCall(number);
     }
@@ -97,16 +97,14 @@ Item {
         callNumber(callManager.voicemailNumber);
     }
 
-    function startChat(contactId, phoneNumber, clear) {
-        var properties = { number: phoneNumber, newMessage: false };
-        if (contactId) {
-            properties["contactId"] = contactId;
-        }
+    function showCommunication(prop, value, id, clear) {
+        var properties = { filterProperty: prop, filterValue: value, newMessage: false, contactId: id };
+
         if (clear) {
             resetView();
         }
 
-        messages.load(properties);
+        communication.load(properties);
     }
 
     function endCall() {
@@ -137,7 +135,7 @@ Item {
 
     function startNewMessage() {
         resetView();
-        messages.load({ newMessage: true })
+        communication.load({ newMessage: true })
     }
 
     function sendMessage(number, message) {
@@ -183,7 +181,7 @@ Item {
             iconSource: (tabs.selectedTabIndex != 1) ? "assets/tab_icon_messaging_inactive.png" : "assets/tab_icon_messaging_active.png"
             page: singlePane ? undefined : Qt.resolvedUrl(panel)
             property string pane: "Panes/SelectMessagePane.qml"
-            property string panel: "PanelMessages/MessagesPanel.qml"
+            property string panel: "PanelCommunications/CommunicationsPanel.qml"
         }
 
         Tab {

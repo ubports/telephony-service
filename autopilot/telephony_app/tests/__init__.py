@@ -11,7 +11,7 @@ from autopilot.introspection.qt import QtIntrospectionTestMixin
 from autopilot.testcase import AutopilotTestCase
 
 from telephony_app.emulators.call_panel import CallPanel
-from telephony_app.emulators.message_panel import MessagesPanel
+from telephony_app.emulators.communication_panel import CommunicationPanel
 from telephony_app.emulators.contacts_panel import ContactsPanel
 
 
@@ -37,8 +37,8 @@ class TelephonyAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
         return CallPanel(self.app)
 
     @property
-    def messages_panel(self):
-        return MessagesPanel(self.app)
+    def communication_panel(self):
+        return CommunicationPanel(self.app)
 
     @property
     def contacts_panel(self):

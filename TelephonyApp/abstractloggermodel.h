@@ -29,44 +29,32 @@
 #include <QMap>
 #include <QUrl>
 
-class ContactEntry;
+#include "conversationfeedmodel.h"
+#include "conversationfeeditem.h"
 
 typedef QList<Tpl::EntityType> EntityTypeList;
 
-class LogEntry {
-public:
-    virtual QVariant data(int role) const;
+class LoggerItem : public ConversationFeedItem {
+    Q_OBJECT
+    Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
 
-    // for simplicity keep the members as public
-    QString contactId;
-    QString contactAlias;
-    QUrl avatar;
-    QString phoneNumber;
-    QString phoneType;
-    QDateTime timestamp;
-    bool incoming;
+public:
+    explicit LoggerItem(QObject *parent = 0) : ConversationFeedItem(parent) { }
+    void setPhoneNumber(const QString &phone) { mPhoneNumber = phone; Q_EMIT contactIdChanged(); };
+    QString phoneNumber() { return mPhoneNumber; };
+Q_SIGNALS:
+    void phoneNumberChanged();
+private:
+    QString mPhoneNumber;
 };
 
-class AbstractLoggerModel : public QAbstractListModel
+class AbstractLoggerModel : public ConversationFeedModel
 {
     Q_OBJECT
 public:
-    enum LogRoles {
-        ContactId = Qt::UserRole,
-        ContactAlias,
-        Avatar,
-        PhoneNumber,
-        PhoneType,
-        Timestamp,
-        Incoming,
-        LastLogRole
-    };
-
     explicit AbstractLoggerModel(QObject *parent = 0);
 
-    int rowCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
-
+public Q_SLOTS:
     virtual void populate();
 
 Q_SIGNALS:
@@ -76,21 +64,20 @@ protected:
     void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny, EntityTypeList entityTypes = EntityTypeList());
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);
     void requestEventsForDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
-    void fillContactInfo(LogEntry *entry, ContactEntry *contact);
-    void clearContactInfo(LogEntry *entry);
     void appendEvents(const Tpl::EventPtrList &events);
-    void appendEntry(LogEntry *entry);
-    void clear();
     void invalidateRequests();
     bool validateRequest(Tpl::PendingOperation *op);
-    QModelIndex indexFromEntry(LogEntry *entry) const;
     void updateLogForContact(ContactEntry *contactEntry);
 
-    virtual LogEntry *createEntry(const Tpl::EventPtr &event);
+    virtual LoggerItem *createEntry(const Tpl::EventPtr &event);
     virtual void handleEntities(const Tpl::EntityPtrList &entities);
     virtual void handleDates(const Tpl::EntityPtr &entity, const Tpl::QDateList &dates);
     virtual void handleEvents(const Tpl::EventPtrList &events);
-    bool checkNonStandardNumbers(LogEntry *entry);
+    bool checkNonStandardNumbers(LoggerItem *entry);
+
+    virtual QVariant data(const QModelIndex &index, int role) const;
+
+    virtual bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
 
 protected Q_SLOTS:
     void onPendingEntitiesFinished(Tpl::PendingOperation *op);
@@ -104,7 +91,6 @@ protected Q_SLOTS:
 
 protected:
     Tpl::LogManagerPtr mLogManager;
-    QList<LogEntry*> mLogEntries;
     Tpl::EventTypeMask mType;
     EntityTypeList mEntityTypes;
     QList<Tpl::PendingOperation*> mActiveOperations;

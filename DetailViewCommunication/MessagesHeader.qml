@@ -11,9 +11,9 @@ BaseMessageHeader {
     TextCustom {
         id: name
 
-        anchors.left: parent.left
+        anchors.left: icon.right
         anchors.leftMargin: units.gu(2)
-        anchors.right: icon.left
+        anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
         fontSize: "large"
@@ -27,8 +27,8 @@ BaseMessageHeader {
     LocalWidgets.FramedImage {
         id: icon
 
-        anchors.right: parent.right
-        anchors.rightMargin: units.gu(1)
+        anchors.left: parent.left
+        anchors.leftMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: units.dp(-1)
         width: units.gu(4)
@@ -43,9 +43,9 @@ BaseMessageHeader {
     }
 
     Item {
-        anchors.right: icon.left
+        anchors.right: name.right
         anchors.rightMargin: units.gu(0.5)
-        anchors.left: name.right
+        anchors.left: icon.right
         anchors.leftMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: units.dp(-1)

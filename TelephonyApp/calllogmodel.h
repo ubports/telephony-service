@@ -24,31 +24,43 @@
 #include <QTime>
 #include <TelepathyQt/CallChannel>
 
-class CallLogEntry : public LogEntry {
+class CallLogEntry : public LoggerItem {
+    Q_OBJECT
+    Q_PROPERTY(QTime duration READ duration WRITE setDuration NOTIFY durationChanged)
+    Q_PROPERTY(bool missed READ missed WRITE setMissed NOTIFY missedChanged)
 public:
-    QVariant data(int role) const;
-    QTime duration;
-    bool missed;
+    explicit CallLogEntry(QObject *parent = 0) : LoggerItem(parent) { }
+    void setDuration(const QTime &duration) { mDuration = duration; Q_EMIT durationChanged(); }
+    QTime duration() { return mDuration; }
+    void setMissed(bool missed) { mMissed = missed; Q_EMIT missedChanged(); }
+    bool missed() { return mMissed; }
+
+Q_SIGNALS:
+    void durationChanged();
+    void missedChanged();
+
+private:
+    QTime mDuration;
+    bool mMissed;
 };
 
 class CallLogModel : public AbstractLoggerModel
 {
     Q_OBJECT
 public:
-    enum CallLogRoles {
-        Duration = AbstractLoggerModel::LastLogRole,
-        Missed
-    };
-
     explicit CallLogModel(QObject *parent = 0);
 
-    void populate();
+    QString itemType(const QModelIndex &index) const;
+
+    bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
+
 
 public Q_SLOTS:
+    void populate();
     void onCallEnded(const Tp::CallChannelPtr &channel);
-    
+
 protected:
-    LogEntry *createEntry(const Tpl::EventPtr &event);
+    LoggerItem *createEntry(const Tpl::EventPtr &event);
 };
 
 #endif // CALLLOGMODEL_H

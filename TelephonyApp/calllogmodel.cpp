@@ -25,26 +25,9 @@
 #include <TelepathyLoggerQt/CallEvent>
 #include <TelepathyQt/Contact>
 
-QVariant CallLogEntry::data(int role) const
-{
-    switch(role) {
-    case CallLogModel::Duration:
-        return duration;
-    case CallLogModel::Missed:
-        return missed;
-    default:
-        return LogEntry::data(role);
-    }
-}
-
 CallLogModel::CallLogModel(QObject *parent) :
     AbstractLoggerModel(parent)
 {
-    // set the role names
-    QHash<int, QByteArray> roles = roleNames();
-    roles[Duration] = "duration";
-    roles[Missed] = "missed";
-    setRoleNames(roles);
 }
 
 void CallLogModel::populate()
@@ -61,16 +44,16 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
         return;
     }
 
-    CallLogEntry *entry = new CallLogEntry();
+    CallLogEntry *entry = new CallLogEntry(this);
     // FIXME: handle conference call
     Q_FOREACH(const Tp::ContactPtr &contact, contacts) {
-        entry->phoneNumber = contact->id();
+        entry->setPhoneNumber(contact->id());
         break;
     }
 
     // fill the contact info
-    ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(entry->phoneNumber);
-    entry->contactAlias = entry->phoneNumber;
+    ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(entry->phoneNumber());
+    entry->setContactAlias(entry->phoneNumber());
     if (contact) {
         fillContactInfo(entry, contact);
     } else {
@@ -78,34 +61,63 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
     }
 
     // fill the call info
-    entry->timestamp = channel->property("timestamp").toDateTime();
+    entry->setTimestamp(channel->property("timestamp").toDateTime());
     bool isIncoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
-    entry->incoming = isIncoming;
-    entry->duration = QTime(0,0,0);
+    entry->setIncoming(isIncoming);
+    entry->setDuration(QTime(0,0,0));
 
     // outgoing calls can be missed calls?
-    if (entry->incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer) {
-        entry->missed = true;
+    if (entry->incoming() && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer) {
+        entry->setMissed(true);
     } else {
         QDateTime activeTime = channel->property("activeTime").toDateTime();
-        entry->duration.addSecs(activeTime.secsTo(QDateTime::currentDateTime()));
-        entry->missed = false;
+        entry->setDuration(entry->duration().addSecs(activeTime.secsTo(QDateTime::currentDateTime())));
+        entry->setMissed(false);
     }
 
     // and finally add the entry
-    appendEntry(entry);
+    addItem(entry);
 }
 
-LogEntry *CallLogModel::createEntry(const Tpl::EventPtr &event)
+LoggerItem *CallLogModel::createEntry(const Tpl::EventPtr &event)
 {
-    CallLogEntry *entry = new CallLogEntry();
+    CallLogEntry *entry = new CallLogEntry(this);
     Tpl::CallEventPtr callEvent = event.dynamicCast<Tpl::CallEvent>();
 
     if (callEvent.isNull()) {
         qWarning() << "The event" << event << "is not a Tpl::CallEvent!";
     }
 
-    entry->missed = (callEvent->endReason() == Tp::CallStateChangeReasonNoAnswer);
-    entry->duration = callEvent->duration();
+    entry->setMissed(callEvent->endReason() == Tp::CallStateChangeReasonNoAnswer);
+    entry->setDuration(callEvent->duration());
     return entry;
+}
+
+bool CallLogModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
+{
+    CallLogEntry *entry = dynamic_cast<CallLogEntry*>(index.data(ConversationFeedModel::FeedItem).value<CallLogEntry*>());
+    if (!entry) {
+        return false;
+    }
+
+    QString value = entry->contactAlias();
+    if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
+        // if onlyLatest option is set, we just return one contact alias match
+        return true;
+    }
+
+    // Test the phone number
+    value = entry->phoneNumber();
+    if (ContactModel::instance()->comparePhoneNumbers(value, searchTerm)) {
+        // if onlyLatest option is set, we just return one contact alias match
+        return true;
+    }
+
+    return false;
+}
+
+QString CallLogModel::itemType(const QModelIndex &index) const
+{
+    Q_UNUSED(index);
+    return "call";
 }

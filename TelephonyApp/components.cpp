@@ -24,7 +24,6 @@
 #include "channelobserver.h"
 #include "chatmanager.h"
 #include "calllogmodel.h"
-#include "calllogproxymodel.h"
 #include "contactmodel.h"
 #include "contactentry.h"
 #include "contactproxymodel.h"
@@ -34,8 +33,9 @@
 #include "contactname.h"
 #include "contactonlineaccount.h"
 #include "contactphonenumber.h"
+#include "conversationaggregatormodel.h"
+#include "conversationproxymodel.h"
 #include "messagelogmodel.h"
-#include "messagesproxymodel.h"
 #include "modelsectioncounter.h"
 
 #include <QQmlEngine>
@@ -79,17 +79,18 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("contactModel", ContactModel::instance(contactEngine));
 
     mCallLogModel = new CallLogModel(mRootContext);
-    mRootContext->setContextProperty("callLogModel", mCallLogModel);
     mMessageLogModel = new MessageLogModel(mRootContext);
-    mRootContext->setContextProperty("messageLogModel", mMessageLogModel);
+    mConversationModel = new ConversationAggregatorModel(mRootContext);
+    mConversationModel->addFeedModel(mCallLogModel);
+    mConversationModel->addFeedModel(mMessageLogModel);
+    mRootContext->setContextProperty("conversationAggregatorModel", mConversationModel);
 }
 
 void Components::registerTypes(const char *uri)
 {
     // @uri TelephonyApp
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
-    qmlRegisterType<CallLogProxyModel>(uri, 0, 1, "CallLogProxyModel");
-    qmlRegisterType<MessagesProxyModel>(uri, 0, 1, "MessagesProxyModel");
+    qmlRegisterType<ConversationProxyModel>(uri, 0, 1, "ConversationProxyModel");
     qmlRegisterType<ContactEntry>(uri, 0, 1, "ContactEntry");
     qmlRegisterType<ContactProxyModel>(uri, 0, 1, "ContactProxyModel");
     qmlRegisterType<ContactDetail>(uri, 0, 1, "ContactDetail");
@@ -110,6 +111,8 @@ void Components::onAccountReady()
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 
-    mCallLogModel->populate();
-    mMessageLogModel->populate();
+    // QTimer::singleShot() is used here to make sure the slots are executed in the correct thread. If we call the slots directly
+    // the items created for those models will be on the wrong thread.
+    QTimer::singleShot(0, mCallLogModel, SLOT(populate()));
+    QTimer::singleShot(0, mMessageLogModel, SLOT(populate()));
 }
