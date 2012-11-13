@@ -61,7 +61,6 @@ Item {
         placeholderIconSource: "../assets/avatar_contacts_list.png"
         text: contactAlias
         subtext: item.phoneNumber
-        //selected: callItem.selected
 
         onClicked: callItem.parent.clicked(mouse)
     }
@@ -70,8 +69,6 @@ Item {
         id: timeLabel
 
         parent: infoBox.content
-        //anchors.right: incoming ? undefined : parent.right
-        //anchors.left: incoming ? parent.left : undefined
         anchors.rightMargin: units.gu(1)
         anchors.bottom: parent.bottom
         anchors.bottomMargin: units.gu(0.5)
@@ -125,7 +122,6 @@ Item {
         anchors.rightMargin: units.dp(2)
         anchors.topMargin: units.dp(1)
         width: height
-        //selected: callItem.selected
 
         iconSource: item.phoneNumber != "-" ? "../assets/tab_icon_call_inactive.png" : ""
         isIcon: true

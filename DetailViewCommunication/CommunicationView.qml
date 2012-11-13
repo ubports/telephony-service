@@ -68,7 +68,6 @@ LocalWidgets.TelephonyPage {
     ConversationProxyModel {
         id: conversationProxyModel
         conversationModel: conversationAggregatorModel
-        //searchString: search.text
         ascending: false
         grouped: false
     }
