@@ -68,6 +68,7 @@ LocalWidgets.TelephonyPage {
         searchString: search.text
         ascending: false
         grouped: true
+        showLatestFromGroup: true
     }
 
     CommunicationsList {

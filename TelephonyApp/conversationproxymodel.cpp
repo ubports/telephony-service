@@ -25,7 +25,7 @@
 #include "contactmodel.h"
 
 ConversationProxyModel::ConversationProxyModel(QObject *parent) :
-    QSortFilterProxyModel(parent), mAscending(true), mGrouped(false)
+    QSortFilterProxyModel(parent), mAscending(true), mGrouped(false), mShowLatestFromGroup(false)
 {
     setSortRole(ConversationFeedModel::Timestamp);
     setDynamicSortFilter(true);
@@ -149,8 +149,23 @@ void ConversationProxyModel::setGrouped(bool value)
     if (value != mGrouped) {
         mGrouped = value;
         mGroupedEntries.clear();
-        invalidateFilter();
+        processGrouping();
         Q_EMIT groupedChanged();
+    }
+}
+
+bool ConversationProxyModel::showLatestFromGroup() const
+{
+    return mShowLatestFromGroup;
+}
+
+void ConversationProxyModel::setShowLatestFromGroup(bool value)
+{
+    if (value != mShowLatestFromGroup) {
+        mShowLatestFromGroup = value;
+        mGroupedEntries.clear();
+        processGrouping();
+        Q_EMIT showLatestFromGroupChanged();
     }
 }
 
@@ -166,14 +181,24 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
     }
 
     QModelIndex sourceIndex = mapToSource(index);
+    ConversationGroup group = groupForSourceIndex(sourceIndex);
+
+    // fill the result using the standard QSortFilterProxyModel data function
+    // and overwrite it if necessary
+    QVariant result = QSortFilterProxyModel::data(index, role);
+
+    // if we are grouping entries and showing the latest event from each group,
+    // return the data from the latest item instead of the current one
+    if (mGrouped && mShowLatestFromGroup) {
+        QModelIndex latestIndex = sourceModel()->index(group.latestSourceRow, 0);
+        result = latestIndex.data(role);
+    }
 
     switch (role) {
     case EventsRole: {
         if (!mGrouped) {
-            return QVariant();
+            break;
         }
-
-        ConversationGroup group = groupForSourceIndex(sourceIndex);
 
         // convert the event count into QVariantMap
         QVariantMap eventMap;
@@ -181,21 +206,22 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
             eventMap[key] = group.eventCount[key];
         }
 
-        return eventMap;
+        result = eventMap;
+        break;
     }
     case ConversationFeedModel::Timestamp:
         if (mGrouped) {
-            ConversationGroup group = groupForSourceIndex(sourceIndex);
-            return group.latestTime;
+            result = group.latestTime;
         }
-        return QSortFilterProxyModel::data(index, role);
+        break;
     case ConversationFeedModel::ItemType:
-        if (mGrouped && mSearchString.isEmpty()) {
-            return "group";
+        if (mGrouped && mSearchString.isEmpty() && !mShowLatestFromGroup) {
+            result = "group";
         }
-    default:
-        return QSortFilterProxyModel::data(index, role);
+        break;
     }
+
+    return result;
 }
 
 bool ConversationProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -259,6 +285,7 @@ void ConversationProxyModel::processGrouping()
         group.eventCount[model->itemType(sourceIndex)]++;
 
         if (item->timestamp() > group.latestTime) {
+            group.latestSourceRow = row;
             group.latestTime = item->timestamp();
         }
 
