@@ -20,6 +20,7 @@ Item {
         subtext: DateUtils.formatLogDate(timestamp)
         onClicked: groupDelegate.parent.clicked(mouse)
         selected: groupDelegate.parent ? groupDelegate.parent.selected : false
+        textBold: groupDelegate.parent ? groupDelegate.parent.newItem : false
     }
 
     Row {

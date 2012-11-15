@@ -87,6 +87,8 @@ void ConversationFeedModel::addItem(ConversationFeedItem *item)
     connect(item, SIGNAL(contactIdChanged()), SLOT(onItemChanged()));
     connect(item, SIGNAL(incomingChanged()), SLOT(onItemChanged()));
     connect(item, SIGNAL(timestampChanged()), SLOT(onItemChanged()));
+    connect(item, SIGNAL(newItemChanged()), SLOT(onItemChanged()));
+
     mItems.append(item);
     endInsertRows();
 }

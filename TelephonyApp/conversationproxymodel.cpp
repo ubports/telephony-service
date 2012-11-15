@@ -25,7 +25,7 @@
 #include "contactmodel.h"
 
 ConversationProxyModel::ConversationProxyModel(QObject *parent) :
-    QSortFilterProxyModel(parent), mAscending(true), mGrouped(false)
+    QSortFilterProxyModel(parent), mAscending(true), mGrouped(false), mShowLatestFromGroup(false)
 {
     setSortRole(ConversationFeedModel::Timestamp);
     setDynamicSortFilter(true);
@@ -149,8 +149,23 @@ void ConversationProxyModel::setGrouped(bool value)
     if (value != mGrouped) {
         mGrouped = value;
         mGroupedEntries.clear();
-        invalidateFilter();
+        processGrouping();
         Q_EMIT groupedChanged();
+    }
+}
+
+bool ConversationProxyModel::showLatestFromGroup() const
+{
+    return mShowLatestFromGroup;
+}
+
+void ConversationProxyModel::setShowLatestFromGroup(bool value)
+{
+    if (value != mShowLatestFromGroup) {
+        mShowLatestFromGroup = value;
+        mGroupedEntries.clear();
+        processGrouping();
+        Q_EMIT showLatestFromGroupChanged();
     }
 }
 
@@ -166,36 +181,39 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
     }
 
     QModelIndex sourceIndex = mapToSource(index);
+    ConversationGroup group = groupForSourceIndex(sourceIndex);
+
+    // fill the result using the standard QSortFilterProxyModel data function
+    // and overwrite it if necessary
+    QVariant result = QSortFilterProxyModel::data(index, role);
+    QVariantMap eventMap;
 
     switch (role) {
-    case EventsRole: {
+    case EventsRole:
         if (!mGrouped) {
-            return QVariant();
+            break;
         }
 
-        ConversationGroup group = groupForSourceIndex(sourceIndex);
-
         // convert the event count into QVariantMap
-        QVariantMap eventMap;
         Q_FOREACH(const QString & key, group.eventCount.keys()) {
             eventMap[key] = group.eventCount[key];
         }
 
-        return eventMap;
-    }
-    case ConversationFeedModel::Timestamp:
-        if (mGrouped) {
-            ConversationGroup group = groupForSourceIndex(sourceIndex);
-            return group.latestTime;
-        }
-        return QSortFilterProxyModel::data(index, role);
+        result = eventMap;
+        break;
     case ConversationFeedModel::ItemType:
-        if (mGrouped && mSearchString.isEmpty()) {
-            return "group";
+        if (mGrouped && mSearchString.isEmpty() && !mShowLatestFromGroup) {
+            result = "group";
         }
-    default:
-        return QSortFilterProxyModel::data(index, role);
+        break;
+    case ConversationFeedModel::NewItem:
+        if (mGrouped) {
+            result = group.newItem;
+        }
+        break;
     }
+
+    return result;
 }
 
 bool ConversationProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
@@ -257,12 +275,10 @@ void ConversationProxyModel::processGrouping()
         QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
         ConversationGroup &group = mGroupedEntries[groupingProperty][propertyValue];
         group.eventCount[model->itemType(sourceIndex)]++;
+        group.newItem |= item->newItem();
 
-        if (item->timestamp() > group.latestTime) {
+        if (item->timestamp() > group.latestTime || group.displayedRow < 0) {
             group.latestTime = item->timestamp();
-        }
-
-        if (group.displayedRow < 0) {
             group.displayedRow = row;
         }
     }
