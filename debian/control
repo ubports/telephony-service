@@ -43,3 +43,15 @@ Depends:
     ${misc:Depends}
 Description: debugging symbols for telephony-app
  This package contains the debugging symbols for telephony-app
+
+Package: telephony-app-testing
+Architecture: any
+Section: debug
+Priority: extra
+Depends:
+    telephony-app (= ${binary:Version}),
+    ${misc:Depends},
+    autopilot-qt5,
+    python-autopilot
+Description: autopilot tests for telephony-app
+ This package contains the autopilot tests for telephony-app

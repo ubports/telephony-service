@@ -1,0 +1,6 @@
+set(AUTOPILOT_DIR autopilot)
+
+install(DIRECTORY ${AUTOPILOT_DIR}
+    DESTINATION ${TELEPHONY_APP_DIR}/tests
+    )
+
