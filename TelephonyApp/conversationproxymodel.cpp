@@ -187,13 +187,6 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
     // and overwrite it if necessary
     QVariant result = QSortFilterProxyModel::data(index, role);
 
-    // if we are grouping entries and showing the latest event from each group,
-    // return the data from the latest item instead of the current one
-    if (mGrouped && mShowLatestFromGroup) {
-        QModelIndex latestIndex = sourceModel()->index(group.latestSourceRow, 0);
-        result = latestIndex.data(role);
-    }
-
     switch (role) {
     case EventsRole: {
         if (!mGrouped) {
@@ -209,11 +202,6 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
         result = eventMap;
         break;
     }
-    case ConversationFeedModel::Timestamp:
-        if (mGrouped) {
-            result = group.latestTime;
-        }
-        break;
     case ConversationFeedModel::ItemType:
         if (mGrouped && mSearchString.isEmpty() && !mShowLatestFromGroup) {
             result = "group";
@@ -284,12 +272,8 @@ void ConversationProxyModel::processGrouping()
         ConversationGroup &group = mGroupedEntries[groupingProperty][propertyValue];
         group.eventCount[model->itemType(sourceIndex)]++;
 
-        if (item->timestamp() > group.latestTime) {
-            group.latestSourceRow = row;
+        if (item->timestamp() > group.latestTime || group.displayedRow < 0) {
             group.latestTime = item->timestamp();
-        }
-
-        if (group.displayedRow < 0) {
             group.displayedRow = row;
         }
     }
