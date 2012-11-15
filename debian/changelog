@@ -1,4 +1,4 @@
-telephony-app (0.58.7) UNRELEASED; urgency=low
+telephony-app (0.58.7) quantal; urgency=low
 
   * Group the messages and call log views into the new "Communications" view.
 
