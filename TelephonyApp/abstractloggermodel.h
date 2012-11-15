@@ -45,6 +45,7 @@ public:
 
 Q_SIGNALS:
     void phoneNumberChanged();
+
 private:
     QString mPhoneNumber;
 };
@@ -58,9 +59,6 @@ public:
 public Q_SLOTS:
     virtual void populate();
 
-Q_SIGNALS:
-    void resetView();
-    
 protected:
     void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny, EntityTypeList entityTypes = EntityTypeList());
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);

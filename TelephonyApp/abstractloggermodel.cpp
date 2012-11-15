@@ -188,7 +188,6 @@ void AbstractLoggerModel::appendEvents(const Tpl::EventPtrList &events)
 
         addItem(entry);
     }
-    Q_EMIT resetView();
 }
 
 void AbstractLoggerModel::invalidateRequests()
