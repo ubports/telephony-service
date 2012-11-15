@@ -48,8 +48,6 @@ void MessageLogModel::appendMessage(const QString &number,
         fillContactInfo(entry, contact);
     }
     addItem(entry);
-
-    updateLatestMessages(number);
 }
 
 void MessageLogModel::populate()
@@ -89,7 +87,7 @@ MessageLogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 
     entry->setMessageId(textEvent->messageToken());
     entry->setMessage(textEvent->message());
-    entry->setIsLatest(false);
+
     return entry;
 }
 
@@ -123,53 +121,6 @@ void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
     }
 
     AbstractLoggerModel::handleEvents(filteredEvents);
-
-    // update the latest messages for the numbers we loaded
-    Q_FOREACH (const QString &phoneNumber, phoneNumbers) {
-        updateLatestMessages(phoneNumber);
-    }
-}
-
-void MessageLogModel::updateLatestMessages(const QString &phoneNumber)
-{
-    if (mItems.count() == 0) {
-        return;
-    }
-
-    MessageLogEntry *latestEntry = 0;
-
-    // go through the list of messages trying to find the latest one, and reset the latest flag on other items
-    Q_FOREACH (ConversationFeedItem *entry, mItems) {
-        MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
-        if (!messageEntry || !ContactModel::instance()->comparePhoneNumbers(messageEntry->phoneNumber(), phoneNumber)) {
-            continue;
-        }
-
-        // reset the isLatest flag
-        if (messageEntry->isLatest()) {
-            QModelIndex index = indexFromEntry(messageEntry);
-            messageEntry->setIsLatest(false);
-            Q_EMIT dataChanged(index, index);
-        }
-
-        if (!latestEntry) {
-            latestEntry = messageEntry;
-            continue;
-        }
-
-        if (messageEntry->timestamp() > latestEntry->timestamp()) {
-            latestEntry = messageEntry;
-        }
-    }
-
-    if (!latestEntry) {
-        return;
-    }
-
-    // after finding the latest one, mark it as being so
-    QModelIndex index = indexFromEntry(latestEntry);
-    latestEntry->setIsLatest(true);
-    Q_EMIT dataChanged(index, index);
 }
 
 MessageLogEntry *MessageLogModel::messageById(const QString &messageId)
