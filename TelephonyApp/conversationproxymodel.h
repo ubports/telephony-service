@@ -58,6 +58,10 @@ class ConversationProxyModel : public QSortFilterProxyModel
                READ grouped
                WRITE setGrouped
                NOTIFY groupedChanged)
+    Q_PROPERTY(bool showLatestFromGroup
+               READ showLatestFromGroup
+               WRITE setShowLatestFromGroup
+               NOTIFY showLatestFromGroupChanged)
 
     Q_ENUMS(ModelRoles)
 
@@ -86,6 +90,9 @@ public:
     bool grouped() const;
     void setGrouped(bool value);
 
+    bool showLatestFromGroup() const;
+    void setShowLatestFromGroup(bool value);
+
     void updateSorting();
 
     virtual QVariant data(const QModelIndex &index, int role) const;
@@ -97,6 +104,7 @@ Q_SIGNALS:
     void filterValueChanged();
     void filterPropertyChanged();
     void groupedChanged();
+    void showLatestFromGroupChanged();
 
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
@@ -111,6 +119,7 @@ private:
     QString mFilterValue;
     QString mFilterProperty;
     bool mGrouped;
+    bool mShowLatestFromGroup;
 
     QMap<QString, QMap<QString, ConversationGroup> > mGroupedEntries;
 };
