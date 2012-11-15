@@ -43,6 +43,9 @@ void MessageLogModel::appendMessage(const QString &number,
     // set the alias to the phone number as a fallback in case the contact is not known
     entry->setContactAlias(number);
 
+    // if the item is incoming, mark it as new
+    entry->setNewItem(true);
+
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
     if (contact) {
         fillContactInfo(entry, contact);

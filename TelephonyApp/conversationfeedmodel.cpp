@@ -55,6 +55,8 @@ QVariant ConversationFeedModel::data(const QModelIndex &index, int role) const
         return item->timestamp();
     case Incoming:
         return item->incoming();
+    case NewItem:
+        return item->newItem();
     case ItemType:
         return itemType(index);
     case FeedItem:

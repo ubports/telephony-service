@@ -29,6 +29,7 @@ public:
     QMap<QString, int> eventCount;
     QDateTime latestTime;
     int displayedRow;
+    bool newItem;
 };
 
 class ConversationProxyModel : public QSortFilterProxyModel
