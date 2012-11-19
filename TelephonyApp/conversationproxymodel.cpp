@@ -275,7 +275,7 @@ void ConversationProxyModel::processGrouping()
         QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
         ConversationGroup &group = mGroupedEntries[groupingProperty][propertyValue];
         group.eventCount[model->itemType(sourceIndex)]++;
-        group.newItem |= item->newItem();
+        group.newItem  = group.newItem || item->newItem();
 
         if (item->timestamp() > group.latestTime || group.displayedRow < 0) {
             group.latestTime = item->timestamp();
