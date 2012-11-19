@@ -9,7 +9,9 @@ Item {
 
     Component.onCompleted: {
         // mark the message as read
-        item.newItem = false;
+        if (item.newItem) {
+            item.newItem = false;
+        }
     }
 
     LocalWidgets.CustomListItemBase {

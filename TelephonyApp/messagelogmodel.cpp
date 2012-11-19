@@ -46,6 +46,10 @@ void MessageLogModel::appendMessage(const QString &number,
     // if the item is incoming, mark it as new
     entry->setNewItem(true);
 
+    connect(entry,
+            SIGNAL(newItemChanged()),
+            SLOT(onNewItemChanged()));
+
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
     if (contact) {
         fillContactInfo(entry, contact);
@@ -75,6 +79,16 @@ void MessageLogModel::onMessageSent(const QString &number, const QString &messag
     appendMessage(number, message, false);
 }
 
+void MessageLogModel::onNewItemChanged()
+{
+    MessageLogEntry *entry = qobject_cast<MessageLogEntry*>(sender());
+    if (!entry) {
+        return;
+    }
+
+    Q_EMIT messageRead(entry->phoneNumber(), entry->messageId());
+}
+
 MessageLogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 {
     MessageLogEntry *entry = new MessageLogEntry(this);
@@ -86,6 +100,10 @@ MessageLogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
 
     entry->setMessageId(textEvent->messageToken());
     entry->setMessage(textEvent->message());
+
+    connect(entry,
+            SIGNAL(newItemChanged()),
+            SLOT(onNewItemChanged()));
 
     return entry;
 }

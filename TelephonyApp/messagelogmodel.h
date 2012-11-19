@@ -44,6 +44,7 @@ Q_SIGNALS:
 public:
     QString mMessage;
     QString mMessageId;
+
 };
 
 class MessageLogModel : public AbstractLoggerModel
@@ -61,10 +62,16 @@ public:
     QString itemType(const QModelIndex &index) const;
     bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
 
+Q_SIGNALS:
+    void messageRead(const QString &number, const QString &messageId);
+
 public Q_SLOTS:
     void populate();
     void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp, const QString &messageId);
     void onMessageSent(const QString &number, const QString &message);
+
+protected Q_SLOTS:
+    void onNewItemChanged();
 
 protected:
     MessageLogEntry *createEntry(const Tpl::EventPtr &event);
