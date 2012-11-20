@@ -31,6 +31,7 @@ class ConversationFeedItem : public QObject
     Q_PROPERTY(QString contactAlias READ contactAlias WRITE setContactAlias NOTIFY contactAliasChanged)
     Q_PROPERTY(QUrl contactAvatar READ contactAvatar WRITE setContactAvatar NOTIFY contactAvatarChanged)
     Q_PROPERTY(bool incoming READ incoming WRITE setIncoming NOTIFY incomingChanged)
+    Q_PROPERTY(bool newItem READ newItem WRITE setNewItem NOTIFY newItemChanged)
     Q_PROPERTY(QDateTime timestamp READ timestamp WRITE setTimestamp NOTIFY timestampChanged)
 
 public:
@@ -48,6 +49,9 @@ public:
     bool incoming() const;
     void setIncoming(bool value);
 
+    bool newItem() const;
+    void setNewItem(bool value);
+
     QDateTime timestamp() const;
     void setTimestamp(const QDateTime &value);
 
@@ -56,6 +60,7 @@ Q_SIGNALS:
     void contactAliasChanged();
     void contactAvatarChanged();
     void incomingChanged();
+    void newItemChanged();
     void timestampChanged();
 
 private:
@@ -63,6 +68,7 @@ private:
     QString mContactAlias;
     QUrl mContactAvatar;
     bool mIncoming;
+    bool mNewItem;
     QDateTime mTimestamp;
 };
 

@@ -61,6 +61,7 @@ Item {
                 property url contactAvatar: (model && model.contactAvatar) ? model.contactAvatar : ""
                 property variant timestamp: (model && model.timestamp) ? model.timestamp : null
                 property bool incoming: (model && model.incoming) ? model.incoming : false
+                property bool newItem: (model && model.newItem) ? model.newItem : false
                 property string itemType: (model && model.itemType) ? model.itemType : "none"
                 property QtObject item: (model && model.item) ? model.item : null
                 property variant events: (model && model.events) ? model.events : null

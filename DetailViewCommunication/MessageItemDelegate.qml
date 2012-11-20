@@ -7,6 +7,13 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 Item {
     id: messageDelegate
 
+    Component.onCompleted: {
+        // mark the message as read
+        if (item.newItem) {
+            item.newItem = false;
+        }
+    }
+
     LocalWidgets.CustomListItemBase {
         id: baseInfo
 

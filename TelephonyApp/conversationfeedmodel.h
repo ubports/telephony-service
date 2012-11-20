@@ -37,6 +37,7 @@ public:
         ContactAvatar,
         Timestamp,
         Incoming,
+        NewItem,
         ItemType,
         FeedItem,
         GroupingProperty,

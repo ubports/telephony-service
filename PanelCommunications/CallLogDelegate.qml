@@ -18,6 +18,7 @@ Item {
         text: contactAlias
         subtext: item.phoneNumber
         selected: callItem.parent ? callItem.parent.selected : false
+        textBold: callItem.parent ? callItem.parent.newItem : false
 
         onClicked: callItem.parent.clicked(mouse)
     }

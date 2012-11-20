@@ -63,11 +63,6 @@ void ChatManager::startChat(const QString &phoneNumber)
 
 void ChatManager::endChat(const QString &phoneNumber)
 {
-    // if the chat we are ending was the current one, clear the property
-    if (ContactModel::comparePhoneNumbers(mActiveChat, phoneNumber)) {
-        setActiveChat("");
-    }
-
     Tp::TextChannelPtr channel = existingChat(phoneNumber);
     if (channel.isNull()) {
         return;
@@ -117,20 +112,6 @@ void ChatManager::acknowledgeMessages(const QString &phoneNumber)
     channel->acknowledge(channel->messageQueue());
 }
 
-QString ChatManager::activeChat() const
-{
-    return mActiveChat;
-}
-
-void ChatManager::setActiveChat(const QString &value)
-{
-    if (value != mActiveChat) {
-        mActiveChat = value;
-        acknowledgeMessages(mActiveChat);
-        Q_EMIT activeChatChanged();
-    }
-}
-
 int ChatManager::unreadMessagesCount() const
 {
     int count = 0;
@@ -155,10 +136,6 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     QString id = channel->targetContact()->id();
     mChannels[id] = channel;
-    if (ContactModel::comparePhoneNumbers(id, mActiveChat)) {
-        acknowledgeMessages(id);
-    }
-
     connect(channel.data(),
             SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
             SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
@@ -170,11 +147,6 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken());
-
-    // if the message belongs to an active conversation, mark it as read
-    if (ContactModel::comparePhoneNumbers(message.sender()->id(), mActiveChat)) {
-        acknowledgeMessages(mActiveChat);
-    }
 
     Q_EMIT unreadMessagesChanged(message.sender()->id());;
 }
@@ -199,6 +171,21 @@ void ChatManager::onMessageSent(Tp::PendingOperation *op)
     }
 
     Q_EMIT messageSent(psm->channel()->targetContact()->id(), psm->message().text());
+}
+
+void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &messageId)
+{
+    Tp::TextChannelPtr channel = existingChat(phoneNumber);
+    if(channel.isNull() || messageId.isNull()) {
+        return;
+    }
+
+    Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
+        if (message.messageToken() == messageId) {
+            channel->acknowledge(QList<Tp::ReceivedMessage>() << message);
+            break;
+        }
+    }
 }
 
 Tp::TextChannelPtr ChatManager::existingChat(const QString &phoneNumber)

@@ -24,11 +24,7 @@ LocalWidgets.TelephonyPage {
 
     function updateActiveChat() {
         // acknowledge messages as read just when the view is visible
-        if (visible) {
-            chatManager.activeChat = view.phoneNumber;
-        } else {
-            chatManager.activeChat = "";
-        }
+        // FIXME: check how to implement that in the new layout.
     }
 
     Connections {
