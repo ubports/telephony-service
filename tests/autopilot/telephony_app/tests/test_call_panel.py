@@ -18,6 +18,10 @@ from telephony_app.tests import TelephonyAppTestCase
 class TestCallPanel(TelephonyAppTestCase):
     """Tests for the Call panel."""
 
+    def setUp(self):
+        dialer_page = self.call_panel.get_dialer_page()
+        self.assertThat(dialer_page.isCurrent, Eventually(Equals(True)))
+        super(self)
 
     def test_keypad(self):
         keypad_entry = self.call_panel.get_keypad_entry()
