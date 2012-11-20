@@ -146,56 +146,37 @@ LocalWidgets.TelephonyPage {
     }
 
     Component {
-        id: messageComponent
-        MessageItemDelegate {
-            id: messageItemDelegate
-        }
-    }
-
-    Component {
-        id: callComponent
-        CallItemDelegate {
-            id: callItemDelegate
-        }
-    }
-
-    Component {
         id: conversationComponent
         ListView {
             width: view.width
             anchors.fill: parent
             model: conversationProxyModel
             clip: true
-            delegate: ListItem.Base {
-                id: delegate
-                anchors.left: parent.left
-                anchors.right: parent.right
-                showDivider: true
-                __height: units.gu(7)
+            delegate: CommunicationDelegate {
+                id: communicationDelegate
 
-                Loader {
-                    signal clicked
-                    property string contactId: model ? model.contactId : ""
-                    property string contactAlias: model ? model.contactAlias : ""
-                    property url contactAvatar: model ? model.contactAvatar : ""
-                    property variant timestamp: model ? model.timestamp : null
-                    property bool incoming: model ? model.incoming : false
-                    property string itemType: model ? model.itemType : "none"
-                    property QtObject item: model ? model.item : null
-                    property variant events: model ? model.events : null
-                    anchors.fill: parent
-                    onClicked: view.phoneNumber = item.phoneNumber
-                    sourceComponent: {
-                        switch (itemType) {
-                        case "message":
-                            messageComponent;
-                            break;
-                        case "call":
-                            callComponent;
-                            break;
-                        }
+                itemType: model.itemType
+                incoming: model.incoming
+                missed: model.item.missed ? model.item.missed : false
+                message: model.item.message ? model.item.message : ""
+                itemIcon: {
+                    switch (model.itemType) {
+                    case "message":
+                        "../assets/contact_icon_message.png";
+                        break;
+                    case "call":
+                        "../assets/contact_icon_phone.png";
+                        break;
+                    case "group":
+                        "../assets/tab_icon_contacts_inactive.png";
+                        break;
+                    default:
+                        "";
+                        break;
                     }
                 }
+
+                onClicked: view.phoneNumber = item.phoneNumber
             }
         }
     }
