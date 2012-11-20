@@ -7,6 +7,7 @@ LocalWidgets.TelephonyPage {
     anchors.fill: parent
     property string voicemailNumber: callManager.voicemailNumber
     property alias dialNumber: keypadEntry.value
+    property alias input: keypadEntry.input
 
     function isVoicemailActive() {
         return telephony.isVoicemailActive();
@@ -16,59 +17,73 @@ LocalWidgets.TelephonyPage {
         anchors.fill: parent
         focus: true
 
-        Rectangle {
-            id: background
+        Image {
+            id: divider
 
-            anchors.fill: parent
-            color: "#3a3c41"
+            anchors.top: parent.top
+            source: "../assets/section_divider.png"
         }
 
-        Item {
-            width: keypad.width
-            height: childrenRect.height
+        KeypadEntry {
+            id: keypadEntry
 
-            anchors.centerIn: parent
-            anchors.verticalCenterOffset: -units.gu(3)
+            anchors.top: divider.bottom
+            anchors.left: keypad.left
+            anchors.right: keypad.right
+            anchors.leftMargin: units.dp(-2)
+            anchors.rightMargin: units.dp(-2)
+            focus: true
+            Keys.forwardTo: [callButton]
+        }
 
-            KeypadEntry {
-                id: keypadEntry
+        Keypad {
+            id: keypad
 
-                anchors.left: keypad.left
-                anchors.right: keypad.right
-                anchors.leftMargin: units.dp(-2)
-                anchors.rightMargin: units.dp(-2)
-                focus: true
-                Keys.forwardTo: [callButton]
+            anchors.top: keypadEntry.bottom
+            onKeyPressed: keypadEntry.value += label
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.topMargin: units.dp(10)
+        }
+
+        CallButton {
+            id: callButton
+            objectName: "callButton"
+            anchors.top: keypad.bottom
+            anchors.topMargin: units.gu(2)
+            anchors.horizontalCenter: parent.horizontalCenter
+            onClicked: telephony.callNumber(keypadEntry.value)
+        }
+
+        Button {
+            id: contactListButton
+            objectName: "contactListButton"
+            anchors.right: callButton.left
+            anchors.verticalCenter: callButton.verticalCenter
+            anchors.rightMargin: units.dp(6)
+            iconSource: "../assets/tab_icon_contacts_inactive.png"
+            width: units.gu(7)
+            height: units.gu(7)
+            color: "transparent"
+            onClicked: {
+                telephony.switchToTab(telephony.contactDetails.tab)
             }
+        }
 
-            Keypad {
-                id: keypad
+        Button {
+            id: backspace
+            anchors.left: callButton.right
+            anchors.verticalCenter: callButton.verticalCenter
+            anchors.leftMargin: units.dp(6)
+            width: units.gu(7)
+            height: units.gu(7)
+            iconSource: "../assets/keypad_backspace.png"
+            color: "transparent"
 
-                anchors.top: keypadEntry.bottom
-                onKeyPressed: keypadEntry.value += label
-            }
-
-            CallButton {
-                id: callButton
-                objectName: "callButton"
-                anchors.top: keypad.bottom
-                anchors.topMargin: units.gu(2)
-                color: "#c53e10"
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: telephony.callNumber(keypadEntry.value)
-            }
-
-            Button {
-                id: contactListButton
-                objectName: "contactListButton"
-                anchors.left: callButton.right
-                anchors.verticalCenter: callButton.verticalCenter
-                iconSource: "../assets/tab_icon_contacts_inactive.png"
-                width: units.gu(5)
-                color: "#565656"
-                ItemStyle.class: "dark-button"
-                onClicked: {
-                    telephony.switchToTab(telephony.contactDetails.tab)
+            onClicked:  {
+                if (input.cursorPosition != 0)  {
+                    var position = input.cursorPosition;
+                    input.text = input.text.slice(0, input.cursorPosition - 1) + input.text.slice(input.cursorPosition);
+                    input.cursorPosition = position - 1;
                 }
             }
         }

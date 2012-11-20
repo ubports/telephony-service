@@ -9,34 +9,12 @@ Item {
 
     signal keyPressed(int keycode, string label)
 
-    BorderImage {
-        id: background
-
-        anchors.fill: keys
-        anchors.leftMargin: units.dp(-2)
-        anchors.rightMargin: units.dp(-2)
-        anchors.bottomMargin: units.dp(-1)
-        source: "../assets/keypad_background.png"
-        border {left: units.dp(15); right: units.dp(15); top: units.dp(2); bottom: units.dp(15)}
-        horizontalTileMode: BorderImage.Stretch
-        verticalTileMode: BorderImage.Stretch
-    }
-
-    Image {
-        id: separators
-
-        anchors.fill: keys
-        source: "../assets/keypad_div_tile.png"
-        fillMode: Image.Tile
-        verticalAlignment: Image.AlignTop
-    }
-
     Grid {
         id: keys
 
         rows: 4
         columns: 3
-        spacing: units.dp(1)
+        spacing: units.dp(5)
 
         KeypadButton {
             label: "1"
