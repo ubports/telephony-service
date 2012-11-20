@@ -65,11 +65,7 @@ Item {
     }
 
     function showLiveCall(clear) {
-        if (clear) {
-            resetView();
-        }
-
-        liveCall.load()
+        liveCall.load({}, clear)
     }
 
     function showVoicemail() {
@@ -100,11 +96,7 @@ Item {
     function showCommunication(prop, value, id, clear) {
         var properties = { filterProperty: prop, filterValue: value, newMessage: false, contactId: id };
 
-        if (clear) {
-            resetView();
-        }
-
-        communication.load(properties);
+        communication.load(properties, clear);
     }
 
     function endCall() {
@@ -116,11 +108,7 @@ Item {
 
     function showContactDetails(contact, clear) {
         var properties = { contact: contact, added: false }
-        if (clear) {
-            resetView();
-        }
-
-        contactDetails.load(properties)
+        contactDetails.load(properties, clear)
     }
 
     function showContactDetailsFromId(contactId) {

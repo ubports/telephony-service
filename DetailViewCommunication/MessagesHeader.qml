@@ -8,6 +8,21 @@ BaseMessageHeader {
     property variant contact
     property string number
 
+    height: icon.height + units.gu(4)
+
+    Image {
+        id: icon
+
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.margins: units.gu(2)
+
+        width: units.gu(6)
+        height: units.gu(6)
+        source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_messaging.png"
+        fillMode: Image.PreserveAspectCrop
+    }
+
     TextCustom {
         id: name
 
@@ -16,70 +31,23 @@ BaseMessageHeader {
         anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
-        fontSize: "large"
+        fontSize: "medium"
         elide: Text.ElideRight
-        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-        style: Text.Raised
-        styleColor: "white"
+        color: "#333333"
+        opacity: 0.6
         text: contact ? contact.displayLabel : "Unknown Contact"
     }
 
-    LocalWidgets.FramedImage {
-        id: icon
 
-        anchors.left: parent.left
-        anchors.leftMargin: units.gu(1)
+    Button {
+        ItemStyle.class: "transparent-button"
+        anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: units.dp(-1)
-        width: units.gu(4)
-        height: width
-        source: contact ? contact.avatar : fallbackSource
-        fallbackSource: "../assets/avatar_messaging.png"
-    }
+        anchors.margins: units.gu(2)
+        width: units.gu(3)
+        height: units.gu(3)
 
-    AbstractButton {
-        anchors.fill: icon
-        onClicked: telephony.showContactDetails(contact)
-    }
-
-    Item {
-        anchors.right: name.right
-        anchors.rightMargin: units.gu(0.5)
-        anchors.left: icon.right
-        anchors.leftMargin: units.gu(1)
-        anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: units.dp(-1)
-        height: childrenRect.height
-
-        TextCustom {
-            id: label
-
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            horizontalAlignment: Text.AlignRight
-            fontSize: "small"
-            elide: Text.ElideRight
-            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-            style: Text.Raised
-            styleColor: "white"
-            text: header.number
-        }
-
-        TextCustom {
-            id: sublabel
-
-            anchors.top: label.bottom
-            anchors.topMargin: units.dp(1)
-            anchors.left: parent.left
-            anchors.right: parent.right
-            horizontalAlignment: Text.AlignRight
-            fontSize: "x-small"
-            elide: Text.ElideRight
-            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-            style: Text.Raised
-            styleColor: "white"
-            text: contact ? contact.phoneType : ""
-        }
+        iconSource: "../assets/tab_icon_contacts_inactive.png"
+        onClicked: telephony.showContactDetails(contact, true)
     }
 }
