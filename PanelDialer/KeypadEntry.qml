@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import "../fontUtils.js" as Font
 
 FocusScope {
     id: keypadEntry
@@ -31,7 +30,7 @@ FocusScope {
         height: font.pixelSize
         horizontalAlignment: TextInput.AlignRight
         text: ""
-        font.pixelSize: Font.sizeToPixels("large")
+        font.pixelSize: FontUtils.sizeToPixels("large")
         color: "#e3e5e8"
         focus: true
     }

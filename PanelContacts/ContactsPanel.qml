@@ -2,7 +2,6 @@ import QtQuick 2.0
 import TelephonyApp 0.1
 import ".."
 import "../Widgets" as LocalWidgets
-import "../fontUtils.js" as Font
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 

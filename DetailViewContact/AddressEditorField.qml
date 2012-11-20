@@ -16,7 +16,6 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import "../fontUtils.js" as FontUtils
 
 FocusScope {
     id: addressEditorField

@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import "../fontUtils.js" as FontUtils
+import Ubuntu.Components 0.1
 
 TextInput {
     font.pixelSize: FontUtils.sizeToPixels("medium")
