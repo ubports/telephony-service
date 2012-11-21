@@ -9,6 +9,19 @@ LocalWidgets.TelephonyPage {
     id: contactsPanel
     title: "Contacts"
 
+    chromeButtons: ListModel {
+        ListElement {
+            label: "Add"
+            name: "add"
+        }
+    }
+
+    onChromeButtonClicked: {
+        if (buttonName == "add") {
+            telephony.createNewContact()
+        }
+    }
+
     property alias searchQuery : contactsSearchBox.text
 
     anchors.fill: parent
@@ -46,6 +59,10 @@ LocalWidgets.TelephonyPage {
         anchors.right: parent.right
         anchors.top: contactsSearchBox.bottom
         anchors.topMargin: units.gu(1)
+
+        // hide this on single panel version
+        visible: !telephony.singlePane
+        height: visible ? childrenRect.height : 0
 
         ListItem.ThinDivider {}
 

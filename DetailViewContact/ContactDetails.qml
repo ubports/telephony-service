@@ -23,6 +23,84 @@ LocalWidgets.TelephonyPage {
     width: units.gu(50)
     height: units.gu(75)
 
+    ListModel {
+        id: editButtons
+        ListElement {
+            label: "Delete"
+            name: "delete"
+        }
+
+        ListElement {
+            label: "Cancel"
+            name: "cancel"
+        }
+        ListElement {
+            label: "Save"
+            name: "save"
+        }
+    }
+
+    ListModel {
+        id: newContactButtons
+
+        ListElement {
+            label: "Cancel"
+            name: "cancel"
+        }
+        ListElement {
+            label: "Save"
+            name: "save"
+        }
+    }
+
+    ListModel {
+        id: standardButtons
+
+        ListElement {
+            label: "Edit"
+            name: "edit"
+        }
+    }
+
+    chromeButtons: bottomButtons()
+
+    onChromeButtonClicked: {
+        switch (buttonName) {
+        case "delete":
+            // FIXME: show a dialog asking for confirmation
+            contactModel.removeContact(contact);
+            telephony.resetView();
+            break;
+        case "cancel":
+            if (added) {
+                telephony.resetView();
+            } else {
+                contact.revertChanges();
+                editable = false;
+            }
+            break;
+        case "save":
+            contactDetails.save();
+            break;
+        case "edit":
+            editable = true;
+            break;
+
+        }
+    }
+
+    function bottomButtons() {
+        if (editable) {
+            if (added) {
+                return newContactButtons;
+            } else {
+                return editButtons;
+            }
+        } else {
+            return standardButtons;
+        }
+    }
+
     function createNewContact() {
         contact = Qt.createQmlObject("import TelephonyApp 0.1; ContactEntry {}", contactModel);
         editable = true;
@@ -36,6 +114,36 @@ LocalWidgets.TelephonyPage {
         }
 
         header.focus = true;
+    }
+
+    function save() {
+        /* We ask each detail delegate to save all edits to the underlying
+           model object. The other way to do it would be to change editable
+           to false and catch onEditableChanged in the delegates and save there.
+           However that other way doesn't work since we can't guarantee that all
+           delegates have received the signal before we call contact.save() here.
+        */
+        header.save();
+
+        var addedDetails = [];
+        for (var i = 0; i < detailsList.children.length; i++) {
+            var saver = detailsList.children[i].save;
+            if (saver && saver instanceof Function) {
+                var newDetails = saver();
+                for (var k = 0; k < newDetails.length; k++)
+                    addedDetails.push(newDetails[k]);
+            }
+        }
+
+        for (i = 0; i < addedDetails.length; i++) {
+            console.log("Add detail: " + contact.addDetail(addedDetails[i]));
+        }
+
+        if (contact.modified || added)
+            contactModel.saveContact(contact);
+
+        editable = false;
+        added = false;
     }
 
     Connections {
@@ -227,7 +335,8 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        height: units.gu(5)
+        visible: !telephony.singlePane
+        height: visible ? units.gu(5) : 0
 
         Rectangle {
             anchors.fill: parent
@@ -303,33 +412,7 @@ LocalWidgets.TelephonyPage {
                 onClicked: {
                     if (!editable) editable = true;
                     else {
-                        /* We ask each detail delegate to save all edits to the underlying
-                           model object. The other way to do it would be to change editable
-                           to false and catch onEditableChanged in the delegates and save there.
-                           However that other way doesn't work since we can't guarantee that all
-                           delegates have received the signal before we call contact.save() here.
-                        */
-                        header.save();
-
-                        var addedDetails = [];
-                        for (var i = 0; i < detailsList.children.length; i++) {
-                            var saver = detailsList.children[i].save;
-                            if (saver && saver instanceof Function) {
-                                var newDetails = saver();
-                                for (var k = 0; k < newDetails.length; k++)
-                                    addedDetails.push(newDetails[k]);
-                            }
-                        }
-
-                        for (i = 0; i < addedDetails.length; i++) {
-                            console.log("Add detail: " + contact.addDetail(addedDetails[i]));
-                        }
-
-                        if (contact.modified || added)
-                            contactModel.saveContact(contact);
-
-                        editable = false;
-                        added = false;
+                        contactDetails.save();
                     }
                 }
             }

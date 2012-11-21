@@ -8,6 +8,18 @@ LocalWidgets.TelephonyPage {
     id: messageList
     objectName: "communicationPanel"
     title: "Communication"
+    chromeButtons: ListModel {
+        ListElement {
+            label: "Compose"
+            name: "compose"
+        }
+    }
+
+    onChromeButtonClicked: {
+        if (buttonName == "compose") {
+            telephony.startNewMessage()
+        }
+    }
 
     anchors.fill: parent
 
@@ -43,6 +55,10 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
 
+        // hide this on single panel version
+        visible: !telephony.singlePane
+        height: visible ? childrenRect.height : 0
+
         ListItem.ThinDivider {}
 
         ListItem.Standard {
@@ -50,6 +66,7 @@ LocalWidgets.TelephonyPage {
             anchors.left: parent.left
             anchors.right: parent.right
             height: units.gu(4)
+
             __leftIconMargin: units.gu(2)
             __rightIconMargin: units.gu(2)
 

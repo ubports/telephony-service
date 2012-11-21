@@ -4,6 +4,7 @@ import "../Widgets" as LocalWidgets
 
 LocalWidgets.TelephonyPage {
     title: "Dialer"
+    showChromeBar: false
     anchors.fill: parent
     property string voicemailNumber: callManager.voicemailNumber
     property alias dialNumber: keypadEntry.value

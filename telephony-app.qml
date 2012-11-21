@@ -180,22 +180,29 @@ Item {
         }
     }
 
+    LocalWidgets.ChromeBar {
+        id: chromeBar
+        z: 1
+
+        anchors.bottom: parent.bottom
+    }
+
+    Image {
+        id: background
+
+        anchors.fill: parent
+        source: "assets/noise_tile.png"
+        fillMode: Image.Tile
+    }
+
     Item {
         id: leftPane
 
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.bottom: parent.bottom
+        anchors.bottom: chromeBar.top
         anchors.right: singlePane ? parent.right : undefined
         width: units.gu(31)
-
-        Image {
-            id: background
-
-            anchors.fill: parent
-            source: "assets/noise_tile.png"
-            fillMode: Image.Tile
-        }
 
         Rectangle {
             id: border
@@ -207,35 +214,35 @@ Item {
             color: "white"
             opacity: 0.3
         }
+    }
 
-        OnCallPanel {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: shown ? 0 : -height
-            Behavior on anchors.bottomMargin { LocalWidgets.StandardAnimation {}}
-            z: 1
+    OnCallPanel {
+        anchors.left: leftPane.left
+        anchors.right: leftPane.right
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: shown ? 0 : -height
+        Behavior on anchors.bottomMargin { LocalWidgets.StandardAnimation {}}
+        z: 1
 
-            property bool shown
-            shown: {
-                if (telephony.singlePane) {
-                    return false;
-                }
-
-                if (!callManager.hasCalls) {
-                    return false
-                } else {
-                    if (isVoicemailActive() && !telephony.voicemail.loaded) {
-                        return true
-                    } else if (!isVoicemailActive() && !telephony.liveCall.loaded) {
-                        return true
-                    }
-                }
-                return false
+        property bool shown
+        shown: {
+            if (telephony.singlePane) {
+                return false;
             }
 
-            onClicked: isVoicemailActive() ? telephony.showVoicemail() : telephony.showLiveCall()
+            if (!callManager.hasCalls) {
+                return false
+            } else {
+                if (isVoicemailActive() && !telephony.voicemail.loaded) {
+                    return true
+                } else if (!isVoicemailActive() && !telephony.liveCall.loaded) {
+                    return true
+                }
+            }
+            return false
         }
+
+        onClicked: isVoicemailActive() ? telephony.showVoicemail() : telephony.showLiveCall()
     }
 
     Item {

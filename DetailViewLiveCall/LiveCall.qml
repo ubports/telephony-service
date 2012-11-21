@@ -16,6 +16,7 @@ LocalWidgets.TelephonyPage {
     property alias isDtmf: flipable.flipped
 
     title: call && call.dialing ? "Call dialing" : "Call Duration " + stopWatch.elapsed
+    showChromeBar: false
 
     Component.onDestruction: {
         // if this view was destroyed but we still have
