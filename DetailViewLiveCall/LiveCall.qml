@@ -13,9 +13,9 @@ LocalWidgets.TelephonyPage {
     property bool onHold: call ? call.held : false
     property bool isSpeaker: call ? call.speaker : false
     property bool isMuted: call ? call.muted : false
-    property bool isDtmf: false
+    property alias isDtmf: flipable.flipped
 
-    title: "On Call"
+    title: call && call.dialing ? "Call dialing" : "Call Duration " + stopWatch.elapsed
 
     Component.onDestruction: {
         // if this view was destroyed but we still have
@@ -30,6 +30,12 @@ LocalWidgets.TelephonyPage {
         if (call) {
             call.endCall();
         }
+    }
+
+    LocalWidgets.StopWatch {
+        id: stopWatch
+        time: call ? call.elapsedTime : 0
+        visible: false
     }
 
     ContactWatcher {
@@ -49,13 +55,6 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-    Rectangle {
-        id: background
-
-        anchors.fill: parent
-        color: "#3a3c41"
-    }
-
     BackgroundCall {
         id: backgroundCall
 
@@ -67,178 +66,104 @@ LocalWidgets.TelephonyPage {
         visible: callManager.hasBackgroundCall
     }
 
-    Item {
-        id: container
+    Flipable {     
+        id: flipable
+        anchors.fill: parent
+        property bool flipped: false
+        transform: Rotation {
+            id: rotation
+            origin.x: flipable.width/2
+            origin.y: flipable.height/2
+            axis.x: 0; axis.y: 1; axis.z: 0
+            angle: 0    // the default angle
+        }
 
-        anchors.top: backgroundCall.visible ? backgroundCall.bottom : parent.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        states: State {
+            name: "back"
+            PropertyChanges { target: rotation; angle: 180 }
+            when: flipable.flipped
+        }
 
-        Item {
-            id: body
+        // avoid events on the wrong view
+        onSideChanged: { 
+            front.visible = (side == Flipable.Front);
+            back.visible = (side == Flipable.Back);
+        }
 
-            anchors.centerIn: parent
-            width: childrenRect.width
-            height: childrenRect.height
+        transitions: Transition {
+            NumberAnimation { target: rotation; property: "angle"; duration: 400 }
+        }
 
-            LocalWidgets.FramedImage {
-                id: picture
+        front: Item {
+            anchors.top: backgroundCall.visible ? backgroundCall.bottom : parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: units.gu(18)
-                height: units.gu(18)
-                source: contact ? contact.avatar : fallbackSource
-                fallbackSource: "../assets/avatar_incall_rightpane.png"
-                ItemStyle.class: "dark-button"
-            }
+            Item {
+                id: header
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: units.gu(15)
 
-            TextCustom {
-                id: name
+                LocalWidgets.FramedImage {
+                    id: picture
 
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: units.gu(2)
-                anchors.top: picture.bottom
-                text: contact ? contact.displayLabel : "Unknown Contact"
-                color: "white"
-                style: Text.Sunken
-                styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
-                fontSize: "large"
-            }
-
-            TextCustom {
-                id: number
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: name.bottom
-                anchors.topMargin: units.dp(2)
-                text: liveCall.number
-                color: "#a0a0a2"
-                style: Text.Sunken
-                styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
-                fontSize: "medium"
-            }
-
-            TextCustom {
-                id: location
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.top: number.bottom
-                anchors.topMargin: units.dp(2)
-                // FIXME: add back geo-location information to the ContactEntry model
-                text: contact ? contact.geoLocation.label : ""
-                color: "#a0a0a2"
-                style: Text.Sunken
-                styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
-                fontSize: "medium"
-            }
-
-            TextCustom {
-                id: dialing
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: units.gu(2)
-                anchors.top: location.text != "" ? location.bottom : number.bottom
-
-                text: "Dialing"
-                color: "#a0a0a2"
-                style: Text.Sunken
-                styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
-                fontSize: "medium"
-                opacity: (call && call.dialing) ? 1.0 : 0.0
-            }
-
-            LocalWidgets.StopWatch {
-                id: stopWatch
-                time: call ? call.elapsedTime : 0
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: units.gu(2)
-                anchors.top: location.text != "" ? location.bottom : number.bottom
-                opacity: (call && !call.dialing) ? 1.0 : 0.0
-            }
-
-            Keypad {
-                id: keypad
-
-                visible: false
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom: mainButtonsContainer.top
-                anchors.bottomMargin: units.gu(1)
-                onKeyPressed: {
-                    if (call) {
-                        call.sendDTMF(label)
-                    }
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
+                    anchors.leftMargin: units.gu(2)
+                    width: units.gu(10)
+                    height: units.gu(10)
+                    source: contact ? contact.avatar : fallbackSource
+                    fallbackSource: "../assets/avatar_incall_rightpane.png"
                 }
-                z: 1
+
+                TextCustom {
+                    id: name
+
+                    anchors.topMargin: units.gu(2)
+                    anchors.top: parent.top
+                    anchors.left: picture.right
+                    anchors.leftMargin: units.gu(2)
+                    text: contact ? contact.displayLabel : "Unknown Contact"
+                    color: "#a0a0a2"
+                    fontSize: "large"
+                }
+
+                TextCustom {
+                    id: number
+
+                    anchors.top: name.bottom
+                    anchors.topMargin: units.dp(2)
+                    anchors.left: picture.right
+                    anchors.leftMargin: units.gu(2)
+                    text: liveCall.number
+                    color: "#a0a0a2"
+                    fontSize: "medium"
+                }
             }
 
             Item {
-                id: mainButtonsContainer
+                id: body
 
-                anchors.top: stopWatch.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: mainButtons.width
-                height: mainButtons.height
-
-                BorderImage {
-                    id: mainButtonsBackground
-
-                    anchors.fill: parent
-                    anchors.topMargin: units.dp(-2)
-                    anchors.bottomMargin: units.dp(-2)
-                    anchors.leftMargin: units.dp(-3)
-                    anchors.rightMargin: units.dp(-2)
-                    source: "../assets/incall_keypad_background.png"
-                    border {right: units.dp(14); left: units.dp(14); top: units.dp(10); bottom: units.dp(10)}
-                    horizontalTileMode: BorderImage.Stretch
-                    verticalTileMode: BorderImage.Stretch
-                    smooth: true
-                }
-
-                Image {
-                    id: mainButtonsSeparators
-
-                    anchors.fill: mainButtonsBackground
-                    anchors.topMargin: units.dp(1)
-                    anchors.bottomMargin: units.dp(2)
-                    anchors.leftMargin: units.dp(2)
-                    anchors.rightMargin: units.dp(1)
-                    source: "../assets/livecall_keypad_div_tile.png"
-                    fillMode: Image.Tile
-                    verticalAlignment: Image.AlignTop
-                    horizontalAlignment: Image.AlignLeft
-                }
+                anchors.top: header.bottom
+                anchors.right: parent.right
+                anchors.left: parent.left
+                anchors.bottom: footer.top
 
                 Grid {
-                    id: mainButtons
-
-                    columns: 2
+                    id: mainButtonsGrid
                     rows: 2
+                    columns: 3
+                    spacing: units.dp(6)
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: childrenRect.width
+                    height: childrenRect.height
 
                     LiveCallKeypadButton {
-                        corner: Qt.TopLeftCorner
-                        iconSource: selected ? "../assets/incall_keypad_dialler_selected.png" : "../assets/incall_keypad_dialler_unselected.png"
-                        selected: liveCall.isDtmf
-                        onClicked: {
-                            liveCall.isDtmf = !liveCall.isDtmf
-                            keypad.visible = liveCall.isDtmf
-                        }
-                    }
-
-                    LiveCallKeypadButton {
-                        corner: Qt.TopRightCorner
-                        iconSource: selected ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
-                        selected: liveCall.isSpeaker
-                        onClicked: {
-                            if (call) {
-                                call.speaker = !selected
-                            }
-                        }
-                    }
-
-                    LiveCallKeypadButton {
-                        corner: Qt.BottomLeftCorner
                         iconSource: selected ? "../assets/incall_keypad_pause_selected.png" : "../assets/incall_keypad_pause_unselected.png"
                         selected: liveCall.onHold
                         onClicked: {
@@ -249,7 +174,16 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        corner: Qt.BottomRightCorner
+                        iconSource: selected ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
+                        selected: liveCall.isSpeaker
+                        onClicked: {
+                            if (call) {
+                                call.speaker = !selected
+                            }
+                        }
+                    }
+
+                    LiveCallKeypadButton {
                         iconSource: selected ? "../assets/incall_keypad_mute_selected.png" : "../assets/incall_keypad_mute_unselected.png"
                         selected: liveCall.isMuted
                         onClicked: {
@@ -258,33 +192,95 @@ LocalWidgets.TelephonyPage {
                             }
                         }
                     }
+
+                    // TODO: fix assets and action
+                    LiveCallKeypadButton {
+                        iconSource: selected ? "../assets/add_contacts_icon.png" : "../assets/add_contacts_icon.png"
+                        selected: false
+                        onClicked: {
+                        }
+                    }
+
+                    LiveCallKeypadButton {
+                        iconSource: selected ? "../assets/incall_keypad_dialler_selected.png" : "../assets/incall_keypad_dialler_unselected.png"
+                        selected: liveCall.isDtmf
+                        onClicked: {
+                            liveCall.isDtmf = true
+                        }
+                    }
+
+                    // TODO: fix assets and action
+                    LiveCallKeypadButton {
+                        iconSource: selected ? "../assets/incall_keypad_addcaller_unselected.png" : "../assets/incall_keypad_addcaller_unselected.png"
+                        selected: false
+                        onClicked: {
+                        }
+                    }
                 }
             }
 
-            Row {
-                anchors.top: mainButtonsContainer.bottom
-                anchors.topMargin: units.gu(3)
-                anchors.horizontalCenter: parent.horizontalCenter
-                spacing: units.gu(0.5)
+            Item {
+                id: footer
+                height: childrenRect.height
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottomMargin: units.gu(4)
 
                 Button {
                     id: hangupButton
 
                     iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
-                    width: units.gu(8)
+                    width: units.gu(19)
+                    height: units.gu(8)
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.verticalCenter: parent.verticalCenter
                     color: "#bf400c"
                     ItemStyle.class: "dark-button"
                     onClicked: endCall()
                 }
+            }
+        }
 
-                Button {
-                    id: addToContactsButton
+        back: FocusScope {
+            anchors.fill: parent
+            focus: true
 
-                    iconSource: "../assets/incall_keypad_addcaller_unselected.png"
-                    width: units.gu(8)
-                    color: "#666666"
-                    ItemStyle.class: "dark-button"
-                }
+            Image {
+                id: divider
+
+                anchors.top: parent.top
+                source: "../assets/section_divider.png"
+            }
+
+            KeypadEntry {
+                id: keypadEntry
+
+                anchors.top: divider.bottom
+                anchors.left: keypad.left
+                anchors.right: keypad.right
+                anchors.leftMargin: units.dp(-2)
+                anchors.rightMargin: units.dp(-2)
+                focus: true
+            }
+
+            Keypad {
+                id: keypad
+
+                anchors.top: keypadEntry.bottom
+                onKeyPressed: keypadEntry.value += label
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: units.dp(10)
+            }
+
+            CallButton {
+                id: backButton
+                objectName: "backButton"
+                anchors.top: keypad.bottom
+                anchors.topMargin: units.gu(2)
+                color: "#bf400c"
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: liveCall.isDtmf = false
             }
         }
     }

@@ -17,37 +17,15 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 
-AbstractButton {
+Button {
     id: button
 
     property alias iconSource: icon.source
     property bool selected: false
-    property int corner
+    color: "transparent"
 
-    width: units.gu(8)
-    height: units.gu(6)
-
-    BorderImage {
-        anchors.fill: parent
-        visible: button.state == "pressed"
-        source: {
-            switch (button.corner) {
-            case Qt.TopLeftCorner:
-                return "../assets/keypad_select_top_left.png"
-            case Qt.TopRightCorner:
-                return "../assets/keypad_select_top_right.png"
-            case Qt.BottomLeftCorner:
-                return "../assets/keypad_select_bottom_left.png"
-            case Qt.BottomRightCorner:
-                return "../assets/keypad_select_bottom_right.png"
-            default:
-                return ""
-            }
-        }
-        border {right: units.dp(14); left: units.dp(14); top: units.dp(10); bottom: units.dp(10)}
-        horizontalTileMode: BorderImage.Stretch
-        verticalTileMode: BorderImage.Stretch
-    }
+    width: units.gu(9)
+    height: units.gu(9)
 
     Image {
         id: icon
