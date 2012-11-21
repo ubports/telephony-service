@@ -121,9 +121,11 @@ LocalWidgets.TelephonyPage {
     Loader {
         id: headerLoader
 
-        sourceComponent: view.newMessage ? newHeaderComponent : headerComponent
+        sourceComponent: view.newMessage ? newHeaderComponent : null
         anchors.top: parent.top
         onLoaded: item.focus = true
+
+        height: sourceComponent != null ? childrenRect.height : 0
     }
 
     Image {
@@ -152,6 +154,7 @@ LocalWidgets.TelephonyPage {
             anchors.fill: parent
             model: conversationProxyModel
             clip: true
+            header: headerComponent
             delegate: CommunicationDelegate {
                 id: communicationDelegate
 
