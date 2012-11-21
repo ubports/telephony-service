@@ -27,7 +27,6 @@ class MessageLogEntry : public LoggerItem {
     Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
     Q_PROPERTY(QString messageId READ messageId WRITE setMessageId NOTIFY messageIdChanged)
     Q_PROPERTY(QString date READ date)
-    Q_PROPERTY(bool isLatest READ isLatest WRITE setIsLatest NOTIFY isLatestChanged)
 public:
     explicit MessageLogEntry(QObject *parent = 0) : LoggerItem(parent) { }
     void setMessage(const QString &message) { mMessage = message; Q_EMIT messageChanged(); }
@@ -36,19 +35,16 @@ public:
     void setMessageId(const QString &messageId) { mMessageId = messageId; Q_EMIT messageIdChanged(); }
     QString messageId() { return mMessageId; }
 
-    void setIsLatest(bool isLatest) { mIsLatest = isLatest; Q_EMIT isLatestChanged(); }
-    bool isLatest() { return mIsLatest; }
-
     QString date() { return timestamp().date().toString(Qt::DefaultLocaleLongDate); }
+
 Q_SIGNALS:
     void messageChanged();
     void messageIdChanged();
-    void isLatestChanged();
 
 public:
     QString mMessage;
     QString mMessageId;
-    bool mIsLatest;
+
 };
 
 class MessageLogModel : public AbstractLoggerModel
@@ -66,15 +62,20 @@ public:
     QString itemType(const QModelIndex &index) const;
     bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
 
+Q_SIGNALS:
+    void messageRead(const QString &number, const QString &messageId);
+
 public Q_SLOTS:
     void populate();
     void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp, const QString &messageId);
     void onMessageSent(const QString &number, const QString &message);
 
+protected Q_SLOTS:
+    void onNewItemChanged();
+
 protected:
     MessageLogEntry *createEntry(const Tpl::EventPtr &event);
     void handleEvents(const Tpl::EventPtrList &events);
-    void updateLatestMessages(const QString &phoneNumber);
     MessageLogEntry *messageById(const QString &messageId);
 
 };

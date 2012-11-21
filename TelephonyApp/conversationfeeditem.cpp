@@ -20,7 +20,7 @@
 #include "conversationfeeditem.h"
 
 ConversationFeedItem::ConversationFeedItem(QObject *parent) :
-    QObject(parent), mIncoming(false)
+    QObject(parent), mIncoming(false), mNewItem(false)
 {
 }
 
@@ -66,6 +66,17 @@ void ConversationFeedItem::setIncoming(bool value)
 {
     mIncoming = value;
     Q_EMIT incomingChanged();
+}
+
+bool ConversationFeedItem::newItem() const
+{
+    return mNewItem;
+}
+
+void ConversationFeedItem::setNewItem(bool value)
+{
+    mNewItem = value;
+    Q_EMIT newItemChanged();
 }
 
 QDateTime ConversationFeedItem::timestamp() const

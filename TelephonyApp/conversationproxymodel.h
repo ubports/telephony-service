@@ -25,10 +25,11 @@
 
 class ConversationGroup {
 public:
-    ConversationGroup() : displayedRow(-1) {}
+    ConversationGroup() : displayedRow(-1), newItem(false) {}
     QMap<QString, int> eventCount;
     QDateTime latestTime;
     int displayedRow;
+    bool newItem;
 };
 
 class ConversationProxyModel : public QSortFilterProxyModel

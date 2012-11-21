@@ -38,6 +38,7 @@ public:
         Timestamp,
         Date,
         Incoming,
+        NewItem,
         ItemType,
         FeedItem,
         GroupingProperty,

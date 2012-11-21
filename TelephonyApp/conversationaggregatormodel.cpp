@@ -31,6 +31,7 @@ ConversationAggregatorModel::ConversationAggregatorModel(QObject *parent) :
     roles[ConversationFeedModel::Timestamp] = "timestamp";
     roles[ConversationFeedModel::Date] = "date";
     roles[ConversationFeedModel::Incoming] = "incoming";
+    roles[ConversationFeedModel::NewItem] = "newItem";
     roles[ConversationFeedModel::ItemType] = "itemType";
     roles[ConversationFeedModel::FeedItem] = "item";
     roles[ConversationFeedModel::GroupingProperty] = "groupingProperty";

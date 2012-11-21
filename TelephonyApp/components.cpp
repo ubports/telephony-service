@@ -80,6 +80,8 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
 
     mCallLogModel = new CallLogModel(mRootContext);
     mMessageLogModel = new MessageLogModel(mRootContext);
+    connect(mMessageLogModel, SIGNAL(messageRead(QString,QString)),
+            ChatManager::instance(), SLOT(acknowledgeMessage(QString,QString)));
     mConversationModel = new ConversationAggregatorModel(mRootContext);
     mConversationModel->addFeedModel(mCallLogModel);
     mConversationModel->addFeedModel(mMessageLogModel);

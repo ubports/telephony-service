@@ -40,10 +40,12 @@ class LoggerItem : public ConversationFeedItem {
 
 public:
     explicit LoggerItem(QObject *parent = 0) : ConversationFeedItem(parent) { }
-    void setPhoneNumber(const QString &phone) { mPhoneNumber = phone; Q_EMIT contactIdChanged(); };
-    QString phoneNumber() { return mPhoneNumber; };
+    void setPhoneNumber(const QString &phone) { mPhoneNumber = phone; Q_EMIT contactIdChanged(); }
+    QString phoneNumber() { return mPhoneNumber; }
+
 Q_SIGNALS:
     void phoneNumberChanged();
+
 private:
     QString mPhoneNumber;
 };
@@ -57,9 +59,6 @@ public:
 public Q_SLOTS:
     virtual void populate();
 
-Q_SIGNALS:
-    void resetView();
-    
 protected:
     void fetchLog(Tpl::EventTypeMask type = Tpl::EventTypeMaskAny, EntityTypeList entityTypes = EntityTypeList());
     void requestDatesForEntities(const Tpl::EntityPtrList &entities);

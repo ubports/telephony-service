@@ -186,25 +186,29 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
     // fill the result using the standard QSortFilterProxyModel data function
     // and overwrite it if necessary
     QVariant result = QSortFilterProxyModel::data(index, role);
+    QVariantMap eventMap;
 
     switch (role) {
-    case EventsRole: {
+    case EventsRole:
         if (!mGrouped) {
             break;
         }
 
         // convert the event count into QVariantMap
-        QVariantMap eventMap;
         Q_FOREACH(const QString & key, group.eventCount.keys()) {
             eventMap[key] = group.eventCount[key];
         }
 
         result = eventMap;
         break;
-    }
     case ConversationFeedModel::ItemType:
         if (mGrouped && mSearchString.isEmpty() && !mShowLatestFromGroup) {
             result = "group";
+        }
+        break;
+    case ConversationFeedModel::NewItem:
+        if (mGrouped) {
+            result = group.newItem;
         }
         break;
     }
@@ -271,6 +275,7 @@ void ConversationProxyModel::processGrouping()
         QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
         ConversationGroup &group = mGroupedEntries[groupingProperty][propertyValue];
         group.eventCount[model->itemType(sourceIndex)]++;
+        group.newItem  = group.newItem || item->newItem();
 
         if (item->timestamp() > group.latestTime || group.displayedRow < 0) {
             group.latestTime = item->timestamp();
