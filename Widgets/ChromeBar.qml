@@ -17,8 +17,8 @@ Item {
                 bottom: parent.bottom
                 margins: units.gu(1)
             }
-            width: childrenRect.width + units.gu(2)
-            height: childrenRect.height + units.gu(2)
+            width: backImage.width + units.gu(2)
+            height: backImage.height + units.gu(2)
             visible: telephony.viewStack.depth > 1
             onClicked: telephony.viewStack.pop()
 

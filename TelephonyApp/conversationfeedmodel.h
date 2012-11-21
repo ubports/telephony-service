@@ -36,6 +36,7 @@ public:
         ContactAlias,
         ContactAvatar,
         Timestamp,
+        Date,
         Incoming,
         ItemType,
         FeedItem,

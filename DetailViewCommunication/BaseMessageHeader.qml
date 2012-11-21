@@ -27,12 +27,4 @@ FocusScope {
         color: "white"
         opacity: 0.3
     }
-
-    Rectangle {
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: units.dp(1)
-        color: "white"
-    }
 }

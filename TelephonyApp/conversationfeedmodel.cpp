@@ -53,6 +53,8 @@ QVariant ConversationFeedModel::data(const QModelIndex &index, int role) const
         return item->contactAvatar();
     case Timestamp:
         return item->timestamp();
+    case Date:
+        return item->timestamp().date();
     case Incoming:
         return item->incoming();
     case ItemType:

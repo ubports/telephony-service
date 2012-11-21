@@ -3,6 +3,7 @@ import TelephonyApp 0.1
 import "../Widgets" as LocalWidgets
 import "../"
 import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Components 0.1
 
 LocalWidgets.TelephonyPage {
     id: view
@@ -173,6 +174,31 @@ LocalWidgets.TelephonyPage {
             model: conversationProxyModel
             clip: true
             header: headerComponent
+
+            section.property: "date"
+            section.delegate: Column {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                spacing: units.gu(0.5)
+
+
+                ListItem.ThinDivider {
+                    height: units.gu(0.5)
+                }
+
+                TextCustom {
+                    anchors.left: parent.left
+                    anchors.leftMargin: units.gu(2)
+                    fontSize: "small"
+                    elide: Text.ElideRight
+                    color: "#333333"
+                    opacity: 0.6
+                    text: Qt.formatDate(section)
+                    height: paintedHeight + units.gu(1)
+                }
+            }
+
+
             delegate: CommunicationDelegate {
                 id: communicationDelegate
 

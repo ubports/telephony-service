@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Item {
     id: messageList
@@ -11,6 +12,9 @@ Item {
         id: listView
         anchors.fill: parent
         clip: true
+        section.property: "date"
+        section.delegate: ListItem.Divider { }
+
         delegate: CommunicationDelegate {
             title: (model && model.contactAlias) ? model.contactAlias : ""
             subtitle: "(TODO: show phone type)"

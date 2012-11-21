@@ -29,6 +29,7 @@ ConversationAggregatorModel::ConversationAggregatorModel(QObject *parent) :
     roles[ConversationFeedModel::ContactAlias] = "contactAlias";
     roles[ConversationFeedModel::ContactAvatar] = "contactAvatar";
     roles[ConversationFeedModel::Timestamp] = "timestamp";
+    roles[ConversationFeedModel::Date] = "date";
     roles[ConversationFeedModel::Incoming] = "incoming";
     roles[ConversationFeedModel::ItemType] = "itemType";
     roles[ConversationFeedModel::FeedItem] = "item";
