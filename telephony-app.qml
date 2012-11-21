@@ -255,6 +255,7 @@ Item {
                 property bool isCurrent: index == tabs.selectedTabIndex
                 anchors.fill: parent
                 visible: isCurrent
+
                 onSourceChanged: {
                     stack.push(Qt.resolvedUrl(source))
                     stack.currentPage.source = Qt.resolvedUrl(source);

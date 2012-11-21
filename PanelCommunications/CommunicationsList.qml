@@ -13,7 +13,7 @@ Item {
         clip: true
         delegate: CommunicationDelegate {
             title: (model && model.contactAlias) ? model.contactAlias : ""
-            subtitle: "(TODO: Phone type)"
+            subtitle: "(TODO: show phone type)"
             text: (model && model.item && model.item.message) ? model.item.message : ""
             timestamp: (model && model.timestamp) ? model.timestamp : null
             avatar: (model && model.contactAvatar) ? model.contactAvatar : ""

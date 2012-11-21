@@ -56,7 +56,6 @@ LocalWidgets.TelephonyPage {
             icon: Qt.resolvedUrl("../assets/add_new_message_icon.png")
             iconFrame: false
             text: "New Message"
-            // FIXME: maybe use a signal and handle in the instance
             onClicked: telephony.startNewMessage()
             selected: telephony.communication.loaded && telephony.view.newMessage
         }
