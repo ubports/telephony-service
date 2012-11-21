@@ -17,7 +17,7 @@ Item {
 
     height: bubble.height + units.gu(1.5)
 
-    Rectangle {
+    UbuntuShape {
         id: bubble
 
         anchors.left: incoming ? icon.right : parent.left
@@ -27,7 +27,7 @@ Item {
         anchors.top: parent.top
         anchors.topMargin: units.gu(0.5)
 
-        height: childrenRect.height + units.gu(3)
+        height: messageText.height + units.gu(3)
         color: (incoming && itemType != "call") ? "#dd5314" : "#f5f5f5"
 
         TextCustom {
@@ -50,7 +50,7 @@ Item {
                     if (missed) {
                         return "Missed call";
                     } else {
-                        return "Call - TODO: add duration";
+                        return "Call";
                     }
                 } else {
                     return communicationDelegate.message;

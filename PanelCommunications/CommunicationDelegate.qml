@@ -31,11 +31,14 @@ ListItem.Base {
         height: childrenRect.height
         spacing: __spacing
 
-        Image {
+        UbuntuShape {
             height: units.gu(6)
             width: units.gu(6)
-            source: communicationDelegate.avatar != "" ? communicationDelegate.avatar : "../assets/avatar_contacts_list.png"
-            fillMode: Image.PreserveAspectCrop
+
+            image: Image {
+                source: communicationDelegate.avatar != "" ? communicationDelegate.avatar : "../assets/avatar_contacts_list.png"
+                fillMode: Image.PreserveAspectCrop
+            }
         }
 
         Image {

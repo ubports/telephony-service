@@ -10,7 +10,7 @@ BaseMessageHeader {
 
     height: icon.height + units.gu(4)
 
-    Image {
+    UbuntuShape {
         id: icon
 
         anchors.left: parent.left
@@ -19,8 +19,11 @@ BaseMessageHeader {
 
         width: units.gu(6)
         height: units.gu(6)
-        source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_messaging.png"
-        fillMode: Image.PreserveAspectCrop
+
+        image: Image {
+            source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_messaging.png"
+            fillMode: Image.PreserveAspectCrop
+        }
     }
 
     TextCustom {
@@ -37,7 +40,6 @@ BaseMessageHeader {
         opacity: 0.6
         text: contact ? contact.displayLabel : "Unknown Contact"
     }
-
 
     Button {
         ItemStyle.class: "transparent-button"
