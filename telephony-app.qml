@@ -218,6 +218,10 @@ Item {
 
             property bool shown
             shown: {
+                if (telephony.singlePane) {
+                    return false;
+                }
+
                 if (!callManager.hasCalls) {
                     return false
                 } else {
