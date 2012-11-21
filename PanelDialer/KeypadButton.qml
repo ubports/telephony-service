@@ -12,7 +12,16 @@ Button {
     property int keycode
     property bool isCorner: false
     property int corner
-    color: "transparent"
+    ItemStyle.class: "transparent"
+
+    Image {
+        anchors.fill: parent
+        anchors.centerIn: parent
+        width: units.gu(11)
+        height: units.gu(8)
+        source: "../assets/dialer_pad_bg.png"
+        fillMode: Image.PreserveAspectFit
+    }
 
     TextCustom {
         id: labelItem

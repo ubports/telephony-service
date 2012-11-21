@@ -22,16 +22,30 @@ Button {
 
     property alias iconSource: icon.source
     property bool selected: false
-    color: "transparent"
+    ItemStyle.class: "transparent"
 
     width: units.gu(9)
     height: units.gu(9)
 
+    property int iconWidth
+    property int iconHeight
+
+    Image {
+        anchors.fill: parent
+        anchors.centerIn: parent
+        width: parent.width
+        height: parent.height
+        source: "../assets/dialer_pad_bg.png"
+        fillMode: Image.PreserveAspectFit
+    }
+
     Image {
         id: icon
-
         anchors.centerIn: parent
         anchors.horizontalCenterOffset: units.dp(1)
+        width: iconWidth
+        height: iconHeight
+        source: icon
         fillMode: Image.PreserveAspectFit
     }
 }

@@ -36,10 +36,19 @@ LocalWidgets.TelephonyPage {
             Keys.forwardTo: [callButton]
         }
 
+        Image {
+            id: divider2
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: keypadEntry.bottom
+            source: "../assets/dialer_top_number_bg.png"
+        }
+
         Keypad {
             id: keypad
 
-            anchors.top: keypadEntry.bottom
+            anchors.top: divider2.bottom
             onKeyPressed: keypadEntry.value += label
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: units.dp(10)
@@ -54,30 +63,32 @@ LocalWidgets.TelephonyPage {
             onClicked: telephony.callNumber(keypadEntry.value)
         }
 
-        Button {
+        CustomButton {
             id: contactListButton
             objectName: "contactListButton"
             anchors.right: callButton.left
             anchors.verticalCenter: callButton.verticalCenter
             anchors.rightMargin: units.dp(6)
-            iconSource: "../assets/tab_icon_contacts_inactive.png"
-            width: units.gu(7)
-            height: units.gu(7)
-            color: "transparent"
+            icon: "../assets/dialer_contacts.png"
+            iconWidth: units.gu(4)
+            iconHeight: units.gu(4)
+            width: units.gu(8)
+            height: units.gu(8)
             onClicked: {
                 telephony.switchToTab(telephony.contactDetails.tab)
             }
         }
 
-        Button {
+        CustomButton {
             id: backspace
             anchors.left: callButton.right
             anchors.verticalCenter: callButton.verticalCenter
             anchors.leftMargin: units.dp(6)
-            width: units.gu(7)
-            height: units.gu(7)
-            iconSource: "../assets/keypad_backspace.png"
-            color: "transparent"
+            width: units.gu(8)
+            height: units.gu(8)
+            icon: "../assets/dialer_backspace.png"
+            iconWidth: units.gu(4)
+            iconHeight: units.gu(4)
 
             onClicked:  {
                 if (input.cursorPosition != 0)  {

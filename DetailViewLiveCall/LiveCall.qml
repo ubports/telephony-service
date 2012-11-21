@@ -107,23 +107,24 @@ LocalWidgets.TelephonyPage {
                 anchors.right: parent.right
                 height: units.gu(15)
 
-                LocalWidgets.FramedImage {
+                UbuntuShape {
                     id: picture
 
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: units.gu(2)
-                    width: units.gu(10)
-                    height: units.gu(10)
-                    source: contact ? contact.avatar : fallbackSource
-                    fallbackSource: "../assets/avatar_incall_rightpane.png"
+                    width: units.gu(6)
+                    height: units.gu(6)
+                    image: Image {
+                        source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_messaging.png"
+                        fillMode: Image.PreserveAspectCrop
+                    }
                 }
 
                 TextCustom {
                     id: name
 
-                    anchors.topMargin: units.gu(2)
-                    anchors.top: parent.top
+                    anchors.top: picture.top
                     anchors.left: picture.right
                     anchors.leftMargin: units.gu(2)
                     text: contact ? contact.displayLabel : "Unknown Contact"
@@ -163,8 +164,11 @@ LocalWidgets.TelephonyPage {
                     width: childrenRect.width
                     height: childrenRect.height
 
+                    // TODO: fix assets for selected buttons
                     LiveCallKeypadButton {
-                        iconSource: selected ? "../assets/incall_keypad_pause_selected.png" : "../assets/incall_keypad_pause_unselected.png"
+                        iconSource: "../assets/incall_pause.png"
+                        iconWidth: units.gu(3)
+                        iconHeight: units.gu(3)
                         selected: liveCall.onHold
                         onClicked: {
                             if (call) {
@@ -174,8 +178,10 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: selected ? "../assets/incall_keypad_speaker_selected.png" : "../assets/incall_keypad_speaker_unselected.png"
+                        iconSource: "../assets/incall_speaker.png"
                         selected: liveCall.isSpeaker
+                        iconWidth: units.gu(3)
+                        iconHeight: units.gu(3)
                         onClicked: {
                             if (call) {
                                 call.speaker = !selected
@@ -184,7 +190,9 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: selected ? "../assets/incall_keypad_mute_selected.png" : "../assets/incall_keypad_mute_unselected.png"
+                        iconSource: "../assets/incall_mute.png"
+                        iconWidth: units.gu(3)
+                        iconHeight: units.gu(3)
                         selected: liveCall.isMuted
                         onClicked: {
                             if (call) {
@@ -193,25 +201,29 @@ LocalWidgets.TelephonyPage {
                         }
                     }
 
-                    // TODO: fix assets and action
                     LiveCallKeypadButton {
-                        iconSource: selected ? "../assets/add_contacts_icon.png" : "../assets/add_contacts_icon.png"
+                        iconSource: "../assets/incall_add.png"
+                        iconWidth: units.gu(3)
+                        iconHeight: units.gu(3)
                         selected: false
                         onClicked: {
                         }
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: selected ? "../assets/incall_keypad_dialler_selected.png" : "../assets/incall_keypad_dialler_unselected.png"
+                        iconSource: "../assets/incall_keyboard.png"
+                        iconWidth: units.gu(3)
+                        iconHeight: units.gu(3)
                         selected: liveCall.isDtmf
                         onClicked: {
                             liveCall.isDtmf = true
                         }
                     }
 
-                    // TODO: fix assets and action
                     LiveCallKeypadButton {
-                        iconSource: selected ? "../assets/incall_keypad_addcaller_unselected.png" : "../assets/incall_keypad_addcaller_unselected.png"
+                        iconSource: "../assets/incall_contact.png"
+                        iconWidth: units.gu(3)
+                        iconHeight: units.gu(3)
                         selected: false
                         onClicked: {
                         }
@@ -227,12 +239,14 @@ LocalWidgets.TelephonyPage {
                 anchors.right: parent.right
                 anchors.bottomMargin: units.gu(4)
 
-                Button {
+                CustomButton {
                     id: hangupButton
 
-                    iconSource: "../assets/incall_keypad_endcallbutton_icon.png"
+                    icon: "../assets/incall_hangup.png"
                     width: units.gu(19)
                     height: units.gu(8)
+                    iconWidth: units.gu(5)
+                    iconHeight: units.gu(5)
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                     color: "#bf400c"
