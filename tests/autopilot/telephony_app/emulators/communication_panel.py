@@ -22,9 +22,9 @@ class CommunicationPanel(object):
         """Returns the clear button in the main searchbox attached to the communication panel."""
         return self.get_communication_searchbox().get_children_by_type("QQuickBorderImage")[0].get_children_by_type("Button")[0]
 
-    def get_new_message_list_item(self):
+    def get_new_message_button(self):
         """Returns 'New Message' list item."""
-        return self.app.select_single("LabelVisual", text='New Message')
+        return self.app.select_single("Button", objectName='compose', text='Compose')
 
     def get_communication_view(self):
         """Returns the CommunicationView."""

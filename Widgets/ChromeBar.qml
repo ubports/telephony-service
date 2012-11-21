@@ -43,6 +43,7 @@ Item {
             model: telephony.view.chromeButtons ? telephony.view.chromeButtons : null
 
             Button {
+                objectName: model.name
                 height: units.gu(4)
                 text: model.label
                 onClicked: telephony.view.chromeButtonClicked(model.name)

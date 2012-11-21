@@ -30,7 +30,7 @@ class CallPanel(object):
 
     def get_contacts_list_button(self):
         """Returns the Contacts list button next to the dial button"""
-        return self.app.select_single('Button', objectName='contactListButton')
+        return self.app.select_single('CustomButton', objectName='contactListButton')
     
     def get_dialer_page(self):
         return self.app.select_single('PageStack',

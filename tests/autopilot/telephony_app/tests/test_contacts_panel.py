@@ -71,11 +71,6 @@ class TestContactsPanel(TelephonyAppTestCase):
 
         self.assertThat(searchbox.text, Eventually(Equals("")))
 
-    def test_add_new_contact_list_item_select(self):
-        """Clicking on the 'Add a new contact' list item must highlight it."""
-        new_contact_item = self.click_add_contact_list_item()
-        self.assertThat(new_contact_item.selected, Eventually(Equals(True)))
-
     def test_add_new_contact_page(self):
         """Clicking on the 'Add a new contact' list item must load the contact details page."""
         self.click_add_contact_list_item()
@@ -102,7 +97,7 @@ class TestContactsPanel(TelephonyAppTestCase):
         self.mouse.click()
         self.keyboard.type("LastName")
 
-        save_button = self.contacts_panel.get_contact_edit_save_button()
+        save_button = self.contacts_panel.get_contact_save_button()
         self.mouse.move_to_object(save_button)
         self.mouse.click()
 

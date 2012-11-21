@@ -24,8 +24,8 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.mouse.move_to_object(communication_tab)
         self.mouse.click()
 
-    def click_new_message_list_item(self):
-        new_message_item = self.communication_panel.get_new_message_list_item()
+    def click_new_message_button(self):
+        new_message_item = self.communication_panel.get_new_message_button()
 
         self.mouse.move_to_object(new_message_item)
         self.mouse.click()
@@ -72,24 +72,12 @@ class TestCommunicationPanel(TelephonyAppTestCase):
 
         self.assertThat(searchbox.text, Eventually(Equals("")))
 
-    def test_new_message_list_item_select(self):
-        """Clicking on the 'New Message' list item must highlight it."""
-        new_message_item = self.communication_panel.get_new_message_list_item()
-
-        self.mouse.move_to_object(new_message_item)
-        self.mouse.click()
-
-        self.assertThat(new_message_item.selected, Eventually(Equals(True)))
-
     def test_communication_view_visible(self):
         """Clicking on the 'New Message' list item must show the
         message view.
 
         """
-        new_message_item = self.communication_panel.get_new_message_list_item()
-        self.mouse.move_to_object(new_message_item)
-        self.mouse.click()
-
+        self.click_new_message_button()
         communication_view = self.communication_panel.get_communication_view()
 
         self.assertThat(communication_view.visible, Eventually(Equals(True)))
@@ -99,14 +87,14 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         'sendto' box.
 
         """
-        self.click_new_message_list_item()
+        self.click_new_message_button()
         sendto_box = self.communication_panel.get_new_message_send_to_box()
 
         self.assertThat(sendto_box.activeFocus, Eventually(Equals(True)))
 
     def test_message_send_to_entry(self):
         """Ensures that number can be typed into the 'sendto' box."""
-        self.click_new_message_list_item()
+        self.click_new_message_button()
         sendto_box = self.communication_panel.get_new_message_send_to_box()
 
         self.keyboard.type("911")
@@ -118,7 +106,7 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         button.
 
         """
-        self.click_new_message_list_item()
+        self.click_new_message_button()
         send_button = self.communication_panel.get_message_send_button()
 
         self.keyboard.type("911")
@@ -130,7 +118,7 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         Send button.
 
         """
-        self.click_new_message_list_item()
+        self.click_new_message_button()
         send_button = self.communication_panel.get_message_send_button()
 
         self.keyboard.type("911")
@@ -141,7 +129,7 @@ class TestCommunicationPanel(TelephonyAppTestCase):
 
     def test_new_message_box_focus(self):
         """Clicking inside the main message box must give it the focus."""
-        self.click_new_message_list_item()
+        self.click_new_message_button()
         message_box = self.communication_panel.get_new_message_text_box()
 
         self.mouse.move_to_object(message_box)
@@ -151,7 +139,7 @@ class TestCommunicationPanel(TelephonyAppTestCase):
 
     def test_new_message_box_entry(self):
         """Ensures that typing inside the main message box works."""
-        self.click_new_message_list_item()
+        self.click_new_message_button()
         message_box = self.communication_panel.get_new_message_text_box()
 
         self.mouse.move_to_object(message_box)
