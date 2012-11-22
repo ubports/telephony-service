@@ -1,9 +1,10 @@
-telephony-app (0.58.8) UNRELEASED; urgency=low
+telephony-app (0.58.8) quantal; urgency=low
 
+  [ Gustavo Pichorim Boiko ]
   * Apply the new visual design to most components.
   * Fix displaying unread messages and marking them as read.
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 21 Nov 2012 19:01:51 -0200
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Thu, 22 Nov 2012 01:02:24 -0200
 
 telephony-app (0.58.7) quantal; urgency=low
 
