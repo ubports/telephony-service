@@ -3,6 +3,7 @@ import TelephonyApp 0.1
 import "../Widgets" as LocalWidgets
 import "../"
 import Ubuntu.Components.ListItems 0.1 as ListItem
+import Ubuntu.Components 0.1
 
 LocalWidgets.TelephonyPage {
     id: view
@@ -18,6 +19,24 @@ LocalWidgets.TelephonyPage {
     property string pendingMessage
 
     title: "Communication"
+
+    chromeButtons: newMessage ? null : buttons
+
+    ListModel {
+        id: buttons
+
+        ListElement {
+            label: "Edit"
+            name: "edit"
+        }
+    }
+
+    onChromeButtonClicked: {
+        if (buttonName == "edit") {
+            console.log("TODO: edit clicked, implement");
+        }
+    }
+
     ContactWatcher {
         id: contactWatcher
     }
@@ -117,9 +136,11 @@ LocalWidgets.TelephonyPage {
     Loader {
         id: headerLoader
 
-        sourceComponent: view.newMessage ? newHeaderComponent : headerComponent
+        sourceComponent: view.newMessage ? newHeaderComponent : null
         anchors.top: parent.top
         onLoaded: item.focus = true
+
+        height: sourceComponent != null ? childrenRect.height : 0
     }
 
     Image {
@@ -142,56 +163,63 @@ LocalWidgets.TelephonyPage {
     }
 
     Component {
-        id: messageComponent
-        MessageItemDelegate {
-            id: messageItemDelegate
-        }
-    }
-
-    Component {
-        id: callComponent
-        CallItemDelegate {
-            id: callItemDelegate
-        }
-    }
-
-    Component {
         id: conversationComponent
         ListView {
             width: view.width
             anchors.fill: parent
             model: conversationProxyModel
             clip: true
-            delegate: ListItem.Base {
-                id: delegate
+            header: headerComponent
+
+            section.property: "date"
+            section.delegate: Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                showDivider: true
-                __height: units.gu(7)
+                spacing: units.gu(0.5)
 
-                Loader {
-                    signal clicked
-                    property string contactId: model ? model.contactId : ""
-                    property string contactAlias: model ? model.contactAlias : ""
-                    property url contactAvatar: model ? model.contactAvatar : ""
-                    property variant timestamp: model ? model.timestamp : null
-                    property bool incoming: model ? model.incoming : false
-                    property string itemType: model ? model.itemType : "none"
-                    property QtObject item: model ? model.item : null
-                    property variant events: model ? model.events : null
-                    anchors.fill: parent
-                    onClicked: view.phoneNumber = item.phoneNumber
-                    sourceComponent: {
-                        switch (itemType) {
-                        case "message":
-                            messageComponent;
-                            break;
-                        case "call":
-                            callComponent;
-                            break;
-                        }
+
+                ListItem.ThinDivider {
+                    height: units.gu(0.5)
+                }
+
+                TextCustom {
+                    anchors.left: parent.left
+                    anchors.leftMargin: units.gu(2)
+                    fontSize: "small"
+                    elide: Text.ElideRight
+                    color: "#333333"
+                    opacity: 0.6
+                    text: Qt.formatDate(section)
+                    height: paintedHeight + units.gu(1)
+                }
+            }
+
+
+            delegate: CommunicationDelegate {
+                id: communicationDelegate
+
+                itemType: model.itemType
+                incoming: model.incoming
+                missed: model.item.missed ? model.item.missed : false
+                message: model.item.message ? model.item.message : ""
+                itemIcon: {
+                    switch (model.itemType) {
+                    case "message":
+                        "../assets/contact_icon_message.png";
+                        break;
+                    case "call":
+                        "../assets/contact_icon_phone.png";
+                        break;
+                    case "group":
+                        "../assets/tab_icon_contacts_inactive.png";
+                        break;
+                    default:
+                        "";
+                        break;
                     }
                 }
+
+                onClicked: view.phoneNumber = item.phoneNumber
             }
         }
     }

@@ -8,91 +8,53 @@ Item {
 
     property alias model: listView.model
 
-    Component {
-        id: messageComponent
-
-        MessageDelegate {
-            id: messageDelegate
-        }
-    }
-
-    Component {
-        id: groupComponent
-
-        GroupDelegate {
-            id: groupDelegate
-        }
-    }
-
-    Component {
-        id: callLogComponent
-
-        CallLogDelegate {
-            id: callLogDelegate
-        }
-    }
-
     ListView {
         id: listView
         anchors.fill: parent
         clip: true
-        delegate: ListItem.Base {
-            id: delegate
-            anchors.left: parent.left
-            anchors.right: parent.right
-            showDivider: true
-            __height: units.gu(7)
+        section.property: "date"
+        section.delegate: ListItem.Divider { }
 
-            onClicked: {
-                telephony.showCommunication(groupingProperty, item[groupingProperty], model.contactId, true);
+        delegate: CommunicationDelegate {
+            title: (model && model.contactAlias) ? model.contactAlias : ""
+            subtitle: "(TODO: show phone type)"
+            text: (model && model.item && model.item.message) ? model.item.message : ""
+            timestamp: (model && model.timestamp) ? model.timestamp : null
+            avatar: (model && model.contactAvatar) ? model.contactAvatar : ""
+            itemIcon:  {
+                switch (itemType) {
+                case "message":
+                    "../assets/contact_icon_message.png";
+                    break;
+                case "call":
+                    "../assets/contact_icon_phone.png";
+                    break;
+                case "group":
+                    "../assets/tab_icon_contacts_inactive.png";
+                    break;
+                default:
+                    "";
+                    break;
+                }
             }
 
-            selected: communicationsDelegate.selected
+            selected: isSelected()
 
-            Loader {
-                id: communicationsDelegate
-
-                signal clicked(variant mouse)
-                onClicked: delegate.clicked(mouse)
-
-                anchors.fill: parent
-                property string contactId: (model && model.contactId) ? model.contactId : ""
-                property string contactAlias: (model && model.contactAlias) ? model.contactAlias : ""
-                property url contactAvatar: (model && model.contactAvatar) ? model.contactAvatar : ""
-                property variant timestamp: (model && model.timestamp) ? model.timestamp : null
-                property bool incoming: (model && model.incoming) ? model.incoming : false
-                property bool newItem: (model && model.newItem) ? model.newItem : false
-                property string itemType: (model && model.itemType) ? model.itemType : "none"
-                property QtObject item: (model && model.item) ? model.item : null
-                property variant events: (model && model.events) ? model.events : null
-                property bool selected: isSelected()
-
-                function isSelected() {
-                    if (!model || !model.groupingProperty) {
-                        return false;
-                    }
-
-                    if (!telephony.view || !telephony.view.filterProperty) {
-                        return false;
-                    }
-
-                    return (telephony.view.filterProperty == model.groupingProperty) &&
-                            (telephony.view.filterValue == model.item[model.groupingProperty]);
+            function isSelected() {
+                if (!model || !model.groupingProperty) {
+                    return false;
                 }
 
-                sourceComponent: {
-                    switch (itemType) {
-                    case "message":
-                        messageComponent;
-                        break;
-                    case "call":
-                        callLogComponent;
-                        break;
-                    case "group":
-                        groupComponent;
-                        break;
-                    }
+                if (!telephony.view || !telephony.view.filterProperty) {
+                    return false;
                 }
+
+                return (telephony.view.filterProperty == model.groupingProperty) &&
+                        (telephony.view.filterValue == model.item[model.groupingProperty]);
+            }
+
+            onClicked: {
+                telephony.showCommunication(model.groupingProperty, model.item[groupingProperty], model.contactId, true);
             }
         }
     }

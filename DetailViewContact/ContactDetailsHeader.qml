@@ -18,7 +18,7 @@ FocusScope {
         name.save()
     }
 
-    LocalWidgets.FramedImage {
+    UbuntuShape {
         id: icon
 
         anchors.left: parent.left
@@ -26,9 +26,11 @@ FocusScope {
         anchors.top: parent.top
         anchors.topMargin: units.gu(1)
         width: units.gu(8)
-        height: width
-        source: contact ? contact.avatar : fallbackSource
-        fallbackSource: "../assets/avatar_contacts_details.png"
+        height: units.gu(8)
+
+        image: Image {
+            source: contact ? contact.avatar : "../assets/avatar_contacts_details.png"
+        }
     }
 
     Item {

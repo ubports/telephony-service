@@ -1,9 +1,9 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 
-AbstractButton {
-    width: image.paintedWidth
-    height: image.paintedHeight
+Button {
+    width: units.gu(9)
+    height: units.gu(9)
 
     Image {
         id: image

@@ -2,13 +2,25 @@ import QtQuick 2.0
 import TelephonyApp 0.1
 import ".."
 import "../Widgets" as LocalWidgets
-import "../fontUtils.js" as Font
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
 LocalWidgets.TelephonyPage {
     id: contactsPanel
     title: "Contacts"
+
+    chromeButtons: ListModel {
+        ListElement {
+            label: "Add"
+            name: "add"
+        }
+    }
+
+    onChromeButtonClicked: {
+        if (buttonName == "add") {
+            telephony.createNewContact()
+        }
+    }
 
     property alias searchQuery : contactsSearchBox.text
 
@@ -47,6 +59,10 @@ LocalWidgets.TelephonyPage {
         anchors.right: parent.right
         anchors.top: contactsSearchBox.bottom
         anchors.topMargin: units.gu(1)
+
+        // hide this on single panel version
+        visible: !telephony.singlePane
+        height: visible ? childrenRect.height : 0
 
         ListItem.ThinDivider {}
 

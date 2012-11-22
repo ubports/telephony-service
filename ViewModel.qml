@@ -21,13 +21,17 @@ QtObject {
     property int tab
     property bool loaded: telephony.view != undefined && telephony.view.source == source
 
-    function load(properties) {
+    function load(properties, clear) {
         if (properties == undefined) {
             properties = {};
         }
         properties["source"] = source;
         properties["previousTab"] = telephony.selectedTabIndex;
         telephony.selectedTabIndex = tab
+        if (clear) {
+            telephony.resetView();
+        }
+
         telephony.viewStack.push(Qt.resolvedUrl(source), properties);
     }
 }

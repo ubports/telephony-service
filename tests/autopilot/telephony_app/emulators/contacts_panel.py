@@ -30,7 +30,7 @@ class ContactsPanel(object):
 
     def get_add_contact_list_item(self):
         """Returns the 'Add a new contact' list item."""
-        return self.app.select_single("LabelVisual", text='Add a new contact')
+        return self.app.select_single("Button", objectName='add', text='Add')
 
     def get_contact_list(self):
         """Returns the contact list item."""
@@ -48,6 +48,10 @@ class ContactsPanel(object):
         """Returns the contact last name input item."""
         return self.app.select_single("AddressEditorField", objectName="lastName")
 
-    def get_contact_edit_save_button(self):
-        """Returns the contact edit/save button."""
-        return self.app.select_single("Button", objectName="editSaveButton")
+    def get_contact_edit_button(self):
+        """Returns the contact edit button."""
+        return self.app.select_single("Button", objectName='edit', text='Edit')
+
+    def get_contact_save_button(self):
+        """Returns the contact save button."""
+        return self.app.select_single("Button", objectName='save', text='Save')

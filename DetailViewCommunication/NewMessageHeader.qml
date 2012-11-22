@@ -1,5 +1,4 @@
 import QtQuick 2.0
-import "../fontUtils.js" as Font
 import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 

@@ -4,7 +4,7 @@ import Ubuntu.Components 0.1
 Item {
     id: delegate
 
-    property string fontColor: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+    property color fontColor: Qt.rgba(0.4, 0.4, 0.4, 1.0)
     property string fontSize: "medium"
     property bool isLast: false
 
