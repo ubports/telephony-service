@@ -3,6 +3,8 @@ import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 import TelephonyApp 0.1
 
+import "PanelContacts" as PanelContacts
+
 Item {
     id: telephony
 
@@ -164,24 +166,79 @@ Item {
         }
 
         Tab {
-            iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
-            page: singlePane ? undefined : Qt.resolvedUrl(panel)
+            id: callsTab
+
             property string pane: "Panes/CallEndedPane.qml"
             property string panel: "PanelDialer/DialerView.qml"
+
+            iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
+            page: Item {
+                id: callsTabPage
+
+                anchors.fill: parent
+
+                Loader {
+                    anchors.fill: parent
+                    source: singlePane ? "" : Qt.resolvedUrl(callsTab.panel)
+
+                    onStatusChanged: {
+                        if (status == Loader.Ready) {
+                            item.visible = true
+                        }
+                    }
+                }
+            }
         }
 
         Tab {
+            id: communicationsTab
             iconSource: (tabs.selectedTabIndex != 1) ? "assets/tab_icon_messaging_inactive.png" : "assets/tab_icon_messaging_active.png"
-            page: singlePane ? undefined : Qt.resolvedUrl(panel)
+
             property string pane: "Panes/SelectMessagePane.qml"
             property string panel: "PanelCommunications/CommunicationsPanel.qml"
+
+            page: Item {
+                id: communicationsTabPage
+
+                anchors.fill: parent
+
+                Loader {
+                    anchors.fill: parent
+                    source: singlePane ? "" : Qt.resolvedUrl(communicationsTab.panel)
+
+                    onStatusChanged: {
+                        if (status == Loader.Ready) {
+                            item.visible = true
+                        }
+                    }
+                }
+            }
+
         }
 
         Tab {
-            iconSource: (tabs.selectedTabIndex != 2) ? "assets/tab_icon_contacts_inactive.png" : "assets/tab_icon_contacts_active.png"
-            page: singlePane ? undefined : Qt.resolvedUrl(panel)
+            id: contactsTab
+
             property string pane: "Panes/SelectContactPane.qml"
             property string panel: "PanelContacts/ContactsPanel.qml"
+
+            iconSource: (tabs.selectedTabIndex != 2) ? "assets/tab_icon_contacts_inactive.png" : "assets/tab_icon_contacts_active.png"
+            page: Item {
+                id: contactsTabPage
+
+                anchors.fill: parent
+
+                Loader {
+                    anchors.fill: parent
+                    source: singlePane ? "" : Qt.resolvedUrl(contactsTab.panel)
+
+                    onStatusChanged: {
+                        if (status == Loader.Ready) {
+                            item.visible = true
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -207,7 +264,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: chromeBar.top
         anchors.right: singlePane ? parent.right : undefined
-        width: units.gu(31)
+        width: singlePane ? undefined : units.gu(31)
 
         Rectangle {
             id: border
@@ -253,36 +310,83 @@ Item {
     Item {
         id: rightPaneStacks
 
-        property variant currentStack: children[tabs.selectedTabIndex]
+        property variant currentStack: stacks[tabs.selectedTabIndex]
         property variant currentItem: (currentStack != undefined ? currentStack.currentPage : undefined)
+
+        property variant stacks: [ callsStack, communicationsStack, contactsStack ]
+
         anchors.fill: parent
-        parent: singlePane ? tabs.children[tabs.selectedTabIndex] : rightPane
+        parent: rightPane
+        visible: !singlePane
 
         /* Instantiate a PageStack per tab and keep its loaded content alive.
            That makes the application stateful.
            Ref.: https://bugs.launchpad.net/newyork/+bug/1017659
         */
 
-        Repeater {
-            model: tabs.children
-            delegate: PageStack {
-                id: stack
-                property string source: singlePane ? modelData.panel : modelData.pane
-                property bool isCurrent: index == tabs.selectedTabIndex
-                anchors.fill: parent
-                visible: isCurrent
+        PageStack {
+            id: callsStack
+            property string source: singlePane ? callsTab.panel : callsTab.pane
+            property bool isCurrent: tabs.selectedTabIndex == liveCall.tab
+            anchors.fill: parent
+            visible: isCurrent
+            parent: singlePane ? callsTabPage : rightPaneStacks
 
-                onSourceChanged: {
-                    stack.push(Qt.resolvedUrl(source))
-                    stack.currentPage.source = Qt.resolvedUrl(source);
-                }
+            onSourceChanged: {
+                callsStack.clear();
+                callsStack.push(Qt.resolvedUrl(source));
+                callsStack.currentPage.source = Qt.resolvedUrl(source);
+            }
 
-                Component.onCompleted: {
-                    stack.push(Qt.resolvedUrl(source))
-                    stack.currentPage.source = Qt.resolvedUrl(source);
-                }
+            Component.onCompleted: {
+                callsStack.clear();
+                callsStack.push(Qt.resolvedUrl(source));
+                callsStack.currentPage.source = Qt.resolvedUrl(source);
             }
         }
+
+        PageStack {
+            id: communicationsStack
+            property string source: singlePane ? communicationsTab.panel : communicationsTab.pane
+            property bool isCurrent: tabs.selectedTabIndex == communication.tab
+            anchors.fill: parent
+            visible: isCurrent
+            parent: singlePane ? communicationsTabPage : rightPaneStacks
+
+            onSourceChanged: {
+                communicationsStack.clear();
+                communicationsStack.push(Qt.resolvedUrl(source));
+                communicationsStack.currentPage.source = Qt.resolvedUrl(source);
+            }
+
+            Component.onCompleted: {
+                communicationsStack.clear();
+                communicationsStack.push(Qt.resolvedUrl(source));
+                communicationsStack.currentPage.source = Qt.resolvedUrl(source);
+            }
+        }
+
+        PageStack {
+            id: contactsStack
+            property string source: singlePane ? contactsTab.panel : contactsTab.pane
+            property bool isCurrent: tabs.selectedTabIndex == contactDetails.tab
+            anchors.fill: parent
+            visible: isCurrent
+            parent: singlePane ? contactsTabPage : rightPaneStacks
+
+            onSourceChanged: {
+                contactsStack.clear();
+                contactsStack.push(Qt.resolvedUrl(source));
+                contactsStack.currentPage.source = Qt.resolvedUrl(source);
+            }
+
+            Component.onCompleted: {
+                contactsStack.clear();
+                contactsStack.push(Qt.resolvedUrl(source));
+                contactsStack.currentPage.source = Qt.resolvedUrl(source);
+            }
+        }
+
     }
 
     Item {
