@@ -156,7 +156,12 @@ Item {
         anchors.topMargin: units.gu(1)
         anchors.fill: leftPane
         parent: leftPane
-        buttonsExpanded: true
+
+        Binding {
+            target: tabs.ItemStyle.style
+            property: "buttonsExpanded"
+            value: "true"
+        }
 
         Tab {
             iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
