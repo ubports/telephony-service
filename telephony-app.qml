@@ -3,8 +3,6 @@ import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 import TelephonyApp 0.1
 
-import "PanelContacts" as PanelContacts
-
 Item {
     id: telephony
 
