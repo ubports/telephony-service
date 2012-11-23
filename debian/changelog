@@ -1,4 +1,4 @@
-telephony-app (0.58.9) UNRELEASED; urgency=low
+telephony-app (0.58.9) quantal; urgency=low
 
   * Fix the tabs usage and adapt to the new API.
 
