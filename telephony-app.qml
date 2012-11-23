@@ -329,7 +329,7 @@ Item {
             property string source: singlePane ? callsTab.panel : callsTab.pane
             property bool isCurrent: tabs.selectedTabIndex == liveCall.tab
             anchors.fill: parent
-            visible: isCurrent
+            visible: singlePane || isCurrent
             parent: singlePane ? callsTabPage : rightPaneStacks
 
             onSourceChanged: {
@@ -350,7 +350,7 @@ Item {
             property string source: singlePane ? communicationsTab.panel : communicationsTab.pane
             property bool isCurrent: tabs.selectedTabIndex == communication.tab
             anchors.fill: parent
-            visible: isCurrent
+            visible: singlePane || isCurrent
             parent: singlePane ? communicationsTabPage : rightPaneStacks
 
             onSourceChanged: {
@@ -371,7 +371,7 @@ Item {
             property string source: singlePane ? contactsTab.panel : contactsTab.pane
             property bool isCurrent: tabs.selectedTabIndex == contactDetails.tab
             anchors.fill: parent
-            visible: isCurrent
+            visible: singlePane || isCurrent
             parent: singlePane ? contactsTabPage : rightPaneStacks
 
             onSourceChanged: {
