@@ -30,6 +30,9 @@ class TestCallPanel(TelephonyAppTestCase):
         """The Keypad works, either using a hardware keyboard or the in-app buttons"""
         keypad_entry = self.call_panel.get_keypad_entry()
         keypad_keys = self.call_panel.get_keypad_keys()
+
+        self.mouse.move_to_object(keypad_entry)
+        self.mouse.click()
         
         self.keyboard.press_and_release("1")
         self.keyboard.press_and_release("2")
