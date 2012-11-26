@@ -29,6 +29,9 @@ class TestCallPanel(TelephonyAppTestCase):
     def test_keypad(self):
         keypad_entry = self.call_panel.get_keypad_entry()
         keypad_keys = self.call_panel.get_keypad_keys()
+
+        self.mouse.move_to_object(keypad_entry)
+        self.mouse.click()
         
         self.keyboard.press_and_release("1")
         self.keyboard.press_and_release("2")
