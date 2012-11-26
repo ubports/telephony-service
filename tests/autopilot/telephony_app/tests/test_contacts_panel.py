@@ -58,7 +58,7 @@ class TestContactsPanel(TelephonyAppTestCase):
         self.assertThat(searchbox.text, Eventually(Equals("test")))
 
     def test_searchbox_clear_button(self):
-        """clicking the cross icon must clear the searchbox."""
+        """Clicking the cross icon must clear the searchbox."""
         searchbox = self.contacts_panel.get_contacts_searchbox()
         clearicon = self.contacts_panel.get_contacts_searchbox_icon(searchbox)
         self.mouse.move_to_object(searchbox)
