@@ -82,7 +82,7 @@ Item {
     }
 
     function callNumber(number) {
-        var callStack = rightPaneStacks.children[dialer.tab]
+        var callStack = rightPaneStacks.stacks[dialer.tab]
         if (callStack.currentPage.source == dialer.source) {
             callStack.currentPage.dialNumber = ""
         }
@@ -100,7 +100,7 @@ Item {
     }
 
     function endCall() {
-        var callStack = rightPaneStacks.children[liveCall.tab]
+        var callStack = rightPaneStacks.stacks[liveCall.tab]
         if (callStack.currentPage.source == liveCall.source || callStack.currentPage.source == voicemail.source) {
             callStack.pop();
         }
