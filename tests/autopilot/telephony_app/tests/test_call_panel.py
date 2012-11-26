@@ -47,7 +47,7 @@ class TestCallPanel(TelephonyAppTestCase):
             self.mouse.click()
         
         self.assertThat(keypad_entry.value, Eventually(Equals("123456789*0#")))
-        
+
     def test_call(self):
         """Dialing a number works"""
         self.keyboard.press_and_release("1");
