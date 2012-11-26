@@ -29,5 +29,5 @@ telephonyappadaptor.*
 
 Testing
 TelephonyApp/tests/*Test
-TelephonyApp/tests/Test.moc
+libtelephonyapp/tests/*Test
 CTestTestfile.cmake

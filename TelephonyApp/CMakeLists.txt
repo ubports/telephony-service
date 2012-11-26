@@ -3,14 +3,6 @@
 set(plugin_SRCS
     abstractloggermodel.cpp
     calllogmodel.cpp
-    contactaddress.cpp
-    contactdetail.cpp
-    contactemailaddress.cpp
-    contactentry.cpp
-    contactmodel.cpp
-    contactname.cpp
-    contactonlineaccount.cpp
-    contactphonenumber.cpp
     contactproxymodel.cpp
     conversationfeeditem.cpp
     conversationfeedmodel.cpp
@@ -34,6 +26,7 @@ include_directories(
     #${Qt5Quick_PRIVATE_INCLUDE_DIRS}
     ${QTGLIB_INCLUDE_DIRS}
     ${GLIB_INCLUDE_DIRS}
+    ${CMAKE_SOURCE_DIR}/libtelephonyapp
     )
 
 add_library(telephony-qml SHARED ${plugin_SRCS} ${plugin_HDRS})
@@ -44,6 +37,7 @@ target_link_libraries(telephony-qml
     ${TP_QT5_LIBRARIES}
     ${TPL_QT5_LIBRARIES}
     ${GLIB_LIBRARIES}
+    telephonyapp
     )
 
 # FIXME: check how to detect that using cmake
