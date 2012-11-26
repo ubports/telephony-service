@@ -27,6 +27,7 @@ class TestCallPanel(TelephonyAppTestCase):
         self.assertThat(dialer_page.isCurrent, Eventually(Equals(True)))
 
     def test_keypad(self):
+        """The Keypad works, either using a hardware keyboard or the in-app buttons"""
         keypad_entry = self.call_panel.get_keypad_entry()
         keypad_keys = self.call_panel.get_keypad_keys()
         
@@ -46,8 +47,9 @@ class TestCallPanel(TelephonyAppTestCase):
             self.mouse.click()
         
         self.assertThat(keypad_entry.value, Eventually(Equals("123456789*0#")))
-
+        
     def test_call(self):
+        """Dialing a number works"""
         self.keyboard.press_and_release("1");
         self.keyboard.press_and_release("2");
         self.keyboard.press_and_release("3");
@@ -63,6 +65,7 @@ class TestCallPanel(TelephonyAppTestCase):
         self.assertThat(keypad_entry.value, Eventually(Equals("")))
 
     def test_switch_to_contacts(self):
+        """Switching to the contact list using the dialers contacts button"""
         dialer_page = self.call_panel.get_dialer_page()
         contacts_page = self.call_panel.get_contacts_page()
 

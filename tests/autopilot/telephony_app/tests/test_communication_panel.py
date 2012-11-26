@@ -73,9 +73,7 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.assertThat(searchbox.text, Eventually(Equals("")))
 
     def test_communication_view_visible(self):
-        """Clicking on the 'New Message' list item must show the
-        message view.
-
+        """Clicking on the 'New Message' list item must show the message view.
         """
         self.click_new_message_button()
         communication_view = self.communication_panel.get_communication_view()
@@ -102,9 +100,7 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.assertThat(sendto_box.text, Eventually(Equals("911")))
 
     def test_send_button_active(self):
-        """Typing a number into the 'sendto' box must enable the Send
-        button.
-
+        """Typing a number into the 'sendto' box must enable the Send button.
         """
         self.click_new_message_button()
         send_button = self.communication_panel.get_message_send_button()
