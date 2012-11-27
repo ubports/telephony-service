@@ -7,6 +7,7 @@ include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${NOTIFY_INCLUDE_DIRS}
     ${INDICATE_QT_INCLUDE_DIRS}
+    ${CMAKE_SOURCE_DIR}/libtelephonyapp
     )
 
 add_executable(telephony-app-approver ${approver_SRCS} ${approver_HDRS})
@@ -16,6 +17,7 @@ target_link_libraries(telephony-app-approver
     ${TP_QT5_LIBRARIES}
     ${NOTIFY_LIBRARIES}
     ${INDICATE_QT_LIBRARIES}
+    telephonyapp
     )
 
 install(TARGETS telephony-app-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

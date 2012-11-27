@@ -1,6 +1,6 @@
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/TelephonyApp
+    ${CMAKE_SOURCE_DIR}/libtelephonyapp
     )
 
 macro(generate_tests)
@@ -9,17 +9,14 @@ macro(generate_tests)
         qt5_use_modules(${test} Contacts Core DBus Qml Test)
         target_link_libraries(${test}
             ${TPL_QT5_LIBRARIES}
-            telephony-qml
+            telephonyapp
             )
         add_test(${test} ${CMAKE_CURRENT_BINARY_DIR}/${test})
     endforeach(test)
 endmacro(generate_tests)
 
 generate_tests(
-    TemplateTest
-    ContactProxyModelTest
-    ConversationAggregatorModelTest
-    ConversationFeedItemTest
-    ConversationFeedModelTest
-    #ModelSectionCounterTest# --> disabled due to bug #1046821 and because ModelSectionCounter is not working.
+    ContactModelTest
+    ContactEntryTest
+    ContactDetailsTest
     )

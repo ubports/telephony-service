@@ -126,6 +126,7 @@ install(FILES ${TELEPHONY_APP}.desktop
 
 enable_testing()
 
+add_subdirectory(libtelephonyapp)
 add_subdirectory(TelephonyApp)
 add_subdirectory(TelephonyAppApprover)
 add_subdirectory(icons)
