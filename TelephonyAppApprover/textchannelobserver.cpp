@@ -19,6 +19,7 @@
 
 #include <libnotify/notify.h>
 #include "textchannelobserver.h"
+#include "messagingmenu.h"
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ChannelClassSpecList>
@@ -136,6 +137,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         icon = "mail-unread";
     }
 
+    // show the notification
     NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
                                                                message.text().toStdString().c_str(),
                                                                icon.toStdString().c_str());
@@ -146,6 +148,9 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     }
 
     g_object_unref(G_OBJECT(notification));
+
+    // and add the message to the messaging menu
+    MessagingMenu::instance()->addMessage(contact->id(), message.messageToken(), message.received(), message.text());
 }
 
 Tp::TextChannelPtr TextChannelObserver::channelFromPath(const QString &path)
@@ -237,6 +242,7 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
 {
     Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
     updateIndicatorsFromChannel(textChannel);
+    MessagingMenu::instance()->removeMessage(message.messageToken());
 }
 
 void TextChannelObserver::onIndicatorDisplay(QIndicate::Indicator *indicator)
