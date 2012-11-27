@@ -151,17 +151,12 @@ Item {
         }
     }
 
-    Tabs {
+    LocalWidgets.Tabs {
         id: tabs
         anchors.topMargin: units.gu(1)
         anchors.fill: leftPane
         parent: leftPane
-
-        Binding {
-            target: tabs.ItemStyle.style
-            property: "buttonsExpanded"
-            value: "true"
-        }
+        ItemStyle.delegate: LocalWidgets.SlidingTabsDelegate {}
 
         Tab {
             id: callsTab
