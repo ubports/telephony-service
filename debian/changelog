@@ -1,3 +1,15 @@
+telephony-app (0.58.10) UNRELEASED; urgency=low
+
+  * Use the right instance of callStack when making calls.
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 26 Nov 2012 10:54:28 -0200
+
+telephony-app (0.58.9) quantal; urgency=low
+
+  * Fix the tabs usage and adapt to the new API.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 23 Nov 2012 18:27:24 -0200
+
 telephony-app (0.58.8) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
