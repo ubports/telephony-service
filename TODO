@@ -3,12 +3,16 @@ General items
 - Check how to import/export potfiles from the ts one
 
 Contact integration items:
-- Show favorite contacts
 - Fix contact search when names contain accentuated characters
 
 Qt5 porting pendencies:
 - The count overlay on tabs needs to be reimplemented.
 - ModelSectionCounter is not working, needs investigation.
-- ContactOnlineAccount's protocols are not strings anymore, this needs to be ported.
 - Check for code on tests that was disabled in the porting to Qt5
 - Check how to test QContactId stuff
+
+Sharing code between the approver and the QML plugin:
+- the TelepathyHelper class needs to be adapted to be able to be used in both
+  places
+- Change the ChannelObserver and the ChannelApprover code to allow using from
+  both places.
