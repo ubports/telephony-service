@@ -9,6 +9,7 @@ Item {
     property bool incoming: false
     property variant timestamp
     property bool missed: false
+    property variant item
 
     signal clicked(var mouse)
 
@@ -16,6 +17,12 @@ Item {
     anchors.right: parent ? parent.right: undefined
 
     height: bubble.height + units.gu(1.5)
+
+    Component.onCompleted: {
+        if (item.newItem) {
+            item.newItem = false;
+        }
+    }
 
     UbuntuShape {
         id: bubble
