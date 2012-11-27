@@ -1,8 +1,12 @@
 telephony-app (0.58.10) UNRELEASED; urgency=low
 
+  [ Tiago Salem Herrmann ]
   * Use the right instance of callStack when making calls.
 
- -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 26 Nov 2012 10:54:28 -0200
+  [ Gustavo Pichorim Boiko ]
+  * Add a static library to share code between the approver and the QML plugin.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 27 Nov 2012 10:32:02 -0200
 
 telephony-app (0.58.9) quantal; urgency=low
 
