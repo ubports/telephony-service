@@ -7,6 +7,10 @@ Item {
     height: visible ? childrenRect.height + units.gu(2) : 0
     visible: telephony.view.showChromeBar && ((telephony.viewStack.depth > 1) || (buttonsRepeater.count > 0))
 
+     Behavior on height {
+         NumberAnimation { duration: 150 }
+     }
+
     onVisibleChanged: console.log("Visible changed to " + visible)
 
     AbstractButton {

@@ -257,6 +257,29 @@ Item {
         z: 2
     }
 
+    Flickable {
+        height: units.gu(5)
+        contentHeight: units.gu(10)
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
+        // fake content just to track the scroll
+        Rectangle {
+            height: units.gu(10)
+            anchors.right: parent.right
+            anchors.left: parent.left
+        }
+        onMovementEnded: {
+            if (contentY != 0) telephony.view.showChromeBar = true
+            if (contentY == 0) telephony.view.showChromeBar = false
+            contentY = 0;
+        }
+        opacity: 0
+        z: 1
+    }
+
     LocalWidgets.ChromeBar {
         id: chromeBar
         z: 1
