@@ -24,31 +24,35 @@ Item {
         }
     }
 
-    UbuntuShape {
+    BorderImage {
         id: bubble
 
         anchors.left: incoming ? icon.right : parent.left
-        anchors.leftMargin: incoming ? units.gu(1) : units.gu(2)
+        anchors.leftMargin: units.gu(1)
         anchors.right: incoming ? parent.right : icon.left
-        anchors.rightMargin: incoming ? units.gu(2) : units.gu(1)
+        anchors.rightMargin: units.gu(2)
         anchors.top: parent.top
         anchors.topMargin: units.gu(0.5)
 
+        source: incoming ? "../assets/conversation_incoming.sci" :
+                           "../assets/conversation_outgoing.sci"
+
         height: messageText.height + units.gu(3)
-        color: (incoming && itemType != "call") ? "#dd5314" : "#f5f5f5"
 
         TextCustom {
             id: messageText
 
             anchors.left: bubble.left
+            anchors.leftMargin: bubble.border.left
             anchors.top: bubble.top
+            anchors.topMargin: units.gu(1)
             anchors.right: bubble.right
-            anchors.margins: units.gu(1)
+            anchors.rightMargin: bubble.border.right
             height: paintedHeight
 
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             fontSize: "small"
-            color: (incoming && itemType != "call") ? "#ffffff" : "#333333"
+            color: incoming ? "#ffffff" : "#333333"
             opacity: incoming ? 1 : 0.9
             text: selectMessage()
 
@@ -64,20 +68,6 @@ Item {
                 }
             }
         }
-    }
-
-    Rectangle {
-        id: arrow
-
-        anchors.horizontalCenter: incoming ? bubble.right : bubble.left
-        anchors.verticalCenter: bubble.bottom
-        anchors.verticalCenterOffset: units.gu(-2)
-
-        rotation: 45
-        width: units.gu(1.4)
-        height: units.gu(1.4)
-
-        color: bubble.color
     }
 
     Image {
