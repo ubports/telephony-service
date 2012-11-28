@@ -67,9 +67,20 @@ LocalWidgets.TelephonyPage {
         visible: callManager.hasBackgroundCall
     }
 
-    Flipable {     
+    LocalWidgets.Header {
+        id: pageHeader
+        text: title
+    }
+
+    Flipable {
         id: flipable
-        anchors.fill: parent
+        anchors {
+            top: pageHeader.bottom
+            left: parent.left
+            right: parent.right
+            bottom: parent.bottom
+        }
+        
         property bool flipped: false
         transform: Rotation {
             id: rotation
@@ -106,7 +117,7 @@ LocalWidgets.TelephonyPage {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: units.gu(15)
+                height: units.gu(10)
 
                 UbuntuShape {
                     id: picture
@@ -146,10 +157,20 @@ LocalWidgets.TelephonyPage {
                 }
             }
 
+            Image {
+                id: divider2
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: header.bottom
+                source: "../assets/dialer_top_number_bg.png"
+            }
+
+
             Item {
                 id: body
 
-                anchors.top: header.bottom
+                anchors.top: divider2.bottom
                 anchors.right: parent.right
                 anchors.left: parent.left
                 anchors.bottom: footer.top
@@ -240,6 +261,17 @@ LocalWidgets.TelephonyPage {
                 anchors.right: parent.right
                 anchors.bottomMargin: units.gu(4)
 
+                Image {
+                    id: divider3
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.bottom: hangupButton.top
+                    anchors.bottomMargin: units.gu(2)
+                    source: "../assets/horizontal_divider.png"
+                    opacity: 0.4
+                }
+
                 CustomButton {
                     id: hangupButton
 
@@ -261,17 +293,10 @@ LocalWidgets.TelephonyPage {
             anchors.fill: parent
             focus: true
 
-            Image {
-                id: divider
-
-                anchors.top: parent.top
-                source: "../assets/section_divider.png"
-            }
-
             KeypadEntry {
                 id: keypadEntry
 
-                anchors.top: divider.bottom
+                anchors.top: parent.top
                 anchors.left: keypad.left
                 anchors.right: keypad.right
                 anchors.leftMargin: units.dp(-2)
@@ -279,10 +304,20 @@ LocalWidgets.TelephonyPage {
                 focus: true
             }
 
+            Image {
+                id: divider4
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: keypadEntry.bottom
+                source: "../assets/dialer_top_number_bg.png"
+            }
+
+
             Keypad {
                 id: keypad
 
-                anchors.top: keypadEntry.bottom
+                anchors.top: divider4.bottom
                 onKeyPressed: keypadEntry.value += label
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: units.dp(10)
