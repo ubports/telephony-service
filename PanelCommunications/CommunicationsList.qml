@@ -16,6 +16,7 @@ Item {
         section.delegate: ListItem.Divider { }
 
         delegate: CommunicationDelegate {
+            item: (model && model.item) ? model.item : null
             title: (model && model.contactAlias) ? model.contactAlias : ""
             subtitle: "(TODO: show phone type)"
             text: (model && model.item && model.item.message) ? model.item.message : ""
