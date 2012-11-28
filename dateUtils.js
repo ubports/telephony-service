@@ -31,3 +31,21 @@ function formatLogDate(timestamp) {
         return Qt.formatDateTime(timestamp, Qt.DefaultLocaleShortDate)
     }
 }
+
+function friendlyDay(date) {
+    var today = new Date();
+    var yesterday = new Date();
+    yesterday.setDate(today.getDate()-1);
+    if (areSameDay(today, date)) {
+        return "Today";
+    } else if (areSameDay(yesterday, date)) {
+        return "Yesterday";
+    } else {
+        return Qt.formatDate(date, Qt.DefaultLocaleShortDate);
+    }
+}
+
+function formatFriendlyDate(timestamp) {
+    var date = new Date(timestamp);
+    return Qt.formatTime(timestamp, Qt.DefaultLocaleShortDate) + " - " + friendlyDay(date);
+}

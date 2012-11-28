@@ -2,6 +2,7 @@ import QtQuick 2.0
 import TelephonyApp 0.1
 import "../Widgets" as LocalWidgets
 import "../"
+import "../dateUtils.js" as DateUtils
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components 0.1
 
@@ -189,7 +190,7 @@ LocalWidgets.TelephonyPage {
                     elide: Text.ElideRight
                     color: "#333333"
                     opacity: 0.6
-                    text: Qt.formatDateTime(section)
+                    text: DateUtils.formatFriendlyDate(section);
                     height: paintedHeight + units.gu(1)
                 }
             }
