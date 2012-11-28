@@ -20,7 +20,7 @@ Item {
         delegate: CommunicationDelegate {
             item: (model && model.item) ? model.item : null
             title: (model && model.contactAlias) ? model.contactAlias : ""
-            subtitle: "(TODO: show phone type)"
+            //subtitle: "(TODO: show phone type)"
             text: (model && model.item && model.item.message) ? model.item.message : ""
             timestamp: (model && model.timestamp) ? model.timestamp : null
             avatar: (model && model.contactAvatar) ? model.contactAvatar : ""
