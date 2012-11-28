@@ -71,6 +71,8 @@ LocalWidgets.TelephonyPage {
             anchors.topMargin: units.gu(2)
             anchors.horizontalCenter: parent.horizontalCenter
             onClicked: telephony.callNumber(keypadEntry.value)
+            enabled: dialNumber != ""
+            opacity: enabled ? 1 : 0.2
         }
 
         CustomButton {
