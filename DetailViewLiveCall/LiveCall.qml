@@ -15,7 +15,7 @@ LocalWidgets.TelephonyPage {
     property bool isMuted: call ? call.muted : false
     property alias isDtmf: flipable.flipped
 
-    title: call && call.dialing ? "Call dialing" : "Call Duration " + stopWatch.elapsed
+    title: call && call.dialing ? "Dialing" : "Duration " + stopWatch.elapsed
     showChromeBar: false
 
     Component.onDestruction: {
