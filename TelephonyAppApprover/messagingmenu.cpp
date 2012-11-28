@@ -16,25 +16,28 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
 {
     // try to get a contact for that phone number
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(phoneNumber);
-    QString icon;
+    QString iconPath;
     QString contactAlias = phoneNumber;
 
     if (contact) {
-        icon = contact->avatar().toLocalFile();
+        iconPath = contact->avatar().toLocalFile();
         contactAlias = contact->displayLabel();
     }
 
-    GFile *file = g_file_new_for_path(icon.toUtf8().data());
+    GFile *file = g_file_new_for_path(iconPath.toUtf8().data());
+    GIcon *icon = g_file_icon_new(file);
     MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
-                                                               g_file_icon_new(file),
+                                                               icon,
                                                                contactAlias.toUtf8().data(),
                                                                NULL,
                                                                text.toUtf8().data(),
                                                                timestamp.toMSecsSinceEpoch());
-    g_object_unref(file);
     mMessages[messageId] = message;
     messaging_menu_app_append_message(mApp, message, "telephony-app", true);
     // TODO: setup callbacks
+
+    g_object_unref(file);
+    g_object_unref(icon);
 }
 
 void MessagingMenu::removeMessage(const QString &messageId)
@@ -86,8 +89,9 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
         text = QString("1 missed call");
     }
     GFile *file = g_file_new_for_path(call.contactIcon.toUtf8().data());
+    GIcon *icon = g_file_icon_new(file);
     call.message = messaging_menu_message_new(call.number.toUtf8().data(),
-                                              g_file_icon_new(file),
+                                              icon,
                                               call.contactAlias.toUtf8().data(),
                                               NULL,
                                               text.toUtf8().data(),
@@ -95,6 +99,9 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     messaging_menu_app_append_message(mApp, call.message, "telephony-app", true);
     mCalls.append(call);
     // TODO: setup actions and callbacks
+
+    g_object_unref(file);
+    g_object_unref(icon);
 }
 
 
