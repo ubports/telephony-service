@@ -12,8 +12,10 @@ Item {
         id: listView
         anchors.fill: parent
         clip: true
-        section.property: "date"
-        section.delegate: ListItem.Divider { }
+        // We are not using sections right now, re-enable that in the future in case the
+        // design changes.
+        //section.property: "date"
+        //section.delegate: ListItem.Divider { }
 
         delegate: CommunicationDelegate {
             item: (model && model.item) ? model.item : null
