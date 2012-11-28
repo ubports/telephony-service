@@ -5,7 +5,7 @@ Item {
     anchors.left: parent.left
     anchors.right: parent.right
     height: visible ? childrenRect.height + units.gu(2) : 0
-    visible: telephony.view.showChromeBar && (telephony.viewStack.depth > 1) || (buttonsRepeater.count > 0)
+    visible: telephony.view.showChromeBar && ((telephony.viewStack.depth > 1) || (buttonsRepeater.count > 0))
 
     onVisibleChanged: console.log("Visible changed to " + visible)
 
