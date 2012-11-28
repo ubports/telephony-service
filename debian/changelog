@@ -1,4 +1,4 @@
-telephony-app (0.58.10) UNRELEASED; urgency=low
+telephony-app (0.58.10) quantal; urgency=low
 
   [ Tiago Salem Herrmann ]
   * Use the right instance of callStack when making calls.
@@ -6,7 +6,11 @@ telephony-app (0.58.10) UNRELEASED; urgency=low
   [ Gustavo Pichorim Boiko ]
   * Add a static library to share code between the approver and the QML plugin.
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 27 Nov 2012 10:32:02 -0200
+  [ Bill Filler ]
+  * Change label of view to Conversations
+  * fix spacing of conversation search field so not obscured by header 
+
+ -- Bill Filler <bill.filler@canonical.com>  Tue, 27 Nov 2012 20:34:53 -0500
 
 telephony-app (0.58.9) quantal; urgency=low
 
