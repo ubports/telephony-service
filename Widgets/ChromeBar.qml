@@ -45,7 +45,7 @@ Item {
             Button {
                 objectName: model.name
                 height: units.gu(4)
-                width: paintedHeight
+                width: undefined
                 text: model.label
                 onClicked: telephony.view.chromeButtonClicked(model.name)
             }
