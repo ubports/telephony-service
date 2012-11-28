@@ -21,7 +21,11 @@ LocalWidgets.TelephonyPage {
         Image {
             id: divider
 
-            anchors.top: parent.top
+            anchors {
+                top: parent.top
+                left: parent.left
+                right: parent.right
+            }
             source: "../assets/section_divider.png"
         }
 
