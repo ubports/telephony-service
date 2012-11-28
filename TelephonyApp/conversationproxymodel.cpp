@@ -119,6 +119,7 @@ void ConversationProxyModel::setConversationModel(QObject *value)
 
     QHash<int, QByteArray> roles = roleNames();
     roles[EventsRole] = "events";
+    roles[TimeSlot] = "timeSlot";
     setRoleNames(roles);
 
     processGrouping();
@@ -187,6 +188,7 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
     // and overwrite it if necessary
     QVariant result = QSortFilterProxyModel::data(index, role);
     QVariantMap eventMap;
+    ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
 
     switch (role) {
     case EventsRole:
@@ -200,6 +202,10 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
         }
 
         result = eventMap;
+        break;
+
+    case TimeSlot:
+        result = item->property("timeSlot");
         break;
     case ConversationFeedModel::ItemType:
         if (mGrouped && mSearchString.isEmpty() && !mShowLatestFromGroup) {
@@ -292,6 +298,32 @@ void ConversationProxyModel::processGrouping()
     }
 
     invalidateFilter();
+
+    // create the time slots after the filtering has been updated
+    processTimeSlots();
+}
+
+void ConversationProxyModel::processTimeSlots()
+{
+    int count = rowCount();
+    if (mFilterProperty.isEmpty() || count == 0) {
+        return;
+    }
+
+    QDateTime currentSlot = index(0, 0).data(ConversationFeedModel::Timestamp).toDateTime();
+    for (int i = 0; i < count; ++i) {
+        QModelIndex idx = index(i, 0);
+        ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(idx.data(ConversationFeedModel::FeedItem).value<QObject*>());
+        QDateTime itemTimestamp = item->timestamp();
+        int minutes = itemTimestamp.secsTo(currentSlot) / 60;
+
+        if (minutes > 15) {
+            currentSlot = itemTimestamp;
+        }
+
+        item->setProperty("timeSlot", currentSlot);
+        Q_EMIT dataChanged(idx, idx);
+    }
 }
 
 ConversationGroup ConversationProxyModel::groupForSourceIndex(const QModelIndex &sourceIndex) const

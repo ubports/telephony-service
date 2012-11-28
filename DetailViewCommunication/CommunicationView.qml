@@ -171,7 +171,7 @@ LocalWidgets.TelephonyPage {
             clip: true
             header: headerComponent
 
-            section.property: "date"
+            section.property: "timeSlot"
             section.delegate: Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -189,7 +189,7 @@ LocalWidgets.TelephonyPage {
                     elide: Text.ElideRight
                     color: "#333333"
                     opacity: 0.6
-                    text: Qt.formatDate(section)
+                    text: Qt.formatDateTime(section)
                     height: paintedHeight + units.gu(1)
                 }
             }
