@@ -202,6 +202,7 @@ LocalWidgets.TelephonyPage {
                 incoming: model.incoming
                 missed: model.item.missed ? model.item.missed : false
                 message: model.item.message ? model.item.message : ""
+                item: model.item
                 itemIcon: {
                     switch (model.itemType) {
                     case "message":

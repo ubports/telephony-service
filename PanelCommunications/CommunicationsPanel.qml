@@ -7,7 +7,7 @@ import Ubuntu.Components 0.1
 LocalWidgets.TelephonyPage {
     id: messageList
     objectName: "communicationPanel"
-    title: "Communication"
+    title: "Conversations"
     chromeButtons: ListModel {
         ListElement {
             label: "Compose"
@@ -27,7 +27,7 @@ LocalWidgets.TelephonyPage {
         id: search
 
         anchors.top: parent.top
-        anchors.topMargin: units.gu(1)
+        anchors.topMargin: units.gu(3)
         anchors.left: parent.left
         anchors.leftMargin: units.gu(1)
         anchors.right: parent.right
