@@ -30,7 +30,7 @@ Item {
         border {left: 0; right: 0; top: units.dp(1); bottom: units.dp(1)}
     }
 
-    TextCustom {
+    Label {
         id: label
 
         anchors.left: parent.left

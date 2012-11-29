@@ -59,7 +59,7 @@ AbstractButton {
         anchors.rightMargin: units.gu(0.5)
         anchors.verticalCenter: avatar.verticalCenter
 
-        TextCustom {
+        Label {
             anchors.left: parent.left
             anchors.right: parent.right
 
@@ -71,7 +71,7 @@ AbstractButton {
             styleColor: "white"
         }
 
-        TextCustom {
+        Label {
             anchors.left: parent.left
             anchors.right: parent.right
 

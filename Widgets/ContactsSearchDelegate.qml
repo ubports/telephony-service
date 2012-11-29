@@ -45,7 +45,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     height: childrenRect.height
 
-                    TextCustom {
+                    Label {
                         id: contactName
 
                         anchors.left: parent.left
@@ -56,7 +56,7 @@ Item {
                         styleColor: "white"
                     }
 
-                    TextCustom {
+                    Label {
                         anchors.left: contactName.right
                         anchors.leftMargin: units.gu(1)
                         anchors.right: parent.right

@@ -133,7 +133,7 @@ LocalWidgets.TelephonyPage {
                     }
                 }
 
-                TextCustom {
+                Label {
                     id: name
 
                     anchors.top: picture.top
@@ -144,7 +144,7 @@ LocalWidgets.TelephonyPage {
                     fontSize: "large"
                 }
 
-                TextCustom {
+                Label {
                     id: number
 
                     anchors.top: name.bottom

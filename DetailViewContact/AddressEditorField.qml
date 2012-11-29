@@ -25,7 +25,7 @@ FocusScope {
 
     height: childrenRect.height
 
-    TextCustom {
+    Label {
         id: label
 
         anchors.left: parent.left

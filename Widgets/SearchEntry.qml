@@ -188,7 +188,7 @@ FocusScope {
                 }
             }
 
-            TextCustom {
+            Label {
                 id: searchInstructions
 
                 anchors.left: parent.left

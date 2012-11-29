@@ -23,7 +23,7 @@ Button {
         fillMode: Image.PreserveAspectFit
     }
 
-    TextCustom {
+    Label {
         id: labelItem
 
         anchors.centerIn: parent
@@ -35,7 +35,7 @@ Button {
         z: 1
     }
 
-    TextCustom {
+    Label {
         id: sublabelItem
 
         anchors.top: labelItem.bottom

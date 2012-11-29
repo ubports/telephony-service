@@ -40,7 +40,7 @@ Item {
             ItemStyle.class: "transparent-button"
         }
 
-        TextCustom {
+        Label {
             id: addText
 
             anchors.left: addButton.right
@@ -112,7 +112,7 @@ Item {
                     border {top: 0; right: units.dp(2); bottom: units.dp(2); left: units.dp(3)}
                 }
 
-                TextCustom {
+                Label {
                     id: optionText
 
                     anchors.verticalCenter: parent.verticalCenter

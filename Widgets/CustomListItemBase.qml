@@ -53,7 +53,7 @@ AbstractButton {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
-            TextCustom {
+            Label {
                 id: label
 
                 property bool centered: !listItem.__hasSubLabel
@@ -76,7 +76,7 @@ AbstractButton {
                 opacity: listItem.enabled ? 1.0 : 0.5
             }
 
-            TextCustom {
+            Label {
                 id: sublabel
 
                 anchors.left: label.left
