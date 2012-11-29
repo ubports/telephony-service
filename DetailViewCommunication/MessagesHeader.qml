@@ -42,7 +42,18 @@ BaseMessageHeader {
         text: contact ? contact.displayLabel : title
     }
 
+    BorderImage {
+        id: separator
+        anchors.right: contactDetailsButton.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.margins: units.gu(2)
+        source: "../assets/contacts_vertical_divider.sci"
+        width: units.dp(2)
+    }
+
     Button {
+        id: contactDetailsButton
         ItemStyle.class: "transparent-button"
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
