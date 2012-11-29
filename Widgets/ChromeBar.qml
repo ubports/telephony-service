@@ -4,14 +4,13 @@ import Ubuntu.Components 0.1
 Item {
     anchors.left: parent.left
     anchors.right: parent.right
-    height: visible ? childrenRect.height + units.gu(2) : 0
+    height: childrenRect.height + units.gu(2)
+    anchors.bottomMargin: visible ? 0 : -height
     visible: telephony.view.showChromeBar && ((telephony.viewStack.depth > 1) || (buttonsRepeater.count > 0))
 
-     Behavior on height {
+     Behavior on anchors.bottomMargin {
          NumberAnimation { duration: 150 }
      }
-
-    onVisibleChanged: console.log("Visible changed to " + visible)
 
     AbstractButton {
             id: backButton
