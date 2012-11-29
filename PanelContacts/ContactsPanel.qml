@@ -28,10 +28,15 @@ LocalWidgets.TelephonyPage {
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact, true)
 
+   LocalWidgets.Header {
+        id: header
+        text: title
+    }
+
     TextField {
         id: contactsSearchBox
 
-        anchors.top: parent.top
+        anchors.top: header.bottom
         anchors.topMargin: units.gu(1)
         anchors.left: parent.left
         anchors.leftMargin: units.gu(1)

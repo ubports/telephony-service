@@ -12,12 +12,15 @@ Item {
         id: listView
         anchors.fill: parent
         clip: true
-        section.property: "date"
-        section.delegate: ListItem.Divider { }
+        // We are not using sections right now, re-enable that in the future in case the
+        // design changes.
+        //section.property: "date"
+        //section.delegate: ListItem.Divider { }
 
         delegate: CommunicationDelegate {
+            item: (model && model.item) ? model.item : null
             title: (model && model.contactAlias) ? model.contactAlias : ""
-            subtitle: "(TODO: show phone type)"
+            //subtitle: "(TODO: show phone type)"
             text: (model && model.item && model.item.message) ? model.item.message : ""
             timestamp: (model && model.timestamp) ? model.timestamp : null
             avatar: (model && model.contactAvatar) ? model.contactAvatar : ""

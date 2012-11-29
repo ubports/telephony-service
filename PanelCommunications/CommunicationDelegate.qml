@@ -6,6 +6,7 @@ import "../dateUtils.js" as DateUtils
 ListItem.Base {
     id: communicationDelegate
 
+    property variant item
     property url avatar
     property url itemIcon
     property variant timestamp
@@ -19,6 +20,14 @@ ListItem.Base {
     property string __selectedFontColor: "#f37505"
 
     __height: content.height + units.gu(2)
+
+    Rectangle {
+        id: selectedOverlay
+        anchors.fill: parent
+        color: "white"
+        opacity: 0.4
+        visible: item && item.newItem
+    }
 
     Row {
         id: content

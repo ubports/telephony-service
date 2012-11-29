@@ -18,17 +18,15 @@ LocalWidgets.TelephonyPage {
         anchors.fill: parent
         focus: true
 
-        Image {
-            id: divider
-
-            anchors.top: parent.top
-            source: "../assets/section_divider.png"
+        LocalWidgets.Header {
+            id: header
+            text: title
         }
 
         KeypadEntry {
             id: keypadEntry
 
-            anchors.top: divider.bottom
+            anchors.top: header.bottom
             anchors.left: keypad.left
             anchors.right: keypad.right
             anchors.leftMargin: units.dp(-2)
@@ -55,13 +53,26 @@ LocalWidgets.TelephonyPage {
             anchors.topMargin: units.dp(10)
         }
 
+        Image {
+            id: divider3
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: keypad.bottom
+            anchors.topMargin: units.gu(2)
+            source: "../assets/horizontal_divider.png"
+            opacity: 0.4
+        }
+
         CallButton {
             id: callButton
             objectName: "callButton"
-            anchors.top: keypad.bottom
+            anchors.top: divider3.bottom
             anchors.topMargin: units.gu(2)
             anchors.horizontalCenter: parent.horizontalCenter
             onClicked: telephony.callNumber(keypadEntry.value)
+            enabled: dialNumber != ""
+            opacity: enabled ? 1 : 0.2
         }
 
         CustomButton {

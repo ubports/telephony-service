@@ -23,11 +23,16 @@ LocalWidgets.TelephonyPage {
 
     anchors.fill: parent
 
+    LocalWidgets.Header {
+        id: header
+        text: title
+    }
+
     TextField {
         id: search
 
-        anchors.top: parent.top
-        anchors.topMargin: units.gu(3)
+        anchors.top: header.bottom
+        anchors.topMargin: units.gu(1)
         anchors.left: parent.left
         anchors.leftMargin: units.gu(1)
         anchors.right: parent.right

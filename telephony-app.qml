@@ -153,7 +153,6 @@ Item {
 
     LocalWidgets.Tabs {
         id: tabs
-        anchors.topMargin: units.gu(1)
         anchors.fill: leftPane
         parent: leftPane
         ItemStyle.delegate: LocalWidgets.SlidingTabsDelegate {}
@@ -235,11 +234,40 @@ Item {
         }
     }
 
+    // TODO: this indicator will be provided by the Tabs component
+    Item {
+        id: tabIndicator
+        height: units.dp(3)
+        anchors {
+            bottom: parent.bottom
+            left: parent.left
+            right: parent.right
+        }
+        Rectangle {
+            anchors.fill: parent
+            color: "#000000"
+        }
+
+        Rectangle { 
+            color: "#f37505"
+            height: parent.height
+            width: parent.width/3
+            x: (parent.width/3)*(tabs.selectedTabIndex)
+        }
+        z: 2
+    }
+
     LocalWidgets.ChromeBar {
         id: chromeBar
         z: 1
-
         anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        buttonsModel: telephony.view.chromeButtons ? telephony.view.chromeButtons : null
+        showChromeBar: telephony.view.showChromeBar
+        pageStack: telephony.viewStack
+        onButtonClicked: telephony.view.chromeButtonClicked(buttonName)
     }
 
     Image {
@@ -324,6 +352,7 @@ Item {
             anchors.fill: parent
             visible: singlePane || isCurrent
             parent: singlePane ? callsTabPage : rightPaneStacks
+            __showHeader: false
 
             onSourceChanged: {
                 callsStack.clear();
@@ -345,6 +374,7 @@ Item {
             anchors.fill: parent
             visible: singlePane || isCurrent
             parent: singlePane ? communicationsTabPage : rightPaneStacks
+            __showHeader: false
 
             onSourceChanged: {
                 communicationsStack.clear();
@@ -366,6 +396,7 @@ Item {
             anchors.fill: parent
             visible: singlePane || isCurrent
             parent: singlePane ? contactsTabPage : rightPaneStacks
+            __showHeader: false
 
             onSourceChanged: {
                 contactsStack.clear();

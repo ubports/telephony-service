@@ -2,6 +2,7 @@ import QtQuick 2.0
 import TelephonyApp 0.1
 import "../Widgets" as LocalWidgets
 import "../"
+import "../dateUtils.js" as DateUtils
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components 0.1
 
@@ -130,6 +131,7 @@ LocalWidgets.TelephonyPage {
             width: view.width
             contact: view.contact
             number: view.number
+            title: filterValue
         }
     }
 
@@ -171,7 +173,7 @@ LocalWidgets.TelephonyPage {
             clip: true
             header: headerComponent
 
-            section.property: "date"
+            section.property: "timeSlot"
             section.delegate: Column {
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -189,7 +191,7 @@ LocalWidgets.TelephonyPage {
                     elide: Text.ElideRight
                     color: "#333333"
                     opacity: 0.6
-                    text: Qt.formatDate(section)
+                    text: DateUtils.formatFriendlyDate(section);
                     height: paintedHeight + units.gu(1)
                 }
             }
@@ -220,7 +222,13 @@ LocalWidgets.TelephonyPage {
                     }
                 }
 
-                onClicked: view.phoneNumber = item.phoneNumber
+                onClicked: {
+                    if (itemType == "call") {
+                        telephony.callNumber(item.phoneNumber);
+                    } else {
+                        view.phoneNumber = item.phoneNumber
+                    }
+                }
             }
         }
     }

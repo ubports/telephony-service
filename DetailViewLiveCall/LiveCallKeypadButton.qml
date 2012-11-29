@@ -35,7 +35,7 @@ Button {
         anchors.centerIn: parent
         width: parent.width
         height: parent.height
-        source: "../assets/dialer_pad_bg.png"
+        source: selected ? "../assets/dialer_pad_bg_pressed.png" : "../assets/dialer_pad_bg.png"
         fillMode: Image.PreserveAspectFit
     }
 

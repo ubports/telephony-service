@@ -68,7 +68,8 @@ class ConversationProxyModel : public QSortFilterProxyModel
 
 public:
     enum CustomRoles {
-        EventsRole = ConversationFeedModel::CustomRole
+        EventsRole = ConversationFeedModel::CustomRole,
+        TimeSlot // the 15 minutes interval in which the message fits
     };
 
     explicit ConversationProxyModel(QObject *parent = 0);
@@ -113,6 +114,7 @@ protected:
 
 private Q_SLOTS:
     void processGrouping();
+    void processTimeSlots();
 
 private:
     bool mAscending;

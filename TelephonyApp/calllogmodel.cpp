@@ -70,7 +70,7 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
     if (entry->incoming() && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer) {
         entry->setMissed(true);
     } else {
-        QDateTime activeTime = channel->property("activeTime").toDateTime();
+        QDateTime activeTime = channel->property("activeTimestamp").toDateTime();
         entry->setDuration(entry->duration().addSecs(activeTime.secsTo(QDateTime::currentDateTime())));
         entry->setMissed(false);
     }
@@ -88,7 +88,8 @@ LoggerItem *CallLogModel::createEntry(const Tpl::EventPtr &event)
         qWarning() << "The event" << event << "is not a Tpl::CallEvent!";
     }
 
-    entry->setMissed(callEvent->endReason() == Tp::CallStateChangeReasonNoAnswer);
+    bool incoming = event->sender()->entityType() != Tpl::EntityTypeSelf;
+    entry->setMissed(incoming && callEvent->endReason() == Tp::CallStateChangeReasonNoAnswer);
     entry->setDuration(callEvent->duration());
     return entry;
 }
