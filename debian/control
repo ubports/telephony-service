@@ -15,7 +15,8 @@ Build-Depends: debhelper (>= 8.0.0),
                libindicate-qt-dev,
                libicu-dev,
                libgl-dev,
-               libgles2-mesa-dev
+               libgles2-mesa-dev,
+               python2.7,
 Standards-Version: 3.9.3
 Vcs-Bzr: https://code.launchpad.net/~newyork-team/newyork/telephony-app
 
