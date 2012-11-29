@@ -32,7 +32,8 @@ function formatLogDate(timestamp) {
     }
 }
 
-function friendlyDay(date) {
+function friendlyDay(timestamp) {
+    var date = new Date(timestamp);
     var today = new Date();
     var yesterday = new Date();
     yesterday.setDate(today.getDate()-1);
@@ -46,6 +47,5 @@ function friendlyDay(date) {
 }
 
 function formatFriendlyDate(timestamp) {
-    var date = new Date(timestamp);
-    return Qt.formatTime(timestamp, Qt.DefaultLocaleShortDate) + " - " + friendlyDay(date);
+    return Qt.formatTime(timestamp, Qt.DefaultLocaleShortDate) + " - " + friendlyDay(timestamp);
 }
