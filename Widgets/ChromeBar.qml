@@ -16,6 +16,13 @@ Item {
     anchors.right: parent.right
     height: bar.height - bar.y
 
+    onEnabledChanged: {
+        if (!enabled) {
+            bar.shown = false;
+            bar.y = bar.height;
+        }
+    }
+
     MouseArea {
         anchors.left: parent.left
         anchors.right: parent.right
@@ -57,6 +64,12 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             y: parent.height
+
+            Behavior on y {
+                NumberAnimation {
+                    duration: 150
+                }
+            }
 
             Column {
                 anchors.left: parent.left
