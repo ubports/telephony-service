@@ -1,5 +1,6 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import "../dateUtils.js" as DateUtils
 
 Item {
     id: communicationDelegate
@@ -59,9 +60,9 @@ Item {
             function selectMessage() {
                 if (communicationDelegate.itemType == "call") {
                     if (missed) {
-                        return "Missed call";
+                        return "missed call";
                     } else {
-                        return "Call";
+                        return DateUtils.formatFriendlyCallDuration(item.duration) + " call";
                     }
                 } else {
                     return communicationDelegate.message;
