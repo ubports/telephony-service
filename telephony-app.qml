@@ -257,34 +257,17 @@ Item {
         z: 2
     }
 
-    Flickable {
-        height: units.gu(5)
-        contentHeight: units.gu(10)
-        anchors {
-            bottom: parent.bottom
-            left: parent.left
-            right: parent.right
-        }
-        // fake content just to track the scroll
-        Item {
-            height: units.gu(10)
-            anchors.right: parent.right
-            anchors.left: parent.left
-        }
-        onMovementEnded: {
-            if (contentY != 0) telephony.view.showChromeBar = true
-            if (contentY == 0) telephony.view.showChromeBar = false
-            contentY = 0;
-        }
-        opacity: 0
-        z: 1
-    }
-
     LocalWidgets.ChromeBar {
         id: chromeBar
         z: 1
-
         anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        buttonsModel: telephony.view.chromeButtons ? telephony.view.chromeButtons : null
+        showChromeBar: telephony.view.showChromeBar
+        pageStack: telephony.viewStack
+        onButtonClicked: telephony.view.chromeButtonClicked(buttonName)
     }
 
     Image {

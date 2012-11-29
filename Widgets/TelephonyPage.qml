@@ -23,7 +23,7 @@ Page {
     property int previousTab: -1
 
     property ListModel chromeButtons
-    property bool showChromeBar: false
+    property bool showChromeBar: true
 
     signal chromeButtonClicked(var buttonName)
 }
