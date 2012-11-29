@@ -266,7 +266,7 @@ Item {
             right: parent.right
         }
         // fake content just to track the scroll
-        Rectangle {
+        Item {
             height: units.gu(10)
             anchors.right: parent.right
             anchors.left: parent.left
