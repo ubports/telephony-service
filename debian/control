@@ -13,6 +13,7 @@ Build-Depends: debhelper (>= 8.0.0),
                pkg-config,
                libnotify-dev,
                libindicate-qt-dev,
+               libmessaging-menu-dev,
                libicu-dev,
                libgl-dev,
                libgles2-mesa-dev
