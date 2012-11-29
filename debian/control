@@ -44,7 +44,7 @@ Depends:
 Description: debugging symbols for telephony-app
  This package contains the debugging symbols for telephony-app
 
-Package: telephony-app-testing
+Package: telephony-app-autopilot
 Architecture: any
 Section: debug
 Priority: extra

@@ -1,6 +1,6 @@
-set(AUTOPILOT_DIR autopilot)
+set(AUTOPILOT_DIR autopilot/telephony_app)
 
 install(DIRECTORY ${AUTOPILOT_DIR}
-    DESTINATION ${TELEPHONY_APP_DIR}/tests
+    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/python2.7/dist-packages/
     )
 
