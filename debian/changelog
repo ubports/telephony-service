@@ -1,3 +1,9 @@
+telephony-app (0.58.11) UNRELEASED; urgency=low
+
+  * Add initial support for the messaging menu interaction.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 28 Nov 2012 16:08:39 -0200
+
 telephony-app (0.58.10) quantal; urgency=low
 
   [ Tiago Salem Herrmann ]

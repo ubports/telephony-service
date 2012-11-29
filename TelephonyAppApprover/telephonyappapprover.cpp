@@ -18,6 +18,7 @@
  */
 
 #include "telephonyappapprover.h"
+#include "messagingmenu.h"
 
 #include <QDebug>
 
@@ -396,6 +397,9 @@ void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
         if (NULL != mPendingSnapDecision) {
             notify_notification_close(mPendingSnapDecision, NULL);
             mPendingSnapDecision = NULL;
+
+            // add the missed call to the messaging menu
+            MessagingMenu::instance()->addCall(channel->targetContact()->id(), QDateTime::currentDateTime());
         }
     } else if (state == Tp::CallStateActive) {
         onApproved(dispatchOperation, NULL);
