@@ -36,6 +36,7 @@ Item {
             // check if there was at least some moving to avoid displaying
             // the chrome bar on clicking
             if (Math.abs(__pressedY - mouse.y) < units.gu(2)) {
+                bar.y = bar.shown ? 0 : bar.height
                 return;
             }
 
