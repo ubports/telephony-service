@@ -25,8 +25,20 @@ Item {
         drag.axis: Drag.YAxis
         drag.minimumY: 0
         drag.maximumY: height + bar.height
+        propagateComposedEvents: true
+
+        property int __pressedY
+        onPressed: {
+            __pressedY = mouse.y;
+        }
 
         onReleased: {
+            // check if there was at least some moving to avoid displaying
+            // the chrome bar on clicking
+            if (Math.abs(__pressedY - mouse.y) < units.gu(2)) {
+                return;
+            }
+
             if (!bar.shown) {
                 bar.y = 0;
                 bar.shown = true;
