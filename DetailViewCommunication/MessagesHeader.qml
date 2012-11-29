@@ -7,6 +7,7 @@ BaseMessageHeader {
 
     property variant contact
     property string number
+    property string title
 
     height: icon.height + units.gu(4)
 
@@ -38,7 +39,7 @@ BaseMessageHeader {
         elide: Text.ElideRight
         color: "#333333"
         opacity: 0.6
-        text: contact ? contact.displayLabel : "Unknown Contact"
+        text: contact ? contact.displayLabel : title
     }
 
     Button {

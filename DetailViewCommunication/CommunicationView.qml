@@ -131,6 +131,7 @@ LocalWidgets.TelephonyPage {
             width: view.width
             contact: view.contact
             number: view.number
+            title: filterValue
         }
     }
 
@@ -221,7 +222,13 @@ LocalWidgets.TelephonyPage {
                     }
                 }
 
-                onClicked: view.phoneNumber = item.phoneNumber
+                onClicked: {
+                    if (itemType == "call") {
+                        telephony.callNumber(item.phoneNumber);
+                    } else {
+                        view.phoneNumber = item.phoneNumber
+                    }
+                }
             }
         }
     }
