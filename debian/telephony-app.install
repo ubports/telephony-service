@@ -10,7 +10,6 @@ usr/share/notify-osd/icons/gnome/scalable/status/notification-group-call.svg
 usr/share/icons/ubuntu-mono-light/status/*/indicator-call.svg
 usr/share/telephony-app/*.qml
 usr/share/telephony-app/*.js
-usr/share/telephony-app/DetailViewCallLog
 usr/share/telephony-app/DetailViewCommunication
 usr/share/telephony-app/DetailViewContact
 usr/share/telephony-app/DetailViewLiveCall

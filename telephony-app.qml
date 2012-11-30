@@ -28,7 +28,6 @@ Item {
     property ViewModel callEnded: ViewModel {source: "Panes/CallEndedPane.qml"; tab: 0 }
     property ViewModel dialer: ViewModel {source: "PanelDialer/DialerView.qml"; tab: 0 }
     property ViewModel contactDetails: ViewModel {source: "DetailViewContact/ContactDetails.qml"; tab: 2 }
-    property ViewModel callLog: ViewModel {source: "DetailViewCallLog/CallLog.qml"; tab: 0 }
 
     signal applicationReady
 
@@ -134,11 +133,6 @@ Item {
             pendingNumber = number;
             chatManager.startChat(number);
         }
-    }
-
-    function showCallLog() {
-        resetView();
-        callLog.load()
     }
 
     function resetView() {

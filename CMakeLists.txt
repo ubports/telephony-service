@@ -92,7 +92,6 @@ install(FILES ${QML_JS_FILES}
     )
 
 set(QML_DIRS
-    DetailViewCallLog
     DetailViewContact
     DetailViewLiveCall
     DetailViewVoicemail
