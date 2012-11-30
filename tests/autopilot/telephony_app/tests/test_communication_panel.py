@@ -20,21 +20,21 @@ class TestCommunicationPanel(TelephonyAppTestCase):
 
     def setUp(self):
         super(TestCommunicationPanel, self).setUp()
-        communication_tab = self.get_main_view_tabs()[1]
-        self.mouse.move_to_object(communication_tab)
-        self.mouse.click()
+        main_view = self.get_main_view()
+        start_point = self.get_main_view().geometry[0] + self.get_main_view().geometry[2] * 0.75
+        stop_point = self.get_main_view().geometry[0] + self.get_main_view().geometry[2] * 0.25
+        y_line = self.get_main_view().geometry[1] + 10
+        self.pointing_device.move(start_point, y_line)
+        self.mouse.press()
+        self.pointing_device.move(stop_point, y_line)
+        self.pointing_device.release()
+
 
     def click_new_message_button(self):
         new_message_item = self.communication_panel.get_new_message_button()
 
         self.mouse.move_to_object(new_message_item)
         self.mouse.click()
-
-    def test_main_tab_focus(self):
-        """Clicking on the 'communication' tab must give it the focus."""
-        communication_tab = self.get_main_view_tabs()[1]
-
-        self.assertThat(communication_tab.selected, Eventually(Equals(True)))
 
     def test_searchbox_focus(self):
         """Clicking inside the searbox must give it the focus."""

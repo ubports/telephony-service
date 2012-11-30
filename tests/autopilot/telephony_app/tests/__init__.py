@@ -28,9 +28,8 @@ class TelephonyAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
             self.app = self.launch_test_application(
                 "launch-telephony-app", "--test-contacts")
 
-    def get_main_view_tabs(self):
-        """Returns a list of tabs on the main window."""
-        return self.app.select_many("TabButton")
+    def get_main_view(self):
+        return self.app.select_single("QQuickView")
 
     @property
     def call_panel(self):

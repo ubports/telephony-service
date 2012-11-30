@@ -20,11 +20,6 @@ class TestCallPanel(TelephonyAppTestCase):
 
     def setUp(self):
         super(TestCallPanel, self).setUp()
-        dialer_tab = self.get_main_view_tabs()[0]
-        self.mouse.move_to_object(dialer_tab)
-        self.mouse.click()
-        dialer_page = self.call_panel.get_dialer_page()
-        self.assertThat(dialer_page.isCurrent, Eventually(Equals(True)))
 
     def test_keypad(self):
         """The Keypad works, either using a hardware keyboard or the in-app buttons"""

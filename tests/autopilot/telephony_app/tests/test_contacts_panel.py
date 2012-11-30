@@ -9,7 +9,7 @@
 
 from __future__ import absolute_import
 
-from testtools.matchers import Equals
+from testtools.matchers import Equals, GreaterThan
 from autopilot.matchers import Eventually
 
 from telephony_app.tests import TelephonyAppTestCase
@@ -21,9 +21,15 @@ class TestContactsPanel(TelephonyAppTestCase):
 
     def setUp(self):
         super(TestContactsPanel, self).setUp()
-        contacts_tab = self.get_main_view_tabs()[2]
-        self.mouse.move_to_object(contacts_tab)
-        self.mouse.click()
+        main_view = self.get_main_view()
+        start_point = self.get_main_view().geometry[0] + self.get_main_view().geometry[2] * 0.75
+        stop_point = self.get_main_view().geometry[0] + self.get_main_view().geometry[2] * 0.25
+        y_line = self.get_main_view().geometry[1] + 10
+        for i in 0,1:
+            self.pointing_device.move(start_point, y_line)
+            self.mouse.press()
+            self.pointing_device.move(stop_point, y_line)
+            self.pointing_device.release()
 
     def click_add_contact_list_item(self):
         new_contact_item = self.contacts_panel.get_add_contact_list_item()
