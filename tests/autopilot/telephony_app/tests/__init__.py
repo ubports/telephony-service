@@ -31,6 +31,16 @@ class TelephonyAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
     def get_main_view(self):
         return self.app.select_single("QQuickView")
 
+    def move_to_next_tab(self):
+        main_view = self.get_main_view()
+        start_x = main_view.geometry[0] + self.get_main_view().geometry[2] * 0.75
+        stop_x = self.get_main_view().geometry[0] + self.get_main_view().geometry[2] * 0.15
+        y_line = self.get_main_view().geometry[1] + 10
+        self.mouse.move(start_x, y_line)
+        self.mouse.press()
+        self.mouse.move(stop_x, y_line)
+        self.mouse.release()
+
     @property
     def call_panel(self):
         return CallPanel(self.app)
