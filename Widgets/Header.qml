@@ -33,7 +33,7 @@ Item {
             right: parent.right
         }
 
-        TextCustom {
+        Label {
             text: header.text
             anchors {
                 verticalCenter: parent.verticalCenter

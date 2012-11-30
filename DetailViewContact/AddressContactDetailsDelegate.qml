@@ -28,7 +28,7 @@ BaseContactDetailsDelegate {
         anchors.right: parent.right
         height: childrenRect.height
 
-        TextCustom {
+        Label {
             id: formattedAddress
 
             anchors.top: parent.top
@@ -52,7 +52,7 @@ BaseContactDetailsDelegate {
               ].filter(nonEmpty).join("\n");
         }
 
-        TextCustom {
+        Label {
             id: subTypeText
 
             anchors.right: parent.right

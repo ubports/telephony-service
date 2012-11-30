@@ -98,7 +98,7 @@ FocusScope {
                 ItemStyle.class: "transparent-button"
             }
 
-            TextCustom {
+            Label {
                 id: addText
 
                 anchors.left: addButton.right

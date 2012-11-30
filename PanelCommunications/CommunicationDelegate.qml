@@ -61,7 +61,7 @@ ListItem.Base {
             spacing: units.gu(0.5)
             width: parent.width - x
 
-            TextCustom {
+            Label {
                 width: parent.width
                 height: text != "" ? paintedHeight : 0
                 elide: Text.ElideRight
@@ -72,7 +72,7 @@ ListItem.Base {
                 opacity: 0.9
             }
 
-            TextCustom {
+            Label {
                 width: parent.width
                 height: text != "" ? paintedHeight : 0
                 elide: Text.ElideRight
@@ -82,7 +82,7 @@ ListItem.Base {
                 opacity: 0.6
             }
 
-            TextCustom {
+            Label {
                 width: parent.width
                 height: text != "" ? paintedHeight : 0
                 elide: Text.ElideRight
@@ -93,7 +93,7 @@ ListItem.Base {
                 opacity: 0.6
             }
 
-            TextCustom {
+            Label {
                 width: parent.width
                 height: text != "" ? paintedHeight : 0
                 text: communicationDelegate.text
