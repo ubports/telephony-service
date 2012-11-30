@@ -1,8 +1,14 @@
-telephony-app (0.58.11) UNRELEASED; urgency=low
+telephony-app (0.58.11) quantal; urgency=low
 
+  [ Gustavo Pichorim Boiko ]
   * Add initial support for the messaging menu interaction.
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 28 Nov 2012 16:08:39 -0200
+  [ Bill Filler ]
+  * added /usr/bin/ofono-setup to setup initial accounts from session startup 
+    rather than app startup
+  * removed account setup from /usr/bin/launch-telephony-app
+
+ -- Bill Filler <bill.filler@canonical.com>  Thu, 29 Nov 2012 19:31:23 -0500
 
 telephony-app (0.58.10) quantal; urgency=low
 

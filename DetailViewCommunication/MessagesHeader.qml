@@ -27,7 +27,7 @@ BaseMessageHeader {
         }
     }
 
-    TextCustom {
+    Label {
         id: name
 
         anchors.left: icon.right

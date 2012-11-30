@@ -35,7 +35,7 @@ AbstractButton {
         anchors.leftMargin: units.gu(1)
         anchors.rightMargin: units.gu(1)
 
-        TextCustom {
+        Label {
             id: currentText
 
             anchors.verticalCenter: parent.verticalCenter
@@ -115,7 +115,7 @@ AbstractButton {
                     border {top: 0; right: units.dp(2); bottom: units.dp(2); left: units.dp(3)}
                 }
 
-                TextCustom {
+                Label {
                     id: optionText
 
                     anchors.verticalCenter: parent.verticalCenter

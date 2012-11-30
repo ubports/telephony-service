@@ -42,7 +42,7 @@ FocusScope {
        editor.suffix = detail.suffix
     }
 
-    TextCustom {
+    Label {
         id: text
         anchors.top: parent.top
         anchors.left: parent.left

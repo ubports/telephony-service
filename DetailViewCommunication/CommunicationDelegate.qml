@@ -40,7 +40,7 @@ Item {
 
         height: messageText.height + units.gu(3)
 
-        TextCustom {
+        Label {
             id: messageText
 
             anchors.left: bubble.left

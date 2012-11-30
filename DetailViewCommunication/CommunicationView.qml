@@ -182,7 +182,7 @@ LocalWidgets.TelephonyPage {
                 height: units.gu(0.5)
             }
 
-            TextCustom {
+            Label {
                 anchors.left: parent.left
                 anchors.leftMargin: units.gu(2)
                 fontSize: "small"
