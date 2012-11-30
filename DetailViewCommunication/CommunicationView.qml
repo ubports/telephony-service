@@ -158,79 +158,81 @@ LocalWidgets.TelephonyPage {
         id: messagesLoader
 
         sourceComponent: view.newMessage ? undefined : conversationComponent
+
+    }
+
+    ListView {
+        id: listView
         anchors.top: headerLoader.bottom
         anchors.bottom: footer.top
         anchors.left: parent.left
         anchors.right: parent.right
-    }
+        model: conversationProxyModel
+        clip: true
+        header: headerComponent
 
-    Component {
-        id: conversationComponent
-        ListView {
-            width: view.width
-            anchors.fill: parent
-            model: conversationProxyModel
-            clip: true
-            header: headerComponent
+        section.property: "timeSlot"
+        section.delegate: Column {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: units.gu(0.5)
 
-            section.property: "timeSlot"
-            section.delegate: Column {
+
+            ListItem.ThinDivider {
+                height: units.gu(0.5)
+            }
+
+            TextCustom {
                 anchors.left: parent.left
-                anchors.right: parent.right
-                spacing: units.gu(0.5)
+                anchors.leftMargin: units.gu(2)
+                fontSize: "small"
+                elide: Text.ElideRight
+                color: "#333333"
+                opacity: 0.6
+                text: DateUtils.formatFriendlyDate(section);
+                height: paintedHeight + units.gu(1)
+            }
+        }
 
 
-                ListItem.ThinDivider {
-                    height: units.gu(0.5)
-                }
+        delegate: CommunicationDelegate {
+            id: communicationDelegate
 
-                TextCustom {
-                    anchors.left: parent.left
-                    anchors.leftMargin: units.gu(2)
-                    fontSize: "small"
-                    elide: Text.ElideRight
-                    color: "#333333"
-                    opacity: 0.6
-                    text: DateUtils.formatFriendlyDate(section);
-                    height: paintedHeight + units.gu(1)
+            itemType: model.itemType
+            incoming: model.incoming
+            missed: model.item.missed ? model.item.missed : false
+            message: model.item.message ? model.item.message : ""
+            item: model.item
+            itemIcon: {
+                switch (model.itemType) {
+                case "message":
+                    "../assets/contact_icon_message.png";
+                    break;
+                case "call":
+                    "../assets/contact_icon_phone.png";
+                    break;
+                case "group":
+                    "../assets/tab_icon_contacts_inactive.png";
+                    break;
+                default:
+                    "";
+                    break;
                 }
             }
 
-
-            delegate: CommunicationDelegate {
-                id: communicationDelegate
-
-                itemType: model.itemType
-                incoming: model.incoming
-                missed: model.item.missed ? model.item.missed : false
-                message: model.item.message ? model.item.message : ""
-                item: model.item
-                itemIcon: {
-                    switch (model.itemType) {
-                    case "message":
-                        "../assets/contact_icon_message.png";
-                        break;
-                    case "call":
-                        "../assets/contact_icon_phone.png";
-                        break;
-                    case "group":
-                        "../assets/tab_icon_contacts_inactive.png";
-                        break;
-                    default:
-                        "";
-                        break;
-                    }
-                }
-
-                onClicked: {
-                    if (itemType == "call") {
-                        telephony.callNumber(item.phoneNumber);
-                    } else {
-                        view.phoneNumber = item.phoneNumber
-                    }
+            onClicked: {
+                if (itemType == "call") {
+                    telephony.callNumber(item.phoneNumber);
+                } else {
+                    view.phoneNumber = item.phoneNumber
                 }
             }
         }
+    }
+
+    Scrollbar {
+        flickableItem: listView
+        align: Qt.AlignTrailing
     }
 
     MessagesFooter {

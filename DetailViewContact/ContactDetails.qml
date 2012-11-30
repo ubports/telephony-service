@@ -324,8 +324,9 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-    LocalWidgets.ScrollbarForFlickable {
-        flickable: scrollArea
+    Scrollbar {
+        flickableItem: scrollArea
+        align: Qt.AlignTrailing
     }
 
     Item {
