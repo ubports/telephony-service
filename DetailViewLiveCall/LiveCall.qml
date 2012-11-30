@@ -18,15 +18,6 @@ LocalWidgets.TelephonyPage {
     title: call && call.dialing ? "Dialing" : "Duration " + stopWatch.elapsed
     showChromeBar: false
 
-    Component.onDestruction: {
-        // if this view was destroyed but we still have
-        // active calls, then it means it was manually removed
-        // from the stack
-        if (previousTab != -1 && callManager.hasCalls) {
-            telephony.selectedTabIndex = previousTab
-        }
-    }
-
     function endCall() {
         if (call) {
             call.endCall();
@@ -47,10 +38,15 @@ LocalWidgets.TelephonyPage {
     Connections {
         target: callManager
         onCallEnded: {
-            if (!callManager.hasCalls) {
-                if (liveCall.visible && liveCall.previousTab != -1) {
-                    telephony.selectedTabIndex = liveCall.previousTab
+            if (!callManager.hasCalls && telephony.liveCall.loaded) {
+                var filterProperty = "phoneNumber";
+                var filterValue = contactWatcher.phoneNumber;
+                if (contactWatcher.contactId != "") {
+                    filterProperty = "contactId";
+                    filterValue = contactWatcher.contactId;
                 }
+
+                telephony.showCommunication(filterProperty, filterValue, contactWatcher.contactId, true);
                 telephony.endCall();
             }
         }
