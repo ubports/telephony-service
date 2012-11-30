@@ -20,6 +20,8 @@ class TestCallPanel(TelephonyAppTestCase):
 
     def setUp(self):
         super(TestCallPanel, self).setUp()
+        dialer_page = self.call_panel.get_dialer_page()
+        self.assertThat(dialer_page.isCurrent, Eventually(Equals(True)))
 
     def test_keypad(self):
         """The Keypad works, either using a hardware keyboard or the in-app buttons"""
@@ -46,12 +48,37 @@ class TestCallPanel(TelephonyAppTestCase):
         
         self.assertThat(keypad_entry.value, Eventually(Equals("123456789*0#")))
 
+    def test_call_button_disabling(self):
+        """The call button needs to be disabled when there is no number in the input"""
+        keypad_entry = self.call_panel.get_keypad_entry()
+        dial_button = self.call_panel.get_dial_button()
+        self.assertThat(keypad_entry.value, Eventually(Equals("")))
+        self.assertThat(dial_button.enabled, Eventually(Equals(False)))
+
+        self.mouse.move_to_object(keypad_entry)
+        self.mouse.click()
+        self.keyboard.press_and_release("1");
+        self.keyboard.press_and_release("2");
+        self.keyboard.press_and_release("3");
+        self.assertThat(keypad_entry.value, Eventually(Equals("123")))
+        self.assertThat(dial_button.enabled, Eventually(Equals(True)))
+
+        self.keyboard.press_and_release("BackSpace")
+        self.keyboard.press_and_release("BackSpace")
+        self.keyboard.press_and_release("BackSpace")
+        self.assertThat(dial_button.enabled, Eventually(Equals(False)))
+
     def test_call(self):
         """Dialing a number works"""
+        keypad_entry = self.call_panel.get_keypad_entry()
+        self.mouse.move_to_object(keypad_entry)
+        self.mouse.click()
+
         self.keyboard.press_and_release("1");
         self.keyboard.press_and_release("2");
         self.keyboard.press_and_release("3");
         self.keyboard.press_and_release("4");
+        self.assertThat(keypad_entry.value, Eventually(Equals("1234")))
         
         dial_button = self.call_panel.get_dial_button()
         self.mouse.move_to_object(dial_button)
