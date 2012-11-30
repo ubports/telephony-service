@@ -62,7 +62,7 @@ LocalWidgets.TelephonyPage {
             //width: childrenRect.width
             //height: childrenRect.height
 
-            TextCustom {
+            Label {
                 id: name
 
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -75,7 +75,7 @@ LocalWidgets.TelephonyPage {
                 fontSize: "large"
             }
 
-            TextCustom {
+            Label {
                 id: number
 
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -88,7 +88,7 @@ LocalWidgets.TelephonyPage {
                 fontSize: "medium"
             }
 
-            TextCustom {
+            Label {
                 id: dialing
 
                 anchors.horizontalCenter: parent.horizontalCenter

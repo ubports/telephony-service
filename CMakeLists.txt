@@ -79,6 +79,10 @@ install(PROGRAMS launch-telephony-app
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
+install(PROGRAMS ofono-setup
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+
 configure_file(org.freedesktop.Telepathy.Client.TelephonyApp.service.in org.freedesktop.Telepathy.Client.TelephonyApp.service)
 install(FILES ${CMAKE_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyApp.service DESTINATION share/dbus-1/services)
 install(FILES TelephonyApp.client DESTINATION share/telepathy/clients)

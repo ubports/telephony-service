@@ -25,3 +25,4 @@ usr/share/telephony-app/assets
 usr/share/telephony-app/dummydata
 usr/share/telepathy/clients/TelephonyApp*.client
 usr/bin/*telephony-app*
+usr/bin/ofono-setup

@@ -21,7 +21,7 @@ BaseContactDetailsDelegate {
         anchors.right: parent.right
         height: childrenRect.height
 
-        TextCustom {
+        Label {
             id: value
 
             anchors.top: parent.top
@@ -36,7 +36,7 @@ BaseContactDetailsDelegate {
             text: (detail && detailTypeInfo.displayField) ? detail[detailTypeInfo.displayField] : ""
         }
 
-        TextCustom {
+        Label {
             id: subTypeText
 
             anchors.right: parent.right

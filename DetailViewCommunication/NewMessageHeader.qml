@@ -36,7 +36,7 @@ BaseMessageHeader {
             header.contactSelected(contact, number);
         }
 
-        TextCustom {
+        Label {
             id: toText
             text: "To:"
             fontSize: "small"
