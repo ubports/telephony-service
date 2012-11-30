@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# check if there is a tp-ofono account already
+mc-tool show ofono/ofono/account0 2>&1 > /dev/null
+
+# if there is not, create one and enable it
+if [ $? -eq 1 ]; then
+        echo 'creating ofono/ofono/account0'
+        mc-tool add ofono/ofono account0
+        echo 'enabling ofono/ofono/account0'
+        mc-tool enable ofono/ofono/account0
+fi
+
+echo 'ofono/ofono/account0 initialized'
