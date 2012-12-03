@@ -14,6 +14,8 @@ xml_footer = "</log>"
 
 sms = {}
 call = {}
+        
+token = random.randrange(111111111, 999999999)
 
 if len(sys.argv) != 2 or not os.path.isfile(sys.argv[1]):
     print "Usage: " + sys.argv[0] + " conversation_data.csv"
@@ -55,12 +57,12 @@ with open(sys.argv[1], 'rb') as csvfile:
         filedate = year+month+day
         finalDate = filedate+"T"+time
 
-        token = str(random.randrange(111111111, 999999999))
 
         if eventtype == "sms":
             string = None
             if incoming:
-                string = "<message time='"+finalDate+"' id='"+userid+"' name='"+phoneNumber+"' token='' isuser='false' type='normal' message-token='"+token+"'>"+message+"</message>\n"
+                string = "<message time='"+finalDate+"' id='"+userid+"' name='"+phoneNumber+"' token='' isuser='false' type='normal' message-token='"+str(token)+"'>"+message+"</message>\n"
+                token += 1
             else:
                 string = "<message time='"+finalDate+"' id='ofono' name='ofono' token='' isuser='true' type='normal'>"+message+"</message>\n"
 
@@ -109,7 +111,7 @@ if len(call) != 0 or len(sms) != 0:
         if not os.path.exists(user_call_dir):
             os.makedirs(user_call_dir)
         for date in call[userid]:
-            f = open(user_sms_dir+"/"+date+".call.log", 'w')
+            f = open(user_call_dir+"/"+date+".call.log", 'w')
             f.write(xml_header)
             f.write(call[userid][date])
             f.write(xml_footer)
