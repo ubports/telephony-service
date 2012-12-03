@@ -29,6 +29,7 @@ LocalWidgets.TelephonyPage {
         ListElement {
             label: "Edit"
             name: "edit"
+            icon: "../assets/add_new_message_icon.png"
         }
     }
 

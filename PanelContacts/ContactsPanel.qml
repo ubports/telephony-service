@@ -13,6 +13,7 @@ LocalWidgets.TelephonyPage {
         ListElement {
             label: "Add"
             name: "add"
+            icon: "../assets/add_new_message_icon.png"
         }
     }
 

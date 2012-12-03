@@ -18,9 +18,17 @@ Item {
 
     onEnabledChanged: {
         if (!enabled) {
-            bar.shown = false;
+            setBarShown(false);
+        }
+    }
+
+    function setBarShown(shown) {
+        if (shown) {
+            bar.y = 0;
+        } else {
             bar.y = bar.height;
         }
+        bar.shown = shown;
     }
 
     MouseArea {
@@ -42,28 +50,28 @@ Item {
         onReleased: {
             // check if there was at least some moving to avoid displaying
             // the chrome bar on clicking
-            if (Math.abs(__pressedY - mouse.y) < units.gu(2)) {
-                bar.y = bar.shown ? 0 : bar.height
+            if (Math.abs(__pressedY - mouse.y) < units.gu(1)) {
+                setBarShown(bar.shown);
                 return;
             }
 
-            if (!bar.shown) {
-                bar.y = 0;
-                bar.shown = true;
-            } else {
-                bar.y = bar.height;
-                bar.shown = false;
-            }
+            setBarShown(!bar.shown);
         }
 
         Item {
             id: bar
 
             property bool shown: false
-            height: childrenRect.height
+            height: units.gu(6) + orangeRect.height
             anchors.left: parent.left
             anchors.right: parent.right
             y: parent.height
+
+            Rectangle {
+                id: background
+                anchors.fill: parent
+                color: "white"
+            }
 
             Behavior on y {
                 NumberAnimation {
@@ -87,47 +95,52 @@ Item {
                     anchors.right: parent.right
                     height: chromeButtons.height + units.gu(2)
 
-                    AbstractButton {
+                    ChromeButton {
                         id: backButton
                         anchors.left: parent.left
+                        anchors.leftMargin: units.gu(1)
                         anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.margins: units.gu(1)
-                        width: backImage.width + units.gu(2)
-                        height: backImage.height + units.gu(2)
-                        visible: pageStack && pageStack.depth > 1
-                        onClicked: pageStack.pop()
+                        icon: "../assets/chromebar_icon_back.png"
+                        text: "Back"
 
-                        Image {
-                            id: backImage
-                            anchors.centerIn: parent
-                            source: "../assets/back_button.png"
-                            fillMode: Image.PreserveAspectFit
-                            rotation: 180
+                        onClicked: {
+                            pageStack.pop()
+                            setBarShown(false)
                         }
+
+                        visible: pageStack && pageStack.depth > 1
                     }
 
                     Row {
                         id: chromeButtons
                         anchors.top: parent.top
                         anchors.right: parent.right
-                        anchors.margins: units.gu(1)
+                        anchors.rightMargin: units.gu(1)
                         height: childrenRect.height
 
                         Repeater {
                             id: buttonsRepeater
 
-                            Button {
-                                objectName: model.name
-                                height: units.gu(4)
-                                width: undefined
+                            ChromeButton {
                                 text: model.label
+                                icon: model.icon
+                                objectName: model.name
+                                anchors.top: parent.top
                                 onClicked: buttonClicked(model.name)
                             }
-                        }
-                    }
-                }
-            }
-        }
+                        } // Repeater
+                    } // Row
+                } // Item
+            } // Column
+        } // Item - bar
+    } // MouseArea
+
+    Rectangle {
+        id: orangeRect
+        color: "#f37505"
+        height: units.dp(3)
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
     }
 }
