@@ -1,0 +1,1 @@
+install(PROGRAMS csv2logger.py DESTINATION ${CMAKE_INSTALL_BINDIR})
