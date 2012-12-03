@@ -37,7 +37,7 @@ FocusScope {
        have already called contact.removeDetail() on it. */
     property bool deleted: false
 
-    property bool bottomSeparator: false
+    property bool bottomSeparator: true
 
     signal clicked(string value)
     signal actionClicked(string value)
@@ -97,11 +97,11 @@ FocusScope {
             id: contentBox
 
             anchors.left: parent.left
-            anchors.leftMargin: units.gu(1)
+            anchors.leftMargin: units.gu(2)
             anchors.right: readOnlySeparator.left
             anchors.rightMargin: units.gu(1)
             anchors.top: parent.top
-            anchors.topMargin: units.gu(1)
+            anchors.topMargin: units.gu(2)
             height: childrenRect.height
 
             onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
@@ -119,18 +119,20 @@ FocusScope {
         Rectangle {
             id: readOnlySeparator
 
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
+            anchors.verticalCenter: parent.verticalCenter
+            height: units.gu(6)
             anchors.right: actionBox.left
             width: units.dp(1)
             color: "black"
             opacity: 0.1
+            visible: actionBox.visible
         }
 
         AbstractButton {
             id: actionBox
 
-            width: units.gu(6)
+            width: units.gu(7)
+            visible: detailTypeInfo.hasAction
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
@@ -138,7 +140,7 @@ FocusScope {
 
             Image {
                 anchors.centerIn: parent
-                width: units.gu(2)
+                width: units.gu(3)
                 sourceSize.width: width
                 fillMode: Image.PreserveAspectFit
 
@@ -199,6 +201,7 @@ FocusScope {
             width: units.gu(11)
             detailTypeInfo: contactDetailsItem.detailTypeInfo
             detail: contactDetailsItem.detail
+            visible: editable
         }
     }
 }

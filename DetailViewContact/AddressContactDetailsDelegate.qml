@@ -29,17 +29,24 @@ BaseContactDetailsDelegate {
         height: childrenRect.height
 
         Label {
+            id: subTypeText
+
+            anchors.left: parent.left
+            anchors.top: parent.top
+            text: detailTypeInfo.showSubtype ? DetailUtils.getDetailSubType(detail) : detailTypeInfo.name
+            fontSize: "small"
+        }
+
+        Label {
             id: formattedAddress
 
-            anchors.top: parent.top
+            anchors.top: subTypeText.bottom
             anchors.left: parent.left
-            anchors.right: subTypeText.left
+            anchors.right: parent.right
             anchors.rightMargin: units.gu(1)
-            fontSize: "medium"
+            fontSize: "large"
             elide: Text.ElideRight
-            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-            style: Text.Raised
-            styleColor: "white"
+            wrapMode: Text.WordWrap
 
             /* Render the address in a single field format */
             function nonEmpty(item) { return item && item.length > 0 }
@@ -52,19 +59,6 @@ BaseContactDetailsDelegate {
               ].filter(nonEmpty).join("\n");
         }
 
-        Label {
-            id: subTypeText
-
-            anchors.right: parent.right
-            anchors.top: parent.top
-            horizontalAlignment: Text.AlignRight
-            text: DetailUtils.getDetailSubType(detail)
-            fontSize: "small"
-            elide: Text.ElideRight
-            color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-            style: Text.Raised
-            styleColor: "white"
-        }
     }
 
     AddressContactDetailsEditor {
