@@ -84,11 +84,6 @@ Item {
                 anchors.right: parent.right
                 anchors.top: parent.top
 
-                ListItem.ThinDivider {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                }
-
                 Item {
                     id: contents
                     anchors.left: parent.left
