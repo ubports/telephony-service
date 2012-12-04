@@ -27,41 +27,30 @@ LocalWidgets.TelephonyPage {
             id: keypadEntry
 
             anchors.top: header.bottom
-            anchors.left: keypad.left
-            anchors.right: keypad.right
-            anchors.leftMargin: units.dp(-2)
-            anchors.rightMargin: units.dp(-2)
-            focus: true
-            Keys.forwardTo: [callButton]
-        }
-
-        Image {
-            id: divider2
-
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: keypadEntry.bottom
-            source: "../assets/dialer_top_number_bg.png"
+            focus: true
+            Keys.forwardTo: [callButton]
         }
 
         Keypad {
             id: keypad
 
-            anchors.top: divider2.bottom
+            anchors.top: keypadEntry.bottom
             onKeyPressed: keypadEntry.value += label
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.topMargin: units.dp(10)
+            anchors.topMargin: units.gu(3)
         }
 
-        Image {
+        BorderImage {
             id: divider3
 
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: keypad.bottom
             anchors.topMargin: units.gu(2)
-            source: "../assets/horizontal_divider.png"
-            opacity: 0.4
+            source: "../assets/horizontal_divider.sci"
+            height: units.dp(2)
         }
 
         CallButton {
@@ -72,7 +61,6 @@ LocalWidgets.TelephonyPage {
             anchors.horizontalCenter: parent.horizontalCenter
             onClicked: telephony.callNumber(keypadEntry.value)
             enabled: dialNumber != ""
-            opacity: enabled ? 1 : 0.2
         }
 
         CustomButton {
@@ -80,12 +68,12 @@ LocalWidgets.TelephonyPage {
             objectName: "contactListButton"
             anchors.right: callButton.left
             anchors.verticalCenter: callButton.verticalCenter
-            anchors.rightMargin: units.dp(6)
+            anchors.rightMargin: units.gu(1)
             icon: "../assets/dialer_contacts.png"
             iconWidth: units.gu(4)
             iconHeight: units.gu(4)
-            width: units.gu(8)
-            height: units.gu(8)
+            width: units.gu(7)
+            height: units.gu(7)
             onClicked: {
                 telephony.switchToTab(telephony.contactDetails.tab)
             }
@@ -95,9 +83,9 @@ LocalWidgets.TelephonyPage {
             id: backspace
             anchors.left: callButton.right
             anchors.verticalCenter: callButton.verticalCenter
-            anchors.leftMargin: units.dp(6)
-            width: units.gu(8)
-            height: units.gu(8)
+            anchors.leftMargin: units.gu(1)
+            width: units.gu(7)
+            height: units.gu(7)
             icon: "../assets/dialer_backspace.png"
             iconWidth: units.gu(4)
             iconHeight: units.gu(4)

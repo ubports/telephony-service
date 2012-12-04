@@ -54,15 +54,11 @@ Item {
             }
         }
 
-        Image {
+        BorderImage {
             id: divider
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            height: units.gu(2)
-            // FIXME: replace by the correct asset when it is done
-            source: "../assets/section_divider.png"
+            anchors.left: parent.left
+            anchors.right: parent.right
+            source: "../assets/PageHeaderBaseDivider.sci"
         }
     }
 }

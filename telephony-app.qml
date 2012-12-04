@@ -454,4 +454,11 @@ Item {
             application.activateWindow();
         }
     }
+
+    Image {
+        source: "assets/phone_grid.png"
+        anchors.top: parent.top
+        anchors.left: parent.left
+        opacity: 0.0
+    }
 }

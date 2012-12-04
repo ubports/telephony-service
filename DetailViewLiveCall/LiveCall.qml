@@ -113,7 +113,7 @@ LocalWidgets.TelephonyPage {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: units.gu(10)
+                height: units.gu(11)
 
                 UbuntuShape {
                     id: picture
@@ -121,8 +121,8 @@ LocalWidgets.TelephonyPage {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: units.gu(2)
-                    width: units.gu(6)
-                    height: units.gu(6)
+                    width: units.gu(7)
+                    height: units.gu(7)
                     image: Image {
                         source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_messaging.png"
                         fillMode: Image.PreserveAspectCrop

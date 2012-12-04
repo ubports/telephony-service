@@ -8,13 +8,12 @@ Button {
     property int iconWidth
     property int iconHeight
 
-    Image {
-        anchors.fill: parent
+    UbuntuShape {
+        id: shape
         anchors.centerIn: parent
         width: parent.width
         height: parent.height
-        source: pressed ? "../assets/dialer_pad_bg_pressed.png" : "../assets/dialer_pad_bg.png"
-        fillMode: Image.PreserveAspectFit
+        borderSource: pressed ? "../assets/dialer_pad_bg_pressed.sci" : "../assets/dialer_pad_bg.sci"
     }
 
     Image {
@@ -23,7 +22,6 @@ Button {
         height: iconHeight
         source: icon
         fillMode: Image.PreserveAspectFit
-        z: 1
     }
     ItemStyle.class: "transparent"
 }

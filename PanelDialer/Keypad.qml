@@ -14,7 +14,7 @@ Item {
 
         rows: 4
         columns: 3
-        spacing: units.dp(5)
+        spacing: units.gu(1)
 
         KeypadButton {
             label: "1"
