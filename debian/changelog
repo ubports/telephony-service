@@ -1,4 +1,4 @@
-telephony-app (0.58.12) quantal; urgency=low
+telephony-app (0.58.12) UNRELEASED; urgency=low
 
   [ Tiago Salem Herrmann ]
   * add csv2logger.py script to convert csv files into xml logger files
