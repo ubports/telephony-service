@@ -280,7 +280,7 @@ void ContactModel::onContactSaved()
         } else {
             // each request contains just one contact as we just ask one contact to be saved at a time
             QContact contact = request->contacts().first();
-            QString id = contact.detail<QContactGuid>().guid();
+            QString id = contact.id().toString();
             Q_EMIT contactSaved(id);
         }
     }

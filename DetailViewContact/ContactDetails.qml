@@ -153,6 +153,9 @@ LocalWidgets.TelephonyPage {
             // because for added contacts, we need the newly created ContactEntry instead of the one
             // we were using before.
             contactWatcher.contact = null;
+            // empty contactId because if it remains same, contact watcher wont search
+            // for a new contact
+            contactWatcher.contactId = ""
             contactWatcher.contactId = contactId;
         }
 
