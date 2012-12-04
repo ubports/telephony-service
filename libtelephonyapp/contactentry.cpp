@@ -276,7 +276,9 @@ void ContactEntry::loadDetails()
 {
     // clear previously saved details
     Q_FOREACH(const QList<ContactDetail*> list, mDetails.values()) {
-        qDeleteAll(list);
+        Q_FOREACH(ContactDetail *detail, list) {
+            detail->deleteLater();
+        }
     }
     mDetails.clear();
 

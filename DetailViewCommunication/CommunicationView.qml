@@ -23,21 +23,6 @@ LocalWidgets.TelephonyPage {
 
     chromeButtons: newMessage ? null : buttons
 
-    ListModel {
-        id: buttons
-
-        ListElement {
-            label: "Edit"
-            name: "edit"
-        }
-    }
-
-    onChromeButtonClicked: {
-        if (buttonName == "edit") {
-            console.log("TODO: edit clicked, implement");
-        }
-    }
-
     ContactWatcher {
         id: contactWatcher
     }

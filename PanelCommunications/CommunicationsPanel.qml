@@ -12,6 +12,7 @@ LocalWidgets.TelephonyPage {
         ListElement {
             label: "Compose"
             name: "compose"
+            icon: "../assets/compose.png"
         }
     }
 

@@ -6,7 +6,6 @@ Item {
 
     width: keys.width
     height: keys.height
-
     signal keyPressed(int keycode, string label)
 
     Grid {
@@ -14,7 +13,7 @@ Item {
 
         rows: 4
         columns: 3
-        spacing: units.dp(5)
+        spacing: units.gu(1)
 
         KeypadButton {
             label: "1"

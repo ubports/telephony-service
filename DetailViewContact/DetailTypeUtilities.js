@@ -50,9 +50,11 @@ var supportedTypes = [
                 items: "phoneNumbers",
                 newItemText: "Add a phone number",
                 newItemType: "ContactPhoneNumber",
-                actionIcon: "../assets/contact_icon_message.png",
+                actionIcon: "../assets/messaging_icon_button.png",
+                hasAction: true,
                 displayField: "number",
                 subTypes: phoneSubTypes,
+                showSubtype: true,
                 createOnNew: true
             },
             {
@@ -62,8 +64,10 @@ var supportedTypes = [
                 newItemText: "Add an email address",
                 newItemType: "ContactEmailAddress",
                 actionIcon: "../assets/contact_icon_email.png",
+                hasAction: false,
                 displayField: "emailAddress",
                 subTypes: emailSubTypes,
+                showSubtype: false,
                 createOnNew: true
             },
             {
@@ -73,6 +77,8 @@ var supportedTypes = [
                 newItemText: "Add a postal address",
                 newItemType: "ContactAddress",
                 actionIcon: "../assets/contact_icon_location.png",
+                hasAction: false,
+                showSubtype: false,
                 subTypes: postalAddressSubTypes
             },
             {
@@ -83,6 +89,8 @@ var supportedTypes = [
                 displayField: "accountUri",
                 newItemType: "ContactOnlineAccount",
                 actionIcon: "../assets/contact_icon_IM.png",
+                hasAction: false,
+                showSubtype: false,
                 subTypes: IMSubTypes
             }
         ];

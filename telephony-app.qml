@@ -259,15 +259,12 @@ Item {
 
     LocalWidgets.ChromeBar {
         id: chromeBar
-        z: 1
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
 
         buttonsModel: telephony.view.chromeButtons ? telephony.view.chromeButtons : null
         showChromeBar: telephony.view.showChromeBar
-        pageStack: telephony.viewStack
+        showBackButton: telephony.viewStack.depth > 1
         onButtonClicked: telephony.view.chromeButtonClicked(buttonName)
+        onBackButtonClicked: telephony.viewStack.pop()
     }
 
     Image {
@@ -283,7 +280,7 @@ Item {
 
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.bottom: chromeBar.top
+        anchors.bottom: parent.bottom
         anchors.right: singlePane ? parent.right : undefined
         width: singlePane ? undefined : units.gu(31)
 
@@ -453,5 +450,12 @@ Item {
             }
             application.activateWindow();
         }
+    }
+
+    Image {
+        source: "assets/phone_grid.png"
+        anchors.top: parent.top
+        anchors.left: parent.left
+        opacity: 0.0
     }
 }

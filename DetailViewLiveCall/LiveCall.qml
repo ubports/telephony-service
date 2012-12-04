@@ -113,7 +113,7 @@ LocalWidgets.TelephonyPage {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: units.gu(10)
+                height: units.gu(11)
 
                 UbuntuShape {
                     id: picture
@@ -121,8 +121,8 @@ LocalWidgets.TelephonyPage {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: units.gu(2)
-                    width: units.gu(6)
-                    height: units.gu(6)
+                    width: units.gu(7)
+                    height: units.gu(7)
                     image: Image {
                         source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_messaging.png"
                         fillMode: Image.PreserveAspectCrop
@@ -159,7 +159,7 @@ LocalWidgets.TelephonyPage {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: header.bottom
-                source: "../assets/dialer_top_number_bg.png"
+                source: "../assets/horizontal_divider.png"
             }
 
 
@@ -169,8 +169,7 @@ LocalWidgets.TelephonyPage {
                 anchors.top: divider2.bottom
                 anchors.right: parent.right
                 anchors.left: parent.left
-                anchors.bottom: footer.top
-
+                height: units.gu(36)
                 Grid {
                     id: mainButtonsGrid
                     rows: 2
@@ -251,36 +250,42 @@ LocalWidgets.TelephonyPage {
 
             Item {
                 id: footer
-                height: childrenRect.height
+                height: units.gu(12)
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.bottomMargin: units.gu(4)
 
                 Image {
                     id: divider3
 
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.bottom: hangupButton.top
-                    anchors.bottomMargin: units.gu(2)
+                    anchors.top: parent.top
                     source: "../assets/horizontal_divider.png"
-                    opacity: 0.4
                 }
 
-                CustomButton {
+                Button {
                     id: hangupButton
 
-                    icon: "../assets/incall_hangup.png"
-                    width: units.gu(19)
+                    //icon: "../assets/incall_hangup.png"
+
+                    width: units.gu(20)
                     height: units.gu(8)
-                    iconWidth: units.gu(5)
-                    iconHeight: units.gu(5)
+                    anchors.top: divider3.bottom
+                    anchors.topMargin: units.gu(2)
                     anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
                     color: "#bf400c"
-                    ItemStyle.class: "dark-button"
+                    ItemStyle.class: "darkbutton"
                     onClicked: endCall()
+
+                    Image {
+                        anchors.centerIn: parent
+                        width: units.gu(6)
+                        height: units.gu(6)
+                        source: "../assets/incall_hangup.png"
+                        fillMode: Image.PreserveAspectFit
+                        z: 1
+                    }
                 }
             }
         }
@@ -319,14 +324,33 @@ LocalWidgets.TelephonyPage {
                 anchors.topMargin: units.dp(10)
             }
 
-            CallButton {
-                id: backButton
-                objectName: "backButton"
-                anchors.top: keypad.bottom
-                anchors.topMargin: units.gu(2)
-                color: "#bf400c"
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: liveCall.isDtmf = false
+            Item {
+                id: dialFooter
+                height: units.gu(12)
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                Image {
+                    id: divider5
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    source: "../assets/horizontal_divider.png"
+                }
+
+                CallButton {
+                    id: backButton
+                    objectName: "backButton"
+                    width: units.gu(20)
+                    height: units.gu(8)
+                    anchors.top: divider5.bottom
+                    anchors.topMargin: units.gu(2)
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    color: "#bf400c"
+                    onClicked: liveCall.isDtmf = false
+                }
             }
         }
     }
