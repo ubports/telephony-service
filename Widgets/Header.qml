@@ -26,7 +26,7 @@ Item {
 
     Item {
         id: headerLabel
-        height: units.gu(6.5)
+        height: units.gu(8)
         anchors {
             top: topDivider.top
             left: parent.left
@@ -53,8 +53,6 @@ Item {
             left: parent.left
             right: parent.right
         }
-        height: units.gu(2)
-        opacity: 0.5
         source: "../assets/section_divider.png"
     }
 }
