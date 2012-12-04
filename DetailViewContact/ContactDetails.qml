@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import TelephonyApp 0.1
 import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../Widgets" as LocalWidgets
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes
@@ -164,39 +165,6 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-    Item {
-        id: background
-
-        anchors.fill: parent
-
-        Image {
-            anchors.fill: parent
-            source: "../assets/noise_tile.png"
-            fillMode: Image.Tile
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            color: "black"
-            opacity: 0.05
-        }
-    }
-
-    Rectangle {
-        anchors.top: header.bottom
-        anchors.bottom: editFooter.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-        color: "white"
-        opacity: 0.3
-    }
-
-    Rectangle {
-        anchors.fill: header
-        color: "white"
-        opacity: 0.5
-    }
-
     ContactDetailsHeader {
         id: header
         contact: contactDetails.contact
@@ -204,13 +172,9 @@ LocalWidgets.TelephonyPage {
         focus: true
     }
 
-    Image {
-        anchors.top: header.bottom
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        source: "../assets/right_pane_pattern.png"
-        fillMode: Image.Tile
+    ListItem.ThinDivider {
+        id: bottomDividerLine
+        anchors.bottom: header.bottom
     }
 
     Flickable {
@@ -223,7 +187,7 @@ LocalWidgets.TelephonyPage {
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
         clip: true
-        contentHeight: detailsList.height + bottomSeparatorLine.height +
+        contentHeight: detailsList.height +
                        (contactDetails.editable ? newDetailChooser.height + newDetailChooser.menuHeight + units.gu(1) : 0)
 
         Column {
@@ -262,7 +226,9 @@ LocalWidgets.TelephonyPage {
                             onActionClicked: {
                                 switch(modelData.type) {
                                 case ContactDetail.PhoneNumber:
-                                    telephony.startChat(contact.id, modelData.number);
+                                    var filterProperty = "phoneNumber";
+                                    var filterValue = modelData.number;
+                                    telephony.showCommunication(filterProperty, filterValue, "", true);
                                     break;
                                 case ContactDetail.EmailAddress:
                                     Qt.openUrlExternally("mailto:" + modelData.emailAddress);
@@ -285,16 +251,6 @@ LocalWidgets.TelephonyPage {
                     }
                 }
             }
-        }
-
-        Image {
-            id: bottomSeparatorLine
-
-            anchors.top: detailsList.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: visible ? units.dp(2) : 0
-            source: "../Widgets/artwork/ListItemSeparator.png"
         }
 
         ContactDetailTypeChooser {

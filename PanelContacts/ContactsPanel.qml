@@ -134,7 +134,7 @@ LocalWidgets.TelephonyPage {
                 id: headerFavorite
                 anchors.left: parent.left
                 anchors.right: parent.right
-                text: "Favorite"
+                text: "Favourites"
             }
             
            ListView {
