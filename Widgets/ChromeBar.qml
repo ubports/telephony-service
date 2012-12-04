@@ -8,7 +8,7 @@ Item {
     property bool showChromeBar: true
     property bool showBackButton: true
 
-    signal buttonClicked(var buttonName)
+    signal buttonClicked(var buttonName, var button)
     signal backButtonClicked()
 
     enabled: chromeBar.showChromeBar && (showBackButton || (buttonsRepeater.count > 0))
@@ -119,11 +119,12 @@ Item {
                             id: buttonsRepeater
 
                             ChromeButton {
+                                id: chromeButton
                                 text: model.label
                                 icon: model.icon
                                 objectName: model.name
                                 anchors.top: parent.top
-                                onClicked: buttonClicked(model.name)
+                                onClicked: buttonClicked(model.name, chromeButton)
                             }
                         } // Repeater
                     } // Row
