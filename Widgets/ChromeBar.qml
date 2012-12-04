@@ -6,7 +6,7 @@ Item {
     id: chromeBar
     property alias buttonsModel: buttonsRepeater.model
     property bool showChromeBar: true
-    property bool showBackButton: true
+    property bool showBackButton: false
 
     signal buttonClicked(var buttonName, var button)
     signal backButtonClicked()
@@ -14,7 +14,9 @@ Item {
     enabled: chromeBar.showChromeBar && (showBackButton || (buttonsRepeater.count > 0))
     anchors.left: parent.left
     anchors.right: parent.right
+    anchors.bottom: parent.bottom
     height: bar.height - bar.y
+    z: 1
 
     onEnabledChanged: {
         if (!enabled) {

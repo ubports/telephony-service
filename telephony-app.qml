@@ -259,10 +259,6 @@ Item {
 
     LocalWidgets.ChromeBar {
         id: chromeBar
-        z: 1
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
 
         buttonsModel: telephony.view.chromeButtons ? telephony.view.chromeButtons : null
         showChromeBar: telephony.view.showChromeBar

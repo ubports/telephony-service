@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import Ubuntu.Components 0.1
 
-Button {
+AbstractButton {
     id: button
     property alias text: label.text
     property alias icon: icon.source
