@@ -187,7 +187,7 @@ LocalWidgets.TelephonyPage {
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
         clip: true
-        contentHeight: detailsList.height + bottomSeparatorLine.height +
+        contentHeight: detailsList.height +
                        (contactDetails.editable ? newDetailChooser.height + newDetailChooser.menuHeight + units.gu(1) : 0)
 
         Column {
@@ -251,16 +251,6 @@ LocalWidgets.TelephonyPage {
                     }
                 }
             }
-        }
-
-        Image {
-            id: bottomSeparatorLine
-
-            anchors.top: detailsList.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: visible ? units.dp(2) : 0
-            source: "../Widgets/artwork/ListItemSeparator.png"
         }
 
         ContactDetailTypeChooser {

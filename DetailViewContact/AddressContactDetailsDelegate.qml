@@ -26,15 +26,17 @@ BaseContactDetailsDelegate {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: childrenRect.height
+        height: childrenRect.height + units.gu(2)
 
         Label {
             id: subTypeText
 
             anchors.left: parent.left
             anchors.top: parent.top
+            height: units.gu(3)
             text: detailTypeInfo.showSubtype ? DetailUtils.getDetailSubType(detail) : detailTypeInfo.name
-            fontSize: "small"
+            fontSize: "x-small"
+            verticalAlignment: Text.AlignBottom
         }
 
         Label {

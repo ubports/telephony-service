@@ -19,16 +19,18 @@ BaseContactDetailsDelegate {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-        height: childrenRect.height
+        height: childrenRect.height + units.gu(2)
 
         Label {
             id: subTypeText
 
             anchors.left: parent.left
             anchors.top: parent.top
-            horizontalAlignment: Text.AlignRight
+            horizontalAlignment: Text.AlignLeft
+            height: units.gu(3)
+            verticalAlignment: Text.AlignBottom
             text: detailTypeInfo.showSubtype ? DetailUtils.getDetailSubType(detail) : detailTypeInfo.name
-            fontSize: "small"
+            fontSize: "x-small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised
@@ -40,7 +42,9 @@ BaseContactDetailsDelegate {
 
             anchors.top: subTypeText.bottom
             anchors.left: subTypeText.left
+            height: units.gu(3)
             fontSize: "large"
+            verticalAlignment: Text.AlignBottom
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised

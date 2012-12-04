@@ -89,7 +89,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.top: parent.top
         // center contentBox vertically
-        height: contentBox.height + 2*contentBox.anchors.topMargin
+        height: contentBox.height
         opacity: editable ? 0.0 : 1.0
         Behavior on opacity {LocalWidgets.StandardAnimation {}}
 
@@ -101,7 +101,6 @@ FocusScope {
             anchors.right: readOnlySeparator.left
             anchors.rightMargin: units.gu(1)
             anchors.top: parent.top
-            anchors.topMargin: units.gu(2)
             height: childrenRect.height
 
             onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
