@@ -283,7 +283,7 @@ Item {
 
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.bottom: chromeBar.top
+        anchors.bottom: parent.bottom
         anchors.right: singlePane ? parent.right : undefined
         width: singlePane ? undefined : units.gu(31)
 
