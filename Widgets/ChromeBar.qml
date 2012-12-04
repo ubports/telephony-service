@@ -7,11 +7,11 @@ Item {
     property alias buttonsModel: buttonsRepeater.model
     property bool showChromeBar: true
     property bool showBackButton: true
-    property variant pageStack
 
     signal buttonClicked(var buttonName)
+    signal backButtonClicked()
 
-    enabled: chromeBar.showChromeBar && ((pageStack && pageStack.depth > 1) || (buttonsRepeater.count > 0))
+    enabled: chromeBar.showChromeBar && (showBackButton || (buttonsRepeater.count > 0))
     anchors.left: parent.left
     anchors.right: parent.right
     height: bar.height - bar.y
@@ -21,6 +21,8 @@ Item {
             setBarShown(false);
         }
     }
+
+    onButtonsModelChanged: setBarShown(false)
 
     function setBarShown(shown) {
         if (shown) {
@@ -99,11 +101,11 @@ Item {
                         text: "Back"
 
                         onClicked: {
-                            pageStack.pop()
+                            backButtonClicked()
                             setBarShown(false)
                         }
 
-                        visible: pageStack && pageStack.depth > 1
+                        visible: showBackButton
                     }
 
                     Row {
