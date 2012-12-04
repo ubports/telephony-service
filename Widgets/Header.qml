@@ -12,47 +12,53 @@ Item {
         left: parent.left
         right: parent.right
     }
-  
-    Rectangle {
-        id: topDivider
-        height: units.dp(2)
+
+    Column {
         anchors {
+            left: parent.left
+            right: parent.right
             top: parent.top
-            left: parent.left
-            right: parent.right
         }
-        color: "#f37505"
-    }
+        height: childrenRect.height
 
-    Item {
-        id: headerLabel
-        height: units.gu(8)
-        anchors {
-            top: topDivider.top
-            left: parent.left
-            right: parent.right
-        }
-
-        Label {
-            text: header.text
+        Rectangle {
+            id: topDivider
+            height: units.dp(2)
             anchors {
-                verticalCenter: parent.verticalCenter
                 left: parent.left
-                leftMargin: units.gu(2)
+                right: parent.right
             }
-            fontSize: "x-large"
-            color: "#333333"
-            opacity: 0.4
+            color: "#f37505"
         }
-    }
 
-    Image {
-        id: divider
-        anchors {
-            top: headerLabel.bottom
-            left: parent.left
-            right: parent.right
+        Item {
+            id: headerLabel
+            height: units.gu(6)
+            anchors {
+                left: parent.left
+                right: parent.right
+            }
+
+            Label {
+                text: header.text
+                anchors {
+                    verticalCenter: parent.verticalCenter
+                    left: parent.left
+                    leftMargin: units.gu(2)
+                }
+                fontSize: "x-large"
+                color: "#333333"
+                opacity: 0.4
+                height: units.gu(4)
+                verticalAlignment: Text.AlignVCenter
+            }
         }
-        source: "../assets/section_divider.png"
+
+        BorderImage {
+            id: divider
+            anchors.left: parent.left
+            anchors.right: parent.right
+            source: "../assets/PageHeaderBaseDivider.sci"
+        }
     }
 }

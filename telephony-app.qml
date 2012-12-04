@@ -283,7 +283,7 @@ Item {
 
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.bottom: chromeBar.top
+        anchors.bottom: parent.bottom
         anchors.right: singlePane ? parent.right : undefined
         width: singlePane ? undefined : units.gu(31)
 
@@ -453,5 +453,12 @@ Item {
             }
             application.activateWindow();
         }
+    }
+
+    Image {
+        source: "assets/phone_grid.png"
+        anchors.top: parent.top
+        anchors.left: parent.left
+        opacity: 0.0
     }
 }

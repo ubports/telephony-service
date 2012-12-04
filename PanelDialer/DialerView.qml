@@ -27,86 +27,81 @@ LocalWidgets.TelephonyPage {
             id: keypadEntry
 
             anchors.top: header.bottom
-            anchors.left: keypad.left
-            anchors.right: keypad.right
-            anchors.leftMargin: units.dp(-2)
-            anchors.rightMargin: units.dp(-2)
-            focus: true
-            Keys.forwardTo: [callButton]
-        }
-
-        Image {
-            id: divider2
-
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: keypadEntry.bottom
-            source: "../assets/dialer_top_number_bg.png"
+            focus: true
+            Keys.forwardTo: [callButton]
         }
 
         Keypad {
             id: keypad
 
-            anchors.top: divider2.bottom
+            anchors.top: keypadEntry.bottom
             onKeyPressed: keypadEntry.value += label
             anchors.horizontalCenter: parent.horizontalCenter
-            anchors.topMargin: units.dp(10)
+            anchors.topMargin: units.gu(3)
         }
 
-        Image {
-            id: divider3
+        Item {
+            id: footer
 
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.top: keypad.bottom
-            anchors.topMargin: units.gu(2)
-            source: "../assets/horizontal_divider.png"
-            opacity: 0.4
-        }
+            anchors.bottom: parent.bottom
+            height: units.gu(12)
 
-        CallButton {
-            id: callButton
-            objectName: "callButton"
-            anchors.top: divider3.bottom
-            anchors.topMargin: units.gu(2)
-            anchors.horizontalCenter: parent.horizontalCenter
-            onClicked: telephony.callNumber(keypadEntry.value)
-            enabled: dialNumber != ""
-            opacity: enabled ? 1 : 0.2
-        }
+            BorderImage {
+                id: divider3
 
-        CustomButton {
-            id: contactListButton
-            objectName: "contactListButton"
-            anchors.right: callButton.left
-            anchors.verticalCenter: callButton.verticalCenter
-            anchors.rightMargin: units.dp(6)
-            icon: "../assets/dialer_contacts.png"
-            iconWidth: units.gu(4)
-            iconHeight: units.gu(4)
-            width: units.gu(8)
-            height: units.gu(8)
-            onClicked: {
-                telephony.switchToTab(telephony.contactDetails.tab)
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: keypad.bottom
+                source: "../assets/horizontal_divider.sci"
             }
-        }
 
-        CustomButton {
-            id: backspace
-            anchors.left: callButton.right
-            anchors.verticalCenter: callButton.verticalCenter
-            anchors.leftMargin: units.dp(6)
-            width: units.gu(8)
-            height: units.gu(8)
-            icon: "../assets/dialer_backspace.png"
-            iconWidth: units.gu(4)
-            iconHeight: units.gu(4)
+            CallButton {
+                id: callButton
+                objectName: "callButton"
+                anchors.top: divider3.bottom
+                anchors.topMargin: units.gu(2)
+                anchors.horizontalCenter: parent.horizontalCenter
+                onClicked: telephony.callNumber(keypadEntry.value)
+                enabled: dialNumber != ""
+            }
 
-            onClicked:  {
-                if (input.cursorPosition != 0)  {
-                    var position = input.cursorPosition;
-                    input.text = input.text.slice(0, input.cursorPosition - 1) + input.text.slice(input.cursorPosition);
-                    input.cursorPosition = position - 1;
+            CustomButton {
+                id: contactListButton
+                objectName: "contactListButton"
+                anchors.right: callButton.left
+                anchors.verticalCenter: callButton.verticalCenter
+                anchors.rightMargin: units.gu(1)
+                icon: "../assets/dialer_contacts.png"
+                iconWidth: units.gu(4)
+                iconHeight: units.gu(4)
+                width: units.gu(7)
+                height: units.gu(7)
+                onClicked: {
+                    telephony.switchToTab(telephony.contactDetails.tab)
+                }
+            }
+
+            CustomButton {
+                id: backspace
+                anchors.left: callButton.right
+                anchors.verticalCenter: callButton.verticalCenter
+                anchors.leftMargin: units.gu(1)
+                width: units.gu(7)
+                height: units.gu(7)
+                icon: "../assets/dialer_backspace.png"
+                iconWidth: units.gu(4)
+                iconHeight: units.gu(4)
+
+                onClicked:  {
+                    if (input.cursorPosition != 0)  {
+                        var position = input.cursorPosition;
+                        input.text = input.text.slice(0, input.cursorPosition - 1) + input.text.slice(input.cursorPosition);
+                        input.cursorPosition = position - 1;
+                    }
                 }
             }
         }

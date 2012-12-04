@@ -2,7 +2,7 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 
 Button {
-    width: units.gu(19)
+    width: units.gu(20)
     height: units.gu(8)
     // FIXME: waiting on #1072733
     //iconSource: "../assets/dialer_call.png"
