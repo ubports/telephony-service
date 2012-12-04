@@ -29,15 +29,18 @@ LocalWidgets.TelephonyPage {
         ListElement {
             label: "Delete"
             name: "delete"
+            icon: "../assets/delete.png"
         }
 
         ListElement {
             label: "Cancel"
             name: "cancel"
+            icon: "../assets/cancel.png"
         }
         ListElement {
             label: "Save"
             name: "save"
+            icon: "../assets/save.png"
         }
     }
 
@@ -47,10 +50,12 @@ LocalWidgets.TelephonyPage {
         ListElement {
             label: "Cancel"
             name: "cancel"
+            icon: "../assets/cancel.png"
         }
         ListElement {
             label: "Save"
             name: "save"
+            icon: "../assets/save.png"
         }
     }
 
@@ -60,6 +65,7 @@ LocalWidgets.TelephonyPage {
         ListElement {
             label: "Edit"
             name: "edit"
+            icon: "../assets/edit.png"
         }
     }
 
