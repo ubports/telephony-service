@@ -6,7 +6,6 @@ Item {
 
     width: keys.width
     height: keys.height
-
     signal keyPressed(int keycode, string label)
 
     Grid {
