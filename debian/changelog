@@ -1,3 +1,9 @@
+telephony-app (0.58.12) UNRELEASED; urgency=low
+
+  * add csv2logger.py script to convert csv files into xml logger files
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 03 Dec 2012 18:13:49 -0200
+
 telephony-app (0.58.11) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
