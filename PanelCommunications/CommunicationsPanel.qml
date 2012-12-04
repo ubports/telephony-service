@@ -12,7 +12,7 @@ LocalWidgets.TelephonyPage {
         ListElement {
             label: "Compose"
             name: "compose"
-            icon: "../assets/chromebar_icon_compose.png"
+            icon: "../assets/compose.png"
         }
     }
 
