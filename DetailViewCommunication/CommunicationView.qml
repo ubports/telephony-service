@@ -223,7 +223,7 @@ LocalWidgets.TelephonyPage {
 
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: (keyboardRect.visible  && footer.hasFocus) ? keyboardRect.top : parent.bottom
         height: visible ? units.gu(5) : 0
         visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
@@ -246,5 +246,14 @@ LocalWidgets.TelephonyPage {
                 chatManager.startChat(view.phoneNumber);
             }
         }
+    }
+
+    Item {
+        id: keyboardRect
+        anchors.left: parent.left
+        anchors.right: parent.right
+        y: Qt.inputMethod.keyboardRectangle.y
+        height: Qt.inputMethod.keyboardRectangle.height
+        visible: Qt.inputMethod.visible
     }
 }
