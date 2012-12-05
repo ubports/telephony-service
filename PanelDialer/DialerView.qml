@@ -30,13 +30,24 @@ LocalWidgets.TelephonyPage {
             anchors.left: parent.left
             anchors.right: parent.right
             focus: true
+            placeHolder: "Enter a number"
             Keys.forwardTo: [callButton]
         }
+
+        Image {
+            id: divider
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: keypadEntry.bottom
+            source: "../assets/dialer_top_number_bg.png"
+        }
+
 
         Keypad {
             id: keypad
 
-            anchors.top: keypadEntry.bottom
+            anchors.top: divider.bottom
             onKeyPressed: {
                 if (input.cursorPosition != 0)  {
                     var position = input.cursorPosition;

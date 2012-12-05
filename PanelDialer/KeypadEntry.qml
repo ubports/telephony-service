@@ -6,17 +6,9 @@ FocusScope {
 
     property alias value: input.text
     property alias input: input
+    property alias placeHolder: hint.text
 
     height: units.gu(7.5)
-
-    Image {
-        id: divider
-
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        source: "../assets/dialer_top_number_bg.png"
-    }
 
     Label {
         id: dots
@@ -84,7 +76,7 @@ FocusScope {
         id: hint
         visible: input.text == ""
         anchors.centerIn: input
-        text: "Enter a number"
+        text: ""
         font.pixelSize: units.dp(20)
         font.weight: Font.DemiBold
         font.family: "Ubuntu"
