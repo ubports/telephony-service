@@ -18,11 +18,23 @@ FocusScope {
         source: "../assets/dialer_top_number_bg.png"
     }
 
+    Label {
+        id: dots
+        clip: true
+        width: input.contentWidth > input.width ? contentWidth : 0
+        visible: input.contentWidth > input.width
+        anchors.left: parent.left
+        text: "..."
+        font.pixelSize: units.dp(43)
+        font.weight: Font.DemiBold
+        font.family: "Ubuntu"
+        color: "#464646"
+    }
+
     TextInput {
         id: input
 
-        anchors.left: parent.left
-        anchors.leftMargin: units.gu(5)
+        anchors.left: dots.right
         anchors.right: parent.right
         anchors.rightMargin: units.gu(2)
         anchors.verticalCenter: parent.verticalCenter
