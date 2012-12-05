@@ -1,4 +1,4 @@
-telephony-app (0.58.12) UNRELEASED; urgency=low
+telephony-app (0.58.12) quantal; urgency=low
 
   [ Tiago Salem Herrmann ]
   * add csv2logger.py script to convert csv files into xml logger files
@@ -7,7 +7,7 @@ telephony-app (0.58.12) UNRELEASED; urgency=low
   * Update the visuals of the ChromeBar
   * Make sure the message text input field is not covered by the on-screen-keyboard.
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 04 Dec 2012 20:29:41 +0000
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 05 Dec 2012 00:10:04 +0000
 
 telephony-app (0.58.11) quantal; urgency=low
 
