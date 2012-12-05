@@ -48,8 +48,11 @@ FocusScope {
     }
 
     MouseArea {
-        anchors.fill: parent
+        anchors.fill: input
         property bool held: false
+        onClicked: {
+            input.cursorPosition = input.positionAt(mouseX,TextInput.CursorOnCharacter)
+        }
         onPressAndHold: {
             if (input.text != "") {
                 held = true

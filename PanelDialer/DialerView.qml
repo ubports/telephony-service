@@ -32,7 +32,15 @@ LocalWidgets.TelephonyPage {
         id: keypad
 
         anchors.top: keypadEntry.bottom
-        onKeyPressed: keypadEntry.value += label
+        onKeyPressed: {
+            if (input.cursorPosition != 0)  {
+                var position = input.cursorPosition;
+                input.text = input.text.slice(0, input.cursorPosition) + label + input.text.slice(input.cursorPosition);
+                input.cursorPosition = position +1 ;
+            } else {
+                keypadEntry.value += label
+            }
+        }
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.topMargin: units.gu(3)
     }
