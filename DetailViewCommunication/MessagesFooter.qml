@@ -5,6 +5,7 @@ FocusScope {
     id: footer
    
     property bool validRecipient: false
+    property alias hasFocus: entry.activeFocus
 
     signal newMessage(string message)
 
