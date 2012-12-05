@@ -98,12 +98,18 @@ LocalWidgets.TelephonyPage {
             width: view.width
 
             onContactSelected: {
+                view.filterProperty = "contactId";
+                view.filterValue = contact.id;
                 view.number = number;
+                view.phoneNumber = number;
                 view.newMessage = false;
             }
 
             onNumberSelected: {
+                view.filterProperty = "phoneNumber"
+                view.filterValue = number;
                 view.number = number;
+                view.phoneNumber = number;
                 view.newMessage = false;
             }
         }
@@ -234,8 +240,10 @@ LocalWidgets.TelephonyPage {
             // use whatever is on the text field
             if (view.newMessage) {
                 var phoneNumber = headerLoader.item.text;
-                view.number = phoneNumber
-                view.phoneNumber = phoneNumber
+                view.filterProperty = "phoneNumber"
+                view.filterValue = phoneNumber;
+                view.number = phoneNumber;
+                view.phoneNumber = phoneNumber;
                 view.newMessage = false;
             }
 

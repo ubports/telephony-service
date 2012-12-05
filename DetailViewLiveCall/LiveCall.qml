@@ -46,7 +46,7 @@ LocalWidgets.TelephonyPage {
                     filterValue = contactWatcher.contactId;
                 }
 
-                telephony.showCommunication(filterProperty, filterValue, contactWatcher.contactId, true);
+                telephony.showCommunication(filterProperty, filterValue, "", contactWatcher.contactId, true);
                 telephony.endCall();
             }
         }
