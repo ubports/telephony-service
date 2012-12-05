@@ -18,7 +18,6 @@ FocusScope {
         source: "../assets/dialer_top_number_bg.png"
     }
 
-    // FIXME: check how to disable OSK
     TextInput {
         id: input
 
@@ -34,7 +33,50 @@ FocusScope {
         font.weight: Font.DemiBold
         font.family: "Ubuntu"
         color: "#464646"
-        focus: true
+        
+        // we dont receive focus to avoid osk to appear
+        activeFocusOnPress: false
+        focus: false
+        cursorVisible: true
         clip: true
+
+        // force cursor to be always visible
+        onCursorVisibleChanged: {
+            if (!cursorVisible)
+                cursorVisible = true
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        property bool held: false
+        onPressAndHold: {
+            if (input.text != "") {
+                held = true
+                input.selectAll()
+                input.copy()
+            } else {
+                input.paste()
+            }
+        }
+        onReleased: {
+            if(held) {
+                input.deselect()
+                held = false
+            }
+
+        }
+    }
+
+    Label {
+        id: hint
+        visible: input.text == ""
+        anchors.centerIn: input
+        text: "Enter a number"
+        font.pixelSize: units.dp(20)
+        font.weight: Font.DemiBold
+        font.family: "Ubuntu"
+        color: "#464646"
+        opacity: 0.25
     }
 }
