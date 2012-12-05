@@ -1,10 +1,3 @@
-telephony-app (0.58.13) UNRELEASED; urgency=low
-
-  * Make sure the view shows the edit input field for the cases where there is
-    no message shown.
-
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 05 Dec 2012 18:18:39 +0000
-
 telephony-app (0.58.12) quantal; urgency=low
 
   [ Tiago Salem Herrmann ]
