@@ -33,10 +33,7 @@ FocusScope {
         font.weight: Font.DemiBold
         font.family: "Ubuntu"
         color: "#464646"
-        
-        // we dont receive focus to avoid osk to appear
-        activeFocusOnPress: false
-        focus: false
+        focus: true
         cursorVisible: true
         clip: true
 
