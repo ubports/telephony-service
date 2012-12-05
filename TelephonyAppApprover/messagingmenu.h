@@ -28,12 +28,12 @@
 class Call
 {
 public:
-    Call() : count(0), message(0) { }
+    Call() : count(0) { }
     QString number;
     int count;
     QString contactAlias;
     QString contactIcon;
-    MessagingMenuMessage *message;
+    QString messageId;
 
     bool operator==(const Call &other) {
         return other.number == number;
@@ -55,8 +55,9 @@ public:
 private:
     explicit MessagingMenu(QObject *parent = 0);
 
-    MessagingMenuApp *mApp;
-    QMap<QString, MessagingMenuMessage*> mMessages;
+    MessagingMenuApp *mCallsApp;
+    MessagingMenuApp *mMessagesApp;
+    QMap<QString, QString> mMessages;
     QList<Call> mCalls;
 };
 
