@@ -235,9 +235,10 @@ LocalWidgets.TelephonyPage {
                             onActionClicked: {
                                 switch(modelData.type) {
                                 case ContactDetail.PhoneNumber:
-                                    var filterProperty = "phoneNumber";
-                                    var filterValue = modelData.number;
-                                    telephony.showCommunication(filterProperty, filterValue, "", true);
+                                    var filterProperty = "contactId";
+                                    var filterValue = contact.id;
+                                    var phoneNumber = modelData.number;
+                                    telephony.showCommunication(filterProperty, filterValue, phoneNumber, contact.id, true);
                                     break;
                                 case ContactDetail.EmailAddress:
                                     Qt.openUrlExternally("mailto:" + modelData.emailAddress);

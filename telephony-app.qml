@@ -93,8 +93,12 @@ Item {
         callNumber(callManager.voicemailNumber);
     }
 
-    function showCommunication(prop, value, id, clear) {
-        var properties = { filterProperty: prop, filterValue: value, newMessage: false, contactId: id };
+    function showCommunication(prop, value, phoneNumber, id, clear) {
+        var properties = { filterProperty: prop,
+                           filterValue: value,
+                           newMessage: false,
+                           phoneNumber: phoneNumber,
+                           contactId: id };
 
         communication.load(properties, clear);
     }
