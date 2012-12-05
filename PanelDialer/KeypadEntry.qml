@@ -36,5 +36,6 @@ FocusScope {
         color: "#464646"
         focus: true
         clip: true
+        readOnly: true
     }
 }
