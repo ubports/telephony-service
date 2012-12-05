@@ -223,7 +223,7 @@ LocalWidgets.TelephonyPage {
 
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: (keyboardRect.visible  && footer.hasFocus) ? keyboardRect.top : parent.bottom
+        anchors.bottom: keyboardRect.visible ? keyboardRect.top : parent.bottom
         height: visible ? units.gu(5) : 0
         visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
