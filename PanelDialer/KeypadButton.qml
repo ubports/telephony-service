@@ -54,5 +54,6 @@ Button {
         id: subImage
         visible: source != ""
         anchors.centerIn: sublabelItem
+        opacity: 0.8
     }
 }
