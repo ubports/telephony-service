@@ -29,7 +29,7 @@ FocusScope {
         height: units.gu(8)
 
         image: Image {
-            source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_contacts_details.png"
+            source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar-default.png"
         }
     }
 

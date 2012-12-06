@@ -44,7 +44,7 @@ LocalWidgets.TelephonyPage {
         anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
 
-        placeholderText: "Search contacts"
+        placeholderText: "Search"
         Keys.onEscapePressed: text = ""
 
         primaryItem: AbstractButton {

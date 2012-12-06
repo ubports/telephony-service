@@ -16,7 +16,7 @@ ListItem.Standard {
         width: units.gu(6)
         image: Image {
             anchors.fill: parent
-            source: decoration != "" ? Qt.resolvedUrl(decoration) : "../assets/avatar_contacts_list.png"
+            source: decoration != "" ? Qt.resolvedUrl(decoration) : "../assets/avatar-default.png"
         }
     }
 

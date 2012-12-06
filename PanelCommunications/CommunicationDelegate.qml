@@ -45,7 +45,7 @@ ListItem.Base {
             width: units.gu(6)
 
             image: Image {
-                source: communicationDelegate.avatar != "" ? communicationDelegate.avatar : "../assets/avatar_contacts_list.png"
+                source: communicationDelegate.avatar != "" ? communicationDelegate.avatar : "../assets/avatar-default.png"
                 fillMode: Image.PreserveAspectCrop
             }
         }
@@ -58,7 +58,6 @@ ListItem.Base {
         }
 
         Column {
-            spacing: units.gu(0.5)
             width: parent.width - x
 
             Label {
@@ -67,7 +66,6 @@ ListItem.Base {
                 elide: Text.ElideRight
                 text: communicationDelegate.title
                 color: selected ? __selectedFontColor : __normalFontColor
-                font.bold: true
                 fontSize: "medium"
                 opacity: 0.9
             }
@@ -88,7 +86,7 @@ ListItem.Base {
                 elide: Text.ElideRight
                 text: communicationDelegate.subtitle
                 color: selected ? __selectedFontColor : __normalFontColor
-                font.bold: true
+                font.weight: Font.DemiBold
                 fontSize: "small"
                 opacity: 0.6
             }

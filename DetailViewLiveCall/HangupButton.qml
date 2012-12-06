@@ -10,7 +10,7 @@ AbstractButton {
 
     UbuntuShape {
         anchors.fill: parent
-        color: button.pressed ? "#cd3804" : "#dd4814"
+        color: button.pressed ? "#aaaaaa" : "#bababa"
         radius: "medium"
     }
 

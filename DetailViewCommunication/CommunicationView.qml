@@ -172,7 +172,7 @@ LocalWidgets.TelephonyPage {
 
 
                 ListItem.ThinDivider {
-                    height: units.gu(0.5)
+
                 }
 
                 Label {
@@ -183,7 +183,9 @@ LocalWidgets.TelephonyPage {
                     color: "#333333"
                     opacity: 0.6
                     text: DateUtils.formatFriendlyDate(section);
-                    height: paintedHeight + units.gu(1)
+                    height: paintedHeight + units.gu(1.5)
+                    verticalAlignment: Text.AlignVCenter
+
                 }
             }
 
@@ -199,13 +201,13 @@ LocalWidgets.TelephonyPage {
                 itemIcon: {
                     switch (model.itemType) {
                     case "message":
-                        "../assets/contact_icon_message.png";
+                        "../assets/messages.png";
                         break;
                     case "call":
-                        "../assets/contact_icon_phone.png";
+                        "../assets/phone-call.png";
                         break;
                     case "group":
-                        "../assets/tab_icon_contacts_inactive.png";
+                        "../assets/contact.png";
                         break;
                     default:
                         "";
@@ -230,7 +232,7 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: keyboardRect.visible ? keyboardRect.top : parent.bottom
-        height: visible ? units.gu(5) : 0
+        height: visible ? units.gu(7) : 0
         visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
         validRecipient: (!view.newMessage || headerLoader.item.text.match("^[0-9+][0-9+-]*$") != null)
