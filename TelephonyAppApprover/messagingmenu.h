@@ -62,6 +62,8 @@ private:
     MessagingMenuApp *mMessagesApp;
     QMap<QString, QString> mMessages;
     QList<Call> mCalls;
+    QString mVoicemailId;
+    int mVoicemailCount;
 };
 
 #endif // MESSAGINGMENU_H
