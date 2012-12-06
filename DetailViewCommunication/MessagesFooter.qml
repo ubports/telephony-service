@@ -10,7 +10,6 @@ FocusScope {
     signal newMessage(string message)
 
     height: entry.height + units.gu(2)
-    onHeightChanged: console.log("Height: " + height);
 
     Rectangle {
         anchors.fill: parent
@@ -49,7 +48,6 @@ FocusScope {
             Keys.onReturnPressed: sendButton.clicked(null)
             Keys.onEscapePressed: text = ""
             height: units.gu(4)
-            onHeightChanged: console.log("Height of entry: " + height)
         }
 
         Button {
