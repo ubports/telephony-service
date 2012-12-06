@@ -24,6 +24,7 @@
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
+#include <TelepathyQt/PendingChannelRequest>
 
 #define CANONICAL_IFACE_TELEPHONY "com.canonical.Telephony"
 
@@ -76,6 +77,18 @@ void CallManager::onAccountReady()
         mVoicemailNumber = replyNumber.value();
         Q_EMIT voicemailNumberChanged();
     }
+}
+
+void CallManager::onChannelRequested(Tp::PendingOperation *op)
+{
+    Tp::PendingChannelRequest *pendingRequest = qobject_cast<Tp::PendingChannelRequest*>(op);
+
+    if (!pendingRequest) {
+        qCritical() << "The pending operation was not a Tp::PendingChannelRequest" << op;
+        return;
+    }
+
+    Q_EMIT channelRequested(pendingRequest->channelRequest());
 }
 
 QObject *CallManager::foregroundCall() const
@@ -165,7 +178,9 @@ void CallManager::onContactsAvailable(Tp::PendingOperation *op)
 
     // start call to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        account->ensureAudioCall(contact, QLatin1String("audio"), QDateTime::currentDateTime(), "org.freedesktop.Telepathy.Client.TelephonyApp");
+        connect(account->ensureAudioCall(contact, QLatin1String("audio"), QDateTime::currentDateTime(), "org.freedesktop.Telepathy.Client.TelephonyApp"),
+                SIGNAL(finished(Tp::PendingOperation*)),
+                SLOT(onChannelRequested(Tp::PendingOperation*)));
 
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;

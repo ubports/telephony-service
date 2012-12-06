@@ -24,6 +24,7 @@
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
+#include <TelepathyQt/PendingChannelRequest>
 
 ChatManager::ChatManager(QObject *parent)
 : QObject(parent)
@@ -173,6 +174,18 @@ void ChatManager::onMessageSent(Tp::PendingOperation *op)
     Q_EMIT messageSent(psm->channel()->targetContact()->id(), psm->message().text());
 }
 
+void ChatManager::onChannelRequested(Tp::PendingOperation *op)
+{
+    Tp::PendingChannelRequest *pendingRequest = qobject_cast<Tp::PendingChannelRequest*>(op);
+
+    if (!pendingRequest) {
+        qCritical() << "The pending operation was not a Tp::PendingChannelRequest" << op;
+        return;
+    }
+
+    Q_EMIT channelRequested(pendingRequest->channelRequest());
+}
+
 void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &messageId)
 {
     Tp::TextChannelPtr channel = existingChat(phoneNumber);
@@ -215,7 +228,9 @@ void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
     // start chatting to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
         QString handler = TelepathyHelper::instance()->channelHandler()->property("clientName").toString();
-        account->ensureTextChat(contact, QDateTime::currentDateTime(), handler);
+        connect(account->ensureTextChat(contact, QDateTime::currentDateTime(), handler),
+                SIGNAL(finished(Tp::PendingOperation*)),
+                SLOT(onChannelRequested(Tp::PendingOperation*)));
 
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;
