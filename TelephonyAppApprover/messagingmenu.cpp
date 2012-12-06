@@ -51,6 +51,13 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
                                                                NULL,
                                                                text.toUtf8().data(),
                                                                timestamp.toMSecsSinceEpoch());
+    messaging_menu_message_add_action(message,
+                                      "quickreply",
+                                      NULL, // label
+                                      G_VARIANT_TYPE("s"),
+                                      NULL // predefined values
+                                      );
+    g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::messageActivateCallback), this);
     mMessages[messageId] = message;
     messaging_menu_app_append_message(mApp, message, "telephony-app", true);
     // TODO: setup callbacks
@@ -121,6 +128,23 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
 
     g_object_unref(file);
     g_object_unref(icon);
+}
+
+void MessagingMenu::messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance)
+{
+    QString action(actionId);
+    QString messageId(messaging_menu_message_get_id(message));
+
+    QString text(g_variant_get_string(param, NULL));
+
+    if (action == "quickreply") {
+        instance->sendMessageReply(messageId, text);
+    }
+}
+
+void MessagingMenu::sendMessageReply(const QString &messageId, const QString &reply)
+{
+    qDebug() << "BLABLA replying to message" << messageId << "with text" << reply;
 }
 
 

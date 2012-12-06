@@ -52,6 +52,11 @@ public:
 
     void addCall(const QString &phoneNumber, const QDateTime &timestamp);
 
+    static void messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
+
+private Q_SLOTS:
+    void sendMessageReply(const QString &messageId, const QString &reply);
+
 private:
     explicit MessagingMenu(QObject *parent = 0);
 
