@@ -94,9 +94,9 @@ LocalWidgets.TelephonyPage {
                 anchors.right: callButton.left
                 anchors.verticalCenter: callButton.verticalCenter
                 anchors.rightMargin: units.gu(1)
-                icon: "../assets/dialer_contacts.png"
-                iconWidth: units.gu(4)
-                iconHeight: units.gu(4)
+                icon: "../assets/contacts.png"
+                iconWidth: units.gu(3)
+                iconHeight: units.gu(3)
                 width: units.gu(7)
                 height: units.gu(7)
                 onClicked: {
@@ -111,9 +111,9 @@ LocalWidgets.TelephonyPage {
                 anchors.leftMargin: units.gu(1)
                 width: units.gu(7)
                 height: units.gu(7)
-                icon: "../assets/dialer_backspace.png"
-                iconWidth: units.gu(4)
-                iconHeight: units.gu(4)
+                icon: "../assets/erase.png"
+                iconWidth: units.gu(3)
+                iconHeight: units.gu(3)
 
                 onPressAndHold: input.text = ""
 

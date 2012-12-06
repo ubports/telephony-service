@@ -47,6 +47,7 @@ Item {
                     leftMargin: units.gu(2)
                 }
                 fontSize: "x-large"
+                font.weight: Font.Light
                 color: "#333333"
                 opacity: 0.4
                 height: units.gu(4)

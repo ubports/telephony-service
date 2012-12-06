@@ -9,6 +9,7 @@ Button {
 
     property alias label: labelItem.text
     property alias sublabel: sublabelItem.text
+    property alias sublabelSize: sublabelItem.fontSize
     property int keycode
     property bool isCorner: false
     property int corner

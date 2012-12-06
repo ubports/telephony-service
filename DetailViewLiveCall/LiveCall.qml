@@ -124,7 +124,7 @@ LocalWidgets.TelephonyPage {
                     width: units.gu(7)
                     height: units.gu(7)
                     image: Image {
-                        source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_messaging.png"
+                        source: (contact && contact.avatar != "") ? contact.avatar : "../assets/contacts.png"
                         fillMode: Image.PreserveAspectCrop
                     }
                 }
@@ -181,11 +181,8 @@ LocalWidgets.TelephonyPage {
                     width: childrenRect.width
                     height: childrenRect.height
 
-                    // TODO: fix assets for selected buttons
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_pause.png"
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
+                        iconSource: selected ? "../assets/play.png" : "../assets/pause.png"
                         selected: liveCall.onHold
                         onClicked: {
                             if (call) {
@@ -195,10 +192,8 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_speaker.png"
+                        iconSource: selected ? "../assets/speaker.png" : "../assets/speaker-mute.png"
                         selected: liveCall.isSpeaker
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
                         onClicked: {
                             if (call) {
                                 call.speaker = !selected
@@ -207,9 +202,7 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_mute.png"
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
+                        iconSource: selected ? "../assets/microphone-mute.png" : "../assets/microphone.png"
                         selected: liveCall.isMuted
                         onClicked: {
                             if (call) {
@@ -219,18 +212,14 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_add.png"
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
+                        iconSource: "../assets/quick-add.png"
                         selected: false
                         onClicked: {
                         }
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_keyboard.png"
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
+                        iconSource: "../assets/keypad.png"
                         selected: liveCall.isDtmf
                         onClicked: {
                             liveCall.isDtmf = true
@@ -238,9 +227,7 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_contact.png"
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
+                        iconSource: "../assets/live_call_contacts.png"
                         selected: false
                         onClicked: {
                         }
@@ -371,7 +358,7 @@ LocalWidgets.TelephonyPage {
                     anchors.verticalCenter: hangupButton2.verticalCenter
                     anchors.rightMargin: units.gu(1)
                     // FIXME: use the right icon
-                    icon: "../assets/dialer_backspace.png"
+                    icon: "../assets/back.png"
                     iconWidth: units.gu(4)
                     iconHeight: units.gu(4)
                     width: units.gu(7)

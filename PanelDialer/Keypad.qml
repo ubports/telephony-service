@@ -89,6 +89,7 @@ Item {
         KeypadButton {
             label: "0"
             sublabel: "+"
+            sublabelSize: "medium"
             keycode: Qt.Key_0
             onClicked: keypad.keyPressed(keycode, label)
             onPressAndHold: keypad.keyPressed(keycode, sublabel)
