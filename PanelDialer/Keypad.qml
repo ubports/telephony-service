@@ -20,6 +20,7 @@ Item {
             keycode: Qt.Key_1
             onClicked: keypad.keyPressed(keycode, label)
             onPressAndHold: telephony.callVoicemail()
+            iconSource: "../assets/voicemail.png"
         }
 
         KeypadButton {

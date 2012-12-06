@@ -10,6 +10,7 @@ Button {
     property alias label: labelItem.text
     property alias sublabel: sublabelItem.text
     property alias sublabelSize: sublabelItem.fontSize
+    property alias iconSource: subImage.source
     property int keycode
     property bool isCorner: false
     property int corner
@@ -46,5 +47,11 @@ Button {
         horizontalAlignment: Text.AlignHCenter
         fontSize: "x-small"
         color: "#a3a3a3"
+    }
+
+    Image {
+        id: subImage
+        visible: source != ""
+        anchors.centerIn: sublabelItem
     }
 }
