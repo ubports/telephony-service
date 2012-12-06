@@ -30,14 +30,33 @@ LocalWidgets.TelephonyPage {
             anchors.left: parent.left
             anchors.right: parent.right
             focus: true
+            placeHolder: "Enter a number"
             Keys.forwardTo: [callButton]
         }
+
+        Image {
+            id: divider
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: keypadEntry.bottom
+            source: "../assets/dialer_top_number_bg.png"
+        }
+
 
         Keypad {
             id: keypad
 
-            anchors.top: keypadEntry.bottom
-            onKeyPressed: keypadEntry.value += label
+            anchors.top: divider.bottom
+            onKeyPressed: {
+                if (input.cursorPosition != 0)  {
+                    var position = input.cursorPosition;
+                    input.text = input.text.slice(0, input.cursorPosition) + label + input.text.slice(input.cursorPosition);
+                    input.cursorPosition = position +1 ;
+                } else {
+                    keypadEntry.value += label
+                }
+            }
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: units.gu(3)
         }
@@ -95,6 +114,8 @@ LocalWidgets.TelephonyPage {
                 icon: "../assets/dialer_backspace.png"
                 iconWidth: units.gu(4)
                 iconHeight: units.gu(4)
+
+                onPressAndHold: input.text = ""
 
                 onClicked:  {
                     if (input.cursorPosition != 0)  {

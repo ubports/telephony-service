@@ -302,6 +302,7 @@ LocalWidgets.TelephonyPage {
                 anchors.right: keypad.right
                 anchors.leftMargin: units.dp(-2)
                 anchors.rightMargin: units.dp(-2)
+                placeHolder: liveCall.number
                 focus: true
             }
 
@@ -313,7 +314,6 @@ LocalWidgets.TelephonyPage {
                 anchors.top: keypadEntry.bottom
                 source: "../assets/dialer_top_number_bg.png"
             }
-
 
             Keypad {
                 id: keypad
@@ -340,15 +340,42 @@ LocalWidgets.TelephonyPage {
                     source: "../assets/horizontal_divider.png"
                 }
 
-                CallButton {
-                    id: backButton
-                    objectName: "backButton"
+                Button {
+                    id: hangupButton2
+
+                    //icon: "../assets/incall_hangup.png"
+
                     width: units.gu(20)
                     height: units.gu(8)
                     anchors.top: divider5.bottom
                     anchors.topMargin: units.gu(2)
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: "#bf400c"
+                    ItemStyle.class: "darkbutton"
+                    onClicked: endCall()
+
+                    Image {
+                        anchors.centerIn: parent
+                        width: units.gu(6)
+                        height: units.gu(6)
+                        source: "../assets/incall_hangup.png"
+                        fillMode: Image.PreserveAspectFit
+                        z: 1
+                    }
+                }
+
+                CustomButton {
+                    id: backButton
+                    objectName: "backButton"
+                    anchors.right: hangupButton2.left
+                    anchors.verticalCenter: hangupButton2.verticalCenter
+                    anchors.rightMargin: units.gu(1)
+                    // FIXME: use the right icon
+                    icon: "../assets/dialer_backspace.png"
+                    iconWidth: units.gu(4)
+                    iconHeight: units.gu(4)
+                    width: units.gu(7)
+                    height: units.gu(7)
                     onClicked: liveCall.isDtmf = false
                 }
             }

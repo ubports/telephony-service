@@ -6,24 +6,27 @@ FocusScope {
 
     property alias value: input.text
     property alias input: input
+    property alias placeHolder: hint.text
 
     height: units.gu(7.5)
 
-    Image {
-        id: divider
-
+    Label {
+        id: dots
+        clip: true
+        width: input.contentWidth > input.width ? contentWidth : 0
+        visible: input.contentWidth > input.width
         anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        source: "../assets/dialer_top_number_bg.png"
+        text: "..."
+        font.pixelSize: units.dp(43)
+        font.weight: Font.DemiBold
+        font.family: "Ubuntu"
+        color: "#464646"
     }
 
-    // FIXME: check how to disable OSK
     TextInput {
         id: input
 
-        anchors.left: parent.left
-        anchors.leftMargin: units.gu(5)
+        anchors.left: dots.right
         anchors.right: parent.right
         anchors.rightMargin: units.gu(2)
         anchors.verticalCenter: parent.verticalCenter
@@ -35,7 +38,49 @@ FocusScope {
         font.family: "Ubuntu"
         color: "#464646"
         focus: true
+        cursorVisible: true
         clip: true
-        readOnly: true
+
+        // force cursor to be always visible
+        onCursorVisibleChanged: {
+            if (!cursorVisible)
+                cursorVisible = true
+        }
+    }
+
+    MouseArea {
+        anchors.fill: input
+        property bool held: false
+        onClicked: {
+            input.cursorPosition = input.positionAt(mouseX,TextInput.CursorOnCharacter)
+        }
+        onPressAndHold: {
+            if (input.text != "") {
+                held = true
+                input.selectAll()
+                input.copy()
+            } else {
+                input.paste()
+            }
+        }
+        onReleased: {
+            if(held) {
+                input.deselect()
+                held = false
+            }
+
+        }
+    }
+
+    Label {
+        id: hint
+        visible: input.text == ""
+        anchors.centerIn: input
+        text: ""
+        font.pixelSize: units.dp(20)
+        font.weight: Font.DemiBold
+        font.family: "Ubuntu"
+        color: "#464646"
+        opacity: 0.25
     }
 }
