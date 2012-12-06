@@ -33,6 +33,15 @@ FocusScope {
         }
     }
 
+    Image {
+        anchors.right: labelBox.left
+        anchors.top: labelBox.top
+        height: units.gu(2)
+        width: units.gu(2)
+        anchors.rightMargin: units.gu(1)
+        source: contact.isFavorite ? "../assets/favorite-selected.png" : "../assets/favorite-unselected.png"
+    }
+
     Item {
         id: labelBox
 
