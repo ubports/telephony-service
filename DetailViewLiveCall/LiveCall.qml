@@ -292,7 +292,13 @@ LocalWidgets.TelephonyPage {
                 id: keypad
 
                 anchors.top: divider4.bottom
-                onKeyPressed: keypadEntry.value += label
+                onKeyPressed: {
+                    keypadEntry.value += label
+                    if (call) {
+                        call.sendDTMF(label)
+                    }
+                }
+
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: units.dp(10)
             }
