@@ -123,6 +123,14 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     g_object_unref(icon);
 }
 
+void MessagingMenu::showVoicemailEntry(int count)
+{
+}
+
+void MessagingMenu::hideVoicemailEntry()
+{
+}
+
 
 MessagingMenu *MessagingMenu::instance()
 {

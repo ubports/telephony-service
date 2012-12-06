@@ -25,24 +25,11 @@
 #include <TelepathyQt/ChannelClassSpecList>
 #include <TelepathyQt/MethodInvocationContext>
 #include <TelepathyQt/ReceivedMessage>
-#include <qindicateserver.h>
-#include <qindicateindicator.h>
 #include <QImage>
 
 TextChannelObserver::TextChannelObserver(QObject *parent) :
     QObject(parent), Tp::AbstractClientObserver(channelFilters(), true)
-{
-    mIndicateServer = QIndicate::Server::defaultInstance();
-    mIndicateServer->setType("message");
-    mIndicateServer->setDesktopFile("/usr/share/applications/telephony-app-sms.desktop");
-
-    mNewMessageIndicator = new QIndicate::Indicator(this);
-    mNewMessageIndicator->setNameProperty("New Message...");
-    mNewMessageIndicator->show();
-
-    connect(mNewMessageIndicator,
-            SIGNAL(display(QIndicate::Indicator*)),
-            SLOT(onIndicatorDisplay(QIndicate::Indicator*)));
+{    
 }
 
 Tp::ChannelClassSpecList TextChannelObserver::channelFilters() const
@@ -84,43 +71,6 @@ void TextChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<>
         mReadyMap[ready] = textChannel;
         mContexts[textChannel.data()] = context;
     }
-}
-
-void TextChannelObserver::updateIndicatorsFromChannel(const Tp::TextChannelPtr &textChannel)
-{
-    if (textChannel->messageQueue().isEmpty()) {
-        // no more pending messages, remove the indicator
-        removeIndicatorsFromChannel(textChannel);
-    } else {
-        QIndicate::Indicator *indicator;
-        if (mIndicators.contains(textChannel->objectPath())) {
-            indicator = mIndicators[textChannel->objectPath()];
-        } else {
-            indicator = new QIndicate::Indicator(this);
-            mIndicators[textChannel->objectPath()] = indicator;
-            indicator->setProperty("channelPath", textChannel->objectPath());
-
-            connect(indicator,
-                    SIGNAL(display(QIndicate::Indicator*)),
-                    SLOT(onIndicatorDisplay(QIndicate::Indicator*)));
-        }
-
-        indicator->setNameProperty(textChannel->targetContact()->alias());
-        indicator->setIconProperty(QImage(textChannel->targetContact()->avatarData().fileName));
-        indicator->setCountProperty(textChannel->messageQueue().count());
-        indicator->setTimeProperty(textChannel->messageQueue().last().received());
-        indicator->setDrawAttentionProperty(true);
-        indicator->show();
-    }
-}
-
-void TextChannelObserver::removeIndicatorsFromChannel(const Tp::TextChannelPtr &textChannel)
-{
-    if (!mIndicators.contains(textChannel->objectPath())) {
-        return;
-    }
-
-    delete mIndicators.take(textChannel->objectPath());
 }
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
@@ -196,11 +146,10 @@ void TextChannelObserver::onTextChannelReady(Tp::PendingOperation *op)
             SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
 
     mChannels.append(textChannel);
-    updateIndicatorsFromChannel(textChannel);
 
-    // notify the latest message from the channel, if any
-    if (!textChannel->messageQueue().isEmpty()) {
-        showNotificationForMessage(textChannel->messageQueue().last());
+    // notify all the messages from the channel
+    Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
+        showNotificationForMessage(message);
     }
 
     if (!mContexts.contains(textChannel.data())) {
@@ -226,43 +175,15 @@ void TextChannelObserver::onTextChannelReady(Tp::PendingOperation *op)
 void TextChannelObserver::onTextChannelInvalidated()
 {
     Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
-    removeIndicatorsFromChannel(textChannel);
     mChannels.removeAll(textChannel);
 }
 
 void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 {
-    Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
-    updateIndicatorsFromChannel(textChannel);
-
     showNotificationForMessage(message);
 }
 
 void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
 {
-    Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
-    updateIndicatorsFromChannel(textChannel);
     MessagingMenu::instance()->removeMessage(message.messageToken());
-}
-
-void TextChannelObserver::onIndicatorDisplay(QIndicate::Indicator *indicator)
-{
-    QDBusInterface telephonyApp("com.canonical.TelephonyApp",
-                                "/com/canonical/TelephonyApp",
-                                "com.canonical.TelephonyApp");
-
-    if (indicator == mNewMessageIndicator) {
-        telephonyApp.call("NewMessage");
-        return;
-    }
-
-    // look for the channel to get the number to display messages from
-    Tp::TextChannelPtr channel = channelFromPath(indicator->property("channelPath").toString());
-    if (channel.isNull()) {
-        qWarning() << "Unable to find the text channel corresponding to the indicator" << indicator;
-        return;
-    }
-
-    QString id = channel->targetContact()->id();
-    telephonyApp.call("ShowMessages", id);
 }
