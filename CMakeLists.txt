@@ -44,7 +44,6 @@ pkg_check_modules(TPL_QT5 REQUIRED TelepathyLoggerQt5)
 pkg_check_modules(QTGLIB REQUIRED QtGLib-2.0)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
-pkg_check_modules(INDICATE_QT REQUIRED indicate-qt)
 pkg_check_modules(MESSAGING_MENU REQUIRED messaging-menu)
 
 add_definitions(-DQT_NO_KEYWORDS)

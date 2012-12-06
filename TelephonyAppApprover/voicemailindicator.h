@@ -24,21 +24,17 @@
 #include <QVariantMap>
 #include <QStringList>
 
-namespace QIndicate {
-    class Indicator;
-    class Server;
-}
-
 class VoiceMailIndicator : public QObject
 {
     Q_OBJECT
 public:
     explicit VoiceMailIndicator(QObject *parent = 0);
 
+    void showVoicemailOnApp();
+
 public Q_SLOTS:
     void onVoicemailCountChanged(int count);
     void onVoicemailIndicatorChanged(bool active);
-    void onIndicatorDisplay(QIndicate::Indicator *indicator);
     void onAccountReady();
 
 private:
@@ -46,8 +42,6 @@ private:
     int voicemailCount();
     bool checkConnected();
     QDBusConnection mConnection;
-    QIndicate::Server *mIndicateServer;
-    QIndicate::Indicator *mIndicator;
 };
 
 #endif // VOICEMAILINDICATOR_H

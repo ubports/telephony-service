@@ -52,6 +52,9 @@ public:
 
     void addCall(const QString &phoneNumber, const QDateTime &timestamp);
 
+    void showVoicemailEntry(int count);
+    void hideVoicemailEntry();
+
 private:
     explicit MessagingMenu(QObject *parent = 0);
 
@@ -59,6 +62,8 @@ private:
     MessagingMenuApp *mMessagesApp;
     QMap<QString, QString> mMessages;
     QList<Call> mCalls;
+    QString mVoicemailId;
+    int mVoicemailCount;
 };
 
 #endif // MESSAGINGMENU_H

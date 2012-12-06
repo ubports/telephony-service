@@ -23,7 +23,7 @@
 #include <gio/gio.h>
 
 MessagingMenu::MessagingMenu(QObject *parent) :
-    QObject(parent)
+    QObject(parent), mVoicemailCount(-1)
 {
     GIcon *icon = g_icon_new_for_string("telephony-app", NULL);
     mMessagesApp = messaging_menu_app_new("telephony-app-sms.desktop");
@@ -131,6 +131,45 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     g_object_unref(file);
     g_object_unref(icon);
     g_object_unref(message);
+}
+
+void MessagingMenu::showVoicemailEntry(int count)
+{
+    MessagingMenuMessage *message;
+    if (!mVoicemailId.isEmpty()) {
+        // if the count didn't change, don't do anything
+        if (count == mVoicemailCount) {
+            return;
+        }
+
+        message = messaging_menu_app_get_message(mCallsApp, mVoicemailId.toUtf8().data());
+        messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
+    }
+
+    QString messageBody = "Voicemail messages";
+    if (count != 0) {
+        messageBody = QString("%1 voicemail messages").arg(count);
+    }
+
+    GIcon *icon = g_themed_icon_new("indicator-call");
+    message = messaging_menu_message_new("voicemail",
+                                         icon,
+                                         "Voicemail",
+                                         NULL,
+                                         messageBody.toUtf8().data(),
+                                         QDateTime::currentDateTime().toMSecsSinceEpoch());
+    mVoicemailId = "voicemail";
+
+    g_object_unref(icon);
+    g_object_unref(message);
+}
+
+void MessagingMenu::hideVoicemailEntry()
+{
+    if (!mVoicemailId.isEmpty()) {
+        messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
+        mVoicemailId = "";
+    }
 }
 
 
