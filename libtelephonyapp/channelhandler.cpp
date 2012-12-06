@@ -21,7 +21,9 @@
 #include "channelhandler.h"
 #include "chatmanager.h"
 #include "telepathyhelper.h"
+#include "config.h"
 
+#include <TelepathyQt/MethodInvocationContext>
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ChannelClassSpec>
@@ -45,6 +47,19 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
                                const QDateTime &userActionTime,
                                const Tp::AbstractClientHandler::HandlerInfo &handlerInfo)
 {
+    // if the class is not in the telephony application, we should only handle the channels that
+    // were requested by this instance.
+    if (!isTelephonyApplicationInstance()) {
+        Q_FOREACH(Tp::ChannelRequestPtr channelRequest, requestsSatisfied) {
+            if (!mChannelRequests.contains(channelRequest)) {
+                context->setFinishedWithError(TP_QT_ERROR_REJECTED,
+                                              "The channel should be handled by org.freedesktop.Telepathy.Client.TelephonyApp");
+            }
+
+            mChannelRequests.removeOne(channelRequest);
+        }
+    }
+
     Q_FOREACH(const Tp::ChannelPtr channel, channels) {
         Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
         if (textChannel) {
@@ -131,4 +146,9 @@ void ChannelHandler::onCallChannelReady(Tp::PendingOperation *op)
     mReadyRequests.remove(pr);
 
     Q_EMIT callChannelAvailable(callChannel);
+}
+
+void ChannelHandler::onChannelRequested(Tp::ChannelRequestPtr channelRequest)
+{
+    mChannelRequests.append(channelRequest);
 }

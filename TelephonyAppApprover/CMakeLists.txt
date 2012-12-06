@@ -4,7 +4,6 @@ set(qt_SRCS
     telephonyappapprover.cpp
     textchannelobserver.cpp
     voicemailindicator.cpp
-    telepathyhelper.cpp
     )
 
 set(approver_SRCS main.cpp ${qt_SRCS})
