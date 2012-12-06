@@ -37,7 +37,7 @@ AbstractButton {
             anchors.fill: parent
             anchors.margins: units.dp(1)
             source: call ? call.contactAvatar : fallbackSource
-            fallbackSource: "assets/avatar_contacts_list.png"
+            fallbackSource: "assets/avatar-default.png"
             frameSource: "assets/oncall_picture_frame.sci"
         }
 

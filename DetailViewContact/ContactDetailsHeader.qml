@@ -29,8 +29,17 @@ FocusScope {
         height: units.gu(8)
 
         image: Image {
-            source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_contacts_details.png"
+            source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar-default.png"
         }
+    }
+
+    Image {
+        anchors.right: labelBox.left
+        anchors.top: labelBox.top
+        height: units.gu(2)
+        width: units.gu(2)
+        anchors.rightMargin: units.gu(1)
+        source: contact.isFavorite ? "../assets/favorite-selected.png" : "../assets/favorite-unselected.png"
     }
 
     Item {

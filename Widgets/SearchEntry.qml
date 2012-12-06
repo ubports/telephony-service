@@ -49,7 +49,7 @@ FocusScope {
     /* Keys forwarded to the search entry are forwarded to the text input. */
     Keys.forwardTo: [searchInput]
 
-    height: units.gu(3)
+    height: units.gu(4)
     width: units.gu(13)
 
     BorderImage {
@@ -134,7 +134,7 @@ FocusScope {
             horizontalAlignment: Text.AlignLeft
 
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-            font.pixelSize: FontUtils.sizeToPixels("small")
+            font.pixelSize: FontUtils.sizeToPixels("large")
             focus: true
             selectByMouse: true
             cursorDelegate: cursor
@@ -200,7 +200,6 @@ FocusScope {
 
                 color: Qt.rgba(0.7, 0.7, 0.7, 1.0)
                 fontSize: "small"
-                font.italic: true
                 text: {
                     if(searchInput.text || searchInput.inputMethodComposing)
                         return ""

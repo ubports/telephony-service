@@ -38,13 +38,16 @@ FocusScope {
 
             objectName: "newMessageText"
             anchors.left: parent.left
+            anchors.leftMargin: units.gu(1)
             anchors.right: sendButton.left
+            anchors.rightMargin: units.gu(1)
             anchors.bottom: parent.bottom
-            anchors.margins: units.gu(1)
+            anchors.bottomMargin: units.gu(1.5)
             focus: true
             // send message if return was pressed
             Keys.onReturnPressed: sendButton.clicked(null)
             Keys.onEscapePressed: text = ""
+            height: units.gu(4)
         }
 
         Button {
