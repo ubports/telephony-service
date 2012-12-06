@@ -23,21 +23,6 @@ LocalWidgets.TelephonyPage {
 
     chromeButtons: newMessage ? null : buttons
 
-    ListModel {
-        id: buttons
-
-        ListElement {
-            label: "Edit"
-            name: "edit"
-        }
-    }
-
-    onChromeButtonClicked: {
-        if (buttonName == "edit") {
-            console.log("TODO: edit clicked, implement");
-        }
-    }
-
     ContactWatcher {
         id: contactWatcher
     }
@@ -113,12 +98,18 @@ LocalWidgets.TelephonyPage {
             width: view.width
 
             onContactSelected: {
+                view.filterProperty = "contactId";
+                view.filterValue = contact.id;
                 view.number = number;
+                view.phoneNumber = number;
                 view.newMessage = false;
             }
 
             onNumberSelected: {
+                view.filterProperty = "phoneNumber"
+                view.filterValue = number;
                 view.number = number;
+                view.phoneNumber = number;
                 view.newMessage = false;
             }
         }
@@ -238,7 +229,7 @@ LocalWidgets.TelephonyPage {
 
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: keyboardRect.visible ? keyboardRect.top : parent.bottom
         height: visible ? units.gu(5) : 0
         visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
@@ -249,8 +240,10 @@ LocalWidgets.TelephonyPage {
             // use whatever is on the text field
             if (view.newMessage) {
                 var phoneNumber = headerLoader.item.text;
-                view.number = phoneNumber
-                view.phoneNumber = phoneNumber
+                view.filterProperty = "phoneNumber"
+                view.filterValue = phoneNumber;
+                view.number = phoneNumber;
+                view.phoneNumber = phoneNumber;
                 view.newMessage = false;
             }
 
@@ -261,5 +254,14 @@ LocalWidgets.TelephonyPage {
                 chatManager.startChat(view.phoneNumber);
             }
         }
+    }
+
+    Item {
+        id: keyboardRect
+        anchors.left: parent.left
+        anchors.right: parent.right
+        y: Qt.inputMethod.keyboardRectangle.y
+        height: Qt.inputMethod.keyboardRectangle.height
+        visible: Qt.inputMethod.visible
     }
 }

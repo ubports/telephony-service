@@ -23,12 +23,18 @@
 #include <gio/gio.h>
 
 MessagingMenu::MessagingMenu(QObject *parent) :
-    QObject(parent)
+    QObject(parent), mVoicemailCount(-1)
 {
-    // create the messaging menu app
-    mApp = messaging_menu_app_new("telephony-app.desktop");
-    messaging_menu_app_register(mApp);
-    messaging_menu_app_append_source(mApp, "telephony-app", g_icon_new_for_string("telephony-app", NULL), "Telephony App");
+    GIcon *icon = g_icon_new_for_string("telephony-app", NULL);
+    mMessagesApp = messaging_menu_app_new("telephony-app-sms.desktop");
+    messaging_menu_app_register(mMessagesApp);
+    messaging_menu_app_append_source(mMessagesApp, "telephony-app", icon, "Telephony App");
+
+    mCallsApp = messaging_menu_app_new("telephony-app-phone.desktop");
+    messaging_menu_app_register(mCallsApp);
+    messaging_menu_app_append_source(mCallsApp, "telephony-app", icon, "Telephony App");
+
+    g_object_unref(icon);
 }
 
 void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text)
@@ -58,12 +64,16 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
                                       NULL // predefined values
                                       );
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::messageActivateCallback), this);
-    mMessages[messageId] = message;
-    messaging_menu_app_append_message(mApp, message, "telephony-app", true);
+
+    // save the phone number to use in the actions
+    mMessages[messageId] = phoneNumber;
+    messaging_menu_app_append_message(mMessagesApp, message, "telephony-app", true);
+
     // TODO: setup callbacks
 
     g_object_unref(file);
     g_object_unref(icon);
+    g_object_unref(message);
 }
 
 void MessagingMenu::removeMessage(const QString &messageId)
@@ -72,9 +82,8 @@ void MessagingMenu::removeMessage(const QString &messageId)
         return;
     }
 
-    MessagingMenuMessage *message = mMessages.take(messageId);
-    messaging_menu_app_remove_message(mApp, message);
-    g_object_unref(message);
+    MessagingMenuMessage *message = messaging_menu_app_get_message(mMessagesApp, messageId.toUtf8().data());
+    messaging_menu_app_remove_message(mMessagesApp, message);
 }
 
 void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timestamp)
@@ -88,8 +97,8 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
             mCalls.removeOne(callMessage);
 
             // remove the previous entry and add a new one increasing the missed call count
-            messaging_menu_app_remove_message(mApp, call.message);
-            g_object_unref(call.message);
+            MessagingMenuMessage *message = messaging_menu_app_get_message(mCallsApp, callMessage.messageId.toUtf8().data());
+            messaging_menu_app_remove_message(mCallsApp, message);
             break;
         }
     }
@@ -109,6 +118,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     call.count++;
 
     QString text;
+    // TODO: do proper i18n in here.
     if (call.count > 1) {
         text = QString("%1 missed calls").arg(call.count);
     } else {
@@ -116,18 +126,59 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     }
     GFile *file = g_file_new_for_path(call.contactIcon.toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
-    call.message = messaging_menu_message_new(call.number.toUtf8().data(),
-                                              icon,
-                                              call.contactAlias.toUtf8().data(),
-                                              NULL,
-                                              text.toUtf8().data(),
-                                              timestamp.toMSecsSinceEpoch());
-    messaging_menu_app_append_message(mApp, call.message, "telephony-app", true);
+    MessagingMenuMessage *message = messaging_menu_message_new(call.number.toUtf8().data(),
+                                                               icon,
+                                                               call.contactAlias.toUtf8().data(),
+                                                               NULL,
+                                                               text.toUtf8().data(),
+                                                               timestamp.toMSecsSinceEpoch());
+    call.messageId = messaging_menu_message_get_id(message);
+    messaging_menu_app_append_message(mCallsApp, message, "telephony-app", true);
     mCalls.append(call);
     // TODO: setup actions and callbacks
 
     g_object_unref(file);
     g_object_unref(icon);
+    g_object_unref(message);
+}
+
+void MessagingMenu::showVoicemailEntry(int count)
+{
+    MessagingMenuMessage *message;
+    if (!mVoicemailId.isEmpty()) {
+        // if the count didn't change, don't do anything
+        if (count == mVoicemailCount) {
+            return;
+        }
+
+        message = messaging_menu_app_get_message(mCallsApp, mVoicemailId.toUtf8().data());
+        messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
+    }
+
+    QString messageBody = "Voicemail messages";
+    if (count != 0) {
+        messageBody = QString("%1 voicemail messages").arg(count);
+    }
+
+    GIcon *icon = g_themed_icon_new("indicator-call");
+    message = messaging_menu_message_new("voicemail",
+                                         icon,
+                                         "Voicemail",
+                                         NULL,
+                                         messageBody.toUtf8().data(),
+                                         QDateTime::currentDateTime().toMSecsSinceEpoch());
+    mVoicemailId = "voicemail";
+
+    g_object_unref(icon);
+    g_object_unref(message);
+}
+
+void MessagingMenu::hideVoicemailEntry()
+{
+    if (!mVoicemailId.isEmpty()) {
+        messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
+        mVoicemailId = "";
+    }
 }
 
 void MessagingMenu::messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance)
@@ -156,6 +207,6 @@ MessagingMenu *MessagingMenu::instance()
 
 MessagingMenu::~MessagingMenu()
 {
-    messaging_menu_app_unregister(mApp);
-    g_object_unref(mApp);
+    g_object_unref(mMessagesApp);
+    g_object_unref(mCallsApp);
 }

@@ -46,6 +46,7 @@ Q_SIGNALS:
     void messageReceived(const QString &phoneNumber, const QString &message, const QDateTime &timestamp, const QString &messageId);
     void messageSent(const QString &phoneNumber, const QString &message);
     void unreadMessagesChanged(const QString &phoneNumber);
+    void channelRequested(Tp::ChannelRequestPtr channelRequest);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
@@ -53,6 +54,7 @@ public Q_SLOTS:
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
     void onMessageSent(Tp::PendingOperation *op);
+    void onChannelRequested(Tp::PendingOperation *op);
 
     void acknowledgeMessage(const QString &phoneNumber, const QString &messageId);
 

@@ -27,24 +27,20 @@ Button {
     width: units.gu(9)
     height: units.gu(9)
 
-    property int iconWidth
-    property int iconHeight
+    property int iconWidth: 0
+    property int iconHeight: 0
 
-    Image {
+    UbuntuShape {
         anchors.fill: parent
-        anchors.centerIn: parent
-        width: parent.width
-        height: parent.height
-        source: selected ? "../assets/dialer_pad_bg_pressed.png" : "../assets/dialer_pad_bg.png"
-        fillMode: Image.PreserveAspectFit
+        borderSource: (selected || pressed) ? "../assets/dialer_pad_bg_pressed.png" : "../assets/dialer_pad_bg.png"
     }
 
     Image {
         id: icon
         anchors.centerIn: parent
         anchors.horizontalCenterOffset: units.dp(1)
-        width: iconWidth
-        height: iconHeight
+        width: (iconWidth > 0) ? iconWidth : undefined
+        height: (iconHeight > 0) ? iconHeight : undefined
         source: icon
         fillMode: Image.PreserveAspectFit
     }

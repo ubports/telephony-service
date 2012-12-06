@@ -45,12 +45,6 @@ FocusScope {
         anchors.right: parent.right
         anchors.top: parent.top
 
-        LocalWidgets.ListSectionHeader {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            text: detailTypeInfo.name
-        }
-
         Repeater {
             id: details
             // model and delegate are set via property alias

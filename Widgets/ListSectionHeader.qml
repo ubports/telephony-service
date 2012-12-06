@@ -16,19 +16,13 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 
 Item {
     width: units.gu(13)
-    height: units.gu(2)
+    height: units.gu(4)
 
     property alias text: label.text
-
-    // FIXME: replace with proper asset which should have a 1px border at the top and the bottom
-    BorderImage {
-        anchors.fill: parent
-        source: "artwork/section_header.png"
-        border {left: 0; right: 0; top: units.dp(1); bottom: units.dp(1)}
-    }
 
     Label {
         id: label
@@ -37,11 +31,11 @@ Item {
         anchors.leftMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: units.dp(-1)
-        fontSize: "x-small"
-        font.italic: true
-        elide: Text.ElideRight
-        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-        style: Text.Raised
-        styleColor: "white"
+        fontSize: "medium"
+    }
+
+    ListItem.ThinDivider {
+        id: bottomDividerLine
+        anchors.bottom: parent.bottom
     }
 }

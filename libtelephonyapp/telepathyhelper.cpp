@@ -19,16 +19,23 @@
  */
 
 #include "telepathyhelper.h"
+#include "chatmanager.h"
+#include "config.h"
 
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/PendingAccount>
+#include <TelepathyQt/ChannelRequest>
 
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
+      mChannelHandler(0),
+      mChannelObserver(0),
       mFirstTime(true)
 {
+    mCallManager = new CallManager(this);
+
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
                      << Tp::Contact::FeatureCapabilities;
@@ -56,9 +63,62 @@ TelepathyHelper *TelepathyHelper::instance()
     return helper;
 }
 
+CallManager *TelepathyHelper::callManager() const
+{
+    return mCallManager;
+}
+
 Tp::AccountPtr TelepathyHelper::account() const
 {
     return mAccount;
+}
+
+ChannelHandler *TelepathyHelper::channelHandler() const
+{
+    return mChannelHandler;
+}
+
+ChannelObserver *TelepathyHelper::channelObserver() const
+{
+    return mChannelObserver;
+}
+
+void TelepathyHelper::initializeTelepathyClients()
+{
+    // check if this instance is running on the main telephony application
+    // or if it is just the plugin imported somewhere else
+    QString handlerName = "TelephonyApp";
+    QString observerName = "TelephonyAppObserver";
+
+    if (!isTelephonyApplicationInstance()) {
+        handlerName = "TelephonyPlugin";
+        observerName = "TelephonyPluginObserver";
+    }
+
+    mChannelHandler = new ChannelHandler(this);
+    registerClient(mChannelHandler, handlerName);
+    Q_EMIT channelHandlerCreated(mChannelHandler);
+
+    mChannelObserver = new ChannelObserver(this);
+    registerClient(mChannelObserver, observerName);
+    Q_EMIT channelObserverCreated(mChannelObserver);
+
+    connect(mChannelHandler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
+            ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+    connect(mChannelHandler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+            mCallManager, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+
+    connect(ChatManager::instance(), SIGNAL(channelRequested(Tp::ChannelRequestPtr)),
+            mChannelHandler, SLOT(onChannelRequested(Tp::ChannelRequestPtr)));
+
+}
+
+void TelepathyHelper::registerClients()
+{
+    Tp::ChannelFactoryPtr channelFactory = Tp::ChannelFactoryPtr::constCast(mAccountManager->channelFactory());
+    channelFactory->addCommonFeatures(Tp::Channel::FeatureCore);
+    mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
+    initializeTelepathyClients();
 }
 
 QStringList TelepathyHelper::supportedProtocols() const
@@ -110,9 +170,35 @@ void TelepathyHelper::ensureAccountConnected()
     }
 }
 
+void TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
+{
+    Tp::AbstractClientPtr clientPtr(client);
+    bool succeeded = mClientRegistrar->registerClient(clientPtr, name);
+    if (!succeeded) {
+        name.append("%1");
+        int count = 0;
+        // limit the number of registered clients to 20, that should be a safe margin
+        while (!succeeded && count < 20) {
+            succeeded = mClientRegistrar->registerClient(clientPtr, name.arg(++count));
+            if (succeeded) {
+                name = name.arg(count);
+            }
+        }
+    }
+
+    if (succeeded) {
+        QObject *object = dynamic_cast<QObject*>(client);
+        if (object) {
+            object->setProperty("clientName", TP_QT_IFACE_CLIENT + "." + name );
+        }
+    }
+}
+
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 {
     Q_UNUSED(op)
+
+    registerClients();
 
     Tp::AccountSetPtr accountSet;
     // try to find an account of the one of supported protocols

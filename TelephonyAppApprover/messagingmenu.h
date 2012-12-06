@@ -28,12 +28,12 @@
 class Call
 {
 public:
-    Call() : count(0), message(0) { }
+    Call() : count(0) { }
     QString number;
     int count;
     QString contactAlias;
     QString contactIcon;
-    MessagingMenuMessage *message;
+    QString messageId;
 
     bool operator==(const Call &other) {
         return other.number == number;
@@ -54,15 +54,21 @@ public:
 
     static void messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
 
+    void showVoicemailEntry(int count);
+    void hideVoicemailEntry();
+
 private Q_SLOTS:
     void sendMessageReply(const QString &messageId, const QString &reply);
 
 private:
     explicit MessagingMenu(QObject *parent = 0);
 
-    MessagingMenuApp *mApp;
-    QMap<QString, MessagingMenuMessage*> mMessages;
+    MessagingMenuApp *mCallsApp;
+    MessagingMenuApp *mMessagesApp;
+    QMap<QString, QString> mMessages;
     QList<Call> mCalls;
+    QString mVoicemailId;
+    int mVoicemailCount;
 };
 
 #endif // MESSAGINGMENU_H

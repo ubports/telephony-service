@@ -9,6 +9,7 @@ if [ $? -eq 1 ]; then
         mc-tool add ofono/ofono account0
         echo 'enabling ofono/ofono/account0'
         mc-tool enable ofono/ofono/account0
+        mc-tool auto-connect ofono/ofono/account0
 fi
 
 echo 'ofono/ofono/account0 initialized'

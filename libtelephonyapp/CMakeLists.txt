@@ -8,6 +8,12 @@ set(library_SRCS
     contactname.cpp
     contactonlineaccount.cpp
     contactphonenumber.cpp
+    callentry.cpp
+    callmanager.cpp
+    channelhandler.cpp
+    channelobserver.cpp
+    chatmanager.cpp
+    telepathyhelper.cpp
     )
 
 include_directories(
@@ -19,7 +25,8 @@ include_directories(
 
 
 add_library(telephonyapp STATIC ${library_SRCS} ${library_HDRS})
+target_link_libraries(telephonyapp ${TP_QT5_LIBRARIES})
 
-qt5_use_modules(telephonyapp Contacts Core Qml Quick Versit)
+qt5_use_modules(telephonyapp Contacts Core DBus Qml Quick Versit)
 
 add_subdirectory(tests)

@@ -68,12 +68,14 @@ Q_SIGNALS:
     void hasBackgroundCallChanged();
     void speakerChanged();
     void voicemailNumberChanged();
+    void channelRequested(Tp::ChannelRequestPtr channelRequest);
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
     void onContactsAvailable(Tp::PendingOperation *op);
     void onCallEnded();
     void onAccountReady();
+    void onChannelRequested(Tp::PendingOperation *op);
 
 private:
     void refreshProperties();

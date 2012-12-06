@@ -13,6 +13,7 @@ LocalWidgets.TelephonyPage {
         ListElement {
             label: "Add"
             name: "add"
+            icon: "../assets/new-contact.png"
         }
     }
 
@@ -134,7 +135,7 @@ LocalWidgets.TelephonyPage {
                 id: headerFavorite
                 anchors.left: parent.left
                 anchors.right: parent.right
-                text: "Favorite"
+                text: "Favourites"
             }
             
            ListView {
