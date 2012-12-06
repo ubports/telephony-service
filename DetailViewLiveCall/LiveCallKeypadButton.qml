@@ -30,13 +30,9 @@ Button {
     property int iconWidth: 0
     property int iconHeight: 0
 
-    Image {
+    UbuntuShape {
         anchors.fill: parent
-        anchors.centerIn: parent
-        width: parent.width
-        height: parent.height
-        source: (selected || pressed) ? "../assets/dialer_pad_bg_pressed.png" : "../assets/dialer_pad_bg.png"
-        fillMode: Image.PreserveAspectFit
+        borderSource: (selected || pressed) ? "../assets/dialer_pad_bg_pressed.png" : "../assets/dialer_pad_bg.png"
     }
 
     Image {

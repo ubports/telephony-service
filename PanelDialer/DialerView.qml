@@ -3,7 +3,7 @@ import Ubuntu.Components 0.1
 import "../Widgets" as LocalWidgets
 
 LocalWidgets.TelephonyPage {
-    title: "Dialer"
+    title: "Call"
     showChromeBar: false
     anchors.fill: parent
     property string voicemailNumber: callManager.voicemailNumber

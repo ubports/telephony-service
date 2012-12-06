@@ -7,6 +7,7 @@ FocusScope {
     property alias value: input.text
     property alias input: input
     property alias placeHolder: hint.text
+    property alias placeHolderPixelFontSize: hint.font.pixelSize
 
     height: units.gu(7.5)
 
@@ -18,7 +19,7 @@ FocusScope {
         anchors.left: parent.left
         text: "..."
         font.pixelSize: units.dp(43)
-        font.weight: Font.DemiBold
+        font.weight: Font.Light
         font.family: "Ubuntu"
         color: "#464646"
     }
@@ -34,12 +35,13 @@ FocusScope {
         horizontalAlignment: TextInput.AlignRight
         text: ""
         font.pixelSize: units.dp(43)
-        font.weight: Font.DemiBold
+        font.weight: Font.Light
         font.family: "Ubuntu"
         color: "#464646"
         focus: true
         cursorVisible: true
         clip: true
+        opacity: 0.9
 
         // force cursor to be always visible
         onCursorVisibleChanged: {
@@ -78,9 +80,9 @@ FocusScope {
         anchors.centerIn: input
         text: ""
         font.pixelSize: units.dp(20)
-        font.weight: Font.DemiBold
+        font.weight: Font.Light
         font.family: "Ubuntu"
         color: "#464646"
-        opacity: 0.25
+        opacity: 0.9
     }
 }

@@ -32,10 +32,11 @@ Button {
         anchors.verticalCenterOffset: -units.gu(0.5)
         horizontalAlignment: Text.AlignHCenter
         font.pixelSize: units.dp(43)
-        font.weight: Font.DemiBold
+        font.weight: Font.Light
         color: "#464646"
         height: paintedHeight
         verticalAlignment: Text.AlignTop
+        opacity: 0.9
     }
 
     Label {

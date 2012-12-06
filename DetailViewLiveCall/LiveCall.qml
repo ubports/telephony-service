@@ -124,7 +124,7 @@ LocalWidgets.TelephonyPage {
                     width: units.gu(7)
                     height: units.gu(7)
                     image: Image {
-                        source: (contact && contact.avatar != "") ? contact.avatar : "../assets/contacts.png"
+                        source: (contact && contact.avatar != "") ? contact.avatar : "../assets/avatar-default.png"
                         fillMode: Image.PreserveAspectCrop
                     }
                 }
@@ -251,28 +251,13 @@ LocalWidgets.TelephonyPage {
                     source: "../assets/horizontal_divider.png"
                 }
 
-                Button {
+                HangupButton {
                     id: hangupButton
 
-                    //icon: "../assets/incall_hangup.png"
-
-                    width: units.gu(20)
-                    height: units.gu(8)
                     anchors.top: divider3.bottom
                     anchors.topMargin: units.gu(2)
                     anchors.horizontalCenter: parent.horizontalCenter
-                    color: "#bf400c"
-                    ItemStyle.class: "darkbutton"
                     onClicked: endCall()
-
-                    Image {
-                        anchors.centerIn: parent
-                        width: units.gu(6)
-                        height: units.gu(6)
-                        source: "../assets/incall_hangup.png"
-                        fillMode: Image.PreserveAspectFit
-                        z: 1
-                    }
                 }
             }
         }
@@ -290,6 +275,7 @@ LocalWidgets.TelephonyPage {
                 anchors.leftMargin: units.dp(-2)
                 anchors.rightMargin: units.dp(-2)
                 placeHolder: liveCall.number
+                placeHolderPixelFontSize: units.dp(43)
                 focus: true
             }
 
@@ -327,28 +313,13 @@ LocalWidgets.TelephonyPage {
                     source: "../assets/horizontal_divider.png"
                 }
 
-                Button {
+                HangupButton {
                     id: hangupButton2
 
-                    //icon: "../assets/incall_hangup.png"
-
-                    width: units.gu(20)
-                    height: units.gu(8)
                     anchors.top: divider5.bottom
                     anchors.topMargin: units.gu(2)
                     anchors.horizontalCenter: parent.horizontalCenter
-                    color: "#bf400c"
-                    ItemStyle.class: "darkbutton"
                     onClicked: endCall()
-
-                    Image {
-                        anchors.centerIn: parent
-                        width: units.gu(6)
-                        height: units.gu(6)
-                        source: "../assets/incall_hangup.png"
-                        fillMode: Image.PreserveAspectFit
-                        z: 1
-                    }
                 }
 
                 CustomButton {
