@@ -98,7 +98,7 @@ FocusScope {
 
             anchors.left: parent.left
             anchors.leftMargin: units.gu(2)
-            anchors.right: readOnlySeparator.left
+            anchors.right: actionBox.left
             anchors.rightMargin: units.gu(1)
             anchors.top: parent.top
             height: childrenRect.height
@@ -115,7 +115,7 @@ FocusScope {
             }
         }
 
-        Rectangle {
+        /*Rectangle {
             id: readOnlySeparator
 
             anchors.verticalCenter: parent.verticalCenter
@@ -125,7 +125,7 @@ FocusScope {
             color: "black"
             opacity: 0.1
             visible: actionBox.visible
-        }
+        }*/
 
         AbstractButton {
             id: actionBox

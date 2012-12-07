@@ -42,7 +42,7 @@ BaseMessageHeader {
         text: contact ? contact.displayLabel : title
     }
 
-    BorderImage {
+    /*BorderImage {
         id: separator
         anchors.right: contactDetailsButton.left
         anchors.top: parent.top
@@ -50,7 +50,7 @@ BaseMessageHeader {
         anchors.margins: units.gu(2)
         source: "../assets/contacts_vertical_divider.sci"
         width: units.dp(2)
-    }
+    }*/
 
     Button {
         id: contactDetailsButton
