@@ -137,6 +137,14 @@ FocusScope {
             anchors.right: parent.right
             onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
 
+            Rectangle {
+                id: progressionHighlight
+                visible: actionBox.pressed
+                anchors.fill: actionBox
+                color: "white"
+                opacity: 0.7
+            }
+
             Image {
                 anchors.centerIn: parent
                 width: units.gu(3)
