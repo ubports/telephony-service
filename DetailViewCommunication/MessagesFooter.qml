@@ -44,6 +44,9 @@ FocusScope {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: units.gu(1.5)
             focus: true
+            font.pixelSize: Fonts.sizeToPixels("medium")
+            font.family: "Ubuntu"
+            font.weight: Font.DemiBold
             // send message if return was pressed
             Keys.onReturnPressed: sendButton.clicked(null)
             Keys.onEscapePressed: text = ""
