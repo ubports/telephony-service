@@ -41,6 +41,7 @@ LocalWidgets.TelephonyPage {
 
         placeholderText: "Search"
         Keys.onEscapePressed: text = ""
+        height: units.gu(4)
 
         primaryItem: AbstractButton {
             width: units.gu(3)
