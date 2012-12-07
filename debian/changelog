@@ -1,3 +1,21 @@
+telephony-app (0.58.14) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Tweak the design of the calls and conversation tabs.
+  * Use a shared code for the TelepathyHelper class between the approver and the
+    app itself, just making sure that the Handler in the approver handles only
+    channels requested inside it.
+  * Remove the usage of the obsolete libindicate library and use a messaging menu
+    entry to display the voicemail instead.
+  * Use separate messaging menu app instances to handle calls and messages, 
+    because they use a different desktop file (different icons, etc).
+
+  [ Tiago Salem Herrmann ]
+  * Send events to telepathy when using DTMF.
+  * Add pressed state to buttons in the live call view.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 06 Dec 2012 23:42:45 +0000
+
 telephony-app (0.58.13) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
