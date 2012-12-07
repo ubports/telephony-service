@@ -54,7 +54,7 @@ LocalWidgets.TelephonyPage {
                 anchors.left: parent.left
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.leftMargin: units.gu(0.5)
-                source: contactsSearchBox.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
+                source: "../assets/search.png"
             }
             onClicked: contactsSearchBox.text = ""
         }

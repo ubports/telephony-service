@@ -49,7 +49,7 @@ LocalWidgets.TelephonyPage {
                 anchors.left: parent.left
                 anchors.leftMargin: units.gu(0.5)
                 anchors.verticalCenter: parent.verticalCenter
-                source: search.text ? "../assets/quick_search_delete_icon.png" : "../assets/search_icon.png"
+                source: "../assets/search.png"
             }
             onClicked: search.text = ""
         }

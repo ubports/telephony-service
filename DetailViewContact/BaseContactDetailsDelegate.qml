@@ -10,7 +10,7 @@ FocusScope {
        the layout. We also need to set the height to zero to make them completely go away.
        There is a 2 pixels vertical spacing between fields in edit mode.
     */
-    height: (deleted) ? 0 : (((editable) ? editableGroup.height + units.dp(2) : readOnlyGroup.height) + bottomSeparatorLine.height - units.dp(1))
+    height: (deleted) ? 0 : (((editable) ? editableGroup.height + units.dp(2) : readOnlyGroup.height) + bottomSeparatorLine.height - units.dp(2))
     opacity: (deleted) ? 0.0 : 1.0
 
     state: "read"
@@ -103,6 +103,14 @@ FocusScope {
             anchors.top: parent.top
             height: childrenRect.height
 
+            Rectangle {
+                id: itemHighlight
+                visible: actionBox.pressed
+                anchors.fill: actionBox
+                color: "white"
+                opacity: 0.7
+            }
+
             onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
 
             Item {
@@ -138,7 +146,7 @@ FocusScope {
             onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
 
             Rectangle {
-                id: progressionHighlight
+                id: actionHighlight
                 visible: actionBox.pressed
                 anchors.fill: actionBox
                 color: "white"
