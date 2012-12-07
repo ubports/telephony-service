@@ -39,7 +39,7 @@ LocalWidgets.TelephonyPage {
         anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
 
-        placeholderText: "Search"
+        //placeholderText: "Search"
         Keys.onEscapePressed: text = ""
         height: units.gu(4)
 
