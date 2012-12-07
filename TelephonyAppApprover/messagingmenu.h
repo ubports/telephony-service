@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QMap>
+#include <QDBusInterface>
 #include <messaging-menu.h>
 #include <messaging-menu-message.h>
 
@@ -53,12 +54,18 @@ public:
     void addCall(const QString &phoneNumber, const QDateTime &timestamp);
 
     static void messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
+    static void callsActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
 
     void showVoicemailEntry(int count);
     void hideVoicemailEntry();
 
 private Q_SLOTS:
     void sendMessageReply(const QString &messageId, const QString &reply);
+    void callBack(const QString &messageId);
+    void replyWithMessage(const QString &messageId, const QString &reply);
+    void callVoicemail(const QString &messageId);
+
+    Call callFromMessageId(const QString &messageId);
 
 private:
     explicit MessagingMenu(QObject *parent = 0);
@@ -69,6 +76,7 @@ private:
     QList<Call> mCalls;
     QString mVoicemailId;
     int mVoicemailCount;
+    QDBusInterface mTelephonyAppInterface;
 };
 
 #endif // MESSAGINGMENU_H
