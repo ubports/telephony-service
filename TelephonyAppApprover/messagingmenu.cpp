@@ -215,8 +215,9 @@ void MessagingMenu::messageActivateCallback(MessagingMenuMessage *message, const
     QString text(g_variant_get_string(param, NULL));
 
     if (action == "quickReply") {
-        QMetaObject::invokeMethod(instance, "sendMessageReply",  Qt::QueuedConnection,
-                                  Q_ARG(QString, messageId), Q_ARG(QString, text));
+        QMetaObject::invokeMethod(instance, "sendMessageReply", Q_ARG(QString, messageId), Q_ARG(QString, text));
+    } else if (action.isEmpty()) {
+        QMetaObject::invokeMethod(instance, "showMessage", Q_ARG(QString, messageId));
     }
 }
 
@@ -239,6 +240,11 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
 {
     QString phoneNumber = mMessages[messageId];
     ChatManager::instance()->sendMessage(phoneNumber, reply);
+}
+
+void MessagingMenu::showMessage(const QString &messageId)
+{
+    mTelephonyAppInterface.call("ShowMessage", messageId);
 }
 
 void MessagingMenu::callBack(const QString &messageId)

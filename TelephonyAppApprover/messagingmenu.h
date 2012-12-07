@@ -61,6 +61,7 @@ public:
 
 private Q_SLOTS:
     void sendMessageReply(const QString &messageId, const QString &reply);
+    void showMessage(const QString &messageId);
     void callBack(const QString &messageId);
     void replyWithMessage(const QString &messageId, const QString &reply);
     void callVoicemail(const QString &messageId);

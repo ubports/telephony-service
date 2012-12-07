@@ -22,6 +22,7 @@ static void printUsage(const QStringList& arguments)
              << "[contact://CONTACT_KEY]"
              << "[call://PHONE_NUMBER]"
              << "[message://PHONE_NUMBER]"
+             << "[messageId://MESSAGE_ID]"
              << "[voicemail://]"
              << "[--dual-panel]"
              << "[--single-panel]"
@@ -47,6 +48,7 @@ bool TelephonyApplication::setup()
         validSchemes << "contact";
         validSchemes << "call";
         validSchemes << "message";
+        validSchemes << "messageId";
         validSchemes << "voicemail";
     }
 
@@ -217,6 +219,14 @@ void TelephonyApplication::parseArgument(const QString &arg)
                               Q_ARG(QVariant, QVariant("")));
             }
        }
+    } else if (scheme == "messageId") {
+        int index = mo->indexOfMethod("showMessage(QVariant)");
+        if (index != -1) {
+            QMetaMethod method = mo->method(index);
+            method.invoke(telephony,
+                          Q_ARG(QVariant, QVariant("")),
+                          Q_ARG(QVariant, QVariant(value)));
+        }
     } else if (scheme == "voicemail") {
         int index = mo->indexOfMethod("showVoicemail()");
         if (index != -1) {
