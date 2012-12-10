@@ -26,6 +26,7 @@ Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          telepathy-ofono,
+         dconf-tools,
          telepathy-mission-control-5,
          telepathy-logger,
          libnotify4,
