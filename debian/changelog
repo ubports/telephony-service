@@ -1,3 +1,13 @@
+telephony-app (0.58.15) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Add support for messaging menu actions
+
+  [ Tiago Salem Herrmann ]
+  * force tp-ofono to be launched even if no network connection is available
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 10 Dec 2012 19:20:16 -0200
+
 telephony-app (0.58.14) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
