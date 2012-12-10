@@ -20,10 +20,15 @@
 #include "messagingmenu.h"
 #include "contactmodel.h"
 #include "contactentry.h"
+#include "chatmanager.h"
 #include <gio/gio.h>
 
 MessagingMenu::MessagingMenu(QObject *parent) :
-    QObject(parent), mVoicemailCount(-1)
+    QObject(parent), mVoicemailCount(-1),
+    mTelephonyAppInterface("com.canonical.TelephonyApp",
+                           "/com/canonical/TelephonyApp",
+                           "com.canonical.TelephonyApp")
+
 {
     GIcon *icon = g_icon_new_for_string("telephony-app", NULL);
     mMessagesApp = messaging_menu_app_new("telephony-app-sms.desktop");
@@ -57,10 +62,17 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
                                                                NULL,
                                                                text.toUtf8().data(),
                                                                timestamp.toMSecsSinceEpoch());
+    messaging_menu_message_add_action(message,
+                                      "quickReply",
+                                      NULL, // label
+                                      G_VARIANT_TYPE("s"),
+                                      NULL // predefined values
+                                      );
+    g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::messageActivateCallback), this);
+
     // save the phone number to use in the actions
     mMessages[messageId] = phoneNumber;
     messaging_menu_app_append_message(mMessagesApp, message, "telephony-app", true);
-    // TODO: setup callbacks
 
     g_object_unref(file);
     g_object_unref(icon);
@@ -124,10 +136,32 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
                                                                text.toUtf8().data(),
                                                                timestamp.toMSecsSinceEpoch());
     call.messageId = messaging_menu_message_get_id(message);
+    messaging_menu_message_add_action(message,
+                                      "callBack",
+                                      NULL, // label
+                                      NULL, // argument type
+                                      NULL // predefined values
+                                      );
+    const char *predefinedMessages[] = {
+            "I missed your call - can you call me now?",
+            "I'm running late. I'm on my way.",
+            "I'm busy at the moment. I'll call you later.",
+            "I'll be 20 minutes late.",
+            "Sorry, I'm still busy. I'll call you later.",
+            0
+            };
+    GVariant *messages = g_variant_new_strv(predefinedMessages, -1);
+    messaging_menu_message_add_action(message,
+                                      "replyWithMessage",
+                                      NULL, // label
+                                      G_VARIANT_TYPE("s"),
+                                      messages // predefined values
+                                      );
+    g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
     messaging_menu_app_append_message(mCallsApp, message, "telephony-app", true);
     mCalls.append(call);
-    // TODO: setup actions and callbacks
 
+    g_object_unref(messages);
     g_object_unref(file);
     g_object_unref(icon);
     g_object_unref(message);
@@ -158,6 +192,7 @@ void MessagingMenu::showVoicemailEntry(int count)
                                          NULL,
                                          messageBody.toUtf8().data(),
                                          QDateTime::currentDateTime().toMSecsSinceEpoch());
+    g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
     mVoicemailId = "voicemail";
 
     g_object_unref(icon);
@@ -170,6 +205,80 @@ void MessagingMenu::hideVoicemailEntry()
         messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
         mVoicemailId = "";
     }
+}
+
+void MessagingMenu::messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance)
+{
+    QString action(actionId);
+    QString messageId(messaging_menu_message_get_id(message));
+
+    GVariant *var = g_variant_get_variant(param);
+    QString text(g_variant_get_string(var, NULL));
+    g_variant_unref(var);
+
+    if (action == "quickReply") {
+        QMetaObject::invokeMethod(instance, "sendMessageReply", Q_ARG(QString, messageId), Q_ARG(QString, text));
+    } else if (action.isEmpty()) {
+        QMetaObject::invokeMethod(instance, "showMessage", Q_ARG(QString, messageId));
+    }
+}
+
+void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance)
+{
+    QString action(actionId);
+    QString messageId(messaging_menu_message_get_id(message));
+
+    if (action == "callBack") {
+        QMetaObject::invokeMethod(instance, "callBack", Q_ARG(QString, messageId));
+    } else if (action == "replyWithMessage") {
+        GVariant *var = g_variant_get_variant(param);
+        QString text(g_variant_get_string(var, NULL));
+        g_variant_unref(var);
+        QMetaObject::invokeMethod(instance, "replyWithMessage", Q_ARG(QString, messageId), Q_ARG(QString, text));
+    } else if (messageId == instance->mVoicemailId) {
+        QMetaObject::invokeMethod(instance, "callVoicemail", Q_ARG(QString, messageId));
+    }
+}
+
+void MessagingMenu::sendMessageReply(const QString &messageId, const QString &reply)
+{
+    QString phoneNumber = mMessages[messageId];
+    ChatManager::instance()->sendMessage(phoneNumber, reply);
+}
+
+void MessagingMenu::showMessage(const QString &messageId)
+{
+    mTelephonyAppInterface.call("ShowMessage", messageId);
+}
+
+void MessagingMenu::callBack(const QString &messageId)
+{
+    QString phoneNumber = callFromMessageId(messageId).number;
+    qDebug() << "TelephonyApp/MessagingMenu: Calling back" << phoneNumber;
+    mTelephonyAppInterface.call("CallNumber", phoneNumber);
+}
+
+void MessagingMenu::replyWithMessage(const QString &messageId, const QString &reply)
+{
+    QString phoneNumber = callFromMessageId(messageId).number;
+    qDebug() << "TelephonyApp/MessagingMenu: Replying to call" << phoneNumber << "with text" << reply;
+    ChatManager::instance()->sendMessage(phoneNumber, reply);
+}
+
+void MessagingMenu::callVoicemail(const QString &messageId)
+{
+    qDebug() << "TelephonyApp/MessagingMenu: Calling voicemail for messageId" << messageId;
+    mTelephonyAppInterface.call("ShowVoicemail");
+}
+
+Call MessagingMenu::callFromMessageId(const QString &messageId)
+{
+    Q_FOREACH(const Call &call, mCalls) {
+        if (call.messageId == messageId) {
+            return call;
+        }
+     }
+    return Call();
 }
 
 

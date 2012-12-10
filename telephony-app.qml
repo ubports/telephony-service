@@ -103,6 +103,11 @@ Item {
         communication.load(properties, clear);
     }
 
+    function showMessage(id) {
+        // Show a message by its given ID
+        // TODO: implement
+    }
+
     function endCall() {
         var callStack = rightPaneStacks.stacks[liveCall.tab]
         if (callStack.currentPage.source == liveCall.source || callStack.currentPage.source == voicemail.source) {
