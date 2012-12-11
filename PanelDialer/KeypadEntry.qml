@@ -9,7 +9,7 @@ FocusScope {
     property alias placeHolder: hint.text
     property alias placeHolderPixelFontSize: hint.font.pixelSize
 
-    height: units.gu(7.5)
+    height: units.gu(8)
 
     Label {
         id: dots
@@ -31,7 +31,6 @@ FocusScope {
         anchors.right: parent.right
         anchors.rightMargin: units.gu(2)
         anchors.verticalCenter: parent.verticalCenter
-        anchors.verticalCenterOffset: units.dp(-1)
         horizontalAlignment: TextInput.AlignRight
         text: ""
         font.pixelSize: units.dp(43)
@@ -85,4 +84,14 @@ FocusScope {
         color: "#464646"
         opacity: 0.9
     }
+
+    Image {
+        id: divider
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        source: "../assets/dialer_top_number_bg.png"
+    }
+
 }
