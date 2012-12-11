@@ -54,6 +54,22 @@ bool TelephonyApplication::setup()
 
     QString contactKey;
     QStringList arguments = this->arguments();
+
+    /* Hybris gathers info on the list of running applications from the .desktop
+       file specified on the command line with the desktop_file_hint switch. 
+       So app will be launched like this:
+
+       /usr/bin/launch-telephony-app --desktop_file_hint=/usr/share/applications/telephony-app.desktop
+
+       So remove that argument and continue parsing.
+    */
+    for (int i = arguments.count() - 1; i >=0; --i) {
+        if (arguments[i].startsWith("--desktop_file_hint")) {
+            arguments.removeAt(i);
+        }
+    }
+
+
     if (arguments.contains("--dual-panel")) {
         arguments.removeAll("--dual-panel");
         singlePanel = false;
