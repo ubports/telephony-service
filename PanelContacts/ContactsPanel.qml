@@ -36,6 +36,7 @@ LocalWidgets.TelephonyPage {
 
     TextField {
         id: contactsSearchBox
+        objectName: "contactsSearchBox"
 
         anchors.top: header.bottom
         anchors.topMargin: units.gu(1)

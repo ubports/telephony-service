@@ -16,21 +16,21 @@ class ContactsPanel(object):
 
     def get_contacts_searchbox(self):
         """Returns the main searchbox attached to the contacts panel."""
-        return self.app.select_single("TextField", placeholderText="Search contacts")
+        return self.app.select_single("TextField", objectName="contactsSearchBox")
 
     def get_contacts_searchbox_icon(self, searchbox):
         """Returns the icon of the searchbox attached to the contacts panel."""
         # FIXME: this is a bit hackish, but it was the way I (boiko) managed to
         # select the correct button
-        return searchbox.get_children()[0].get_children_by_type("Button")[0]
+        return self.get_contacts_searchbox().get_children_by_type("Button")[0]
 
     def get_contacts_panel(self):
         """Returns the ContactsPanel."""
         return self.app.select_single("ContactsPanel")
 
-    def get_add_contact_list_item(self):
+    def get_add_contact_button(self):
         """Returns the 'Add a new contact' list item."""
-        return self.app.select_single("Button", objectName='add', text='Add')
+        return self.app.select_single("ChromeButton", objectName='add', text='Add')
 
     def get_contact_list(self):
         """Returns the contact list item."""
@@ -50,8 +50,8 @@ class ContactsPanel(object):
 
     def get_contact_edit_button(self):
         """Returns the contact edit button."""
-        return self.app.select_single("Button", objectName='edit', text='Edit')
+        return self.app.select_single("ChromeButton", objectName='edit')
 
     def get_contact_save_button(self):
         """Returns the contact save button."""
-        return self.app.select_single("Button", objectName='save', text='Save')
+        return self.app.select_single("ChromeButton", objectName='save')

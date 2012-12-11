@@ -29,6 +29,7 @@ Item {
 
     ListView {
         id: tabView
+        objectName: "tabsListView"
         anchors.fill: parent
 
         model: slidingTabsDelegate.tabModel

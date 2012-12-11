@@ -21,29 +21,15 @@ class TestContactsPanel(TelephonyAppTestCase):
 
     def setUp(self):
         super(TestContactsPanel, self).setUp()
-        main_view = self.get_main_view()
-        start_point = self.get_main_view().geometry[0] + self.get_main_view().geometry[2] * 0.75
-        stop_point = self.get_main_view().geometry[0] + self.get_main_view().geometry[2] * 0.25
-        y_line = self.get_main_view().geometry[1] + 10
-        for i in 0,1:
-            self.pointing_device.move(start_point, y_line)
-            self.mouse.press()
-            self.pointing_device.move(stop_point, y_line)
-            self.pointing_device.release()
+        self.move_to_next_tab()
+        self.move_to_next_tab()
 
-    def click_add_contact_list_item(self):
-        new_contact_item = self.contacts_panel.get_add_contact_list_item()
+    def click_add_contact(self):
+        self.reveal_toolbar()
+        add_contact_button = self.contacts_panel.get_add_contact_button()
 
-        self.mouse.move_to_object(new_contact_item)
+        self.mouse.move_to_object(add_contact_button)
         self.mouse.click()
-
-        return new_contact_item
-
-    def test_main_tab_focus(self):
-        """Clicking on the 'contacts' tab must give it the focus."""
-        contacts_tab = self.get_main_view_tabs()[2]
-
-        self.assertThat(contacts_tab.selected, Eventually(Equals(True)))
 
     def test_searchbox_focus(self):
         """Clicking inside the searbox must give it the focus."""
@@ -79,21 +65,21 @@ class TestContactsPanel(TelephonyAppTestCase):
 
     def test_add_new_contact_page(self):
         """Clicking on the 'Add a new contact' list item must load the contact details page."""
-        self.click_add_contact_list_item()
+        self.click_add_contact()
         contact_details = self.contacts_panel.get_contact_details()
 
         self.assertThat(contact_details.visible, Eventually(Equals(True)))
 
     def test_add_new_contact_first_name_focused(self):
         """When adding a new contact, the first name input field needs to be focused by default."""
-        self.click_add_contact_list_item()
+        self.click_add_contact()
         first_name = self.contacts_panel.get_contact_first_name_input()
 
         self.assertThat(first_name.activeFocus, Eventually(Equals(True)))
 
     def test_add_new_contact_with_name(self):
         """Test adding a contact with first and last names set."""
-        self.click_add_contact_list_item()
+        self.click_add_contact()
 
         first_name = self.contacts_panel.get_contact_first_name_input()
         self.keyboard.type("FirstName")
@@ -103,6 +89,7 @@ class TestContactsPanel(TelephonyAppTestCase):
         self.mouse.click()
         self.keyboard.type("LastName")
 
+        self.reveal_toolbar()
         save_button = self.contacts_panel.get_contact_save_button()
         self.mouse.move_to_object(save_button)
         self.mouse.click()

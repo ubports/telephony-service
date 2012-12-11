@@ -25,6 +25,7 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.assertThat(communication_page.isCurrent, Eventually(Equals(True)))
 
     def click_new_message_button(self):
+        self.reveal_toolbar()
         new_message_item = self.communication_panel.get_new_message_button()
 
         self.mouse.move_to_object(new_message_item)
