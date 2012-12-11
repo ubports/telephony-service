@@ -10,14 +10,11 @@ set(plugin_SRCS
     conversationproxymodel.cpp
     components.cpp
     messagelogmodel.cpp
-    modelsectioncounter.cpp
     )
 
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${TPL_QT5_INCLUDE_DIRS}
-    # TODO: enable this include once we get the proper Qt5 packages
-    #${Qt5Quick_PRIVATE_INCLUDE_DIRS}
     ${QTGLIB_INCLUDE_DIRS}
     ${GLIB_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyapp

@@ -68,7 +68,9 @@ Item {
         }
     }
 
-    LocalWidgets.ScrollbarForListView {
-        view: listView
+    Scrollbar {
+        flickableItem: listView
+        align: Qt.AlignTrailing
+        __interactive: false
     }
 }

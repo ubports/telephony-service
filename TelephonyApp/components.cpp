@@ -36,7 +36,6 @@
 #include "conversationaggregatormodel.h"
 #include "conversationproxymodel.h"
 #include "messagelogmodel.h"
-#include "modelsectioncounter.h"
 
 #include <QQmlEngine>
 #include <qqml.h>
@@ -101,7 +100,6 @@ void Components::registerTypes(const char *uri)
     qmlRegisterType<ContactName>(uri, 0, 1, "ContactName");
     qmlRegisterType<ContactOnlineAccount>(uri, 0, 1, "ContactOnlineAccount");
     qmlRegisterType<ContactPhoneNumber>(uri, 0, 1, "ContactPhoneNumber");
-    qmlRegisterType<ModelSectionCounter>(uri, 0, 1, "ModelSectionCounter");
 }
 
 void Components::onAccountReady()

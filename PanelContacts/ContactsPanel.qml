@@ -125,10 +125,10 @@ LocalWidgets.TelephonyPage {
         // FIXME: references to runtime and fake model need to be removed before final release
         model: typeof(runtime) != "undefined" ? fakeContacts : contactProxyModel
 
-        header: Item {
+        header: Column {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: headerFavorite.height + favoriteContacts.height
+            height: childrenRect.height
             visible: favoriteContacts.count > 0
 
             LocalWidgets.ListSectionHeader {
@@ -138,15 +138,8 @@ LocalWidgets.TelephonyPage {
                 text: "Favourites"
             }
             
-           ListView {
-                id: favoriteContacts
+            Repeater {
                 model: typeof(runtime) != "undefined" ? fakeContacts : favoriteContactProxyModel
-                clip: true
-                interactive: false
-                anchors.top: headerFavorite.bottom
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: contentHeight
                 delegate: contactDelegate
             }
         }
@@ -159,7 +152,9 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-    LocalWidgets.ScrollbarForListView {
-        view: contactsList
+    Scrollbar {
+        flickableItem: contactsList
+        align: Qt.AlignTrailing
+        __interactive: false
     }
 }

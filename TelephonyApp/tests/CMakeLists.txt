@@ -21,5 +21,4 @@ generate_tests(
     ConversationAggregatorModelTest
     ConversationFeedItemTest
     ConversationFeedModelTest
-    #ModelSectionCounterTest# --> disabled due to bug #1046821 and because ModelSectionCounter is not working.
     )
