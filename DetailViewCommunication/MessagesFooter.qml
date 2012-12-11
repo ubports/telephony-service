@@ -6,6 +6,7 @@ FocusScope {
    
     property bool validRecipient: false
     property alias hasFocus: entry.activeFocus
+    property bool newConversation: true
 
     signal newMessage(string message)
 
@@ -44,10 +45,14 @@ FocusScope {
             anchors.bottom: parent.bottom
             anchors.bottomMargin: units.gu(1.5)
             focus: true
+            font.pixelSize: FontUtils.sizeToPixels("medium")
+            font.family: "Ubuntu"
+
             // send message if return was pressed
             Keys.onReturnPressed: sendButton.clicked(null)
             Keys.onEscapePressed: text = ""
             height: units.gu(4)
+            placeholderText: newConversation ? "Compose" : "Reply via SMS"
         }
 
         Button {

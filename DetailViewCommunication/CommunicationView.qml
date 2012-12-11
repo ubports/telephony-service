@@ -73,24 +73,6 @@ LocalWidgets.TelephonyPage {
         grouped: false
     }
 
-    Item {
-        id: background
-
-        anchors.fill: parent
-
-        Image {
-            anchors.fill: parent
-            source: "../assets/noise_tile.png"
-            fillMode: Image.Tile
-        }
-
-        Rectangle {
-            anchors.fill: parent
-            color: "black"
-            opacity: 0.05
-        }
-    }
-
     Component {
         id: newHeaderComponent
 
@@ -134,15 +116,6 @@ LocalWidgets.TelephonyPage {
         onLoaded: item.focus = true
 
         height: sourceComponent != null ? childrenRect.height : 0
-    }
-
-    Image {
-        anchors.top: messagesLoader.top
-        anchors.bottom: footer.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        source: "../assets/right_pane_pattern.png"
-        fillMode: Image.Tile
     }
 
     Loader {
@@ -239,6 +212,7 @@ LocalWidgets.TelephonyPage {
         visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
         validRecipient: (!view.newMessage || headerLoader.item.text.match("^[0-9+][0-9+-]*$") != null)
+        newConversation: view.newMessage
 
         onNewMessage: {
             // if the user didn't select a number from the new message header, just

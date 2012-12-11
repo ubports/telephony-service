@@ -34,20 +34,10 @@ LocalWidgets.TelephonyPage {
             Keys.forwardTo: [callButton]
         }
 
-        Image {
-            id: divider
-
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: keypadEntry.bottom
-            source: "../assets/dialer_top_number_bg.png"
-        }
-
-
         Keypad {
             id: keypad
 
-            anchors.top: divider.bottom
+            anchors.top: keypadEntry.bottom
             onKeyPressed: {
                 if (input.cursorPosition != 0)  {
                     var position = input.cursorPosition;

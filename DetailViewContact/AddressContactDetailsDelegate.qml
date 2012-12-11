@@ -33,10 +33,11 @@ BaseContactDetailsDelegate {
 
             anchors.left: parent.left
             anchors.top: parent.top
+            anchors.topMargin: units.gu(1)
             height: units.gu(3)
             text: detailTypeInfo.showSubtype ? DetailUtils.getDetailSubType(detail) : detailTypeInfo.name
-            fontSize: "x-small"
-            verticalAlignment: Text.AlignBottom
+            fontSize: "small"
+            verticalAlignment: Text.AlignVCenter
         }
 
         Label {

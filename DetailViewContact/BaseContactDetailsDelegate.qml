@@ -10,7 +10,7 @@ FocusScope {
        the layout. We also need to set the height to zero to make them completely go away.
        There is a 2 pixels vertical spacing between fields in edit mode.
     */
-    height: (deleted) ? 0 : (((editable) ? editableGroup.height + units.dp(2) : readOnlyGroup.height) + bottomSeparatorLine.height - units.dp(1))
+    height: (deleted) ? 0 : (((editable) ? editableGroup.height + units.dp(2) : readOnlyGroup.height) + bottomSeparatorLine.height - units.dp(2))
     opacity: (deleted) ? 0.0 : 1.0
 
     state: "read"
@@ -98,10 +98,18 @@ FocusScope {
 
             anchors.left: parent.left
             anchors.leftMargin: units.gu(2)
-            anchors.right: readOnlySeparator.left
+            anchors.right: actionBox.left
             anchors.rightMargin: units.gu(1)
             anchors.top: parent.top
             height: childrenRect.height
+
+            Rectangle {
+                id: itemHighlight
+                visible: actionBox.pressed
+                anchors.fill: actionBox
+                color: "white"
+                opacity: 0.7
+            }
 
             onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
 
@@ -115,7 +123,7 @@ FocusScope {
             }
         }
 
-        Rectangle {
+        /*Rectangle {
             id: readOnlySeparator
 
             anchors.verticalCenter: parent.verticalCenter
@@ -125,7 +133,7 @@ FocusScope {
             color: "black"
             opacity: 0.1
             visible: actionBox.visible
-        }
+        }*/
 
         AbstractButton {
             id: actionBox
@@ -136,6 +144,14 @@ FocusScope {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             onClicked: contactDetailsItem.actionClicked(contactDetailsItem.value);
+
+            Rectangle {
+                id: actionHighlight
+                visible: actionBox.pressed
+                anchors.fill: actionBox
+                color: "white"
+                opacity: 0.7
+            }
 
             Image {
                 anchors.centerIn: parent

@@ -26,11 +26,12 @@ BaseContactDetailsDelegate {
 
             anchors.left: parent.left
             anchors.top: parent.top
+            anchors.topMargin: units.gu(1)
             horizontalAlignment: Text.AlignLeft
             height: units.gu(3)
-            verticalAlignment: Text.AlignBottom
+            verticalAlignment: Text.AlignVCenter
             text: detailTypeInfo.showSubtype ? DetailUtils.getDetailSubType(detail) : detailTypeInfo.name
-            fontSize: "x-small"
+            fontSize: "small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             style: Text.Raised
