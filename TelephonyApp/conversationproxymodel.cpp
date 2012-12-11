@@ -257,10 +257,32 @@ bool ConversationProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
 
     if (!mFilterProperty.isEmpty() && !mFilterValue.isEmpty()) {
         QString propertyValue = item->property(mFilterProperty.toLatin1().data()).toString();
+        if (mFilterProperty == "phoneNumber") {
+            return ContactModel::comparePhoneNumbers(mFilterValue, propertyValue);
+        }
         return (propertyValue == mFilterValue);
     }
 
     return true;
+}
+
+ConversationGroup & ConversationProxyModel::groupForEntry(const QString &groupingProperty, const QString &propertyValue) {
+    QString finalValue;
+    QMap<QString, ConversationGroup> &groups = mGroupedEntries[groupingProperty];
+    if (groupingProperty == "phoneNumber") {
+        Q_FOREACH(const QString &key, groups.keys()) {
+            if (ContactModel::comparePhoneNumbers(key, propertyValue)) {
+                mPhoneMatch[propertyValue] = key;
+                finalValue = key;
+                break;
+            }
+        }
+    }
+    if (finalValue.isEmpty()) {
+        finalValue = propertyValue;
+    }
+    ConversationGroup &group = groups[finalValue];
+    return group;
 }
 
 void ConversationProxyModel::processGrouping()
@@ -272,14 +294,15 @@ void ConversationProxyModel::processGrouping()
     ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
 
     mGroupedEntries.clear();
-
+    mPhoneMatch.clear();
     int count = model->rowCount();
     for (int row = 0; row < count; ++row) {
         QModelIndex sourceIndex = model->index(row, 0, QModelIndex());
         ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
         QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
         QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
-        ConversationGroup &group = mGroupedEntries[groupingProperty][propertyValue];
+        ConversationGroup &group = groupForEntry(groupingProperty, propertyValue);
+
         group.eventCount[model->itemType(sourceIndex)]++;
         group.newItem  = group.newItem || item->newItem();
 
@@ -331,6 +354,10 @@ ConversationGroup ConversationProxyModel::groupForSourceIndex(const QModelIndex 
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
     QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
     QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
-    ConversationGroup group = mGroupedEntries[groupingProperty][propertyValue];
-    return group;
+    
+    if(!mPhoneMatch.value(propertyValue).isEmpty() && groupingProperty == "phoneNumber") {
+        return mGroupedEntries[groupingProperty][mPhoneMatch.value(propertyValue)];
+    } else {
+        return mGroupedEntries[groupingProperty][propertyValue];
+    }
 }
