@@ -233,6 +233,7 @@ LocalWidgets.TelephonyPage {
     Scrollbar {
         flickableItem: listView
         align: Qt.AlignTrailing
+        __interactive: false
     }
 
     MessagesFooter {

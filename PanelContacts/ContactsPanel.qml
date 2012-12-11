@@ -154,5 +154,6 @@ LocalWidgets.TelephonyPage {
     Scrollbar {
         flickableItem: contactsList
         align: Qt.AlignTrailing
+        __interactive: false
     }
 }
