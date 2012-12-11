@@ -63,5 +63,6 @@ BaseMessageHeader {
 
         iconSource: "../assets/contacts.png"
         onClicked: telephony.showContactDetails(contact, true)
+        visible: contact != null
     }
 }
