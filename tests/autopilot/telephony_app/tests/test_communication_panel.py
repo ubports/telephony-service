@@ -28,28 +28,28 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.reveal_toolbar()
         new_message_item = self.communication_panel.get_new_message_button()
 
-        self.mouse.move_to_object(new_message_item)
-        self.mouse.click()
+        self.pointing_device.move_to_object(new_message_item)
+        self.pointing_device.click()
 
     def click_sendto_box(self):
         sendto_box = self.communication_panel.get_new_message_send_to_box()
-        self.mouse.move_to_object(sendto_box)
-        self.mouse.click()
+        self.pointing_device.move_to_object(sendto_box)
+        self.pointing_device.click()
         self.assertThat(sendto_box.activeFocus, Eventually(Equals(True)))
 
     def test_searchbox_focus(self):
         """Clicking inside the searbox must give it the focus."""
         searchbox = self.communication_panel.get_communication_searchbox()
-        self.mouse.move_to_object(searchbox)
-        self.mouse.click()
+        self.pointing_device.move_to_object(searchbox)
+        self.pointing_device.click()
 
         self.assertThat(searchbox.activeFocus, Eventually(Equals(True)))
 
     def test_searchbox_entry(self):
         """Ensures that typing inside the main searchbox works."""
         searchbox = self.communication_panel.get_communication_searchbox()
-        self.mouse.move_to_object(searchbox)
-        self.mouse.click()
+        self.pointing_device.move_to_object(searchbox)
+        self.pointing_device.click()
 
         self.keyboard.type("test")
 
@@ -60,14 +60,14 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         searchbox = self.communication_panel.get_communication_searchbox()
         clear_button = self.communication_panel.get_communication_searchbox_clear_button()
 
-        self.mouse.move_to_object(searchbox)
-        self.mouse.click()
+        self.pointing_device.move_to_object(searchbox)
+        self.pointing_device.click()
 
         self.keyboard.type("test")
         self.assertThat(searchbox.text, Eventually(Equals("test")))
 
-        self.mouse.move_to_object(clear_button)
-        self.mouse.click()
+        self.pointing_device.move_to_object(clear_button)
+        self.pointing_device.click()
 
         self.assertThat(searchbox.text, Eventually(Equals("")))
 
@@ -140,8 +140,8 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.click_new_message_button()
         message_box = self.communication_panel.get_new_message_text_box()
 
-        self.mouse.move_to_object(message_box)
-        self.mouse.click()
+        self.pointing_device.move_to_object(message_box)
+        self.pointing_device.click()
 
         self.assertThat(message_box.activeFocus, Eventually(Equals(True)))
 
@@ -150,8 +150,8 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.click_new_message_button()
         message_box = self.communication_panel.get_new_message_text_box()
 
-        self.mouse.move_to_object(message_box)
-        self.mouse.click()
+        self.pointing_device.move_to_object(message_box)
+        self.pointing_device.click()
 
         self.keyboard.type("test")
 

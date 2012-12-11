@@ -42,7 +42,7 @@ class TelephonyAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
         start_x = main_view.geometry[0] + main_view.geometry[2] * 0.75
         stop_x = main_view.geometry[0] + main_view.geometry[2] * 0.15
         y_line = main_view.geometry[1] + 10
-        self.mouse.drag(start_x, y_line, stop_x, y_line)
+        self.pointing_device.drag(start_x, y_line, stop_x, y_line)
         self.assertThat(self.get_tabs_list_view().moving, Eventually(Equals(False)))
 
     def reveal_toolbar(self):
@@ -50,7 +50,7 @@ class TelephonyAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
         x_line = main_view.geometry[0] + main_view.geometry[2] * 0.5
         start_y = main_view.geometry[1] + main_view.geometry[3] - 1
         stop_y = start_y - 200
-        self.mouse.drag(x_line, start_y, x_line, stop_y)
+        self.pointing_device.drag(x_line, start_y, x_line, stop_y)
 
     @property
     def call_panel(self):

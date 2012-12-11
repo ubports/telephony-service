@@ -28,22 +28,22 @@ class TestContactsPanel(TelephonyAppTestCase):
         self.reveal_toolbar()
         add_contact_button = self.contacts_panel.get_add_contact_button()
 
-        self.mouse.move_to_object(add_contact_button)
-        self.mouse.click()
+        self.pointing_device.move_to_object(add_contact_button)
+        self.pointing_device.click()
 
     def test_searchbox_focus(self):
         """Clicking inside the searbox must give it the focus."""
         searchbox = self.contacts_panel.get_contacts_searchbox()
-        self.mouse.move_to_object(searchbox)
-        self.mouse.click()
+        self.pointing_device.move_to_object(searchbox)
+        self.pointing_device.click()
 
         self.assertThat(searchbox.activeFocus, Eventually(Equals(True)))
 
     def test_searchbox_entry(self):
         """Ensures that typing inside the main searchbox works."""
         searchbox = self.contacts_panel.get_contacts_searchbox()
-        self.mouse.move_to_object(searchbox)
-        self.mouse.click()
+        self.pointing_device.move_to_object(searchbox)
+        self.pointing_device.click()
 
         self.keyboard.type("test")
 
@@ -53,13 +53,13 @@ class TestContactsPanel(TelephonyAppTestCase):
         """Clicking the cross icon must clear the searchbox."""
         searchbox = self.contacts_panel.get_contacts_searchbox()
         clearicon = self.contacts_panel.get_contacts_searchbox_icon(searchbox)
-        self.mouse.move_to_object(searchbox)
-        self.mouse.click()
+        self.pointing_device.move_to_object(searchbox)
+        self.pointing_device.click()
 
         self.keyboard.type("test")
 
-        self.mouse.move_to_object(clearicon)
-        self.mouse.click()
+        self.pointing_device.move_to_object(clearicon)
+        self.pointing_device.click()
 
         self.assertThat(searchbox.text, Eventually(Equals("")))
 
@@ -85,14 +85,14 @@ class TestContactsPanel(TelephonyAppTestCase):
         self.keyboard.type("FirstName")
 
         last_name = self.contacts_panel.get_contact_last_name_input()
-        self.mouse.move_to_object(last_name)
-        self.mouse.click()
+        self.pointing_device.move_to_object(last_name)
+        self.pointing_device.click()
         self.keyboard.type("LastName")
 
         self.reveal_toolbar()
         save_button = self.contacts_panel.get_contact_save_button()
-        self.mouse.move_to_object(save_button)
-        self.mouse.click()
+        self.pointing_device.move_to_object(save_button)
+        self.pointing_device.click()
 
         contacts_list = self.contacts_panel.get_contact_list()
         self.assertThat(contacts_list.count, Eventually(Equals(1)))
