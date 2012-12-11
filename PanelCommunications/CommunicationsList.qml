@@ -27,10 +27,16 @@ Item {
             itemIcon:  {
                 switch (itemType) {
                 case "message":
-                    "../assets/contact_icon_message.png";
+                    "../assets/messages.png";
                     break;
                 case "call":
-                    "../assets/contact_icon_phone.png";
+                    if (item.missed) {
+                        "../assets/missed-call.png"
+                    } else if (item.incoming) {
+                        "../assets/incoming-call.png"
+                    } else {
+                        "../assets/outgoing-call.png"
+                    }
                     break;
                 case "group":
                     "../assets/tab_icon_contacts_inactive.png";
@@ -57,7 +63,7 @@ Item {
             }
 
             onClicked: {
-                telephony.showCommunication(model.groupingProperty, model.item[groupingProperty], model.contactId, true);
+                telephony.showCommunication(model.groupingProperty, model.item[groupingProperty], "", model.contactId, true);
             }
         }
     }

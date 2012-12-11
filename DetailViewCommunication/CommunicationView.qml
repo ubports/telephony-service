@@ -23,21 +23,6 @@ LocalWidgets.TelephonyPage {
 
     chromeButtons: newMessage ? null : buttons
 
-    ListModel {
-        id: buttons
-
-        ListElement {
-            label: "Edit"
-            name: "edit"
-        }
-    }
-
-    onChromeButtonClicked: {
-        if (buttonName == "edit") {
-            console.log("TODO: edit clicked, implement");
-        }
-    }
-
     ContactWatcher {
         id: contactWatcher
     }
@@ -113,12 +98,18 @@ LocalWidgets.TelephonyPage {
             width: view.width
 
             onContactSelected: {
+                view.filterProperty = "contactId";
+                view.filterValue = contact.id;
                 view.number = number;
+                view.phoneNumber = number;
                 view.newMessage = false;
             }
 
             onNumberSelected: {
+                view.filterProperty = "phoneNumber"
+                view.filterValue = number;
                 view.number = number;
+                view.phoneNumber = number;
                 view.newMessage = false;
             }
         }
@@ -177,7 +168,6 @@ LocalWidgets.TelephonyPage {
             anchors.right: parent.right
             spacing: units.gu(0.5)
 
-
             ListItem.ThinDivider {
                 height: units.gu(0.5)
             }
@@ -190,7 +180,8 @@ LocalWidgets.TelephonyPage {
                 color: "#333333"
                 opacity: 0.6
                 text: DateUtils.formatFriendlyDate(section);
-                height: paintedHeight + units.gu(1)
+                height: paintedHeight + units.gu(2)
+                verticalAlignment: Text.AlignVCenter
             }
         }
 
@@ -206,13 +197,13 @@ LocalWidgets.TelephonyPage {
             itemIcon: {
                 switch (model.itemType) {
                 case "message":
-                    "../assets/contact_icon_message.png";
+                    "../assets/messages.png";
                     break;
                 case "call":
-                    "../assets/contact_icon_phone.png";
+                    "../assets/phone-call.png";
                     break;
                 case "group":
-                    "../assets/tab_icon_contacts_inactive.png";
+                    "../assets/contact.png";
                     break;
                 default:
                     "";
@@ -234,6 +225,8 @@ LocalWidgets.TelephonyPage {
         flickableItem: listView
         align: Qt.AlignTrailing
         __interactive: false
+
+
     }
 
     MessagesFooter {
@@ -241,8 +234,8 @@ LocalWidgets.TelephonyPage {
 
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        height: visible ? units.gu(5) : 0
+        anchors.bottom: keyboardRect.visible ? keyboardRect.top : parent.bottom
+        height: visible ? units.gu(7) : 0
         visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
         validRecipient: (!view.newMessage || headerLoader.item.text.match("^[0-9+][0-9+-]*$") != null)
@@ -252,8 +245,10 @@ LocalWidgets.TelephonyPage {
             // use whatever is on the text field
             if (view.newMessage) {
                 var phoneNumber = headerLoader.item.text;
-                view.number = phoneNumber
-                view.phoneNumber = phoneNumber
+                view.filterProperty = "phoneNumber"
+                view.filterValue = phoneNumber;
+                view.number = phoneNumber;
+                view.phoneNumber = phoneNumber;
                 view.newMessage = false;
             }
 
@@ -264,5 +259,14 @@ LocalWidgets.TelephonyPage {
                 chatManager.startChat(view.phoneNumber);
             }
         }
+    }
+
+    Item {
+        id: keyboardRect
+        anchors.left: parent.left
+        anchors.right: parent.right
+        y: Qt.inputMethod.keyboardRectangle.y
+        height: Qt.inputMethod.keyboardRectangle.height
+        visible: Qt.inputMethod.visible
     }
 }

@@ -12,6 +12,7 @@ LocalWidgets.TelephonyPage {
         ListElement {
             label: "Compose"
             name: "compose"
+            icon: "../assets/compose.png"
         }
     }
 
@@ -38,7 +39,7 @@ LocalWidgets.TelephonyPage {
         anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
 
-        placeholderText: "Search communication"
+        placeholderText: "Search"
         Keys.onEscapePressed: text = ""
 
         primaryItem: AbstractButton {

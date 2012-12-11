@@ -1,8 +1,57 @@
-telephony-app (0.58.12) UNRELEASED; urgency=low
+telephony-app (0.58.15) quantal; urgency=low
 
+  [ Gustavo Pichorim Boiko ]
+  * Add support for messaging menu actions
+
+  [ Tiago Salem Herrmann ]
+  * force tp-ofono to be launched even if no network connection is available
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 10 Dec 2012 19:20:16 -0200
+
+telephony-app (0.58.14) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Tweak the design of the calls and conversation tabs.
+  * Use a shared code for the TelepathyHelper class between the approver and the
+    app itself, just making sure that the Handler in the approver handles only
+    channels requested inside it.
+  * Remove the usage of the obsolete libindicate library and use a messaging menu
+    entry to display the voicemail instead.
+  * Use separate messaging menu app instances to handle calls and messages, 
+    because they use a different desktop file (different icons, etc).
+
+  [ Tiago Salem Herrmann ]
+  * Send events to telepathy when using DTMF.
+  * Add pressed state to buttons in the live call view.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 06 Dec 2012 23:42:45 +0000
+
+telephony-app (0.58.13) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure the view shows the edit input field for the cases where there is
+    no message shown.
+  * Make sure the input field is not covered by the OSK even if it is not the one
+    holding the focus.
+
+  [ Thomas Moenicke ]
+  * textinput readonly so it does not trigger the keyboard
+
+  [ Tiago Salem Herrmann ]
+  * General fixes for the dialer and live call screens.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 06 Dec 2012 00:32:33 +0000
+
+telephony-app (0.58.12) quantal; urgency=low
+
+  [ Tiago Salem Herrmann ]
   * add csv2logger.py script to convert csv files into xml logger files
 
- -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 03 Dec 2012 18:13:49 -0200
+  [ Gustavo Pichorim Boiko ]
+  * Update the visuals of the ChromeBar
+  * Make sure the message text input field is not covered by the on-screen-keyboard.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 05 Dec 2012 00:10:04 +0000
 
 telephony-app (0.58.11) quantal; urgency=low
 

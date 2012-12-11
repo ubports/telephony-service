@@ -19,10 +19,9 @@
 
 #include "voicemailindicator.h"
 #include "telepathyhelper.h"
+#include "messagingmenu.h"
 #include <QDebug>
 #include <QDBusReply>
-#include <qindicateserver.h>
-#include <qindicateindicator.h>
 
 #define CANONICAL_IFACE_TELEPHONY "com.canonical.Telephony"
 
@@ -30,29 +29,20 @@ VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
 : QObject(parent),
   mConnection(QDBusConnection::sessionBus())
 {
-    mIndicateServer = new QIndicate::Server(this, "/com/canonical/TelephonyApp/indicators/voicemail");
-    mIndicateServer->setType("message");
-    mIndicateServer->setDesktopFile("/usr/share/applications/telephony-app-phone.desktop");
-    mIndicateServer->show();
-
-    mIndicator = new QIndicate::Indicator(this);
-    mIndicator->setNameProperty("Voicemail");
-
-    // the indicator gets automatically added to the default server, so we need to remove it from there
-    // and add to the correct server
-    QIndicate::Server::defaultInstance()->removeIndicator(mIndicator);
-    mIndicateServer->addIndicator(mIndicator);
-
-    connect(mIndicator,
-            SIGNAL(display(QIndicate::Indicator*)),
-            SLOT(onIndicatorDisplay(QIndicate::Indicator*)));
-
     if(!checkConnected()) {
         connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onAccountReady()));
         connect(TelepathyHelper::instance(), SIGNAL(connectionChanged()), SLOT(onAccountReady()));
     } else {
         onAccountReady();
     }
+}
+
+void VoiceMailIndicator::showVoicemailOnApp()
+{
+    QDBusInterface telephonyApp("com.canonical.TelephonyApp",
+                                "/com/canonical/TelephonyApp",
+                                "com.canonical.TelephonyApp");
+    telephonyApp.call("ShowVoicemail");
 }
 
 bool VoiceMailIndicator::checkConnected()
@@ -81,12 +71,9 @@ void VoiceMailIndicator::onAccountReady()
 void VoiceMailIndicator::onVoicemailIndicatorChanged(bool active)
 {
     if (active) {
-        mIndicator->setCountProperty(voicemailCount());
-        mIndicator->show();
-        mIndicator->setDrawAttentionProperty(true);
+        MessagingMenu::instance()->showVoicemailEntry(voicemailCount());
     } else {
-        mIndicator->hide();
-        mIndicator->setDrawAttentionProperty(false);
+        MessagingMenu::instance()->hideVoicemailEntry();
     }
 }
 
@@ -126,20 +113,5 @@ int VoiceMailIndicator::voicemailCount()
 
 void VoiceMailIndicator::onVoicemailCountChanged(int count)
 {
-    if (voicemailIndicatorVisible()) {
-        mIndicator->setCountProperty(count);
-        mIndicator->show();
-        mIndicator->setDrawAttentionProperty(true);
-    } else {
-        mIndicator->hide();
-        mIndicator->setDrawAttentionProperty(false);
-    }
-}
-
-void VoiceMailIndicator::onIndicatorDisplay(QIndicate::Indicator *indicator)
-{
-    QDBusInterface telephonyApp("com.canonical.TelephonyApp",
-                                "/com/canonical/TelephonyApp",
-                                "com.canonical.TelephonyApp");
-    telephonyApp.call("ShowVoicemail");
+    onVoicemailIndicatorChanged(voicemailIndicatorVisible());
 }

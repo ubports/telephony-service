@@ -46,7 +46,7 @@ LocalWidgets.TelephonyPage {
                     filterValue = contactWatcher.contactId;
                 }
 
-                telephony.showCommunication(filterProperty, filterValue, contactWatcher.contactId, true);
+                telephony.showCommunication(filterProperty, filterValue, "", contactWatcher.contactId, true);
                 telephony.endCall();
             }
         }
@@ -113,7 +113,7 @@ LocalWidgets.TelephonyPage {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: units.gu(10)
+                height: units.gu(11)
 
                 UbuntuShape {
                     id: picture
@@ -121,10 +121,10 @@ LocalWidgets.TelephonyPage {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.left: parent.left
                     anchors.leftMargin: units.gu(2)
-                    width: units.gu(6)
-                    height: units.gu(6)
+                    width: units.gu(7)
+                    height: units.gu(7)
                     image: Image {
-                        source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_messaging.png"
+                        source: (contact && contact.avatar != "") ? contact.avatar : "../assets/avatar-default.png"
                         fillMode: Image.PreserveAspectCrop
                     }
                 }
@@ -159,7 +159,7 @@ LocalWidgets.TelephonyPage {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: header.bottom
-                source: "../assets/dialer_top_number_bg.png"
+                source: "../assets/horizontal_divider.png"
             }
 
 
@@ -169,8 +169,7 @@ LocalWidgets.TelephonyPage {
                 anchors.top: divider2.bottom
                 anchors.right: parent.right
                 anchors.left: parent.left
-                anchors.bottom: footer.top
-
+                height: units.gu(36)
                 Grid {
                     id: mainButtonsGrid
                     rows: 2
@@ -182,11 +181,8 @@ LocalWidgets.TelephonyPage {
                     width: childrenRect.width
                     height: childrenRect.height
 
-                    // TODO: fix assets for selected buttons
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_pause.png"
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
+                        iconSource: selected ? "../assets/play.png" : "../assets/pause.png"
                         selected: liveCall.onHold
                         onClicked: {
                             if (call) {
@@ -196,10 +192,8 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_speaker.png"
+                        iconSource: selected ? "../assets/speaker.png" : "../assets/speaker-mute.png"
                         selected: liveCall.isSpeaker
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
                         onClicked: {
                             if (call) {
                                 call.speaker = !selected
@@ -208,9 +202,7 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_mute.png"
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
+                        iconSource: selected ? "../assets/microphone-mute.png" : "../assets/microphone.png"
                         selected: liveCall.isMuted
                         onClicked: {
                             if (call) {
@@ -220,18 +212,14 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_add.png"
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
+                        iconSource: "../assets/quick-add.png"
                         selected: false
                         onClicked: {
                         }
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_keyboard.png"
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
+                        iconSource: "../assets/keypad.png"
                         selected: liveCall.isDtmf
                         onClicked: {
                             liveCall.isDtmf = true
@@ -239,9 +227,7 @@ LocalWidgets.TelephonyPage {
                     }
 
                     LiveCallKeypadButton {
-                        iconSource: "../assets/incall_contact.png"
-                        iconWidth: units.gu(3)
-                        iconHeight: units.gu(3)
+                        iconSource: "../assets/live_call_contacts.png"
                         selected: false
                         onClicked: {
                         }
@@ -251,35 +237,26 @@ LocalWidgets.TelephonyPage {
 
             Item {
                 id: footer
-                height: childrenRect.height
+                height: units.gu(12)
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.bottomMargin: units.gu(4)
 
                 Image {
                     id: divider3
 
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.bottom: hangupButton.top
-                    anchors.bottomMargin: units.gu(2)
+                    anchors.top: parent.top
                     source: "../assets/horizontal_divider.png"
-                    opacity: 0.4
                 }
 
-                CustomButton {
+                HangupButton {
                     id: hangupButton
 
-                    icon: "../assets/incall_hangup.png"
-                    width: units.gu(19)
-                    height: units.gu(8)
-                    iconWidth: units.gu(5)
-                    iconHeight: units.gu(5)
+                    anchors.top: divider3.bottom
+                    anchors.topMargin: units.gu(2)
                     anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.verticalCenter: parent.verticalCenter
-                    color: "#bf400c"
-                    ItemStyle.class: "dark-button"
                     onClicked: endCall()
                 }
             }
@@ -297,6 +274,8 @@ LocalWidgets.TelephonyPage {
                 anchors.right: keypad.right
                 anchors.leftMargin: units.dp(-2)
                 anchors.rightMargin: units.dp(-2)
+                placeHolder: liveCall.number
+                placeHolderPixelFontSize: units.dp(43)
                 focus: true
             }
 
@@ -309,24 +288,60 @@ LocalWidgets.TelephonyPage {
                 source: "../assets/dialer_top_number_bg.png"
             }
 
-
             Keypad {
                 id: keypad
 
                 anchors.top: divider4.bottom
-                onKeyPressed: keypadEntry.value += label
+                onKeyPressed: {
+                    keypadEntry.value += label
+                    if (call) {
+                        call.sendDTMF(label)
+                    }
+                }
+
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: units.dp(10)
             }
 
-            CallButton {
-                id: backButton
-                objectName: "backButton"
-                anchors.top: keypad.bottom
-                anchors.topMargin: units.gu(2)
-                color: "#bf400c"
-                anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: liveCall.isDtmf = false
+            Item {
+                id: dialFooter
+                height: units.gu(12)
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                Image {
+                    id: divider5
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    source: "../assets/horizontal_divider.png"
+                }
+
+                HangupButton {
+                    id: hangupButton2
+
+                    anchors.top: divider5.bottom
+                    anchors.topMargin: units.gu(2)
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    onClicked: endCall()
+                }
+
+                CustomButton {
+                    id: backButton
+                    objectName: "backButton"
+                    anchors.right: hangupButton2.left
+                    anchors.verticalCenter: hangupButton2.verticalCenter
+                    anchors.rightMargin: units.gu(1)
+                    // FIXME: use the right icon
+                    icon: "../assets/back.png"
+                    iconWidth: units.gu(4)
+                    iconHeight: units.gu(4)
+                    width: units.gu(7)
+                    height: units.gu(7)
+                    onClicked: liveCall.isDtmf = false
+                }
             }
         }
     }

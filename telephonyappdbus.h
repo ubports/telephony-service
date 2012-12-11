@@ -38,6 +38,7 @@ public:
 
 public Q_SLOTS:
     Q_NOREPLY void ShowMessages(const QString &number);
+    Q_NOREPLY void ShowMessage(const QString &messageId);
     Q_NOREPLY void NewMessage();
     Q_NOREPLY void SendMessage(const QString &number, const QString &message);
     Q_NOREPLY void ShowVoicemail();

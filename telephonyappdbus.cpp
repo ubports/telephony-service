@@ -53,6 +53,11 @@ TelephonyAppDBus::ShowMessages(const QString &number)
     Q_EMIT request(QString("message://%1").arg(number));
 }
 
+void TelephonyAppDBus::ShowMessage(const QString &messageId)
+{
+    Q_EMIT request(QString("messageId://%1").arg(messageId));
+}
+
 void TelephonyAppDBus::NewMessage()
 {
     Q_EMIT request(QString("message://"));

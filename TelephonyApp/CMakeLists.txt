@@ -9,13 +9,7 @@ set(plugin_SRCS
     conversationaggregatormodel.cpp
     conversationproxymodel.cpp
     components.cpp
-    channelhandler.cpp
-    channelobserver.cpp
-    chatmanager.cpp
-    callentry.cpp
-    callmanager.cpp
     messagelogmodel.cpp
-    telepathyhelper.cpp
     )
 
 include_directories(

@@ -6,7 +6,6 @@ Item {
 
     width: keys.width
     height: keys.height
-
     signal keyPressed(int keycode, string label)
 
     Grid {
@@ -14,13 +13,14 @@ Item {
 
         rows: 4
         columns: 3
-        spacing: units.dp(5)
+        spacing: units.gu(1)
 
         KeypadButton {
             label: "1"
             keycode: Qt.Key_1
             onClicked: keypad.keyPressed(keycode, label)
             onPressAndHold: telephony.callVoicemail()
+            iconSource: "../assets/voicemail.png"
         }
 
         KeypadButton {
@@ -90,8 +90,10 @@ Item {
         KeypadButton {
             label: "0"
             sublabel: "+"
+            sublabelSize: "medium"
             keycode: Qt.Key_0
             onClicked: keypad.keyPressed(keycode, label)
+            onPressAndHold: keypad.keyPressed(keycode, sublabel)
         }
 
         KeypadButton {

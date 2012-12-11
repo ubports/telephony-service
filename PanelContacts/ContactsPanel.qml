@@ -13,6 +13,7 @@ LocalWidgets.TelephonyPage {
         ListElement {
             label: "Add"
             name: "add"
+            icon: "../assets/new-contact.png"
         }
     }
 
@@ -43,7 +44,7 @@ LocalWidgets.TelephonyPage {
         anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
 
-        placeholderText: "Search contacts"
+        placeholderText: "Search"
         Keys.onEscapePressed: text = ""
 
         primaryItem: AbstractButton {
@@ -134,7 +135,7 @@ LocalWidgets.TelephonyPage {
                 id: headerFavorite
                 anchors.left: parent.left
                 anchors.right: parent.right
-                text: "Favorite"
+                text: "Favourites"
             }
             
             Repeater {

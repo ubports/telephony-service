@@ -9,41 +9,51 @@ Button {
 
     property alias label: labelItem.text
     property alias sublabel: sublabelItem.text
+    property alias sublabelSize: sublabelItem.fontSize
+    property alias iconSource: subImage.source
     property int keycode
     property bool isCorner: false
     property int corner
     ItemStyle.class: "transparent"
 
-    Image {
-        anchors.fill: parent
+    UbuntuShape {
+        id: shape
         anchors.centerIn: parent
         width: units.gu(11)
         height: units.gu(8)
-        source: pressed ? "../assets/dialer_pad_bg_pressed.png" : "../assets/dialer_pad_bg.png"
-        fillMode: Image.PreserveAspectFit
+        borderSource: pressed ? "../assets/dialer_pad_bg_pressed.sci" : "../assets/dialer_pad_bg.sci"
     }
 
     Label {
         id: labelItem
 
-        anchors.centerIn: parent
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
         anchors.verticalCenterOffset: -units.gu(0.5)
-        anchors.horizontalCenterOffset: units.dp(1)
         horizontalAlignment: Text.AlignHCenter
-        fontSize: "x-large"
+        font.pixelSize: units.dp(43)
+        font.weight: Font.Light
         color: "#464646"
-        z: 1
+        height: paintedHeight
+        verticalAlignment: Text.AlignTop
+        opacity: 0.9
     }
 
     Label {
         id: sublabelItem
 
-        anchors.top: labelItem.bottom
+        anchors.bottom: shape.bottom
+        anchors.bottomMargin: units.dp(7)
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: units.dp(1)
         horizontalAlignment: Text.AlignHCenter
         fontSize: "x-small"
         color: "#a3a3a3"
-        z: 1
+    }
+
+    Image {
+        id: subImage
+        visible: source != ""
+        anchors.centerIn: sublabelItem
+        opacity: 0.8
     }
 }
