@@ -77,7 +77,6 @@ private:
     QList<Call> mCalls;
     QString mVoicemailId;
     int mVoicemailCount;
-    QDBusInterface mTelephonyAppInterface;
 };
 
 #endif // MESSAGINGMENU_H

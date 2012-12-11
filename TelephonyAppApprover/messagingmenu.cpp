@@ -24,11 +24,7 @@
 #include <gio/gio.h>
 
 MessagingMenu::MessagingMenu(QObject *parent) :
-    QObject(parent), mVoicemailCount(-1),
-    mTelephonyAppInterface("com.canonical.TelephonyApp",
-                           "/com/canonical/TelephonyApp",
-                           "com.canonical.TelephonyApp")
-
+    QObject(parent), mVoicemailCount(-1)
 {
     GIcon *icon = g_icon_new_for_string("telephony-app", NULL);
     mMessagesApp = messaging_menu_app_new("telephony-app-sms.desktop");
@@ -248,6 +244,10 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
 
 void MessagingMenu::showMessage(const QString &messageId)
 {
+    QDBusInterface mTelephonyAppInterface("com.canonical.TelephonyApp",
+                           "/com/canonical/TelephonyApp",
+                           "com.canonical.TelephonyApp");
+
     mTelephonyAppInterface.call("ShowMessage", messageId);
 }
 
@@ -255,6 +255,10 @@ void MessagingMenu::callBack(const QString &messageId)
 {
     QString phoneNumber = callFromMessageId(messageId).number;
     qDebug() << "TelephonyApp/MessagingMenu: Calling back" << phoneNumber;
+    QDBusInterface mTelephonyAppInterface("com.canonical.TelephonyApp",
+                           "/com/canonical/TelephonyApp",
+                           "com.canonical.TelephonyApp");
+
     mTelephonyAppInterface.call("CallNumber", phoneNumber);
 }
 
@@ -268,6 +272,10 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
     qDebug() << "TelephonyApp/MessagingMenu: Calling voicemail for messageId" << messageId;
+    QDBusInterface mTelephonyAppInterface("com.canonical.TelephonyApp",
+                           "/com/canonical/TelephonyApp",
+                           "com.canonical.TelephonyApp");
+
     mTelephonyAppInterface.call("ShowVoicemail");
 }
 
