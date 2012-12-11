@@ -209,6 +209,7 @@ LocalWidgets.TelephonyPage {
         visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
         validRecipient: (!view.newMessage || headerLoader.item.text.match("^[0-9+][0-9+-]*$") != null)
+        newConversation: view.newMessage
 
         onNewMessage: {
             // if the user didn't select a number from the new message header, just
