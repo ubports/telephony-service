@@ -16,9 +16,9 @@ class CallPanel(object):
         """Returns keypad's input box."""
         return self.app.select_single('KeypadEntry')
     
-    def get_keypad_clear_button(self):
-        """Returns the clear button of the keypad's input box"""
-        return get_keypad_entry().get_children_by_type('AbstractButton')
+    def get_erase_button(self):
+        """Returns the erase button of the keypad"""
+        return self.app.select_single('CustomButton', objectName="eraseButton")
     
     def get_keypad_keys(self):
         """Returns list of dialpad keys."""
@@ -26,7 +26,7 @@ class CallPanel(object):
 
     def get_dial_button(self):
         """Returns the Dial button"""
-        return self.app.select_single('Button', objectName='callButton')
+        return self.app.select_single('AbstractButton', objectName='callButton')
 
     def get_contacts_list_button(self):
         """Returns the Contacts list button next to the dial button"""

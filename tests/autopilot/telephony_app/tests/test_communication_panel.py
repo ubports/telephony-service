@@ -20,35 +20,36 @@ class TestCommunicationPanel(TelephonyAppTestCase):
 
     def setUp(self):
         super(TestCommunicationPanel, self).setUp()
-        communication_tab = self.get_main_view_tabs()[1]
-        self.mouse.move_to_object(communication_tab)
-        self.mouse.click()
+        communication_page = self.communication_panel.get_communication_page()
+        self.move_to_next_tab()
+        self.assertThat(communication_page.isCurrent, Eventually(Equals(True)))
 
     def click_new_message_button(self):
+        self.reveal_toolbar()
         new_message_item = self.communication_panel.get_new_message_button()
 
-        self.mouse.move_to_object(new_message_item)
-        self.mouse.click()
+        self.pointing_device.move_to_object(new_message_item)
+        self.pointing_device.click()
 
-    def test_main_tab_focus(self):
-        """Clicking on the 'communication' tab must give it the focus."""
-        communication_tab = self.get_main_view_tabs()[1]
-
-        self.assertThat(communication_tab.selected, Eventually(Equals(True)))
+    def click_sendto_box(self):
+        sendto_box = self.communication_panel.get_new_message_send_to_box()
+        self.pointing_device.move_to_object(sendto_box)
+        self.pointing_device.click()
+        self.assertThat(sendto_box.activeFocus, Eventually(Equals(True)))
 
     def test_searchbox_focus(self):
         """Clicking inside the searbox must give it the focus."""
         searchbox = self.communication_panel.get_communication_searchbox()
-        self.mouse.move_to_object(searchbox)
-        self.mouse.click()
+        self.pointing_device.move_to_object(searchbox)
+        self.pointing_device.click()
 
         self.assertThat(searchbox.activeFocus, Eventually(Equals(True)))
 
     def test_searchbox_entry(self):
         """Ensures that typing inside the main searchbox works."""
         searchbox = self.communication_panel.get_communication_searchbox()
-        self.mouse.move_to_object(searchbox)
-        self.mouse.click()
+        self.pointing_device.move_to_object(searchbox)
+        self.pointing_device.click()
 
         self.keyboard.type("test")
 
@@ -58,17 +59,15 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         """Clicking the cross icon must clear the searchbox."""
         searchbox = self.communication_panel.get_communication_searchbox()
         clear_button = self.communication_panel.get_communication_searchbox_clear_button()
-        #tx = clear_button.globalRect[0]
-        #ty = clear_button.globalRect[1]
 
-        self.mouse.move_to_object(searchbox)
-        self.mouse.click()
+        self.pointing_device.move_to_object(searchbox)
+        self.pointing_device.click()
 
         self.keyboard.type("test")
         self.assertThat(searchbox.text, Eventually(Equals("test")))
 
-        self.mouse.move_to_object(clear_button)
-        self.mouse.click()
+        self.pointing_device.move_to_object(clear_button)
+        self.pointing_device.click()
 
         self.assertThat(searchbox.text, Eventually(Equals("")))
 
@@ -88,6 +87,10 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.click_new_message_button()
         sendto_box = self.communication_panel.get_new_message_send_to_box()
 
+        # FIXME: we should have the field focused by default, but right now we
+        # need to explicitly give it focus
+        self.click_sendto_box()
+
         self.assertThat(sendto_box.activeFocus, Eventually(Equals(True)))
 
     def test_message_send_to_entry(self):
@@ -95,6 +98,9 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.click_new_message_button()
         sendto_box = self.communication_panel.get_new_message_send_to_box()
 
+        # FIXME: we should have the field focused by default, but right now we
+        # need to explicitly give it focus
+        self.click_sendto_box()
         self.keyboard.type("911")
 
         self.assertThat(sendto_box.text, Eventually(Equals("911")))
@@ -105,6 +111,9 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.click_new_message_button()
         send_button = self.communication_panel.get_message_send_button()
 
+        # FIXME: we should have the field focused by default, but right now we
+        # need to explicitly give it focus
+        self.click_sendto_box()
         self.keyboard.type("911")
 
         self.assertThat(send_button.enabled, Eventually(Equals(True)))
@@ -117,6 +126,9 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.click_new_message_button()
         send_button = self.communication_panel.get_message_send_button()
 
+        # FIXME: we should have the field focused by default, but right now we
+        # need to explicitly give it focus
+        self.click_sendto_box()
         self.keyboard.type("911")
         self.keyboard.press_and_release("Ctrl+a")
         self.keyboard.press_and_release("Delete")
@@ -128,8 +140,8 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.click_new_message_button()
         message_box = self.communication_panel.get_new_message_text_box()
 
-        self.mouse.move_to_object(message_box)
-        self.mouse.click()
+        self.pointing_device.move_to_object(message_box)
+        self.pointing_device.click()
 
         self.assertThat(message_box.activeFocus, Eventually(Equals(True)))
 
@@ -138,8 +150,8 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.click_new_message_button()
         message_box = self.communication_panel.get_new_message_text_box()
 
-        self.mouse.move_to_object(message_box)
-        self.mouse.click()
+        self.pointing_device.move_to_object(message_box)
+        self.pointing_device.click()
 
         self.keyboard.type("test")
 

@@ -16,19 +16,24 @@ class CommunicationPanel(object):
 
     def get_communication_searchbox(self):
         """Returns the main searchbox attached to the communication panel."""
-        return self.app.select_single("TextField", placeholderText="Search communication")
+        return self.app.select_single("TextField", objectName="messageSearchBox")
 
     def get_communication_searchbox_clear_button(self):
         """Returns the clear button in the main searchbox attached to the communication panel."""
-        return self.get_communication_searchbox().get_children_by_type("QQuickBorderImage")[0].get_children_by_type("Button")[0]
+        return self.get_communication_searchbox().get_children_by_type("Button")[0]
 
     def get_new_message_button(self):
         """Returns 'New Message' list item."""
-        return self.app.select_single("Button", objectName='compose', text='Compose')
+        return self.app.select_single("ChromeButton", objectName='compose', text='Compose')
 
     def get_communication_view(self):
         """Returns the CommunicationView."""
         return self.app.select_single("CommunicationView")
+
+    def get_communication_page(self):
+        """Returns the Communication page"""
+        return self.app.select_single('PageStack',
+                                      source='PanelCommunications/CommunicationsPanel.qml')
 
     def get_new_message_send_to_box(self):
         """Return the "To" input box for sending an sms."""

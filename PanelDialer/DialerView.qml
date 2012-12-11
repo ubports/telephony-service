@@ -106,6 +106,7 @@ LocalWidgets.TelephonyPage {
 
             CustomButton {
                 id: backspace
+                objectName: "eraseButton"
                 anchors.left: callButton.right
                 anchors.verticalCenter: callButton.verticalCenter
                 anchors.leftMargin: units.gu(1)

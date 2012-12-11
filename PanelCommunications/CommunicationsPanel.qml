@@ -31,6 +31,7 @@ LocalWidgets.TelephonyPage {
 
     TextField {
         id: search
+        objectName: "messageSearchBox"
 
         anchors.top: header.bottom
         anchors.topMargin: units.gu(1)
