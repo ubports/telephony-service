@@ -28,20 +28,6 @@ class TestCallPanel(TelephonyAppTestCase):
         keypad_entry = self.call_panel.get_keypad_entry()
         keypad_keys = self.call_panel.get_keypad_keys()
 
-        self.mouse.move_to_object(keypad_entry)
-        self.mouse.click()
-        
-        self.keyboard.press_and_release("1")
-        self.keyboard.press_and_release("2")
-        self.keyboard.press_and_release("3")
-        
-        self.assertThat(keypad_entry.value, Eventually(Equals("123")))
-        
-        self.keyboard.press_and_release("BackSpace")
-        self.keyboard.press_and_release("BackSpace")
-        self.keyboard.press_and_release("BackSpace")
-        self.assertThat(keypad_entry.value, Eventually(Equals("")))
-        
         for keys in keypad_keys:
             self.mouse.move_to_object(keys)
             self.mouse.click()
@@ -51,33 +37,42 @@ class TestCallPanel(TelephonyAppTestCase):
     def test_call_button_disabling(self):
         """The call button needs to be disabled when there is no number in the input"""
         keypad_entry = self.call_panel.get_keypad_entry()
+        keypad_keys = self.call_panel.get_keypad_keys()
         dial_button = self.call_panel.get_dial_button()
         self.assertThat(keypad_entry.value, Eventually(Equals("")))
         self.assertThat(dial_button.enabled, Eventually(Equals(False)))
 
-        self.mouse.move_to_object(keypad_entry)
+        self.mouse.move_to_object(keypad_keys[0])
         self.mouse.click()
-        self.keyboard.press_and_release("1");
-        self.keyboard.press_and_release("2");
-        self.keyboard.press_and_release("3");
+        self.mouse.move_to_object(keypad_keys[1])
+        self.mouse.click()
+        self.mouse.move_to_object(keypad_keys[2])
+        self.mouse.click()
+
         self.assertThat(keypad_entry.value, Eventually(Equals("123")))
         self.assertThat(dial_button.enabled, Eventually(Equals(True)))
 
-        self.keyboard.press_and_release("BackSpace")
-        self.keyboard.press_and_release("BackSpace")
-        self.keyboard.press_and_release("BackSpace")
+        erase_button = self.call_panel.get_erase_button()
+        self.mouse.move_to_object(erase_button)
+        self.mouse.click()
+        self.mouse.click()
+        self.mouse.click()
         self.assertThat(dial_button.enabled, Eventually(Equals(False)))
 
     def test_call(self):
         """Dialing a number works"""
         keypad_entry = self.call_panel.get_keypad_entry()
-        self.mouse.move_to_object(keypad_entry)
+        keypad_keys = self.call_panel.get_keypad_keys()
+
+        self.mouse.move_to_object(keypad_keys[0])
+        self.mouse.click()
+        self.mouse.move_to_object(keypad_keys[1])
+        self.mouse.click()
+        self.mouse.move_to_object(keypad_keys[2])
+        self.mouse.click()
+        self.mouse.move_to_object(keypad_keys[3])
         self.mouse.click()
 
-        self.keyboard.press_and_release("1");
-        self.keyboard.press_and_release("2");
-        self.keyboard.press_and_release("3");
-        self.keyboard.press_and_release("4");
         self.assertThat(keypad_entry.value, Eventually(Equals("1234")))
         
         dial_button = self.call_panel.get_dial_button()

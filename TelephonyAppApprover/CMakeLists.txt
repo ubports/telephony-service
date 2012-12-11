@@ -4,7 +4,6 @@ set(qt_SRCS
     telephonyappapprover.cpp
     textchannelobserver.cpp
     voicemailindicator.cpp
-    telepathyhelper.cpp
     )
 
 set(approver_SRCS main.cpp ${qt_SRCS})
@@ -13,7 +12,6 @@ set(desktop_FILES telephony-app-sms.desktop telephony-app-phone.desktop)
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${NOTIFY_INCLUDE_DIRS}
-    ${INDICATE_QT_INCLUDE_DIRS}
     ${MESSAGING_MENU_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyapp
     )
@@ -26,7 +24,6 @@ qt5_use_modules(telephony-app-approver Contacts Core Gui DBus Qml Widgets)
 target_link_libraries(telephony-app-approver
     ${TP_QT5_LIBRARIES}
     ${NOTIFY_LIBRARIES}
-    ${INDICATE_QT_LIBRARIES}
     ${MESSAGING_MENU_LIBRARIES}
     telephonyapp
     )

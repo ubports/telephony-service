@@ -17,7 +17,7 @@ Item {
     anchors.left: parent ? parent.left : undefined
     anchors.right: parent ? parent.right: undefined
 
-    height: bubble.height + units.gu(1.5)
+    height: bubble.height + units.gu(1)
 
     Component.onCompleted: {
         if (item.newItem) {
@@ -31,30 +31,40 @@ Item {
         anchors.left: incoming ? icon.right : parent.left
         anchors.leftMargin: units.gu(1)
         anchors.right: incoming ? parent.right : icon.left
-        anchors.rightMargin: units.gu(2)
+        anchors.rightMargin: units.gu(1)
         anchors.top: parent.top
-        anchors.topMargin: units.gu(0.5)
 
-        source: incoming ? "../assets/conversation_incoming.sci" :
-                           "../assets/conversation_outgoing.sci"
+        function selectBubble() {
+            var fileName = "../assets/conversation_";
+            if (itemType == "call") {
+                fileName += "phonecall_";
+            }
+            if (incoming) {
+                fileName += "incoming.sci";
+            } else {
+                fileName += "outgoing.sci";
+            }
+            return fileName;
+        }
+
+        source: selectBubble()
 
         height: messageText.height + units.gu(3)
 
         Label {
             id: messageText
 
+            anchors.verticalCenter: parent.verticalCenter
             anchors.left: bubble.left
             anchors.leftMargin: bubble.border.left
-            anchors.top: bubble.top
-            anchors.topMargin: units.gu(1)
             anchors.right: bubble.right
             anchors.rightMargin: bubble.border.right
             height: paintedHeight
 
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
-            fontSize: "small"
-            color: incoming ? "#ffffff" : "#333333"
-            opacity: incoming ? 1 : 0.9
+            fontSize: "medium"
+            color: (incoming && itemType != "call") ? "#ffffff" : "#333333"
+            opacity: (incoming && itemType != "call") ? 1 : 0.9
             text: selectMessage()
 
             function selectMessage() {

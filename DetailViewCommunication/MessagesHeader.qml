@@ -22,7 +22,7 @@ BaseMessageHeader {
         height: units.gu(6)
 
         image: Image {
-            source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar_messaging.png"
+            source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar-default.png"
             fillMode: Image.PreserveAspectCrop
         }
     }
@@ -35,7 +35,7 @@ BaseMessageHeader {
         anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
         anchors.verticalCenter: parent.verticalCenter
-        fontSize: "medium"
+        fontSize: "large"
         elide: Text.ElideRight
         color: "#333333"
         opacity: 0.6
@@ -61,7 +61,7 @@ BaseMessageHeader {
         width: units.gu(3)
         height: units.gu(3)
 
-        iconSource: "../assets/tab_icon_contacts_inactive.png"
+        iconSource: "../assets/contacts.png"
         onClicked: telephony.showContactDetails(contact, true)
     }
 }

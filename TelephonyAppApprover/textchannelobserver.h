@@ -26,11 +26,6 @@
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 
-namespace QIndicate {
-    class Indicator;
-    class Server;
-}
-
 class TextChannelObserver : public QObject, public Tp::AbstractClientObserver
 {
     Q_OBJECT
@@ -48,8 +43,6 @@ public:
                          const Tp::AbstractClientObserver::ObserverInfo &observerInfo);
 
 protected:
-    void updateIndicatorsFromChannel(const Tp::TextChannelPtr &textChannel);
-    void removeIndicatorsFromChannel(const Tp::TextChannelPtr &textChannel);
     void showNotificationForMessage(const Tp::ReceivedMessage &message);
     Tp::TextChannelPtr channelFromPath(const QString &path);
 
@@ -58,15 +51,11 @@ protected Q_SLOTS:
     void onTextChannelInvalidated();
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
-    void onIndicatorDisplay(QIndicate::Indicator *indicator);
 
 private:
     QMap<Tp::Channel*, Tp::MethodInvocationContextPtr<> > mContexts;
     QMap<Tp::PendingReady*, Tp::ChannelPtr> mReadyMap;
     QList<Tp::TextChannelPtr> mChannels;
-    QMap<QString, QIndicate::Indicator*> mIndicators;
-    QIndicate::Server *mIndicateServer;
-    QIndicate::Indicator *mNewMessageIndicator;
 };
 
 #endif // TEXTCHANNELOBSERVER_H

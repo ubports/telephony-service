@@ -31,7 +31,7 @@ FocusScope {
         id: entry
         anchors.left: parent.left
         anchors.right: parent.right
-        onTextChanged: text != "" ? dropDownSearch.state = "searching" : dropDownSearch.state = "idle"
+        onTextChanged: (text != "" && entry.activeFocus) ? dropDownSearch.state = "searching" : dropDownSearch.state = "idle"
         onLeftIconClicked: parent.leftIconClicked()
         onRightIconClicked: parent.rightIconClicked()
         onActivateFirstResult: parent.activateFirstResult()
