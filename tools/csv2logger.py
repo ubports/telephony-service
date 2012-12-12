@@ -17,80 +17,85 @@ call = {}
         
 token = random.randrange(111111111, 999999999)
 
-if len(sys.argv) != 2 or not os.path.isfile(sys.argv[1]):
-    print "Usage: " + sys.argv[0] + " conversation_data.csv"
+if len(sys.argv) == 1:
+    print "Usage: " + sys.argv[0] + " conversation_data1.csv conversation_data2.csv ..."
     sys.exit(1)
 
-with open(sys.argv[1], 'rb') as csvfile:
-    reader = csv.reader(csvfile)
-    count = 0
-    for row in reader:
-        count+=1
-        # skip header
-        if count == 1:
-            continue
-        phoneNumber = row[0]
-        datetime = row[1]
-        eventtype = row[2]
-        incoming = (row[3] == "yes")
-        source = row[4]
-        missed = (row[5] == "yes")
-        message = row[6]
-        duration = row[7]
-        # use phoneNumber as userid
-        userid = phoneNumber.replace(" ", "") # no space
-        userid = userid.replace("(", "").replace(")","") # no ()
-        userid = userid.replace("-", "") # no dash
+for n in range(1, len(sys.argv)):
+    with open(sys.argv[n], 'rb') as csvfile:
+        reader = csv.reader(csvfile)
+        count = 0
+        for row in reader:
+            count+=1
+            # skip header
+            if count == 1:
+                continue
+            phoneNumber = row[0]
+            date = row[1]
+            time = row[2]
+            eventtype = row[3]
+            incoming = (row[4] == "yes")
+            source = row[5]
+            missed = (row[6] == "yes")
+            message = row[7]
+            duration = ""
+            if len(row[8]) != 0:
+                h, m, s = row[8].split(":")
+                duration = str((int(h)*360) + (int(m)*60) + int(s))
+            # use phoneNumber as userid
+            userid = phoneNumber.replace(" ", "") # no space
+            userid = userid.replace("(", "").replace(")","") # no ()
+            userid = userid.replace("-", "") # no dash
+#            userid = userid.replace("+", "") # no plus
 
-        # fix possible format errors
-        date, time = datetime.split(" ")
-        if len(time) == 7:
-            time = "0"+time
+            # fix possible format errors
+            if len(time) == 7:
+                time = "0"+time
 
-        day, month, year =  date.split("/")
-        if len(month) == 1:
-            month = "0"+month
+            print date, sys.argv[n]
+            month, day, year =  date.split("/")
+            if len(month) == 1:
+                month = "0"+month
 
-        if len(day) == 1:
-            day = "0"+day
+            if len(day) == 1:
+                day = "0"+day
 
-        filedate = year+month+day
-        finalDate = filedate+"T"+time
+            filedate = year+month+day
+            finalDate = filedate+"T"+time
 
-
-        if eventtype == "sms":
-            string = None
-            if incoming:
-                string = "<message time='"+finalDate+"' id='"+userid+"' name='"+phoneNumber+"' token='' isuser='false' type='normal' message-token='"+str(token)+"'>"+message+"</message>\n"
-                token += 1
-            else:
-                string = "<message time='"+finalDate+"' id='ofono' name='ofono' token='' isuser='true' type='normal'>"+message+"</message>\n"
-
-            if userid in sms:
-                if filedate in sms[userid]:
-                    sms[userid][filedate] += string
+            if eventtype == "sms":
+                string = None
+                if incoming:
+                    string = "<message time='"+finalDate+"' id='"+userid+"' name='"+phoneNumber+"' token='' isuser='false' type='normal' message-token='"+str(token)+"'>"+message+"</message>\n"
+                    token += 1
                 else:
-                    sms[userid][filedate] = string
-            else:
-                sms[userid] = {filedate: string}
+                    string = "<message time='"+finalDate+"' id='ofono' name='ofono' token='' isuser='true' type='normal'>"+message+"</message>\n"
 
-        if eventtype == "call":
-            string = None
-            if incoming:
-                if missed:
-                    string = "<call time='"+finalDate+"' id='"+userid+"' name='"+phoneNumber+"' isuser='false' token='' duration='-1' actor='"+userid+"' actortype='contact' actorname='"+phoneNumber+"' actortoken='' reason='no-answer' detail=''/>\n"
+                if userid in sms:
+                    if filedate in sms[userid]:
+                        sms[userid][filedate] += string
+                    else:
+                        sms[userid][filedate] = string
                 else:
-                    string = "<call time='"+finalDate+"' id='"+userid+"' name='"+phoneNumber+"' isuser='false' token='' duration='"+duration+"' actor='"+userid+"' actortype='contact' actorname='"+phoneNumber+"' actortoken='' reason='user-requested' detail=''/>\n"
-            else:
-                string = "<call time='"+finalDate+"' id='ofono' name='ofono' isuser='true' token='' duration='"+duration+"' actor='"+userid+"' actortype='contact' actorname='"+phoneNumber+"' actortoken='' reason='user-requested' detail=''/>\n"
+                    sms[userid] = {filedate: string}
 
-            if userid in call:
-                if filedate in call[userid]:
-                    call[userid][filedate] += string
+            if eventtype == "call":
+                string = None
+                if incoming:
+                    if missed:
+                        string = "<call time='"+finalDate+"' id='"+userid+"' name='"+phoneNumber+"' isuser='false' token='' duration='-1' actor='"+userid+"' actortype='contact' actorname='"+phoneNumber+"' actortoken='' reason='no-answer' detail=''/>\n"
+                    else:
+                        string = "<call time='"+finalDate+"' id='"+userid+"' name='"+phoneNumber+"' isuser='false' token='' duration='"+duration+"' actor='"+userid+"' actortype='contact' actorname='"+phoneNumber+"' actortoken='' reason='user-requested' detail=''/>\n"
                 else:
-                    call[userid][filedate] = string
-            else:
-                call[userid] = {filedate: string}
+                    string = "<call time='"+finalDate+"' id='ofono' name='ofono' isuser='true' token='' duration='"+duration+"' actor='"+userid+"' actortype='contact' actorname='"+phoneNumber+"' actortoken='' reason='user-requested' detail=''/>\n"
+
+                if userid in call:
+                    if filedate in call[userid]:
+                        call[userid][filedate] += string
+                    else:
+                        call[userid][filedate] = string
+                else:
+                    call[userid] = {filedate: string}
 
 if len(call) != 0 or len(sms) != 0:
     # create sms log files
