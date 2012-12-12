@@ -355,7 +355,7 @@ ConversationGroup ConversationProxyModel::groupForSourceIndex(const QModelIndex 
     QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
     QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
     
-    if(!mPhoneMatch.value(propertyValue).isEmpty() && groupingProperty == "phoneNumber") {
+    if(groupingProperty == "phoneNumber" && !mPhoneMatch[propertyValue].isEmpty()) {
         return mGroupedEntries[groupingProperty][mPhoneMatch.value(propertyValue)];
     } else {
         return mGroupedEntries[groupingProperty][propertyValue];
