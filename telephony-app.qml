@@ -102,6 +102,10 @@ Item {
         communication.load(properties, clear);
     }
 
+    function startChat(number) {
+        showCommunication("phoneNumber", number, "");
+    }
+
     function showMessage(id) {
         // Show a message by its given ID
         // TODO: implement
