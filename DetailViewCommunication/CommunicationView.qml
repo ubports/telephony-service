@@ -207,7 +207,7 @@ LocalWidgets.TelephonyPage {
 
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: keyboardRect.visible ? keyboardRect.top : parent.bottom
+        anchors.bottom: keyboard.top
         height: visible ? units.gu(7) : 0
         visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
@@ -235,12 +235,7 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-    Item {
-        id: keyboardRect
-        anchors.left: parent.left
-        anchors.right: parent.right
-        y: Qt.inputMethod.keyboardRectangle.y
-        height: Qt.inputMethod.keyboardRectangle.height
-        visible: Qt.inputMethod.visible
+    LocalWidgets.KeyboardRectangle {
+        id: keyboard
     }
 }

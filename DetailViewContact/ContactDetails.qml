@@ -299,7 +299,7 @@ LocalWidgets.TelephonyPage {
     Item {
         id: editFooter
 
-        anchors.bottom: parent.bottom
+        anchors.bottom: keyboard.top
         anchors.left: parent.left
         anchors.right: parent.right
 
@@ -385,5 +385,9 @@ LocalWidgets.TelephonyPage {
                 }
             }
         }
+    }
+
+    LocalWidgets.KeyboardRectangle {
+        id: keyboard
     }
 }
