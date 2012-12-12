@@ -120,7 +120,7 @@ LocalWidgets.TelephonyPage {
         objectName: "contactsList"
 
         anchors.top: buttons.bottom
-        anchors.bottom: parent.bottom
+        anchors.bottom: keyboard.top
         anchors.left: parent.left
         anchors.right: parent.right
         clip: true
@@ -158,5 +158,9 @@ LocalWidgets.TelephonyPage {
         flickableItem: contactsList
         align: Qt.AlignTrailing
         __interactive: false
+    }
+
+    LocalWidgets.KeyboardRectangle {
+        id: keyboard
     }
 }
