@@ -1,3 +1,21 @@
+telephony-app (0.58.16) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * More design tweaks. This time most of the changes are in the contacts panel,
+    but there are a few design adjustments to the other views.
+  * Remove the desktop_file_hint argument from command line args so that the
+    application is correctly started when launched by hybris (lp:1088947).
+  * Use scrollbars from SDK and mark them as non-interactive (lp:1078921).
+
+  [ Michael Zanetti ]
+  * fixes autopilot tests with latest design changes.
+
+  [ Tiago Salem Herrmann ]
+  * workaround to prevent QDBusInterface to launch the app during approver startup.
+  * group entries in communication view by phoneNumber (lp:1087381).
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 12 Dec 2012 10:47:43 -0200
+
 telephony-app (0.58.15) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
