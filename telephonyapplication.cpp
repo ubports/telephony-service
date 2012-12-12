@@ -230,7 +230,6 @@ void TelephonyApplication::parseArgument(const QString &arg)
             if (index != -1) {
                 QMetaMethod method = mo->method(index);
                 method.invoke(telephony,
-                              Q_ARG(QVariant, QVariant("")),
                               Q_ARG(QVariant, QVariant(value)));
             }
        }
