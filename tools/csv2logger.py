@@ -3,6 +3,7 @@ import csv
 import os, os.path
 import sys
 import random
+import cgi
 
 logger_dir = os.path.expanduser("~/.local/share/TpLogger/logs/ofono_ofono_account0")
 
@@ -37,7 +38,7 @@ for n in range(1, len(sys.argv)):
             incoming = (row[4] == "yes")
             source = row[5]
             missed = (row[6] == "yes")
-            message = row[7]
+            message = cgi.escape(row[7])
             duration = ""
             if len(row[8]) != 0:
                 h, m, s = row[8].split(":")
