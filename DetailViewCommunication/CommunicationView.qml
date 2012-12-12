@@ -118,22 +118,15 @@ LocalWidgets.TelephonyPage {
         height: sourceComponent != null ? childrenRect.height : 0
     }
 
-    Loader {
-        id: messagesLoader
-
-        sourceComponent: view.newMessage ? undefined : conversationComponent
-
-    }
-
     ListView {
         id: listView
         anchors.top: headerLoader.bottom
         anchors.bottom: footer.top
         anchors.left: parent.left
         anchors.right: parent.right
-        model: conversationProxyModel
+        model: view.newMessage ? null : conversationProxyModel
         clip: true
-        header: headerComponent
+        header: view.newMessage ? null: headerComponent
 
         section.property: "timeSlot"
         section.delegate: Column {
