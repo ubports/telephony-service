@@ -111,6 +111,7 @@ Q_SIGNALS:
 protected:
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
     ConversationGroup groupForSourceIndex(const QModelIndex &sourceIndex) const;
+    ConversationGroup & groupForEntry(const QString &groupingProperty, const QString &propertyValue);
 
 private Q_SLOTS:
     void processGrouping();
@@ -125,6 +126,7 @@ private:
     bool mShowLatestFromGroup;
 
     QMap<QString, QMap<QString, ConversationGroup> > mGroupedEntries;
+    QMap<QString, QString> mPhoneMatch;
 };
 
 #endif // CONVERSATIONPROXYMODEL_H
