@@ -103,7 +103,12 @@ Item {
     }
 
     function startChat(number) {
-        showCommunication("phoneNumber", number, "");
+        var contact = contactModel.contactFromPhoneNumber(number);
+        if(contact) {
+            showCommunication("contactId", contact.id, number, contact.id);
+        } else {
+            showCommunication("phoneNumber", number, number);
+        }
     }
 
     function showMessage(id) {
