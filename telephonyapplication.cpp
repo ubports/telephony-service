@@ -226,13 +226,11 @@ void TelephonyApplication::parseArgument(const QString &arg)
                 method.invoke(telephony);
             }
         } else {
-            int index = mo->indexOfMethod("startChat(QVariant,QVariant)");
+            int index = mo->indexOfMethod("startChat(QVariant)");
             if (index != -1) {
                 QMetaMethod method = mo->method(index);
                 method.invoke(telephony,
-                              Q_ARG(QVariant, QVariant("")),
-                              Q_ARG(QVariant, QVariant(value)),
-                              Q_ARG(QVariant, QVariant("")));
+                              Q_ARG(QVariant, QVariant(value)));
             }
        }
     } else if (scheme == "messageId") {
