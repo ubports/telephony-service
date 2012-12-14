@@ -51,11 +51,9 @@ Q_SIGNALS:
 private Q_SLOTS:
     void onTextChannelReady(Tp::PendingOperation *op);
     void onCallChannelReady(Tp::PendingOperation *op);
-    void onChannelRequested(Tp::ChannelRequestPtr channelRequest);
 
 private:
     QMap<Tp::PendingReady*, Tp::ChannelPtr> mReadyRequests;
-    QList<Tp::ChannelRequestPtr> mChannelRequests;
 };
 
 #endif

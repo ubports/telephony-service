@@ -50,13 +50,12 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
     // if the class is not in the telephony application, we should only handle the channels that
     // were requested by this instance.
     if (!isTelephonyApplicationInstance()) {
+        QString handler = TelepathyHelper::instance()->channelHandler()->property("clientName").toString();
         Q_FOREACH(Tp::ChannelRequestPtr channelRequest, requestsSatisfied) {
-            if (!mChannelRequests.contains(channelRequest)) {
+            if (channelRequest->preferredHandler() != handler) {
                 context->setFinishedWithError(TP_QT_ERROR_REJECTED,
                                               "The channel should be handled by org.freedesktop.Telepathy.Client.TelephonyApp");
             }
-
-            mChannelRequests.removeOne(channelRequest);
         }
     }
 
@@ -146,9 +145,4 @@ void ChannelHandler::onCallChannelReady(Tp::PendingOperation *op)
     mReadyRequests.remove(pr);
 
     Q_EMIT callChannelAvailable(callChannel);
-}
-
-void ChannelHandler::onChannelRequested(Tp::ChannelRequestPtr channelRequest)
-{
-    mChannelRequests.append(channelRequest);
 }
