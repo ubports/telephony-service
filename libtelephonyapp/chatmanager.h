@@ -67,6 +67,7 @@ private:
 
     QMap<QString, Tp::TextChannelPtr> mChannels;
     QMap<QString, Tp::ContactPtr> mContacts;
+    QMap<QString, QString> mPendingMessages;
 };
 
 #endif // CHATMANAGER_H

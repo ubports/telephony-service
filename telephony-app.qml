@@ -102,6 +102,15 @@ Item {
         communication.load(properties, clear);
     }
 
+    function startChat(number) {
+        var contact = contactModel.contactFromPhoneNumber(number);
+        if(contact) {
+            showCommunication("contactId", contact.id, number, contact.id);
+        } else {
+            showCommunication("phoneNumber", number, number);
+        }
+    }
+
     function showMessage(id) {
         // Show a message by its given ID
         // TODO: implement
