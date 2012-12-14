@@ -20,6 +20,7 @@
 #include <libnotify/notify.h>
 #include "textchannelobserver.h"
 #include "messagingmenu.h"
+#include "config.h"
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ChannelClassSpecList>
@@ -81,10 +82,10 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     }
 
     Tp::ContactPtr contact = message.sender();
-    QString title = QString("New SMS message from %1").arg(contact->alias());
+    QString title = QString("SMS from %1").arg(contact->alias());
     QString icon = contact->avatarData().fileName;
     if (icon.isEmpty()) {
-        icon = "mail-unread";
+        icon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
     }
 
     // show the notification
