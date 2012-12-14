@@ -210,7 +210,6 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: keyboard.top
-        height: visible ? units.gu(7) : 0
         visible: view.phoneNumber != "" || view.newMessage == true
         focus: true
         validRecipient: (!view.newMessage || headerLoader.item.text.match("^[0-9+][0-9+-]*$") != null)
