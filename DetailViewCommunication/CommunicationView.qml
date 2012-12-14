@@ -234,6 +234,9 @@ LocalWidgets.TelephonyPage {
                 view.pendingMessage = message;
                 chatManager.startChat(view.phoneNumber);
             }
+
+            listView.currentIndex = 0;
+            listView.positionViewAtIndex(listView.currentIndex, ListView.Begin);
         }
     }
 
