@@ -2,12 +2,14 @@
 set(qt_SRCS
     messagingmenu.cpp
     telephonyappapprover.cpp
+    telephonyappapproverdbus.cpp
     textchannelobserver.cpp
     voicemailindicator.cpp
     )
 
 set(approver_SRCS main.cpp ${qt_SRCS})
 set(desktop_FILES telephony-app-sms.desktop telephony-app-phone.desktop)
+qt5_add_dbus_adaptor(approver_SRCS TelephonyAppApprover.xml TelephonyAppApprover/telephonyappapproverdbus.h TelephonyAppApproverDBus)
 
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
