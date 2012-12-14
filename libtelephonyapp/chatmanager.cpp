@@ -95,6 +95,8 @@ void ChatManager::sendMessage(const QString &phoneNumber, const QString &message
 
     Tp::TextChannelPtr channel = existingChat(phoneNumber);
     if (channel.isNull()) {
+        mPendingMessages[phoneNumber] = message;
+        startChat(phoneNumber);
         return;
     }
 
@@ -141,8 +143,14 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
             SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
             SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
 
-    Q_EMIT chatReady(channel->targetContact()->id());
-    Q_EMIT unreadMessagesChanged(channel->targetContact()->id());
+    Q_EMIT chatReady(id);
+    Q_EMIT unreadMessagesChanged(id);
+
+    // if there is a pending message for this number, send it
+    if (mPendingMessages.contains(id)) {
+        sendMessage(id, mPendingMessages[id]);
+        mPendingMessages.remove(id);
+    }
 }
 
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)

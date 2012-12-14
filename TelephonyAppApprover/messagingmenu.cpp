@@ -20,7 +20,6 @@
 #include "messagingmenu.h"
 #include "contactmodel.h"
 #include "contactentry.h"
-#include "chatmanager.h"
 #include <gio/gio.h>
 
 MessagingMenu::MessagingMenu(QObject *parent) :
@@ -239,7 +238,7 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
 void MessagingMenu::sendMessageReply(const QString &messageId, const QString &reply)
 {
     QString phoneNumber = mMessages[messageId];
-    ChatManager::instance()->sendMessage(phoneNumber, reply);
+    Q_EMIT replyReceived(phoneNumber, reply);
 }
 
 void MessagingMenu::showMessage(const QString &messageId)
@@ -266,7 +265,7 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 {
     QString phoneNumber = callFromMessageId(messageId).number;
     qDebug() << "TelephonyApp/MessagingMenu: Replying to call" << phoneNumber << "with text" << reply;
-    ChatManager::instance()->sendMessage(phoneNumber, reply);
+    Q_EMIT replyReceived(phoneNumber, reply);
 }
 
 void MessagingMenu::callVoicemail(const QString &messageId)

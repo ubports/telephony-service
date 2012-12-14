@@ -58,6 +58,7 @@ private Q_SLOTS:
     void onCallStateChanged(Tp::CallState state);
     void onServiceRegistered(const QString &serviceName);
     void onServiceUnregistered(const QString &serviceName);
+    void onReplyReceived(const QString &phoneNumber, const QString &reply);
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
@@ -65,6 +66,7 @@ private:
     NotifyNotification* mPendingSnapDecision;
     QDBusServiceWatcher mTelephonyAppWatcher;
     bool mTelephonyAppRunning;
+    QMap<QString, QString> mPendingMessages;
 };
 
 #endif // TELEPHONYAPPAPPROVER_H
