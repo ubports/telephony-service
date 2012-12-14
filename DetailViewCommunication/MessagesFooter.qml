@@ -10,7 +10,7 @@ FocusScope {
 
     signal newMessage(string message)
 
-    height: entry.height + units.gu(2)
+    height: visible ? entry.height + units.gu(2) : 0
 
     Rectangle {
         anchors.fill: parent
@@ -34,7 +34,7 @@ FocusScope {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        TextField {
+        TextArea {
             id: entry
 
             objectName: "newMessageText"
@@ -53,6 +53,8 @@ FocusScope {
             Keys.onEscapePressed: text = ""
             height: units.gu(4)
             placeholderText: newConversation ? "Compose" : "Reply via SMS"
+            autoExpand: true
+            maximumLineCount: 0
         }
 
         Button {
@@ -60,7 +62,6 @@ FocusScope {
 
             anchors.right: parent.right
             anchors.rightMargin: units.gu(1)
-            anchors.top: entry.top
             anchors.bottom: entry.bottom
             width: units.gu(9)
             height: units.gu(4)
