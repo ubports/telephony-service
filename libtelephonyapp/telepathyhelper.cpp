@@ -26,7 +26,6 @@
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/PendingAccount>
-#include <TelepathyQt/ChannelRequest>
 
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
@@ -107,9 +106,6 @@ void TelepathyHelper::initializeTelepathyClients()
             ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
     connect(mChannelHandler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
             mCallManager, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
-
-    connect(ChatManager::instance(), SIGNAL(channelRequested(Tp::ChannelRequestPtr)),
-            mChannelHandler, SLOT(onChannelRequested(Tp::ChannelRequestPtr)));
 
 }
 
