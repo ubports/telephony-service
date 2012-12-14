@@ -21,16 +21,6 @@ Item {
         }
         height: childrenRect.height
 
-        Rectangle {
-            id: topDivider
-            height: units.dp(2)
-            anchors {
-                left: parent.left
-                right: parent.right
-            }
-            color: "#f37505"
-        }
-
         Item {
             id: headerLabel
             height: units.gu(6)
