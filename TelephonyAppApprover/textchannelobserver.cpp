@@ -82,7 +82,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     }
 
     Tp::ContactPtr contact = message.sender();
-    QString title = QString("New SMS message from %1").arg(contact->alias());
+    QString title = QString("SMS from %1").arg(contact->alias());
     QString icon = contact->avatarData().fileName;
     if (icon.isEmpty()) {
         icon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
