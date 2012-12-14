@@ -475,6 +475,9 @@ void TelephonyAppApprover::onReplyReceived(const QString &phoneNumber, const QSt
         mChannels[claimop] = textChannel;
         connect(claimop, SIGNAL(finished(Tp::PendingOperation*)),
                 this, SLOT(onClaimFinished(Tp::PendingOperation*)));
+    } else {
+        // if there is no dispatch operation, just send using the chatmanager
+        ChatManager::instance()->sendMessage(phoneNumber, reply);
     }
 }
 
