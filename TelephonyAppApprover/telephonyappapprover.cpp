@@ -22,6 +22,7 @@
 #include "messagingmenu.h"
 #include "chatmanager.h"
 #include "contactmodel.h"
+#include "config.h"
 
 #include <QDebug>
 
@@ -248,25 +249,15 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     if (!contact->avatarData().fileName.isEmpty()) {
         icon = contact->avatarData().fileName;
     } else {
-        if (unknown) {
-            icon = "notification-unknown-call";
-        } else {
-            icon = "notification-unavailable-image-call.svg";
-        }
+        icon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
     }
 
-    if (icon != contact->avatarData().fileName) {
-        notification = notify_notification_new (title.toStdString().c_str(),
-                                                body.toStdString().c_str(),
-                                                icon.toStdString().c_str());
-    } else {
-        notification = notify_notification_new (title.toStdString().c_str(),
-                                                body.toStdString().c_str(),
-                                                NULL);
-        notify_notification_set_hint_string(notification,
-                                            "image_path",
-                                            icon.toStdString().c_str());
-    }
+    notification = notify_notification_new (title.toStdString().c_str(),
+                                            body.toStdString().c_str(),
+                                            NULL);
+    notify_notification_set_hint_string(notification,
+                                        "image_path",
+                                        icon.toStdString().c_str());
     notify_notification_set_hint_string(notification,
                                         "x-canonical-snap-decisions",
                                         "true");

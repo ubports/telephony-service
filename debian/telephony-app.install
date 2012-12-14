@@ -1,6 +1,6 @@
 opt/qt5/imports/TelephonyApp
 etc/xdg/autostart/telephony-app-approver.desktop
-usr/share/icons/hicolor/*/apps/telephony-app.png
+usr/share/icons/hicolor/*/apps/telephony-app*.png
 usr/share/icons/ubuntu-mono-dark/status/*/indicator-call.svg
 usr/share/applications/telephony-app*.desktop
 usr/share/dbus-1/services/*TelephonyApp*.service

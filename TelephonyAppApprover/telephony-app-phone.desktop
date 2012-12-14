@@ -2,5 +2,5 @@
 Type=Application
 Name=Phone
 Exec=telephony-app
-Icon=indicator-call
+Icon=telephony-app-call
 NoDisplay=true
