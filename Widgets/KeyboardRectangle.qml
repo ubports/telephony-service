@@ -10,4 +10,38 @@ Item {
     Behavior on height {
         StandardAnimation { }
     }
+
+    function recursiveFindFocusedItem(parent) {
+        if (parent.activeFocus) {
+            return parent;
+        }
+
+        for (var i in parent.children) {
+            var child = parent.children[i];
+            if (child.activeFocus) {
+                return child;
+            }
+
+            var item = recursiveFindFocusedItem(child);
+
+            if (item != null) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    Connections {
+        target: Qt.inputMethod
+
+        onVisibleChanged: {
+            if (!Qt.inputMethod.visible) {
+                var focusedItem = recursiveFindFocusedItem(keyboardRect.parent);
+                if (focusedItem != null) {
+                    focusedItem.focus = false;
+                }
+            }
+        }
+    }
 }
