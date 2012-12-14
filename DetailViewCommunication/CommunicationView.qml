@@ -178,12 +178,21 @@ LocalWidgets.TelephonyPage {
             }
 
             onClicked: {
+                listView.currentIndex = index
                 if (itemType == "call") {
                     telephony.callNumber(item.phoneNumber);
                 } else {
                     view.phoneNumber = item.phoneNumber
                 }
             }
+        }
+
+        onHeightChanged: {
+            listView.positionViewAtIndex(listView.currentIndex, ListView.End)
+        }
+
+        onCurrentIndexChanged: {
+            listView.positionViewAtIndex(listView.currentIndex, ListView.End)
         }
     }
 
@@ -225,6 +234,9 @@ LocalWidgets.TelephonyPage {
                 view.pendingMessage = message;
                 chatManager.startChat(view.phoneNumber);
             }
+
+            listView.currentIndex = 0;
+            listView.positionViewAtIndex(listView.currentIndex, ListView.Begin);
         }
     }
 

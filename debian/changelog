@@ -1,3 +1,10 @@
+telephony-app (0.58.18) quantal; urgency=low
+
+  * display the correct icons for telephony related messaging menu
+    items (lp:108957)
+
+ -- Bill Filler <bill.filler@canonical.com>  Thu, 13 Dec 2012 21:50:38 -0500
+
 telephony-app (0.58.17) quantal; urgency=low
 
   * Fix the compose new message view: do not show the messages nor the header

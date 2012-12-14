@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "messagingmenu.h"
 #include "contactmodel.h"
 #include "contactentry.h"
@@ -49,6 +50,10 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
         contactAlias = contact->displayLabel();
     }
 
+    if (iconPath.isNull()) {
+        iconPath = telephonyAppDirectory() + "/assets/avatar-default@18.png";
+    }
+
     GFile *file = g_file_new_for_path(iconPath.toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
     MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
@@ -56,7 +61,7 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
                                                                contactAlias.toUtf8().data(),
                                                                NULL,
                                                                text.toUtf8().data(),
-                                                               timestamp.toMSecsSinceEpoch());
+                                                               timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
     messaging_menu_message_add_action(message,
                                       "quickReply",
                                       NULL, // label
@@ -115,6 +120,10 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
 
     call.count++;
 
+    if (call.contactIcon.isEmpty()) {
+        call.contactIcon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
+    }
+
     QString text;
     // TODO: do proper i18n in here.
     if (call.count > 1) {
@@ -122,6 +131,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     } else {
         text = QString("1 missed call");
     }
+
     GFile *file = g_file_new_for_path(call.contactIcon.toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
     MessagingMenuMessage *message = messaging_menu_message_new(call.number.toUtf8().data(),
@@ -129,7 +139,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
                                                                call.contactAlias.toUtf8().data(),
                                                                NULL,
                                                                text.toUtf8().data(),
-                                                               timestamp.toMSecsSinceEpoch());
+                                                               timestamp.toMSecsSinceEpoch() * 1000);  // the value is expected to be in microseconds
     call.messageId = messaging_menu_message_get_id(message);
     messaging_menu_message_add_action(message,
                                       "callBack",
@@ -186,7 +196,7 @@ void MessagingMenu::showVoicemailEntry(int count)
                                          "Voicemail",
                                          NULL,
                                          messageBody.toUtf8().data(),
-                                         QDateTime::currentDateTime().toMSecsSinceEpoch());
+                                         QDateTime::currentDateTime().toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
     mVoicemailId = "voicemail";
 
