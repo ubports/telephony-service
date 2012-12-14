@@ -53,6 +53,7 @@ public Q_SLOTS:
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
     void onMessageSent(Tp::PendingOperation *op);
+    void onAccountReady();
 
     void acknowledgeMessage(const QString &phoneNumber, const QString &messageId);
 
@@ -66,6 +67,7 @@ private:
     QMap<QString, Tp::TextChannelPtr> mChannels;
     QMap<QString, Tp::ContactPtr> mContacts;
     QMap<QString, QString> mPendingMessages;
+    QList<QString> mChatPending;
 };
 
 #endif // CHATMANAGER_H
