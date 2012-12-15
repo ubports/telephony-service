@@ -85,8 +85,8 @@ void MessagingMenu::removeMessage(const QString &messageId)
         return;
     }
 
-    MessagingMenuMessage *message = messaging_menu_app_get_message(mMessagesApp, messageId.toUtf8().data());
-    messaging_menu_app_remove_message(mMessagesApp, message);
+    messaging_menu_app_remove_message_by_id(mMessagesApp, messageId.toUtf8().data());
+    mMessages.remove(messageId);
 }
 
 void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timestamp)
@@ -100,8 +100,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
             mCalls.removeOne(callMessage);
 
             // remove the previous entry and add a new one increasing the missed call count
-            MessagingMenuMessage *message = messaging_menu_app_get_message(mCallsApp, callMessage.messageId.toUtf8().data());
-            messaging_menu_app_remove_message(mCallsApp, message);
+            messaging_menu_app_remove_message_by_id(mCallsApp, callMessage.messageId.toUtf8().data());
             break;
         }
     }
@@ -174,14 +173,12 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
 
 void MessagingMenu::showVoicemailEntry(int count)
 {
-    MessagingMenuMessage *message;
     if (!mVoicemailId.isEmpty()) {
         // if the count didn't change, don't do anything
         if (count == mVoicemailCount) {
             return;
         }
 
-        message = messaging_menu_app_get_message(mCallsApp, mVoicemailId.toUtf8().data());
         messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
     }
 
@@ -191,12 +188,12 @@ void MessagingMenu::showVoicemailEntry(int count)
     }
 
     GIcon *icon = g_themed_icon_new("indicator-call");
-    message = messaging_menu_message_new("voicemail",
-                                         icon,
-                                         "Voicemail",
-                                         NULL,
-                                         messageBody.toUtf8().data(),
-                                         QDateTime::currentDateTime().toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
+    MessagingMenuMessage *message = messaging_menu_message_new("voicemail",
+                                                               icon,
+                                                               "Voicemail",
+                                                               NULL,
+                                                               messageBody.toUtf8().data(),
+                                                               QDateTime::currentDateTime().toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
     mVoicemailId = "voicemail";
 
