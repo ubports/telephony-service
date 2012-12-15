@@ -1,3 +1,33 @@
+telephony-app (0.58.19) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Fix sending messages via telephony-app-approver when the app is not running.
+  * Unfocus the currently focused item when the on-screen keyboard disappears
+    (lp:1086828).
+  * Use text area to allow long messages to be broken in multiple lines while
+    editting.
+  * Shorten the title of notify-osd messages so that they fit in one line
+    (lp:1090406).
+  * Remove the extra orange line at the top of the views (lp:1090351).
+  * Fix the avatar displaying in messaging menu, snap decision and notify-osd
+    items (lp:1090384).
+  * Fix the timestamp for the messaging-menu entries.
+  * Move the conversation view to the top when a message is sent (lp:1087779).
+  * Scroll the message we are replying to all the way down to the input field
+    when possible.
+  * Remove messaging-menu messages using the remove_by_id functions to simplify
+    the code.
+
+  [ Tiago Salem Herrmann ]
+  * Adapt csv2logger.py to support the latest changes in the conversation data
+    spreadsheet.
+  * Add dbus interface to the approver and expose the SendMessage(number, text)
+    method.
+  * Avoid crashes in telephony-app when calling SendMessage() from dbus and the
+    app is not running yet.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 14 Dec 2012 21:57:43 -0200
+
 telephony-app (0.58.18) quantal; urgency=low
 
   * display the correct icons for telephony related messaging menu
