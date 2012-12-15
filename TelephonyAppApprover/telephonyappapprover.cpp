@@ -18,6 +18,7 @@
  */
 
 #include "telephonyappapprover.h"
+#include "telephonyappapproverdbus.h"
 #include "messagingmenu.h"
 #include "chatmanager.h"
 #include "contactmodel.h"
@@ -43,6 +44,11 @@ TelephonyAppApprover::TelephonyAppApprover()
     mTelephonyAppWatcher.setConnection(QDBusConnection::sessionBus());
     mTelephonyAppWatcher.setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
     mTelephonyAppWatcher.addWatchedService(TELEPHONY_APP_CLIENT);
+
+    TelephonyAppApproverDBus *dbus = new TelephonyAppApproverDBus();
+    connect(dbus, SIGNAL(onMessageSent(const QString&, const QString&)),
+                  SLOT(onReplyReceived(const QString&, const QString&)));
+    dbus->connectToBus();
 
     connect(&mTelephonyAppWatcher,
             SIGNAL(serviceRegistered(const QString&)),

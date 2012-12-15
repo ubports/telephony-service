@@ -28,6 +28,21 @@
 ChatManager::ChatManager(QObject *parent)
 : QObject(parent)
 {
+    // track when the account becomes available
+    connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onAccountReady()));
+    // track when the connection becomes available
+    connect(TelepathyHelper::instance(), SIGNAL(connectionChanged()), SLOT(onAccountReady()));
+}
+
+void ChatManager::onAccountReady()
+{
+    if (!TelepathyHelper::instance()->account() || !TelepathyHelper::instance()->account()->connection()) {
+        return;
+    }
+    Q_FOREACH(const QString &number, mChatPending) {
+        startChat(number);
+    }
+    mChatPending.clear();
 }
 
 ChatManager *ChatManager::instance()
@@ -52,6 +67,11 @@ bool ChatManager::isChattingToContact(const QString &phoneNumber)
 
 void ChatManager::startChat(const QString &phoneNumber)
 {
+    if (!TelepathyHelper::instance()->account() || !TelepathyHelper::instance()->account()->connection()) {
+        mChatPending << phoneNumber;
+        return;
+    }
+
     if (!isChattingToContact(phoneNumber)) {
         // Request the contact to start chatting to
         Tp::AccountPtr account = TelepathyHelper::instance()->account();
