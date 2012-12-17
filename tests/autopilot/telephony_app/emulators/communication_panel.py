@@ -20,7 +20,7 @@ class CommunicationPanel(object):
 
     def get_communication_searchbox_clear_button(self):
         """Returns the clear button in the main searchbox attached to the communication panel."""
-        return self.get_communication_searchbox().get_children_by_type("Button")[0]
+        return self.get_communication_searchbox().get_children_by_type("AbstractButton")[0]
 
     def get_new_message_button(self):
         """Returns 'New Message' list item."""
@@ -45,4 +45,4 @@ class CommunicationPanel(object):
 
     def get_new_message_text_box(self):
         """Returns main message box for sending an sms."""
-        return self.app.select_single("TextField", objectName="newMessageText")
+        return self.app.select_single("TextArea", objectName="newMessageText")
