@@ -17,6 +17,7 @@ ListItem.Standard {
         image: Image {
             anchors.fill: parent
             source: decoration != "" ? Qt.resolvedUrl(decoration) : "../assets/avatar-default.png"
+            asynchronous: true
         }
     }
 

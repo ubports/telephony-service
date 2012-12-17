@@ -47,6 +47,7 @@ ListItem.Base {
             image: Image {
                 source: communicationDelegate.avatar != "" ? communicationDelegate.avatar : "../assets/avatar-default.png"
                 fillMode: Image.PreserveAspectCrop
+                asynchronous: true
             }
         }
 
