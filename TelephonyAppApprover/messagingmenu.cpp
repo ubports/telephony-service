@@ -213,10 +213,7 @@ void MessagingMenu::messageActivateCallback(MessagingMenuMessage *message, const
 {
     QString action(actionId);
     QString messageId(messaging_menu_message_get_id(message));
-
-    GVariant *var = g_variant_get_variant(param);
-    QString text(g_variant_get_string(var, NULL));
-    g_variant_unref(var);
+    QString text(g_variant_get_string(param, NULL));
 
     if (action == "quickReply") {
         QMetaObject::invokeMethod(instance, "sendMessageReply", Q_ARG(QString, messageId), Q_ARG(QString, text));
@@ -233,9 +230,7 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
     if (action == "callBack") {
         QMetaObject::invokeMethod(instance, "callBack", Q_ARG(QString, messageId));
     } else if (action == "replyWithMessage") {
-        GVariant *var = g_variant_get_variant(param);
-        QString text(g_variant_get_string(var, NULL));
-        g_variant_unref(var);
+        QString text(g_variant_get_string(param, NULL));
         QMetaObject::invokeMethod(instance, "replyWithMessage", Q_ARG(QString, messageId), Q_ARG(QString, text));
     } else if (messageId == instance->mVoicemailId) {
         QMetaObject::invokeMethod(instance, "callVoicemail", Q_ARG(QString, messageId));
