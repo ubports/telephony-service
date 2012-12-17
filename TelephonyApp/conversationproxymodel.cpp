@@ -400,7 +400,7 @@ void ConversationProxyModel::removeRowFromGroup(int sourceRow, QString groupingP
     }
 }
 
-void ConversationProxyModel::processTimeSlots(int start, bool notify)
+void ConversationProxyModel::processTimeSlots(bool notify)
 {
     int count = rowCount();
     if (mFilterProperty.isEmpty() || count == 0) {
