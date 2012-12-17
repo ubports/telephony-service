@@ -346,7 +346,7 @@ void ConversationProxyModel::processRowGrouping(int sourceRow)
 
 
         // if the displayed row changed, report that it changed
-        if (oldDisplayedRow != sourceRow) {
+        if (oldDisplayedRow >= 0 && oldDisplayedRow != sourceRow) {
             QModelIndex index = model->index(oldDisplayedRow);
             emitDataChanged(index);
         }
