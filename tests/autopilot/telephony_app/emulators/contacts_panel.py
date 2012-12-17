@@ -22,7 +22,7 @@ class ContactsPanel(object):
         """Returns the icon of the searchbox attached to the contacts panel."""
         # FIXME: this is a bit hackish, but it was the way I (boiko) managed to
         # select the correct button
-        return self.get_contacts_searchbox().get_children_by_type("Button")[0]
+        return self.get_contacts_searchbox().get_children_by_type("AbstractButton")[0]
 
     def get_contacts_panel(self):
         """Returns the ContactsPanel."""

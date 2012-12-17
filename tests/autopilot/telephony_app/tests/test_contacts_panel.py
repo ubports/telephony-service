@@ -70,18 +70,13 @@ class TestContactsPanel(TelephonyAppTestCase):
 
         self.assertThat(contact_details.visible, Eventually(Equals(True)))
 
-    def test_add_new_contact_first_name_focused(self):
-        """When adding a new contact, the first name input field needs to be focused by default."""
-        self.click_add_contact()
-        first_name = self.contacts_panel.get_contact_first_name_input()
-
-        self.assertThat(first_name.activeFocus, Eventually(Equals(True)))
-
     def test_add_new_contact_with_name(self):
         """Test adding a contact with first and last names set."""
         self.click_add_contact()
 
         first_name = self.contacts_panel.get_contact_first_name_input()
+        self.pointing_device.move_to_object(first_name)
+        self.pointing_device.click()
         self.keyboard.type("FirstName")
 
         last_name = self.contacts_panel.get_contact_last_name_input()
