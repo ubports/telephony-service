@@ -25,7 +25,8 @@
 #include "contactmodel.h"
 
 ConversationProxyModel::ConversationProxyModel(QObject *parent) :
-    QSortFilterProxyModel(parent), mAscending(true), mGrouped(false), mShowLatestFromGroup(false)
+    QSortFilterProxyModel(parent), mAscending(true), mGrouped(false),
+    mShowLatestFromGroup(false), mRequestedDataChanged(false)
 {
     setSortRole(ConversationFeedModel::Timestamp);
     setDynamicSortFilter(true);
@@ -101,19 +102,19 @@ void ConversationProxyModel::setConversationModel(QObject *value)
         ConversationAggregatorModel *conversationModel = qobject_cast<ConversationAggregatorModel*>(value);
         connect(conversationModel,
                 SIGNAL(rowsInserted(QModelIndex,int,int)),
-                SLOT(processGrouping()));
+                SLOT(onRowsInserted(QModelIndex,int,int)));
         connect(conversationModel,
                 SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-                SLOT(processGrouping()));
+                SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)));
         connect(conversationModel,
                 SIGNAL(rowsRemoved(QModelIndex,int,int)),
-                SLOT(processGrouping()));
-        connect(conversationModel,
-                SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                SLOT(processGrouping()));
+                SLOT(onRowsRemoved(QModelIndex,int,int)));
         connect(conversationModel,
                 SIGNAL(modelReset()),
                 SLOT(processGrouping()));
+        connect(conversationModel,
+                SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+                SLOT(onDataChanged(QModelIndex,QModelIndex)));
         Q_EMIT conversationModelChanged();
     }
 
@@ -285,6 +286,21 @@ ConversationGroup & ConversationProxyModel::groupForEntry(const QString &groupin
     return group;
 }
 
+void ConversationProxyModel::removeGroup(const QString &groupingProperty, const QString &propertyValue)
+{
+    if (groupingProperty == "phoneNumber") {
+        QMap<QString, ConversationGroup> &groups = mGroupedEntries[groupingProperty];
+        Q_FOREACH(const QString &key, groups.keys()) {
+            if (ContactModel::comparePhoneNumbers(key, propertyValue)) {
+                groups.remove(key);
+                break;
+            }
+        }
+    } else {
+         mGroupedEntries[groupingProperty].remove(propertyValue);
+    }
+}
+
 void ConversationProxyModel::processGrouping()
 {
     if (!sourceModel()) {
@@ -297,33 +313,82 @@ void ConversationProxyModel::processGrouping()
     mPhoneMatch.clear();
     int count = model->rowCount();
     for (int row = 0; row < count; ++row) {
-        QModelIndex sourceIndex = model->index(row, 0, QModelIndex());
-        ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
-        QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
-        QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
-        ConversationGroup &group = groupForEntry(groupingProperty, propertyValue);
-
-        group.eventCount[model->itemType(sourceIndex)]++;
-        group.newItem  = group.newItem || item->newItem();
-
-        if (item->timestamp() > group.latestTime || group.displayedRow < 0) {
-            group.latestTime = item->timestamp();
-            group.displayedRow = row;
-        }
+        processRowGrouping(row);
     }
-
-    // notify changes for all items to make sure everything gets updated correctly
-    Q_FOREACH(const QString &prop, mGroupedEntries.keys()) {
-        Q_FOREACH(const ConversationGroup &group, mGroupedEntries[prop].values()) {
-            QModelIndex index = mapFromSource(model->index(group.displayedRow, 0, QModelIndex()));
-            Q_EMIT dataChanged(index, index);
-        }
-    }
-
-    invalidateFilter();
 
     // create the time slots after the filtering has been updated
     processTimeSlots();
+}
+
+void ConversationProxyModel::processRowGrouping(int sourceRow)
+{
+    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+    QModelIndex sourceIndex = model->index(sourceRow, 0, QModelIndex());
+    ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+    QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
+    QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
+    ConversationGroup &group = groupForEntry(groupingProperty, propertyValue);
+
+    // save the previous grouping property and value in case the item data changes
+    item->setProperty("groupingProperty", groupingProperty);
+    item->setProperty("propertyValue", propertyValue);
+
+    group.eventCount[model->itemType(sourceIndex)]++;
+    group.newItem  = group.newItem || item->newItem();
+    if (!group.rows.contains(sourceRow)) {
+        group.rows.append(sourceRow);
+    }
+
+    if (item->timestamp() > group.latestTime || group.displayedRow < 0) {
+        int oldDisplayedRow = group.displayedRow;
+        group.latestTime = item->timestamp();
+        group.displayedRow = sourceRow;
+
+
+        // if the displayed row changed, report that it changed
+        if (oldDisplayedRow != sourceRow) {
+            QModelIndex index = model->index(oldDisplayedRow);
+            emitDataChanged(index);
+        }
+    }
+
+    emitDataChanged(sourceIndex);
+}
+
+void ConversationProxyModel::removeRowFromGroup(int sourceRow, QString groupingProperty, QString propertyValue)
+{
+    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+    QModelIndex sourceIndex = model->index(sourceRow, 0, QModelIndex());
+    ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+    if (groupingProperty.isEmpty()) {
+        groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
+        propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
+    }
+    ConversationGroup &group = groupForEntry(groupingProperty, propertyValue);
+
+    group.rows.removeAll(sourceRow);
+    if (group.displayedRow == sourceRow) {
+        // find the newest event
+        int newRow = -1;
+        QDateTime latestTimestamp;
+        Q_FOREACH(int i, group.rows) {
+            QDateTime timestamp = model->index(i).data(ConversationFeedModel::Timestamp).toDateTime();
+            if (timestamp > latestTimestamp) {
+                newRow = i;
+                latestTimestamp = timestamp;
+            }
+        }
+
+        if (newRow >= 0) {
+            group.displayedRow = newRow;
+            group.latestTime = latestTimestamp;
+
+            QModelIndex index = model->index(newRow);
+            emitDataChanged(index);
+        } else if (group.rows.isEmpty()) {
+            removeGroup(groupingProperty, propertyValue);
+        }
+    }
 }
 
 void ConversationProxyModel::processTimeSlots()
@@ -348,6 +413,109 @@ void ConversationProxyModel::processTimeSlots()
         Q_EMIT dataChanged(idx, idx);
     }
 }
+
+void ConversationProxyModel::emitDataChanged(const QModelIndex &sourceIndex)
+{
+    mRequestedDataChanged = true;
+    Q_EMIT sourceModel()->dataChanged(sourceIndex, sourceIndex);
+    mRequestedDataChanged = false;
+}
+
+void ConversationProxyModel::onRowsInserted(const QModelIndex &parent, int start, int end)
+{
+    // we don't support tree models yet
+    if (parent.isValid()) {
+        return;
+    }
+
+    // update the group for the added indexes
+    for (int row = start; row <= end; ++row) {
+        processRowGrouping(row);
+    }
+
+    processTimeSlots();
+}
+
+void ConversationProxyModel::onRowsMoved(const QModelIndex &parent, int start, int end, const QModelIndex &newParent, int newRow)
+{
+    // we don't support tree models yet
+    if (parent.isValid() || newParent.isValid()) {
+        return;
+    }
+
+    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+    int offset = newRow = start;
+    for (int row = start; row <= end; ++row) {
+        QModelIndex sourceIndex = model->index(row, 0, QModelIndex());
+        ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+        QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
+        QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
+        ConversationGroup &group = groupForEntry(groupingProperty, propertyValue);
+
+        // if the currently displayed row is moved, we need to update that.
+        if (group.displayedRow == row) {
+            group.displayedRow = row + offset;
+
+            QModelIndex index = model->index(group.displayedRow);
+            emitDataChanged(index);
+
+            index = mapFromSource(model->index(row));
+            emitDataChanged(index);
+        }
+
+        group.rows.removeAll(row);
+        group.rows.append(row + offset);
+    }
+
+    processTimeSlots();
+}
+
+void ConversationProxyModel::onRowsRemoved(const QModelIndex &parent, int start, int end)
+{
+    // we don't support tree models yet
+    if (parent.isValid()) {
+        return;
+    }
+
+    for (int row = start; row <= end; ++row) {
+        removeRowFromGroup(row);
+    }
+
+    processTimeSlots();
+}
+
+void ConversationProxyModel::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+{
+    if (mRequestedDataChanged) {
+        return;
+    }
+
+    // we don't support tree models yet
+    if (topLeft.parent().isValid() || bottomRight.parent().isValid()) {
+        return;
+    }
+
+    int start = topLeft.row();
+    int end = bottomRight.row();
+    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+
+    for (int row = start; row <= end; ++row) {
+        QModelIndex sourceIndex = model->index(row, 0, QModelIndex());
+        ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+        QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
+        QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
+        QString oldGroupingProperty = item->property("groupingProperty").toString();
+        QString oldPropertyValue = item->property("propertyValue").toString();
+
+        // if the grouping property changed, we need to update the item accordingly
+        if (oldGroupingProperty != groupingProperty || oldPropertyValue != propertyValue) {
+            removeRowFromGroup(row, oldGroupingProperty, oldPropertyValue);
+            processRowGrouping(row);
+        }
+    }
+    processTimeSlots();
+}
+
 
 ConversationGroup ConversationProxyModel::groupForSourceIndex(const QModelIndex &sourceIndex) const
 {
