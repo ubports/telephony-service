@@ -183,6 +183,7 @@ LocalWidgets.TelephonyPage {
                     telephony.callNumber(item.phoneNumber);
                 } else {
                     view.phoneNumber = item.phoneNumber
+                    footer.focus = true
                 }
             }
         }
@@ -210,8 +211,11 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: keyboard.top
-        visible: view.phoneNumber != "" || view.newMessage == true
+        visible: view.phoneNumber != "" || view.newMessage == true || footer.focus == true
         focus: true
+        onFocusChanged: {
+            if (!focus) view.phoneNumber = ""
+        }
         validRecipient: (!view.newMessage || headerLoader.item.text.match("^[0-9+][0-9+-]*$") != null)
         newConversation: view.newMessage
 
