@@ -7,6 +7,12 @@ FocusScope {
     property bool validRecipient: false
     property alias hasFocus: entry.activeFocus
     property bool newConversation: true
+    onFocusChanged: {
+        if (focus && entryFocusScope && entryFocusScope.inputEntry) {
+            entryFocusScope.inputEntry.forceActiveFocus()
+        }
+    }
+    onVisibleChanged: if(visible) entryFocusScope.inputEntry.forceActiveFocus()
 
     signal newMessage(string message)
 
@@ -28,7 +34,9 @@ FocusScope {
         color: "white"
     }
 
-    Item {
+    FocusScope {
+        id: entryFocusScope
+        property var inputEntry: entry
         anchors.top: separator.bottom
         anchors.bottom: parent.bottom
         anchors.left: parent.left
