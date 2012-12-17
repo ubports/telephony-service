@@ -313,14 +313,19 @@ void ConversationProxyModel::processGrouping()
     mPhoneMatch.clear();
     int count = model->rowCount();
     for (int row = 0; row < count; ++row) {
-        processRowGrouping(row);
+        processRowGrouping(row, false);
     }
 
     // create the time slots after the filtering has been updated
-    processTimeSlots();
+    processTimeSlots(false);
+
+    // only after processing all the rows we emit the dataChanged signal
+    for (int row = 0; row < count; ++row) {
+        emitDataChanged(model->index(row));
+    }
 }
 
-void ConversationProxyModel::processRowGrouping(int sourceRow)
+void ConversationProxyModel::processRowGrouping(int sourceRow, bool notify)
 {
     ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
     QModelIndex sourceIndex = model->index(sourceRow, 0, QModelIndex());
@@ -348,11 +353,15 @@ void ConversationProxyModel::processRowGrouping(int sourceRow)
         // if the displayed row changed, report that it changed
         if (oldDisplayedRow >= 0 && oldDisplayedRow != sourceRow) {
             QModelIndex index = model->index(oldDisplayedRow);
-            emitDataChanged(index);
+            if (notify) {
+                emitDataChanged(index);
+            }
         }
     }
 
-    emitDataChanged(sourceIndex);
+    if (notify) {
+        emitDataChanged(sourceIndex);
+    }
 }
 
 void ConversationProxyModel::removeRowFromGroup(int sourceRow, QString groupingProperty, QString propertyValue)
@@ -391,7 +400,7 @@ void ConversationProxyModel::removeRowFromGroup(int sourceRow, QString groupingP
     }
 }
 
-void ConversationProxyModel::processTimeSlots()
+void ConversationProxyModel::processTimeSlots(int start, bool notify)
 {
     int count = rowCount();
     if (mFilterProperty.isEmpty() || count == 0) {
@@ -409,8 +418,14 @@ void ConversationProxyModel::processTimeSlots()
             currentSlot = itemTimestamp;
         }
 
-        item->setProperty("timeSlot", currentSlot);
-        Q_EMIT dataChanged(idx, idx);
+        // check the current timeslot
+        QDateTime itemSlot = item->property("timeSlot").toDateTime();
+        if (itemSlot != currentSlot) {
+            item->setProperty("timeSlot", currentSlot);
+            if (notify) {
+                Q_EMIT dataChanged(idx, idx);
+            }
+        }
     }
 }
 

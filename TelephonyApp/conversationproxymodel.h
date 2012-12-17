@@ -117,9 +117,9 @@ protected:
 
 private Q_SLOTS:
     void processGrouping();
-    void processRowGrouping(int sourceRow);
+    void processRowGrouping(int sourceRow, bool notify = true);
     void removeRowFromGroup(int sourceRow, QString groupingProperty = QString::null, QString propertyValue = QString::null);
-    void processTimeSlots();
+    void processTimeSlots(int start = 0, bool notify = true);
     void emitDataChanged(const QModelIndex &sourceIndex);
 
     void onRowsInserted(const QModelIndex &parent, int start, int end);
