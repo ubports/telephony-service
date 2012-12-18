@@ -99,7 +99,6 @@ set(QML_DIRS
     DetailViewLiveCall
     DetailViewVoicemail
     DetailViewCommunication
-    LiveCallDetailView
     PanelDialer
     PanelContacts
     PanelCommunications

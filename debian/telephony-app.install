@@ -14,7 +14,6 @@ usr/share/telephony-app/DetailViewCommunication
 usr/share/telephony-app/DetailViewContact
 usr/share/telephony-app/DetailViewLiveCall
 usr/share/telephony-app/DetailViewVoicemail
-usr/share/telephony-app/LiveCallDetailView
 usr/share/telephony-app/PanelCommunications
 usr/share/telephony-app/PanelContacts
 usr/share/telephony-app/PanelDialer
