@@ -1,3 +1,20 @@
+telephony-app (0.58.20) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Change the process of item grouping to work in an incremental way. This way
+    when the items are added only the really required calculations are done
+    (lp:1091290, lp:1091364).
+  * Load contact avatar images asynchronously.
+  * Fix autopilot tests.
+  * Remove the GVariant unwrapping from the callback as this has been fixed in
+    libmessaging-menu.
+
+  [ Tiago Salem Herrmann ]
+  * Hide input entry when not focused and focus entry when a message is clicked
+    (lp:1091211)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 17 Dec 2012 22:25:45 -0200
+
 telephony-app (0.58.19) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
