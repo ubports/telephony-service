@@ -42,6 +42,12 @@ FocusScope {
         anchors.left: parent.left
         anchors.right: parent.right
 
+        MouseArea {
+            anchors.fill: entry
+            onClicked: entry.forceActiveFocus()
+            z: 1
+        }
+
         TextArea {
             id: entry
 
