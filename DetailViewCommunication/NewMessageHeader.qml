@@ -10,6 +10,14 @@ BaseMessageHeader {
 
     property alias text: contactsSearchEntry.text
 
+    MouseArea {
+        anchors.fill: contactsSearchEntry
+        onClicked: {
+            contactsSearchEntry.forceActiveFocus()
+        }
+        z: 1
+    }
+
     LocalWidgets.ContactsSearchCombo {
         id: contactsSearchEntry
 
@@ -21,11 +29,11 @@ BaseMessageHeader {
             verticalCenter: parent.verticalCenter
             verticalCenterOffset: units.dp(-1)
         }
-        leftIconSource: "../assets/empty.png"
-        onLeftIconClicked: text = ""
+        //leftIconSource: "../assets/empty.png"
+        //onLeftIconClicked: text = ""
 
-        rightIconSource: "../assets/icon_message_grey.png"
-        rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
+        //rightIconSource: "../assets/icon_message_grey.png"
+        //rightIconVisible: text.match("^[0-9+][0-9+-]*$") != null
         focus: true
 
         onRightIconClicked: {
