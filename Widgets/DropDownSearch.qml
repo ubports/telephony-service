@@ -5,14 +5,19 @@ import Ubuntu.Components 0.1
 
 FocusScope {
     id: dropDownSearch
-    property alias searchQuery: entry.text
+    property alias searchQuery: entry.searchQuery
     property alias model: searchView.model
     property alias delegate: searchView.delegate
     property alias count: searchView.count
     property int listMaximumHeight: units.gu(50)
     property alias text: entry.text
     property int currentIndex: -1
-//    property alias hint: entry.placeholderText
+    property alias hint: entry.hint
+
+    property alias leftIconSource: entry.leftIconSource
+    property alias leftIconVisible: entry.leftIconVisible
+    property alias rightIconSource: entry.rightIconSource
+    property alias rightIconVisible: entry.rightIconVisible
 
     signal leftIconClicked
     signal rightIconClicked
@@ -22,16 +27,15 @@ FocusScope {
     state: "idle"
     height: entry.height
 
-    TextField {
+    SearchEntry {
         id: entry
         anchors.left: parent.left
         anchors.right: parent.right
-        height: units.gu(4)
-        //onTextChanged: (text != "" && entry.activeFocus) ? dropDownSearch.state = "searching" : dropDownSearch.state = "idle"
-        //onLeftIconClicked: parent.leftIconClicked()
-        //onRightIconClicked: parent.rightIconClicked()
-        //onActivateFirstResult: parent.activateFirstResult()
-        //backgroundSource: dropDownSearch.state == "searching" && searchView.count > 0 ? "../assets/input_field_autofill_top.sci" : "../assets/input_field_background.sci"
+        onTextChanged: (text != "" && entry.activeFocus) ? dropDownSearch.state = "searching" : dropDownSearch.state = "idle"
+        onLeftIconClicked: parent.leftIconClicked()
+        onRightIconClicked: parent.rightIconClicked()
+        onActivateFirstResult: parent.activateFirstResult()
+        backgroundSource: dropDownSearch.state == "searching" && searchView.count > 0 ? "../assets/input_field_autofill_top.sci" : "../assets/input_field_background.sci"
         focus: true
     }
 

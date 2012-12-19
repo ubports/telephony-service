@@ -51,8 +51,7 @@ LocalWidgets.TelephonyPage {
         if (view.newMessage) {
             headerLoader.focus = true;
             headerLoader.forceActiveFocus()
-        } else if (view.phoneNumber != "") {
-            console.log(view.phoneNumber)
+        } else {
             footer.focus = true
         }
     }
@@ -194,7 +193,6 @@ LocalWidgets.TelephonyPage {
                 } else {
                     view.phoneNumber = item.phoneNumber
                     footer.focus = true
-                    footer.forceActiveFocus()
                 }
             }
         }
