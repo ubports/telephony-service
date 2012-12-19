@@ -47,6 +47,15 @@ LocalWidgets.TelephonyPage {
         }
     }
 
+    Component.onCompleted: {
+        if (view.newMessage) {
+            headerLoader.focus = true;
+            headerLoader.forceActiveFocus()
+        } else {
+            footer.focus = true
+        }
+    }
+
     // make sure the text channel gets closed after chatting
     Component.onDestruction: chatManager.endChat(number);
 
@@ -212,7 +221,7 @@ LocalWidgets.TelephonyPage {
         anchors.right: parent.right
         anchors.bottom: keyboard.top
         visible: view.phoneNumber != "" || view.newMessage == true || footer.focus == true
-        focus: true
+        focus: false
         onFocusChanged: {
             if (!focus) view.phoneNumber = ""
         }

@@ -12,7 +12,6 @@ FocusScope {
             entryFocusScope.inputEntry.forceActiveFocus()
         }
     }
-    onVisibleChanged: if(visible) entryFocusScope.inputEntry.forceActiveFocus()
 
     signal newMessage(string message)
 
