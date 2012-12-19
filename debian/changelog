@@ -2,6 +2,7 @@ telephony-app (0.58.21) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
   * Remove some unused files.
+  * Fix handling of favorite contacts (lp:1092192).
 
   [ Tiago Salem Herrmann ]
   * Focus input entry when the TextArea is clicked. (lp:1091225).
