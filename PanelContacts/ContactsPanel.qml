@@ -130,7 +130,7 @@ LocalWidgets.TelephonyPage {
         header: Column {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: childrenRect.height
+            height: visible ? childrenRect.height : 0
             visible: favoriteContacts.count > 0
 
             LocalWidgets.ListSectionHeader {
@@ -141,6 +141,7 @@ LocalWidgets.TelephonyPage {
             }
             
             Repeater {
+                id: favoriteContacts
                 model: typeof(runtime) != "undefined" ? fakeContacts : favoriteContactProxyModel
                 delegate: contactDelegate
             }

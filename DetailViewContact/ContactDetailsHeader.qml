@@ -41,6 +41,12 @@ FocusScope {
         width: units.gu(2)
         anchors.rightMargin: units.gu(1)
         source: contact.isFavorite ? "../assets/favorite-selected.png" : "../assets/favorite-unselected.png"
+
+        MouseArea {
+            enabled: editable
+            anchors.fill: parent
+            onClicked: contact.isFavorite = !contact.isFavorite
+        }
     }
 
     Item {
