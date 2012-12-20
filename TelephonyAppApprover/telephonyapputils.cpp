@@ -18,6 +18,7 @@
  */
 
 #include "telephonyapputils.h"
+#include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusReply>
