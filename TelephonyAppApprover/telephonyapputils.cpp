@@ -85,14 +85,10 @@ void TelephonyAppUtils::startTelephonyApp()
 #ifdef USE_HYBRIS
     ubuntu_ui_session_trigger_switch_to_well_known_application(TELEPHONY_APP);
 
-#if 0
-    // FIXME: check how to do this: dbus on phone don't like it much
     // block until the app is registered
     while (!mTelephonyAppRunning) {
         QCoreApplication::processEvents();
     }
-#endif
-
 #endif
 }
 
