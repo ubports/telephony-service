@@ -25,12 +25,12 @@
 
 class ConversationGroup {
 public:
-    ConversationGroup() : displayedRow(-1), newItem(false) {}
+    ConversationGroup() : newItem(false) {}
     QMap<QString, int> eventCount;
     QDateTime latestTime;
-    int displayedRow;
+    QPersistentModelIndex displayedIndex;
     bool newItem;
-    QList<int> rows;
+    QList<QPersistentModelIndex> rows;
 };
 
 class ConversationProxyModel : public QSortFilterProxyModel
@@ -117,13 +117,11 @@ protected:
 
 private Q_SLOTS:
     void processGrouping();
-    void processRowGrouping(int sourceRow, bool notify = true);
+    void processRowGrouping(int sourceRow);
     void removeRowFromGroup(int sourceRow, QString groupingProperty = QString::null, QString propertyValue = QString::null);
-    void processTimeSlots(bool notify = true);
-    void emitDataChanged(const QModelIndex &sourceIndex);
+    void processTimeSlots();
 
     void onRowsInserted(const QModelIndex &parent, int start, int end);
-    void onRowsMoved(const QModelIndex &parent, int start, int end, const QModelIndex &newParent, int newRow);
     void onRowsRemoved(const QModelIndex &parent, int start, int end);
     void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
