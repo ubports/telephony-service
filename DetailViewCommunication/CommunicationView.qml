@@ -51,8 +51,6 @@ LocalWidgets.TelephonyPage {
         if (view.newMessage) {
             headerLoader.focus = true;
             headerLoader.forceActiveFocus()
-        } else {
-            footer.focus = true
         }
     }
 
