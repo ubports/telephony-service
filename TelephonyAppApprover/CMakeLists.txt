@@ -3,6 +3,7 @@ set(qt_SRCS
     messagingmenu.cpp
     telephonyappapprover.cpp
     telephonyappapproverdbus.cpp
+    telephonyapputils.cpp
     textchannelobserver.cpp
     voicemailindicator.cpp
     )
@@ -23,10 +24,15 @@ link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
 add_executable(telephony-app-approver ${approver_SRCS} ${approver_HDRS})
 qt5_use_modules(telephony-app-approver Contacts Core Gui DBus Qml Widgets)
 
+if (USE_HYBRIS)
+    set(UBUNTU_APP_LIB "-lubuntu_application_api")
+endif (USE_HYBRIS)
+
 target_link_libraries(telephony-app-approver
     ${TP_QT5_LIBRARIES}
     ${NOTIFY_LIBRARIES}
     ${MESSAGING_MENU_LIBRARIES}
+    ${UBUNTU_APP_LIB}
     telephonyapp
     )
 

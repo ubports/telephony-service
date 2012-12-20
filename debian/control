@@ -18,6 +18,7 @@ Build-Depends: debhelper (>= 8.0.0),
                libgl-dev,
                libgles2-mesa-dev,
                python2.7,
+               libhybris-dev [armhf]
 Standards-Version: 3.9.3
 Vcs-Bzr: https://code.launchpad.net/~newyork-team/newyork/telephony-app
 

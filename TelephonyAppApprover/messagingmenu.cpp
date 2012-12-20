@@ -18,6 +18,7 @@
  */
 
 #include "config.h"
+#include "telephonyapputils.h"
 #include "messagingmenu.h"
 #include "contactmodel.h"
 #include "contactentry.h"
@@ -245,6 +246,8 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
 
 void MessagingMenu::showMessage(const QString &messageId)
 {
+    TelephonyAppUtils::instance()->startTelephonyApp();
+
     QDBusInterface mTelephonyAppInterface("com.canonical.TelephonyApp",
                            "/com/canonical/TelephonyApp",
                            "com.canonical.TelephonyApp");
@@ -254,6 +257,8 @@ void MessagingMenu::showMessage(const QString &messageId)
 
 void MessagingMenu::callBack(const QString &messageId)
 {
+    TelephonyAppUtils::instance()->startTelephonyApp();
+
     QString phoneNumber = callFromMessageId(messageId).number;
     qDebug() << "TelephonyApp/MessagingMenu: Calling back" << phoneNumber;
     QDBusInterface mTelephonyAppInterface("com.canonical.TelephonyApp",
@@ -273,6 +278,7 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
     qDebug() << "TelephonyApp/MessagingMenu: Calling voicemail for messageId" << messageId;
+    TelephonyAppUtils::instance()->startTelephonyApp();
     QDBusInterface mTelephonyAppInterface("com.canonical.TelephonyApp",
                            "/com/canonical/TelephonyApp",
                            "com.canonical.TelephonyApp");
