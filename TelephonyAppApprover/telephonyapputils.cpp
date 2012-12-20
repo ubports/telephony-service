@@ -22,6 +22,7 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusReply>
+#include <QDebug>
 #include <TelepathyQt/Constants>
 
 #ifdef USE_HYBRIS
@@ -83,12 +84,15 @@ void TelephonyAppUtils::onServiceUnregistered(const QString &serviceName)
 void TelephonyAppUtils::startTelephonyApp()
 {
 #ifdef USE_HYBRIS
+    qDebug() << "Starting telephony-app...";
     ubuntu_ui_session_trigger_switch_to_well_known_application(TELEPHONY_APP);
 
     // block until the app is registered
     while (!mTelephonyAppRunning) {
         QCoreApplication::processEvents();
     }
+
+    qDebug() << "... succeeded!";
 #endif
 }
 
