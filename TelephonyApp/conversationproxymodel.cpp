@@ -103,9 +103,6 @@ void ConversationProxyModel::setConversationModel(QObject *value)
                 SIGNAL(rowsInserted(QModelIndex,int,int)),
                 SLOT(onRowsInserted(QModelIndex,int,int)));
         connect(conversationModel,
-                SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-                SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)));
-        connect(conversationModel,
                 SIGNAL(rowsRemoved(QModelIndex,int,int)),
                 SLOT(onRowsRemoved(QModelIndex,int,int)));
         connect(conversationModel,
@@ -258,7 +255,7 @@ bool ConversationProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
     if (mGrouped) {
         ConversationGroup group = groupForSourceIndex(sourceIndex);
-        return (group.displayedRow == sourceRow);
+        return (group.displayedIndex == sourceIndex);
     }
 
     if (!mFilterProperty.isEmpty() && !mFilterValue.isEmpty()) {
@@ -339,14 +336,13 @@ void ConversationProxyModel::processRowGrouping(int sourceRow)
 
     group.eventCount[model->itemType(sourceIndex)]++;
     group.newItem  = group.newItem || item->newItem();
-    if (!group.rows.contains(sourceRow)) {
-        group.rows.append(sourceRow);
+    if (!group.rows.contains(sourceIndex)) {
+        group.rows.append(sourceIndex);
     }
 
-    if (item->timestamp() > group.latestTime || group.displayedRow < 0) {
-        int oldDisplayedRow = group.displayedRow;
+    if (item->timestamp() > group.latestTime || !group.displayedIndex.isValid()) {
         group.latestTime = item->timestamp();
-        group.displayedRow = sourceRow;
+        group.displayedIndex = sourceIndex;
     }
 }
 
@@ -361,15 +357,12 @@ void ConversationProxyModel::removeRowFromGroup(int sourceRow, QString groupingP
     }
     ConversationGroup &group = groupForEntry(groupingProperty, propertyValue);
 
-    group.rows.removeAll(sourceRow);
-    if (group.displayedRow == sourceRow) {
-        // find the newest event
-        int newRow = -1;
+    group.rows.removeAll(sourceIndex);
+    if (group.displayedIndex == sourceIndex) {
         QDateTime latestTimestamp;
-        Q_FOREACH(int i, group.rows) {
-            QDateTime timestamp = model->index(i).data(ConversationFeedModel::Timestamp).toDateTime();
+        Q_FOREACH(QPersistentModelIndex index, group.rows) {
+            QDateTime timestamp = index.data(ConversationFeedModel::Timestamp).toDateTime();
             if (timestamp > latestTimestamp) {
-                newRow = i;
                 latestTimestamp = timestamp;
             }
         }
@@ -420,35 +413,6 @@ void ConversationProxyModel::onRowsInserted(const QModelIndex &parent, int start
         for (int row = start; row <= end; ++row) {
             processRowGrouping(row);
         }
-    }
-
-    processTimeSlots();
-    invalidateFilter();
-}
-
-void ConversationProxyModel::onRowsMoved(const QModelIndex &parent, int start, int end, const QModelIndex &newParent, int newRow)
-{
-    // we don't support tree models yet
-    if (parent.isValid() || newParent.isValid()) {
-        return;
-    }
-
-    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
-    int offset = newRow = start;
-    for (int row = start; row <= end; ++row) {
-        QModelIndex sourceIndex = model->index(row, 0, QModelIndex());
-        ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
-        QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
-        QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
-        ConversationGroup &group = groupForEntry(groupingProperty, propertyValue);
-
-        // if the currently displayed row is moved, we need to update that.
-        if (group.displayedRow == row) {
-            group.displayedRow = row + offset;
-        }
-
-        group.rows.removeAll(row);
-        group.rows.append(row + offset);
     }
 
     processTimeSlots();
