@@ -125,6 +125,9 @@ void ConversationProxyModel::setConversationModel(QObject *value)
     if (mGrouped) {
         processGrouping();
     }
+
+    // create the time slots after the filtering has been updated
+    processTimeSlots();
 }
 
 QString ConversationProxyModel::searchString() const
@@ -154,6 +157,7 @@ void ConversationProxyModel::setGrouped(bool value)
         processGrouping();
         Q_EMIT groupedChanged();
     }
+    processTimeSlots();
 }
 
 bool ConversationProxyModel::showLatestFromGroup() const
@@ -169,6 +173,7 @@ void ConversationProxyModel::setShowLatestFromGroup(bool value)
         processGrouping();
         Q_EMIT showLatestFromGroupChanged();
     }
+    processTimeSlots();
 }
 
 void ConversationProxyModel::updateSorting()
@@ -315,9 +320,6 @@ void ConversationProxyModel::processGrouping()
     for (int row = 0; row < count; ++row) {
         processRowGrouping(row);
     }
-
-    // create the time slots after the filtering has been updated
-    processTimeSlots();
 
     invalidateFilter();
 }
