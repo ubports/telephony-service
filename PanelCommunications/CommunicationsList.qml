@@ -8,16 +8,9 @@ Item {
 
     property alias model: listView.model
 
-    ListView {
-        id: listView
-        anchors.fill: parent
-        clip: true
-        // We are not using sections right now, re-enable that in the future in case the
-        // design changes.
-        //section.property: "date"
-        //section.delegate: ListItem.Divider { }
-
-        delegate: CommunicationDelegate {
+    Component {
+        id: delegateComponent
+        CommunicationDelegate {
             item: (model && model.item) ? model.item : null
             title: (model && model.contactAlias) ? model.contactAlias : ""
             //subtitle: "(TODO: show phone type)"
@@ -25,7 +18,7 @@ Item {
             timestamp: (model && model.timestamp) ? model.timestamp : null
             avatar: (model && model.contactAvatar) ? model.contactAvatar : ""
             itemIcon:  {
-                switch (itemType) {
+                switch (model.itemType) {
                 case "message":
                     "../assets/messages.png";
                     break;
@@ -46,7 +39,6 @@ Item {
                     break;
                 }
             }
-
             selected: isSelected()
 
             function isSelected() {
@@ -64,6 +56,32 @@ Item {
 
             onClicked: {
                 telephony.showCommunication(model.groupingProperty, model.item[groupingProperty], "", model.contactId, true);
+            }
+        }
+    }
+
+    ListView {
+        id: listView
+        anchors.fill: parent
+        clip: true
+        // We are not using sections right now, re-enable that in the future in case the
+        // design changes.
+        //section.property: "date"
+        //section.delegate: ListItem.Divider { }
+
+        delegate: Loader {
+            id: conversationLoader
+            sourceComponent: delegateComponent
+            asynchronous: true
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: item ? item.height : 0
+
+            Binding {
+                target: conversationLoader.item
+                property: "model"
+                value: model
+                when: conversationLoader.status == Loader.Ready
             }
         }
     }

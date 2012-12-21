@@ -143,10 +143,38 @@ LocalWidgets.TelephonyPage {
             Repeater {
                 id: favoriteContacts
                 model: typeof(runtime) != "undefined" ? fakeContacts : favoriteContactProxyModel
-                delegate: contactDelegate
+                delegate: Loader {
+                    id: favoriteLoader
+                    sourceComponent: contactDelegate
+                    asynchronous: true
+                    height: item ? item.height : 0
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    Binding {
+                        target: favoriteLoader.item
+                        property: "model"
+                        value: model
+                        when: favoriteLoader.status == Loader.Ready
+                    }
+                }
             }
         }
-        delegate: contactDelegate
+        delegate: Loader {
+            id: contactLoader
+            sourceComponent: contactDelegate
+            asynchronous: true
+            height: item ? item.height : 0
+            anchors.left: parent.left
+            anchors.right: parent.right
+
+            Binding {
+                target: contactLoader.item
+                property: "model"
+                value: model
+                when: contactLoader.status == Loader.Ready
+            }
+        }
         section.property: "initial"
         section.criteria: ViewSection.FullString
         section.delegate: LocalWidgets.ListSectionHeader {

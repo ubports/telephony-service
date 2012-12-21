@@ -6,6 +6,7 @@ import "../dateUtils.js" as DateUtils
 ListItem.Base {
     id: communicationDelegate
 
+    property variant model
     property variant item
     property url avatar
     property url itemIcon
