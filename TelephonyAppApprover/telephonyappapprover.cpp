@@ -19,6 +19,7 @@
 
 #include "telephonyappapprover.h"
 #include "telephonyappapproverdbus.h"
+#include "telephonyapputils.h"
 #include "messagingmenu.h"
 #include "chatmanager.h"
 #include "contactmodel.h"
@@ -40,33 +41,17 @@ TelephonyAppApprover::TelephonyAppApprover()
 : Tp::AbstractClientApprover(channelFilters()),
   mPendingSnapDecision(NULL)
 {
-    // Setup a DBus watcher to check if the telephony-app is running
-    mTelephonyAppWatcher.setConnection(QDBusConnection::sessionBus());
-    mTelephonyAppWatcher.setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
-    mTelephonyAppWatcher.addWatchedService(TELEPHONY_APP_CLIENT);
-
     TelephonyAppApproverDBus *dbus = new TelephonyAppApproverDBus();
     connect(dbus, SIGNAL(onMessageSent(const QString&, const QString&)),
                   SLOT(onReplyReceived(const QString&, const QString&)));
     dbus->connectToBus();
 
-    connect(&mTelephonyAppWatcher,
-            SIGNAL(serviceRegistered(const QString&)),
-            SLOT(onServiceRegistered(const QString&)));
-    connect(&mTelephonyAppWatcher,
-            SIGNAL(serviceUnregistered(const QString&)),
-            SLOT(onServiceUnregistered(const QString&)));
-
-    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered(TELEPHONY_APP_CLIENT);
-    if (reply.isValid()) {
-        mTelephonyAppRunning = reply.value();
-    } else {
-        mTelephonyAppRunning = false;
-    }
-
     connect(MessagingMenu::instance(),
             SIGNAL(replyReceived(QString,QString)),
             SLOT(onReplyReceived(QString,QString)));
+    connect(TelephonyAppUtils::instance(),
+            SIGNAL(applicationRunningChanged(bool)),
+            SLOT(processChannels()));
 }
 
 TelephonyAppApprover::~TelephonyAppApprover()
@@ -290,6 +275,9 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
 void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
                                       Tp::PendingReady *pr)
 {
+    // launch the telephony-app before dispatching the channel
+    TelephonyAppUtils::instance()->startTelephonyApp();
+
     dispatchOp->handleWith(TELEPHONY_APP_CLIENT);
     mDispatchOps.removeAll(dispatchOp);
     if (pr) {
@@ -313,7 +301,7 @@ void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp
 void TelephonyAppApprover::processChannels()
 {
     // if the telephony app is not running, do not approve text channels
-    if (!mTelephonyAppRunning) {
+    if (!TelephonyAppUtils::instance()->isApplicationRunning()) {
         return;
     }
 
@@ -420,29 +408,10 @@ void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
     }
 }
 
-void TelephonyAppApprover::onServiceRegistered(const QString &serviceName)
-{
-    // for now we are only watching the telephony-app service, so no need to use/compare the
-    // service name
-    Q_UNUSED(serviceName)
-
-    mTelephonyAppRunning = true;
-    processChannels();
-}
-
-void TelephonyAppApprover::onServiceUnregistered(const QString &serviceName)
-{
-    // for now we are only watching the telephony-app service, so no need to use/compare the
-    // service name
-    Q_UNUSED(serviceName)
-
-    mTelephonyAppRunning = false;
-}
-
 void TelephonyAppApprover::onReplyReceived(const QString &phoneNumber, const QString &reply)
 {
     // if the app is running, just send using it
-    if (mTelephonyAppRunning) {
+    if (TelephonyAppUtils::instance()->isApplicationRunning()) {
         ChatManager::instance()->sendMessage(phoneNumber, reply);
         return;
     }

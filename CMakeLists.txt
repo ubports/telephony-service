@@ -5,6 +5,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 # Standard install paths
 include(GNUInstallDirs)
 
+# Check for include files
+include(CheckIncludeFileCXX)
+
 include(EnableCoverageReport)
 #####################################################################
 # Enable code coverage calculation with gcov/gcovr/lcov
@@ -26,6 +29,13 @@ set(TELEPHONY_APP_DIR ${CMAKE_INSTALL_DATADIR}/telephony-app)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
+
+# Check if should build using hybris
+check_include_file_cxx("hybris/ubuntu/ui/ubuntu_ui_session_service.h" USE_HYBRIS)
+
+if (USE_HYBRIS)
+    add_definitions(-DUSE_HYBRIS)
+endif (USE_HYBRIS)
 
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
