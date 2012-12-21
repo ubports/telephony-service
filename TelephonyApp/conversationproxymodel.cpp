@@ -26,9 +26,10 @@
 
 ConversationProxyModel::ConversationProxyModel(QObject *parent) :
     QSortFilterProxyModel(parent), mAscending(true), mGrouped(false),
-    mShowLatestFromGroup(false), mRequestedDataChanged(false)
+    mShowLatestFromGroup(false), mRequestedDataChanged(false), mDataChangedTriggered(false)
 {
     setSortRole(ConversationFeedModel::Timestamp);
+    setDynamicSortFilter(true);
     updateSorting();
 }
 
@@ -125,6 +126,7 @@ void ConversationProxyModel::setConversationModel(QObject *value)
 
     // create the time slots after the filtering has been updated
     processTimeSlots();
+    triggerDataChanged();
 }
 
 QString ConversationProxyModel::searchString() const
@@ -137,7 +139,6 @@ void ConversationProxyModel::setSearchString(QString value)
     if (value != mSearchString) {
         mSearchString = value;
         invalidateFilter();
-        Q_EMIT dataChanged(index(0,0), index(rowCount()-1, 0));
         Q_EMIT searchStringChanged();
     }
 }
@@ -155,6 +156,8 @@ void ConversationProxyModel::setGrouped(bool value)
         Q_EMIT groupedChanged();
     }
     processTimeSlots();
+    triggerDataChanged();
+    invalidateFilter();
 }
 
 bool ConversationProxyModel::showLatestFromGroup() const
@@ -171,6 +174,8 @@ void ConversationProxyModel::setShowLatestFromGroup(bool value)
         Q_EMIT showLatestFromGroupChanged();
     }
     processTimeSlots();
+    triggerDataChanged();
+    invalidateFilter();
 }
 
 void ConversationProxyModel::updateSorting()
@@ -317,8 +322,6 @@ void ConversationProxyModel::processGrouping()
     for (int row = 0; row < count; ++row) {
         processRowGrouping(row);
     }
-
-    invalidateFilter();
 }
 
 void ConversationProxyModel::processRowGrouping(int sourceRow)
@@ -341,9 +344,17 @@ void ConversationProxyModel::processRowGrouping(int sourceRow)
     }
 
     if (item->timestamp() > group.latestTime || !group.displayedIndex.isValid()) {
+        QPersistentModelIndex oldDisplayedIndex = group.displayedIndex;
         group.latestTime = item->timestamp();
         group.displayedIndex = sourceIndex;
+
+        if (oldDisplayedIndex.isValid() && oldDisplayedIndex != group.displayedIndex) {
+            markIndexAsChanged(oldDisplayedIndex);
+        }
     }
+
+    markIndexAsChanged(group.displayedIndex);
+    markIndexAsChanged(sourceIndex);
 }
 
 void ConversationProxyModel::removeRowFromGroup(int sourceRow, QString groupingProperty, QString propertyValue)
@@ -360,17 +371,24 @@ void ConversationProxyModel::removeRowFromGroup(int sourceRow, QString groupingP
     group.rows.removeAll(sourceIndex);
     if (group.displayedIndex == sourceIndex) {
         QDateTime latestTimestamp;
+        QPersistentModelIndex latestIndex;
         Q_FOREACH(QPersistentModelIndex index, group.rows) {
             QDateTime timestamp = index.data(ConversationFeedModel::Timestamp).toDateTime();
             if (timestamp > latestTimestamp) {
                 latestTimestamp = timestamp;
+                latestIndex = index;
             }
         }
 
         if (group.rows.isEmpty()) {
             removeGroup(groupingProperty, propertyValue);
+        } else {
+            group.displayedIndex = latestIndex;
+            group.latestTime = latestTimestamp;
+            markIndexAsChanged(group.displayedIndex);
         }
     }
+    markIndexAsChanged(sourceIndex);
 }
 
 void ConversationProxyModel::processTimeSlots()
@@ -395,9 +413,38 @@ void ConversationProxyModel::processTimeSlots()
         QDateTime itemSlot = item->property("timeSlot").toDateTime();
         if (itemSlot != currentSlot) {
             item->setProperty("timeSlot", currentSlot);
-            Q_EMIT dataChanged(idx, idx);
+            markIndexAsChanged(mapToSource(idx));
         }
     }
+}
+
+void ConversationProxyModel::triggerDataChanged()
+{
+    if (mDataChangedTriggered) {
+        return;
+    }
+
+    QTimer::singleShot(0, this, SLOT(notifyDataChanged()));
+    mDataChangedTriggered = true;
+}
+
+void ConversationProxyModel::markIndexAsChanged(const QModelIndex &index)
+{
+    if (!mChangedIndexes.contains(index)) {
+        mChangedIndexes.append(index);
+    }
+}
+
+void ConversationProxyModel::notifyDataChanged()
+{
+    mRequestedDataChanged = true;
+    QAbstractItemModel *model = sourceModel();
+    Q_FOREACH(const QPersistentModelIndex &index, mChangedIndexes) {
+        Q_EMIT model->dataChanged(index, index);
+    }
+    mChangedIndexes.clear();
+    mRequestedDataChanged = false;
+    mDataChangedTriggered = false;
 }
 
 void ConversationProxyModel::onRowsInserted(const QModelIndex &parent, int start, int end)
@@ -416,7 +463,7 @@ void ConversationProxyModel::onRowsInserted(const QModelIndex &parent, int start
     }
 
     processTimeSlots();
-    invalidateFilter();
+    triggerDataChanged();
 }
 
 void ConversationProxyModel::onRowsRemoved(const QModelIndex &parent, int start, int end)
@@ -433,7 +480,7 @@ void ConversationProxyModel::onRowsRemoved(const QModelIndex &parent, int start,
     }
 
     processTimeSlots();
-    invalidateFilter();
+    triggerDataChanged();
 }
 
 void ConversationProxyModel::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
@@ -464,7 +511,7 @@ void ConversationProxyModel::onDataChanged(const QModelIndex &topLeft, const QMo
         }
     }
     processTimeSlots();
-    invalidateFilter();
+    triggerDataChanged();
 }
 
 
