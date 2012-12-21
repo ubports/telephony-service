@@ -1,3 +1,17 @@
+telephony-app (0.58.22) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure all actions launching the app are done using the application API
+    (lp:1089012)
+  * Fix the filtering of conversations both for showing the latest from each
+    conversation, and for showing messages from a single conversation
+    (lp:1091797, lp:1092670).
+
+  [ Tiago Salem Herrmann ]
+  * Do not focus the message entry when loading the view.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 20 Dec 2012 23:43:43 -0200
+
 telephony-app (0.58.21) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
