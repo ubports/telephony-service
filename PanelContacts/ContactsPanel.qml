@@ -108,7 +108,7 @@ LocalWidgets.TelephonyPage {
     Component {
         id: contactDelegate
         ContactDelegate {
-            onClicked: contactsPanel.contactClicked(contact)
+            onClicked: contactsPanel.contactClicked(model.contact)
             selected: (telephony.view &&
             telephony.view.contact &&
             typeof(contact) != "undefined") ? (telephony.view.contact == contact) : false
@@ -142,7 +142,21 @@ LocalWidgets.TelephonyPage {
             Repeater {
                 id: favoriteContacts
                 model: typeof(runtime) != "undefined" ? fakeContacts : favoriteContactProxyModel
-                delegate: contactDelegate
+                delegate: Loader {
+                    id: favoriteLoader
+                    sourceComponent: contactDelegate
+                    asynchronous: true
+                    height: item ? item.height : 0
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    Binding {
+                        target: favoriteLoader.item
+                        property: "model"
+                        value: model
+                        when: favoriteLoader.status == Loader.Ready
+                    }
+                }
             }
         }
 
@@ -158,8 +172,21 @@ LocalWidgets.TelephonyPage {
             // FIXME: references to runtime and fake model need to be removed before final release
             model: typeof(runtime) != "undefined" ? fakeContacts : contactProxyModel
             interactive: false
+            delegate: Loader {
+                id: contactLoader
+                sourceComponent: contactDelegate
+                asynchronous: true
+                height: item ? item.height : 0
+                anchors.left: parent.left
+                anchors.right: parent.right
 
-            delegate: contactDelegate
+                Binding {
+                    target: contactLoader.item
+                    property: "model"
+                    value: model
+                    when: contactLoader.status == Loader.Ready
+                }
+            }
             section.property: "initial"
             section.criteria: ViewSection.FullString
             section.delegate: LocalWidgets.ListSectionHeader {

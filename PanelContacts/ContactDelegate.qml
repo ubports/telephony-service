@@ -6,6 +6,7 @@ ListItem.Standard {
     width: (parent) ? parent.width : undefined
     __height: units.gu(8)
     showDivider: true
+    property variant model
 
     UbuntuShape {
         id: avatar
@@ -16,13 +17,13 @@ ListItem.Standard {
         width: units.gu(6)
         image: Image {
             anchors.fill: parent
-            source: decoration != "" ? Qt.resolvedUrl(decoration) : "../assets/avatar-default.png"
+            source: model.decoration != "" ? Qt.resolvedUrl(model.decoration) : "../assets/avatar-default.png"
             asynchronous: true
         }
     }
 
     Label {
-        text: display
+        text: model.display
         anchors.top: avatar.top
         anchors.left: avatar.right
         anchors.leftMargin: units.gu(1)

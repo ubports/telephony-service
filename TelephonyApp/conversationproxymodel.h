@@ -120,6 +120,9 @@ private Q_SLOTS:
     void processRowGrouping(int sourceRow);
     void removeRowFromGroup(int sourceRow, QString groupingProperty = QString::null, QString propertyValue = QString::null);
     void processTimeSlots();
+    void triggerDataChanged();
+    void markIndexAsChanged(const QModelIndex &index);
+    void notifyDataChanged();
 
     void onRowsInserted(const QModelIndex &parent, int start, int end);
     void onRowsRemoved(const QModelIndex &parent, int start, int end);
@@ -133,9 +136,11 @@ private:
     bool mGrouped;
     bool mShowLatestFromGroup;
     bool mRequestedDataChanged;
+    bool mDataChangedTriggered;
 
     QMap<QString, QMap<QString, ConversationGroup> > mGroupedEntries;
     QMap<QString, QString> mPhoneMatch;
+    QList<QPersistentModelIndex> mChangedIndexes;
 };
 
 #endif // CONVERSATIONPROXYMODEL_H
