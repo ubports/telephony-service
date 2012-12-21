@@ -177,6 +177,9 @@ LocalWidgets.TelephonyPage {
                 sourceComponent: contactDelegate
                 asynchronous: true
                 height: item ? item.height : 0
+                anchors.left: parent.left
+                anchors.right: parent.right
+
                 Binding {
                     target: contactLoader.item
                     property: "model"
