@@ -115,19 +115,18 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-    ListView {
-        id: contactsList
-        objectName: "contactsList"
-
+    // FIXME: this approach loads all the delegates during startup.
+    Flickable {
+        id: flickableContent
         anchors.top: buttons.bottom
         anchors.bottom: keyboard.top
         anchors.left: parent.left
         anchors.right: parent.right
+        contentHeight: favoriteList.height + contactsList.height
         clip: true
-        // FIXME: references to runtime and fake model need to be removed before final release
-        model: typeof(runtime) != "undefined" ? fakeContacts : contactProxyModel
 
-        header: Column {
+        Column {
+            id: favoriteList
             anchors.left: parent.left
             anchors.right: parent.right
             height: visible ? childrenRect.height : 0
@@ -160,31 +159,42 @@ LocalWidgets.TelephonyPage {
                 }
             }
         }
-        delegate: Loader {
-            id: contactLoader
-            sourceComponent: contactDelegate
-            asynchronous: true
-            height: item ? item.height : 0
+
+        ListView {
+            id: contactsList
+            objectName: "contactsList"
+
+            anchors.top: favoriteList.bottom
             anchors.left: parent.left
             anchors.right: parent.right
-
-            Binding {
-                target: contactLoader.item
-                property: "model"
-                value: model
-                when: contactLoader.status == Loader.Ready
+            height: visible ? childrenRect.height : 0
+            clip: true
+            // FIXME: references to runtime and fake model need to be removed before final release
+            model: typeof(runtime) != "undefined" ? fakeContacts : contactProxyModel
+            interactive: false
+            delegate: Loader {
+                id: contactLoader
+                sourceComponent: contactDelegate
+                asynchronous: true
+                height: item ? item.height : 0
+                Binding {
+                    target: contactLoader.item
+                    property: "model"
+                    value: model
+                    when: contactLoader.status == Loader.Ready
+                }
             }
-        }
-        section.property: "initial"
-        section.criteria: ViewSection.FullString
-        section.delegate: LocalWidgets.ListSectionHeader {
-            width: parent ? parent.width : 0
-            text: typeof(section) != "undefined" ? section : ""
+            section.property: "initial"
+            section.criteria: ViewSection.FullString
+            section.delegate: LocalWidgets.ListSectionHeader {
+                width: parent ? parent.width : 0
+                text: typeof(section) != "undefined" ? section : ""
+            }
         }
     }
 
     Scrollbar {
-        flickableItem: contactsList
+        flickableItem: flickableContent
         align: Qt.AlignTrailing
         __interactive: false
     }
