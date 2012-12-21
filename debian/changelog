@@ -1,3 +1,13 @@
+telephony-app (0.58.23) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Fix the lag on swiping when the application is started. (lp:1091290)
+
+  [ Tiago Salem Herrmann ]
+  * Favorites should be fully visible in default contact view. (lp:1092962)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 21 Dec 2012 18:23:51 -0200
+
 telephony-app (0.58.22) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
