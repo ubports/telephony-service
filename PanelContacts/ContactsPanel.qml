@@ -108,7 +108,7 @@ LocalWidgets.TelephonyPage {
     Component {
         id: contactDelegate
         ContactDelegate {
-            onClicked: contactsPanel.contactClicked(contact)
+            onClicked: contactsPanel.contactClicked(model.contact)
             selected: (telephony.view &&
             telephony.view.contact &&
             typeof(contact) != "undefined") ? (telephony.view.contact == contact) : false

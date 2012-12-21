@@ -55,7 +55,7 @@ Item {
             }
 
             onClicked: {
-                telephony.showCommunication(model.groupingProperty, model.item[groupingProperty], "", model.contactId, true);
+                telephony.showCommunication(model.groupingProperty, model.item[model.groupingProperty], "", model.contactId, true);
             }
         }
     }
