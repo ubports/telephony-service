@@ -81,10 +81,6 @@ Item {
     }
 
     function callNumber(number) {
-        var callStack = rightPaneStacks.stacks[dialer.tab]
-        if (callStack.currentPage.source == dialer.source) {
-            callStack.currentPage.dialNumber = ""
-        }
         callManager.startCall(number);
     }
 
@@ -455,6 +451,10 @@ Item {
     Connections {
         target: callManager
         onCallReady: {
+            var callStack = rightPaneStacks.stacks[dialer.tab]
+            if (callStack.currentPage.source == dialer.source) {
+                callStack.currentPage.dialNumber = ""
+            }
             if (isVoicemailActive()) {
                 showVoicemail()
             } else {
