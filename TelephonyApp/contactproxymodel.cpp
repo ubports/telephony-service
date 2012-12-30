@@ -105,9 +105,14 @@ bool ContactProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
 
 bool ContactProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
+    ContactEntry *leftContact = qobject_cast<ContactEntry*>(left.data(ContactModel::ContactRole).value<QObject*>());
+    ContactEntry *rightContact = qobject_cast<ContactEntry*>(right.data(ContactModel::ContactRole).value<QObject*>());
     QString leftString = left.data().toString();
     QString rightString = right.data().toString();
 
-    return leftString.toLower().localeAwareCompare(rightString.toLower()) < 0;
+    if (leftContact->isFavorite() == rightContact->isFavorite()) {
+        return leftString.toLower().localeAwareCompare(rightString.toLower()) < 0;
+    }
+    return leftContact->isFavorite();
 }
 
