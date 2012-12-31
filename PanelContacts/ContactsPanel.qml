@@ -124,7 +124,7 @@ LocalWidgets.TelephonyPage {
             id: contactLoader
             sourceComponent: contactDelegate
             asynchronous: true
-            height: item ? item.height : 0
+            height: item ? item.height : units.gu(8)
             anchors.left: parent.left
             anchors.right: parent.right
 
