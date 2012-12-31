@@ -88,6 +88,9 @@ void ContactEntry::setDisplayLabel(const QString &value)
 
 QString ContactEntry::initial() const
 {
+    if (isFavorite()) {
+        return "Favourites";
+    }
     QString label = displayLabel();
     if (label.isEmpty()) {
         return "";

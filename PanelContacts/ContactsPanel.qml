@@ -98,13 +98,6 @@ LocalWidgets.TelephonyPage {
         model: contactModel
     }
 
-    ContactProxyModel {
-        id: favoriteContactProxyModel
-        filterText: contactsSearchBox.text
-        favoriteOnly: true
-        model: contactModel
-    }
-
     Component {
         id: contactDelegate
         ContactDelegate {
@@ -116,88 +109,42 @@ LocalWidgets.TelephonyPage {
     }
 
     // FIXME: this approach loads all the delegates during startup.
-    Flickable {
-        id: flickableContent
+    ListView {
+        id: contactsList
+        objectName: "contactsList"
+
         anchors.top: buttons.bottom
         anchors.bottom: keyboard.top
         anchors.left: parent.left
         anchors.right: parent.right
-        contentHeight: favoriteList.height + contactsList.height
         clip: true
-
-        Column {
-            id: favoriteList
+        // FIXME: references to runtime and fake model need to be removed before final release
+        model: typeof(runtime) != "undefined" ? fakeContacts : contactProxyModel
+        delegate: Loader {
+            id: contactLoader
+            sourceComponent: contactDelegate
+            asynchronous: true
+            height: item ? item.height : 0
             anchors.left: parent.left
             anchors.right: parent.right
-            height: visible ? childrenRect.height : 0
-            visible: favoriteContacts.count > 0
 
-            LocalWidgets.ListSectionHeader {
-                id: headerFavorite
-                anchors.left: parent.left
-                anchors.right: parent.right
-                text: "Favourites"
-            }
-            
-            Repeater {
-                id: favoriteContacts
-                model: typeof(runtime) != "undefined" ? fakeContacts : favoriteContactProxyModel
-                delegate: Loader {
-                    id: favoriteLoader
-                    sourceComponent: contactDelegate
-                    asynchronous: true
-                    height: item ? item.height : 0
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-
-                    Binding {
-                        target: favoriteLoader.item
-                        property: "model"
-                        value: model
-                        when: favoriteLoader.status == Loader.Ready
-                    }
-                }
+            Binding {
+                target: contactLoader.item
+                property: "model"
+                value: model
+                when: contactLoader.status == Loader.Ready
             }
         }
-
-        ListView {
-            id: contactsList
-            objectName: "contactsList"
-
-            anchors.top: favoriteList.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: visible ? childrenRect.height : 0
-            clip: true
-            // FIXME: references to runtime and fake model need to be removed before final release
-            model: typeof(runtime) != "undefined" ? fakeContacts : contactProxyModel
-            interactive: false
-            delegate: Loader {
-                id: contactLoader
-                sourceComponent: contactDelegate
-                asynchronous: true
-                height: item ? item.height : 0
-                anchors.left: parent.left
-                anchors.right: parent.right
-
-                Binding {
-                    target: contactLoader.item
-                    property: "model"
-                    value: model
-                    when: contactLoader.status == Loader.Ready
-                }
-            }
-            section.property: "initial"
-            section.criteria: ViewSection.FullString
-            section.delegate: LocalWidgets.ListSectionHeader {
-                width: parent ? parent.width : 0
-                text: typeof(section) != "undefined" ? section : ""
-            }
+        section.property: "initial"
+        section.criteria: ViewSection.FullString
+        section.delegate: LocalWidgets.ListSectionHeader {
+            width: parent ? parent.width : 0
+            text: typeof(section) != "undefined" ? section : ""
         }
     }
 
     Scrollbar {
-        flickableItem: flickableContent
+        flickableItem: contactsList
         align: Qt.AlignTrailing
         __interactive: false
     }
