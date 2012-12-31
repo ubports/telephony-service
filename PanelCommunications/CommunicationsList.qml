@@ -75,7 +75,7 @@ Item {
             asynchronous: true
             anchors.left: parent.left
             anchors.right: parent.right
-            height: item ? item.height : 0
+            height: item ? item.height : units.gu(8.5)
 
             Binding {
                 target: conversationLoader.item
