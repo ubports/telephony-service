@@ -16,12 +16,12 @@ Button {
     property int corner
     ItemStyle.class: "transparent"
 
-    UbuntuShape {
+    BorderImage {
         id: shape
         anchors.centerIn: parent
         width: units.gu(11)
         height: units.gu(8)
-        borderSource: pressed ? "../assets/dialer_pad_bg_pressed.sci" : "../assets/dialer_pad_bg.sci"
+        source: pressed ? "../assets/dialer_pad_bg_pressed.sci" : "../assets/dialer_pad_bg.sci"
     }
 
     Label {

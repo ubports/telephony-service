@@ -8,12 +8,12 @@ Button {
     property int iconWidth
     property int iconHeight
 
-    UbuntuShape {
+    BorderImage {
         id: shape
         anchors.centerIn: parent
         width: parent.width
         height: parent.height
-        borderSource: pressed ? "../assets/dialer_pad_bg_pressed.sci" : "../assets/dialer_pad_bg.sci"
+        source: pressed ? "../assets/dialer_pad_bg_pressed.sci" : "../assets/dialer_pad_bg.sci"
     }
 
     Image {
