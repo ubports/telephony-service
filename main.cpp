@@ -24,7 +24,6 @@
 #include <QString>
 #include <QTemporaryFile>
 #include <QTextStream>
-#include <QApplication>
 
 // libc
 #include <cerrno>
@@ -37,7 +36,7 @@
 
 // Temporarily disable the telepathy folks backend
 // as it doesn’t play well with QtFolks.
-static void disableTelepathyFolksBackend(QApplication* application)
+static void disableTelepathyFolksBackend(QGuiApplication* application)
 {
     QTemporaryFile* temp = new QTemporaryFile(application);
     if (temp->open()) {
@@ -58,7 +57,7 @@ static void disableTelepathyFolksBackend(QApplication* application)
 
 int main(int argc, char** argv)
 {
-    QApplication::setApplicationName("Telephony App");
+    QGuiApplication::setApplicationName("Telephony App");
     TelephonyApplication application(argc, argv);
 
     disableTelepathyFolksBackend(&application);
