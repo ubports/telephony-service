@@ -54,6 +54,10 @@ void CallManager::startCall(const QString &phoneNumber)
 
     // Request the contact to start audio call
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
+    if (account->connection() == NULL) {
+        return;
+    }
+
     connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
