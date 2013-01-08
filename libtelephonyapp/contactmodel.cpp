@@ -31,11 +31,7 @@
 #include <QUrl>
 #include <QDBusInterface>
 #include <QDBusReply>
-#include <QVersitContactImporter>
-#include <QVersitReader>
 #include "config.h"
-
-QTVERSIT_USE_NAMESPACE
 
 ContactModel *ContactModel::instance(const QString &engine)
 {
