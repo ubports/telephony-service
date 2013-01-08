@@ -1,3 +1,13 @@
+telephony-app (0.58.24) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Add missing license headers (LP:1097077).
+
+  [ Michael Zanetti ]
+  * Fixes a crash when trying to start a phone call without having a connection.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 08 Jan 2013 16:29:37 -0200
+
 telephony-app (0.58.23) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
