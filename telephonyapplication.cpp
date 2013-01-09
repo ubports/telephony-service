@@ -46,7 +46,8 @@ static void printUsage(const QStringList& arguments)
              << "[--dual-panel]"
              << "[--single-panel]"
              << "[--fullscreen]"
-             << "[--test-contacts]";
+             << "[--test-contacts]"
+             << "[-testability]";
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
