@@ -29,6 +29,7 @@
 #include <QDBusInterface>
 #include <QDBusReply>
 #include <QDBusConnectionInterface>
+#include <QLibrary>
 #include "config.h"
 #include "telephonyappdbus.h"
 #include <QQmlEngine>
@@ -45,7 +46,8 @@ static void printUsage(const QStringList& arguments)
              << "[--dual-panel]"
              << "[--single-panel]"
              << "[--fullscreen]"
-             << "[--test-contacts]";
+             << "[--test-contacts]"
+             << "[-testability]";
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
@@ -106,6 +108,24 @@ bool TelephonyApplication::setup()
     if (arguments.contains("--test-contacts")) {
         arguments.removeAll("--test-contacts");
         contactEngine = "memory";
+    }
+
+    // The testability driver is only loaded by QApplication but not by QGuiApplication.
+    // However, QApplication depends on QWidget which would add some unneeded overhead => Let's load the testability driver on our own.
+    if (arguments.contains("-testability")) {
+        arguments.removeAll("-testability");
+        QLibrary testLib(QLatin1String("qttestability"));
+        if (testLib.load()) {
+            typedef void (*TasInitialize)(void);
+            TasInitialize initFunction = (TasInitialize)testLib.resolve("qt_testability_init");
+            if (initFunction) {
+                initFunction();
+            } else {
+                qCritical("Library qttestability resolve failed!");
+            }
+        } else {
+            qCritical("Library qttestability load failed!");
+        }
     }
 
     if (arguments.size() > 2) {
