@@ -20,6 +20,9 @@ import QtQuick 2.0
 import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 import TelephonyApp 0.1
+import "PanelContacts"
+import "PanelCommunications"
+import "PanelDialer"
 
 Item {
     id: telephony
@@ -193,7 +196,7 @@ Item {
         parent: leftPane
         ItemStyle.class: singlePane ? "new-tabs" : "tabs"
 
-        property variant tabPageItems: [ callsTab.page.item, communicationsTab.page.item, contactsTab.page.item ]
+        property variant tabPageItems: [ callsTab.page, communicationsTab.page, contactsTab.page ]
 
         Tab {
             id: callsTab
@@ -203,17 +206,10 @@ Item {
 
             title: "Call"
             iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
-            page: Loader {
+            page: DialerView {
                 id: callsTabPage
 
                 anchors.fill: parent
-                source: Qt.resolvedUrl(callsTab.panel)
-
-                onStatusChanged: {
-                    if (status == Loader.Ready) {
-                        item.visible = true
-                    }
-                }
             }
         }
 
@@ -225,17 +221,10 @@ Item {
             property string pane: "Panes/SelectMessagePane.qml"
             property string panel: "PanelCommunications/CommunicationsPanel.qml"
 
-            page: Loader {
+            page: CommunicationsPanel {
                 id: communicationsTabPage
 
                 anchors.fill: parent
-                source: Qt.resolvedUrl(communicationsTab.panel)
-
-                onStatusChanged: {
-                    if (status == Loader.Ready) {
-                        item.visible = true
-                    }
-                }
             }
         }
 
@@ -247,17 +236,10 @@ Item {
 
             title: "Contacts"
             iconSource: (tabs.selectedTabIndex != 2) ? "assets/tab_icon_contacts_inactive.png" : "assets/tab_icon_contacts_active.png"
-            page: Loader {
+            page: ContactsPanel {
                 id: contactsTabPage
 
                 anchors.fill: parent
-                source: Qt.resolvedUrl(contactsTab.panel)
-
-                onStatusChanged: {
-                    if (status == Loader.Ready) {
-                        item.visible = true
-                    }
-                }
             }
         }
     }

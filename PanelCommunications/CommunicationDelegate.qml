@@ -24,14 +24,33 @@ import "../dateUtils.js" as DateUtils
 ListItem.Base {
     id: communicationDelegate
 
+    function selectIcon()  {
+        switch (model.itemType) {
+        case "message":
+            return "../assets/messages.png";
+        case "call":
+            if (item.missed) {
+                return "../assets/missed-call.png";
+            } else if (item.incoming) {
+                return "../assets/incoming-call.png";
+            } else {
+                return "../assets/outgoing-call.png";
+            }
+        case "group":
+            return "../assets/tab_icon_contacts_inactive.png";
+        default:
+            return "";
+        }
+    }
+
     property variant model
-    property variant item
-    property url avatar
-    property url itemIcon
-    property variant timestamp
-    property string title
-    property string subtitle
-    property string text
+    property variant item: (model && model.item) ? model.item : null
+    property url avatar: (model && model.contactAvatar) ? model.contactAvatar : ""
+    property url itemIcon: selectIcon()
+    property variant timestamp: (model && model.timestamp) ? model.timestamp : null
+    property string title: (model && model.contactAlias) ? model.contactAlias : ""
+    property string subtitle //:"(TODO: show phone type)"
+    property string text: (model && model.item && model.item.message) ? model.item.message : ""
     property alias customContentArea: customArea
     property int __spacing: units.gu(1)
 
