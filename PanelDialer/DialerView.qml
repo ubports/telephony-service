@@ -18,15 +18,10 @@ LocalWidgets.TelephonyPage {
         anchors.fill: parent
         focus: true
 
-        LocalWidgets.Header {
-            id: header
-            text: title
-        }
-
         KeypadEntry {
             id: keypadEntry
 
-            anchors.top: header.bottom
+            anchors.top: parent.top
             anchors.left: parent.left
             anchors.right: parent.right
             focus: true
@@ -64,7 +59,7 @@ LocalWidgets.TelephonyPage {
 
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.top: keypad.bottom
+                anchors.top: parent.top
                 source: "../assets/horizontal_divider.sci"
             }
 

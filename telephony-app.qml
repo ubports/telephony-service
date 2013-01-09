@@ -187,11 +187,12 @@ Item {
         }
     }
 
-    LocalWidgets.Tabs {
+    Tabs {
         id: tabs
         anchors.fill: leftPane
         parent: leftPane
-        ItemStyle.delegate: LocalWidgets.SlidingTabsDelegate {}
+        ItemStyle.class: singlePane ? "new-tabs" : "tabs"
+
         property variant tabPageItems: [ callsTab.page.item, communicationsTab.page.item, contactsTab.page.item ]
 
         Tab {
@@ -200,6 +201,7 @@ Item {
             property string pane: "Panes/CallEndedPane.qml"
             property string panel: "PanelDialer/DialerView.qml"
 
+            title: "Call"
             iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
             page: Loader {
                 id: callsTabPage
@@ -217,6 +219,7 @@ Item {
 
         Tab {
             id: communicationsTab
+            title: "Conversations"
             iconSource: (tabs.selectedTabIndex != 1) ? "assets/tab_icon_messaging_inactive.png" : "assets/tab_icon_messaging_active.png"
 
             property string pane: "Panes/SelectMessagePane.qml"
@@ -242,6 +245,7 @@ Item {
             property string pane: "Panes/SelectContactPane.qml"
             property string panel: "PanelContacts/ContactsPanel.qml"
 
+            title: "Contacts"
             iconSource: (tabs.selectedTabIndex != 2) ? "assets/tab_icon_contacts_inactive.png" : "assets/tab_icon_contacts_active.png"
             page: Loader {
                 id: contactsTabPage
