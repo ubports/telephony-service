@@ -25,7 +25,7 @@
 #include "textchannelobserver.h"
 #include "voicemailindicator.h"
 #include "contactmodel.h"
-#include <QApplication>
+#include <QCoreApplication>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/AbstractClient>
 #include <TelepathyQt/AccountManager>
@@ -33,8 +33,7 @@
 
 int main(int argc, char **argv)
 {
-    QApplication app(argc, argv);
-    app.setQuitOnLastWindowClosed(false);
+    QCoreApplication app(argc, argv);
 
     notify_init("Telephony App Approver");
 
