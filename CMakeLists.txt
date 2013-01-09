@@ -46,7 +46,6 @@ find_package(Qt5Gui)
 find_package(Qt5Qml)
 find_package(Qt5Quick)
 find_package(Qt5Test)
-find_package(Qt5Widgets)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
@@ -78,7 +77,7 @@ qt5_add_dbus_adaptor(telephony_app_SRCS TelephonyApp.xml telephonyappdbus.h Tele
 add_executable(${TELEPHONY_APP}
     ${telephony_app_SRCS}
     )
-qt5_use_modules(${TELEPHONY_APP} Core DBus Gui Qml Quick Widgets)
+qt5_use_modules(${TELEPHONY_APP} Core DBus Gui Qml Quick)
 
 install(TARGETS ${TELEPHONY_APP}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -123,12 +122,6 @@ install(DIRECTORY ${QML_DIRS}
 set(ASSETS_DIR assets)
 
 install(DIRECTORY ${ASSETS_DIR}
-    DESTINATION ${TELEPHONY_APP_DIR}
-    )
-
-set(DUMMYDATA_DIR dummydata)
-
-install(DIRECTORY ${DUMMYDATA_DIR}
     DESTINATION ${TELEPHONY_APP_DIR}
     )
 

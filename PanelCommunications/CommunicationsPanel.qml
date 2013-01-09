@@ -89,8 +89,7 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
         clip: true
-        // FIXME: reference to fake model needs to be removed before final release
-        model: typeof(runtime) != "undefined" ? fakeMessages : conversationProxyModel
+        model: conversationProxyModel
 
         header: Column {
             anchors.left: parent.left

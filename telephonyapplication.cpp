@@ -49,7 +49,7 @@ static void printUsage(const QStringList& arguments)
 }
 
 TelephonyApplication::TelephonyApplication(int &argc, char **argv)
-    : QApplication(argc, argv), m_view(0), m_applicationIsReady(false)
+    : QGuiApplication(argc, argv), m_view(0), m_applicationIsReady(false)
 {
     setApplicationName("com.canonical.TelephonyApp");
     m_dbus = new TelephonyAppDBus(this);

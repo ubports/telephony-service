@@ -21,11 +21,11 @@
 
 #include <QObject>
 #include <QQuickView>
-#include <QApplication>
+#include <QGuiApplication>
 
 class TelephonyAppDBus;
 
-class TelephonyApplication : public QApplication
+class TelephonyApplication : public QGuiApplication
 {
     Q_OBJECT
 

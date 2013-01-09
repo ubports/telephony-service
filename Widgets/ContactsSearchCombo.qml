@@ -31,8 +31,7 @@ LocalWidgets.DropDownSearch {
         filterText: search.text != "" ? search.text : "some text that won't match"
     }
 
-    // FIXME: references to runtime and fake model need to be removed before final release
-    model: typeof(runtime) != "undefined" ? fakeContacts : contacts
+    model: contacts
 
     delegate: ContactsSearchDelegate {
         anchors.left: parent ? parent.left : undefined

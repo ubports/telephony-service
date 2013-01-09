@@ -73,8 +73,7 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
         clip: true
-        // FIXME: references to runtime and fake model need to be removed before final release
-        model: typeof(runtime) != "undefined" ? fakeContacts : contactProxyModel
+        model: contactProxyModel
 
         header: Column {
             anchors.left: parent.left
