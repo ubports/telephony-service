@@ -56,6 +56,16 @@ Item {
         }
     }
 
+    onSinglePaneChanged: {
+        if (singlePane) {
+            mainStack.clear();
+            mainStack.push(leftPane);
+        } else {
+            mainStack.clear();
+            leftPane.parent = telephony;
+        }
+    }
+
     Connections {
         target: contactModel
         onContactLoaded: telephony.showContactDetails(contact);
@@ -131,7 +141,7 @@ Item {
     }
 
     function endCall() {
-        var callStack = rightPaneStacks.stacks[liveCall.tab]
+        var callStack = singlePane ? mainStack : rightPaneStacks.stacks[liveCall.tab]
         if (callStack.currentPage.source == liveCall.source || callStack.currentPage.source == voicemail.source) {
             callStack.pop();
         }
@@ -182,6 +192,7 @@ Item {
         anchors.fill: leftPane
         parent: leftPane
         ItemStyle.delegate: LocalWidgets.SlidingTabsDelegate {}
+        property variant tabPageItems: [ callsTab.page.item, communicationsTab.page.item, contactsTab.page.item ]
 
         Tab {
             id: callsTab
@@ -190,19 +201,15 @@ Item {
             property string panel: "PanelDialer/DialerView.qml"
 
             iconSource: (tabs.selectedTabIndex != 0) ? "assets/tab_icon_call_inactive.png" : "assets/tab_icon_call_active.png"
-            page: Item {
+            page: Loader {
                 id: callsTabPage
 
                 anchors.fill: parent
+                source: Qt.resolvedUrl(callsTab.panel)
 
-                Loader {
-                    anchors.fill: parent
-                    source: singlePane ? "" : Qt.resolvedUrl(callsTab.panel)
-
-                    onStatusChanged: {
-                        if (status == Loader.Ready) {
-                            item.visible = true
-                        }
+                onStatusChanged: {
+                    if (status == Loader.Ready) {
+                        item.visible = true
                     }
                 }
             }
@@ -215,23 +222,18 @@ Item {
             property string pane: "Panes/SelectMessagePane.qml"
             property string panel: "PanelCommunications/CommunicationsPanel.qml"
 
-            page: Item {
+            page: Loader {
                 id: communicationsTabPage
 
                 anchors.fill: parent
+                source: Qt.resolvedUrl(communicationsTab.panel)
 
-                Loader {
-                    anchors.fill: parent
-                    source: singlePane ? "" : Qt.resolvedUrl(communicationsTab.panel)
-
-                    onStatusChanged: {
-                        if (status == Loader.Ready) {
-                            item.visible = true
-                        }
+                onStatusChanged: {
+                    if (status == Loader.Ready) {
+                        item.visible = true
                     }
                 }
             }
-
         }
 
         Tab {
@@ -241,19 +243,15 @@ Item {
             property string panel: "PanelContacts/ContactsPanel.qml"
 
             iconSource: (tabs.selectedTabIndex != 2) ? "assets/tab_icon_contacts_inactive.png" : "assets/tab_icon_contacts_active.png"
-            page: Item {
+            page: Loader {
                 id: contactsTabPage
 
                 anchors.fill: parent
+                source: Qt.resolvedUrl(contactsTab.panel)
 
-                Loader {
-                    anchors.fill: parent
-                    source: singlePane ? "" : Qt.resolvedUrl(contactsTab.panel)
-
-                    onStatusChanged: {
-                        if (status == Loader.Ready) {
-                            item.visible = true
-                        }
+                onStatusChanged: {
+                    if (status == Loader.Ready) {
+                        item.visible = true
                     }
                 }
             }
@@ -301,6 +299,13 @@ Item {
         fillMode: Image.Tile
     }
 
+    PageStack {
+        id: mainStack
+        anchors.fill: parent
+        visible: singlePane
+        __showHeader: false
+    }
+
     Item {
         id: leftPane
 
@@ -309,6 +314,7 @@ Item {
         anchors.bottom: parent.bottom
         anchors.right: singlePane ? parent.right : undefined
         width: singlePane ? undefined : units.gu(31)
+        parent: singlePane ? mainStack : telephony
 
         Rectangle {
             id: border
@@ -354,9 +360,17 @@ Item {
     Item {
         id: rightPaneStacks
 
-        property variant currentStack: stacks[tabs.selectedTabIndex]
-        property variant currentItem: (currentStack != undefined ? currentStack.currentPage : undefined)
+        property variant currentStack: singlePane ? mainStack : stacks[tabs.selectedTabIndex]
+        property variant currentItem: {
+            if (singlePane && currentStack.depth == 1) {
+                return tabs.tabPageItems[tabs.selectedTabIndex];
+            }
 
+            if (currentStack != undefined) {
+                return currentStack.currentPage;
+            }
+            return undefined;
+        }
         property variant stacks: [ callsStack, communicationsStack, contactsStack ]
 
         anchors.fill: parent
@@ -370,11 +384,10 @@ Item {
 
         PageStack {
             id: callsStack
-            property string source: singlePane ? callsTab.panel : callsTab.pane
+            property string source: callsTab.pane
             property bool isCurrent: tabs.selectedTabIndex == liveCall.tab
             anchors.fill: parent
-            visible: singlePane || isCurrent
-            parent: singlePane ? callsTabPage : rightPaneStacks
+            visible: isCurrent
             __showHeader: false
 
             onSourceChanged: {
@@ -392,11 +405,10 @@ Item {
 
         PageStack {
             id: communicationsStack
-            property string source: singlePane ? communicationsTab.panel : communicationsTab.pane
+            property string source: communicationsTab.pane
             property bool isCurrent: tabs.selectedTabIndex == communication.tab
             anchors.fill: parent
-            visible: singlePane || isCurrent
-            parent: singlePane ? communicationsTabPage : rightPaneStacks
+            visible: isCurrent
             __showHeader: false
 
             onSourceChanged: {
@@ -414,11 +426,10 @@ Item {
 
         PageStack {
             id: contactsStack
-            property string source: singlePane ? contactsTab.panel : contactsTab.pane
+            property string source: contactsTab.pane
             property bool isCurrent: tabs.selectedTabIndex == contactDetails.tab
             anchors.fill: parent
             visible: singlePane || isCurrent
-            parent: singlePane ? contactsTabPage : rightPaneStacks
             __showHeader: false
 
             onSourceChanged: {
@@ -469,9 +480,9 @@ Item {
     Connections {
         target: callManager
         onCallReady: {
-            var callStack = rightPaneStacks.stacks[dialer.tab]
-            if (callStack.currentPage.source == dialer.source) {
-                callStack.currentPage.dialNumber = ""
+            var currentPage = singlePane ? telephony.view : rightPaneStacks.stacks[dialer.tab].currentPage
+            if (currentPage.source == dialer.source) {
+                currentPage.dialNumber = ""
             }
             if (isVoicemailActive()) {
                 showVoicemail()
