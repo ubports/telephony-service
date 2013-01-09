@@ -36,16 +36,18 @@ class TelephonyAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
     def get_main_view(self):
         return self.app.select_single("QQuickView")
 
-    def get_tabs_list_view(self):
-        return self.app.select_single("QQuickListView", objectName="tabsListView")
+    def get_tabs(self):
+        return self.app.select_single("Tabs")
 
     def move_to_next_tab(self):
         main_view = self.get_main_view()
-        start_x = main_view.geometry[0] + main_view.geometry[2] * 0.75
+        tabs = self.get_tabs()
+        currentTab = tabs.selectedTabIndex
+        start_x = main_view.geometry[0] + main_view.geometry[2] * 0.85
         stop_x = main_view.geometry[0] + main_view.geometry[2] * 0.15
-        y_line = main_view.geometry[1] + 10
+        y_line = main_view.geometry[1] + main_view.geometry[3] * 0.5
         self.pointing_device.drag(start_x, y_line, stop_x, y_line)
-        self.assertThat(self.get_tabs_list_view().moving, Eventually(Equals(False)))
+        self.assertThat(tabs.selectedTabIndex, Eventually(Equals(currentTab + 1)))
 
     def reveal_toolbar(self):
         main_view = self.get_main_view()
