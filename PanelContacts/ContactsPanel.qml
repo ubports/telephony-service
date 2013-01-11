@@ -41,7 +41,7 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-    property string searchQuery
+    property alias searchQuery: contactProxyModel.filterText
 
     anchors.fill: parent
     signal contactClicked(variant contact)
@@ -49,7 +49,6 @@ LocalWidgets.TelephonyPage {
 
     ContactProxyModel {
         id: contactProxyModel
-        filterText: searchQuery
         model: contactModel
     }
 

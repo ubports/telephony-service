@@ -40,7 +40,7 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-    property string searchTerm
+    property alias searchTerm: conversationProxyModel.searchString
 
     anchors.fill: parent
 
@@ -49,7 +49,6 @@ LocalWidgets.TelephonyPage {
     ConversationProxyModel {
         id: conversationProxyModel
         conversationModel: conversationAggregatorModel
-        searchString: messageList.searchTerm
         ascending: false
         grouped: true
         showLatestFromGroup: true
