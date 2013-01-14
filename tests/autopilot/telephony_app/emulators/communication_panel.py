@@ -34,8 +34,7 @@ class CommunicationPanel(object):
 
     def get_communication_page(self):
         """Returns the Communication page"""
-        return self.app.select_single('PageStack',
-                                      source='PanelCommunications/CommunicationsPanel.qml')
+        return self.app.select_single('Tab', objectName='communicationsTab')
 
     def get_new_message_send_to_box(self):
         """Return the "To" input box for sending an sms."""

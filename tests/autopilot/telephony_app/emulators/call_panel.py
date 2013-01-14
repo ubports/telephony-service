@@ -33,11 +33,9 @@ class CallPanel(object):
     def get_contacts_list_button(self):
         """Returns the Contacts list button next to the dial button"""
         return self.app.select_single('CustomButton', objectName='contactListButton')
-    
+
     def get_dialer_page(self):
-        return self.app.select_single('PageStack',
-                                      source='PanelDialer/DialerView.qml')
-    
+        return self.app.select_single('Tab', objectName='callsTab')
+
     def get_contacts_page(self):
-        return self.app.select_single('PageStack',
-                                      source='PanelContacts/ContactsPanel.qml')
+        return self.app.select_single('Tab', objectName='contactsTab')

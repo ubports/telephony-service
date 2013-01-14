@@ -41,78 +41,14 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-    property alias searchQuery : contactsSearchBox.text
+    property alias searchQuery: contactProxyModel.filterText
 
     anchors.fill: parent
     signal contactClicked(variant contact)
     onContactClicked: telephony.showContactDetails(contact, true)
 
-   LocalWidgets.Header {
-        id: header
-        text: title
-    }
-
-    TextField {
-        id: contactsSearchBox
-        objectName: "contactsSearchBox"
-
-        anchors.top: header.bottom
-        anchors.topMargin: units.gu(1)
-        anchors.left: parent.left
-        anchors.leftMargin: units.gu(1)
-        anchors.right: parent.right
-        anchors.rightMargin: units.gu(1)
-        height: units.gu(4)
-
-        //placeholderText: "Search"
-        Keys.onEscapePressed: text = ""
-
-        primaryItem: AbstractButton {
-            width: units.gu(3)
-            Image {
-                anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.leftMargin: units.gu(0.5)
-                source: "../assets/search.png"
-            }
-            onClicked: contactsSearchBox.text = ""
-        }
-    }
-
-    Column {
-        id: buttons
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: contactsSearchBox.bottom
-        anchors.topMargin: units.gu(1)
-
-        // hide this on single panel version
-        visible: !telephony.singlePane
-        height: visible ? childrenRect.height : 0
-
-        ListItem.ThinDivider {}
-
-        ListItem.Standard {
-            id: newContact
-
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: units.gu(4)
-            __leftIconMargin: units.gu(3)
-            __rightIconMargin: units.gu(2)
-
-            text: "Add a new contact"
-            icon: Qt.resolvedUrl("../assets/add_contacts_icon.png")
-            iconFrame: false
-            onClicked: telephony.createNewContact()
-
-            selected: telephony.contactDetails.loaded && telephony.view.added
-        }
-    }
-
     ContactProxyModel {
         id: contactProxyModel
-        filterText: contactsSearchBox.text
         model: contactModel
     }
 
@@ -126,17 +62,77 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-    // FIXME: this approach loads all the delegates during startup.
     ListView {
         id: contactsList
         objectName: "contactsList"
 
-        anchors.top: buttons.bottom
+        anchors.top: parent.top
+        anchors.topMargin: units.gu(1)
         anchors.bottom: keyboard.top
         anchors.left: parent.left
         anchors.right: parent.right
         clip: true
         model: contactProxyModel
+
+        header: Column {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            spacing: units.gu(1)
+
+            TextField {
+                id: contactsSearchBox
+                objectName: "contactsSearchBox"
+
+                anchors.left: parent.left
+                anchors.leftMargin: units.gu(1)
+                anchors.right: parent.right
+                anchors.rightMargin: units.gu(1)
+                height: units.gu(4)
+
+                //placeholderText: "Search"
+                Keys.onEscapePressed: text = ""
+
+                primaryItem: AbstractButton {
+                    width: units.gu(3)
+                    Image {
+                        anchors.left: parent.left
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.leftMargin: units.gu(0.5)
+                        source: "../assets/search.png"
+                    }
+                    onClicked: contactsSearchBox.text = ""
+                }
+
+                Binding {
+                    target: contactsPanel
+                    property: "searchQuery"
+                    value: contactsSearchBox.text
+                }
+            }
+
+            ListItem.ThinDivider {
+                visible: !telephony.singlePane
+            }
+
+            ListItem.Standard {
+                id: newContact
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: visible ? units.gu(4) : 0
+                visible: !telephony.singlePane
+                __leftIconMargin: units.gu(3)
+                __rightIconMargin: units.gu(2)
+
+                text: "Add a new contact"
+                icon: Qt.resolvedUrl("../assets/add_contacts_icon.png")
+                iconFrame: false
+                onClicked: telephony.createNewContact()
+
+                selected: telephony.contactDetails.loaded && telephony.view.added
+            }
+        }
+
         delegate: Loader {
             id: contactLoader
             sourceComponent: contactDelegate

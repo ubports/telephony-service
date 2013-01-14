@@ -21,6 +21,7 @@ import Ubuntu.Components 0.1
 
 Page {
     property alias image: icon.source
+    property string source
 
     Item {
         id: background
