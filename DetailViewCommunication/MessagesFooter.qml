@@ -96,7 +96,7 @@ FocusScope {
             anchors.bottom: entry.bottom
             width: units.gu(9)
             height: units.gu(4)
-            enabled: validRecipient
+            enabled: validRecipient && entry.text != ""
             color: "#37b301"
             text: "Send"
             onClicked: {
