@@ -1,3 +1,15 @@
+telephony-app (0.58.25) quantal; urgency=low
+
+  * Disable the "Send" button if the message is empty (LP:1089509)
+  * Adapt the code to use the Tabs from SDK.
+  * Load the test lib by hand as we are not using QApplication anymore, and
+    remove one test that is now obsolete.
+  * Telephony-app applications don't use widgets, there is no need to use
+    QApplication nor to link to QtWidgets.
+  * Remove the fake data models and other unused files.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 17 Jan 2013 10:23:32 -0200
+
 telephony-app (0.58.24) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
