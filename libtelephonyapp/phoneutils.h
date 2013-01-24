@@ -87,7 +87,7 @@ bool matchIntlPrefix(const QString &a, int len)
 
     int state = 0;
     for (int i = 0 ; i < len ; i++) {
-        char c = a.at(i).toAscii();
+        char c = a.at(i).toLatin1();
 
         switch (state) {
             case 0:
@@ -124,7 +124,7 @@ bool matchTrunkPrefix(const QString &a, int len) {
     found = false;
 
     for (int i = 0 ; i < len ; i++) {
-        char c = a.at(i).toAscii();
+        char c = a.at(i).toLatin1();
 
         if (c == '0' && !found) {
             found = true;
@@ -144,7 +144,7 @@ bool matchIntlPrefixAndCC(const QString &a, int len) {
 
     int state = 0;
     for (int i = 0 ; i < len ; i++ ) {
-        char c = a.at(i).toAscii();
+        char c = a.at(i).toLatin1();
 
         switch (state) {
             case 0:
@@ -223,7 +223,7 @@ bool compareLoosely(const QString &a, const QString &b)
          char ca, cb;
          bool skipCmp = false;
 
-         ca = a.at(ia).toAscii();
+         ca = a.at(ia).toLatin1();
 
          if (!isDialable(ca)) {
              ia--;
@@ -231,7 +231,7 @@ bool compareLoosely(const QString &a, const QString &b)
              numNonDialableCharsInA++;
          }
 
-         cb = b.at(ib).toAscii();
+         cb = b.at(ib).toLatin1();
 
          if (!isDialable(cb)) {
              ib--;

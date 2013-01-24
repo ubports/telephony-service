@@ -184,12 +184,7 @@ void ContactEntryTest::testAddresses()
     QQmlListProperty<ContactDetail> addresses = entry.addresses();
     QCOMPARE(ContactEntry::detailCount(&addresses), 10);
 
-    ContactAddress address;
-    address.setStreet("Street 10");
-    ContactEntry::detailAppend(&addresses, &address);
-    QCOMPARE(ContactEntry::detailCount(&addresses), 11);
-
-    for (int i=0; i < 11; ++i) {
+    for (int i=0; i < 10; ++i) {
         ContactAddress *address = qobject_cast<ContactAddress*>(ContactEntry::detailAt(&addresses, i));
         QVERIFY(address);
         QCOMPARE(address->street(), QString("Street %1").arg(i));
@@ -209,12 +204,7 @@ void ContactEntryTest::testEmails()
     QQmlListProperty<ContactDetail> emails = entry.emails();
     QCOMPARE(ContactEntry::detailCount(&emails), 10);
 
-    ContactEmailAddress email;
-    email.setEmailAddress("contact10@foo.bar");
-    ContactEntry::detailAppend(&emails, &email);
-    QCOMPARE(ContactEntry::detailCount(&emails), 11);
-
-    for (int i=0; i < 11; ++i) {
+    for (int i=0; i < 10; ++i) {
         ContactEmailAddress *email = qobject_cast<ContactEmailAddress*>(ContactEntry::detailAt(&emails, i));
         QVERIFY(email);
         QCOMPARE(email->emailAddress(), QString("contact%1@foo.bar").arg(i));
@@ -234,12 +224,7 @@ void ContactEntryTest::testOnlineAccounts()
     QQmlListProperty<ContactDetail> onlineAccounts = entry.onlineAccounts();
     QCOMPARE(ContactEntry::detailCount(&onlineAccounts), 10);
 
-    ContactOnlineAccount onlineAccount;
-    onlineAccount.setAccountUri("contact10@foo.bar");
-    ContactEntry::detailAppend(&onlineAccounts, &onlineAccount);
-    QCOMPARE(ContactEntry::detailCount(&onlineAccounts), 11);
-
-    for (int i=0; i < 11; ++i) {
+    for (int i=0; i < 10; ++i) {
         ContactOnlineAccount *onlineAccount = qobject_cast<ContactOnlineAccount*>(ContactEntry::detailAt(&onlineAccounts, i));
         QVERIFY(onlineAccount);
         QCOMPARE(onlineAccount->accountUri(), QString("contact%1@foo.bar").arg(i));
@@ -259,12 +244,7 @@ void ContactEntryTest::testPhoneNumbers()
     QQmlListProperty<ContactDetail> phoneNumbers = entry.phoneNumbers();
     QCOMPARE(ContactEntry::detailCount(&phoneNumbers), 10);
 
-    ContactPhoneNumber phoneNumber;
-    phoneNumber.setNumber("12345-10");
-    ContactEntry::detailAppend(&phoneNumbers, &phoneNumber);
-    QCOMPARE(ContactEntry::detailCount(&phoneNumbers), 11);
-
-    for (int i=0; i < 11; ++i) {
+    for (int i=0; i < 10; ++i) {
         ContactPhoneNumber *phoneNumber = qobject_cast<ContactPhoneNumber*>(ContactEntry::detailAt(&phoneNumbers, i));
         QVERIFY(phoneNumber);
         QCOMPARE(phoneNumber->number(), QString("12345-%1").arg(i));

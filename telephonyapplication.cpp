@@ -158,7 +158,7 @@ bool TelephonyApplication::setup()
     m_view = new QQuickView();
     QObject::connect(m_view, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onViewStatusChanged(QQuickView::Status)));
     m_view->setResizeMode(QQuickView::SizeRootObjectToView);
-    m_view->setWindowTitle("Telephony");
+    m_view->setTitle("Telephony");
     m_view->rootContext()->setContextProperty("application", this);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     m_view->rootContext()->setContextProperty("dbus", m_dbus);
@@ -293,7 +293,7 @@ void TelephonyApplication::onMessageReceived(const QString &message)
     if (m_applicationIsReady) {
         parseArgument(message);
         m_arg.clear();
-        m_view->requestActivateWindow();
+        activateWindow();
     } else {
         m_arg = message;
     }
@@ -303,6 +303,6 @@ void TelephonyApplication::activateWindow()
 {
     if (m_view) {
         m_view->raise();
-        m_view->requestActivateWindow();
+        m_view->requestActivate();
     }
 }

@@ -45,10 +45,6 @@ void ConversationProxyModel::setFilterValue(const QString &value)
     mFilterValue = value;
     invalidateFilter();
     Q_EMIT filterValueChanged();
-    // when the filter changes we also have to reset the model as the
-    // ListView element seems to not behave correctly when rows
-    // are changed.
-    reset();
 }
 
 QString ConversationProxyModel::filterProperty() const
@@ -61,10 +57,6 @@ void ConversationProxyModel::setFilterProperty(const QString &value)
     mFilterProperty = value;
     invalidateFilter();
     Q_EMIT filterPropertyChanged();
-    // when the filter changes we also have to reset the model as the
-    // ListView element seems to not behave correctly when rows
-    // are changed.
-    reset();
 }
 
 
@@ -117,10 +109,9 @@ void ConversationProxyModel::setConversationModel(QObject *value)
         Q_EMIT conversationModelChanged();
     }
 
-    QHash<int, QByteArray> roles = roleNames();
-    roles[EventsRole] = "events";
-    roles[TimeSlot] = "timeSlot";
-    setRoleNames(roles);
+    mRoles = roleNames();
+    mRoles[EventsRole] = "events";
+    mRoles[TimeSlot] = "timeSlot";
 
     if (mGrouped) {
         processGrouping();
@@ -230,6 +221,11 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
     }
 
     return result;
+}
+
+QHash<int, QByteArray> ConversationProxyModel::roleNames() const
+{
+    return mRoles;
 }
 
 bool ConversationProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const

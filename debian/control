@@ -5,8 +5,10 @@ Maintainer: The Newyork team <newyork@lists.canonical.com>
 XSBC-Original-Maintainer: Tiago Salem Herrmann <tiago.herrmann@canonical.com>
 Build-Depends: debhelper (>= 8.0.0),
                cmake,
-               qtbase (>= 5.0),
-               qtpim (>= 5.0),
+               qt5-default,
+               qtbase5-dev (>= 5.0),
+               qtdeclarative5-dev (>= 5.0),
+               qtpim5-dev (>= 5),
                libtelepathy-qt5-dev,
                libtelepathy-logger-qt5-dev,
                libqtgstreamer-dev,

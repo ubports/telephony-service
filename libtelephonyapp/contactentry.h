@@ -106,7 +106,6 @@ public:
     Q_INVOKABLE void revertChanges();
 
     // QQmlListProperty helpers
-    static void detailAppend(QQmlListProperty<ContactDetail> *p, ContactDetail *detail);
     static int  detailCount(QQmlListProperty<ContactDetail> *p);
     static ContactDetail* detailAt(QQmlListProperty<ContactDetail> *p, int index);
 

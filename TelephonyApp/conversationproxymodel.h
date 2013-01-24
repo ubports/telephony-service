@@ -101,6 +101,7 @@ public:
     void updateSorting();
 
     virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual QHash<int, QByteArray> roleNames() const;
 
 Q_SIGNALS:
     void ascendingChanged();
@@ -143,6 +144,7 @@ private:
     QMap<QString, QMap<QString, ConversationGroup> > mGroupedEntries;
     QMap<QString, QString> mPhoneMatch;
     QList<QPersistentModelIndex> mChangedIndexes;
+    QHash<int, QByteArray> mRoles;
 };
 
 #endif // CONVERSATIONPROXYMODEL_H
