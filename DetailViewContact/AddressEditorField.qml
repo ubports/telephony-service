@@ -46,7 +46,7 @@ FocusScope {
         anchors.right: parent.right
 
         font.pixelSize: FontUtils.sizeToPixels("medium")
-        color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
+        color: activeFocus? "#dd4814" : Qt.rgba(0.4, 0.4, 0.4, 1.0)
         selectByMouse: true
         focus: true
     }

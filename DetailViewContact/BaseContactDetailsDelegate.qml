@@ -49,6 +49,7 @@ FocusScope {
     property variant detailTypeInfo
 
     property bool editable: false
+    property bool editingActive: false
     property bool added: false
     /* We need to keep track of the deleted state of a detail because it will be
        actually deleted from the model only when we save the contact, even if we
@@ -60,6 +61,7 @@ FocusScope {
     signal clicked(string value)
     signal actionClicked(string value)
     signal deleteClicked()
+    signal focusRequested()
 
     /* Internal properties, use by derived components */
     property variant readOnlyContentBox: readOnlyContentBox
@@ -109,7 +111,19 @@ FocusScope {
         // center contentBox vertically
         height: contentBox.height
         opacity: editable ? 0.0 : 1.0
+        enabled: opacity > 0.0
         Behavior on opacity {LocalWidgets.StandardAnimation {}}
+
+        Rectangle {
+            id: itemHighlight
+            visible: contentBox.pressed
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: actionBox.left
+            color: "white"
+            opacity: 0.7
+        }
 
         AbstractButton {
             id: contentBox
@@ -119,15 +133,7 @@ FocusScope {
             anchors.right: actionBox.left
             anchors.rightMargin: units.gu(1)
             anchors.top: parent.top
-            height: childrenRect.height
-
-            Rectangle {
-                id: itemHighlight
-                visible: actionBox.pressed
-                anchors.fill: actionBox
-                color: "white"
-                opacity: 0.7
-            }
+            height: readOnlyContentBox.height
 
             onClicked: contactDetailsItem.clicked(contactDetailsItem.value);
 
@@ -182,30 +188,49 @@ FocusScope {
         }
     }
 
-    EditBox {
+    Item {
         id: editableGroup
 
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
+        height: childrenRect.height
         opacity: editable ? 1.0 : 0.0
+        enabled: opacity > 0.0
         Behavior on opacity {LocalWidgets.StandardAnimation {}}
 
         Item {
-            parent: editableGroup.leftBox
             anchors.left: parent.left
             anchors.right: parent.right
-            height: editableContentBox.height
+            height: childrenRect.height
+
+            ContactDetailSubTypeChooser {
+                id: subTypeEditor
+
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.leftMargin: units.gu(2)
+                anchors.right: parent.right
+                anchors.rightMargin: units.gu(2)
+                detailTypeInfo: contactDetailsItem.detailTypeInfo
+                detail: contactDetailsItem.detail
+                visible: editable
+                active: editingActive
+
+                onClicked: contactDetailsItem.focusRequested()
+            }
 
             Button {
                 id: removeButton
 
-                anchors.left: parent.left
-                anchors.leftMargin: units.gu(1)
+                anchors.right: parent.right
+                anchors.rightMargin: units.gu(1)
                 anchors.verticalCenter: editableContentBox.verticalCenter
                 width: units.gu(2)
                 iconSource: "../assets/edit_contact_mode_remove.png"
                 ItemStyle.class: "transparent-button"
+                visible: editingActive
+                enabled: visible
 
                 onClicked: {
                     deleted = true;
@@ -216,25 +241,13 @@ FocusScope {
             Item {
                 id: editableContentBox
 
-                anchors.left: removeButton.right
-                anchors.right: parent.right
-                anchors.leftMargin: units.gu(0.5)
+                anchors.top: subTypeEditor.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: units.gu(2)
+                anchors.right: removeButton.left
                 anchors.rightMargin: units.gu(0.5)
                 height: childrenRect.height
             }
-        }
-
-        ContactDetailSubTypeChooser {
-            id: subTypeEditor
-
-            parent: editableGroup.rightBox
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            width: units.gu(11)
-            detailTypeInfo: contactDetailsItem.detailTypeInfo
-            detail: contactDetailsItem.detail
-            visible: editable
         }
     }
 }

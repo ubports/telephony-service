@@ -24,7 +24,6 @@ import "DetailTypeUtilities.js" as DetailUtils
 
 FocusScope {
     id: contactDetailsSection
-    visible: details.count + newItems.count > 0
 
     property alias model: details.model
     property alias delegate: details.delegate

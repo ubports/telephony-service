@@ -214,8 +214,7 @@ LocalWidgets.TelephonyPage {
         flickableDirection: Flickable.VerticalFlick
         boundsBehavior: Flickable.StopAtBounds
         clip: true
-        contentHeight: detailsList.height +
-                       (contactDetails.editable ? newDetailChooser.height + newDetailChooser.menuHeight + units.gu(1) : 0)
+        contentHeight: detailsList.height
 
         Column {
             id: detailsList
@@ -279,32 +278,6 @@ LocalWidgets.TelephonyPage {
                     }
                 }
             }
-        }
-
-        ContactDetailTypeChooser {
-            id: newDetailChooser
-
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: detailsList.bottom
-            anchors.leftMargin: units.dp(1)
-            anchors.rightMargin: units.dp(1)
-
-            opacity: (editable) ? 1.0 : 0.0
-            contact: (editable) ? contactDetails.contact : null
-            height: (editable) ? units.gu(4) : 0
-
-            onSelected: {
-                for (var i = 0; i < detailsList.children.length; i++) {
-                    var child = detailsList.children[i];
-                    if (child.detailTypeInfo.name == detailType.name) {
-                        child.appendNewItem();
-                        return;
-                    }
-                }
-            }
-
-            onOpenedChanged: if (opened) scrollArea.contentY = scrollArea.contentHeight
         }
     }
 

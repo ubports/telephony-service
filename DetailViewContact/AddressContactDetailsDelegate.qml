@@ -38,6 +38,9 @@ BaseContactDetailsDelegate {
         } else return false;
     }
 
+    editingActive: editor.activeFocus
+    onFocusRequested: editor.forceActiveFocus()
+
     Item {
         parent: readOnlyContentBox
 
