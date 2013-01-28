@@ -1,3 +1,10 @@
+telephony-app (0.58.27) quantal; urgency=low
+
+  * Fix setting the role names
+  * Install the plugin to the correct place.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 28 Jan 2013 15:24:12 -0500
+
 telephony-app (0.58.26) quantal; urgency=low
 
   * Adapt to work with qt5 final.
