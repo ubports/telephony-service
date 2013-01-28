@@ -31,9 +31,7 @@ target_link_libraries(telephony-qml
     telephonyapp
     )
 
-# FIXME: check how to detect that using cmake
-set(QT_IMPORTS_DIR /opt/qt5/imports)
-set(PLUGIN_DIR ${QT_IMPORTS_DIR}/TelephonyApp)
+set(PLUGIN_DIR ${QT_INSTALL_IMPORTS}/TelephonyApp)
 install(TARGETS telephony-qml DESTINATION ${PLUGIN_DIR})
 install(FILES qmldir DESTINATION ${PLUGIN_DIR})
 

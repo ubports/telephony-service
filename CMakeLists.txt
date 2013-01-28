@@ -46,8 +46,14 @@ find_package(Qt5Gui)
 find_package(Qt5Qml)
 find_package(Qt5Quick)
 find_package(Qt5Test)
-find_package(PkgConfig REQUIRED)
 
+execute_process(
+    COMMAND qmake -query QT_INSTALL_IMPORTS
+    OUTPUT_VARIABLE QT_INSTALL_IMPORTS
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
+find_package(PkgConfig REQUIRED)
 pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
 pkg_check_modules(TPL_QT5 REQUIRED TelepathyLoggerQt5)
 pkg_check_modules(QTGLIB REQUIRED QtGLib-2.0)
