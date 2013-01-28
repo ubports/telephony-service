@@ -87,6 +87,7 @@ FocusScope {
                     item.detail = Qt.createQmlObject("import TelephonyApp 0.1; " + detailTypeInfo.newItemType + "{}", newItem);
                     if (detailTypeInfo.subTypes.length > 0) DetailUtils.setDetailSubType(item.detail, detailTypeInfo.subTypes[0]);
                     item.focus = true;
+                    item.focusRequested();
                 }
             }
             onItemAdded: item.focus = true
