@@ -20,6 +20,7 @@ import QtQuick 2.0
 import TelephonyApp 0.1
 import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 import "DetailTypeUtilities.js" as DetailUtils
 
 FocusScope {
@@ -99,35 +100,28 @@ FocusScope {
             Behavior on height { LocalWidgets.StandardAnimation {}}
             Behavior on opacity { LocalWidgets.StandardAnimation {}}
 
-            Button {
-                id: addButton
-                anchors.left: parent.left
-                anchors.leftMargin: units.gu(1)
-                anchors.verticalCenter: parent.verticalCenter
-                width: units.gu(2)
-                iconSource: "../assets/edit_contact_mode_add.png"
-                ItemStyle.class: "transparent-button"
-            }
-
             Label {
                 id: addText
 
-                anchors.left: addButton.right
-                anchors.leftMargin: units.gu(0.5)
+                anchors.left: parent.left
+                anchors.leftMargin: units.gu(2)
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.verticalCenterOffset: units.dp(-1)
-                fontSize: "x-small"
-                font.italic: true
+                //fontSize: "x-small"
                 elide: Text.ElideRight
                 color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
-                style: Text.Raised
-                styleColor: "white"
                 text: (detailTypeInfo.newItemText) ? detailTypeInfo.newItemText : ""
             }
 
             MouseArea {
                 anchors.fill: parent
                 onClicked: appendNewItem()
+            }
+
+            ListItem.ThinDivider {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
             }
         }
     }
