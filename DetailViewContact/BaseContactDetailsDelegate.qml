@@ -198,6 +198,7 @@ FocusScope {
         opacity: editable ? 1.0 : 0.0
         enabled: opacity > 0.0
         Behavior on opacity {LocalWidgets.StandardAnimation {}}
+        focus: editable
 
         Item {
             anchors.left: parent.left

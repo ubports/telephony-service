@@ -86,8 +86,9 @@ FocusScope {
         anchors.right: parent.right
         opacity: editable ? 1.0 : 0.0
         Behavior on opacity { LocalWidgets.StandardAnimation {}}
+        enabled: opacity > 0
+        focus: editable
 
         detail: name.detail
-        focus: true
     }
 }
