@@ -1,3 +1,9 @@
+telephony-app (0.58.28) quantal; urgency=low
+
+  * Really fix the installation directory.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 28 Jan 2013 15:46:55 -0500
+
 telephony-app (0.58.27) quantal; urgency=low
 
   * Fix setting the role names
