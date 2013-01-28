@@ -253,7 +253,6 @@ Item {
         Tabs {
             id: tabs
             anchors.fill: leftPane
-            parent: leftPane
             ItemStyle.class: singlePane ? "new-tabs" : "tabs"
 
             property variant tabPageItems: [ callsTab.page, communicationsTab.page, contactsTab.page ]
