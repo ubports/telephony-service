@@ -83,5 +83,12 @@ BaseContactDetailsDelegate {
         anchors.right: parent.right
         text: value.text
         focus: true
+
+        onActiveFocusChanged: {
+            if (activeFocus) {
+                // request the view to scroll to make sure this entry is visible.
+                delegate.scrollRequested();
+            }
+        }
     }
 }

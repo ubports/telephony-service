@@ -221,16 +221,28 @@ LocalWidgets.TelephonyPage {
             anchors.left: parent.left
             anchors.right: parent.right
 
+            function scrollToSectionPosition(section, y, height) {
+                var position = scrollArea.contentItem.mapFromItem(section, 0, y);
+
+                var targetY = position.y + height - scrollArea.height
+                if (targetY >= 0) {
+                    scrollArea.contentY = targetY;
+                }
+            }
+
             Repeater {
                 model: (contact) ? DetailTypes.supportedTypes : []
 
                 delegate: ContactDetailsSection {
+                    id: section
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
 
                     detailTypeInfo: modelData
                     editable: contactDetails.editable
                     onDetailAdded: focus = true
+
+                    onScrollRequested: detailsList.scrollToSectionPosition(section, y, height)
 
                     model: (contact) ? contact[modelData.items] : []
                     delegate: Loader {
@@ -272,6 +284,10 @@ LocalWidgets.TelephonyPage {
                                     Qt.openUrlExternally("mailto:" + modelData.emailAddress);
                                     break;
                                 }
+                            }
+                            onScrollRequested: {
+                                var position = contactDetailsSection.mapFromItem(item, item.x, item.y)
+                                section.scrollRequested(position.y, item.height)
                             }
                         }
                     }

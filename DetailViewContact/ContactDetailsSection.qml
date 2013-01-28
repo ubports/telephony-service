@@ -34,6 +34,7 @@ FocusScope {
     onEditableChanged: if (!editable) newItems.model.clear()
 
     signal detailAdded()
+    signal scrollRequested(real y, real height)
 
     height: col.height
 
@@ -88,6 +89,14 @@ FocusScope {
                     if (detailTypeInfo.subTypes.length > 0) DetailUtils.setDetailSubType(item.detail, detailTypeInfo.subTypes[0]);
                     item.focus = true;
                     item.focusRequested();
+                }
+
+                Connections {
+                    target: item
+                    onScrollRequested: {
+                        var position = contactDetailsSection.mapFromItem(item, item.x, item.y)
+                        contactDetailsSection.scrollRequested(position.y, item.height)
+                    }
                 }
             }
             onItemAdded: item.focus = true

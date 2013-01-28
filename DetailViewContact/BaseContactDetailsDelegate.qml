@@ -31,6 +31,8 @@ FocusScope {
     height: (deleted) ? 0 : (((editable) ? editableGroup.height + units.dp(2) : readOnlyGroup.height) + bottomSeparatorLine.height - units.dp(2))
     opacity: (deleted) ? 0.0 : 1.0
 
+    signal scrollRequested()
+
     state: "read"
     states: [
         State {
