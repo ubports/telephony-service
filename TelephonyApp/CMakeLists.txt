@@ -31,7 +31,7 @@ target_link_libraries(telephony-qml
     telephonyapp
     )
 
-set(PLUGIN_DIR ${QT_INSTALL_IMPORTS}/TelephonyApp)
+set(PLUGIN_DIR ${QT_INSTALL_QML}/TelephonyApp)
 install(TARGETS telephony-qml DESTINATION ${PLUGIN_DIR})
 install(FILES qmldir DESTINATION ${PLUGIN_DIR})
 

@@ -48,8 +48,8 @@ find_package(Qt5Quick)
 find_package(Qt5Test)
 
 execute_process(
-    COMMAND qmake -query QT_INSTALL_IMPORTS
-    OUTPUT_VARIABLE QT_INSTALL_IMPORTS
+    COMMAND qmake -query QT_INSTALL_QML
+    OUTPUT_VARIABLE QT_INSTALL_QML
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
