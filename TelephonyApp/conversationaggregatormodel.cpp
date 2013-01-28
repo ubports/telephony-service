@@ -26,7 +26,7 @@
 ConversationAggregatorModel::ConversationAggregatorModel(QObject *parent) :
     QAbstractListModel(parent), mRowCount(0)
 {
-    mRoles = roleNames();
+    mRoles = QAbstractListModel::roleNames();
     mRoles[ConversationFeedModel::ContactId] = "contactId";
     mRoles[ConversationFeedModel::ContactAlias] = "contactAlias";
     mRoles[ConversationFeedModel::ContactAvatar] = "contactAvatar";

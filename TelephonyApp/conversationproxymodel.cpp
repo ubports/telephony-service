@@ -109,7 +109,7 @@ void ConversationProxyModel::setConversationModel(QObject *value)
         Q_EMIT conversationModelChanged();
     }
 
-    mRoles = roleNames();
+    mRoles = QSortFilterProxyModel::roleNames();
     mRoles[EventsRole] = "events";
     mRoles[TimeSlot] = "timeSlot";
 
