@@ -25,16 +25,17 @@
 #define SOUND_PATH "/usr/share/sounds/ubuntu/stereo/"
 Ringtone::Ringtone(QObject *parent) :
     QObject(parent),
-    mCallAudioFile(SOUND_PATH "phone-incoming-call.ogg"),
-    mMessageAudioFile(SOUND_PATH "message-new-instant.ogg"),
     mCallAudioPlaying(false), mMessageAudioPlaying(false)
 {
-    connect(&mCallAudioOutput,
-            SIGNAL(stateChanged(QAudio::State)),
-            SLOT(onCallAudioStateChanged(QAudio::State)));
-    connect(&mMessageAudioOutput,
-            SIGNAL(stateChanged(QAudio::State)),
-            SLOT(onMessageAudioStateChanged(QAudio::State)));
+    mCallAudioPlayer.setMedia(QUrl::fromLocalFile(SOUND_PATH "phone-incoming-call.ogg"));
+    connect(&mCallAudioPlayer,
+            SIGNAL(stateChanged(QMediaPlayer::State)),
+            SLOT(onCallAudioStateChanged(QMediaPlayer::State)));
+
+    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(SOUND_PATH "message-new-instant.ogg"));
+    connect(&mMessageAudioPlayer,
+            SIGNAL(stateChanged(QMediaPlayer::State)),
+            SLOT(onMessageAudioStateChanged(QMediaPlayer::State)));
 }
 
 
@@ -51,12 +52,7 @@ void Ringtone::playIncomingCallSound()
     }
 
     mCallAudioPlaying = true;
-    if (mCallAudioFile.open(QIODevice::ReadOnly)) {
-        mCallAudioOutput.start(&mCallAudioFile);
-    } else {
-        qCritical() << "Unable to open sound file" << mCallAudioFile.fileName();
-        qCritical() << "Error:" << mCallAudioFile.errorString();
-    }
+    mCallAudioPlayer.play();
 }
 
 void Ringtone::stopIncomingCallSound()
@@ -66,7 +62,7 @@ void Ringtone::stopIncomingCallSound()
     }
 
     mCallAudioPlaying = false;
-    mCallAudioOutput.stop();
+    mCallAudioPlayer.stop();
 }
 
 void Ringtone::playIncomingMessageSound()
@@ -76,12 +72,7 @@ void Ringtone::playIncomingMessageSound()
     }
 
     mMessageAudioPlaying = true;
-    if (mMessageAudioFile.open(QIODevice::ReadOnly)) {
-        mMessageAudioOutput.start((&mMessageAudioFile));
-    } else {
-        qCritical() << "Unable to open sound file" << mMessageAudioFile.fileName();
-        qCritical() << "Error:" << mMessageAudioFile.errorString();
-    }
+    mMessageAudioPlayer.play();
 }
 
 void Ringtone::stopIncomingMessageSound()
@@ -90,30 +81,26 @@ void Ringtone::stopIncomingMessageSound()
         return;
     }
 
-    mMessageAudioOutput.stop();
+    mMessageAudioPlayer.stop();
 }
 
-void Ringtone::onCallAudioStateChanged(QAudio::State state)
+void Ringtone::onCallAudioStateChanged(QMediaPlayer::State state)
 {
-    if (state != QAudio::StoppedState) {
+    if (state != QMediaPlayer::StoppedState) {
         return;
     }
 
     if (mCallAudioPlaying) {
         // loop playing the incoming call sound
-        mCallAudioOutput.start(&mCallAudioFile);
-    } else {
-        // or close it in case we stopped ringing
-        mCallAudioFile.close();
+        mCallAudioPlayer.play();
     }
 }
 
-void Ringtone::onMessageAudioStateChanged(QAudio::State state)
+void Ringtone::onMessageAudioStateChanged(QMediaPlayer::State state)
 {
-    if (state != QAudio::StoppedState) {
+    if (state != QMediaPlayer::StoppedState) {
         return;
     }
 
-    mMessageAudioFile.close();
     mMessageAudioPlaying = false;
 }

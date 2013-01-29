@@ -23,7 +23,7 @@
 #define RINGTONE_H
 
 #include <QObject>
-#include <QAudioOutput>
+#include <QMediaPlayer>
 #include <QFile>
 
 class Ringtone : public QObject
@@ -40,18 +40,16 @@ public Q_SLOTS:
     void stopIncomingMessageSound();
 
 private Q_SLOTS:
-    void onCallAudioStateChanged(QAudio::State state);
-    void onMessageAudioStateChanged(QAudio::State state);
+    void onCallAudioStateChanged(QMediaPlayer::State state);
+    void onMessageAudioStateChanged(QMediaPlayer::State state);
 
 private:
     explicit Ringtone(QObject *parent = 0);
 
-    QAudioOutput mCallAudioOutput;
-    QFile mCallAudioFile;
+    QMediaPlayer mCallAudioPlayer;
     bool mCallAudioPlaying;
 
-    QAudioOutput mMessageAudioOutput;
-    QFile mMessageAudioFile;
+    QMediaPlayer mMessageAudioPlayer;
     bool mMessageAudioPlaying;
 };
 
