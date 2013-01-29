@@ -29,14 +29,12 @@ Ringtone::Ringtone(QObject *parent) :
     mCallAudioPlaying(false), mMessageAudioPlaying(false)
 {
     mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(SOUND_PATH "phone-incoming-call.ogg"));
-    mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+    mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
     mCallAudioPlaylist.setCurrentIndex(0);
-    mCallAudioPlayer.setPlaylist(&mCallAudioPlaylist);
     connect(&mCallAudioPlayer,
             SIGNAL(stateChanged(QMediaPlayer::State)),
             SLOT(onCallAudioStateChanged(QMediaPlayer::State)));
 
-    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(SOUND_PATH "message-new-instant.ogg"));
     connect(&mMessageAudioPlayer,
             SIGNAL(stateChanged(QMediaPlayer::State)),
             SLOT(onMessageAudioStateChanged(QMediaPlayer::State)));
@@ -56,6 +54,7 @@ void Ringtone::playIncomingCallSound()
     }
 
     mCallAudioPlaying = true;
+    mCallAudioPlayer.setPlaylist(&mCallAudioPlaylist);
     mCallAudioPlayer.play();
 }
 
@@ -75,6 +74,7 @@ void Ringtone::playIncomingMessageSound()
     }
 
     mMessageAudioPlaying = true;
+    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(SOUND_PATH "message-new-instant.ogg"));
     mMessageAudioPlayer.play();
 }
 
