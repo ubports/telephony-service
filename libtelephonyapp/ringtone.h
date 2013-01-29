@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QMediaPlayer>
+#include <QMediaPlaylist>
 #include <QFile>
 
 class Ringtone : public QObject
@@ -47,6 +48,7 @@ private:
     explicit Ringtone(QObject *parent = 0);
 
     QMediaPlayer mCallAudioPlayer;
+    QMediaPlaylist mCallAudioPlaylist;
     bool mCallAudioPlaying;
 
     QMediaPlayer mMessageAudioPlayer;

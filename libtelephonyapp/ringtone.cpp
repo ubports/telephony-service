@@ -25,9 +25,13 @@
 #define SOUND_PATH "/usr/share/sounds/ubuntu/stereo/"
 Ringtone::Ringtone(QObject *parent) :
     QObject(parent),
+    mCallAudioPlayer(this), mCallAudioPlaylist(this), mMessageAudioPlayer(this),
     mCallAudioPlaying(false), mMessageAudioPlaying(false)
 {
-    mCallAudioPlayer.setMedia(QUrl::fromLocalFile(SOUND_PATH "phone-incoming-call.ogg"));
+    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(SOUND_PATH "phone-incoming-call.ogg"));
+    mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
+    mCallAudioPlaylist.setCurrentIndex(0);
+    mCallAudioPlayer.setPlaylist(&mCallAudioPlaylist);
     connect(&mCallAudioPlayer,
             SIGNAL(stateChanged(QMediaPlayer::State)),
             SLOT(onCallAudioStateChanged(QMediaPlayer::State)));
@@ -61,7 +65,6 @@ void Ringtone::stopIncomingCallSound()
         return;
     }
 
-    mCallAudioPlaying = false;
     mCallAudioPlayer.stop();
 }
 
@@ -90,10 +93,7 @@ void Ringtone::onCallAudioStateChanged(QMediaPlayer::State state)
         return;
     }
 
-    if (mCallAudioPlaying) {
-        // loop playing the incoming call sound
-        mCallAudioPlayer.play();
-    }
+    mCallAudioPlaying = false;
 }
 
 void Ringtone::onMessageAudioStateChanged(QMediaPlayer::State state)
