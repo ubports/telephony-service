@@ -56,6 +56,7 @@ private Q_SLOTS:
     void onHangupFinished(Tp::PendingOperation* op);
     void onCallStateChanged(Tp::CallState state);
     void onReplyReceived(const QString &phoneNumber, const QString &reply);
+    void closeSnapDecision();
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;

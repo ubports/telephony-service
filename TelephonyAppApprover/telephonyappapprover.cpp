@@ -26,6 +26,7 @@
 #include "chatmanager.h"
 #include "contactmodel.h"
 #include "config.h"
+#include "ringtone.h"
 
 #include <QDebug>
 
@@ -54,6 +55,9 @@ TelephonyAppApprover::TelephonyAppApprover()
     connect(TelephonyAppUtils::instance(),
             SIGNAL(applicationRunningChanged(bool)),
             SLOT(processChannels()));
+
+    Ringtone::instance()->playIncomingCallSound();
+    QTimer::singleShot(3000, Ringtone::instance(), SLOT(stopIncomingCallSound());
 }
 
 TelephonyAppApprover::~TelephonyAppApprover()
@@ -272,6 +276,9 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         qWarning() << "Failed to show snap decision:" << error->message;
         g_error_free (error);
     }
+
+    // play a ringtone
+    Ringtone::instance()->playIncomingCallSound();
 }
 
 void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
@@ -285,10 +292,7 @@ void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp
     if (pr) {
         mChannels.remove(pr);
     }
-    if (NULL != mPendingSnapDecision) {
-        notify_notification_close(mPendingSnapDecision, NULL);
-        mPendingSnapDecision = NULL;
-    }
+    closeSnapDecision();
 }
 
 void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
@@ -398,13 +402,9 @@ void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
             }
         }
 
-        if (NULL != mPendingSnapDecision) {
-            notify_notification_close(mPendingSnapDecision, NULL);
-            mPendingSnapDecision = NULL;
-
-            // add the missed call to the messaging menu
-            MessagingMenu::instance()->addCall(channel->targetContact()->id(), QDateTime::currentDateTime());
-        }
+        closeSnapDecision();
+        // add the missed call to the messaging menu
+        MessagingMenu::instance()->addCall(channel->targetContact()->id(), QDateTime::currentDateTime());
     } else if (state == Tp::CallStateActive) {
         onApproved(dispatchOperation, NULL);
     }
@@ -440,6 +440,15 @@ void TelephonyAppApprover::onReplyReceived(const QString &phoneNumber, const QSt
     } else {
         // if there is no dispatch operation, just send using the chatmanager
         ChatManager::instance()->sendMessage(phoneNumber, reply);
+    }
+}
+
+void TelephonyAppApprover::closeSnapDecision()
+{
+    if (mPendingSnapDecision != NULL) {
+        notify_notification_close(mPendingSnapDecision, NULL);
+        mPendingSnapDecision = NULL;
+        Ringtone::instance()->stopIncomingCallSound();
     }
 }
 

@@ -7,6 +7,7 @@ Build-Depends: debhelper (>= 8.0.0),
                cmake,
                qtbase (>= 5.0),
                qtpim (>= 5.0),
+               qtmultimedia (>= 5.0),
                libtelepathy-qt5-dev,
                libtelepathy-logger-qt5-dev,
                libqtgstreamer-dev,
@@ -33,7 +34,8 @@ Depends: ${shlibs:Depends},
          notify-osd,
          libicu48,
          qt-components-ubuntu (> 0.1+bzr101),
-         dbus-x11
+         dbus-x11,
+         ubuntu-sounds
 Description: An application to execute telephony tasks such as calling and messaging
  An application to execute telephony tasks such as calling and messaging
 

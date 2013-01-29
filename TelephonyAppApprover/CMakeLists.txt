@@ -22,7 +22,7 @@ include_directories(
 link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
 
 add_executable(telephony-app-approver ${approver_SRCS} ${approver_HDRS})
-qt5_use_modules(telephony-app-approver Contacts Core DBus Gui Qml)
+qt5_use_modules(telephony-app-approver Contacts Core DBus Gui Multimedia Qml)
 
 if (USE_HYBRIS)
     set(UBUNTU_APP_LIB "-lubuntu_application_api")
