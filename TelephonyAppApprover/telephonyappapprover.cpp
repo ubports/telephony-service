@@ -58,6 +58,7 @@ TelephonyAppApprover::TelephonyAppApprover()
 
     Ringtone::instance()->playIncomingCallSound();
     QTimer::singleShot(3000, Ringtone::instance(), SLOT(stopIncomingCallSound()));
+    QTimer::singleShot(4000, Ringtone::instance(), SLOT(playIncomingMessageSound()));
 }
 
 TelephonyAppApprover::~TelephonyAppApprover()
