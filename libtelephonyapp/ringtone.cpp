@@ -25,12 +25,19 @@
 #define SOUND_PATH "/usr/share/sounds/ubuntu/stereo/"
 Ringtone::Ringtone(QObject *parent) :
     QObject(parent),
-    mCallAudioPlayer(this), mMessageAudioPlayer(this)
+    mCallAudioPlayer(this), mCallAudioPlaylist(this), mMessageAudioPlayer(this),
+    mCallAudioPlaying(false), mMessageAudioPlaying(false)
 {
-    mCallAudioPlayer.setSource(QUrl::fromLocalFile(SOUND_PATH "phone-incoming-call.ogg"));
-    mCallAudioPlayer.setLoopCount(QSoundEffect::Infinite);
+    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(SOUND_PATH "phone-incoming-call.ogg"));
+    mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
+    mCallAudioPlaylist.setCurrentIndex(0);
+    connect(&mCallAudioPlayer,
+            SIGNAL(stateChanged(QMediaPlayer::State)),
+            SLOT(onCallAudioStateChanged(QMediaPlayer::State)));
 
-    mMessageAudioPlayer.setSource(QUrl::fromLocalFile(SOUND_PATH "message-new-instant.ogg"));
+    connect(&mMessageAudioPlayer,
+            SIGNAL(stateChanged(QMediaPlayer::State)),
+            SLOT(onMessageAudioStateChanged(QMediaPlayer::State)));
 }
 
 
@@ -42,32 +49,58 @@ Ringtone *Ringtone::instance()
 
 void Ringtone::playIncomingCallSound()
 {
-    if (mCallAudioPlayer.isPlaying()) {
+    if (mCallAudioPlaying) {
         return;
     }
 
+    mCallAudioPlaying = true;
+    mCallAudioPlayer.setPlaylist(&mCallAudioPlaylist);
     mCallAudioPlayer.play();
 }
 
 void Ringtone::stopIncomingCallSound()
 {
-    if (mCallAudioPlayer.isPlaying()) {
-        mCallAudioPlayer.stop();
+    if (!mCallAudioPlaying) {
+        return;
     }
+
+    mCallAudioPlayer.stop();
 }
 
 void Ringtone::playIncomingMessageSound()
 {
-    if (mMessageAudioPlayer.isPlaying()) {
+    if (mMessageAudioPlaying) {
         return;
     }
 
+    mMessageAudioPlaying = true;
+    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(SOUND_PATH "message-new-instant.ogg"));
     mMessageAudioPlayer.play();
 }
 
 void Ringtone::stopIncomingMessageSound()
 {
-    if (mMessageAudioPlayer.isPlaying()) {
-        mMessageAudioPlayer.stop();
+    if (!mMessageAudioPlaying) {
+        return;
     }
+
+    mMessageAudioPlayer.stop();
+}
+
+void Ringtone::onCallAudioStateChanged(QMediaPlayer::State state)
+{
+    if (state != QMediaPlayer::StoppedState) {
+        return;
+    }
+
+    mCallAudioPlaying = false;
+}
+
+void Ringtone::onMessageAudioStateChanged(QMediaPlayer::State state)
+{
+    if (state != QMediaPlayer::StoppedState) {
+        return;
+    }
+
+    mMessageAudioPlaying = false;
 }
