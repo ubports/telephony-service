@@ -215,6 +215,10 @@ LocalWidgets.TelephonyPage {
         clip: true
         contentHeight: detailsList.height
 
+        Behavior on contentY {
+            LocalWidgets.StandardAnimation { }
+        }
+
         Column {
             id: detailsList
 
@@ -224,9 +228,20 @@ LocalWidgets.TelephonyPage {
             function scrollToSectionPosition(section, y, height) {
                 var position = scrollArea.contentItem.mapFromItem(section, 0, y);
 
+                // check if the item is already visible
+                var bottomY = scrollArea.contentY + scrollArea.height
+                var itemBottom = position.y + height
+                if (position.y >= scrollArea.contentY && itemBottom <= bottomY) {
+                    return;
+                }
+
+                // if it is not, try to scroll and make it visible
                 var targetY = position.y + height - scrollArea.height
-                if (targetY >= 0) {
+                if (targetY >= 0 && position.y) {
                     scrollArea.contentY = targetY;
+                } else if (position.y < scrollArea.contentY) {
+                    // if it is hidden at the top, also show it
+                    scrollArea.contentY = position.y;
                 }
             }
 
@@ -286,7 +301,7 @@ LocalWidgets.TelephonyPage {
                                 }
                             }
                             onScrollRequested: {
-                                var position = contactDetailsSection.mapFromItem(item, item.x, item.y)
+                                var position = section.mapFromItem(item, item.x, item.y)
                                 section.scrollRequested(position.y, item.height)
                             }
                         }
