@@ -32,6 +32,7 @@ class Ringtone : public QObject
 public:
     static Ringtone *instance();
 
+public Q_SLOTS:
     void playIncomingCallSound();
     void stopIncomingCallSound();
 
