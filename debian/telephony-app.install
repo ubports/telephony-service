@@ -1,4 +1,4 @@
-opt/qt5/imports/TelephonyApp
+usr/lib/*/qt5/qml/TelephonyApp
 etc/xdg/autostart/telephony-app-approver.desktop
 usr/share/icons/hicolor/*/apps/telephony-app*.png
 usr/share/icons/ubuntu-mono-dark/status/*/indicator-call.svg
