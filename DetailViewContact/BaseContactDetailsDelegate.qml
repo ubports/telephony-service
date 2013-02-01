@@ -31,8 +31,6 @@ FocusScope {
     height: (deleted) ? 0 : (((editable) ? editableGroup.height + units.dp(2) : readOnlyGroup.height) + bottomSeparatorLine.height - units.dp(2))
     opacity: (deleted) ? 0.0 : 1.0
 
-    signal scrollRequested()
-
     state: "read"
     states: [
         State {
@@ -64,6 +62,7 @@ FocusScope {
     signal actionClicked(string value)
     signal deleteClicked()
     signal focusRequested()
+    signal scrollRequested()
 
     /* Internal properties, use by derived components */
     property variant readOnlyContentBox: readOnlyContentBox
@@ -196,15 +195,16 @@ FocusScope {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
-        height: childrenRect.height
+        height: editableContent.height
         opacity: editable ? 1.0 : 0.0
         enabled: opacity > 0.0
         Behavior on opacity {LocalWidgets.StandardAnimation {}}
         focus: editable
 
         Item {
+            id: editableContent
             anchors.left: parent.left
-            anchors.right: parent.right
+            anchors.right: removeButton.left
             height: childrenRect.height
 
             ContactDetailSubTypeChooser {
@@ -223,34 +223,38 @@ FocusScope {
                 onClicked: contactDetailsItem.focusRequested()
             }
 
-            Button {
-                id: removeButton
-
-                anchors.right: parent.right
-                anchors.rightMargin: units.gu(1)
-                anchors.verticalCenter: editableContentBox.verticalCenter
-                width: units.gu(2)
-                iconSource: "../assets/edit_contact_mode_remove.png"
-                ItemStyle.class: "transparent-button"
-                visible: editingActive
-                enabled: visible
-
-                onClicked: {
-                    deleted = true;
-                    deleteClicked();
-                }
-            }
-
             Item {
                 id: editableContentBox
 
                 anchors.top: subTypeEditor.bottom
                 anchors.left: parent.left
                 anchors.leftMargin: units.gu(2)
-                anchors.right: removeButton.left
+                anchors.right: parent.right
                 anchors.rightMargin: units.gu(0.5)
                 height: childrenRect.height
             }
+        }
+
+        Button {
+            id: removeButton
+
+            anchors.right: parent.right
+            anchors.rightMargin: units.gu(1)
+            anchors.verticalCenter: editableContent.verticalCenter
+            width: units.gu(2)
+            height: units.gu(2)
+            iconSource: "../assets/icon_edit_remove.png"
+            ItemStyle.class: "transparent-button"
+            visible: editingActive
+            enabled: visible
+
+            onClicked: {
+                deleted = true;
+                console.log("Clicked...");
+                contactDetailsItem.deleteClicked();
+            }
+
+
         }
     }
 }
