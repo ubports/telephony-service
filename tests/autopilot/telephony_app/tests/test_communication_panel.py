@@ -108,16 +108,30 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         self.assertThat(sendto_box.text, Eventually(Equals("911")))
 
     def test_send_button_active(self):
-        """Typing a number into the 'sendto' box must enable the Send button.
+        """Typing a number into the 'sendto' box and a message
+           must enable the Send button.
         """
         self.click_new_message_button()
         send_button = self.communication_panel.get_message_send_button()
+
+        self.assertThat(send_button.enabled, Eventually(Equals(False)))
 
         # FIXME: we should have the field focused by default, but right now we
         # need to explicitly give it focus
         self.click_sendto_box()
         self.keyboard.type("911")
 
+        # By typing just the destination number, the button should continue
+        # disabled until a message is typed
+        self.assertThat(send_button.enabled, Eventually(Equals(False)))
+
+        # type a message
+        message_box = self.communication_panel.get_new_message_text_box()
+        self.pointing_device.move_to_object(message_box)
+        self.pointing_device.click()
+        self.keyboard.type("Hello!")
+
+        # and now finally the send button is enabled
         self.assertThat(send_button.enabled, Eventually(Equals(True)))
 
     def test_send_button_disable_on_clear(self):
@@ -127,6 +141,12 @@ class TestCommunicationPanel(TelephonyAppTestCase):
         """
         self.click_new_message_button()
         send_button = self.communication_panel.get_message_send_button()
+
+        # type a message
+        message_box = self.communication_panel.get_new_message_text_box()
+        self.pointing_device.move_to_object(message_box)
+        self.pointing_device.click()
+        self.keyboard.type("Hello!")
 
         # FIXME: we should have the field focused by default, but right now we
         # need to explicitly give it focus

@@ -152,25 +152,25 @@ void ContactEntry::setContact(const QContact &contact)
 QQmlListProperty<ContactDetail> ContactEntry::addresses()
 {
     static int type = ContactDetail::Address;
-    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailCount, detailAt);
 }
 
 QQmlListProperty<ContactDetail> ContactEntry::emails()
 {
     static int type = ContactDetail::EmailAddress;
-    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailCount, detailAt);
 }
 
 QQmlListProperty<ContactDetail> ContactEntry::onlineAccounts()
 {
     static int type = ContactDetail::InstantMessaging;
-    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailCount, detailAt);
 }
 
 QQmlListProperty<ContactDetail> ContactEntry::phoneNumbers()
 {
     static int type = ContactDetail::PhoneNumber;
-    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailAppend, detailCount, detailAt);
+    return QQmlListProperty<ContactDetail>(this, (void*) &type, detailCount, detailAt);
 }
 
 bool ContactEntry::addDetail(ContactDetail *detail)
@@ -238,17 +238,6 @@ void ContactEntry::onDetailChanged()
     if (mContact.saveDetail(&detail->detail())) {
         setModified(true);
     }
-}
-
-void ContactEntry::detailAppend(QQmlListProperty<ContactDetail> *p, ContactDetail *detail)
-{
-    ContactEntry *entry = qobject_cast<ContactEntry*>(p->object);
-    if (!entry) {
-        qWarning() << "Object is not a ContactEntry!";
-        return;
-    }
-
-    entry->addDetail(detail);
 }
 
 int ContactEntry::detailCount(QQmlListProperty<ContactDetail> *p)

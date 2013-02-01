@@ -26,18 +26,17 @@
 ConversationAggregatorModel::ConversationAggregatorModel(QObject *parent) :
     QAbstractListModel(parent), mRowCount(0)
 {
-    QHash<int, QByteArray> roles = roleNames();
-    roles[ConversationFeedModel::ContactId] = "contactId";
-    roles[ConversationFeedModel::ContactAlias] = "contactAlias";
-    roles[ConversationFeedModel::ContactAvatar] = "contactAvatar";
-    roles[ConversationFeedModel::Timestamp] = "timestamp";
-    roles[ConversationFeedModel::Date] = "date";
-    roles[ConversationFeedModel::Incoming] = "incoming";
-    roles[ConversationFeedModel::NewItem] = "newItem";
-    roles[ConversationFeedModel::ItemType] = "itemType";
-    roles[ConversationFeedModel::FeedItem] = "item";
-    roles[ConversationFeedModel::GroupingProperty] = "groupingProperty";
-    setRoleNames(roles);
+    mRoles = QAbstractListModel::roleNames();
+    mRoles[ConversationFeedModel::ContactId] = "contactId";
+    mRoles[ConversationFeedModel::ContactAlias] = "contactAlias";
+    mRoles[ConversationFeedModel::ContactAvatar] = "contactAvatar";
+    mRoles[ConversationFeedModel::Timestamp] = "timestamp";
+    mRoles[ConversationFeedModel::Date] = "date";
+    mRoles[ConversationFeedModel::Incoming] = "incoming";
+    mRoles[ConversationFeedModel::NewItem] = "newItem";
+    mRoles[ConversationFeedModel::ItemType] = "itemType";
+    mRoles[ConversationFeedModel::FeedItem] = "item";
+    mRoles[ConversationFeedModel::GroupingProperty] = "groupingProperty";
 }
 
 void ConversationAggregatorModel::addFeedModel(ConversationFeedModel *model)
@@ -129,6 +128,11 @@ QModelIndex ConversationAggregatorModel::index(int row, int column, const QModel
     }
 
     return QModelIndex();
+}
+
+QHash<int, QByteArray> ConversationAggregatorModel::roleNames() const
+{
+    return mRoles;
 }
 
 QModelIndex ConversationAggregatorModel::mapFromSource(const QModelIndex &sourceIndex) const

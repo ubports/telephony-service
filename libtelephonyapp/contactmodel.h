@@ -48,6 +48,7 @@ public:
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual QHash<int, QByteArray> roleNames() const;
 
     Q_INVOKABLE ContactEntry *contactFromId(const QString &id);
     Q_INVOKABLE ContactEntry *contactFromPhoneNumber(const QString &phoneNumber);
@@ -83,6 +84,7 @@ private:
     QContactManager *mContactManager;
     QList<ContactEntry*> mContactEntries;
     QString mPendingId;
+    QHash<int, QByteArray> m_roles;
 };
 
 #endif // CONTACTMODEL_H

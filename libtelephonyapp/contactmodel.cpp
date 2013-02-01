@@ -55,10 +55,9 @@ ContactModel::ContactModel(const QString &engine, QObject *parent) :
 
     mContactManager = new QContactManager(availableEngine);
 
-    QHash<int, QByteArray> roles = roleNames();
-    roles[ContactRole] = "contact";
-    roles[InitialRole] = "initial";
-    setRoleNames(roles);
+    m_roles = QAbstractListModel::roleNames();
+    m_roles[ContactRole] = "contact";
+    m_roles[InitialRole] = "initial";
 
     connect(mContactManager,
             SIGNAL(contactsAdded(QList<QContactId>)),
@@ -100,6 +99,11 @@ QVariant ContactModel::data(const QModelIndex &index, int role) const
     }
 
     return QVariant();
+}
+
+QHash<int, QByteArray> ContactModel::roleNames() const
+{
+    return m_roles;
 }
 
 ContactEntry *ContactModel::contactFromId(const QString &id)

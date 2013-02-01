@@ -190,65 +190,7 @@ Item {
         }
     }
 
-    Tabs {
-        id: tabs
-        anchors.fill: leftPane
-        parent: leftPane
-        ItemStyle.class: singlePane ? "new-tabs" : "tabs"
-
-        property variant tabPageItems: [ callsTab.page, communicationsTab.page, contactsTab.page ]
-
-        Tab {
-            id: callsTab
-            objectName: "callsTab"
-
-            property string pane: "Panes/CallEndedPane.qml"
-            property string panel: "PanelDialer/DialerView.qml"
-            property bool isCurrent: tabs.selectedTabIndex == 0
-
-            title: "Call"
-            iconSource: isCurrent ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
-            page: DialerView {
-                id: callsTabPage
-
-                anchors.fill: parent
-            }
-        }
-
-        Tab {
-            id: communicationsTab
-            objectName: "communicationsTab"
-            title: "Conversations"
-            iconSource: isCurrent ? "assets/tab_icon_messaging_active.png" : "assets/tab_icon_messaging_inactive.png"
-
-            property string pane: "Panes/SelectMessagePane.qml"
-            property string panel: "PanelCommunications/CommunicationsPanel.qml"
-            property bool isCurrent: tabs.selectedTabIndex == 1
-
-            page: CommunicationsPanel {
-                id: communicationsTabPage
-
-                anchors.fill: parent
-            }
-        }
-
-        Tab {
-            id: contactsTab
-            objectName: "contactsTab"
-
-            property string pane: "Panes/SelectContactPane.qml"
-            property string panel: "PanelContacts/ContactsPanel.qml"
-            property bool isCurrent: tabs.selectedTabIndex == 2
-
-            title: "Contacts"
-            iconSource: isCurrent ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
-            page: ContactsPanel {
-                id: contactsTabPage
-
-                anchors.fill: parent
-            }
-        }
-    }
+    
 
     // TODO: this indicator will be provided by the Tabs component
     Item {
@@ -308,6 +250,64 @@ Item {
         width: singlePane ? undefined : units.gu(31)
         parent: singlePane ? mainStack : telephony
 
+        Tabs {
+            id: tabs
+            anchors.fill: leftPane
+            ItemStyle.class: singlePane ? "new-tabs" : "tabs"
+
+            property variant tabPageItems: [ callsTab.page, communicationsTab.page, contactsTab.page ]
+
+            Tab {
+                id: callsTab
+                objectName: "callsTab"
+
+                property string pane: "Panes/CallEndedPane.qml"
+                property string panel: "PanelDialer/DialerView.qml"
+                property bool isCurrent: tabs.selectedTabIndex == 0
+
+                title: "Call"
+                iconSource: isCurrent ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
+                page: DialerView {
+                    id: callsTabPage
+
+                    anchors.fill: parent
+                }
+            }
+
+            Tab {
+                id: communicationsTab
+                objectName: "communicationsTab"
+                title: "Conversations"
+                iconSource: isCurrent ? "assets/tab_icon_messaging_active.png" : "assets/tab_icon_messaging_inactive.png"
+
+                property string pane: "Panes/SelectMessagePane.qml"
+                property string panel: "PanelCommunications/CommunicationsPanel.qml"
+                property bool isCurrent: tabs.selectedTabIndex == 1
+
+                page: CommunicationsPanel {
+                    id: communicationsTabPage
+
+                    anchors.fill: parent
+                }
+            }
+
+            Tab {
+                id: contactsTab
+                objectName: "contactsTab"
+
+                property string pane: "Panes/SelectContactPane.qml"
+                property string panel: "PanelContacts/ContactsPanel.qml"
+                property bool isCurrent: tabs.selectedTabIndex == 2
+
+                title: "Contacts"
+                iconSource: isCurrent ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
+                page: ContactsPanel {
+                    id: contactsTabPage
+
+                    anchors.fill: parent
+                }
+            }
+        }
         Rectangle {
             id: border
 
@@ -317,6 +317,7 @@ Item {
             width: units.dp(1)
             color: "white"
             opacity: 0.3
+            visible: !singlePane
         }
     }
 
