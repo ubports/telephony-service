@@ -23,6 +23,7 @@
 #include "textchannelobserver.h"
 #include "messagingmenu.h"
 #include "config.h"
+#include "ringtone.h"
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ChannelClassSpecList>
@@ -104,6 +105,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     // and add the message to the messaging menu
     MessagingMenu::instance()->addMessage(contact->id(), message.messageToken(), message.received(), message.text());
+    Ringtone::instance()->playIncomingMessageSound();
 }
 
 Tp::TextChannelPtr TextChannelObserver::channelFromPath(const QString &path)
