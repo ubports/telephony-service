@@ -40,19 +40,13 @@ public Q_SLOTS:
     void playIncomingMessageSound();
     void stopIncomingMessageSound();
 
-private Q_SLOTS:
-    void onCallAudioStateChanged(QMediaPlayer::State state);
-    void onMessageAudioStateChanged(QMediaPlayer::State state);
-
 private:
     explicit Ringtone(QObject *parent = 0);
 
     QMediaPlayer mCallAudioPlayer;
     QMediaPlaylist mCallAudioPlaylist;
-    bool mCallAudioPlaying;
 
     QMediaPlayer mMessageAudioPlayer;
-    bool mMessageAudioPlaying;
 };
 
 #endif // RINGTONE_H
