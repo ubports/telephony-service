@@ -38,6 +38,9 @@ BaseContactDetailsDelegate {
         } else return false;
     }
 
+    editingActive: editor.activeFocus
+    onFocusRequested: editor.forceActiveFocus()
+
     Item {
         parent: readOnlyContentBox
 
@@ -96,6 +99,13 @@ BaseContactDetailsDelegate {
         country: detail ? detail.country : ""
 
         contactModelItem: delegate.detail
-        focus: true
+        focus: editable
+
+        onActiveFocusChanged: {
+            if (activeFocus) {
+                // request the view to scroll to make sure this entry is visible.
+                delegate.scrollRequested();
+            }
+        }
     }
 }

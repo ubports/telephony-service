@@ -44,7 +44,7 @@ var ADDRESS_LABEL_HOME      = "Home";
 var ADDRESS_LABEL_WORK      = "Work";
 var ADDRESS_LABEL_OTHER     = "Other";
 
-var phoneSubTypes = [ "Mobile", "Home", "Work", "Work Fax", "Home Fax", "Pager", "Other" ];
+var phoneSubTypes = [ "Mobile", "Home", "Work", "Other" ];
 
 var emailSubTypes = [ "Home", "Work", "Other" ];
 
@@ -53,13 +53,9 @@ var postalAddressSubTypes = [ ADDRESS_LABEL_HOME,
                               ADDRESS_LABEL_OTHER ];
 
 var IMSubTypes = [ PROTOCOL_LABEL_GTALK,
-                   PROTOCOL_LABEL_AIM,
-                   PROTOCOL_LABEL_MSN,
                    PROTOCOL_LABEL_YAHOO,
                    PROTOCOL_LABEL_SKYPE,
-                   PROTOCOL_LABEL_QQ,
-                   PROTOCOL_LABEL_ICQ,
-                   PROTOCOL_LABEL_JABBER ];
+                   PROTOCOL_LABEL_OTHER ];
 
 var supportedTypes = [
             {
@@ -135,48 +131,22 @@ function getDetailSubType(detail) {
     /* Phone numbers have a special field for the subType */
     if (detail.type == TelApp.ContactDetail.PhoneNumber) {
         if (detail.contexts.indexOf(TelApp.ContactDetail.ContextHome) > -1) {
-            if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Voice) > -1 || detail.subTypes.isEmpty) {
-                return "Home";
-            } else if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Fax) > -1) {
-                return "Home Fax";
-            }
+            return "Home";
         } else if (detail.contexts.indexOf(TelApp.ContactDetail.ContextWork) > -1) {
-            if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Voice) > -1 || detail.subTypes.isEmpty) {
-                return "Work";
-            } else if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Fax) > -1) {
-                return "Work Fax";
-            }
+            return "Work";
         } else if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Mobile) > -1) {
             return "Mobile";
-        } else if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Pager) > -1) {
-            return "Pager";
         }
-
         return "Other";
     } else if (detail.type == TelApp.ContactDetail.InstantMessaging) {
         var protocol = detail.protocol;
-        if (protocol == PROTOCOL_TYPE_CUSTOM) {
-            if (detail.contexts.indexOf("PROTOCOL=QQ") > -1) {
-                return PROTOCOL_LABEL_QQ;
-            } else {
-                return PROTOCOL_LABEL_OTHER;
-            }
-        } else if (protocol == PROTOCOL_TYPE_AIM) {
-            return PROTOCOL_LABEL_AIM;
-        } else if (protocol == PROTOCOL_TYPE_MSN) {
-            return PROTOCOL_LABEL_MSN;
-        } else if (protocol == PROTOCOL_TYPE_YAHOO) {
+        if (protocol == PROTOCOL_TYPE_YAHOO) {
             return PROTOCOL_LABEL_YAHOO;
         } else if (protocol == PROTOCOL_TYPE_SKYPE) {
             return PROTOCOL_LABEL_SKYPE;
         } else if (protocol == PROTOCOL_TYPE_GTALK) {
             return PROTOCOL_LABEL_GTALK;
-        } else if (protocol == PROTOCOL_TYPE_ICQ) {
-            return PROTOCOL_LABEL_ICQ;
-        } else if (protocol == PROTOCOL_TYPE_JABBER) {
-            return PROTOCOL_LABEL_JABBER;
         } else {
-            console.log("Invalid protocol: " + protocol);
             return PROTOCOL_LABEL_OTHER;
         }
     } else if (detail.type == TelApp.ContactDetail.Address) {
@@ -214,7 +184,7 @@ function getDetailSubType(detail) {
         }
     }
 
-    return "";
+    return "Other";
 }
 
 function updateContext(detail, context) {
@@ -236,41 +206,21 @@ function setDetailSubType(detail, newSubType) {
         } else if (newSubType == "Work") {
             detail.contexts = [ TelApp.ContactDetail.ContextWork ];
             detail.subTypes = [ TelApp.ContactPhoneNumber.Voice ];
-        } else if (newSubType == "Work Fax") {
-            detail.contexts = [ TelApp.ContactDetail.ContextWork ];
-            detail.subTypes = [ TelApp.ContactPhoneNumber.Fax ];
-        } else if (newSubType == "Home Fax") {
-            detail.contexts = [ TelApp.ContactDetail.ContextHome ];
-            detail.subTypes = [ TelApp.ContactPhoneNumber.Fax ];
         } else if (newSubType == "Mobile") {
             detail.contexts = [ ];
             detail.subTypes = [ TelApp.ContactPhoneNumber.Mobile ];
-        } else if (newSubType == "Pager") {
-            detail.contexts = [ ];
-            detail.subTypes = [ TelApp.ContactPhoneNumber.Pager ];
         } else {
             detail.contexts = [ TelApp.ContactDetail.ContextOther ];
             detail.subTypes = [ ];
         }
     } else if (detail.type == TelApp.ContactDetail.InstantMessaging) {
         var protocol = newSubType;
-        if (protocol == PROTOCOL_LABEL_AIM) {
-            detail.protocol = PROTOCOL_TYPE_AIM;
-        } else if (protocol == PROTOCOL_LABEL_MSN) {
-            detail.protocol = PROTOCOL_TYPE_MSN;
-        } else if (protocol == PROTOCOL_LABEL_YAHOO) {
+        if (protocol == PROTOCOL_LABEL_YAHOO) {
             detail.protocol = PROTOCOL_TYPE_YAHOO;
         } else if (protocol == PROTOCOL_LABEL_SKYPE) {
             detail.protocol = PROTOCOL_TYPE_SKYPE;
-        } else if (protocol == PROTOCOL_LABEL_QQ) {
-            detail.protocol = PROTOCOL_TYPE_CUSTOM;
-            updateContext(detail, "QQ");
         } else if (protocol == PROTOCOL_LABEL_GTALK) {
             detail.protocol = PROTOCOL_TYPE_GTALK;
-        } else if (protocol == PROTOCOL_LABEL_ICQ) {
-            detail.protocol = PROTOCOL_TYPE_ICQ;
-        } else if (protocol == PROTOCOL_LABEL_JABBER) {
-            detail.protocol = PROTOCOL_TYPE_JABBER;
         } else {
             console.log("Invalid protocol: " + protocol);
             detail.protocol = PROTOCOL_TYPE_OTHER;

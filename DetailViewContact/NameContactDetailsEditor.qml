@@ -34,27 +34,14 @@ FocusScope {
 
     height: fields.height + 2 * fields.anchors.topMargin
 
-    BorderImage {
-        id: background
-
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: parent.top
-        height: fields.height + 2 * fields.anchors.topMargin
-        Behavior on height { LocalWidgets.StandardAnimation {}}
-
-        source: "../assets/edit_contact_mode_box.png"
-        border {left: units.dp(1); right: units.dp(1); top: units.dp(2); bottom: 0}
-    }
-
     Column {
         id: fields
 
-        anchors.top: background.top
+        anchors.top: parent.top
         anchors.topMargin: units.gu(0.5)
-        anchors.left: background.left
+        anchors.left: parent.left
         anchors.leftMargin: units.gu(1)
-        anchors.right: background.right
+        anchors.right: parent.right
         anchors.rightMargin: units.gu(1)
         spacing: units.dp(2)
 

@@ -31,6 +31,9 @@ BaseContactDetailsDelegate {
         } else return false;
     }
 
+    editingActive: editor.activeFocus
+    onFocusRequested: editor.forceActiveFocus()
+
     Item {
         parent: readOnlyContentBox
 
@@ -76,10 +79,16 @@ BaseContactDetailsDelegate {
     TextContactDetailsEditor {
         id: editor
         parent: editableContentBox
-        anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
         text: value.text
         focus: true
+
+        onActiveFocusChanged: {
+            if (activeFocus) {
+                // request the view to scroll to make sure this entry is visible.
+                delegate.scrollRequested();
+            }
+        }
     }
 }

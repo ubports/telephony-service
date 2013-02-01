@@ -212,10 +212,12 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
         flickableDirection: Flickable.VerticalFlick
-        boundsBehavior: Flickable.StopAtBounds
         clip: true
-        contentHeight: detailsList.height +
-                       (contactDetails.editable ? newDetailChooser.height + newDetailChooser.menuHeight + units.gu(1) : 0)
+        contentHeight: detailsList.height
+
+        Behavior on contentY {
+            LocalWidgets.StandardAnimation { }
+        }
 
         Column {
             id: detailsList
@@ -223,16 +225,39 @@ LocalWidgets.TelephonyPage {
             anchors.left: parent.left
             anchors.right: parent.right
 
+            function scrollToSectionPosition(section, y, height) {
+                var position = scrollArea.contentItem.mapFromItem(section, 0, y);
+
+                // check if the item is already visible
+                var bottomY = scrollArea.contentY + scrollArea.height
+                var itemBottom = position.y + height
+                if (position.y >= scrollArea.contentY && itemBottom <= bottomY) {
+                    return;
+                }
+
+                // if it is not, try to scroll and make it visible
+                var targetY = position.y + height - scrollArea.height
+                if (targetY >= 0 && position.y) {
+                    scrollArea.contentY = targetY;
+                } else if (position.y < scrollArea.contentY) {
+                    // if it is hidden at the top, also show it
+                    scrollArea.contentY = position.y;
+                }
+            }
+
             Repeater {
                 model: (contact) ? DetailTypes.supportedTypes : []
 
                 delegate: ContactDetailsSection {
+                    id: section
                     anchors.left: (parent) ? parent.left : undefined
                     anchors.right: (parent) ? parent.right : undefined
 
                     detailTypeInfo: modelData
                     editable: contactDetails.editable
                     onDetailAdded: focus = true
+
+                    onScrollRequested: detailsList.scrollToSectionPosition(section, y, height)
 
                     model: (contact) ? contact[modelData.items] : []
                     delegate: Loader {
@@ -275,36 +300,14 @@ LocalWidgets.TelephonyPage {
                                     break;
                                 }
                             }
+                            onScrollRequested: {
+                                var position = section.mapFromItem(item, item.x, item.y)
+                                section.scrollRequested(position.y, item.height)
+                            }
                         }
                     }
                 }
             }
-        }
-
-        ContactDetailTypeChooser {
-            id: newDetailChooser
-
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: detailsList.bottom
-            anchors.leftMargin: units.dp(1)
-            anchors.rightMargin: units.dp(1)
-
-            opacity: (editable) ? 1.0 : 0.0
-            contact: (editable) ? contactDetails.contact : null
-            height: (editable) ? units.gu(4) : 0
-
-            onSelected: {
-                for (var i = 0; i < detailsList.children.length; i++) {
-                    var child = detailsList.children[i];
-                    if (child.detailTypeInfo.name == detailType.name) {
-                        child.appendNewItem();
-                        return;
-                    }
-                }
-            }
-
-            onOpenedChanged: if (opened) scrollArea.contentY = scrollArea.contentHeight
         }
     }
 
