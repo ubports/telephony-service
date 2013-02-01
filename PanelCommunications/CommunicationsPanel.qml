@@ -169,13 +169,12 @@ LocalWidgets.TelephonyPage {
         }
     }
 
-/*
     Scrollbar {
         flickableItem: listView
         align: Qt.AlignTrailing
         __interactive: false
     }
-*/
+
     LocalWidgets.KeyboardRectangle {
         id: keyboard
     }
