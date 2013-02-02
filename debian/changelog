@@ -1,3 +1,11 @@
+telephony-app (0.58.27) quantal; urgency=low
+
+  * Add basic ringtone support for calls and messages (LP:1090496).
+  * Apply the latest visual designs to the contacts editing screen (LP:1089597
+    LP:1090359  LP:1092728).
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 01 Feb 2013 23:33:40 -0500
+
 telephony-app (0.58.26) quantal; urgency=low
 
   * Adapt to work with qt5 final.
