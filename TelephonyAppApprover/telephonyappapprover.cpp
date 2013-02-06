@@ -299,6 +299,8 @@ void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp
     mChannels[claimop] = channel;
     connect(claimop, SIGNAL(finished(Tp::PendingOperation*)),
             this, SLOT(onClaimFinished(Tp::PendingOperation*)));
+
+    Ringtone::instance()->stopIncomingCallSound();
 }
 
 void TelephonyAppApprover::processChannels()
@@ -445,7 +447,7 @@ void TelephonyAppApprover::closeSnapDecision()
     if (mPendingSnapDecision != NULL) {
         notify_notification_close(mPendingSnapDecision, NULL);
         mPendingSnapDecision = NULL;
-        Ringtone::instance()->stopIncomingCallSound();
     }
+    Ringtone::instance()->stopIncomingCallSound();
 }
 
