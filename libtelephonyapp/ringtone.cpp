@@ -51,10 +51,6 @@ void Ringtone::playIncomingCallSound()
 
 void Ringtone::stopIncomingCallSound()
 {
-    if (!mCallAudioPlayer.state() == QMediaPlayer::StoppedState) {
-        return;
-    }
-
     mCallAudioPlayer.stop();
 }
 
@@ -70,10 +66,6 @@ void Ringtone::playIncomingMessageSound()
 
 void Ringtone::stopIncomingMessageSound()
 {
-    if (mMessageAudioPlayer.state() == QMediaPlayer::StoppedState) {
-        return;
-    }
-
     mMessageAudioPlayer.stop();
 }
 
