@@ -1,8 +1,8 @@
 Source: telephony-app
 Section: x11
 Priority: optional
-Maintainer: The Newyork team <newyork@lists.canonical.com>
-XSBC-Original-Maintainer: Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+XSBC-Original-Maintainer: The Newyork team <newyork@lists.canonical.com>
 Build-Depends: debhelper (>= 8.0.0),
                cmake,
                qt5-default,
@@ -20,9 +20,10 @@ Build-Depends: debhelper (>= 8.0.0),
                libgl-dev,
                libgles2-mesa-dev,
                python2.7,
-               libhybris-dev [armhf]
+               libubuntu-platform-api1-dev [armhf]
 Standards-Version: 3.9.3
-Vcs-Bzr: https://code.launchpad.net/~newyork-team/newyork/telephony-app
+Vcs-Bzr: lp:marumbi
+Vcs-Browser: https://bazaar.launchpad.net/~amanzi-team/marumbi/trunk/files
 
 Package: telephony-app
 Architecture: any
