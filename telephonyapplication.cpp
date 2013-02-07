@@ -75,7 +75,7 @@ bool TelephonyApplication::setup()
     QString contactKey;
     QStringList arguments = this->arguments();
 
-    /* Hybris gathers info on the list of running applications from the .desktop
+    /* Ubuntu APP Manager gathers info on the list of running applications from the .desktop
        file specified on the command line with the desktop_file_hint switch. 
        So app will be launched like this:
 

@@ -27,8 +27,8 @@
 #include <QDebug>
 #include <TelepathyQt/Constants>
 
-#ifdef USE_HYBRIS
-#include <hybris/ubuntu/ui/ubuntu_ui_session_service.h>
+#ifdef USE_UBUNTU_PLATFORM_API
+#include <ubuntu/ui/ubuntu_ui_session_service.h>
 #endif
 
 #define TELEPHONY_APP_CLIENT TP_QT_IFACE_CLIENT + ".TelephonyApp"
@@ -85,7 +85,7 @@ void TelephonyAppUtils::onServiceUnregistered(const QString &serviceName)
 
 void TelephonyAppUtils::startTelephonyApp()
 {
-#ifdef USE_HYBRIS
+#ifdef USE_UBUNTU_PLATFORM_API
     qDebug() << "Starting telephony-app...";
     ubuntu_ui_session_trigger_switch_to_well_known_application(TELEPHONY_APP);
 

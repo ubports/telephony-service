@@ -30,12 +30,12 @@ set(TELEPHONY_APP_DIR ${CMAKE_INSTALL_DATADIR}/telephony-app)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
-# Check if should build using hybris
-check_include_file_cxx("hybris/ubuntu/ui/ubuntu_ui_session_service.h" USE_HYBRIS)
+# Check if should build using ubuntu platform api
+check_include_file_cxx("ubuntu/ui/ubuntu_ui_session_service.h" USE_UBUNTU_PLATFORM_API)
 
-if (USE_HYBRIS)
-    add_definitions(-DUSE_HYBRIS)
-endif (USE_HYBRIS)
+if (USE_UBUNTU_PLATFORM_API)
+    add_definitions(-DUSE_UBUNTU_PLATFORM_API)
+endif (USE_UBUNTU_PLATFORM_API)
 
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 

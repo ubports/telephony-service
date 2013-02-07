@@ -24,9 +24,9 @@ link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
 add_executable(telephony-app-approver ${approver_SRCS} ${approver_HDRS})
 qt5_use_modules(telephony-app-approver Contacts Core DBus Gui Multimedia Qml)
 
-if (USE_HYBRIS)
+if (USE_UBUNTU_PLATFORM_API)
     set(UBUNTU_APP_LIB "-lubuntu_application_api")
-endif (USE_HYBRIS)
+endif (USE_UBUNTU_PLATFORM_API)
 
 target_link_libraries(telephony-app-approver
     ${TP_QT5_LIBRARIES}

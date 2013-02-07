@@ -1,3 +1,10 @@
+telephony-app (0.58.28) quantal; urgency=low
+
+  * Updating build-dependency to use the new ubuntu-platform-api package
+  * debian/control: updating entries to be compatible with Ubuntu standards
+
+ -- Ricardo Salveti de Araujo <ricardo.salveti@canonical.com>  Wed, 06 Feb 2013 22:25:46 -0200
+
 telephony-app (0.58.27) quantal; urgency=low
 
   * Add basic ringtone support for calls and messages (LP:1090496).
