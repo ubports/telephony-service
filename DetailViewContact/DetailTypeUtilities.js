@@ -190,7 +190,7 @@ function getDetailSubType(detail) {
 function updateContext(detail, context) {
     // We need a copy because QML list properties can't
     // be directly modified, they need to be reassigned a modified copy.
-    detail.contexts = context;
+    detail.contexts = [context];
 }
 
 function setDetailSubType(detail, newSubType) {

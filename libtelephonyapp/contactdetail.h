@@ -70,6 +70,8 @@ public:
      */
     QVariant contexts() const;
     void setContexts(const QVariant &contexts);
+
+    static QList<int> intListFromVariant(const QVariant &valueList);
     
 Q_SIGNALS:
     void typeChanged();

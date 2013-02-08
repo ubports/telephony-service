@@ -91,13 +91,13 @@ void ContactOnlineAccount::setServiceProvider(const QString &value)
 
 QVariant ContactOnlineAccount::subTypes() const
 {
-    return mDetail.value<QStringList>(QContactOnlineAccount::FieldSubTypes);
+    return mDetail.value<QVariant>(QContactOnlineAccount::FieldSubTypes);
 }
 
 void ContactOnlineAccount::setSubTypes(const QVariant &value)
 {
     // FIXME: maybe we should check if the list has really changed?
-    mDetail.setValue(QContactOnlineAccount::FieldSubTypes, value.toStringList());
+    mDetail.setValue(QContactOnlineAccount::FieldSubTypes, QVariant::fromValue(intListFromVariant(value)));
     Q_EMIT changed();
     Q_EMIT subTypesChanged();
 }
