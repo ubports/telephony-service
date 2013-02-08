@@ -49,6 +49,17 @@ QVariant ContactDetail::contexts() const
 
 void ContactDetail::setContexts(const QVariant &contexts)
 {
-    mDetail.setValue(QContactDetail::FieldContext, contexts);
+    mDetail.setValue(QContactDetail::FieldContext, QVariant::fromValue(intListFromVariant(contexts)));
     Q_EMIT detailChanged();
+}
+
+
+QList<int> ContactDetail::intListFromVariant(const QVariant &valueList) {
+    QList<int> result;
+    QVariantList list = valueList.toList();
+    Q_FOREACH(const QVariant &value, list) {
+        result.append(value.toInt());
+    }
+
+    return result;
 }

@@ -120,7 +120,7 @@ QVariant ContactAddress::subTypes() const
 
 void ContactAddress::setSubTypes(const QVariant &value)
 {
-    mDetail.setValue(QContactAddress::FieldSubTypes,  QVariant::fromValue(value));
+    mDetail.setValue(QContactAddress::FieldSubTypes,  QVariant::fromValue(intListFromVariant(value)));
     Q_EMIT changed();
     Q_EMIT subTypesChanged();
 }
