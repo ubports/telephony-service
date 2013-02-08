@@ -1,3 +1,10 @@
+telephony-app (0.58.29) quantal; urgency=low
+
+  * Fix saving subtypes and contexts by converting the values to QList<int> when
+    they are set.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 08 Feb 2013 20:25:42 -0200
+
 telephony-app (0.58.28) quantal; urgency=low
 
   * Updating build-dependency to use the new ubuntu-platform-api package
