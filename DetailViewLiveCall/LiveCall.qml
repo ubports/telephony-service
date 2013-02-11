@@ -295,6 +295,7 @@ LocalWidgets.TelephonyPage {
                 placeHolder: liveCall.number
                 placeHolderPixelFontSize: units.dp(43)
                 focus: true
+                input.readOnly: true
             }
 
             Image {
