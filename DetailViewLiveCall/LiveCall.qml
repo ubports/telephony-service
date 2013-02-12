@@ -34,7 +34,10 @@ LocalWidgets.TelephonyPage {
     property alias isDtmf: flipable.flipped
 
     title: call && call.dialing ? "Dialing" : "Duration " + stopWatch.elapsed
-    showChromeBar: false
+    tools: ToolbarActions {
+        active: false
+        lock: true
+    }
 
     function endCall() {
         if (call) {

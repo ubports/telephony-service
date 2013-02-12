@@ -26,17 +26,11 @@ LocalWidgets.TelephonyPage {
     id: messageList
     objectName: "communicationPanel"
     title: "Conversations"
-    chromeButtons: ListModel {
-        ListElement {
-            label: "Compose"
-            name: "compose"
-            icon: "../assets/compose.png"
-        }
-    }
-
-    onChromeButtonClicked: {
-        if (buttonName == "compose") {
-            telephony.startNewMessage()
+    tools: ToolbarActions {
+        Action {
+            iconSource: Qt.resolvedUrl("../assets/compose.png")
+            text: "Compose"
+            onTriggered: telephony.startNewMessage()
         }
     }
 
