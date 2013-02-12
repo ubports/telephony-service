@@ -2,7 +2,7 @@ Source: telephony-app
 Section: x11
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: The Newyork team <newyork@lists.canonical.com>
+XSBC-Original-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: debhelper (>= 8.0.0),
                cmake,
                qt5-default,
@@ -22,8 +22,8 @@ Build-Depends: debhelper (>= 8.0.0),
                python2.7,
                libubuntu-platform-api1-dev [armhf]
 Standards-Version: 3.9.3
-Vcs-Bzr: lp:marumbi
-Vcs-Browser: https://bazaar.launchpad.net/~amanzi-team/marumbi/trunk/files
+Vcs-Bzr: lp:ubuntu-telephony
+Vcs-Browser: https://bazaar.launchpad.net/~ubuntu-phablet-team/ubuntu-telephony/trunk/files
 
 Package: telephony-app
 Architecture: any
@@ -39,8 +39,8 @@ Depends: ${shlibs:Depends},
          qt-components-ubuntu (> 0.1+bzr101),
          dbus-x11,
          ubuntu-sounds
-Description: An application to execute telephony tasks such as calling and messaging
- An application to execute telephony tasks such as calling and messaging
+Description: Telephony application for Ubuntu
+ An application to execute telephony tasks such as calling, messaging and contact management.
 
 Package: telephony-app-dbg
 Architecture: any
@@ -53,7 +53,7 @@ Description: debugging symbols for telephony-app
  This package contains the debugging symbols for telephony-app
 
 Package: telephony-app-autopilot
-Architecture: any
+Architecture: all
 Section: debug
 Priority: extra
 Depends:
