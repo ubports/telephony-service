@@ -157,6 +157,7 @@ bool TelephonyApplication::setup()
 
     m_view = new QQuickView();
     QObject::connect(m_view, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onViewStatusChanged(QQuickView::Status)));
+    QObject::connect(m_view->engine(), SIGNAL(quit()), SLOT(quit()));
     m_view->setResizeMode(QQuickView::SizeRootObjectToView);
     m_view->setTitle("Telephony");
     m_view->rootContext()->setContextProperty("application", this);
