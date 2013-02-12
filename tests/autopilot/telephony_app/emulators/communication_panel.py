@@ -26,7 +26,7 @@ class CommunicationPanel(object):
 
     def get_new_message_button(self):
         """Returns 'New Message' list item."""
-        return self.app.select_single("ChromeButton", objectName='compose', text='Compose')
+        return self.app.select_single("Button", text='Compose')
 
     def get_communication_view(self):
         """Returns the CommunicationView."""
