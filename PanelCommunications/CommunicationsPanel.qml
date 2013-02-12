@@ -42,10 +42,6 @@ LocalWidgets.TelephonyPage {
 
     property alias searchTerm: conversationProxyModel.searchString
 
-    anchors.fill: parent
-
-
-
     ConversationProxyModel {
         id: conversationProxyModel
         conversationModel: conversationAggregatorModel
@@ -170,7 +166,7 @@ LocalWidgets.TelephonyPage {
     }
 
     Scrollbar {
-        flickableItem: listView
+        flickableItem: communicationsList
         align: Qt.AlignTrailing
         __interactive: false
     }

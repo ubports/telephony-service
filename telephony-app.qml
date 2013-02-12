@@ -24,7 +24,7 @@ import "PanelContacts"
 import "PanelCommunications"
 import "PanelDialer"
 
-Item {
+MainView {
     id: telephony
 
     width: singlePane ? units.gu(40) : units.gu(80)
@@ -190,8 +190,6 @@ Item {
         }
     }
 
-    
-
     // TODO: this indicator will be provided by the Tabs component
     Item {
         id: tabIndicator
@@ -206,23 +204,13 @@ Item {
             color: "#000000"
         }
 
-        Rectangle { 
+        Rectangle {
             color: "#f37505"
             height: parent.height
             width: parent.width/3
             x: (parent.width/3)*(tabs.selectedTabIndex)
         }
         z: 2
-    }
-
-    LocalWidgets.ChromeBar {
-        id: chromeBar
-
-        buttonsModel: telephony.view.chromeButtons ? telephony.view.chromeButtons : null
-        showChromeBar: telephony.view.showChromeBar
-        showBackButton: telephony.viewStack.depth > 1
-        onButtonClicked: telephony.view.chromeButtonClicked(buttonName)
-        onBackButtonClicked: telephony.viewStack.pop()
     }
 
     Image {
@@ -255,7 +243,7 @@ Item {
             anchors.fill: leftPane
             ItemStyle.class: singlePane ? "new-tabs" : "tabs"
 
-            property variant tabPageItems: [ callsTab.page, communicationsTab.page, contactsTab.page ]
+            property variant tabPageItems: [ callsTab.page.item, communicationsTab.page.item, contactsTab.page.item ]
 
             Tab {
                 id: callsTab
@@ -267,10 +255,9 @@ Item {
 
                 title: "Call"
                 iconSource: isCurrent ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
-                page: DialerView {
-                    id: callsTabPage
-
+                page: Loader {
                     anchors.fill: parent
+                    source: callsTab.panel
                 }
             }
 
@@ -284,10 +271,10 @@ Item {
                 property string panel: "PanelCommunications/CommunicationsPanel.qml"
                 property bool isCurrent: tabs.selectedTabIndex == 1
 
-                page: CommunicationsPanel {
-                    id: communicationsTabPage
-
+                page: Loader {
                     anchors.fill: parent
+                    source: communicationsTab.panel
+                    asynchronous: true
                 }
             }
 
@@ -301,13 +288,14 @@ Item {
 
                 title: "Contacts"
                 iconSource: isCurrent ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
-                page: ContactsPanel {
-                    id: contactsTabPage
-
+                page: Loader {
                     anchors.fill: parent
+                    source: contactsTab.panel
+                    asynchronous: true
                 }
             }
         }
+
         Rectangle {
             id: border
 
