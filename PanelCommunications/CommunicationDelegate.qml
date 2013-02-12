@@ -21,7 +21,7 @@ import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../dateUtils.js" as DateUtils
 
-ListItem.Base {
+ListItem.Standard {
     id: communicationDelegate
 
     function selectIcon()  {
@@ -101,7 +101,7 @@ ListItem.Base {
 
             Label {
                 width: parent.width
-                height: text != "" ? paintedHeight : 0
+                visible: text != ""
                 elide: Text.ElideRight
                 text: communicationDelegate.title
                 color: selected ? __selectedFontColor : __normalFontColor
@@ -111,7 +111,7 @@ ListItem.Base {
 
             Label {
                 width: parent.width
-                height: text != "" ? paintedHeight : 0
+                visible: text != ""
                 elide: Text.ElideRight
                 text: DateUtils.formatLogDate(communicationDelegate.timestamp)
                 color: selected ? __selectedFontColor : __normalFontColor
@@ -121,7 +121,7 @@ ListItem.Base {
 
             Label {
                 width: parent.width
-                height: text != "" ? paintedHeight : 0
+                visible: text != ""
                 elide: Text.ElideRight
                 text: communicationDelegate.subtitle
                 color: selected ? __selectedFontColor : __normalFontColor
@@ -132,7 +132,7 @@ ListItem.Base {
 
             Label {
                 width: parent.width
-                height: text != "" ? paintedHeight : 0
+                visible: text != ""
                 text: communicationDelegate.text
                 wrapMode: Text.WordWrap
                 color: selected ? __selectedFontColor : __normalFontColor
@@ -146,10 +146,5 @@ ListItem.Base {
                 width: childrenRect.width
             }
         }
-    }
-
-    MouseArea {
-        anchors.fill: content
-        onClicked: communicationDelegate.clicked(mouse)
     }
 }
