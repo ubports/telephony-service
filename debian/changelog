@@ -1,3 +1,16 @@
+telephony-app (0.58.30) quantal; urgency=low
+
+  [ Antti Kaijanmäki ]
+  * Integrate with HUD Toolbar Quit button.
+
+  [ Gustavo Pichorim Boiko ]
+  * Fix the alignment of the communication delegate items (LP:1123242).
+  * Adjust the app in preparation for its opensource release.
+  * Set the DTMF entry field as read-only to prevent the on-screen keyboard from
+    appearingi (LP:1118591).
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 12 Feb 2013 19:52:35 -0200
+
 telephony-app (0.58.29) quantal; urgency=low
 
   * Fix saving subtypes and contexts by converting the values to QList<int> when
