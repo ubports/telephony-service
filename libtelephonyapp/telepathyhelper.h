@@ -36,6 +36,7 @@
 class TelepathyHelper : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
 
 public:
     ~TelepathyHelper();
@@ -46,11 +47,14 @@ public:
     ChannelHandler *channelHandler() const;
     ChannelObserver *channelObserver() const;
 
+    bool connected() const;
+
 Q_SIGNALS:
     void channelHandlerCreated(ChannelHandler *handler);
     void channelObserverCreated(ChannelObserver *observer);
     void accountReady();
     void connectionChanged();
+    void connectedChanged();
 
 public Q_SLOTS:
     void initializeTelepathyClients();
@@ -61,6 +65,7 @@ protected:
     void initializeAccount();
     void ensureAccountEnabled();
     void ensureAccountConnected();
+    void watchSelfContactPresence();
     void registerClient(Tp::AbstractClient *client, QString name);
 
 private Q_SLOTS:
@@ -68,6 +73,7 @@ private Q_SLOTS:
     void onAccountEnabled(Tp::PendingOperation *op);
     void onAccountStateChanged(bool enabled);
     void onAccountConnectionChanged(const Tp::ConnectionPtr &connection);
+    void onPresenceChanged(const Tp::Presence &presence);
 
 private:
     explicit TelepathyHelper(QObject *parent = 0);
@@ -82,6 +88,7 @@ private:
     ChannelObserver *mChannelObserver;
     CallManager *mCallManager;
     bool mFirstTime;
+    bool mConnected;
 };
 
 #endif // TELEPATHYHELPER_H

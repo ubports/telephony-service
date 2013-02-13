@@ -18,6 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import TelephonyApp 0.1
 
 FocusScope {
     id: footer
@@ -96,7 +97,7 @@ FocusScope {
             anchors.bottom: entry.bottom
             width: units.gu(9)
             height: units.gu(4)
-            enabled: validRecipient && entry.text != ""
+            enabled: validRecipient && entry.text != "" && telepathyHelper.connected
             color: "#37b301"
             text: "Send"
             onClicked: {
