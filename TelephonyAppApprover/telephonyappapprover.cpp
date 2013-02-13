@@ -25,6 +25,7 @@
 #include "messagingmenu.h"
 #include "chatmanager.h"
 #include "contactmodel.h"
+#include "contactentry.h"
 #include "config.h"
 #include "ringtone.h"
 
@@ -210,12 +211,12 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     data->channel = channel;
     data->pr = pr;
 
+    // try to find the contact in the ContactModel
+    ContactEntry *contactEntry = ContactModel::instance()->contactFromPhoneNumber(contact->id());
     // if the contact is not known, the alias and the number will be the same
-    bool unknown = true;
     QString title;
-    if (contact->alias() != contact->id()) {
-        unknown = false;
-        title = contact->alias();
+    if (contactEntry) {
+        title = contactEntry->displayLabel();
     } else {
         title = "Unknown caller";
     }
