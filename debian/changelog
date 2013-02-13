@@ -1,3 +1,11 @@
+telephony-app (0.58.31) quantal; urgency=low
+
+  * Enable/disable telephony-app features based on the connection status
+    (LP:1089080).
+  * Match the contacts for incoming calls too.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 13 Feb 2013 18:49:04 -0200
+
 telephony-app (0.58.30) quantal; urgency=low
 
   [ Antti Kaijanmäki ]
