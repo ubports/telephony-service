@@ -113,7 +113,10 @@ Item {
     }
 
     function callNumber(number) {
-        callManager.startCall(number);
+        // switch to the dialer tab
+        resetView();
+        switchToTab(dialer.tab);
+        view.dialNumber = number;
     }
 
     function callVoicemail(number) {
