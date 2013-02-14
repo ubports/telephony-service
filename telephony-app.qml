@@ -25,9 +25,11 @@ import "PanelContacts"
 import "PanelCommunications"
 import "PanelDialer"
 
-Item {
+Rectangle {
     id: telephony
 
+    // TODO: remove this once MainView is in place
+    color: "#ededf0"
     width: singlePane ? units.gu(40) : units.gu(80)
     height: units.gu(71)
 
@@ -227,14 +229,6 @@ Item {
         showBackButton: telephony.viewStack.depth > 1
         onButtonClicked: telephony.view.chromeButtonClicked(buttonName)
         onBackButtonClicked: telephony.viewStack.pop()
-    }
-
-    Image {
-        id: background
-
-        anchors.fill: parent
-        source: "assets/noise_tile.png"
-        fillMode: Image.Tile
     }
 
     PageStack {
