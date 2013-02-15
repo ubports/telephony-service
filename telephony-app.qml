@@ -495,6 +495,15 @@ Rectangle {
         applicationIdentifier: "telephony-app" // this must match the .desktop file!
         HUD.Context {
             toolbar.quitAction.onTriggered: Qt.quit()
+
+            HUD.Action {
+                label: "Compose"
+                keywords: "New Message"
+            }
+            HUD.Action {
+                label: "Add"
+                keywords: "New Contact"
+            }
         }
     }
 }
