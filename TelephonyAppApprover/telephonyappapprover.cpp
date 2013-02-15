@@ -282,6 +282,8 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
 void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
                                       Tp::PendingReady *pr)
 {
+    closeSnapDecision();
+
     // launch the telephony-app before dispatching the channel
     TelephonyAppUtils::instance()->startTelephonyApp();
 
@@ -290,7 +292,6 @@ void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp
     if (pr) {
         mChannels.remove(pr);
     }
-    closeSnapDecision();
 }
 
 void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
@@ -449,6 +450,7 @@ void TelephonyAppApprover::closeSnapDecision()
         notify_notification_close(mPendingSnapDecision, NULL);
         mPendingSnapDecision = NULL;
     }
+
     Ringtone::instance()->stopIncomingCallSound();
 }
 
