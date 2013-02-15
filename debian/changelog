@@ -1,3 +1,10 @@
+telephony-app (0.58.33) quantal; urgency=low
+
+  * Created "--help" argument to display the usage options.
+  * Now the application accepts any argument.
+
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Fri, 15 Feb 2013 16:27:29 -0300
+
 telephony-app (0.58.32) quantal; urgency=low
 
   * Stop the ringtone before starting the telephony app.
