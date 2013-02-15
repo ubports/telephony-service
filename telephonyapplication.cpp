@@ -47,6 +47,7 @@ static void printUsage(const QStringList& arguments)
              << "[--single-panel]"
              << "[--fullscreen]"
              << "[--test-contacts]"
+             << "[--help]"
              << "[-testability]";
 }
 
@@ -74,6 +75,11 @@ bool TelephonyApplication::setup()
 
     QString contactKey;
     QStringList arguments = this->arguments();
+
+    if (arguments.contains("--help")) {
+        printUsage(arguments);
+        return false;
+    }
 
     /* Ubuntu APP Manager gathers info on the list of running applications from the .desktop
        file specified on the command line with the desktop_file_hint switch. 
@@ -128,15 +134,9 @@ bool TelephonyApplication::setup()
         }
     }
 
-    if (arguments.size() > 2) {
-        printUsage(arguments);
-        return false;
-    } else if (arguments.size() == 2) {
+    if (arguments.size() == 2) {
         QUrl uri(arguments.at(1));
-        if (!validSchemes.contains(uri.scheme())) {
-            printUsage(arguments);
-            return false;
-        } else {
+        if (validSchemes.contains(uri.scheme())) {
             m_arg = arguments.at(1);
         }
     }
