@@ -144,6 +144,11 @@ LocalWidgets.TelephonyPage {
                     image: Image {
                         source: (contact && contact.avatar != "") ? contact.avatar : "../assets/avatar-default.png"
                         fillMode: Image.PreserveAspectCrop
+                        // since we don't know if the image is portrait or landscape without actually reading it,
+                        // set the sourceSize to be the size we need plus 30% to allow cropping.
+                        sourceSize.width: width * 1.3
+                        sourceSize.height: height * 1.3
+                        asyncronous: true
                     }
                 }
 
