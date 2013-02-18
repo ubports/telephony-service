@@ -42,6 +42,8 @@ BaseMessageHeader {
         image: Image {
             source: contact && contact.avatar != "" ? contact.avatar : "../assets/avatar-default.png"
             fillMode: Image.PreserveAspectCrop
+            sourceSize.width: width * 1.3
+            sourceSize.height: height * 1.3
             asynchronous: true
         }
     }
