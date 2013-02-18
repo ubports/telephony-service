@@ -74,6 +74,7 @@ LocalWidgets.TelephonyPage {
         clip: true
         model: contactProxyModel
         cacheBuffer: height * 2
+        currentIndex: -1
 
         header: Column {
             anchors.left: parent.left
