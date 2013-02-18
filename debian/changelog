@@ -1,3 +1,18 @@
+telephony-app (0.58.34) quantal; urgency=low
+
+  [ Antti Kaijanmäki ]
+  * Add HUD dummy Actions (LP:1125656).
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure contacts are matched also for SMS messages (LP:1093115).
+  * Crop the avatars so that they fill the whole UbuntuShape area. Also limit
+    the size of images in memory (some of the original images are quite big now)
+    (LP:1126634).
+  * Make sure the search entries don't lose focus when the proxy model changes
+    (which causes the ListView's focus scopes to be re-evaluated) (LP:1127776).
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 18 Feb 2013 19:48:29 -0300
+
 telephony-app (0.58.33) quantal; urgency=low
 
   * Created "--help" argument to display the usage options.
