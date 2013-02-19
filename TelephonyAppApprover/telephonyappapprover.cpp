@@ -236,10 +236,12 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         body = "Caller number is not available";
     }
 
-    if (!icon.isEmpty() && !contact->avatarData().fileName.isEmpty()) {
-        icon = contact->avatarData().fileName;
-    } else {
-        icon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
+    if (icon.isEmpty()) {
+        if (!contact->avatarData().fileName.isEmpty()) {
+            icon = contact->avatarData().fileName;
+        } else {
+            icon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
+        }
     }
 
     notification = notify_notification_new (title.toStdString().c_str(),
