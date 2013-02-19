@@ -1,3 +1,9 @@
+telephony-app (0.58.35) quantal; urgency=low
+
+  * fix breakage of LiveCall view by fixing typo 
+
+ -- Bill Filler <bill.filler@canonical.com>  Tue, 19 Feb 2013 01:28:45 -0500
+
 telephony-app (0.58.34) quantal; urgency=low
 
   [ Antti Kaijanmäki ]
