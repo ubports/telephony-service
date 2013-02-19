@@ -148,7 +148,7 @@ LocalWidgets.TelephonyPage {
                         // set the sourceSize to be the size we need plus 30% to allow cropping.
                         sourceSize.width: width * 1.3
                         sourceSize.height: height * 1.3
-                        asyncronous: true
+                        asynchronous: true
                     }
                 }
 
