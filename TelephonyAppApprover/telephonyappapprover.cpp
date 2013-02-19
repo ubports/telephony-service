@@ -215,8 +215,10 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     ContactEntry *contactEntry = ContactModel::instance()->contactFromPhoneNumber(contact->id());
     // if the contact is not known, the alias and the number will be the same
     QString title;
+    QString icon;
     if (contactEntry) {
         title = contactEntry->displayLabel();
+        icon = contactEntry->avatar().toLocalFile();
     } else {
         title = "Unknown caller";
     }
@@ -234,8 +236,7 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         body = "Caller number is not available";
     }
 
-    QString icon;
-    if (!contact->avatarData().fileName.isEmpty()) {
+    if (!icon.isEmpty() && !contact->avatarData().fileName.isEmpty()) {
         icon = contact->avatarData().fileName;
     } else {
         icon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
