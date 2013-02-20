@@ -219,27 +219,6 @@ MainView {
         z: 2
     }
 
-<<<<<<< TREE
-    Image {
-        id: background
-=======
-    LocalWidgets.ChromeBar {
-        id: chromeBar
->>>>>>> MERGE-SOURCE
-
-<<<<<<< TREE
-        anchors.fill: parent
-        source: "assets/noise_tile.png"
-        fillMode: Image.Tile
-=======
-        buttonsModel: telephony.view.chromeButtons ? telephony.view.chromeButtons : null
-        showChromeBar: telephony.view.showChromeBar
-        showBackButton: telephony.viewStack.depth > 1
-        onButtonClicked: telephony.view.chromeButtonClicked(buttonName)
-        onBackButtonClicked: telephony.viewStack.pop()
->>>>>>> MERGE-SOURCE
-    }
-
     PageStack {
         id: mainStack
         anchors.fill: parent
