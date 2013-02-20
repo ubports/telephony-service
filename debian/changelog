@@ -1,3 +1,9 @@
+telephony-app (0.58.36) quantal; urgency=low
+
+  * Set the avatar from the matched contact for incoming calls (LP:1093115).
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 19 Feb 2013 18:15:09 -0300
+
 telephony-app (0.58.35) quantal; urgency=low
 
   * fix breakage of LiveCall view by fixing typo 
