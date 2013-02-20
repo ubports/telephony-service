@@ -1,3 +1,66 @@
+telephony-app (0.58.36) quantal; urgency=low
+
+  * Set the avatar from the matched contact for incoming calls (LP:1093115).
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 19 Feb 2013 18:15:09 -0300
+
+telephony-app (0.58.35) quantal; urgency=low
+
+  * fix breakage of LiveCall view by fixing typo 
+
+ -- Bill Filler <bill.filler@canonical.com>  Tue, 19 Feb 2013 01:28:45 -0500
+
+telephony-app (0.58.34) quantal; urgency=low
+
+  [ Antti Kaijanmäki ]
+  * Add HUD dummy Actions (LP:1125656).
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure contacts are matched also for SMS messages (LP:1093115).
+  * Crop the avatars so that they fill the whole UbuntuShape area. Also limit
+    the size of images in memory (some of the original images are quite big now)
+    (LP:1126634).
+  * Make sure the search entries don't lose focus when the proxy model changes
+    (which causes the ListView's focus scopes to be re-evaluated) (LP:1127776).
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 18 Feb 2013 19:48:29 -0300
+
+telephony-app (0.58.33) quantal; urgency=low
+
+  * Created "--help" argument to display the usage options.
+  * Now the application accepts any argument.
+
+ -- Renato Araujo Oliveira Filho <renato@canonical.com>  Fri, 15 Feb 2013 16:27:29 -0300
+
+telephony-app (0.58.32) quantal; urgency=low
+
+  * Stop the ringtone before starting the telephony app.
+  * Update some assets of the dialer view and remove the noisy background from
+    the application.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 14 Feb 2013 22:33:50 -0200
+
+telephony-app (0.58.31) quantal; urgency=low
+
+  * Enable/disable telephony-app features based on the connection status
+    (LP:1089080).
+  * Match the contacts for incoming calls too.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 13 Feb 2013 18:49:04 -0200
+
+telephony-app (0.58.30) quantal; urgency=low
+
+  [ Antti Kaijanmäki ]
+  * Integrate with HUD Toolbar Quit button.
+
+  [ Gustavo Pichorim Boiko ]
+  * Fix the alignment of the communication delegate items (LP:1123242).
+  * Adjust the app in preparation for its opensource release.
+  * Set the DTMF entry field as read-only to prevent the on-screen keyboard from
+    appearingi (LP:1118591).
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 12 Feb 2013 19:52:35 -0200
+
 telephony-app (0.58.29) quantal; urgency=low
 
   * Fix saving subtypes and contexts by converting the values to QList<int> when

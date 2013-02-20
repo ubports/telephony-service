@@ -33,15 +33,18 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mChannelHandler(0),
       mChannelObserver(0),
-      mFirstTime(true)
+      mFirstTime(true),
+      mConnected(false)
 {
     mCallManager = new CallManager(this);
 
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
-                     << Tp::Contact::FeatureCapabilities;
+                     << Tp::Contact::FeatureCapabilities
+                     << Tp::Contact::FeatureSimplePresence;
     mConnectionFeatures << Tp::Connection::FeatureCore
-                        << Tp::Connection::FeatureSelfContact;
+                        << Tp::Connection::FeatureSelfContact
+                        << Tp::Connection::FeatureSimplePresence;
 
     mAccountManager = Tp::AccountManager::create(
             Tp::AccountFactory::create(QDBusConnection::sessionBus(), mAccountFeatures),
@@ -82,6 +85,11 @@ ChannelHandler *TelepathyHelper::channelHandler() const
 ChannelObserver *TelepathyHelper::channelObserver() const
 {
     return mChannelObserver;
+}
+
+bool TelepathyHelper::connected() const
+{
+    return mConnected;
 }
 
 void TelepathyHelper::initializeTelepathyClients()
@@ -160,12 +168,26 @@ void TelepathyHelper::ensureAccountConnected()
     if (!mAccount->connection() || mAccount->connectionStatus() != Tp::ConnectionStatusConnected) {
         Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", "online");
         mAccount->setRequestedPresence(presence);
+    } else {
+        watchSelfContactPresence();
     }
 
     if (mFirstTime) {
         Q_EMIT accountReady();
         mFirstTime = false;
     }
+}
+
+void TelepathyHelper::watchSelfContactPresence()
+{
+    if (mAccount.isNull() || mAccount->connection().isNull()) {
+        return;
+    }
+
+    connect(mAccount->connection()->selfContact().data(),
+            SIGNAL(presenceChanged(Tp::Presence)),
+            SLOT(onPresenceChanged(Tp::Presence)));
+    onPresenceChanged(mAccount->connection()->selfContact()->presence());
 }
 
 void TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
@@ -239,6 +261,14 @@ void TelepathyHelper::onAccountConnectionChanged(const Tp::ConnectionPtr &connec
 {
     if (connection.isNull()) {
         ensureAccountConnected();
+    } else {
+        watchSelfContactPresence();
     }
     Q_EMIT connectionChanged();
+}
+
+void TelepathyHelper::onPresenceChanged(const Tp::Presence &presence)
+{
+    mConnected = (presence.type() == Tp::ConnectionPresenceTypeAvailable);
+    Q_EMIT connectedChanged();
 }

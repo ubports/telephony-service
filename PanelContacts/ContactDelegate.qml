@@ -37,6 +37,11 @@ ListItem.Standard {
             anchors.fill: parent
             source: model.decoration != "" ? Qt.resolvedUrl(model.decoration) : "../assets/avatar-default.png"
             asynchronous: true
+            fillMode: Image.PreserveAspectCrop
+            // since we don't know if the image is portrait or landscape without actually reading it,
+            // set the sourceSize to be the size we need plus 30% to allow cropping.
+            sourceSize.width: width * 1.3
+            sourceSize.height: height * 1.3
         }
     }
 

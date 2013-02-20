@@ -18,6 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import TelephonyApp 0.1
 import "../Widgets" as LocalWidgets
 
 LocalWidgets.TelephonyPage {
@@ -91,8 +92,8 @@ LocalWidgets.TelephonyPage {
                 anchors.top: divider3.bottom
                 anchors.topMargin: units.gu(2)
                 anchors.horizontalCenter: parent.horizontalCenter
-                onClicked: telephony.callNumber(keypadEntry.value)
-                enabled: dialNumber != ""
+                onClicked: callManager.startCall(keypadEntry.value)
+                enabled: dialNumber != "" && telepathyHelper.connected
             }
 
             CustomButton {

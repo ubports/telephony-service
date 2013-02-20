@@ -28,12 +28,6 @@ Page {
 
         anchors.fill: parent
 
-        Image {
-            anchors.fill: parent
-            source: "../assets/noise_tile.png"
-            fillMode: Image.Tile
-        }
-
         Rectangle {
             anchors.fill: parent
             color: "black"

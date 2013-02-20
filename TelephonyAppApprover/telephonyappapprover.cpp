@@ -25,6 +25,7 @@
 #include "messagingmenu.h"
 #include "chatmanager.h"
 #include "contactmodel.h"
+#include "contactentry.h"
 #include "config.h"
 #include "ringtone.h"
 
@@ -210,12 +211,14 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     data->channel = channel;
     data->pr = pr;
 
+    // try to find the contact in the ContactModel
+    ContactEntry *contactEntry = ContactModel::instance()->contactFromPhoneNumber(contact->id());
     // if the contact is not known, the alias and the number will be the same
-    bool unknown = true;
     QString title;
-    if (contact->alias() != contact->id()) {
-        unknown = false;
-        title = contact->alias();
+    QString icon;
+    if (contactEntry) {
+        title = contactEntry->displayLabel();
+        icon = contactEntry->avatar().toLocalFile();
     } else {
         title = "Unknown caller";
     }
@@ -233,11 +236,12 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         body = "Caller number is not available";
     }
 
-    QString icon;
-    if (!contact->avatarData().fileName.isEmpty()) {
-        icon = contact->avatarData().fileName;
-    } else {
-        icon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
+    if (icon.isEmpty()) {
+        if (!contact->avatarData().fileName.isEmpty()) {
+            icon = contact->avatarData().fileName;
+        } else {
+            icon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
+        }
     }
 
     notification = notify_notification_new (title.toStdString().c_str(),
@@ -281,6 +285,8 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
 void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
                                       Tp::PendingReady *pr)
 {
+    closeSnapDecision();
+
     // launch the telephony-app before dispatching the channel
     TelephonyAppUtils::instance()->startTelephonyApp();
 
@@ -289,7 +295,6 @@ void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp
     if (pr) {
         mChannels.remove(pr);
     }
-    closeSnapDecision();
 }
 
 void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
@@ -448,6 +453,7 @@ void TelephonyAppApprover::closeSnapDecision()
         notify_notification_close(mPendingSnapDecision, NULL);
         mPendingSnapDecision = NULL;
     }
+
     Ringtone::instance()->stopIncomingCallSound();
 }
 

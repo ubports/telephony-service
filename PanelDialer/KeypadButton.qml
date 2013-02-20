@@ -55,6 +55,8 @@ Button {
         height: paintedHeight
         verticalAlignment: Text.AlignTop
         opacity: 0.9
+        style: Text.Raised
+        styleColor: "#ffffff"
     }
 
     Label {
@@ -66,6 +68,8 @@ Button {
         horizontalAlignment: Text.AlignHCenter
         fontSize: "x-small"
         color: "#a3a3a3"
+        style: Text.Raised
+        styleColor: "#ffffff"
     }
 
     Image {

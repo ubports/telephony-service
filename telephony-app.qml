@@ -19,6 +19,7 @@
 import QtQuick 2.0
 import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
+import Ubuntu.HUD 0.1 as HUD
 import TelephonyApp 0.1
 import "PanelContacts"
 import "PanelCommunications"
@@ -114,7 +115,10 @@ MainView {
     }
 
     function callNumber(number) {
-        callManager.startCall(number);
+        // switch to the dialer tab
+        resetView();
+        switchToTab(dialer.tab);
+        view.dialNumber = number;
     }
 
     function callVoicemail(number) {
@@ -215,12 +219,25 @@ MainView {
         z: 2
     }
 
+<<<<<<< TREE
     Image {
         id: background
+=======
+    LocalWidgets.ChromeBar {
+        id: chromeBar
+>>>>>>> MERGE-SOURCE
 
+<<<<<<< TREE
         anchors.fill: parent
         source: "assets/noise_tile.png"
         fillMode: Image.Tile
+=======
+        buttonsModel: telephony.view.chromeButtons ? telephony.view.chromeButtons : null
+        showChromeBar: telephony.view.showChromeBar
+        showBackButton: telephony.viewStack.depth > 1
+        onButtonClicked: telephony.view.chromeButtonClicked(buttonName)
+        onBackButtonClicked: telephony.viewStack.pop()
+>>>>>>> MERGE-SOURCE
     }
 
     PageStack {
@@ -481,5 +498,21 @@ MainView {
         anchors.top: parent.top
         anchors.left: parent.left
         opacity: 0.0
+    }
+
+    HUD.HUD {
+        applicationIdentifier: "telephony-app" // this must match the .desktop file!
+        HUD.Context {
+            toolbar.quitAction.onTriggered: Qt.quit()
+
+            HUD.Action {
+                label: "Compose"
+                keywords: "New Message"
+            }
+            HUD.Action {
+                label: "Add"
+                keywords: "New Contact"
+            }
+        }
     }
 }
