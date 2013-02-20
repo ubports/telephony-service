@@ -233,7 +233,7 @@ MainView {
     Item {
         id: leftPane
 
-        property ToolbarActions tools: tabs.tabPageItems[tabs.selectedTabIndex].tools
+        property ToolbarActions tools: tabs.selectedTab.page.tools
 
         anchors.left: parent.left
         anchors.top: parent.top
@@ -244,10 +244,10 @@ MainView {
 
         Tabs {
             id: tabs
-            anchors.fill: leftPane
+            anchors.fill: parent
             ItemStyle.class: singlePane ? "new-tabs" : "tabs"
 
-            property variant tabPageItems: [ callsTab.page.item, communicationsTab.page.item, contactsTab.page.item ]
+            property variant tabPageItems: [ callsTab.page, communicationsTab.page, contactsTab.page ]
 
             Tab {
                 id: callsTab
@@ -259,9 +259,9 @@ MainView {
 
                 title: "Call"
                 iconSource: isCurrent ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
-                page: Loader {
+                page: DialerView {
+                    id: callsTabPage
                     anchors.fill: parent
-                    source: callsTab.panel
                 }
             }
 
@@ -275,10 +275,9 @@ MainView {
                 property string panel: "PanelCommunications/CommunicationsPanel.qml"
                 property bool isCurrent: tabs.selectedTabIndex == 1
 
-                page: Loader {
+                page: CommunicationsPanel {
+                    id: communicationsTabPage
                     anchors.fill: parent
-                    source: communicationsTab.panel
-                    asynchronous: true
                 }
             }
 
@@ -292,10 +291,9 @@ MainView {
 
                 title: "Contacts"
                 iconSource: isCurrent ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
-                page: Loader {
+                page: ContactsPanel {
+                    id: contactsTabPage
                     anchors.fill: parent
-                    source: contactsTab.panel
-                    asynchronous: true
                 }
             }
         }
