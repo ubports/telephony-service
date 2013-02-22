@@ -7,14 +7,15 @@
 # under the terms of the GNU General Public License version 3, as published
 # by the Free Software Foundation.
 
+from telephony_app.emulators.utils import Utils
 
-class ContactsPanel(object):
+class ContactsPanel(Utils):
     """An emulator class that makes it easy to interact with the contacts
     panel.
 
     """
     def __init__(self, app):
-        self.app = app
+        Utils.__init__(self, app)
 
     def get_contacts_searchbox(self):
         """Returns the main searchbox attached to the contacts panel."""
@@ -32,7 +33,7 @@ class ContactsPanel(object):
 
     def get_add_contact_button(self):
         """Returns the 'Add a new contact' list item."""
-        return self.app.select_single("ChromeButton", objectName='add', text='Add')
+        return self.get_tool_button(0)
 
     def get_contact_list(self):
         """Returns the contact list item."""
@@ -52,8 +53,8 @@ class ContactsPanel(object):
 
     def get_contact_edit_button(self):
         """Returns the contact edit button."""
-        return self.app.select_single("ChromeButton", objectName='edit')
+        return self.get_tool_button(0)
 
     def get_contact_save_button(self):
         """Returns the contact save button."""
-        return self.app.select_single("ChromeButton", objectName='save')
+        return self.get_tool_button(3)

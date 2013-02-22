@@ -25,13 +25,13 @@ import "PanelContacts"
 import "PanelCommunications"
 import "PanelDialer"
 
-Rectangle {
+MainView {
     id: telephony
 
-    // TODO: remove this once MainView is in place
-    color: "#ededf0"
     width: singlePane ? units.gu(40) : units.gu(80)
     height: units.gu(71)
+
+    tools: viewStack.tools
 
     state: appLayout
     property bool singlePane: state == "singlePane"
@@ -196,8 +196,6 @@ Rectangle {
         }
     }
 
-    
-
     // TODO: this indicator will be provided by the Tabs component
     Item {
         id: tabIndicator
@@ -212,23 +210,13 @@ Rectangle {
             color: "#000000"
         }
 
-        Rectangle { 
+        Rectangle {
             color: "#f37505"
             height: parent.height
             width: parent.width/3
             x: (parent.width/3)*(tabs.selectedTabIndex)
         }
         z: 2
-    }
-
-    LocalWidgets.ChromeBar {
-        id: chromeBar
-
-        buttonsModel: telephony.view.chromeButtons ? telephony.view.chromeButtons : null
-        showChromeBar: telephony.view.showChromeBar
-        showBackButton: telephony.viewStack.depth > 1
-        onButtonClicked: telephony.view.chromeButtonClicked(buttonName)
-        onBackButtonClicked: telephony.viewStack.pop()
     }
 
     PageStack {
@@ -241,6 +229,8 @@ Rectangle {
     Item {
         id: leftPane
 
+        property ToolbarActions tools: tabs.selectedTab.page.tools
+
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -250,7 +240,7 @@ Rectangle {
 
         Tabs {
             id: tabs
-            anchors.fill: leftPane
+            anchors.fill: parent
             ItemStyle.class: singlePane ? "new-tabs" : "tabs"
 
             property variant tabPageItems: [ callsTab.page, communicationsTab.page, contactsTab.page ]
@@ -267,7 +257,6 @@ Rectangle {
                 iconSource: isCurrent ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
                 page: DialerView {
                     id: callsTabPage
-
                     anchors.fill: parent
                 }
             }
@@ -284,7 +273,6 @@ Rectangle {
 
                 page: CommunicationsPanel {
                     id: communicationsTabPage
-
                     anchors.fill: parent
                 }
             }
@@ -301,11 +289,11 @@ Rectangle {
                 iconSource: isCurrent ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
                 page: ContactsPanel {
                     id: contactsTabPage
-
                     anchors.fill: parent
                 }
             }
         }
+
         Rectangle {
             id: border
 

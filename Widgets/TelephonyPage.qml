@@ -23,20 +23,4 @@ import Ubuntu.Components 0.1
 Page {
     property string source
     property int previousTab: -1
-
-    property ListModel chromeButtons
-    property bool showChromeBar: true
-
-    signal chromeButtonClicked(var buttonName)
 }
-
-/*
-The chromeButtons property expects a model formatted like this:
-
-ListModel {
-    ListElement {
-        label: "A button label"
-        name: "buttonName"
-    }
-}
-*/

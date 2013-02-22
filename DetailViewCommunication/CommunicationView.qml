@@ -39,8 +39,6 @@ LocalWidgets.TelephonyPage {
 
     title: "Communication"
 
-    chromeButtons: newMessage ? null : buttons
-
     ContactWatcher {
         id: contactWatcher
     }

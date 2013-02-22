@@ -27,17 +27,11 @@ LocalWidgets.TelephonyPage {
     id: contactsPanel
     title: "Contacts"
 
-    chromeButtons: ListModel {
-        ListElement {
-            label: "Add"
-            name: "add"
-            icon: "../assets/new-contact.png"
-        }
-    }
-
-    onChromeButtonClicked: {
-        if (buttonName == "add") {
-            telephony.createNewContact()
+    tools: ToolbarActions {
+        Action {
+            text: "Add"
+            iconSource: Qt.resolvedUrl("../assets/new-contact.png")
+            onTriggered: telephony.createNewContact()
         }
     }
 

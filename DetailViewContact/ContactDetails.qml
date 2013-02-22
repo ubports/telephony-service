@@ -42,87 +42,49 @@ LocalWidgets.TelephonyPage {
     width: units.gu(50)
     height: units.gu(75)
 
-    ListModel {
-        id: editButtons
-        ListElement {
-            label: "Delete"
-            name: "delete"
-            icon: "../assets/delete.png"
+    tools: ToolbarActions {
+
+        Action {
+            text: "Edit"
+            iconSource: Qt.resolvedUrl("../assets/edit.png")
+            visible: !editable
+            enabled: visible
+            onTriggered: editable = true
         }
 
-        ListElement {
-            label: "Cancel"
-            name: "cancel"
-            icon: "../assets/cancel.png"
-        }
-        ListElement {
-            label: "Save"
-            name: "save"
-            icon: "../assets/save.png"
-        }
-    }
-
-    ListModel {
-        id: newContactButtons
-
-        ListElement {
-            label: "Cancel"
-            name: "cancel"
-            icon: "../assets/cancel.png"
-        }
-        ListElement {
-            label: "Save"
-            name: "save"
-            icon: "../assets/save.png"
-        }
-    }
-
-    ListModel {
-        id: standardButtons
-
-        ListElement {
-            label: "Edit"
-            name: "edit"
-            icon: "../assets/edit.png"
-        }
-    }
-
-    chromeButtons: bottomButtons()
-
-    onChromeButtonClicked: {
-        switch (buttonName) {
-        case "delete":
-            // FIXME: show a dialog asking for confirmation
-            contactModel.removeContact(contact);
-            telephony.resetView();
-            break;
-        case "cancel":
-            if (added) {
+        Action {
+            text: "Delete"
+            iconSource: Qt.resolvedUrl("../assets/delete.png")
+            visible: editable && !added
+            enabled: visible
+            onTriggered: {
+                // FIXME: show a dialog asking for confirmation
+                contactModel.removeContact(contact);
                 telephony.resetView();
-            } else {
-                contact.revertChanges();
-                editable = false;
             }
-            break;
-        case "save":
-            contactDetails.save();
-            break;
-        case "edit":
-            editable = true;
-            break;
-
         }
-    }
 
-    function bottomButtons() {
-        if (editable) {
-            if (added) {
-                return newContactButtons;
-            } else {
-                return editButtons;
+        Action {
+            text: "Cancel"
+            iconSource: Qt.resolvedUrl("../assets/cancel.png")
+            visible: editable
+            enabled: visible
+            onTriggered: {
+                if (added) {
+                    telephony.resetView();
+                } else {
+                    contact.revertChanges();
+                    editable = false;
+                }
             }
-        } else {
-            return standardButtons;
+        }
+
+        Action {
+            text: "Save"
+            iconSource: Qt.resolvedUrl("../assets/save.png")
+            visible: editable
+            enabled: visible
+            onTriggered: contactDetails.save();
         }
     }
 
