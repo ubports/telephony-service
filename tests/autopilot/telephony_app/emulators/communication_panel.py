@@ -7,14 +7,15 @@
 # under the terms of the GNU General Public License version 3, as published
 # by the Free Software Foundation.
 
+from telephony_app.emulators.utils import Utils
 
-class CommunicationPanel(object):
+class CommunicationPanel(Utils):
     """An emulator class that makes it easy to interact with the communication
     panel.
 
     """
     def __init__(self, app):
-        self.app = app
+        Utils.__init__(self, app)
 
     def get_communication_searchbox(self):
         """Returns the main searchbox attached to the communication panel."""
@@ -26,7 +27,8 @@ class CommunicationPanel(object):
 
     def get_new_message_button(self):
         """Returns 'New Message' list item."""
-        return self.app.select_single("Button", text='Compose')
+        tool_bar = self.get_tool_bar()
+        return self.get_tool_button(0)
 
     def get_communication_view(self):
         """Returns the CommunicationView."""

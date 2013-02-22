@@ -7,12 +7,13 @@
 # under the terms of the GNU General Public License version 3, as published
 # by the Free Software Foundation.
 
+from telephony_app.emulators.utils import Utils
 
-class CallPanel(object):
+class CallPanel(Utils):
     """An emulator class that makes it easy to interact with the call panel."""
 
     def __init__(self, app):
-        self.app = app
+        Utils.__init__(self, app)
 
     def get_keypad_entry(self):
         """Returns keypad's input box."""
