@@ -23,7 +23,6 @@ import "../Widgets" as LocalWidgets
 
 LocalWidgets.TelephonyPage {
     title: "Call"
-    showChromeBar: false
     anchors.fill: parent
     property string voicemailNumber: callManager.voicemailNumber
     property alias dialNumber: keypadEntry.value
@@ -31,6 +30,11 @@ LocalWidgets.TelephonyPage {
 
     function isVoicemailActive() {
         return telephony.isVoicemailActive();
+    }
+
+    tools: ToolbarActions {
+        active: false
+        lock: true
     }
 
     FocusScope {

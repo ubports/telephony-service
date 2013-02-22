@@ -43,16 +43,16 @@ class TelephonyAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
         main_view = self.get_main_view()
         tabs = self.get_tabs()
         currentTab = tabs.selectedTabIndex
-        start_x = main_view.geometry[0] + main_view.geometry[2] * 0.85
-        stop_x = main_view.geometry[0] + main_view.geometry[2] * 0.15
-        y_line = main_view.geometry[1] + main_view.geometry[3] * 0.5
+        start_x = main_view.x + main_view.width * 0.85
+        stop_x = main_view.x + main_view.width * 0.15
+        y_line = main_view.y + main_view.height * 0.5
         self.pointing_device.drag(start_x, y_line, stop_x, y_line)
         self.assertThat(tabs.selectedTabIndex, Eventually(Equals(currentTab + 1)))
 
     def reveal_toolbar(self):
         main_view = self.get_main_view()
-        x_line = main_view.geometry[0] + main_view.geometry[2] * 0.5
-        start_y = main_view.geometry[1] + main_view.geometry[3] - 1
+        x_line = main_view.x + main_view.width * 0.5
+        start_y = main_view.y + main_view.height - 1
         stop_y = start_y - 200
         self.pointing_device.drag(x_line, start_y, x_line, stop_y)
 
