@@ -100,6 +100,7 @@ FocusScope {
             enabled: validRecipient && entry.text != "" && telepathyHelper.connected
             color: "#37b301"
             text: "Send"
+            objectName: "sendMessageButton"
             onClicked: {
                 if(!validRecipient) {
                     return;

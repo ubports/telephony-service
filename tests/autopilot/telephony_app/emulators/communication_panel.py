@@ -42,7 +42,7 @@ class CommunicationPanel(object):
 
     def get_message_send_button(self):
         """Returns the send button."""
-        return self.app.select_single("Button", text='Send')
+        return self.app.select_single("Button", objectName='sendMessageButton')
 
     def get_new_message_text_box(self):
         """Returns main message box for sending an sms."""
