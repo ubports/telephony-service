@@ -36,31 +36,6 @@ class TestCallPanel(TelephonyAppTestCase):
         
         self.assertThat(keypad_entry.value, Eventually(Equals("123456789*0#")))
 
-    def test_call_button_disabling(self):
-        """The call button needs to be disabled when there is no number in the input"""
-        keypad_entry = self.call_panel.get_keypad_entry()
-        keypad_keys = self.call_panel.get_keypad_keys()
-        dial_button = self.call_panel.get_dial_button()
-        self.assertThat(keypad_entry.value, Eventually(Equals("")))
-        self.assertThat(dial_button.enabled, Eventually(Equals(False)))
-
-        self.pointing_device.move_to_object(keypad_keys[0])
-        self.pointing_device.click()
-        self.pointing_device.move_to_object(keypad_keys[1])
-        self.pointing_device.click()
-        self.pointing_device.move_to_object(keypad_keys[2])
-        self.pointing_device.click()
-
-        self.assertThat(keypad_entry.value, Eventually(Equals("123")))
-        self.assertThat(dial_button.enabled, Eventually(Equals(True)))
-
-        erase_button = self.call_panel.get_erase_button()
-        self.pointing_device.move_to_object(erase_button)
-        self.pointing_device.click()
-        self.pointing_device.click()
-        self.pointing_device.click()
-        self.assertThat(dial_button.enabled, Eventually(Equals(False)))
-
     def test_switch_to_contacts(self):
         """Switching to the contact list using the dialers contacts button"""
         dialer_page = self.call_panel.get_dialer_page()
