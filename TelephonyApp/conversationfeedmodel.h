@@ -74,8 +74,19 @@ public:
     void fillContactInfo(ConversationFeedItem *entry, ContactEntry *contact);
     void clearContactInfo(ConversationFeedItem *entry);
 
+protected:
+    void updateLogForContact(ContactEntry *contactEntry);
+    virtual bool contactMatchesItem(ContactEntry *contact, ConversationFeedItem *item) const;
+    bool checkNonStandardNumbers(ConversationFeedItem *item);
+
 private Q_SLOTS:
     void onItemChanged();
+
+    // ContactModel related slots
+    void onContactAdded(ContactEntry *contact);
+    void onContactChanged(ContactEntry *contact);
+    void onContactRemoved(const QString &contactId);
+
 
 protected:
     QList<ConversationFeedItem*> mItems;

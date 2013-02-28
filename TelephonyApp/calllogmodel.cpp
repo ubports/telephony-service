@@ -22,20 +22,18 @@
 #include "calllogmodel.h"
 #include "contactmodel.h"
 #include "telepathyhelper.h"
+#include "telepathylogreader.h"
 #include <TelepathyLoggerQt/Entity>
 #include <TelepathyLoggerQt/Event>
 #include <TelepathyLoggerQt/CallEvent>
 #include <TelepathyQt/Contact>
 
 CallLogModel::CallLogModel(QObject *parent) :
-    AbstractLoggerModel(parent)
+    ConversationFeedModel(parent)
 {
-}
-
-void CallLogModel::populate()
-{
-    fetchLog(Tpl::EventTypeMaskCall, EntityTypeList() << Tpl::EntityTypeContact
-                                                      << Tpl::EntityTypeSelf);
+    connect(TelepathyLogReader::instance(),
+            SIGNAL(loadedCallEvent(QString,bool,QDateTime,QTime,bool,bool)),
+            SLOT(addCallEvent(QString,bool,QDateTime,QTime,bool,bool)));
 }
 
 void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
@@ -46,54 +44,26 @@ void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
         return;
     }
 
-    CallLogEntry *entry = new CallLogEntry(this);
+    QString phoneNumber;
     // FIXME: handle conference call
     Q_FOREACH(const Tp::ContactPtr &contact, contacts) {
-        entry->setPhoneNumber(contact->id());
+        phoneNumber = contact->id();
         break;
     }
 
-    // fill the contact info
-    ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(entry->phoneNumber());
-    entry->setContactAlias(entry->phoneNumber());
-    if (contact) {
-        fillContactInfo(entry, contact);
-    } else {
-        checkNonStandardNumbers(entry);
-    }
-
     // fill the call info
-    entry->setTimestamp(channel->property("timestamp").toDateTime());
-    bool isIncoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
-    entry->setIncoming(isIncoming);
-    entry->setDuration(QTime(0,0,0));
+    QDateTime timestamp = channel->property("timestamp").toDateTime();
+    bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+    QTime duration(0, 0, 0);
+    bool missed = incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer;
 
-    // outgoing calls can be missed calls?
-    if (entry->incoming() && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer) {
-        entry->setMissed(true);
-    } else {
+    if (!missed) {
         QDateTime activeTime = channel->property("activeTimestamp").toDateTime();
-        entry->setDuration(entry->duration().addSecs(activeTime.secsTo(QDateTime::currentDateTime())));
-        entry->setMissed(false);
+        duration = duration.addSecs(activeTime.secsTo(QDateTime::currentDateTime()));
     }
 
     // and finally add the entry
-    addItem(entry);
-}
-
-LoggerItem *CallLogModel::createEntry(const Tpl::EventPtr &event)
-{
-    CallLogEntry *entry = new CallLogEntry(this);
-    Tpl::CallEventPtr callEvent = event.dynamicCast<Tpl::CallEvent>();
-
-    if (callEvent.isNull()) {
-        qWarning() << "The event" << event << "is not a Tpl::CallEvent!";
-    }
-
-    bool incoming = event->sender()->entityType() != Tpl::EntityTypeSelf;
-    entry->setMissed(incoming && callEvent->endReason() == Tp::CallStateChangeReasonNoAnswer);
-    entry->setDuration(callEvent->duration());
-    return entry;
+    addCallEvent(phoneNumber, incoming, timestamp, duration, missed, true);
 }
 
 bool CallLogModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
@@ -123,4 +93,27 @@ QString CallLogModel::itemType(const QModelIndex &index) const
 {
     Q_UNUSED(index);
     return "call";
+}
+
+
+void CallLogModel::addCallEvent(const QString &phoneNumber, bool incoming, const QDateTime &timestamp, const QTime &duration, bool missed, bool newEvent)
+{
+    CallLogEntry *entry = new CallLogEntry(this);
+    entry->setPhoneNumber(phoneNumber);
+    entry->setContactAlias(phoneNumber);
+    entry->setIncoming(incoming);
+    entry->setTimestamp(timestamp);
+    entry->setDuration(duration);
+    entry->setMissed(missed);
+    entry->setNewItem(newEvent);
+
+    // try to fill the contact info
+    ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(phoneNumber);
+    if (contact) {
+        fillContactInfo(entry, contact);
+    } else {
+        checkNonStandardNumbers(entry);
+    }
+
+    addItem(entry);
 }

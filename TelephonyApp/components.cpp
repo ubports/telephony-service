@@ -38,6 +38,7 @@
 #include "conversationaggregatormodel.h"
 #include "conversationproxymodel.h"
 #include "messagelogmodel.h"
+#include "telepathylogreader.h"
 
 #include <QQmlEngine>
 #include <qqml.h>
@@ -108,13 +109,12 @@ void Components::onAccountReady()
 {
     connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callEnded(const Tp::CallChannelPtr&)),
             mCallLogModel, SLOT(onCallEnded(const Tp::CallChannelPtr&)));
-    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&, const QString&)),
-            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&, const QString&)));
+    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&, const QString&, bool)),
+            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&, const QString&, bool)));
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 
     // QTimer::singleShot() is used here to make sure the slots are executed in the correct thread. If we call the slots directly
     // the items created for those models will be on the wrong thread.
-    QTimer::singleShot(0, mCallLogModel, SLOT(populate()));
-    QTimer::singleShot(0, mMessageLogModel, SLOT(populate()));
+    QTimer::singleShot(0, TelepathyLogReader::instance(), SLOT(fetchLog()));
 }

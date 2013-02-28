@@ -45,7 +45,7 @@ public:
 
 Q_SIGNALS:
     void chatReady(const QString &phoneNumber);
-    void messageReceived(const QString &phoneNumber, const QString &message, const QDateTime &timestamp, const QString &messageId);
+    void messageReceived(const QString &phoneNumber, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
     void messageSent(const QString &phoneNumber, const QString &message);
     void unreadMessagesChanged(const QString &phoneNumber);
 

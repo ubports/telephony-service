@@ -21,21 +21,31 @@
 
 #include "messagelogmodel.h"
 #include "contactmodel.h"
+#include "telepathylogreader.h"
 #include <TelepathyLoggerQt/Event>
 #include <TelepathyLoggerQt/TextEvent>
 #include <TelepathyLoggerQt/Entity>
 
 MessageLogModel::MessageLogModel(QObject *parent) :
-    AbstractLoggerModel(parent)
+    ConversationFeedModel(parent)
 {
+    connect(TelepathyLogReader::instance(),
+            SIGNAL(loadedMessageEvent(QString,QString,bool,QDateTime,QString,bool)),
+            SLOT(appendMessage(QString,QString,bool,QDateTime,QString,bool)));
 }
 
 void MessageLogModel::appendMessage(const QString &number,
                                     const QString &message,
                                     bool incoming,
                                     const QDateTime &timestamp,
-                                    const QString &messageId)
+                                    const QString &messageId,
+                                    bool unread)
 {
+    // check if we already have the given message
+    if (messageById(messageId) != 0) {
+        return;
+    }
+
     MessageLogEntry *entry = new MessageLogEntry(this);
     entry->setIncoming(incoming);
     entry->setPhoneNumber(number);
@@ -46,7 +56,7 @@ void MessageLogModel::appendMessage(const QString &number,
     entry->setContactAlias(number);
 
     // if the item is incoming, mark it as new
-    entry->setNewItem(true);
+    entry->setNewItem(unread);
 
     connect(entry,
             SIGNAL(newItemChanged()),
@@ -55,25 +65,22 @@ void MessageLogModel::appendMessage(const QString &number,
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(number);
     if (contact) {
         fillContactInfo(entry, contact);
+    } else {
+        checkNonStandardNumbers(entry);
     }
     addItem(entry);
-}
-
-void MessageLogModel::populate()
-{
-     fetchLog(Tpl::EventTypeMaskText);
 }
 
 void MessageLogModel::onMessageReceived(const QString &number,
                                         const QString &message,
                                         const QDateTime &timestamp,
-                                        const QString &messageId)
+                                        const QString &messageId, bool unread)
 {
     // check if the message is already in the model (it might have been loaded from logger)
     if (!messageId.isEmpty() && messageById(messageId) != 0) {
         return;
     }
-    appendMessage(number, message, true, timestamp, messageId);
+    appendMessage(number, message, true, timestamp, messageId, unread);
 }
 
 void MessageLogModel::onMessageSent(const QString &number, const QString &message)
@@ -89,57 +96,6 @@ void MessageLogModel::onNewItemChanged()
     }
 
     Q_EMIT messageRead(entry->phoneNumber(), entry->messageId());
-}
-
-MessageLogEntry *MessageLogModel::createEntry(const Tpl::EventPtr &event)
-{
-    MessageLogEntry *entry = new MessageLogEntry(this);
-    Tpl::TextEventPtr textEvent = event.dynamicCast<Tpl::TextEvent>();
-
-    if (!textEvent) {
-        qWarning() << "The event" << event << "is not a Tpl::TextEvent!";
-    }
-
-    entry->setMessageId(textEvent->messageToken());
-    entry->setMessage(textEvent->message());
-
-    connect(entry,
-            SIGNAL(newItemChanged()),
-            SLOT(onNewItemChanged()));
-
-    return entry;
-}
-
-void MessageLogModel::handleEvents(const Tpl::EventPtrList &events)
-{
-    Tpl::EventPtrList filteredEvents;
-    QStringList phoneNumbers;
-
-    Q_FOREACH(const Tpl::EventPtr &event, events) {
-        const Tpl::TextEventPtr textEvent = event.dynamicCast<Tpl::TextEvent>();
-        if (!textEvent) {
-            continue;
-        }
-
-        // check if the message is already in the model (it might have been added by telepathy)
-        if (!textEvent->messageToken().isEmpty() && messageById(textEvent->messageToken()) != 0) {
-            continue;
-        }
-
-        // if the edit timestamp is set, the message was already read and can
-        // be appended to the model.
-        // Also, if the message is outgoing, it should also be appeneded to the model
-        bool outgoing = textEvent->sender()->entityType() == Tpl::EntityTypeSelf;
-        filteredEvents.append(event);
-        // add the number to the phone numbers list
-        QString phoneNumber = outgoing ? textEvent->receiver()->identifier() :
-                                         textEvent->sender()->identifier();
-        if (!phoneNumbers.contains(phoneNumber)) {
-            phoneNumbers.append(phoneNumber);
-        }
-    }
-
-    AbstractLoggerModel::handleEvents(filteredEvents);
 }
 
 MessageLogEntry *MessageLogModel::messageById(const QString &messageId)
@@ -169,7 +125,7 @@ bool MessageLogModel::matchesSearch(const QString &searchTerm, const QModelIndex
         foundMatch = true;
     }
 
-    return foundMatch || AbstractLoggerModel::matchesSearch(searchTerm, index);
+    return foundMatch || ConversationFeedModel::matchesSearch(searchTerm, index);
 }
 
 QString MessageLogModel::itemType(const QModelIndex &index) const

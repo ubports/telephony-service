@@ -22,20 +22,23 @@
 #ifndef CALLLOGMODEL_H
 #define CALLLOGMODEL_H
 
-#include "abstractloggermodel.h"
+#include "conversationfeedmodel.h"
+#include "conversationfeeditem.h"
 #include <QTime>
 #include <TelepathyQt/CallChannel>
 
-class CallLogEntry : public LoggerItem {
+class CallLogEntry : public ConversationFeedItem {
     Q_OBJECT
     Q_PROPERTY(QTime duration READ duration WRITE setDuration NOTIFY durationChanged)
     Q_PROPERTY(bool missed READ missed WRITE setMissed NOTIFY missedChanged)
 public:
-    explicit CallLogEntry(QObject *parent = 0) : LoggerItem(parent) { }
+    explicit CallLogEntry(QObject *parent = 0) : ConversationFeedItem(parent) { }
     void setDuration(const QTime &duration) { mDuration = duration; Q_EMIT durationChanged(); }
     QTime duration() { return mDuration; }
     void setMissed(bool missed) { mMissed = missed; Q_EMIT missedChanged(); }
     bool missed() { return mMissed; }
+
+public Q_SLOTS:
 
 Q_SIGNALS:
     void durationChanged();
@@ -46,7 +49,7 @@ private:
     bool mMissed;
 };
 
-class CallLogModel : public AbstractLoggerModel
+class CallLogModel : public ConversationFeedModel
 {
     Q_OBJECT
 public:
@@ -58,11 +61,9 @@ public:
 
 
 public Q_SLOTS:
-    void populate();
+    void addCallEvent(const QString &phoneNumber, bool incoming, const QDateTime &timestamp, const QTime &duration, bool missed, bool newEvent);
     void onCallEnded(const Tp::CallChannelPtr &channel);
 
-protected:
-    LoggerItem *createEntry(const Tpl::EventPtr &event);
 };
 
 #endif // CALLLOGMODEL_H

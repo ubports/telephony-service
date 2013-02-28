@@ -25,6 +25,7 @@
 #include "conversationaggregatormodel.h"
 #include "messagelogmodel.h"
 #include "contactmodel.h"
+#include <QTimer>
 
 ConversationProxyModel::ConversationProxyModel(QObject *parent) :
     QSortFilterProxyModel(parent), mAscending(true), mGrouped(false),

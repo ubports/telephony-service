@@ -176,7 +176,7 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
-    Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken());
+    Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken(), true);
 
     Q_EMIT unreadMessagesChanged(message.sender()->id());;
 }
