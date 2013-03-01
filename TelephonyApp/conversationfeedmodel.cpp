@@ -40,6 +40,10 @@ ConversationFeedModel::ConversationFeedModel(QObject *parent) :
 
 bool ConversationFeedModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
 {
+    if (!index.isValid()) {
+        return false;
+    }
+
     ConversationFeedItem *entry = dynamic_cast<ConversationFeedItem*>(entryFromIndex(index));
     bool foundMatch = false;
 
