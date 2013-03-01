@@ -19,6 +19,9 @@
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
 #include <QDateTime>
+#include <QContact>
+#include <QContactAvatar>
+#include "contactentry.h"
 #include "conversationfeedmodel.h"
 #include "conversationfeeditem.h"
 
@@ -37,6 +40,8 @@ private Q_SLOTS:
     void testEntryFromIndex();
     void testData();
     void testDataChanged();
+    void testMatchesSearchDefault();
+    void testContactInfo();
 
 private:
     QList<ConversationFeedItem*> populateWithItems(int count);
@@ -52,6 +57,7 @@ QList<ConversationFeedItem*> ConversationFeedModelTest::populateWithItems(int co
     QString avatar("/a/file/somewhere/for/contact/%1");
     QString id("ContactId%1");
     bool incoming = true;
+    bool newItem = true;
     QDateTime timestamp = QDateTime::currentDateTime();
 
     for (int i = 0; i < count; ++i) {
@@ -61,6 +67,8 @@ QList<ConversationFeedItem*> ConversationFeedModelTest::populateWithItems(int co
         item->setContactId(id.arg(i));
         item->setIncoming(incoming);
         incoming = !incoming;
+        item->setNewItem(newItem);
+        newItem = !newItem;
         timestamp = timestamp.addDays(qrand() % 10);
         item->setTimestamp(timestamp);
 
@@ -190,6 +198,9 @@ void ConversationFeedModelTest::testIndexFromEntry()
         QCOMPARE(index.row(), pos);
     }
 
+    // passing a null or invalid entry should return an invalid QModelIndex
+    QVERIFY(!feedModel->indexFromEntry(0).isValid());
+
     feedModel->clear();
 }
 
@@ -210,6 +221,9 @@ void ConversationFeedModelTest::testEntryFromIndex()
         ConversationFeedItem *item = feedModel->entryFromIndex(index);
         QCOMPARE(item, addedItems[pos]);
     }
+
+    // passing an invalid index should return null
+    QCOMPARE(feedModel->entryFromIndex(QModelIndex()), static_cast<ConversationFeedItem*>(0));
 
     feedModel->clear();
 }
@@ -232,12 +246,18 @@ void ConversationFeedModelTest::testData()
         QCOMPARE(feedModel->data(index, ConversationFeedModel::ContactAvatar).toUrl(), item->contactAvatar());
         QCOMPARE(feedModel->data(index, ConversationFeedModel::ContactId).toString(), item->contactId());
         QCOMPARE(feedModel->data(index, ConversationFeedModel::Incoming).toBool(), item->incoming());
+        QCOMPARE(feedModel->data(index, ConversationFeedModel::NewItem).toBool(), item->newItem());
         QCOMPARE(feedModel->data(index, ConversationFeedModel::Timestamp).toDateTime(), item->timestamp());
+        QCOMPARE(feedModel->data(index, ConversationFeedModel::Date).toDate(), item->timestamp().date());
         QCOMPARE(feedModel->data(index, ConversationFeedModel::ItemType).toString(), feedModel->itemType(index));
+        QCOMPARE(feedModel->data(index, ConversationFeedModel::GroupingProperty).toString(), QString("contactId"));
 
         ConversationFeedItem *returnedItem = qobject_cast<ConversationFeedItem*>(feedModel->data(index, ConversationFeedModel::FeedItem).value<QObject*>());
         QCOMPARE(returnedItem, item);
     }
+
+    // check if accessing data() for an invalid index returns a null QVariant
+    QVERIFY(feedModel->data(QModelIndex(), ConversationFeedModel::ContactAlias).isNull());
 
     feedModel->clear();
 }
@@ -276,6 +296,11 @@ void ConversationFeedModelTest::testDataChanged()
         QCOMPARE(signalSpy[emitCount-1][0].value<QModelIndex>().row(), pos);
         QCOMPARE(signalSpy[emitCount-1][1].value<QModelIndex>().row(), pos);
 
+        item->setNewItem(true);
+        QCOMPARE(signalSpy.count(), ++emitCount);
+        QCOMPARE(signalSpy[emitCount-1][0].value<QModelIndex>().row(), pos);
+        QCOMPARE(signalSpy[emitCount-1][1].value<QModelIndex>().row(), pos);
+
         item->setTimestamp(QDateTime::currentDateTime());
         QCOMPARE(signalSpy.count(), ++emitCount);
         QCOMPARE(signalSpy[emitCount-1][0].value<QModelIndex>().row(), pos);
@@ -285,6 +310,43 @@ void ConversationFeedModelTest::testDataChanged()
     }
 
     feedModel->clear();
+}
+
+void ConversationFeedModelTest::testMatchesSearchDefault()
+{
+    // matchesSearch always return true in the default implementation
+    populateWithItems(1);
+    QCOMPARE(feedModel->matchesSearch("foobar", QModelIndex()), true);
+    feedModel->clear();
+}
+
+void ConversationFeedModelTest::testContactInfo()
+{
+    // create a fake contact to fill the data
+    QContact contact;
+    QContactDisplayLabel labelDetail;
+    labelDetail.setLabel("Fake Contact");
+    QVERIFY(contact.saveDetail(&labelDetail));
+
+    QContactAvatar avatarDetail;
+    avatarDetail.setImageUrl(QUrl::fromLocalFile("/path/to/some/image.png"));
+    QVERIFY(contact.saveDetail(&avatarDetail));
+
+    ContactEntry entry(contact);
+
+    // fill the contact info and check if it is ok
+    ConversationFeedItem *item = populateWithItems(1).first();
+    feedModel->fillContactInfo(item, &entry);
+
+    QCOMPARE(item->contactId(), entry.id().toString());
+    QCOMPARE(item->contactAvatar(), entry.avatar());
+    QCOMPARE(item->contactAlias(), entry.displayLabel());
+
+    // now clear the contact info and check it was indeed cleared
+    feedModel->clearContactInfo(item);
+    QVERIFY(item->contactId().isEmpty());
+    QVERIFY(item->contactAvatar().toString().isEmpty());
+    QVERIFY(item->contactAlias().isEmpty());
 }
 
 QTEST_MAIN(ConversationFeedModelTest)
