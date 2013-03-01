@@ -487,10 +487,12 @@ MainView {
             HUD.Action {
                 label: "Compose"
                 keywords: "New Message"
+                onTriggered: telephony.startNewMessage()
             }
             HUD.Action {
                 label: "Add"
                 keywords: "New Contact"
+                onTriggered: telephony.createNewContact()
             }
         }
     }
