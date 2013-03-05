@@ -85,7 +85,7 @@ bool TelephonyApplication::setup()
        file specified on the command line with the desktop_file_hint switch. 
        So app will be launched like this:
 
-       /usr/bin/launch-telephony-app --desktop_file_hint=/usr/share/applications/telephony-app.desktop
+       /usr/bin/telephony-app --desktop_file_hint=/usr/share/applications/telephony-app.desktop
 
        So remove that argument and continue parsing.
     */
