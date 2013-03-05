@@ -174,6 +174,11 @@ void ConversationFeedModel::updateLogForContact(ContactEntry *contactEntry)
         if (contactMatchesItem(contactEntry, item)) {
             fillContactInfo(item, contactEntry);
             Q_EMIT dataChanged(index(i,0), index(i,0));
+        } else if (item->contactId() == contactEntry->idString()) {
+            // if the item has the contact id but does not match anymore,
+            // clear it.
+            clearContactInfo(item);
+            Q_EMIT dataChanged(index(i,0), index(i,0));
         }
     }
 }
