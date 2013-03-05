@@ -73,11 +73,11 @@ public:
 
     void fillContactInfo(ConversationFeedItem *entry, ContactEntry *contact);
     void clearContactInfo(ConversationFeedItem *entry);
+    bool checkNonStandardNumbers(ConversationFeedItem *item);
 
 protected:
     void updateLogForContact(ContactEntry *contactEntry);
     virtual bool contactMatchesItem(ContactEntry *contact, ConversationFeedItem *item) const;
-    bool checkNonStandardNumbers(ConversationFeedItem *item);
 
 private Q_SLOTS:
     void onItemChanged();
