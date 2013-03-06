@@ -163,7 +163,7 @@ void ConversationFeedModelTest::testRemoveItem()
     QSignalSpy removedSignalSpy(feedModel, SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
     // insert a few items
-    int count = 20;
+    int count = 15;
 
     QList<ConversationFeedItem*> addedItems = populateWithItems(count);
 
@@ -196,12 +196,12 @@ void ConversationFeedModelTest::testRemoveItem()
 void ConversationFeedModelTest::testIndexFromEntry()
 {
     // insert some
-    int count = 45;
+    int count = 15;
 
     QList<ConversationFeedItem*> addedItems = populateWithItems(count);
 
-    // Try to access 15 items at random
-    for (int i = 0; i < 15; ++i) {
+    // Try to access 5 items at random
+    for (int i = 0; i < 5; ++i) {
         int pos = qrand() % count;
 
         ConversationFeedItem *item = addedItems[pos];
@@ -219,13 +219,13 @@ void ConversationFeedModelTest::testIndexFromEntry()
 
 void ConversationFeedModelTest::testEntryFromIndex()
 {
-    // insert some
-    int count = 40;
+    // insert some items
+    int count = 20;
 
     QList<ConversationFeedItem*> addedItems = populateWithItems(count);
 
-    // Try to access 15 items at random
-    for (int i = 0; i < 15; ++i) {
+    // Try to access 5 items at random
+    for (int i = 0; i < 5; ++i) {
         int pos = qrand() % count;
 
         QModelIndex index = feedModel->index(pos);
@@ -243,11 +243,11 @@ void ConversationFeedModelTest::testEntryFromIndex()
 
 void ConversationFeedModelTest::testData()
 {
-    int count = 50;
+    int count = 20;
     QList<ConversationFeedItem*> addedItems = populateWithItems(count);
 
-    // Try to access 15 items at random
-    for (int i = 0; i < 15; ++i) {
+    // Try to access 5 items at random
+    for (int i = 0; i < 5; ++i) {
         int pos = qrand() % count;
 
         QModelIndex index = feedModel->index(pos);
@@ -281,8 +281,8 @@ void ConversationFeedModelTest::testDataChanged()
     QList<ConversationFeedItem*> addedItems = populateWithItems(count);
     QSignalSpy signalSpy(feedModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
 
-    // Try to access 15 items at random
-    for (int i = 0; i < 15; ++i) {
+    // Try to access 5 items at random
+    for (int i = 0; i < 5; ++i) {
         int pos = qrand() % count;
 
         // change the properties of the item and check if the dataChanged signal is emitted
