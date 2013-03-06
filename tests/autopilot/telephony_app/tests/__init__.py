@@ -19,6 +19,8 @@ from telephony_app.emulators.contacts_panel import ContactsPanel
 from testtools.matchers import Equals
 from autopilot.matchers import Eventually
 
+import os
+
 
 class TelephonyAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
     """A common test case class that provides several useful methods for
@@ -27,11 +29,20 @@ class TelephonyAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
     """
     def setUp(self):
         super(TelephonyAppTestCase, self).setUp()
-        self.launch_test_qml()
 
-    def launch_test_qml(self):
-            self.app = self.launch_test_application(
-                "launch-telephony-app", "--test-contacts")
+        # Lets assume we are installed system wide if this file is somewhere in /usr
+        if os.path.realpath(__file__).startswith("/usr/"):
+            self.launch_test_installed()
+        else:
+            self.launch_test_local()
+
+    def launch_test_local(self):
+        self.app = self.launch_test_application(
+            "../../telephony-app", "--test-contacts")
+
+    def launch_test_installed(self):
+        self.app = self.launch_test_application(
+               "telephony-app", "--test-contacts")
 
     def get_main_view(self):
         return self.app.select_single("QQuickView")
