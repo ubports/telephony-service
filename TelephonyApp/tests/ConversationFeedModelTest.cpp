@@ -21,6 +21,8 @@
 #include <QDateTime>
 #include <QContact>
 #include <QContactAvatar>
+#include <QContactPhoneNumber>
+#include "contactmodel.h"
 #include "contactentry.h"
 #include "conversationfeedmodel.h"
 #include "conversationfeeditem.h"
@@ -40,8 +42,14 @@ private Q_SLOTS:
     void testEntryFromIndex();
     void testData();
     void testDataChanged();
-    void testMatchesSearchDefault();
+    void testMatchesSearch_data();
+    void testMatchesSearch();
     void testContactInfo();
+    void testCheckNonStandardNumbers_data();
+    void testCheckNonStandardNumbers();
+    void testOnContactAdded();
+    void testOnContactChanged();
+    void testOnContactRemoved();
 
 private:
     QList<ConversationFeedItem*> populateWithItems(int count);
@@ -64,7 +72,10 @@ QList<ConversationFeedItem*> ConversationFeedModelTest::populateWithItems(int co
         ConversationFeedItem *item = new ConversationFeedItem(feedModel);
         item->setContactAlias(alias.arg(i));
         item->setContactAvatar(avatar.arg(i));
-        item->setContactId(id.arg(i));
+        // leave some contacts without a contactId
+        if (newItem) {
+            item->setContactId(id.arg(i));
+        }
         item->setIncoming(incoming);
         incoming = !incoming;
         item->setNewItem(newItem);
@@ -81,6 +92,8 @@ QList<ConversationFeedItem*> ConversationFeedModelTest::populateWithItems(int co
 
 void ConversationFeedModelTest::initTestCase()
 {
+    // call the contact model with the memory backend
+    ContactModel::instance("memory");
     feedModel = new ConversationFeedModel(this);
     qsrand(QTime::currentTime().msec());
 }
@@ -250,7 +263,7 @@ void ConversationFeedModelTest::testData()
         QCOMPARE(feedModel->data(index, ConversationFeedModel::Timestamp).toDateTime(), item->timestamp());
         QCOMPARE(feedModel->data(index, ConversationFeedModel::Date).toDate(), item->timestamp().date());
         QCOMPARE(feedModel->data(index, ConversationFeedModel::ItemType).toString(), feedModel->itemType(index));
-        QCOMPARE(feedModel->data(index, ConversationFeedModel::GroupingProperty).toString(), QString("contactId"));
+        QCOMPARE(feedModel->data(index, ConversationFeedModel::GroupingProperty).toString(), QString(item->contactId().isEmpty() ? "phoneNumber" : "contactId"));
 
         ConversationFeedItem *returnedItem = qobject_cast<ConversationFeedItem*>(feedModel->data(index, ConversationFeedModel::FeedItem).value<QObject*>());
         QCOMPARE(returnedItem, item);
@@ -312,11 +325,35 @@ void ConversationFeedModelTest::testDataChanged()
     feedModel->clear();
 }
 
-void ConversationFeedModelTest::testMatchesSearchDefault()
+void ConversationFeedModelTest::testMatchesSearch_data()
 {
-    // matchesSearch always return true in the default implementation
-    populateWithItems(1);
-    QCOMPARE(feedModel->matchesSearch("foobar", QModelIndex()), true);
+    QTest::addColumn<QString>("contactAlias");
+    QTest::addColumn<QString>("phoneNumber");
+    QTest::addColumn<QString>("searchTerm");
+    QTest::addColumn<int>("rowNumber");
+    QTest::addColumn<bool>("result");
+
+    QTest::newRow("exact alias match") << "Contact Alias" << "12345" << "Contact Alias" << 0 << true;
+    QTest::newRow("parcial alias match") << "One Contact Alias" << "12345" << "Contact" << 0 << true;
+    QTest::newRow("case insensitive match") << "OnE CoNtAcT" << "12345" << "One Contact" << 0 << true;
+    QTest::newRow("exact phone number match") << "One Contact" << "6584945" << "6584945" << 0 << true;
+    QTest::newRow("prefixed phone number match") << "Another Contact" << "+1 22 3456 7890" << "34567890" << 0 << true;
+    QTest::newRow("no match") << "Yet Another Contact" << "12345" << "no match" << 0 << false;
+    QTest::newRow("invalid index") << "Contact" << "12345" << "Contact" << -1 << false;
+}
+
+void ConversationFeedModelTest::testMatchesSearch()
+{
+    QFETCH(QString, contactAlias);
+    QFETCH(QString, phoneNumber);
+    QFETCH(QString, searchTerm);
+    QFETCH(int, rowNumber);
+    QFETCH(bool, result);
+
+    ConversationFeedItem *item = populateWithItems(1).first();
+    item->setContactAlias(contactAlias);
+    item->setPhoneNumber(phoneNumber);
+    QCOMPARE(feedModel->matchesSearch(searchTerm, feedModel->index(rowNumber)), result);
     feedModel->clear();
 }
 
@@ -348,6 +385,144 @@ void ConversationFeedModelTest::testContactInfo()
     QVERIFY(item->contactAvatar().toString().isEmpty());
     QVERIFY(item->contactAlias().isEmpty());
 }
+
+void ConversationFeedModelTest::testCheckNonStandardNumbers_data()
+{
+    QTest::addColumn<QString>("phoneNumber");
+    QTest::addColumn<QString>("modifiedPhoneNumber");
+    QTest::addColumn<bool>("aliasIsEmpty");
+    QTest::addColumn<bool>("result");
+
+    QTest::newRow("private number") << "-2" << "-" << false << true;
+    QTest::newRow("unknown number -1") << "-1" << "-" << false << true;
+    QTest::newRow("unknown number #") << "#" << "-" << false << true;
+    QTest::newRow("valid number") << "12345" << "12345" << true << false;
+}
+
+void ConversationFeedModelTest::testCheckNonStandardNumbers()
+{
+    QFETCH(QString, phoneNumber);
+    QFETCH(QString, modifiedPhoneNumber);
+    QFETCH(bool, aliasIsEmpty);
+    QFETCH(bool, result);
+
+    ConversationFeedItem *item = new ConversationFeedItem(this);
+    item->setPhoneNumber(phoneNumber);
+    QCOMPARE(feedModel->checkNonStandardNumbers(item), result);
+    QCOMPARE(item->contactAlias().isEmpty(), aliasIsEmpty);
+    QCOMPARE(item->phoneNumber(), modifiedPhoneNumber);
+    delete item;
+
+    // check if it returns false for a null item
+    QCOMPARE(feedModel->checkNonStandardNumbers(0), false);
+}
+
+void ConversationFeedModelTest::testOnContactAdded()
+{
+    QList<ConversationFeedItem*> addedItems = populateWithItems(5);
+
+    // change one position at random that will match the contact
+    int pos = qrand() % 5;
+    ConversationFeedItem *item = addedItems[pos];
+    item->setPhoneNumber("55554444");
+
+    // create a fake contact to fill the data
+    QContact contact;
+    QContactDisplayLabel labelDetail;
+    labelDetail.setLabel("Fake Contact");
+    QVERIFY(contact.saveDetail(&labelDetail));
+
+    QContactPhoneNumber phoneDetail;
+    phoneDetail.setNumber(item->phoneNumber());
+    QVERIFY(contact.saveDetail(&phoneDetail));
+
+    ContactModel::instance()->contactManager()->saveContact(&contact);
+    ContactEntry entry(contact);
+    QCOMPARE(item->contactId(), entry.idString());
+    QCOMPARE(item->contactAlias(), entry.displayLabel());
+
+    feedModel->clear();
+    ContactModel::instance()->contactManager()->removeContact(contact.id());
+}
+
+void ConversationFeedModelTest::testOnContactChanged()
+{
+    // create a contact in the model
+    QContact contact;
+    QContactDisplayLabel labelDetail;
+    labelDetail.setLabel("Fake Contact");
+    QVERIFY(contact.saveDetail(&labelDetail));
+
+    ContactModel::instance()->contactManager()->saveContact(&contact);
+    ContactEntry contactEntry(contact);
+
+    ConversationFeedItem *item1 = new ConversationFeedItem(feedModel);
+    ConversationFeedItem *item2 = new ConversationFeedItem(feedModel);
+    item1->setPhoneNumber("55554444");
+    item2->setPhoneNumber("44445555");
+
+    feedModel->addItem(item1);
+    feedModel->addItem(item2);
+
+    // now modify the contact to have a phone matching item1
+    QContactPhoneNumber phoneDetail;
+    phoneDetail.setNumber("55554444");
+    QVERIFY(contact.saveDetail(&phoneDetail));
+
+    ContactModel::instance()->contactManager()->saveContact(&contact);
+
+    // and verify the item was properly updated
+    QCOMPARE(item1->contactId(), contactEntry.idString());
+    QCOMPARE(item1->contactAlias(), contactEntry.displayLabel());
+    QVERIFY(item2->contactId().isEmpty());
+    QVERIFY(item2->contactAlias().isEmpty());
+
+    // now change the phone number and check that items are properly updated
+    phoneDetail.setNumber("44445555");
+    QVERIFY(contact.saveDetail(&phoneDetail));
+
+    ContactModel::instance()->contactManager()->saveContact(&contact);
+
+    QCOMPARE(item2->contactId(), contactEntry.idString());
+    QCOMPARE(item2->contactAlias(), contactEntry.displayLabel());
+    QVERIFY(item1->contactId().isEmpty());
+    QVERIFY(item1->contactAlias().isEmpty());
+
+    feedModel->clear();
+    ContactModel::instance()->contactManager()->removeContact(contact.id());
+}
+
+void ConversationFeedModelTest::testOnContactRemoved()
+{
+    ConversationFeedItem *item = new ConversationFeedItem(feedModel);
+    item->setPhoneNumber("55554444");
+    feedModel->addItem(item);
+
+    // create a contact in the model
+    QContact contact;
+    QContactDisplayLabel labelDetail;
+    labelDetail.setLabel("Fake Contact");
+    QVERIFY(contact.saveDetail(&labelDetail));
+
+    QContactPhoneNumber phoneDetail;
+    phoneDetail.setNumber("55554444");
+    QVERIFY(contact.saveDetail(&phoneDetail));
+
+    ContactModel::instance()->contactManager()->saveContact(&contact);
+    ContactEntry contactEntry(contact);
+
+    QCOMPARE(item->contactAlias(), contactEntry.displayLabel());
+    QCOMPARE(item->contactId(), contactEntry.idString());
+
+    // now remove the contact to see if the item is cleared
+    ContactModel::instance()->contactManager()->removeContact(contact.id());
+
+    QVERIFY(item->contactAlias().isEmpty());
+    QVERIFY(item->contactId().isEmpty());
+
+    feedModel->clear();
+}
+
 
 QTEST_MAIN(ConversationFeedModelTest)
 #include "ConversationFeedModelTest.moc"
