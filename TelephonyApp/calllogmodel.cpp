@@ -23,9 +23,6 @@
 #include "contactmodel.h"
 #include "telepathyhelper.h"
 #include "telepathylogreader.h"
-#include <TelepathyLoggerQt/Entity>
-#include <TelepathyLoggerQt/Event>
-#include <TelepathyLoggerQt/CallEvent>
 #include <TelepathyQt/Contact>
 
 CallLogModel::CallLogModel(QObject *parent) :
