@@ -57,9 +57,6 @@ public:
 
     QString itemType(const QModelIndex &index) const;
 
-    bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
-
-
 public Q_SLOTS:
     void addCallEvent(const QString &phoneNumber, bool incoming, const QDateTime &timestamp, const QTime &duration, bool missed, bool newEvent);
     void onCallEnded(const Tp::CallChannelPtr &channel);
