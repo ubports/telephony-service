@@ -47,12 +47,10 @@ private:
 
 void CallLogModelTest::initTestCase()
 {
-    // required for the logger stuff
-    g_type_init();
     // Initialize telepathy types
+    g_type_init();
     Tp::registerTypes();
     Tpl::init();
-
 
     // instanciate the contact model using the memory backend
     ContactModel::instance("memory");
