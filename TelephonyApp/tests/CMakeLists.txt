@@ -22,4 +22,5 @@ generate_tests(
     ConversationAggregatorModelTest
     ConversationFeedItemTest
     ConversationFeedModelTest
+    MessageLogModelTest
     )
