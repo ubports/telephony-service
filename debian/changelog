@@ -1,3 +1,16 @@
+telephony-app (0.58.37) quantal; urgency=low
+
+  * Optimize loading data from telepathy-logger by reading it just once and
+    dispatching the events to the correct model. Also add some unit tests to the
+    logger models (after the changes it was easier to get them tested).
+  * Check whether running locally or installed and launch the app accordingly.
+  * Write some more unit tests for ConversationFeedModel to make it all covered.
+  * Implement HUD actions.
+  * Make sure all autopilot tests pass.
+  * Update telephony-app to use the toolbar from SDK.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 08 Mar 2013 16:32:54 -0300
+
 telephony-app (0.58.36) quantal; urgency=low
 
   * Set the avatar from the matched contact for incoming calls (LP:1093115).
