@@ -21,7 +21,6 @@
 
 #include "messagelogmodel.h"
 #include "contactmodel.h"
-#include "telepathylogreader.h"
 #include <TelepathyLoggerQt/Event>
 #include <TelepathyLoggerQt/TextEvent>
 #include <TelepathyLoggerQt/Entity>
@@ -29,9 +28,6 @@
 MessageLogModel::MessageLogModel(QObject *parent) :
     ConversationFeedModel(parent)
 {
-    connect(TelepathyLogReader::instance(),
-            SIGNAL(loadedMessageEvent(QString,QString,bool,QDateTime,QString,bool)),
-            SLOT(appendMessage(QString,QString,bool,QDateTime,QString,bool)));
 }
 
 void MessageLogModel::appendMessage(const QString &number,

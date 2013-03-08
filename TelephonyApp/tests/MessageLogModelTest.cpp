@@ -23,8 +23,6 @@
 #include <QtTest/QtTest>
 #include <QContact>
 #include <QContactPhoneNumber>
-#include <glib-object.h>
-#include <TelepathyLoggerQt/Init>
 #include "messagelogmodel.h"
 #include "contactmodel.h"
 #include "contactentry.h"
@@ -54,10 +52,6 @@ private:
 
 void MessageLogModelTest::initTestCase()
 {
-    // Initialize telepathy types
-    g_type_init();
-    Tpl::init();
-
     // instanciate the contact model using the memory backend
     ContactModel::instance("memory");
 

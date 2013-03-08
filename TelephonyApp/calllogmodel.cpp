@@ -22,15 +22,11 @@
 #include "calllogmodel.h"
 #include "contactmodel.h"
 #include "telepathyhelper.h"
-#include "telepathylogreader.h"
 #include <TelepathyQt/Contact>
 
 CallLogModel::CallLogModel(QObject *parent) :
     ConversationFeedModel(parent)
 {
-    connect(TelepathyLogReader::instance(),
-            SIGNAL(loadedCallEvent(QString,bool,QDateTime,QTime,bool,bool)),
-            SLOT(addCallEvent(QString,bool,QDateTime,QTime,bool,bool)));
 }
 
 void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)

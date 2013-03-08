@@ -114,6 +114,11 @@ void Components::onAccountReady()
     connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
             mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
 
+    connect(TelepathyLogReader::instance(), SIGNAL(loadedCallEvent(QString,bool,QDateTime,QTime,bool,bool)),
+            mCallLogModel, SLOT(addCallEvent(QString,bool,QDateTime,QTime,bool,bool)));
+    connect(TelepathyLogReader::instance(), SIGNAL(loadedMessageEvent(QString,QString,bool,QDateTime,QString,bool)),
+            mMessageLogModel, SLOT(appendMessage(QString,QString,bool,QDateTime,QString,bool)));
+
     // QTimer::singleShot() is used here to make sure the slots are executed in the correct thread. If we call the slots directly
     // the items created for those models will be on the wrong thread.
     QTimer::singleShot(0, TelepathyLogReader::instance(), SLOT(fetchLog()));
