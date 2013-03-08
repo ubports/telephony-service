@@ -91,3 +91,14 @@ void ConversationFeedItem::setTimestamp(const QDateTime &value)
     mTimestamp = value;
     Q_EMIT timestampChanged();
 }
+
+void ConversationFeedItem::setPhoneNumber(const QString &phone)
+{
+    mPhoneNumber = phone;
+    Q_EMIT phoneNumberChanged();
+}
+
+QString ConversationFeedItem::phoneNumber()
+{
+    return mPhoneNumber;
+}

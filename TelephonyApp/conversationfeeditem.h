@@ -35,6 +35,7 @@ class ConversationFeedItem : public QObject
     Q_PROPERTY(bool incoming READ incoming WRITE setIncoming NOTIFY incomingChanged)
     Q_PROPERTY(bool newItem READ newItem WRITE setNewItem NOTIFY newItemChanged)
     Q_PROPERTY(QDateTime timestamp READ timestamp WRITE setTimestamp NOTIFY timestampChanged)
+    Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
 
 public:
     explicit ConversationFeedItem(QObject *parent = 0);
@@ -57,6 +58,9 @@ public:
     QDateTime timestamp() const;
     void setTimestamp(const QDateTime &value);
 
+    void setPhoneNumber(const QString &phone);
+    QString phoneNumber();
+
 Q_SIGNALS:
     void contactIdChanged();
     void contactAliasChanged();
@@ -64,6 +68,7 @@ Q_SIGNALS:
     void incomingChanged();
     void newItemChanged();
     void timestampChanged();
+    void phoneNumberChanged();
 
 private:
     QString mContactId;
@@ -72,6 +77,7 @@ private:
     bool mIncoming;
     bool mNewItem;
     QDateTime mTimestamp;
+    QString mPhoneNumber;
 };
 
 #endif // CONVERSATIONFEEDITEM_H

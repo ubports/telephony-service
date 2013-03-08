@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -73,9 +73,20 @@ public:
 
     void fillContactInfo(ConversationFeedItem *entry, ContactEntry *contact);
     void clearContactInfo(ConversationFeedItem *entry);
+    bool checkNonStandardNumbers(ConversationFeedItem *item);
+
+protected:
+    void updateLogForContact(ContactEntry *contactEntry);
+    virtual bool contactMatchesItem(ContactEntry *contact, ConversationFeedItem *item) const;
 
 private Q_SLOTS:
     void onItemChanged();
+
+    // ContactModel related slots
+    void onContactAdded(ContactEntry *contact);
+    void onContactChanged(ContactEntry *contact);
+    void onContactRemoved(const QString &contactId);
+
 
 protected:
     QList<ConversationFeedItem*> mItems;

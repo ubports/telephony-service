@@ -17,8 +17,10 @@ endmacro(generate_tests)
 
 generate_tests(
     TemplateTest
+    CallLogModelTest
     ContactProxyModelTest
     ConversationAggregatorModelTest
     ConversationFeedItemTest
     ConversationFeedModelTest
+    MessageLogModelTest
     )

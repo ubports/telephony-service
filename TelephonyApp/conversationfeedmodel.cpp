@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -21,16 +21,44 @@
 
 #include "conversationfeedmodel.h"
 #include "contactentry.h"
+#include "contactmodel.h"
+#include <QContactPhoneNumber>
 
 ConversationFeedModel::ConversationFeedModel(QObject *parent) :
     QAbstractListModel(parent)
 {
+    connect(ContactModel::instance(),
+            SIGNAL(contactAdded(ContactEntry*)),
+            SLOT(onContactAdded(ContactEntry*)));
+    connect(ContactModel::instance(),
+            SIGNAL(contactChanged(ContactEntry*)),
+            SLOT(onContactChanged(ContactEntry*)));
+    connect(ContactModel::instance(),
+            SIGNAL(contactRemoved(const QString&)),
+            SLOT(onContactRemoved(const QString&)));
 }
 
 bool ConversationFeedModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
 {
-    // TODO: implement
-    return true;
+    if (!index.isValid()) {
+        return false;
+    }
+
+    ConversationFeedItem *entry = dynamic_cast<ConversationFeedItem*>(entryFromIndex(index));
+    bool foundMatch = false;
+
+    QString value = entry->contactAlias();
+    if (value.indexOf(searchTerm, 0, Qt::CaseInsensitive) >= 0) {
+        foundMatch = true;
+    }
+
+    // Test the phone number
+    value = entry->phoneNumber();
+    if (ContactModel::instance()->comparePhoneNumbers(value, searchTerm)) {
+        foundMatch = true;
+    }
+
+    return foundMatch;
 }
 
 QString ConversationFeedModel::itemType(const QModelIndex &index) const
@@ -66,7 +94,11 @@ QVariant ConversationFeedModel::data(const QModelIndex &index, int role) const
     case FeedItem:
         return QVariant::fromValue(const_cast<QObject *>(static_cast<const QObject *>(item)));
     case GroupingProperty:
-        return "contactId";
+        if (!item->contactId().isEmpty()) {
+            return "contactId";
+        } else {
+            return "phoneNumber";
+        }
     }
 
     return QVariant();
@@ -133,6 +165,24 @@ void ConversationFeedModel::clearContactInfo(ConversationFeedItem *entry)
     entry->setContactAlias("");
 }
 
+void ConversationFeedModel::updateLogForContact(ContactEntry *contactEntry)
+{
+    // now we need to iterate over the events to look for contacts matching
+    int count = mItems.count();
+    for (int i = 0; i < count; ++i) {
+        ConversationFeedItem *item = mItems[i];
+        if (contactMatchesItem(contactEntry, item)) {
+            fillContactInfo(item, contactEntry);
+            Q_EMIT dataChanged(index(i,0), index(i,0));
+        } else if (item->contactId() == contactEntry->idString()) {
+            // if the item has the contact id but does not match anymore,
+            // clear it.
+            clearContactInfo(item);
+            Q_EMIT dataChanged(index(i,0), index(i,0));
+        }
+    }
+}
+
 void ConversationFeedModel::onItemChanged()
 {
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sender());
@@ -160,3 +210,58 @@ ConversationFeedItem *ConversationFeedModel::entryFromIndex(const QModelIndex &i
 }
 
 
+void ConversationFeedModel::onContactAdded(ContactEntry *contact)
+{
+    updateLogForContact(contact);
+}
+
+void ConversationFeedModel::onContactChanged(ContactEntry *contact)
+{
+    updateLogForContact(contact);
+}
+
+void ConversationFeedModel::onContactRemoved(const QString &contactId)
+{
+    int count = mItems.count();
+    for (int i = 0; i < count; ++i) {
+        ConversationFeedItem *item = dynamic_cast<ConversationFeedItem*>(mItems[i]);
+        if (item->contactId() == contactId) {
+            clearContactInfo(item);
+            Q_EMIT dataChanged(index(i,0), index(i,0));
+        }
+    }
+}
+
+
+bool ConversationFeedModel::contactMatchesItem(ContactEntry *contact, ConversationFeedItem *item) const
+{
+    // check if any of the contact's phone numbers match in the default implementation
+    Q_FOREACH(const QContactPhoneNumber &number, contact->contact().details<QContactPhoneNumber>()) {
+        if (ContactModel::comparePhoneNumbers(item->phoneNumber(), number.number())) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool ConversationFeedModel::checkNonStandardNumbers(ConversationFeedItem *item)
+{
+    bool changed = false;
+
+    if (!item) {
+        return changed;
+    }
+
+    if (item->phoneNumber() == QLatin1String("-2")) {
+        item->setContactAlias(QLatin1String("Private number"));
+        item->setPhoneNumber(QLatin1String("-"));
+        changed = true;
+    } else if (item->phoneNumber() == QLatin1String("-1") || item->phoneNumber() == QLatin1String("#")) {
+        item->setContactAlias(QLatin1String("Unknown number"));
+        item->setPhoneNumber(QLatin1String("-"));
+        changed = true;
+    }
+
+    return changed;
+}

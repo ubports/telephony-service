@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -22,15 +22,16 @@
 #ifndef MESSAGELOGMODEL_H
 #define MESSAGELOGMODEL_H
 
-#include "abstractloggermodel.h"
+#include "conversationfeedmodel.h"
+#include "conversationfeeditem.h"
 
-class MessageLogEntry : public LoggerItem {
+class MessageLogEntry : public ConversationFeedItem {
     Q_OBJECT
     Q_PROPERTY(QString message READ message WRITE setMessage NOTIFY messageChanged)
     Q_PROPERTY(QString messageId READ messageId WRITE setMessageId NOTIFY messageIdChanged)
     Q_PROPERTY(QString date READ date)
 public:
-    explicit MessageLogEntry(QObject *parent = 0) : LoggerItem(parent) { }
+    explicit MessageLogEntry(QObject *parent = 0) : ConversationFeedItem(parent) { }
     void setMessage(const QString &message) { mMessage = message; Q_EMIT messageChanged(); }
     QString message() { return mMessage; }
 
@@ -49,17 +50,12 @@ public:
 
 };
 
-class MessageLogModel : public AbstractLoggerModel
+class MessageLogModel : public ConversationFeedModel
 {
     Q_OBJECT
 public:
     explicit MessageLogModel(QObject *parent = 0);
 
-    Q_INVOKABLE void appendMessage(const QString &number,
-                                   const QString &message,
-                                   bool incoming,
-                                   const QDateTime &timestamp = QDateTime::currentDateTime(),
-                                   const QString &messageId = QString::null);
 
     QString itemType(const QModelIndex &index) const;
     bool matchesSearch(const QString &searchTerm, const QModelIndex &index) const;
@@ -68,16 +64,20 @@ Q_SIGNALS:
     void messageRead(const QString &number, const QString &messageId);
 
 public Q_SLOTS:
-    void populate();
-    void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp, const QString &messageId);
+    void onMessageReceived(const QString &number, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
     void onMessageSent(const QString &number, const QString &message);
+    void appendMessage(const QString &number,
+                       const QString &message,
+                       bool incoming,
+                       const QDateTime &timestamp = QDateTime::currentDateTime(),
+                       const QString &messageId = QString::null,
+                       bool unread = false);
+
 
 protected Q_SLOTS:
     void onNewItemChanged();
 
 protected:
-    MessageLogEntry *createEntry(const Tpl::EventPtr &event);
-    void handleEvents(const Tpl::EventPtrList &events);
     MessageLogEntry *messageById(const QString &messageId);
 
 };
