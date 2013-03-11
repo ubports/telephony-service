@@ -176,6 +176,11 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
+    // ignore delivery reports for now
+    if (message.isDeliveryReport()) {
+        return;
+    }
+
     Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken(), true);
 
     Q_EMIT unreadMessagesChanged(message.sender()->id());;
