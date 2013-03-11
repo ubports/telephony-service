@@ -140,7 +140,7 @@ enable_testing()
 
 add_subdirectory(libtelephonyapp)
 add_subdirectory(TelephonyApp)
-add_subdirectory(TelephonyAppApprover)
+add_subdirectory(PhoneAppApprover)
 add_subdirectory(tools)
 add_subdirectory(icons)
 add_subdirectory(tests)

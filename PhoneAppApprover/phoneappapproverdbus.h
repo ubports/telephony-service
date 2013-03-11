@@ -5,13 +5,13 @@
  *  Ugo Riboni <ugo.riboni@canonical.com>
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -20,23 +20,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TELEPHONYAPPROVERDBUS_H
-#define TELEPHONYAPPROVERDBUS_H
+#ifndef PHONEAPPROVERDBUS_H
+#define PHONEAPPROVERDBUS_H
 
 #include <QtCore/QObject>
 #include <QtDBus/QDBusContext>
 #include "chatmanager.h"
 
 /**
- * DBus interface for the telephony approver
+ * DBus interface for the phone approver
  */
-class TelephonyAppApproverDBus : public QObject, protected QDBusContext
+class PhoneAppApproverDBus : public QObject, protected QDBusContext
 {
     Q_OBJECT
 
 public:
-    TelephonyAppApproverDBus(QObject* parent=0);
-    ~TelephonyAppApproverDBus();
+    PhoneAppApproverDBus(QObject* parent=0);
+    ~PhoneAppApproverDBus();
 
     bool connectToBus();
 
@@ -47,4 +47,4 @@ Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);
 };
 
-#endif // TELEPHONYAPPROVERDBUS_H
+#endif // PHONEAPPROVERDBUS_H

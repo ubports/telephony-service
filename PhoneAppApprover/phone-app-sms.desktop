@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
 Name=SMS
-Exec=telephony-app
-Icon=telephony-app-message
+Exec=phone-app
+Icon=phone-app-message
 NoDisplay=true

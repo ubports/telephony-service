@@ -5,13 +5,13 @@
  *  Ugo Riboni <ugo.riboni@canonical.com>
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -20,38 +20,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "telephonyappapproverdbus.h"
-//#include "telephonyappadaptor.h"
-#include "TelephonyAppApprover/telephonyappapproveradaptor.h"
+#include "phoneappapproverdbus.h"
+#include "PhoneAppApprover/phoneappapproveradaptor.h"
 
 // Qt
 #include <QtDBus/QDBusConnection>
 
-static const char* DBUS_SERVICE = "com.canonical.TelephonyAppApprover";
-static const char* DBUS_OBJECT_PATH = "/com/canonical/TelephonyAppApprover";
+static const char* DBUS_SERVICE = "com.canonical.PhoneAppApprover";
+static const char* DBUS_OBJECT_PATH = "/com/canonical/PhoneAppApprover";
 
-TelephonyAppApproverDBus::TelephonyAppApproverDBus(QObject* parent) : QObject(parent)
+PhoneAppApproverDBus::PhoneAppApproverDBus(QObject* parent) : QObject(parent)
 {
 }
 
-TelephonyAppApproverDBus::~TelephonyAppApproverDBus()
+PhoneAppApproverDBus::~PhoneAppApproverDBus()
 {
 }
 
 bool
-TelephonyAppApproverDBus::connectToBus()
+PhoneAppApproverDBus::connectToBus()
 {
     bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
     if (!ok) {
         return false;
     }
-    new TelephonyAppApproverAdaptor(this);
+    new PhoneAppApproverAdaptor(this);
     QDBusConnection::sessionBus().registerObject(DBUS_OBJECT_PATH, this);
 
     return true;
 }
 
-void TelephonyAppApproverDBus::SendMessage(const QString &number, const QString &message)
+void PhoneAppApproverDBus::SendMessage(const QString &number, const QString &message)
 {
     Q_EMIT onMessageSent(number, message);
 }

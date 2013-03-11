@@ -4,13 +4,13 @@
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -20,7 +20,7 @@
  */
 
 #include "config.h"
-#include "telephonyapputils.h"
+#include "phoneapputils.h"
 #include "messagingmenu.h"
 #include "contactmodel.h"
 #include "contactentry.h"
@@ -29,14 +29,14 @@
 MessagingMenu::MessagingMenu(QObject *parent) :
     QObject(parent), mVoicemailCount(-1)
 {
-    GIcon *icon = g_icon_new_for_string("telephony-app", NULL);
-    mMessagesApp = messaging_menu_app_new("telephony-app-sms.desktop");
+    GIcon *icon = g_icon_new_for_string("phone-app", NULL);
+    mMessagesApp = messaging_menu_app_new("phone-app-sms.desktop");
     messaging_menu_app_register(mMessagesApp);
-    messaging_menu_app_append_source(mMessagesApp, "telephony-app", icon, "Telephony App");
+    messaging_menu_app_append_source(mMessagesApp, "phone-app", icon, "Phone App");
 
-    mCallsApp = messaging_menu_app_new("telephony-app-phone.desktop");
+    mCallsApp = messaging_menu_app_new("phone-app-call.desktop");
     messaging_menu_app_register(mCallsApp);
-    messaging_menu_app_append_source(mCallsApp, "telephony-app", icon, "Telephony App");
+    messaging_menu_app_append_source(mCallsApp, "phone-app", icon, "Phone App");
 
     g_object_unref(icon);
 }
@@ -54,7 +54,7 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
     }
 
     if (iconPath.isNull()) {
-        iconPath = telephonyAppDirectory() + "/assets/avatar-default@18.png";
+        iconPath = phoneAppDirectory() + "/assets/avatar-default@18.png";
     }
 
     GFile *file = g_file_new_for_path(iconPath.toUtf8().data());
@@ -75,7 +75,7 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
 
     // save the phone number to use in the actions
     mMessages[messageId] = phoneNumber;
-    messaging_menu_app_append_message(mMessagesApp, message, "telephony-app", true);
+    messaging_menu_app_append_message(mMessagesApp, message, "phone-app", true);
 
     g_object_unref(file);
     g_object_unref(icon);
@@ -123,7 +123,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     call.count++;
 
     if (call.contactIcon.isEmpty()) {
-        call.contactIcon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
+        call.contactIcon = phoneAppDirectory() + "/assets/avatar-default@18.png";
     }
 
     QString text;
@@ -165,7 +165,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
                                       messages // predefined values
                                       );
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
-    messaging_menu_app_append_message(mCallsApp, message, "telephony-app", true);
+    messaging_menu_app_append_message(mCallsApp, message, "phone-app", true);
     mCalls.append(call);
 
     g_object_unref(messages);
@@ -250,43 +250,43 @@ void MessagingMenu::showMessage(const QString &messageId)
 {
     QString phoneNumber = mMessages[messageId];
 
-    TelephonyAppUtils::instance()->startTelephonyApp();
-    QDBusInterface mTelephonyAppInterface("com.canonical.TelephonyApp",
-                           "/com/canonical/TelephonyApp",
-                           "com.canonical.TelephonyApp");
+    PhoneAppUtils::instance()->startPhoneApp();
+    QDBusInterface mPhoneAppInterface("com.canonical.PhoneApp",
+                           "/com/canonical/PhoneApp",
+                           "com.canonical.PhoneApp");
 
-    mTelephonyAppInterface.call("ShowMessages", phoneNumber);
+    mPhoneAppInterface.call("ShowMessages", phoneNumber);
 }
 
 void MessagingMenu::callBack(const QString &messageId)
 {
-    TelephonyAppUtils::instance()->startTelephonyApp();
+    PhoneAppUtils::instance()->startPhoneApp();
 
     QString phoneNumber = callFromMessageId(messageId).number;
-    qDebug() << "TelephonyApp/MessagingMenu: Calling back" << phoneNumber;
-    QDBusInterface mTelephonyAppInterface("com.canonical.TelephonyApp",
-                           "/com/canonical/TelephonyApp",
-                           "com.canonical.TelephonyApp");
+    qDebug() << "PhoneApp/MessagingMenu: Calling back" << phoneNumber;
+    QDBusInterface mPhoneAppInterface("com.canonical.PhoneApp",
+                           "/com/canonical/PhoneApp",
+                           "com.canonical.PhoneApp");
 
-    mTelephonyAppInterface.call("CallNumber", phoneNumber);
+    mPhoneAppInterface.call("CallNumber", phoneNumber);
 }
 
 void MessagingMenu::replyWithMessage(const QString &messageId, const QString &reply)
 {
     QString phoneNumber = callFromMessageId(messageId).number;
-    qDebug() << "TelephonyApp/MessagingMenu: Replying to call" << phoneNumber << "with text" << reply;
+    qDebug() << "PhoneApp/MessagingMenu: Replying to call" << phoneNumber << "with text" << reply;
     Q_EMIT replyReceived(phoneNumber, reply);
 }
 
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
-    qDebug() << "TelephonyApp/MessagingMenu: Calling voicemail for messageId" << messageId;
-    TelephonyAppUtils::instance()->startTelephonyApp();
-    QDBusInterface mTelephonyAppInterface("com.canonical.TelephonyApp",
-                           "/com/canonical/TelephonyApp",
-                           "com.canonical.TelephonyApp");
+    qDebug() << "PhoneApp/MessagingMenu: Calling voicemail for messageId" << messageId;
+    PhoneAppUtils::instance()->startPhoneApp();
+    QDBusInterface mPhoneAppInterface("com.canonical.PhoneApp",
+                           "/com/canonical/PhoneApp",
+                           "com.canonical.PhoneApp");
 
-    mTelephonyAppInterface.call("ShowVoicemail");
+    mPhoneAppInterface.call("ShowVoicemail");
 }
 
 Call MessagingMenu::callFromMessageId(const QString &messageId)

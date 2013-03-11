@@ -3,11 +3,11 @@
     <dox:d><![CDATA[
       @mainpage
 
-      An interface to the telephony application.
+      An interface to the phone application.
     ]]></dox:d>
-    <interface name="com.canonical.TelephonyAppApprover" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+    <interface name="com.canonical.PhoneAppApprover" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
         <dox:d>
-          An interface to the telephony approver application.
+          An interface to the phone approver application.
         </dox:d>
         <method name="SendMessage">
             <dox:d><![CDATA[

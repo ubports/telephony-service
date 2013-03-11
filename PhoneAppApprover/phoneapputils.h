@@ -4,13 +4,13 @@
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -19,19 +19,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TELEPHONYAPPUTILS_H
-#define TELEPHONYAPPUTILS_H
+#ifndef PHONEAPPUTILS_H
+#define PHONEAPPUTILS_H
 
 #include <QObject>
 #include <QDBusServiceWatcher>
 
-class TelephonyAppUtils : public QObject
+class PhoneAppUtils : public QObject
 {
     Q_OBJECT
 public:
-    static TelephonyAppUtils *instance();
+    static PhoneAppUtils *instance();
 
-    void startTelephonyApp();
+    void startPhoneApp();
     bool isApplicationRunning();
 
 Q_SIGNALS:
@@ -42,11 +42,11 @@ protected Q_SLOTS:
     void onServiceUnregistered(const QString &serviceName);
 
 private:
-    explicit TelephonyAppUtils(QObject *parent = 0);
+    explicit PhoneAppUtils(QObject *parent = 0);
 
-    QDBusServiceWatcher mTelephonyAppWatcher;
-    bool mTelephonyAppRunning;
-    
+    QDBusServiceWatcher mPhoneAppWatcher;
+    bool mPhoneAppRunning;
+
 };
 
-#endif // TELEPHONYAPPUTILS_H
+#endif // PHONEAPPUTILS_H

@@ -1,6 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Phone
-Exec=telephony-app
-Icon=telephony-app-call
-NoDisplay=true

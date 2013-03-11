@@ -4,13 +4,13 @@
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -21,7 +21,7 @@
 
 #include <libnotify/notify.h>
 
-#include "telephonyappapprover.h"
+#include "phoneappapprover.h"
 #include "textchannelobserver.h"
 #include "voicemailindicator.h"
 #include "contactmodel.h"
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
 
-    notify_init("Telephony App Approver");
+    notify_init("Phone App Approver");
 
     Tp::registerTypes();
 
@@ -54,13 +54,13 @@ int main(int argc, char **argv)
 
     // register the approver
     Tp::AbstractClientPtr approver = Tp::AbstractClientPtr::dynamicCast(
-          Tp::SharedPtr<TelephonyAppApprover>(new TelephonyAppApprover()));
-    registrar->registerClient(approver, "TelephonyAppApprover");
+          Tp::SharedPtr<PhoneAppApprover>(new PhoneAppApprover()));
+    registrar->registerClient(approver, "PhoneAppApprover");
 
     // and the observer
     Tp::AbstractClientPtr observer = Tp::AbstractClientPtr::dynamicCast(
           Tp::SharedPtr<TextChannelObserver>(new TextChannelObserver()));
-    registrar->registerClient(observer, "TelephonyAppIndicatorObserver");
+    registrar->registerClient(observer, "PhoneAppIndicatorObserver");
 
     // we don't need to call anything on the indicator, it will work by itself
     VoiceMailIndicator voiceMailIndicator;

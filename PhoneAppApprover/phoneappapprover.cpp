@@ -4,13 +4,13 @@
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "telephonyappapprover.h"
-#include "telephonyappapproverdbus.h"
-#include "telephonyapputils.h"
+#include "phoneappapprover.h"
+#include "phoneappapproverdbus.h"
+#include "phoneapputils.h"
 #include "messagingmenu.h"
 #include "chatmanager.h"
 #include "contactmodel.h"
@@ -37,15 +37,15 @@
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/TextChannel>
 
-#define TELEPHONY_APP_CLIENT TP_QT_IFACE_CLIENT + ".TelephonyApp"
+#define PHONE_APP_CLIENT TP_QT_IFACE_CLIENT + ".PhoneApp"
 #define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
 
 
-TelephonyAppApprover::TelephonyAppApprover()
+PhoneAppApprover::PhoneAppApprover()
 : Tp::AbstractClientApprover(channelFilters()),
   mPendingSnapDecision(NULL)
 {
-    TelephonyAppApproverDBus *dbus = new TelephonyAppApproverDBus();
+    PhoneAppApproverDBus *dbus = new PhoneAppApproverDBus();
     connect(dbus, SIGNAL(onMessageSent(const QString&, const QString&)),
                   SLOT(onReplyReceived(const QString&, const QString&)));
     dbus->connectToBus();
@@ -53,16 +53,16 @@ TelephonyAppApprover::TelephonyAppApprover()
     connect(MessagingMenu::instance(),
             SIGNAL(replyReceived(QString,QString)),
             SLOT(onReplyReceived(QString,QString)));
-    connect(TelephonyAppUtils::instance(),
+    connect(PhoneAppUtils::instance(),
             SIGNAL(applicationRunningChanged(bool)),
             SLOT(processChannels()));
 }
 
-TelephonyAppApprover::~TelephonyAppApprover()
+PhoneAppApprover::~PhoneAppApprover()
 {
 }
 
-Tp::ChannelClassSpecList TelephonyAppApprover::channelFilters() const
+Tp::ChannelClassSpecList PhoneAppApprover::channelFilters() const
 {
     Tp::ChannelClassSpecList specList;
     specList << Tp::ChannelClassSpec::audioCall();
@@ -71,7 +71,7 @@ Tp::ChannelClassSpecList TelephonyAppApprover::channelFilters() const
     return specList;
 }
 
-Tp::ChannelDispatchOperationPtr TelephonyAppApprover::dispatchOperation(Tp::PendingOperation *op)
+Tp::ChannelDispatchOperationPtr PhoneAppApprover::dispatchOperation(Tp::PendingOperation *op)
 {
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
     QString accountId = channel->property("accountId").toString();
@@ -83,7 +83,7 @@ Tp::ChannelDispatchOperationPtr TelephonyAppApprover::dispatchOperation(Tp::Pend
     return Tp::ChannelDispatchOperationPtr();
 }
 
-void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
+void PhoneAppApprover::addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                                         const Tp::ChannelDispatchOperationPtr &dispatchOperation)
 {
     bool willHandle = false;
@@ -127,7 +127,7 @@ void TelephonyAppApprover::addDispatchOperation(const Tp::MethodInvocationContex
 
 class EventData {
 public:
-    TelephonyAppApprover* self;
+    PhoneAppApprover* self;
     Tp::ChannelDispatchOperationPtr dispatchOp;
     Tp::ChannelPtr channel;
     Tp::PendingReady *pr;
@@ -141,7 +141,7 @@ void action_accept(NotifyNotification* notification,
     Q_UNUSED(action);
 
     EventData* eventData = (EventData*) data;
-    TelephonyAppApprover* approver = (TelephonyAppApprover*) eventData->self;
+    PhoneAppApprover* approver = (PhoneAppApprover*) eventData->self;
     if (NULL != approver) {
         QDBusInterface channelIf(eventData->channel->busName(), eventData->channel->objectPath(), TELEPATHY_CALL_IFACE);
         channelIf.call("turnOnSpeaker", true);
@@ -158,7 +158,7 @@ void action_reject(NotifyNotification* notification,
     Q_UNUSED(action);
 
     EventData* eventData = (EventData*) data;
-    TelephonyAppApprover* approver = (TelephonyAppApprover*) eventData->self;
+    PhoneAppApprover* approver = (PhoneAppApprover*) eventData->self;
     if (NULL != approver) {
         approver->onRejected((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp,
                              (Tp::ChannelPtr) eventData->channel);
@@ -170,7 +170,7 @@ void delete_event_data(gpointer data) {
     delete (EventData*) data;
 }
 
-void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
+void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[pr]);
@@ -240,7 +240,7 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
         if (!contact->avatarData().fileName.isEmpty()) {
             icon = contact->avatarData().fileName;
         } else {
-            icon = telephonyAppDirectory() + "/assets/avatar-default@18.png";
+            icon = phoneAppDirectory() + "/assets/avatar-default@18.png";
         }
     }
 
@@ -282,22 +282,22 @@ void TelephonyAppApprover::onChannelReady(Tp::PendingOperation *op)
     Ringtone::instance()->playIncomingCallSound();
 }
 
-void TelephonyAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
+void PhoneAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
                                       Tp::PendingReady *pr)
 {
     closeSnapDecision();
 
-    // launch the telephony-app before dispatching the channel
-    TelephonyAppUtils::instance()->startTelephonyApp();
+    // launch the phone-app before dispatching the channel
+    PhoneAppUtils::instance()->startPhoneApp();
 
-    dispatchOp->handleWith(TELEPHONY_APP_CLIENT);
+    dispatchOp->handleWith(PHONE_APP_CLIENT);
     mDispatchOps.removeAll(dispatchOp);
     if (pr) {
         mChannels.remove(pr);
     }
 }
 
-void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
+void PhoneAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
                                       Tp::ChannelPtr channel)
 {
     Tp::PendingOperation *claimop = dispatchOp->claim();
@@ -308,10 +308,10 @@ void TelephonyAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp
     Ringtone::instance()->stopIncomingCallSound();
 }
 
-void TelephonyAppApprover::processChannels()
+void PhoneAppApprover::processChannels()
 {
-    // if the telephony app is not running, do not approve text channels
-    if (!TelephonyAppUtils::instance()->isApplicationRunning()) {
+    // if the phone app is not running, do not approve text channels
+    if (!PhoneAppUtils::instance()->isApplicationRunning()) {
         return;
     }
 
@@ -324,17 +324,17 @@ void TelephonyAppApprover::processChannels()
                 continue;
             }
 
-            if (dispatchOperation->possibleHandlers().contains(TELEPHONY_APP_CLIENT)) {
-                dispatchOperation->handleWith(TELEPHONY_APP_CLIENT);
+            if (dispatchOperation->possibleHandlers().contains(PHONE_APP_CLIENT)) {
+                dispatchOperation->handleWith(PHONE_APP_CLIENT);
                 mDispatchOps.removeAll(dispatchOperation);
             }
             // FIXME: this shouldn't happen, but in any case, we need to check what to do when
-            // the telephony app client is not available
+            // the phone app client is not available
         }
     }
 }
 
-void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
+void PhoneAppApprover::onClaimFinished(Tp::PendingOperation* op)
 {
     if(!op || op->isError()) {
         qDebug() << "onClaimFinished() error";
@@ -362,7 +362,7 @@ void TelephonyAppApprover::onClaimFinished(Tp::PendingOperation* op)
     }
 }
 
-void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
+void PhoneAppApprover::onHangupFinished(Tp::PendingOperation* op)
 {
     if(!op || op->isError()) {
         qDebug() << "onHangupFinished() error";
@@ -380,7 +380,7 @@ void TelephonyAppApprover::onHangupFinished(Tp::PendingOperation* op)
     mChannels.remove(op);
 }
 
-void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
+void PhoneAppApprover::onCallStateChanged(Tp::CallState state)
 {
     Tp::CallChannel *channel = qobject_cast<Tp::CallChannel*>(sender());
     Tp::ChannelDispatchOperationPtr dispatchOperation;
@@ -414,10 +414,10 @@ void TelephonyAppApprover::onCallStateChanged(Tp::CallState state)
     }
 }
 
-void TelephonyAppApprover::onReplyReceived(const QString &phoneNumber, const QString &reply)
+void PhoneAppApprover::onReplyReceived(const QString &phoneNumber, const QString &reply)
 {
     // if the app is running, just send using it
-    if (TelephonyAppUtils::instance()->isApplicationRunning()) {
+    if (PhoneAppUtils::instance()->isApplicationRunning()) {
         ChatManager::instance()->sendMessage(phoneNumber, reply);
         return;
     }
@@ -447,7 +447,7 @@ void TelephonyAppApprover::onReplyReceived(const QString &phoneNumber, const QSt
     }
 }
 
-void TelephonyAppApprover::closeSnapDecision()
+void PhoneAppApprover::closeSnapDecision()
 {
     if (mPendingSnapDecision != NULL) {
         notify_notification_close(mPendingSnapDecision, NULL);
