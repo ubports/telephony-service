@@ -20,7 +20,7 @@ import QtQuick 2.0
 import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 import Ubuntu.HUD 0.1 as HUD
-import TelephonyApp 0.1
+import Ubuntu.PhoneApp 0.1
 import "PanelContacts"
 import "PanelCommunications"
 import "PanelDialer"

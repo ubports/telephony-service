@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.0
-import TelephonyApp 0.1
+import Ubuntu.PhoneApp 0.1
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../Widgets" as LocalWidgets
@@ -89,7 +89,7 @@ LocalWidgets.TelephonyPage {
     }
 
     function createNewContact() {
-        contact = Qt.createQmlObject("import TelephonyApp 0.1; ContactEntry {}", contactModel);
+        contact = Qt.createQmlObject("import Ubuntu.PhoneApp 0.1; ContactEntry {}", contactModel);
         editable = true;
         added = true;
 

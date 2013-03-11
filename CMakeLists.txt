@@ -138,8 +138,8 @@ install(FILES ${TELEPHONY_APP}.desktop
 
 enable_testing()
 
-add_subdirectory(libtelephonyapp)
-add_subdirectory(TelephonyApp)
+add_subdirectory(libphoneapp)
+add_subdirectory(Ubuntu)
 add_subdirectory(PhoneAppApprover)
 add_subdirectory(tools)
 add_subdirectory(icons)

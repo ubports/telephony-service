@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.0
-import TelephonyApp 0.1
+import Ubuntu.PhoneApp 0.1
 import "../Widgets" as LocalWidgets
 import "../"
 import "../dateUtils.js" as DateUtils

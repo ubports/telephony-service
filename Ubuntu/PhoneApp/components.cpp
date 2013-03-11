@@ -5,13 +5,13 @@
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -92,7 +92,7 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
 
 void Components::registerTypes(const char *uri)
 {
-    // @uri TelephonyApp
+    // @uri PhoneApp
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
     qmlRegisterType<ConversationProxyModel>(uri, 0, 1, "ConversationProxyModel");
     qmlRegisterType<ContactEntry>(uri, 0, 1, "ContactEntry");

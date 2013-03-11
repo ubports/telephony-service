@@ -17,22 +17,22 @@ include_directories(
     ${TPL_QT5_INCLUDE_DIRS}
     ${QTGLIB_INCLUDE_DIRS}
     ${GLIB_INCLUDE_DIRS}
-    ${CMAKE_SOURCE_DIR}/libtelephonyapp
+    ${CMAKE_SOURCE_DIR}/libphoneapp
     )
 
-add_library(telephony-qml SHARED ${plugin_SRCS} ${plugin_HDRS})
+add_library(phone-qml SHARED ${plugin_SRCS} ${plugin_HDRS})
 
-qt5_use_modules(telephony-qml Contacts Core Qml Quick)
+qt5_use_modules(phone-qml Contacts Core Qml Quick)
 
-target_link_libraries(telephony-qml
+target_link_libraries(phone-qml
     ${TP_QT5_LIBRARIES}
     ${TPL_QT5_LIBRARIES}
     ${GLIB_LIBRARIES}
-    telephonyapp
+    phoneapp
     )
 
-set(PLUGIN_DIR ${QT_INSTALL_QML}/TelephonyApp)
-install(TARGETS telephony-qml DESTINATION ${PLUGIN_DIR})
+set(PLUGIN_DIR ${QT_INSTALL_QML}/Ubuntu/PhoneApp)
+install(TARGETS phone-qml DESTINATION ${PLUGIN_DIR})
 install(FILES qmldir DESTINATION ${PLUGIN_DIR})
 
 add_subdirectory(tests)

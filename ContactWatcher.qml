@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.0
-import TelephonyApp 0.1
+import Ubuntu.PhoneApp 0.1
 
 /*
  * ContactWatcher in an element used to track changes to a specific

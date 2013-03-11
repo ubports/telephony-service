@@ -17,7 +17,7 @@
  */
 
 import QtQuick 2.0
-import TelephonyApp 0.1
+import Ubuntu.PhoneApp 0.1
 import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
@@ -85,7 +85,7 @@ FocusScope {
                 opacity: editable ? 1.0 : 0.0
 
                 onLoaded: {
-                    item.detail = Qt.createQmlObject("import TelephonyApp 0.1; " + detailTypeInfo.newItemType + "{}", newItem);
+                    item.detail = Qt.createQmlObject("import Ubuntu.PhoneApp 0.1; " + detailTypeInfo.newItemType + "{}", newItem);
                     if (detailTypeInfo.subTypes.length > 0) DetailUtils.setDetailSubType(item.detail, detailTypeInfo.subTypes[0]);
                     item.focus = true;
                     item.focusRequested();
