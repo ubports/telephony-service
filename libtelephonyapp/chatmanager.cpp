@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -177,6 +177,7 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     // ignore delivery reports for now
+    // FIXME: we need to handle errors on sending messages at some point
     if (message.isDeliveryReport()) {
         return;
     }
