@@ -1,16 +1,16 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Ugo Riboni <ugo.riboni@canonical.com>
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -19,22 +19,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TELEPHONYAPPDBUS_H
-#define TELEPHONYAPPDBUS_H
+#ifndef PHONEAPPDBUS_H
+#define PHONEAPPDBUS_H
 
 #include <QtCore/QObject>
 #include <QtDBus/QDBusContext>
 
 /**
- * DBus interface for the telephony app
+ * DBus interface for the phone app
  */
-class TelephonyAppDBus : public QObject, protected QDBusContext
+class PhoneAppDBus : public QObject, protected QDBusContext
 {
     Q_OBJECT
 
 public:
-    TelephonyAppDBus(QObject* parent=0);
-    ~TelephonyAppDBus();
+    PhoneAppDBus(QObject* parent=0);
+    ~PhoneAppDBus();
 
     bool connectToBus();
 
@@ -52,4 +52,4 @@ Q_SIGNALS:
     void messageSendRequested(const QString &phoneNumber, const QString &message);
 };
 
-#endif // TELEPHONYAPPDBUS_H
+#endif // PHONEAPPDBUS_H

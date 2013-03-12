@@ -1,13 +1,13 @@
 /*
- * Copyright 2012 Canonical Ltd.
+ * Copyright 2012-2013 Canonical Ltd.
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -21,19 +21,19 @@ import QtQuick 2.0
 QtObject {
     property url source
     property int tab
-    property bool loaded: telephony.view != undefined && telephony.view.source == source
+    property bool loaded: mainView.view != undefined && mainView.view.source == source
 
     function load(properties, clear) {
         if (properties == undefined) {
             properties = {};
         }
         properties["source"] = source;
-        properties["previousTab"] = telephony.selectedTabIndex;
-        telephony.selectedTabIndex = tab
+        properties["previousTab"] = mainView.selectedTabIndex;
+        mainView.selectedTabIndex = tab
         if (clear) {
-            telephony.resetView();
+            mainView.resetView();
         }
 
-        telephony.viewStack.push(Qt.resolvedUrl(source), properties);
+        mainView.viewStack.push(Qt.resolvedUrl(source), properties);
     }
 }

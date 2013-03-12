@@ -3,11 +3,11 @@
     <dox:d><![CDATA[
       @mainpage
 
-      An interface to the telephony application.
+      An interface to the phone application.
     ]]></dox:d>
-    <interface name="com.canonical.TelephonyApp" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+    <interface name="com.canonical.PhoneApp" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
         <dox:d>
-          An interface to the telephony application.
+          An interface to the phone application.
         </dox:d>
         <method name="ShowMessages">
             <dox:d><![CDATA[

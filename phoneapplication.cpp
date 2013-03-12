@@ -1,13 +1,13 @@
 /*
  * Copyright (C) 2012 Canonical, Ltd.
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "telephonyapplication.h"
+#include "phoneapplication.h"
 
 #include <QDir>
 #include <QUrl>
@@ -31,7 +31,7 @@
 #include <QDBusConnectionInterface>
 #include <QLibrary>
 #include "config.h"
-#include "telephonyappdbus.h"
+#include "phoneappdbus.h"
 #include <QQmlEngine>
 
 static void printUsage(const QStringList& arguments)
@@ -51,14 +51,14 @@ static void printUsage(const QStringList& arguments)
              << "[-testability]";
 }
 
-TelephonyApplication::TelephonyApplication(int &argc, char **argv)
+PhoneApplication::PhoneApplication(int &argc, char **argv)
     : QGuiApplication(argc, argv), m_view(0), m_applicationIsReady(false)
 {
-    setApplicationName("com.canonical.TelephonyApp");
-    m_dbus = new TelephonyAppDBus(this);
+    setApplicationName("com.canonical.PhoneApp");
+    m_dbus = new PhoneAppDBus(this);
 }
 
-bool TelephonyApplication::setup()
+bool PhoneApplication::setup()
 {
     static QList<QString> validSchemes;
     bool singlePanel = true;
@@ -85,7 +85,7 @@ bool TelephonyApplication::setup()
        file specified on the command line with the desktop_file_hint switch. 
        So app will be launched like this:
 
-       /usr/bin/telephony-app --desktop_file_hint=/usr/share/applications/telephony-app.desktop
+       /usr/bin/phone-app --desktop_file_hint=/usr/share/applications/phone-app.desktop
 
        So remove that argument and continue parsing.
     */
@@ -142,31 +142,31 @@ bool TelephonyApplication::setup()
     }
 
     // check if the app is already running, if it is, send the message to the running instance
-    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered("com.canonical.TelephonyApp");
+    QDBusReply<bool> reply = QDBusConnection::sessionBus().interface()->isServiceRegistered("com.canonical.PhoneApp");
     if (reply.isValid() && reply.value()) {
-        QDBusInterface appInterface("com.canonical.TelephonyApp",
-                                    "/com/canonical/TelephonyApp",
-                                    "com.canonical.TelephonyApp");
+        QDBusInterface appInterface("com.canonical.PhoneApp",
+                                    "/com/canonical/PhoneApp",
+                                    "com.canonical.PhoneApp");
         appInterface.call("SendAppMessage", m_arg);
         return false;
     }
 
     if (!m_dbus->connectToBus()) {
-        qWarning() << "Failed to expose com.canonical.TelephonyApp on DBUS.";
+        qWarning() << "Failed to expose com.canonical.PhoneApp on DBUS.";
     }
 
     m_view = new QQuickView();
     QObject::connect(m_view, SIGNAL(statusChanged(QQuickView::Status)), this, SLOT(onViewStatusChanged(QQuickView::Status)));
     QObject::connect(m_view->engine(), SIGNAL(quit()), SLOT(quit()));
     m_view->setResizeMode(QQuickView::SizeRootObjectToView);
-    m_view->setTitle("Telephony");
+    m_view->setTitle("Phone");
     m_view->rootContext()->setContextProperty("application", this);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     m_view->rootContext()->setContextProperty("dbus", m_dbus);
     m_view->rootContext()->setContextProperty("appLayout", singlePanel ? "singlePane" : "dualPane" );
     m_view->rootContext()->setContextProperty("contactEngine", contactEngine);
-    m_view->engine()->setBaseUrl(QUrl::fromLocalFile(telephonyAppDirectory()));
-    m_view->setSource(QUrl::fromLocalFile("telephony-app.qml"));
+    m_view->engine()->setBaseUrl(QUrl::fromLocalFile(phoneAppDirectory()));
+    m_view->setSource(QUrl::fromLocalFile("phone-app.qml"));
     if (fullScreen) {
         m_view->showFullScreen();
     } else {
@@ -183,26 +183,26 @@ bool TelephonyApplication::setup()
     return true;
 }
 
-TelephonyApplication::~TelephonyApplication()
+PhoneApplication::~PhoneApplication()
 {
     if (m_view) {
         delete m_view;
     }
 }
 
-void TelephonyApplication::onViewStatusChanged(QQuickView::Status status)
+void PhoneApplication::onViewStatusChanged(QQuickView::Status status)
 {
     if (status != QQuickView::Ready) {
         return;
     }
 
-    QQuickItem *telephony = m_view->rootObject();
-    if (telephony) {
-        QObject::connect(telephony, SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
+    QQuickItem *mainView = m_view->rootObject();
+    if (mainView) {
+        QObject::connect(mainView, SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
     }
 }
 
-void TelephonyApplication::onApplicationReady()
+void PhoneApplication::onApplicationReady()
 {
     QObject::disconnect(QObject::sender(), SIGNAL(applicationReady()), this, SLOT(onApplicationReady()));
     m_applicationIsReady = true;
@@ -210,23 +210,23 @@ void TelephonyApplication::onApplicationReady()
     m_arg.clear();
 }
 
-void TelephonyApplication::onMessageSendRequested(const QString &phoneNumber, const QString &message)
+void PhoneApplication::onMessageSendRequested(const QString &phoneNumber, const QString &message)
 {
-    QQuickItem *telephony = m_view->rootObject();
-    if (!telephony) {
+    QQuickItem *mainView = m_view->rootObject();
+    if (!mainView) {
         return;
     }
-    const QMetaObject *mo = telephony->metaObject();
+    const QMetaObject *mo = mainView->metaObject();
     int index = mo->indexOfMethod("sendMessage(QVariant,QVariant)");
     if (index != -1) {
         QMetaMethod method = mo->method(index);
-        method.invoke(telephony,
+        method.invoke(mainView,
                       Q_ARG(QVariant, QVariant(phoneNumber)),
                       Q_ARG(QVariant, QVariant(message)));
     }
 }
 
-void TelephonyApplication::parseArgument(const QString &arg)
+void PhoneApplication::parseArgument(const QString &arg)
 {
     if (arg.isEmpty()) {
         return;
@@ -240,11 +240,11 @@ void TelephonyApplication::parseArgument(const QString &arg)
     QString scheme = args[0];
     QString value = args[1];
 
-    QQuickItem *telephony = m_view->rootObject();
-    if (!telephony) {
+    QQuickItem *mainView = m_view->rootObject();
+    if (!mainView) {
         return;
     }
-    const QMetaObject *mo = telephony->metaObject();
+    const QMetaObject *mo = mainView->metaObject();
 
 
     if (scheme == "contact") {
@@ -255,20 +255,20 @@ void TelephonyApplication::parseArgument(const QString &arg)
         int index = mo->indexOfMethod("callNumber(QVariant)");
         if (index != -1) {
             QMetaMethod method = mo->method(index);
-            method.invoke(telephony, Q_ARG(QVariant, QVariant(value)));
+            method.invoke(mainView, Q_ARG(QVariant, QVariant(value)));
         }
     } else if (scheme == "message") {
         if (value.isEmpty()) {
             int index = mo->indexOfMethod("startNewMessage()");
             if (index != -1) {
                 QMetaMethod method = mo->method(index);
-                method.invoke(telephony);
+                method.invoke(mainView);
             }
         } else {
             int index = mo->indexOfMethod("startChat(QVariant)");
             if (index != -1) {
                 QMetaMethod method = mo->method(index);
-                method.invoke(telephony,
+                method.invoke(mainView,
                               Q_ARG(QVariant, QVariant(value)));
             }
        }
@@ -276,7 +276,7 @@ void TelephonyApplication::parseArgument(const QString &arg)
         int index = mo->indexOfMethod("showMessage(QVariant)");
         if (index != -1) {
             QMetaMethod method = mo->method(index);
-            method.invoke(telephony,
+            method.invoke(mainView,
                           Q_ARG(QVariant, QVariant("")),
                           Q_ARG(QVariant, QVariant(value)));
         }
@@ -284,12 +284,12 @@ void TelephonyApplication::parseArgument(const QString &arg)
         int index = mo->indexOfMethod("showVoicemail()");
         if (index != -1) {
             QMetaMethod method = mo->method(index);
-            method.invoke(telephony);
+            method.invoke(mainView);
         }
     }
 }
 
-void TelephonyApplication::onMessageReceived(const QString &message)
+void PhoneApplication::onMessageReceived(const QString &message)
 {
     if (m_applicationIsReady) {
         parseArgument(message);
@@ -300,7 +300,7 @@ void TelephonyApplication::onMessageReceived(const QString &message)
     }
 }
 
-void TelephonyApplication::activateWindow()
+void PhoneApplication::activateWindow()
 {
     if (m_view) {
         m_view->raise();

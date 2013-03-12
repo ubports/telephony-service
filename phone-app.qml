@@ -1,13 +1,13 @@
 /*
- * Copyright 2012 Canonical Ltd.
+ * Copyright 2012-2013 Canonical Ltd.
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -26,7 +26,7 @@ import "PanelCommunications"
 import "PanelDialer"
 
 MainView {
-    id: telephony
+    id: mainView
 
     width: singlePane ? units.gu(40) : units.gu(80)
     height: units.gu(71)
@@ -68,13 +68,13 @@ MainView {
             mainStack.push(leftPane);
         } else {
             mainStack.clear();
-            leftPane.parent = telephony;
+            leftPane.parent = mainView;
         }
     }
 
     Connections {
         target: contactModel
-        onContactLoaded: telephony.showContactDetails(contact);
+        onContactLoaded: mainView.showContactDetails(contact);
     }
 
     Connections {
@@ -236,7 +236,7 @@ MainView {
         anchors.bottom: parent.bottom
         anchors.right: singlePane ? parent.right : undefined
         width: singlePane ? undefined : units.gu(31)
-        parent: singlePane ? mainStack : telephony
+        parent: singlePane ? mainStack : mainView
 
         Tabs {
             id: tabs
@@ -317,23 +317,23 @@ MainView {
 
         property bool shown
         shown: {
-            if (telephony.singlePane) {
+            if (mainView.singlePane) {
                 return false;
             }
 
             if (!callManager.hasCalls) {
                 return false
             } else {
-                if (isVoicemailActive() && !telephony.voicemail.loaded) {
+                if (isVoicemailActive() && !mainView.voicemail.loaded) {
                     return true
-                } else if (!isVoicemailActive() && !telephony.liveCall.loaded) {
+                } else if (!isVoicemailActive() && !mainView.liveCall.loaded) {
                     return true
                 }
             }
             return false
         }
 
-        onClicked: isVoicemailActive() ? telephony.showVoicemail() : telephony.showLiveCall()
+        onClicked: isVoicemailActive() ? mainView.showVoicemail() : mainView.showLiveCall()
     }
 
     Item {
@@ -452,14 +452,14 @@ MainView {
     Connections {
         target: telepathyHelper
         onAccountReady: {
-            telephony.applicationReady()
+            mainView.applicationReady()
         }
     }
 
     Connections {
         target: callManager
         onCallReady: {
-            var currentPage = singlePane ? telephony.view : rightPaneStacks.stacks[dialer.tab].currentPage
+            var currentPage = singlePane ? mainView.view : rightPaneStacks.stacks[dialer.tab].currentPage
             if (currentPage.source == dialer.source) {
                 currentPage.dialNumber = ""
             }
@@ -480,19 +480,19 @@ MainView {
     }
 
     HUD.HUD {
-        applicationIdentifier: "telephony-app" // this must match the .desktop file!
+        applicationIdentifier: "phone-app" // this must match the .desktop file!
         HUD.Context {
             toolbar.quitAction.onTriggered: Qt.quit()
 
             HUD.Action {
                 label: "Compose"
                 keywords: "New Message"
-                onTriggered: telephony.startNewMessage()
+                onTriggered: mainView.startNewMessage()
             }
             HUD.Action {
                 label: "Add"
                 keywords: "New Contact"
-                onTriggered: telephony.createNewContact()
+                onTriggered: mainView.createNewContact()
             }
         }
     }

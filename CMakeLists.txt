@@ -1,4 +1,4 @@
-project(telephony-app)
+project(phone-app)
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
@@ -22,10 +22,10 @@ IF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
   SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ftest-coverage -fprofile-arcs" )
   SET(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -coverage" )
   SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -coverage" )
-  ENABLE_COVERAGE_REPORT(TARGETS ${TELEPHONY_APP})
+  ENABLE_COVERAGE_REPORT(TARGETS ${PHONE_APP})
 ENDIF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
 
-set(TELEPHONY_APP_DIR ${CMAKE_INSTALL_DATADIR}/telephony-app)
+set(PHONE_APP_DIR ${CMAKE_INSTALL_DATADIR}/phone-app)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
@@ -69,28 +69,28 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-set(TELEPHONY_APP telephony-app)
+set(PHONE_APP phone-app)
 
-set(telephony_app_HDRS
-    telephonyapplication.h
-    telephonyappdbus.h)
+set(phone_app_HDRS
+    phoneapplication.h
+    phoneappdbus.h)
 
-set(telephony_app_SRCS
-    telephonyapplication.cpp
-    telephonyappdbus.cpp
+set(phone_app_SRCS
+    phoneapplication.cpp
+    phoneappdbus.cpp
     main.cpp)
 
-qt5_add_dbus_adaptor(telephony_app_SRCS TelephonyApp.xml telephonyappdbus.h TelephonyAppDBus)
-add_executable(${TELEPHONY_APP}
-    ${telephony_app_SRCS}
+qt5_add_dbus_adaptor(phone_app_SRCS PhoneApp.xml phoneappdbus.h PhoneAppDBus)
+add_executable(${PHONE_APP}
+    ${phone_app_SRCS}
     )
-qt5_use_modules(${TELEPHONY_APP} Core DBus Gui Qml Quick)
+qt5_use_modules(${PHONE_APP} Core DBus Gui Qml Quick)
 
-install(TARGETS ${TELEPHONY_APP}
+install(TARGETS ${PHONE_APP}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
-install(PROGRAMS launch-telephony-app
+install(PROGRAMS launch-phone-app
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
@@ -98,16 +98,16 @@ install(PROGRAMS ofono-setup
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
-configure_file(org.freedesktop.Telepathy.Client.TelephonyApp.service.in org.freedesktop.Telepathy.Client.TelephonyApp.service)
-install(FILES ${CMAKE_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyApp.service DESTINATION share/dbus-1/services)
-install(FILES TelephonyApp.client DESTINATION share/telepathy/clients)
+configure_file(org.freedesktop.Telepathy.Client.PhoneApp.service.in org.freedesktop.Telepathy.Client.PhoneApp.service)
+install(FILES ${CMAKE_BINARY_DIR}/org.freedesktop.Telepathy.Client.PhoneApp.service DESTINATION share/dbus-1/services)
+install(FILES PhoneApp.client DESTINATION share/telepathy/clients)
 file(GLOB QML_JS_FILES *.qml *.js)
 
-configure_file(com.canonical.TelephonyApp.service.in com.canonical.TelephonyApp.service)
-install(FILES ${CMAKE_BINARY_DIR}/com.canonical.TelephonyApp.service DESTINATION share/dbus-1/services)
+configure_file(com.canonical.PhoneApp.service.in com.canonical.PhoneApp.service)
+install(FILES ${CMAKE_BINARY_DIR}/com.canonical.PhoneApp.service DESTINATION share/dbus-1/services)
 
 install(FILES ${QML_JS_FILES}
-    DESTINATION ${TELEPHONY_APP_DIR}
+    DESTINATION ${PHONE_APP_DIR}
     )
 
 set(QML_DIRS
@@ -123,16 +123,16 @@ set(QML_DIRS
     )
 
 install(DIRECTORY ${QML_DIRS}
-    DESTINATION ${TELEPHONY_APP_DIR}
+    DESTINATION ${PHONE_APP_DIR}
     )
 
 set(ASSETS_DIR assets)
 
 install(DIRECTORY ${ASSETS_DIR}
-    DESTINATION ${TELEPHONY_APP_DIR}
+    DESTINATION ${PHONE_APP_DIR}
     )
 
-install(FILES ${TELEPHONY_APP}.desktop
+install(FILES ${PHONE_APP}.desktop
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
     )
 
