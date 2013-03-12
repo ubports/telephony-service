@@ -90,10 +90,6 @@ install(TARGETS ${PHONE_APP}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
-install(PROGRAMS launch-phone-app
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
-
 install(PROGRAMS ofono-setup
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
