@@ -1,15 +1,13 @@
 /*
- * This file is part of unity-2d
+ * Copyright 2010-2013 Canonical Ltd.
  *
- * Copyright 2010-2011 Canonical Ltd.
+ * This file is part of phone-app.
  *
- * This file is part of telephony-app.
- *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.

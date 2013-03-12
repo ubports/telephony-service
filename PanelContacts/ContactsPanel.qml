@@ -1,13 +1,13 @@
 /*
- * Copyright 2012 Canonical Ltd.
+ * Copyright 2012-2013 Canonical Ltd.
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -23,7 +23,7 @@ import "../Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 
-LocalWidgets.TelephonyPage {
+LocalWidgets.PhonePage {
     id: contactsPanel
     title: "Contacts"
 
@@ -31,7 +31,7 @@ LocalWidgets.TelephonyPage {
         Action {
             text: "Add"
             iconSource: Qt.resolvedUrl("../assets/new-contact.png")
-            onTriggered: telephony.createNewContact()
+            onTriggered: mainView.createNewContact()
         }
     }
 
@@ -39,7 +39,7 @@ LocalWidgets.TelephonyPage {
 
     anchors.fill: parent
     signal contactClicked(variant contact)
-    onContactClicked: telephony.showContactDetails(contact, true)
+    onContactClicked: mainView.showContactDetails(contact, true)
 
     ContactProxyModel {
         id: contactProxyModel
@@ -50,9 +50,9 @@ LocalWidgets.TelephonyPage {
         id: contactDelegate
         ContactDelegate {
             onClicked: contactsPanel.contactClicked(model.contact)
-            selected: (telephony.view &&
-            telephony.view.contact &&
-            typeof(contact) != "undefined") ? (telephony.view.contact == contact) : false
+            selected: (mainView.view &&
+            mainView.view.contact &&
+            typeof(contact) != "undefined") ? (mainView.view.contact == contact) : false
         }
     }
 
@@ -107,7 +107,7 @@ LocalWidgets.TelephonyPage {
             }
 
             ListItem.ThinDivider {
-                visible: !telephony.singlePane
+                visible: !mainView.singlePane
             }
 
             ListItem.Standard {
@@ -116,16 +116,16 @@ LocalWidgets.TelephonyPage {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: visible ? units.gu(4) : 0
-                visible: !telephony.singlePane
+                visible: !mainView.singlePane
                 __leftIconMargin: units.gu(3)
                 __rightIconMargin: units.gu(2)
 
                 text: "Add a new contact"
                 icon: Qt.resolvedUrl("../assets/add_contacts_icon.png")
                 iconFrame: false
-                onClicked: telephony.createNewContact()
+                onClicked: mainView.createNewContact()
 
-                selected: telephony.contactDetails.loaded && telephony.view.added
+                selected: mainView.contactDetails.loaded && mainView.view.added
             }
         }
 

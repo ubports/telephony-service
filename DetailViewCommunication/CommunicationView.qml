@@ -1,13 +1,13 @@
 /*
- * Copyright 2012 Canonical Ltd.
+ * Copyright 2012-2013 Canonical Ltd.
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -24,7 +24,7 @@ import "../dateUtils.js" as DateUtils
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import Ubuntu.Components 0.1
 
-LocalWidgets.TelephonyPage {
+LocalWidgets.PhonePage {
     id: view
     objectName: "communicationView"
     property alias contact: contactWatcher.contact
@@ -203,7 +203,7 @@ LocalWidgets.TelephonyPage {
             onClicked: {
                 listView.currentIndex = index
                 if (itemType == "call") {
-                    telephony.callNumber(item.phoneNumber);
+                    mainView.callNumber(item.phoneNumber);
                 } else {
                     view.phoneNumber = item.phoneNumber
                     footer.focus = true

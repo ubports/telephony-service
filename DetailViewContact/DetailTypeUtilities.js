@@ -1,13 +1,13 @@
 /*
- * Copyright 2012 Canonical Ltd.
+ * Copyright 2012-2013 Canonical Ltd.
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -18,7 +18,7 @@
 
 .pragma library
 
-.import TelephonyApp 0.1 as TelApp
+.import Ubuntu.PhoneApp 0.1 as PhoneApp
 
 var PROTOCOL_LABEL_AIM      = "AIM";
 var PROTOCOL_LABEL_MSN      = "Windows Live";
@@ -129,16 +129,16 @@ function getDetailSubType(detail) {
     }
 
     /* Phone numbers have a special field for the subType */
-    if (detail.type == TelApp.ContactDetail.PhoneNumber) {
-        if (detail.contexts.indexOf(TelApp.ContactDetail.ContextHome) > -1) {
+    if (detail.type == PhoneApp.ContactDetail.PhoneNumber) {
+        if (detail.contexts.indexOf(PhoneApp.ContactDetail.ContextHome) > -1) {
             return "Home";
-        } else if (detail.contexts.indexOf(TelApp.ContactDetail.ContextWork) > -1) {
+        } else if (detail.contexts.indexOf(PhoneApp.ContactDetail.ContextWork) > -1) {
             return "Work";
-        } else if (detail.subTypes.indexOf(TelApp.ContactPhoneNumber.Mobile) > -1) {
+        } else if (detail.subTypes.indexOf(PhoneApp.ContactPhoneNumber.Mobile) > -1) {
             return "Mobile";
         }
         return "Other";
-    } else if (detail.type == TelApp.ContactDetail.InstantMessaging) {
+    } else if (detail.type == PhoneApp.ContactDetail.InstantMessaging) {
         var protocol = detail.protocol;
         if (protocol == PROTOCOL_TYPE_YAHOO) {
             return PROTOCOL_LABEL_YAHOO;
@@ -149,11 +149,11 @@ function getDetailSubType(detail) {
         } else {
             return PROTOCOL_LABEL_OTHER;
         }
-    } else if (detail.type == TelApp.ContactDetail.Address) {
+    } else if (detail.type == PhoneApp.ContactDetail.Address) {
         var contexts = detail.contexts
-        if (contexts.indexOf(TelApp.ContactDetail.ContextHome) > -1) {
+        if (contexts.indexOf(PhoneApp.ContactDetail.ContextHome) > -1) {
             return ADDRESS_LABEL_HOME;
-        } else if (contexts.indexOf(TelApp.ContactDetail.ContextWork) > -1) {
+        } else if (contexts.indexOf(PhoneApp.ContactDetail.ContextWork) > -1) {
             return ADDRESS_LABEL_WORK;
         } else {
             return ADDRESS_LABEL_OTHER;
@@ -175,11 +175,11 @@ function getDetailSubType(detail) {
             }
         }
 
-        if (context == TelApp.ContactDetail.ContextHome) {
+        if (context == PhoneApp.ContactDetail.ContextHome) {
             return "Home";
-        } else if (context == TelApp.ContactDetail.ContextWork) {
+        } else if (context == PhoneApp.ContactDetail.ContextWork) {
             return "Work";
-        } else if (subType == TelApp.ContactDetail.ContextOther) {
+        } else if (subType == PhoneApp.ContactDetail.ContextOther) {
             return "Other";
         }
     }
@@ -199,21 +199,21 @@ function setDetailSubType(detail, newSubType) {
     }
 
     /* Phone numbers have a special field for the subType */
-    if (detail.type == TelApp.ContactDetail.PhoneNumber) {
+    if (detail.type == PhoneApp.ContactDetail.PhoneNumber) {
         if (newSubType == "Home") {
-            detail.contexts = [ TelApp.ContactDetail.ContextHome ];
-            detail.subTypes = [ TelApp.ContactPhoneNumber.Voice ];
+            detail.contexts = [ PhoneApp.ContactDetail.ContextHome ];
+            detail.subTypes = [ PhoneApp.ContactPhoneNumber.Voice ];
         } else if (newSubType == "Work") {
-            detail.contexts = [ TelApp.ContactDetail.ContextWork ];
-            detail.subTypes = [ TelApp.ContactPhoneNumber.Voice ];
+            detail.contexts = [ PhoneApp.ContactDetail.ContextWork ];
+            detail.subTypes = [ PhoneApp.ContactPhoneNumber.Voice ];
         } else if (newSubType == "Mobile") {
             detail.contexts = [ ];
-            detail.subTypes = [ TelApp.ContactPhoneNumber.Mobile ];
+            detail.subTypes = [ PhoneApp.ContactPhoneNumber.Mobile ];
         } else {
-            detail.contexts = [ TelApp.ContactDetail.ContextOther ];
+            detail.contexts = [ PhoneApp.ContactDetail.ContextOther ];
             detail.subTypes = [ ];
         }
-    } else if (detail.type == TelApp.ContactDetail.InstantMessaging) {
+    } else if (detail.type == PhoneApp.ContactDetail.InstantMessaging) {
         var protocol = newSubType;
         if (protocol == PROTOCOL_LABEL_YAHOO) {
             detail.protocol = PROTOCOL_TYPE_YAHOO;
@@ -225,22 +225,22 @@ function setDetailSubType(detail, newSubType) {
             console.log("Invalid protocol: " + protocol);
             detail.protocol = PROTOCOL_TYPE_OTHER;
         }
-    } else if (detail.type == TelApp.ContactDetail.Address) {
+    } else if (detail.type == PhoneApp.ContactDetail.Address) {
         if (newSubType == ADDRESS_LABEL_HOME) {
-            detail.contexts = [ TelApp.ContactDetail.ContextHome ];
+            detail.contexts = [ PhoneApp.ContactDetail.ContextHome ];
         } else if (newSubType == ADDRESS_LABEL_WORK) {
-            detail.contexts = [ TelApp.ContactDetail.ContextWork ];
+            detail.contexts = [ PhoneApp.ContactDetail.ContextWork ];
         } else {
-            detail.contexts = [ TelApp.ContactDetail.ContextOther ];
+            detail.contexts = [ PhoneApp.ContactDetail.ContextOther ];
         }
     } else {
         var context = -1
         if (newSubType == "Home") {
-            context = TelApp.ContactDetail.ContextHome;
+            context = PhoneApp.ContactDetail.ContextHome;
         } else if (newSubType == "Work") {
-            context = TelApp.ContactDetail.ContextWork;
+            context = PhoneApp.ContactDetail.ContextWork;
         } else {
-            context = TelApp.ContactDetail.ContextOther;
+            context = PhoneApp.ContactDetail.ContextOther;
         }
 
         updateContext(detail, context);
