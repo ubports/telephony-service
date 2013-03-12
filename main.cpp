@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Olivier Tilloy <olivier.tilloy@canonical.com>
@@ -31,7 +31,7 @@
 #include <cstring>
 
 // local
-#include "telephonyapplication.h"
+#include "phoneapplication.h"
 #include "config.h"
 
 // Temporarily disable the telepathy folks backend
@@ -58,7 +58,7 @@ static void disableTelepathyFolksBackend(QGuiApplication* application)
 int main(int argc, char** argv)
 {
     QGuiApplication::setApplicationName("Phone App");
-    TelephonyApplication application(argc, argv);
+    PhoneApplication application(argc, argv);
 
     disableTelepathyFolksBackend(&application);
 
