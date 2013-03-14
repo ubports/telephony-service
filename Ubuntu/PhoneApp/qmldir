@@ -1,2 +1,2 @@
-module PhoneApp
+module Ubuntu.PhoneApp
 plugin phone-qml
