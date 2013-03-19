@@ -26,6 +26,7 @@ Vcs-Bzr: lp:phone-app
 Vcs-Browser: https://bazaar.launchpad.net/~phablet-team/phone-app/trunk/files
 
 Package: phone-app
+Replaces: telephony-app
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
@@ -44,6 +45,7 @@ Description: Phone application for Ubuntu
  An application to execute phone tasks such as calling, messaging and contact management.
 
 Package: phone-app-dbg
+Replaces: telephony-app-dbg
 Architecture: any
 Section: debug
 Priority: extra
@@ -54,6 +56,7 @@ Description: debugging symbols for phone-app
  This package contains the debugging symbols for phone-app
 
 Package: phone-app-autopilot
+Replaces: telephony-app-autopilot
 Architecture: all
 Section: debug
 Priority: extra
