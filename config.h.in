@@ -41,7 +41,7 @@ inline QString phoneAppDirectory() {
 }
 
 inline bool isPhoneApplicationInstance() {
-    return QCoreApplication::applicationName() == "com.canonical.PhoneApp";
+    return QCoreApplication::applicationName() == "PhoneApp";
 }
 
 inline bool isPhoneApplicationRunning() {
