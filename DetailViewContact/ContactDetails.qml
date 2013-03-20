@@ -39,8 +39,6 @@ LocalWidgets.PhonePage {
     onContactChanged: editable = false
 
     title: "Contact Details"
-    width: units.gu(50)
-    height: units.gu(75)
 
     tools: ToolbarActions {
 
