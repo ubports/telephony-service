@@ -253,7 +253,6 @@ MainView {
                 iconSource: isCurrent ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
                 page: DialerView {
                     id: callsTabPage
-                    anchors.fill: parent
                 }
             }
 
@@ -269,7 +268,6 @@ MainView {
 
                 page: CommunicationsPanel {
                     id: communicationsTabPage
-                    anchors.fill: parent
                 }
             }
 
@@ -285,7 +283,6 @@ MainView {
                 iconSource: isCurrent ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
                 page: ContactsPanel {
                     id: contactsTabPage
-                    anchors.fill: parent
                 }
             }
         }
