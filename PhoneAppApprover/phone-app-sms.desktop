@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=SMS
+Exec=phone-app
+Icon=phone-app-message
+NoDisplay=true

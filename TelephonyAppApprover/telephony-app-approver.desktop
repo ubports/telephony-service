@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Telephony App Approver
-Comment=Handles incoming messages, calls and indicators.
-Icon=telephony-app
-Exec=telephony-app-approver
-Terminal=false
-Type=Application
-NoDisplay=true
-X-GNOME-Autostart-enabled=true

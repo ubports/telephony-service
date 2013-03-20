@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Phone App Approver
+Comment=Handles incoming messages, calls and indicators.
+Icon=phone-app
+Exec=phone-app-approver
+Terminal=false
+Type=Application
+NoDisplay=true
+X-GNOME-Autostart-enabled=true

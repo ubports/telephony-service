@@ -1,4 +1,4 @@
-Source: telephony-app
+Source: phone-app
 Section: x11
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
@@ -22,10 +22,11 @@ Build-Depends: debhelper (>= 8.0.0),
                python2.7,
                libubuntu-platform-api1-dev [armhf]
 Standards-Version: 3.9.3
-Vcs-Bzr: lp:ubuntu-telephony
-Vcs-Browser: https://bazaar.launchpad.net/~ubuntu-phablet-team/ubuntu-telephony/trunk/files
+Vcs-Bzr: lp:phone-app
+Vcs-Browser: https://bazaar.launchpad.net/~phablet-team/phone-app/trunk/files
 
-Package: telephony-app
+Package: phone-app
+Replaces: telephony-app
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
@@ -40,27 +41,29 @@ Depends: ${shlibs:Depends},
          libhud-qt-qml,
          dbus-x11,
          ubuntu-sounds
-Description: Telephony application for Ubuntu
- An application to execute telephony tasks such as calling, messaging and contact management.
+Description: Phone application for Ubuntu
+ An application to execute phone tasks such as calling, messaging and contact management.
 
-Package: telephony-app-dbg
+Package: phone-app-dbg
+Replaces: telephony-app-dbg
 Architecture: any
 Section: debug
 Priority: extra
 Depends:
-    telephony-app (= ${binary:Version}),
+    phone-app (= ${binary:Version}),
     ${misc:Depends}
-Description: debugging symbols for telephony-app
- This package contains the debugging symbols for telephony-app
+Description: debugging symbols for phone-app
+ This package contains the debugging symbols for phone-app
 
-Package: telephony-app-autopilot
+Package: phone-app-autopilot
+Replaces: telephony-app-autopilot
 Architecture: all
 Section: debug
 Priority: extra
 Depends:
-    telephony-app (= ${binary:Version}),
+    phone-app (= ${binary:Version}),
     ${misc:Depends},
     autopilot-qt5,
     python-autopilot
-Description: autopilot tests for telephony-app
- This package contains the autopilot tests for telephony-app
+Description: autopilot tests for phone-app
+ This package contains the autopilot tests for phone-app

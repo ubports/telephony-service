@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=org.freedesktop.Telepathy.Client.TelephonyAppApprover
-Exec=/usr/bin/telephony-app-approver

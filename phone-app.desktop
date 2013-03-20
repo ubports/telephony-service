@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Phone
+GenericName=phone-app
+Comment=Phone application
+Exec=phone-app %u
+Terminal=false
+Icon=phone-app
+MimeType=x-scheme-handler/contact;x-scheme-handler/call

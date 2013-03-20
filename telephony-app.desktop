@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=Telephony
-GenericName=telephony-app
-Comment=Telephony application
-Exec=telephony-app %u
-Terminal=false
-Icon=telephony-app
-MimeType=x-scheme-handler/contact;x-scheme-handler/call

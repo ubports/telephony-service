@@ -1,13 +1,13 @@
 /*
- * Copyright 2012 Canonical Ltd.
+ * Copyright 2012-2013 Canonical Ltd.
  *
- * This file is part of telephony-app.
+ * This file is part of phone-app.
  *
- * telephony-app is free software; you can redistribute it and/or modify
+ * phone-app is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * telephony-app is distributed in the hope that it will be useful,
+ * phone-app is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -17,14 +17,14 @@
  */
 
 import QtQuick 2.0
-import TelephonyApp 0.1
+import Ubuntu.PhoneApp 0.1
 import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../Widgets" as LocalWidgets
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes
 
-LocalWidgets.TelephonyPage {
+LocalWidgets.PhonePage {
     id: contactDetails
 
     property bool editable: false
@@ -60,7 +60,7 @@ LocalWidgets.TelephonyPage {
             onTriggered: {
                 // FIXME: show a dialog asking for confirmation
                 contactModel.removeContact(contact);
-                telephony.resetView();
+                mainView.resetView();
             }
         }
 
@@ -71,7 +71,7 @@ LocalWidgets.TelephonyPage {
             enabled: visible
             onTriggered: {
                 if (added) {
-                    telephony.resetView();
+                    mainView.resetView();
                 } else {
                     contact.revertChanges();
                     editable = false;
@@ -89,7 +89,7 @@ LocalWidgets.TelephonyPage {
     }
 
     function createNewContact() {
-        contact = Qt.createQmlObject("import TelephonyApp 0.1; ContactEntry {}", contactModel);
+        contact = Qt.createQmlObject("import Ubuntu.PhoneApp 0.1; ContactEntry {}", contactModel);
         editable = true;
         added = true;
 
@@ -149,7 +149,7 @@ LocalWidgets.TelephonyPage {
         onContactRemoved: {
             if (contactId == contactDetails.contactId) {
                 contactDetails.contact = null;
-                telephony.resetView();
+                mainView.resetView();
             }
         }
     }
@@ -243,7 +243,7 @@ LocalWidgets.TelephonyPage {
                                     var filterProperty = "contactId";
                                     var filterValue = contact.id;
                                     var phoneNumber = modelData.number;
-                                    telephony.showCommunication(filterProperty, filterValue, phoneNumber, contact.id, true);
+                                    mainView.showCommunication(filterProperty, filterValue, phoneNumber, contact.id, true);
                                     break;
                                 case ContactDetail.EmailAddress:
                                     Qt.openUrlExternally("mailto:" + modelData.emailAddress);
@@ -255,7 +255,7 @@ LocalWidgets.TelephonyPage {
                             onClicked: {
                                 switch (modelData.type) {
                                 case ContactDetail.PhoneNumber:
-                                    telephony.callNumber(modelData.number);
+                                    mainView.callNumber(modelData.number);
                                     break;
                                 case ContactDetail.EmailAddress:
                                     Qt.openUrlExternally("mailto:" + modelData.emailAddress);
@@ -286,7 +286,7 @@ LocalWidgets.TelephonyPage {
         anchors.left: parent.left
         anchors.right: parent.right
 
-        visible: !telephony.singlePane
+        visible: !mainView.singlePane
         height: visible ? units.gu(5) : 0
 
         Rectangle {
@@ -326,7 +326,7 @@ LocalWidgets.TelephonyPage {
                 onClicked: {
                     // FIXME: show a dialog asking for confirmation
                     contactModel.removeContact(contact);
-                    telephony.resetView();
+                    mainView.resetView();
                 }
             }
 
@@ -341,7 +341,7 @@ LocalWidgets.TelephonyPage {
                 opacity: (editable) ? 1.0 : 0.0
                 onClicked: {
                     if (added) {
-                        telephony.resetView();
+                        mainView.resetView();
                     } else {
                         contact.revertChanges();
                         editable = false;

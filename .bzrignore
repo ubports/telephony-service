@@ -5,12 +5,12 @@ cmake_install.cmake
 install_manifest.txt
 
 *.user
-telephony-app.cbp
+phone-app.cbp
 
 config.h
 
-telephony-app
-TelephonyAppApprover/telephony-app-approver
+phone-app
+PhoneAppApprover/phone-app-approver
 
 moc_*.cxx
 moc_*.cpp
@@ -23,11 +23,12 @@ debian/*.debhelper
 debian/*.debhelper.log
 debian/*.substvars
 
-com.canonical.TelephonyApp.service
-org.freedesktop.Telepathy.Client.TelephonyApp.service
-telephonyappadaptor.*
+com.canonical.PhoneApp.service
+org.freedesktop.Telepathy.Client.PhoneApp.service
+phoneappadaptor.*
+PhoneAppApprover/phoneappapproveradaptor.*
 
 Testing
-TelephonyApp/tests/*Test
-libtelephonyapp/tests/*Test
+Ubuntu/PhoneApp/tests/*Test
+libphoneapp/tests/*Test
 CTestTestfile.cmake
