@@ -31,8 +31,6 @@ MainView {
     width: singlePane ? units.gu(40) : units.gu(80)
     height: units.gu(71)
 
-    tools: viewStack.tools
-
     state: appLayout
     property bool singlePane: state == "singlePane"
     property alias viewStack: rightPaneStacks.currentStack
@@ -228,8 +226,6 @@ MainView {
 
     Item {
         id: leftPane
-
-        property ToolbarActions tools: tabs.selectedTab.page.tools
 
         anchors.left: parent.left
         anchors.top: parent.top
