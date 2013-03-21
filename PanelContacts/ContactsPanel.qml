@@ -37,7 +37,6 @@ LocalWidgets.PhonePage {
 
     property alias searchQuery: contactProxyModel.filterText
 
-    anchors.fill: parent
     signal contactClicked(variant contact)
     onContactClicked: mainView.showContactDetails(contact, true)
 
