@@ -86,6 +86,19 @@ LocalWidgets.PhonePage {
         }
     }
 
+    headerContents: ContactDetailsHeader {
+        id: header
+        contact: contactDetails.contact
+        editable: contactDetails.editable
+        focus: true
+        backgroundColor: "#ededed"
+
+        ListItem.ThinDivider {
+            id: bottomDividerLine
+            anchors.bottom: header.bottom
+        }
+    }
+
     function createNewContact() {
         contact = Qt.createQmlObject("import Ubuntu.PhoneApp 0.1; ContactEntry {}", contactModel);
         editable = true;
@@ -152,22 +165,10 @@ LocalWidgets.PhonePage {
         }
     }
 
-    ContactDetailsHeader {
-        id: header
-        contact: contactDetails.contact
-        editable: contactDetails.editable
-        focus: true
-    }
-
-    ListItem.ThinDivider {
-        id: bottomDividerLine
-        anchors.bottom: header.bottom
-    }
-
     Flickable {
         id: scrollArea
 
-        anchors.top: header.bottom
+        anchors.top: parent.top
         anchors.bottom: editFooter.top
         anchors.left: parent.left
         anchors.right: parent.right
@@ -355,7 +356,7 @@ LocalWidgets.PhonePage {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: units.gu(1)
-                color: editable ? "#dd4f22" : "#e3e5e8"
+                color: (editable) ? "#dd4f22" : "#e3e5e8"
                 text: (editable) ? "Save" : "Edit"
                 enabled: !editable || header.contactNameValid
                 onClicked: {

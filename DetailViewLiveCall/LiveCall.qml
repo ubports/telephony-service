@@ -84,19 +84,9 @@ LocalWidgets.PhonePage {
         visible: callManager.hasBackgroundCall
     }
 
-    LocalWidgets.Header {
-        id: pageHeader
-        text: title
-    }
-
     Flipable {
         id: flipable
-        anchors {
-            top: pageHeader.bottom
-            left: parent.left
-            right: parent.right
-            bottom: parent.bottom
-        }
+        anchors.fill: parent
         
         property bool flipped: false
         transform: Rotation {

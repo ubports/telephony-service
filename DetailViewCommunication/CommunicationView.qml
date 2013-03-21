@@ -39,6 +39,10 @@ LocalWidgets.PhonePage {
 
     title: "Communication"
 
+    headerContents: Loader {
+        sourceComponent: newMessage ? newHeaderComponent : headerComponent
+    }
+
     ContactWatcher {
         id: contactWatcher
     }
@@ -131,25 +135,14 @@ LocalWidgets.PhonePage {
         }
     }
 
-    Loader {
-        id: headerLoader
-
-        sourceComponent: view.newMessage ? newHeaderComponent : null
-        anchors.top: parent.top
-        onLoaded: item.focus = true
-
-        height: sourceComponent != null ? childrenRect.height : 0
-    }
-
     ListView {
         id: listView
-        anchors.top: headerLoader.bottom
+        anchors.top: parent.top
         anchors.bottom: footer.top
         anchors.left: parent.left
         anchors.right: parent.right
         model: view.newMessage ? null : conversationProxyModel
         clip: true
-        header: view.newMessage ? null: headerComponent
 
         section.property: "timeSlot"
         section.delegate: Column {

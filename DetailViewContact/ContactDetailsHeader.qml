@@ -26,6 +26,7 @@ FocusScope {
     property variant contact: null
     property variant editable: false
     property alias contactNameValid: name.valid
+    property color backgroundColor: "transparent"
 
     width: parent.width
     // ensure that there is equal padding at the top and bottom of labelBox
@@ -34,6 +35,12 @@ FocusScope {
 
     function save() {
         name.save()
+    }
+
+    Rectangle {
+        id: background
+        anchors.fill: parent
+        color: backgroundColor
     }
 
     UbuntuShape {
