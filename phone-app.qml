@@ -223,7 +223,6 @@ MainView {
         id: mainStack
         anchors.fill: parent
         visible: singlePane
-        __showHeader: false
     }
 
     Item {
@@ -364,7 +363,6 @@ MainView {
             property bool isCurrent: tabs.selectedTabIndex == liveCall.tab
             anchors.fill: parent
             visible: isCurrent
-            __showHeader: false
 
             onSourceChanged: {
                 callsStack.clear();
@@ -385,7 +383,6 @@ MainView {
             property bool isCurrent: tabs.selectedTabIndex == communication.tab
             anchors.fill: parent
             visible: isCurrent
-            __showHeader: false
 
             onSourceChanged: {
                 communicationsStack.clear();
@@ -406,7 +403,6 @@ MainView {
             property bool isCurrent: tabs.selectedTabIndex == contactDetails.tab
             anchors.fill: parent
             visible: singlePane || isCurrent
-            __showHeader: false
 
             onSourceChanged: {
                 contactsStack.clear();
