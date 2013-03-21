@@ -64,6 +64,8 @@ Depends:
     phone-app (= ${binary:Version}),
     ${misc:Depends},
     autopilot-qt5,
-    python-autopilot
+    python-autopilot,
+    libqt5widgets5,
+    libqt5test5,
 Description: autopilot tests for phone-app
  This package contains the autopilot tests for phone-app

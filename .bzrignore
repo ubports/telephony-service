@@ -32,3 +32,4 @@ Testing
 Ubuntu/PhoneApp/tests/*Test
 libphoneapp/tests/*Test
 CTestTestfile.cmake
+test_*.xml
