@@ -18,6 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../Widgets" as LocalWidgets
 
 FocusScope {
@@ -99,5 +100,10 @@ FocusScope {
             detail: (contact) ? contact.name : undefined
             focus: true
         }
+    }
+
+    ListItem.ThinDivider {
+        id: bottomDividerLine
+        anchors.bottom: parent.bottom
     }
 }

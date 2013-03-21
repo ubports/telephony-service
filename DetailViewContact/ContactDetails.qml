@@ -19,7 +19,6 @@
 import QtQuick 2.0
 import Ubuntu.PhoneApp 0.1
 import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../Widgets" as LocalWidgets
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes
@@ -92,11 +91,6 @@ LocalWidgets.PhonePage {
         editable: contactDetails.editable
         focus: true
         backgroundColor: "#ededed"
-
-        ListItem.ThinDivider {
-            id: bottomDividerLine
-            anchors.bottom: header.bottom
-        }
     }
 
     function createNewContact() {
