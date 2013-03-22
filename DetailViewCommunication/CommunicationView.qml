@@ -40,6 +40,7 @@ LocalWidgets.PhonePage {
     title: "Communication"
 
     headerContents: Loader {
+        id: headerLoader
         sourceComponent: newMessage ? newHeaderComponent : headerComponent
     }
 
