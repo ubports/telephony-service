@@ -250,7 +250,6 @@ FocusScope {
 
             onClicked: {
                 deleted = true;
-                console.log("Clicked...");
                 contactDetailsItem.deleteClicked();
             }
 

@@ -32,10 +32,9 @@ FocusScope {
     Label {
         id: dots
         clip: true
-        width: input.contentWidth > input.width ? contentWidth : 0
-        visible: input.contentWidth > input.width
         anchors.left: parent.left
         text: "..."
+        visible: (input.contentWidth > (keypadEntry.width - dots.width))
         font.pixelSize: units.dp(43)
         font.weight: Font.Light
         font.family: "Ubuntu"
@@ -45,7 +44,7 @@ FocusScope {
     TextInput {
         id: input
 
-        anchors.left: dots.right
+        anchors.left: dots.visible ? dots.right : parent.left
         anchors.right: parent.right
         anchors.rightMargin: units.gu(2)
         anchors.verticalCenter: parent.verticalCenter
@@ -59,6 +58,7 @@ FocusScope {
         cursorVisible: true
         clip: true
         opacity: 0.9
+
 
         // force cursor to be always visible
         onCursorVisibleChanged: {
