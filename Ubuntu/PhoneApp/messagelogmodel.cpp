@@ -96,11 +96,12 @@ void MessageLogModel::onNewItemChanged()
 
 MessageLogEntry *MessageLogModel::messageById(const QString &messageId)
 {
-
-    Q_FOREACH(ConversationFeedItem *entry, mItems) {
-        MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
-        if (messageEntry && messageEntry->messageId() == messageId) {
-            return messageEntry;
+    if (!messageId.isEmpty()) {
+        Q_FOREACH(ConversationFeedItem *entry, mItems) {
+            MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
+            if (messageEntry && messageEntry->messageId() == messageId) {
+                return messageEntry;
+            }
         }
     }
 
