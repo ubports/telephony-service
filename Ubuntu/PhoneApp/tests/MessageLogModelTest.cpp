@@ -42,6 +42,7 @@ private Q_SLOTS:
     void testMatchesSearch();
     void testAppendMessage_data();
     void testAppendMessage();
+    void testOutgoingMessages();
     void testMessageReadSignal();
     void testOnMessageSent();
     void testOnMessageReceived();
@@ -170,6 +171,8 @@ void MessageLogModelTest::testAppendMessage_data()
             << "9999 0000" << false << QDateTime(QDate(2006, 6, 6), QTime(6, 6, 6, 6)) << "message5" << "Just checked your message, thanks" << false << false;
     QTest::newRow("outgoing message with contact")
             << "9999 8888" << false << QDateTime(QDate(2007, 7, 7), QTime(23, 40, 40, 888)) << "message6" << "are you still there?" << false << true;
+    QTest::newRow("outgoing message without message ID")
+            << "9999 9999" << false << QDateTime::currentDateTime() << "" << "testing sending a message" << false << false;
 }
 
 void MessageLogModelTest::testAppendMessage()
@@ -221,6 +224,27 @@ void MessageLogModelTest::testAppendMessage()
         QVERIFY(entry->contactId().isEmpty());
         QCOMPARE(entry->contactAlias(), phoneNumber);
     }
+
+    messageModel->clear();
+}
+
+void MessageLogModelTest::testOutgoingMessages()
+{
+    /**
+     * test that a random number of outgoing messages are appended to the model
+     * this is basically to make sure that MessageLogModel::messageById returns 0
+     * for messages with null ID
+     */
+
+    int count = qrand() % 10;
+
+    QSignalSpy signalSpy(messageModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
+
+    for (int i = 0; i < count; ++i) {
+        messageModel->appendMessage("12345", "One test message", false, QDateTime::currentDateTime(), "", false);
+    }
+
+    QCOMPARE(signalSpy.count(), count);
 
     messageModel->clear();
 }
