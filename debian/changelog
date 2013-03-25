@@ -1,3 +1,9 @@
+phone-app (0.59.2) quantal; urgency=low
+
+  * Use the SDK headers in DetailViews of the app, and fix the toolbar usage.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 25 Mar 2013 17:16:16 -0300
+
 phone-app (0.59.1) quantal; urgency=low
 
   * Make sure unit tests save their output to XML files.
