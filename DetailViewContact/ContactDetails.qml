@@ -350,7 +350,7 @@ LocalWidgets.PhonePage {
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.right: parent.right
                 anchors.rightMargin: units.gu(1)
-                color: (editable) ? "#dd4f22" : "#e3e5e8"
+                color: editable ? "#dd4f22" : "#e3e5e8"
                 text: (editable) ? "Save" : "Edit"
                 enabled: !editable || header.contactNameValid
                 onClicked: {
