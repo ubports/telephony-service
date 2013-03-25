@@ -26,7 +26,6 @@ FocusScope {
 
     Rectangle {
         anchors.fill: parent
-        color: "white"
-        opacity: 0.3
+        color: "#ededed"
     }
 }

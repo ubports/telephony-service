@@ -22,6 +22,6 @@ class Utils(object):
         tool_bar = self.get_tool_bar()
         item = tool_bar.get_children_by_type("QQuickItem")[0]
         row = item.get_children_by_type("QQuickRow")[0]
-        return row.get_children_by_type("Button")[index]
+        return row.get_children_by_type("QQuickLoader")[index].get_children_by_type("Button")[0]
 
 
