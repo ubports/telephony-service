@@ -11,7 +11,7 @@ macro(generate_tests)
             ${TPL_QT5_LIBRARIES}
             phoneapp
             )
-        add_test(${test} ${CMAKE_CURRENT_BINARY_DIR}/${test})
+        add_test(${test} ${CMAKE_CURRENT_BINARY_DIR}/${test} -xunitxml -o ${CMAKE_BINARY_DIR}/test_${test}.xml)
     endforeach(test)
 endmacro(generate_tests)
 

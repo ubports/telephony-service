@@ -62,6 +62,9 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     Tp::enableWarnings(true);
     Tpl::init();
 
+    // trigger the log reader construction
+    TelepathyLogReader::instance();
+
     mRootContext = engine->rootContext();
     Q_ASSERT(mRootContext);
 

@@ -1,3 +1,11 @@
+phone-app (0.59.1) quantal; urgency=low
+
+  * Make sure unit tests save their output to XML files.
+  * Adapt the dependencies to match the Ubuntu components rename and do some
+    adjustments to fix the behavior.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 20 Mar 2013 21:25:18 -0300
+
 phone-app (0.59) quantal; urgency=low
 
   * Rename the package from telephony-app to phone-app.

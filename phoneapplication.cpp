@@ -54,7 +54,7 @@ static void printUsage(const QStringList& arguments)
 PhoneApplication::PhoneApplication(int &argc, char **argv)
     : QGuiApplication(argc, argv), m_view(0), m_applicationIsReady(false)
 {
-    setApplicationName("com.canonical.PhoneApp");
+    setApplicationName("PhoneApp");
     m_dbus = new PhoneAppDBus(this);
 }
 

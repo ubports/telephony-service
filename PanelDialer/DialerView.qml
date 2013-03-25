@@ -23,7 +23,6 @@ import "../Widgets" as LocalWidgets
 
 LocalWidgets.PhonePage {
     title: "Call"
-    anchors.fill: parent
     property string voicemailNumber: callManager.voicemailNumber
     property alias dialNumber: keypadEntry.value
     property alias input: keypadEntry.input

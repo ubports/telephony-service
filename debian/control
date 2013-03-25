@@ -26,6 +26,7 @@ Vcs-Bzr: lp:phone-app
 Vcs-Browser: https://bazaar.launchpad.net/~phablet-team/phone-app/trunk/files
 
 Package: phone-app
+Replaces: telephony-app
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
@@ -36,7 +37,8 @@ Depends: ${shlibs:Depends},
          libnotify4,
          notify-osd,
          libicu48,
-         qt-components-ubuntu (> 0.1+bzr101),
+         qtdeclarative5-ubuntu-ui-toolkit-plugin |
+         qt-components-ubuntu,
          libhud-qt-qml,
          dbus-x11,
          ubuntu-sounds
@@ -44,6 +46,7 @@ Description: Phone application for Ubuntu
  An application to execute phone tasks such as calling, messaging and contact management.
 
 Package: phone-app-dbg
+Replaces: telephony-app-dbg
 Architecture: any
 Section: debug
 Priority: extra
@@ -54,6 +57,7 @@ Description: debugging symbols for phone-app
  This package contains the debugging symbols for phone-app
 
 Package: phone-app-autopilot
+Replaces: telephony-app-autopilot
 Architecture: all
 Section: debug
 Priority: extra
@@ -61,6 +65,8 @@ Depends:
     phone-app (= ${binary:Version}),
     ${misc:Depends},
     autopilot-qt5,
-    python-autopilot
+    python-autopilot,
+    libqt5widgets5,
+    libqt5test5,
 Description: autopilot tests for phone-app
  This package contains the autopilot tests for phone-app
