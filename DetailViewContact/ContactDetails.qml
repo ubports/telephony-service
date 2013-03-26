@@ -19,7 +19,6 @@
 import QtQuick 2.0
 import Ubuntu.PhoneApp 0.1
 import Ubuntu.Components 0.1
-import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../Widgets" as LocalWidgets
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes
@@ -84,6 +83,14 @@ LocalWidgets.PhonePage {
             enabled: visible
             onTriggered: contactDetails.save();
         }
+    }
+
+    headerContents: ContactDetailsHeader {
+        id: header
+        contact: contactDetails.contact
+        editable: contactDetails.editable
+        focus: true
+        backgroundColor: "#ededed"
     }
 
     function createNewContact() {
@@ -152,22 +159,10 @@ LocalWidgets.PhonePage {
         }
     }
 
-    ContactDetailsHeader {
-        id: header
-        contact: contactDetails.contact
-        editable: contactDetails.editable
-        focus: true
-    }
-
-    ListItem.ThinDivider {
-        id: bottomDividerLine
-        anchors.bottom: header.bottom
-    }
-
     Flickable {
         id: scrollArea
 
-        anchors.top: header.bottom
+        anchors.top: parent.top
         anchors.bottom: editFooter.top
         anchors.left: parent.left
         anchors.right: parent.right

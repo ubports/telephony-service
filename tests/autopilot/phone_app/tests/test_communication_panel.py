@@ -89,6 +89,10 @@ class TestCommunicationPanel(PhoneAppTestCase):
         self.click_new_message_button()
         sendto_box = self.communication_panel.get_new_message_send_to_box()
 
+        # FIXME: we should have the field focused by default, but right now we
+        # need to explicitly give it focus
+        self.click_sendto_box()
+
         self.assertThat(sendto_box.activeFocus, Eventually(Equals(True)))
 
     def test_message_send_to_entry(self):

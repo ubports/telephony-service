@@ -31,8 +31,6 @@ MainView {
     width: singlePane ? units.gu(40) : units.gu(80)
     height: units.gu(71)
 
-    tools: viewStack.tools
-
     state: appLayout
     property bool singlePane: state == "singlePane"
     property alias viewStack: rightPaneStacks.currentStack
@@ -223,13 +221,10 @@ MainView {
         id: mainStack
         anchors.fill: parent
         visible: singlePane
-        __showHeader: false
     }
 
     Item {
         id: leftPane
-
-        property ToolbarActions tools: tabs.selectedTab.page.tools
 
         anchors.left: parent.left
         anchors.top: parent.top
@@ -369,7 +364,6 @@ MainView {
             property bool isCurrent: tabs.selectedTabIndex == liveCall.tab
             anchors.fill: parent
             visible: isCurrent
-            __showHeader: false
 
             onSourceChanged: {
                 callsStack.clear();
@@ -390,7 +384,6 @@ MainView {
             property bool isCurrent: tabs.selectedTabIndex == communication.tab
             anchors.fill: parent
             visible: isCurrent
-            __showHeader: false
 
             onSourceChanged: {
                 communicationsStack.clear();
@@ -411,7 +404,6 @@ MainView {
             property bool isCurrent: tabs.selectedTabIndex == contactDetails.tab
             anchors.fill: parent
             visible: singlePane || isCurrent
-            __showHeader: false
 
             onSourceChanged: {
                 contactsStack.clear();

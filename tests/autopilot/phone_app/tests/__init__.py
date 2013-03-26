@@ -21,6 +21,10 @@ from autopilot.matchers import Eventually
 
 import os
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class PhoneAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
     """A common test case class that provides several useful methods for
@@ -36,6 +40,9 @@ class PhoneAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
         else:
             self.launch_test_local()
 
+        main_view = self.get_main_view()
+        self.assertThat(main_view.visible, Eventually(Equals(True)))
+
     def launch_test_local(self):
         self.app = self.launch_test_application(
             "../../phone-app", "--test-contacts")
@@ -50,7 +57,7 @@ class PhoneAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
     def get_tabs(self):
         return self.app.select_single("Tabs")
 
-    def move_to_next_tab(self):
+    def move_to_next_tab(self, retries=2):
         main_view = self.get_main_view()
         tabs = self.get_tabs()
         currentTab = tabs.selectedTabIndex
@@ -58,7 +65,19 @@ class PhoneAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
         stop_x = main_view.x + main_view.width * 0.15
         y_line = main_view.y + main_view.height * 0.5
         self.pointing_device.drag(start_x, y_line, stop_x, y_line)
-        self.assertThat(tabs.selectedTabIndex, Eventually(Equals(currentTab + 1)))
+
+        # This is usually done very early and sometimes the app is
+        # painted too slow to make the first swipe grab.
+        # As this is just a helper function and not an actual test case
+        # lets give it another (max. retries) chance when it fails.
+        try:
+            self.assertThat(tabs.selectedTabIndex, Eventually(Equals(currentTab + 1)))
+        except:
+            if retries > 0:
+                logger.warning("Failed to switch tab. Retrying...")
+                self.move_to_next_tab(retries-1)
+            else:
+                logger.warning("Failed to switch tab. Giving up... Test may fail!")
 
     def reveal_toolbar(self):
         main_view = self.get_main_view()

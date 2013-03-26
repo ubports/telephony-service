@@ -21,6 +21,23 @@ import Ubuntu.Components 0.1
 
 // define a source property to hold the source URL that was used to create this page
 Page {
+    id: page
     property string source
     property int previousTab: -1
+    property variant headerContents: null
+
+    onActiveChanged: updateHeader()
+    onHeaderChanged: updateHeader()
+    onHeaderContentsChanged: updateHeader()
+
+    function updateHeader() {
+        if (page.header && page.headerContents != null) {
+            if (active) {
+                page.header.ItemStyle.delegate = page.headerContents;
+            } else {
+                page.headerContents.parent = page;
+                page.header.ItemStyle.delegate = null;
+            }
+        }
+    }
 }

@@ -19,7 +19,7 @@ Build-Depends: debhelper (>= 8.0.0),
                libicu-dev,
                libgl-dev,
                libgles2-mesa-dev,
-               python2.7,
+               python,
                libubuntu-platform-api1-dev [armhf]
 Standards-Version: 3.9.3
 Vcs-Bzr: lp:phone-app

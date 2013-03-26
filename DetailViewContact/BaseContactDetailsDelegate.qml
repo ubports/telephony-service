@@ -239,7 +239,7 @@ FocusScope {
             id: removeButton
 
             anchors.right: parent.right
-            anchors.rightMargin: units.gu(1)
+            anchors.rightMargin: units.gu(2.5)
             anchors.verticalCenter: editableContent.verticalCenter
             width: units.gu(2)
             height: units.gu(2)

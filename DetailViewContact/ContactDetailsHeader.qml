@@ -18,6 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../Widgets" as LocalWidgets
 
 FocusScope {
@@ -26,6 +27,7 @@ FocusScope {
     property variant contact: null
     property variant editable: false
     property alias contactNameValid: name.valid
+    property color backgroundColor: "transparent"
 
     width: parent.width
     // ensure that there is equal padding at the top and bottom of labelBox
@@ -34,6 +36,12 @@ FocusScope {
 
     function save() {
         name.save()
+    }
+
+    Rectangle {
+        id: background
+        anchors.fill: parent
+        color: backgroundColor
     }
 
     UbuntuShape {
@@ -92,5 +100,10 @@ FocusScope {
             detail: (contact) ? contact.name : undefined
             focus: true
         }
+    }
+
+    ListItem.ThinDivider {
+        id: bottomDividerLine
+        anchors.bottom: parent.bottom
     }
 }

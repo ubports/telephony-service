@@ -61,13 +61,6 @@ LocalWidgets.PhonePage {
         }
     }
 
-    Rectangle {
-        id: background
-
-        anchors.fill: parent
-        color: "#3a3c41"
-    }
-
     Item {
         id: container
 
@@ -77,21 +70,6 @@ LocalWidgets.PhonePage {
             id: body
 
             anchors.fill: parent
-            //width: childrenRect.width
-            //height: childrenRect.height
-
-            Label {
-                id: name
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: units.gu(2)
-                anchors.bottom: number.top
-                text: "Voicemail"
-                color: "white"
-                style: Text.Sunken
-                styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)
-                fontSize: "large"
-            }
 
             Label {
                 id: number
