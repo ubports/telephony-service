@@ -59,7 +59,6 @@ FocusScope {
         clip: true
         opacity: 0.9
 
-
         // force cursor to be always visible
         onCursorVisibleChanged: {
             if (!cursorVisible)
