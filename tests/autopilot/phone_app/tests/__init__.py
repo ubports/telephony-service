@@ -40,6 +40,9 @@ class PhoneAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
         else:
             self.launch_test_local()
 
+        main_view = self.get_main_view()
+        self.assertThat(main_view.visible, Eventually(Equals(True)))
+
     def launch_test_local(self):
         self.app = self.launch_test_application(
             "../../phone-app", "--test-contacts")
