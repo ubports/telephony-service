@@ -1,3 +1,18 @@
+phone-app (0.59.3) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Clear many warnings and binding loops in the QML files.
+  * Do not consider an empty string as a message ID for comparing, as sent
+    messages have no ID (LP: #1159975).
+  * Move the remove button in contact details away from the edge so that it is
+    actually clickable (LP: #1136860).
+  * Wait for the application UI to be visible to avoid races in tests.
+
+  [ Michael Zanetti ]
+  * Make initial tab switching in autopilot tests a bit more robust.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 26 Mar 2013 18:21:03 -0300
+
 phone-app (0.59.2) quantal; urgency=low
 
   * Use the SDK headers in DetailViews of the app, and fix the toolbar usage.
