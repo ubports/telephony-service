@@ -34,8 +34,8 @@ ListItem.Standard {
         height: units.gu(6)
         width: units.gu(6)
         image: Image {
-            width: units.gu(6)
-            height: units.gu(6)
+            width: avatar.width
+            height: avatar.height
             source: (model && model.decoration != "") ? Qt.resolvedUrl(model.decoration) : "../assets/avatar-default.png"
             asynchronous: true
             fillMode: Image.PreserveAspectCrop
