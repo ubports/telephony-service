@@ -1,3 +1,13 @@
+phone-app (0.59.3) UNRELEASED; urgency=low
+
+  * Update packaging
+    - Use dh9
+    - Sort Build-Depends and Depends
+    - Add Conflicts on packages we already Replace
+    - Fix syntax of copyright file
+
+ -- Michael Terry <mterry@ubuntu.com>  Tue, 26 Mar 2013 17:43:42 -0400
+
 phone-app (0.59.2) quantal; urgency=low
 
   * Use the SDK headers in DetailViews of the app, and fix the toolbar usage.

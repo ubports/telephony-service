@@ -2,25 +2,24 @@ Source: phone-app
 Section: x11
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-XSBC-Original-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
-Build-Depends: debhelper (>= 8.0.0),
-               cmake,
+Build-Depends: cmake,
+               debhelper (>= 9),
+               libgl-dev,
+               libgles2-mesa-dev,
+               libicu-dev,
+               libmessaging-menu-dev,
+               libnotify-dev,
+               libqtgstreamer-dev,
+               libtelepathy-qt5-dev,
+               libtelepathy-logger-qt5-dev,
+               libubuntu-platform-api1-dev [armhf],
+               pkg-config,
+               python,
                qt5-default,
                qtbase5-dev (>= 5.0),
                qtdeclarative5-dev (>= 5.0),
                qtmultimedia5-dev (>= 5.0),
                qtpim5-dev (>= 5),
-               libtelepathy-qt5-dev,
-               libtelepathy-logger-qt5-dev,
-               libqtgstreamer-dev,
-               pkg-config,
-               libnotify-dev,
-               libmessaging-menu-dev,
-               libicu-dev,
-               libgl-dev,
-               libgles2-mesa-dev,
-               python,
-               libubuntu-platform-api1-dev [armhf]
 Standards-Version: 3.9.3
 Vcs-Bzr: lp:phone-app
 Vcs-Browser: https://bazaar.launchpad.net/~phablet-team/phone-app/trunk/files
@@ -28,45 +27,45 @@ Vcs-Browser: https://bazaar.launchpad.net/~phablet-team/phone-app/trunk/files
 Package: phone-app
 Replaces: telephony-app
 Architecture: any
-Depends: ${shlibs:Depends},
-         ${misc:Depends},
-         telepathy-ofono,
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         dbus-x11,
          dconf-tools,
-         telepathy-mission-control-5,
-         telepathy-logger,
+         libhud-qt-qml,
+         libicu48,
          libnotify4,
          notify-osd,
-         libicu48,
-         qtdeclarative5-ubuntu-ui-toolkit-plugin |
-         qt-components-ubuntu,
-         libhud-qt-qml,
-         dbus-x11,
-         ubuntu-sounds
+         qtdeclarative5-ubuntu-ui-toolkit-plugin | qt-components-ubuntu,
+         telepathy-logger,
+         telepathy-mission-control-5,
+         telepathy-ofono,
+         ubuntu-sounds,
 Description: Phone application for Ubuntu
- An application to execute phone tasks such as calling, messaging and contact management.
+ An application to execute phone tasks such as calling, messaging and contact
+ management.
 
 Package: phone-app-dbg
-Replaces: telephony-app-dbg
 Architecture: any
 Section: debug
 Priority: extra
-Depends:
-    phone-app (= ${binary:Version}),
-    ${misc:Depends}
+Conflicts: telephony-app-dbg
+Replaces: telephony-app-dbg
+Depends: ${misc:Depends},
+         phone-app (= ${binary:Version}),
 Description: debugging symbols for phone-app
  This package contains the debugging symbols for phone-app
 
 Package: phone-app-autopilot
-Replaces: telephony-app-autopilot
 Architecture: all
 Section: debug
 Priority: extra
-Depends:
-    phone-app (= ${binary:Version}),
-    ${misc:Depends},
-    autopilot-qt5,
-    python-autopilot,
-    libqt5widgets5,
-    libqt5test5,
+Conflicts: telephony-app-autopilot
+Replaces: telephony-app-autopilot
+Depends: ${misc:Depends},
+         autopilot-qt5,
+         libqt5test5,
+         libqt5widgets5,
+         phone-app (= ${binary:Version}),
+         python-autopilot,
 Description: autopilot tests for phone-app
  This package contains the autopilot tests for phone-app
