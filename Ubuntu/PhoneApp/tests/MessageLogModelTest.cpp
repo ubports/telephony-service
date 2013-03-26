@@ -236,7 +236,7 @@ void MessageLogModelTest::testOutgoingMessages()
      * for messages with null ID
      */
 
-    int count = qrand() % 10;
+    int count = 5;
 
     QSignalSpy signalSpy(messageModel, SIGNAL(rowsInserted(QModelIndex,int,int)));
 
