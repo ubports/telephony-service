@@ -34,8 +34,9 @@ ListItem.Standard {
         height: units.gu(6)
         width: units.gu(6)
         image: Image {
-            anchors.fill: parent
-            source: model.decoration != "" ? Qt.resolvedUrl(model.decoration) : "../assets/avatar-default.png"
+            width: avatar.width
+            height: avatar.height
+            source: (model && model.decoration != "") ? Qt.resolvedUrl(model.decoration) : "../assets/avatar-default.png"
             asynchronous: true
             fillMode: Image.PreserveAspectCrop
             // since we don't know if the image is portrait or landscape without actually reading it,
@@ -46,7 +47,7 @@ ListItem.Standard {
     }
 
     Label {
-        text: model.display
+        text: model ? model.display : ""
         anchors.top: avatar.top
         anchors.left: avatar.right
         anchors.leftMargin: units.gu(1)

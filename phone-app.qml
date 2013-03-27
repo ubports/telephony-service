@@ -297,35 +297,35 @@ MainView {
             opacity: 0.3
             visible: !singlePane
         }
-    }
 
-    OnCallPanel {
-        anchors.left: leftPane.left
-        anchors.right: leftPane.right
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: shown ? 0 : -height
-        Behavior on anchors.bottomMargin { LocalWidgets.StandardAnimation {}}
-        z: 1
+        OnCallPanel {
+            anchors.left: leftPane.left
+            anchors.right: leftPane.right
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: shown ? 0 : -height
+            Behavior on anchors.bottomMargin { LocalWidgets.StandardAnimation {}}
+            z: 1
 
-        property bool shown
-        shown: {
-            if (mainView.singlePane) {
-                return false;
-            }
-
-            if (!callManager.hasCalls) {
-                return false
-            } else {
-                if (isVoicemailActive() && !mainView.voicemail.loaded) {
-                    return true
-                } else if (!isVoicemailActive() && !mainView.liveCall.loaded) {
-                    return true
+            property bool shown
+            shown: {
+                if (mainView.singlePane) {
+                    return false;
                 }
-            }
-            return false
-        }
 
-        onClicked: isVoicemailActive() ? mainView.showVoicemail() : mainView.showLiveCall()
+                if (!callManager.hasCalls) {
+                    return false
+                } else {
+                    if (isVoicemailActive() && !mainView.voicemail.loaded) {
+                        return true
+                    } else if (!isVoicemailActive() && !mainView.liveCall.loaded) {
+                        return true
+                    }
+                }
+                return false
+            }
+
+            onClicked: isVoicemailActive() ? mainView.showVoicemail() : mainView.showLiveCall()
+        }
     }
 
     Item {

@@ -28,7 +28,7 @@ Item {
     property alias selectedValue: selectedText.text
     property bool active: false
     enabled: visible
-    height: childrenRect.height
+    height: subTypesRow.height
 
     signal clicked()
 
