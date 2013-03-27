@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: cmake,
                debhelper (>= 9),
-               libgl-dev,
+               libgl1-mesa-dev | libgl-dev,
                libgles2-mesa-dev,
                libicu-dev,
                libmessaging-menu-dev,
@@ -20,13 +20,17 @@ Build-Depends: cmake,
                qtdeclarative5-dev (>= 5.0),
                qtmultimedia5-dev (>= 5.0),
                qtpim5-dev (>= 5),
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
+# If you don't have commit rights to lp:phone-app but need to upload
+# packaging changes, just go ahead.  The developers will notice and sync
+# up the code again.
 Vcs-Bzr: lp:phone-app
 Vcs-Browser: https://bazaar.launchpad.net/~phablet-team/phone-app/trunk/files
 
 Package: phone-app
-Replaces: telephony-app
 Architecture: i386 amd64 armhf
+Replaces: telephony-app
+Conflicts: telephony-app
 Depends: ${misc:Depends},
          ${shlibs:Depends},
          dbus-x11,
@@ -65,7 +69,7 @@ Depends: ${misc:Depends},
          autopilot-qt5,
          libqt5test5,
          libqt5widgets5,
-         phone-app (= ${binary:Version}),
+         phone-app (>= ${binary:Version}),
          python-autopilot,
 Description: autopilot tests for phone-app
  This package contains the autopilot tests for phone-app
