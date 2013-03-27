@@ -5,6 +5,7 @@ phone-app (0.59.4) UNRELEASED; urgency=low
     - Sort Build-Depends and Depends
     - Add Conflicts on packages we already Replace
     - Fix syntax of copyright file
+    - Set architecture to only the ones supported by qtdeclarative 
 
  -- Michael Terry <mterry@ubuntu.com>  Tue, 26 Mar 2013 17:43:42 -0400
 
