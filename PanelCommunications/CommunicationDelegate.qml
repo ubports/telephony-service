@@ -21,7 +21,7 @@ import Ubuntu.Components 0.1
 import Ubuntu.Components.ListItems 0.1 as ListItem
 import "../dateUtils.js" as DateUtils
 
-ListItem.Standard {
+ListItem.Empty {
     id: communicationDelegate
 
     function selectIcon()  {

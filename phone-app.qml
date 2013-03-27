@@ -238,7 +238,7 @@ MainView {
             anchors.fill: parent
             ItemStyle.class: singlePane ? "new-tabs" : "tabs"
 
-            property variant tabPageItems: [ callsTab.page, communicationsTab.page, contactsTab.page ]
+            property variant tabPageItems: [ callsTab.page.item, communicationsTab.page.item, contactsTab.page.item ]
 
             Tab {
                 id: callsTab
@@ -250,8 +250,9 @@ MainView {
 
                 title: "Call"
                 iconSource: isCurrent ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
-                page: DialerView {
-                    id: callsTabPage
+                page: Loader {
+                    source: callsTab.panel
+                    anchors.fill: parent
                 }
             }
 
@@ -265,8 +266,10 @@ MainView {
                 property string panel: "PanelCommunications/CommunicationsPanel.qml"
                 property bool isCurrent: tabs.selectedTabIndex == 1
 
-                page: CommunicationsPanel {
-                    id: communicationsTabPage
+                page: Loader {
+                    source: communicationsTab.panel
+                    asynchronous: true
+                    anchors.fill: parent
                 }
             }
 
@@ -280,8 +283,10 @@ MainView {
 
                 title: "Contacts"
                 iconSource: isCurrent ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
-                page: ContactsPanel {
-                    id: contactsTabPage
+                page: Loader {
+                    source: contactsTab.panel
+                    asynchronous: true
+                    anchors.fill: parent
                 }
             }
         }
