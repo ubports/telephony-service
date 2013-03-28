@@ -41,6 +41,7 @@ private Q_SLOTS:
     void testRowCountWithFilter();
     void testData();
     void testDataSorted();
+    void testCountChangedSignal();
 
 private:
     QContactManager *contactManager;
@@ -128,6 +129,13 @@ void ContactProxyModelTest::testDataSorted()
 
     label = contactProxyModel->data(contactProxyModel->index(2,0), Qt::DisplayRole).toString();
     QCOMPARE(label, QString("andrew"));
+}
+
+void ContactProxyModelTest::testCountChangedSignal()
+{
+    QSignalSpy spy(contactProxyModel, SIGNAL(countChanged()));
+    contactProxyModel->setFilterText("Jan");
+    QVERIFY(spy.count() > 0);
 }
 
 QTEST_MAIN(ContactProxyModelTest)
