@@ -41,7 +41,7 @@ class ContactProxyModel : public QSortFilterProxyModel
                NOTIFY favoriteOnlyChanged)
     Q_PROPERTY(int count
                READ rowCount
-               NOTIFY rowCountChanged)
+               NOTIFY countChanged)
 
 public:
     explicit ContactProxyModel(QObject *parent = 0);
@@ -62,7 +62,7 @@ Q_SIGNALS:
     void modelChanged();
     void filterTextChanged();
     void favoriteOnlyChanged();
-    void rowCountChanged();
+    void countChanged();
 
 private:
     QString mFilterText;

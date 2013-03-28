@@ -33,9 +33,9 @@ ContactProxyModel::ContactProxyModel(QObject *parent) :
     setSortCaseSensitivity(Qt::CaseInsensitive);
     sort(0, Qt::AscendingOrder);
 
-    connect(this, SIGNAL(rowsInserted(const QModelIndex&, int, int)), SIGNAL(rowCountChanged()));
-    connect(this, SIGNAL(rowsRemoved(const QModelIndex&, int, int)), SIGNAL(rowCountChanged()));
-    connect(this, SIGNAL(modelReset()), SIGNAL(rowCountChanged()));
+    connect(this, SIGNAL(rowsInserted(const QModelIndex&, int, int)), SIGNAL(countChanged()));
+    connect(this, SIGNAL(rowsRemoved(const QModelIndex&, int, int)), SIGNAL(countChanged()));
+    connect(this, SIGNAL(modelReset()), SIGNAL(countChanged()));
 }
 
 QObject *ContactProxyModel::model() const
