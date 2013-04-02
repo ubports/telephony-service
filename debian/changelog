@@ -1,3 +1,9 @@
+phone-app (0.59.5) quantal; urgency=low
+
+  * Add X-Ubuntu-Touch and X-Ubuntu-StageHint field into desktop file.
+
+ -- Ying-Chun Liu (PaulLiu) <paul.liu@canonical.com>  Tue, 02 Apr 2013 22:50:39 +0800
+
 phone-app (0.59.4) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
