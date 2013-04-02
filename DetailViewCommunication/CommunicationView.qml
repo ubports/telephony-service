@@ -259,6 +259,8 @@ LocalWidgets.PhonePage {
 
             listView.currentIndex = 0;
             listView.positionViewAtIndex(listView.currentIndex, ListView.Begin);
+            footer.focus = false;
+            view.phoneNumber = "";
         }
     }
 
