@@ -37,7 +37,7 @@
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/TextChannel>
 
-#define PHONE_APP_CLIENT TP_QT_IFACE_CLIENT + ".PhoneApp"
+#define PHONE_APP_CLIENT TP_QT_IFACE_CLIENT + ".PhoneAppHandler"
 #define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
 
 
