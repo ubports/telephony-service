@@ -94,9 +94,6 @@ install(PROGRAMS ofono-setup
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     )
 
-configure_file(org.freedesktop.Telepathy.Client.PhoneApp.service.in org.freedesktop.Telepathy.Client.PhoneApp.service)
-install(FILES ${CMAKE_BINARY_DIR}/org.freedesktop.Telepathy.Client.PhoneApp.service DESTINATION share/dbus-1/services)
-install(FILES PhoneApp.client DESTINATION share/telepathy/clients)
 file(GLOB QML_JS_FILES *.qml *.js)
 
 configure_file(com.canonical.PhoneApp.service.in com.canonical.PhoneApp.service)
