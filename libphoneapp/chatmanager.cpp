@@ -250,8 +250,7 @@ void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
 
     // start chatting to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        QString handler = TelepathyHelper::instance()->channelHandler()->property("clientName").toString();
-        account->ensureTextChat(contact, QDateTime::currentDateTime(), handler);
+        account->ensureTextChat(contact, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".PhoneAppHandler");
 
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;

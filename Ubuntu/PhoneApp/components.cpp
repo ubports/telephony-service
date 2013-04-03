@@ -22,7 +22,6 @@
 
 #include "components.h"
 #include "telepathyhelper.h"
-#include "channelhandler.h"
 #include "channelobserver.h"
 #include "chatmanager.h"
 #include "calllogmodel.h"

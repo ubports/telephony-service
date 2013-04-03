@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.freedesktop.Telepathy.Client.PhoneAppHandler
+Exec=/usr/bin/phone-app-handler

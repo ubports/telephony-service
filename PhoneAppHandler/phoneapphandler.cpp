@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -20,8 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "channelhandler.h"
-#include "chatmanager.h"
+#include "phoneapphandler.h"
 #include "telepathyhelper.h"
 #include "config.h"
 
@@ -31,17 +30,17 @@
 #include <TelepathyQt/ChannelClassSpec>
 #include <TelepathyQt/PendingReady>
 
-ChannelHandler::ChannelHandler(QObject *parent)
+PhoneAppHandler::PhoneAppHandler(QObject *parent)
     : QObject(parent), Tp::AbstractClientHandler(channelFilters())
 {
 }
 
-bool ChannelHandler::bypassApproval() const
+bool PhoneAppHandler::bypassApproval() const
 {
     return false;
 }
 
-void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
+void PhoneAppHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
                                const Tp::AccountPtr &account,
                                const Tp::ConnectionPtr &connection,
                                const QList<Tp::ChannelPtr> &channels,
@@ -52,7 +51,7 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
     // if the class is not in the phone application, we should only handle the channels that
     // were requested by this instance.
     if (!isPhoneApplicationInstance()) {
-        QString handler = TelepathyHelper::instance()->channelHandler()->property("clientName").toString();
+        QString handler(TP_QT_IFACE_CLIENT + ".PhoneAppHandler");
         Q_FOREACH(Tp::ChannelRequestPtr channelRequest, requestsSatisfied) {
             if (channelRequest->preferredHandler() != handler) {
                 context->setFinishedWithError(TP_QT_ERROR_REJECTED,
@@ -74,8 +73,6 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
             connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onTextChannelReady(Tp::PendingOperation*)));
 
-            connect(textChannel.data(), SIGNAL(messageReceived(Tp::ReceivedMessage)),
-                    ChatManager::instance(), SLOT(onMessageReceived(Tp::ReceivedMessage)));
             mReadyRequests[pr] = textChannel;
             continue;
         }
@@ -96,7 +93,7 @@ void ChannelHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &cont
     context->setFinished();
 }
 
-Tp::ChannelClassSpecList ChannelHandler::channelFilters()
+Tp::ChannelClassSpecList PhoneAppHandler::channelFilters()
 {
     Tp::ChannelClassSpecList specList;
     specList << Tp::ChannelClassSpec::audioCall();
@@ -105,7 +102,7 @@ Tp::ChannelClassSpecList ChannelHandler::channelFilters()
     return specList;
 }
 
-void ChannelHandler::onTextChannelReady(Tp::PendingOperation *op)
+void PhoneAppHandler::onTextChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
 
@@ -127,7 +124,7 @@ void ChannelHandler::onTextChannelReady(Tp::PendingOperation *op)
     Q_EMIT textChannelAvailable(textChannel);
 }
 
-void ChannelHandler::onCallChannelReady(Tp::PendingOperation *op)
+void PhoneAppHandler::onCallChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
 

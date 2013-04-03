@@ -31,7 +31,6 @@
 
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
-      mChannelHandler(0),
       mChannelObserver(0),
       mFirstTime(true),
       mConnected(false)
@@ -77,11 +76,6 @@ Tp::AccountPtr TelepathyHelper::account() const
     return mAccount;
 }
 
-ChannelHandler *TelepathyHelper::channelHandler() const
-{
-    return mChannelHandler;
-}
-
 ChannelObserver *TelepathyHelper::channelObserver() const
 {
     return mChannelObserver;
@@ -96,27 +90,15 @@ void TelepathyHelper::initializeTelepathyClients()
 {
     // check if this instance is running on the main phone application
     // or if it is just the plugin imported somewhere else
-    QString handlerName = "PhoneApp";
     QString observerName = "PhoneAppObserver";
 
     if (!isPhoneApplicationInstance()) {
-        handlerName = "PhonePlugin";
         observerName = "PhonePluginObserver";
     }
-
-    mChannelHandler = new ChannelHandler(this);
-    registerClient(mChannelHandler, handlerName);
-    Q_EMIT channelHandlerCreated(mChannelHandler);
 
     mChannelObserver = new ChannelObserver(this);
     registerClient(mChannelObserver, observerName);
     Q_EMIT channelObserverCreated(mChannelObserver);
-
-    connect(mChannelHandler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
-            ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
-    connect(mChannelHandler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
-            mCallManager, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
-
 }
 
 void TelepathyHelper::registerClients()

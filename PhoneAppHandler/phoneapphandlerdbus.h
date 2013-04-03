@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
+ *  Ugo Riboni <ugo.riboni@canonical.com>
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
@@ -20,35 +21,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COMPONENTS_H
-#define COMPONENTS_H
+#ifndef PHONEAPPHANDLERDBUS_H
+#define PHONEAPPHANDLERDBUS_H
 
-#include <QQmlContext>
-#include <QQmlExtensionPlugin>
+#include <QtCore/QObject>
+#include <QtDBus/QDBusContext>
+#include "chatmanager.h"
 
-class ChannelObserver;
-class CallLogModel;
-class MessageLogModel;
-class ContactModel;
-class ConversationAggregatorModel;
-
-class Components : public QQmlExtensionPlugin
+/**
+ * DBus interface for the phone approver
+ */
+class PhoneAppHandlerDBus : public QObject, protected QDBusContext
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
 
 public:
-    void initializeEngine(QQmlEngine *engine, const char *uri);
-    void registerTypes(const char *uri);
+    PhoneAppHandlerDBus(QObject* parent=0);
+    ~PhoneAppHandlerDBus();
 
-private Q_SLOTS:
-    void onAccountReady();
+    bool connectToBus();
 
-private:
-    QQmlContext *mRootContext;
-    ConversationAggregatorModel *mConversationModel;
-    CallLogModel *mCallLogModel;
-    MessageLogModel *mMessageLogModel;
+public Q_SLOTS:
+    Q_NOREPLY void SendMessage(const QString &number, const QString &message);
+
+Q_SIGNALS:
+    void onMessageSent(const QString &number, const QString &message);
 };
 
-#endif // COMPONENTS_H
+#endif // PHONEAPPROVERDBUS_H
