@@ -30,7 +30,6 @@
 #include <TelepathyQt/ConnectionManager>
 #include <TelepathyQt/Types>
 #include "channelobserver.h"
-#include "callmanager.h"
 
 class TelepathyHelper : public QObject
 {
@@ -41,7 +40,6 @@ public:
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
-    CallManager *callManager() const;
     Tp::AccountPtr account() const;
     ChannelObserver *channelObserver() const;
 
@@ -82,7 +80,6 @@ private:
     Tp::ClientRegistrarPtr mClientRegistrar;
     Tp::AccountPtr mAccount;
     ChannelObserver *mChannelObserver;
-    CallManager *mCallManager;
     bool mFirstTime;
     bool mConnected;
 };

@@ -22,6 +22,7 @@
 
 #include "components.h"
 #include "telepathyhelper.h"
+#include "callmanager.h"
 #include "channelobserver.h"
 #include "chatmanager.h"
 #include "calllogmodel.h"
@@ -73,7 +74,7 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
 
     mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", ChatManager::instance());
-    mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
+    mRootContext->setContextProperty("callManager", CallManager::instance());
 
     // check which contact engine to use
     QString contactEngine = mRootContext->contextProperty("contactEngine").toString();
@@ -90,6 +91,11 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mConversationModel->addFeedModel(mCallLogModel);
     mConversationModel->addFeedModel(mMessageLogModel);
     mRootContext->setContextProperty("conversationAggregatorModel", mConversationModel);
+
+    connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
+            ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+    connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+            CallManager::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
 }
 
 void Components::registerTypes(const char *uri)

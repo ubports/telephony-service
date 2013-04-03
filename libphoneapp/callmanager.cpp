@@ -22,6 +22,7 @@
 
 #include "callmanager.h"
 #include "callentry.h"
+#include "contactmodel.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/ContactManager>
@@ -31,6 +32,12 @@
 
 typedef QMap<QString, QVariant> dbusQMap;
 Q_DECLARE_METATYPE(dbusQMap)
+
+CallManager *CallManager::instance()
+{
+    static CallManager *self = new CallManager();
+    return self;
+}
 
 CallManager::CallManager(QObject *parent)
 : QObject(parent)
@@ -49,7 +56,7 @@ void CallManager::startCall(const QString &phoneNumber)
 {
     // check if we are already talking to that phone number
     Q_FOREACH(const CallEntry *entry, mCallEntries) {
-        if (entry->phoneNumber() == phoneNumber) {
+        if (ContactModel::comparePhoneNumbers(entry->phoneNumber(), phoneNumber)) {
             return;
         }
     }

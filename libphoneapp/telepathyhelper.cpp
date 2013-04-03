@@ -35,8 +35,6 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
       mFirstTime(true),
       mConnected(false)
 {
-    mCallManager = new CallManager(this);
-
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
                      << Tp::Contact::FeatureCapabilities
@@ -64,11 +62,6 @@ TelepathyHelper *TelepathyHelper::instance()
 {
     static TelepathyHelper* helper = new TelepathyHelper();
     return helper;
-}
-
-CallManager *TelepathyHelper::callManager() const
-{
-    return mCallManager;
 }
 
 Tp::AccountPtr TelepathyHelper::account() const

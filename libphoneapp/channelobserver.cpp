@@ -23,6 +23,7 @@
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/ChannelClassSpecList>
 #include <TelepathyQt/MethodInvocationContext>
+#include <TelepathyQt/TextChannel>
 
 ChannelObserver::ChannelObserver(QObject *parent) :
     QObject(parent), Tp::AbstractClientObserver(channelFilters(), true)
@@ -33,6 +34,7 @@ Tp::ChannelClassSpecList ChannelObserver::channelFilters() const
 {
     Tp::ChannelClassSpecList specList;
     specList << Tp::ChannelClassSpec::audioCall();
+    specList << Tp::ChannelClassSpec::textChat();
 
     return specList;
 }
@@ -53,20 +55,32 @@ void ChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &co
 
     Q_FOREACH (Tp::ChannelPtr channel, channels) {
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
-        if (!callChannel) {
-            qWarning() << "Observed channel is not a call channel:" << channel;
-            continue;
+        if (callChannel) {
+            Tp::PendingReady *ready = callChannel->becomeReady(Tp::Features()
+                                                               << Tp::CallChannel::FeatureCore
+                                                               << Tp::CallChannel::FeatureCallMembers
+                                                               << Tp::CallChannel::FeatureCallState);
+            connect(ready,
+                    SIGNAL(finished(Tp::PendingOperation*)),
+                    SLOT(onCallChannelReady(Tp::PendingOperation*)));
+            mReadyMap[ready] = callChannel;
         }
 
-        Tp::PendingReady *ready = callChannel->becomeReady(Tp::Features()
-                                                           << Tp::CallChannel::FeatureCore
-                                                           << Tp::CallChannel::FeatureCallMembers
-                                                           << Tp::CallChannel::FeatureCallState);
-        connect(ready,
-                SIGNAL(finished(Tp::PendingOperation*)),
-                SLOT(onCallChannelReady(Tp::PendingOperation*)));
-        mReadyMap[ready] = callChannel;
-        mContexts[callChannel.data()] = context;
+        Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
+        if (textChannel) {
+            Tp::PendingReady *ready = textChannel->becomeReady(Tp::Features()
+                                                               << Tp::TextChannel::FeatureCore
+                                                               << Tp::TextChannel::FeatureChatState
+                                                               << Tp::TextChannel::FeatureMessageCapabilities
+                                                               << Tp::TextChannel::FeatureMessageQueue
+                                                               << Tp::TextChannel::FeatureMessageSentSignal);
+            connect(ready,
+                    SIGNAL(finished(Tp::PendingOperation*)),
+                    SLOT(onTextChannelReady(Tp::PendingOperation*)));
+            mReadyMap[ready] = textChannel;
+        }
+
+        mContexts[channel.data()] = context;
     }
 }
 
@@ -106,24 +120,9 @@ void ChannelObserver::onCallChannelReady(Tp::PendingOperation *op)
 
     mChannels.append(callChannel);
 
-    if (!mContexts.contains(callChannel.data())) {
-        qWarning() << "Context for channel not available:" << callChannel;
-        return;
-    }
+    Q_EMIT callChannelAvailable(callChannel);
 
-    Tp::MethodInvocationContextPtr<> context = mContexts[callChannel.data()];
-    mContexts.remove(callChannel.data());
-
-    // check if this is the last channel from the context
-    Q_FOREACH(Tp::MethodInvocationContextPtr<> otherContext, mContexts.values()) {
-        // if we find the context, just return from the function. We need to wait
-        // for the other channels to become ready before setting the context finished
-        if (otherContext == context) {
-            return;
-        }
-    }
-
-    context->setFinished();
+    checkContextFinished(callChannel.data());
 }
 
 void ChannelObserver::onCallChannelInvalidated()
@@ -151,4 +150,52 @@ void ChannelObserver::onCallStateChanged(Tp::CallState state)
     default:
         break;
     }
+}
+
+void ChannelObserver::onTextChannelReady(Tp::PendingOperation *op)
+{
+    Tp::PendingReady *ready = qobject_cast<Tp::PendingReady*>(op);
+    if (!ready) {
+        qCritical() << "Pending operation is not a pending ready:" << op;
+        return;
+    }
+
+    if (!mReadyMap.contains(ready)) {
+        qWarning() << "Pending ready finished but not on the map:" << ready;
+        return;
+    }
+
+    Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(mReadyMap[ready]);
+    mReadyMap.remove(ready);
+
+    if (!textChannel) {
+        qWarning() << "Ready channel is not a call channel:" << textChannel;
+        return;
+    }
+
+    Q_EMIT textChannelAvailable(textChannel);
+
+    checkContextFinished(textChannel.data());
+}
+
+void ChannelObserver::checkContextFinished(Tp::Channel *channel)
+{
+    if (!mContexts.contains(channel)) {
+        qWarning() << "Context for channel not available:" << Tp::ChannelPtr(channel);
+        return;
+    }
+
+    Tp::MethodInvocationContextPtr<> context = mContexts[channel];
+    mContexts.remove(channel);
+
+    // check if this is the last channel from the context
+    Q_FOREACH(Tp::MethodInvocationContextPtr<> otherContext, mContexts.values()) {
+        // if we find the context, just return from the function. We need to wait
+        // for the other channels to become ready before setting the context finished
+        if (otherContext == context) {
+            return;
+        }
+    }
+
+    context->setFinished();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -51,8 +51,8 @@ class CallManager : public QObject
                NOTIFY voicemailNumberChanged)
 
 public:
-    explicit CallManager(QObject *parent = 0);
     
+    static CallManager *instance();
     Q_INVOKABLE void startCall(const QString &phoneNumber);
     Q_INVOKABLE QString getVoicemailNumber();
 
@@ -78,6 +78,7 @@ public Q_SLOTS:
     void onAccountReady();
 
 private:
+    explicit CallManager(QObject *parent = 0);
     void refreshProperties();
 
     QList<CallEntry*> mCallEntries;

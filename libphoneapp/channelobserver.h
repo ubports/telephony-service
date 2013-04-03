@@ -45,11 +45,17 @@ public:
     
 Q_SIGNALS:
     void callEnded(const Tp::CallChannelPtr &channel);
+    void textChannelAvailable(const Tp::TextChannelPtr &channel);
+    void callChannelAvailable(const Tp::CallChannelPtr &channel);
     
 protected Q_SLOTS:
     void onCallChannelReady(Tp::PendingOperation *op);
     void onCallChannelInvalidated();
     void onCallStateChanged(Tp::CallState state);
+    void onTextChannelReady(Tp::PendingOperation *op);
+
+protected:
+    void checkContextFinished(Tp::Channel *channel);
 
 private:
     QMap<Tp::Channel*, Tp::MethodInvocationContextPtr<> > mContexts;
