@@ -1,5 +1,6 @@
 
 set(qt_SRCS
+    callhandler.cpp
     phoneapphandler.cpp
     phoneapphandlerdbus.cpp
     )
