@@ -92,6 +92,8 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mConversationModel->addFeedModel(mMessageLogModel);
     mRootContext->setContextProperty("conversationAggregatorModel", mConversationModel);
 
+    TelepathyHelper::instance()->registerClients();
+
     connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
             ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
     connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
@@ -115,7 +117,7 @@ void Components::registerTypes(const char *uri)
 
 void Components::onAccountReady()
 {
-    connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callEnded(const Tp::CallChannelPtr&)),
+    connect(CallManager::instance(), SIGNAL(callEnded(const Tp::CallChannelPtr&)),
             mCallLogModel, SLOT(onCallEnded(const Tp::CallChannelPtr&)));
     connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&, const QString&, bool)),
             mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&, const QString&, bool)));

@@ -452,7 +452,13 @@ MainView {
 
     Connections {
         target: callManager
-        onCallReady: {
+        onForegroundCallChanged: {
+            console.log("BLABLA foregroundCallChanged:" + callManager.foregroundCall);
+            // if there is no call, or if the views are already loaded, do not continue processing
+            if (!callManager.foregroundCall || mainView.voicemail.loaded || mainView.liveCall.loaded) {
+                return;
+            }
+
             var currentPage = singlePane ? mainView.view : rightPaneStacks.stacks[dialer.tab].currentPage
             if (currentPage.source == dialer.source) {
                 currentPage.dialNumber = ""

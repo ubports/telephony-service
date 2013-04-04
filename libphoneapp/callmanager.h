@@ -62,8 +62,7 @@ public:
     bool hasBackgroundCall() const;
 
 Q_SIGNALS:
-    void callReady();
-    void callEnded();
+    void callEnded(const Tp::CallChannelPtr &channel);
     void foregroundCallChanged();
     void backgroundCallChanged();
     void hasCallsChanged();

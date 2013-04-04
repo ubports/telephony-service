@@ -49,9 +49,8 @@ Q_SIGNALS:
     void callChannelAvailable(const Tp::CallChannelPtr &channel);
     
 protected Q_SLOTS:
+    void onChannelInvalidated();
     void onCallChannelReady(Tp::PendingOperation *op);
-    void onCallChannelInvalidated();
-    void onCallStateChanged(Tp::CallState state);
     void onTextChannelReady(Tp::PendingOperation *op);
 
 protected:

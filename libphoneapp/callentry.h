@@ -66,6 +66,9 @@ class CallEntry : public QObject
     Q_PROPERTY(bool dialing
                READ dialing
                NOTIFY dialingChanged)
+    Q_PROPERTY(bool incoming
+               READ incoming
+               NOTIFY incomingChanged)
     Q_PROPERTY(bool speaker
                READ isSpeakerOn
                WRITE setSpeaker
@@ -91,6 +94,7 @@ public:
     Q_INVOKABLE void setSpeaker(bool speaker);
 
     bool dialing() const;
+    bool incoming() const;
     QString phoneNumber() const;
     QString contactAlias() const;
     QString contactAvatar() const;
@@ -98,13 +102,17 @@ public:
     Q_INVOKABLE void sendDTMF(const QString &key);
     Q_INVOKABLE void endCall();
 
+    Tp::CallChannelPtr channel() const;
+
 protected Q_SLOTS:
-    void onChannelReady(Tp::PendingOperation *op);
     void onCallStateChanged(Tp::CallState state);
     void onCallFlagsChanged(Tp::CallFlags flags);
     void onCallHangupFinished(Tp::PendingOperation *op);
     void onMutedChanged(uint state);
     void onSpeakerChanged(bool active);
+
+protected:
+    void setupCallChannel();
 
 Q_SIGNALS:
     void callEnded();
@@ -115,6 +123,7 @@ Q_SIGNALS:
     void voicemailChanged();
     void phoneNumberChanged();
     void dialingChanged();
+    void incomingChanged();
     void contactAliasChanged();
     void contactAvatarChanged();
     void elapsedTimeChanged();
@@ -131,7 +140,6 @@ private:
     bool mVoicemail;
     bool mLocalMuteState;
     QTime mElapsedTime;
-    bool mChannelReady;
     bool mHasSpeakerProperty;
     bool mSpeakerMode;
 };

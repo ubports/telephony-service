@@ -55,12 +55,20 @@ void ChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &co
 
     Q_FOREACH (Tp::ChannelPtr channel, channels) {
         mContexts[channel.data()] = context;
+        mChannels.append(channel);
+
+        connect(channel.data(),
+                SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
+                SLOT(onChannelInvalidated()));
+
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (callChannel) {
             Tp::PendingReady *ready = callChannel->becomeReady(Tp::Features()
                                                                << Tp::CallChannel::FeatureCore
                                                                << Tp::CallChannel::FeatureCallMembers
-                                                               << Tp::CallChannel::FeatureCallState);
+                                                               << Tp::CallChannel::FeatureCallState
+                                                               << Tp::CallChannel::FeatureContents
+                                                               << Tp::CallChannel::FeatureLocalHoldState);
             connect(ready,
                     SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onCallChannelReady(Tp::PendingOperation*)));
@@ -110,45 +118,15 @@ void ChannelObserver::onCallChannelReady(Tp::PendingOperation *op)
         callChannel->setProperty("activeTimestamp", QDateTime::currentDateTime());
     }
 
-    connect(callChannel.data(),
-            SIGNAL(callStateChanged(Tp::CallState)),
-            SLOT(onCallStateChanged(Tp::CallState)));
-    connect(callChannel.data(),
-            SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
-            SLOT(onCallChannelInvalidated()));
-
-    mChannels.append(callChannel);
-
     Q_EMIT callChannelAvailable(callChannel);
 
     checkContextFinished(callChannel.data());
 }
 
-void ChannelObserver::onCallChannelInvalidated()
+void ChannelObserver::onChannelInvalidated()
 {
-    Tp::CallChannelPtr callChannel(qobject_cast<Tp::CallChannel*>(sender()));
-    mChannels.removeAll(callChannel);
-}
-
-void ChannelObserver::onCallStateChanged(Tp::CallState state)
-{
-    Tp::CallChannelPtr callChannel(qobject_cast<Tp::CallChannel*>(sender()));
-    if (!callChannel || !mChannels.contains(callChannel)) {
-        qWarning() << "The observer knows nothing about the call channel:" << callChannel;
-        return;
-    }
-
-    switch (state) {
-    case Tp::CallStateActive:
-        callChannel->setProperty("activeTimestamp", QDateTime::currentDateTime());
-        break;
-
-    case Tp::CallStateEnded:
-        Q_EMIT callEnded(callChannel);
-        break;
-    default:
-        break;
-    }
+    Tp::ChannelPtr channel(qobject_cast<Tp::Channel*>(sender()));
+    mChannels.removeAll(channel);
 }
 
 void ChannelObserver::onTextChannelReady(Tp::PendingOperation *op)

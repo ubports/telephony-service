@@ -196,8 +196,6 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 {
     Q_UNUSED(op)
 
-    registerClients();
-
     Tp::AccountSetPtr accountSet;
     // try to find an account of the one of supported protocols
     Q_FOREACH(const QString &protocol, supportedProtocols()) {

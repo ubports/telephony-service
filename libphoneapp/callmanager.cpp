@@ -93,16 +93,22 @@ void CallManager::onAccountReady()
 
 QObject *CallManager::foregroundCall() const
 {
+    CallEntry *call = 0;
+
     // if we have only one call, return it as being always in foreground
     // even if it is held
     if (mCallEntries.count() == 1) {
-        return mCallEntries.first();
+        call = mCallEntries.first();
     }
 
     Q_FOREACH(CallEntry *entry, mCallEntries) {
-        if (!entry->isHeld()) {
-            return entry;
+        if (entry->isActive() && !entry->isHeld()) {
+            call = entry;
         }
+    }
+
+    if (call && (call->isActive() || call->isHeld())) {
+        return call;
     }
 
     return 0;
@@ -154,6 +160,9 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
             SIGNAL(heldChanged()),
             SIGNAL(foregroundCallChanged()));
     connect(entry,
+            SIGNAL(activeChanged()),
+            SIGNAL(foregroundCallChanged()));
+    connect(entry,
             SIGNAL(heldChanged()),
             SIGNAL(backgroundCallChanged()));
 
@@ -162,7 +171,6 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
     Q_EMIT hasBackgroundCallChanged();
     Q_EMIT foregroundCallChanged();
     Q_EMIT backgroundCallChanged();
-    Q_EMIT callReady();
 }
 
 void CallManager::onContactsAvailable(Tp::PendingOperation *op)
@@ -195,12 +203,12 @@ void CallManager::onCallEnded()
 
     // at this point the entry should be removed
     mCallEntries.removeAll(entry);
-    entry->deleteLater();
-    Q_EMIT callEnded();
+    Q_EMIT callEnded(entry->channel());
     Q_EMIT hasCallsChanged();
     Q_EMIT hasBackgroundCallChanged();
     Q_EMIT foregroundCallChanged();
     Q_EMIT backgroundCallChanged();
+    entry->deleteLater();
 }
 
 QString CallManager::getVoicemailNumber()

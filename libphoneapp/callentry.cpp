@@ -43,22 +43,26 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mElapsedTime(QTime::currentTime()),
     mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE),
     mSpeakerInterface(channel->busName(), channel->objectPath(), TELEPATHY_CALL_IFACE),
-    mChannelReady(false),
     mHasSpeakerProperty(false),
     mSpeakerMode(false)
 {
-    connect(mChannel->becomeReady(Tp::Features()
-                                  << Tp::CallChannel::FeatureCore
-                                  << Tp::CallChannel::FeatureCallMembers
-                                  << Tp::CallChannel::FeatureCallState
-                                  << Tp::CallChannel::FeatureContents
-                                  << Tp::CallChannel::FeatureLocalHoldState),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onChannelReady(Tp::PendingOperation*)));
-    connect(channel.data(),
+    setupCallChannel();
+
+    Q_EMIT incomingChanged();
+}
+
+void CallEntry::onSpeakerChanged(bool active)
+{
+    mSpeakerMode = active;
+    Q_EMIT speakerChanged();
+}
+
+void CallEntry::setupCallChannel()
+{
+    connect(mChannel.data(),
             SIGNAL(callStateChanged(Tp::CallState)),
             SLOT(onCallStateChanged(Tp::CallState)));
-    connect(channel.data(),
+    connect(mChannel.data(),
             SIGNAL(callFlagsChanged(Tp::CallFlags)),
             SLOT(onCallFlagsChanged(Tp::CallFlags)));
     connect(mChannel.data(),
@@ -75,12 +79,19 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     if (mHasSpeakerProperty) {
         connect(&mSpeakerInterface, SIGNAL(SpeakerChanged(bool)), SLOT(onSpeakerChanged(bool)));
     }
-}
 
-void CallEntry::onSpeakerChanged(bool active)
-{
-    mSpeakerMode = active;
-    Q_EMIT speakerChanged();
+    onCallStateChanged(mChannel->callState());
+
+    ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(mChannel->targetContact()->id());
+    if (entry) {
+        mContact = entry->contact();
+        Q_EMIT contactAliasChanged();
+        Q_EMIT contactAvatarChanged();
+    }
+
+    Q_EMIT heldChanged();
+    Q_EMIT phoneNumberChanged();
+    Q_EMIT dialingChanged();
 }
 
 void CallEntry::timerEvent(QTimerEvent *event)
@@ -106,13 +117,12 @@ void CallEntry::refreshProperties()
 
 bool CallEntry::dialing() const
 {
-    if (!mChannelReady) {
-        return false;
-    }
+    return !incoming() && (mChannel->callState() == Tp::CallStateInitialised);
+}
 
-    bool isOutgoing = mChannel->initiatorContact() == TelepathyHelper::instance()->account()->connection()->selfContact();
-      
-    return isOutgoing && (mChannel->callState() == Tp::CallStateInitialised);
+bool CallEntry::incoming() const
+{
+    return mChannel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
 }
 
 QString CallEntry::phoneNumber() const
@@ -163,6 +173,11 @@ void CallEntry::endCall()
     Q_EMIT callEnded();
 }
 
+Tp::CallChannelPtr CallEntry::channel() const
+{
+    return mChannel;
+}
+
 bool CallEntry::isHeld() const
 {
     if (!mChannel->actualFeatures().contains(Tp::CallChannel::FeatureLocalHoldState)) {
@@ -198,49 +213,19 @@ void CallEntry::setMute(bool value)
     mMuteInterface.call("RequestMuted", value);
 }
 
-void CallEntry::onChannelReady(Tp::PendingOperation *op)
+void CallEntry::onCallStateChanged(Tp::CallState state)
 {
-    if (op->isError()) {
-        qWarning() << "PendingOperation finished with error:" << op->errorName() << op->errorMessage();
-    }
-
-    switch(mChannel->callState()) {
-    case Tp::CallStateActive: 
-        // start timer if this call is already active
+    switch (state) {
+    case Tp::CallStateEnded:
+        endCall();
+        break;
+    case Tp::CallStateActive:
         startTimer(1000);
         mElapsedTime.start();
         Q_EMIT callActive();
         break;
-    case Tp::CallStateInitialised:
-        Q_EMIT dialingChanged();
-    default:
-        // accept the call if it was not accepted yet
-        mChannel->accept();
     }
 
-    mChannelReady = true;
-
-    ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(mChannel->targetContact()->id());
-    if (entry) {
-        mContact = entry->contact();
-        Q_EMIT contactAliasChanged();
-        Q_EMIT contactAvatarChanged();
-    }
-
-    Q_EMIT heldChanged();
-    Q_EMIT phoneNumberChanged();
-    Q_EMIT dialingChanged();
-}
-
-void CallEntry::onCallStateChanged(Tp::CallState state)
-{
-    if (state == Tp::CallStateEnded) {
-        endCall();
-    } else if (state == Tp::CallStateActive) {
-        startTimer(1000);
-        mElapsedTime.start();
-        Q_EMIT callActive();
-    }
     Q_EMIT dialingChanged();
 }
 
