@@ -45,6 +45,8 @@ public:
 
     bool connected() const;
 
+    void registerClient(Tp::AbstractClient *client, QString name);
+
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
     void accountReady();
@@ -61,7 +63,6 @@ protected:
     void ensureAccountEnabled();
     void ensureAccountConnected();
     void watchSelfContactPresence();
-    void registerClient(Tp::AbstractClient *client, QString name);
 
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);

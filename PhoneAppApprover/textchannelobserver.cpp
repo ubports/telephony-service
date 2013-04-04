@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -28,55 +28,12 @@
 #include "ringtone.h"
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
-#include <TelepathyQt/ChannelClassSpecList>
-#include <TelepathyQt/MethodInvocationContext>
 #include <TelepathyQt/ReceivedMessage>
 #include <QImage>
 
 TextChannelObserver::TextChannelObserver(QObject *parent) :
-    QObject(parent), Tp::AbstractClientObserver(channelFilters(), true)
+    QObject(parent)
 {    
-}
-
-Tp::ChannelClassSpecList TextChannelObserver::channelFilters() const
-{
-    Tp::ChannelClassSpecList specList;
-    specList << Tp::ChannelClassSpec::textChat();
-
-    return specList;
-}
-
-void TextChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &context,
-                                      const Tp::AccountPtr &account,
-                                      const Tp::ConnectionPtr &connection,
-                                      const QList<Tp::ChannelPtr> &channels,
-                                      const Tp::ChannelDispatchOperationPtr &dispatchOperation,
-                                      const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
-                                      const Tp::AbstractClientObserver::ObserverInfo &observerInfo)
-{
-    Q_UNUSED(account)
-    Q_UNUSED(connection)
-    Q_UNUSED(dispatchOperation)
-    Q_UNUSED(requestsSatisfied)
-    Q_UNUSED(observerInfo)
-
-    Q_FOREACH (Tp::ChannelPtr channel, channels) {
-        Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
-        if (!textChannel) {
-            qWarning() << "Observed channel is not a text channel:" << channel;
-            continue;
-        }
-
-        Tp::PendingReady *ready = textChannel->becomeReady(Tp::Features()
-                                                           << Tp::TextChannel::FeatureCore
-                                                           << Tp::TextChannel::FeatureMessageQueue
-                                                           << Tp::TextChannel::FeatureChatState);
-        connect(ready,
-                SIGNAL(finished(Tp::PendingOperation*)),
-                SLOT(onTextChannelReady(Tp::PendingOperation*)));
-        mReadyMap[ready] = textChannel;
-        mContexts[textChannel.data()] = context;
-    }
 }
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
@@ -127,27 +84,8 @@ Tp::TextChannelPtr TextChannelObserver::channelFromPath(const QString &path)
     return Tp::TextChannelPtr(0);
 }
 
-void TextChannelObserver::onTextChannelReady(Tp::PendingOperation *op)
+void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
 {
-    Tp::PendingReady *ready = qobject_cast<Tp::PendingReady*>(op);
-    if (!ready) {
-        qCritical() << "Pending operation is not a pending ready:" << op;
-        return;
-    }
-
-    if (!mReadyMap.contains(ready)) {
-        qWarning() << "Pending ready finished but not on the map:" << ready;
-        return;
-    }
-
-    Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(mReadyMap[ready]);
-    mReadyMap.remove(ready);
-
-    if (!textChannel) {
-        qWarning() << "Ready channel is not a call channel:" << mReadyMap[ready];
-        return;
-    }
-
     connect(textChannel.data(),
             SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
             SLOT(onTextChannelInvalidated()));
@@ -164,25 +102,6 @@ void TextChannelObserver::onTextChannelReady(Tp::PendingOperation *op)
     Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
         showNotificationForMessage(message);
     }
-
-    if (!mContexts.contains(textChannel.data())) {
-        qWarning() << "Context for channel not available:" << textChannel;
-        return;
-    }
-
-    Tp::MethodInvocationContextPtr<> context = mContexts[textChannel.data()];
-    mContexts.remove(textChannel.data());
-
-    // check if this is the last channel from the context
-    Q_FOREACH(Tp::MethodInvocationContextPtr<> otherContext, mContexts.values()) {
-        // if we find the context, just return from the function. We need to wait
-        // for the other channels to become ready before setting the context finished
-        if (otherContext == context) {
-            return;
-        }
-    }
-
-    context->setFinished();
 }
 
 void TextChannelObserver::onTextChannelInvalidated()

@@ -37,6 +37,8 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
 {
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
+                     << Tp::Contact::FeatureAvatarData
+                     << Tp::Contact::FeatureAvatarToken
                      << Tp::Contact::FeatureCapabilities
                      << Tp::Contact::FeatureSimplePresence;
     mConnectionFeatures << Tp::Connection::FeatureCore
@@ -98,6 +100,7 @@ void TelepathyHelper::registerClients()
 {
     Tp::ChannelFactoryPtr channelFactory = Tp::ChannelFactoryPtr::constCast(mAccountManager->channelFactory());
     channelFactory->addCommonFeatures(Tp::Channel::FeatureCore);
+
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
     initializeTelepathyClients();
 }

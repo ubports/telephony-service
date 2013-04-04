@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of phone-app.
  *
@@ -22,6 +23,7 @@
 #include <libnotify/notify.h>
 
 #include "phoneappapprover.h"
+#include "telepathyhelper.h"
 #include "textchannelobserver.h"
 #include "voicemailindicator.h"
 #include "contactmodel.h"
@@ -39,28 +41,16 @@ int main(int argc, char **argv)
 
     Tp::registerTypes();
 
+    TelepathyHelper::instance()->registerClients();
 
-    QDBusConnection sessionBus = QDBusConnection::sessionBus();
-    Tp::ClientRegistrarPtr registrar = Tp::ClientRegistrar::create(sessionBus,
-                                                                   Tp::AccountFactory::create(sessionBus),
-                                                                   Tp::ConnectionFactory::create(sessionBus, Tp::Features()
-                                                                                                 << Tp::Connection::FeatureCore
-                                                                                                 << Tp::Connection::FeatureSelfContact),
-                                                                   Tp::ChannelFactory::create(sessionBus),
-                                                                   Tp::ContactFactory::create(Tp::Features()
-                                                                                              << Tp::Contact::FeatureAlias
-                                                                                              << Tp::Contact::FeatureAvatarData
-                                                                                              << Tp::Contact::FeatureAvatarToken));
+    // Connect the textObserver to the channel observer in TelepathyHelper
+    TextChannelObserver *textObserver = new TextChannelObserver();
+    QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
+                     textObserver, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
 
     // register the approver
-    Tp::AbstractClientPtr approver = Tp::AbstractClientPtr::dynamicCast(
-          Tp::SharedPtr<PhoneAppApprover>(new PhoneAppApprover()));
-    registrar->registerClient(approver, "PhoneAppApprover");
-
-    // and the observer
-    Tp::AbstractClientPtr observer = Tp::AbstractClientPtr::dynamicCast(
-          Tp::SharedPtr<TextChannelObserver>(new TextChannelObserver()));
-    registrar->registerClient(observer, "PhoneAppIndicatorObserver");
+    PhoneAppApprover *approver = new PhoneAppApprover();
+    TelepathyHelper::instance()->registerClient(approver, "PhoneAppApprover");
 
     // we don't need to call anything on the indicator, it will work by itself
     VoiceMailIndicator voiceMailIndicator;

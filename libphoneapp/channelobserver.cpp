@@ -54,6 +54,7 @@ void ChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &co
     Q_UNUSED(observerInfo)
 
     Q_FOREACH (Tp::ChannelPtr channel, channels) {
+        mContexts[channel.data()] = context;
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (callChannel) {
             Tp::PendingReady *ready = callChannel->becomeReady(Tp::Features()
@@ -79,8 +80,6 @@ void ChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &co
                     SLOT(onTextChannelReady(Tp::PendingOperation*)));
             mReadyMap[ready] = textChannel;
         }
-
-        mContexts[channel.data()] = context;
     }
 }
 
@@ -173,15 +172,15 @@ void ChannelObserver::onTextChannelReady(Tp::PendingOperation *op)
         return;
     }
 
-    Q_EMIT textChannelAvailable(textChannel);
 
+    Q_EMIT textChannelAvailable(textChannel);
     checkContextFinished(textChannel.data());
 }
 
 void ChannelObserver::checkContextFinished(Tp::Channel *channel)
 {
     if (!mContexts.contains(channel)) {
-        qWarning() << "Context for channel not available:" << Tp::ChannelPtr(channel);
+        qWarning() << "Context for channel not available:" << channel;
         return;
     }
 
