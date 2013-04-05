@@ -3,6 +3,7 @@ set(qt_SRCS
     callhandler.cpp
     phoneapphandler.cpp
     phoneapphandlerdbus.cpp
+    texthandler.cpp
     )
 
 set(handler_SRCS main.cpp ${qt_SRCS})
