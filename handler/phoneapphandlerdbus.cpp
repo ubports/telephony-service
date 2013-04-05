@@ -22,7 +22,7 @@
  */
 
 #include "phoneapphandlerdbus.h"
-#include "PhoneAppHandler/phoneapphandleradaptor.h"
+#include "phoneapphandleradaptor.h"
 
 // Qt
 #include <QtDBus/QDBusConnection>

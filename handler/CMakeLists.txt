@@ -8,11 +8,12 @@ set(qt_SRCS
 
 set(handler_SRCS main.cpp ${qt_SRCS})
 set(desktop_FILES phone-app-handler.desktop)
-qt5_add_dbus_adaptor(handler_SRCS PhoneAppHandler.xml PhoneAppHandler/phoneapphandlerdbus.h PhoneAppHandlerDBus)
+qt5_add_dbus_adaptor(handler_SRCS PhoneAppHandler.xml handler/phoneapphandlerdbus.h PhoneAppHandlerDBus)
 
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libphoneapp
+    ${CMAKE_CURRENT_BINARY_DIR}
     )
 
 add_executable(phone-app-handler ${handler_SRCS} ${handler_HDRS})

@@ -10,13 +10,14 @@ set(qt_SRCS
 
 set(approver_SRCS main.cpp ${qt_SRCS})
 set(desktop_FILES phone-app-sms.desktop phone-app-call.desktop)
-qt5_add_dbus_adaptor(approver_SRCS PhoneAppApprover.xml PhoneAppApprover/phoneappapproverdbus.h PhoneAppApproverDBus)
+qt5_add_dbus_adaptor(approver_SRCS PhoneAppApprover.xml approver/phoneappapproverdbus.h PhoneAppApproverDBus)
 
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${NOTIFY_INCLUDE_DIRS}
     ${MESSAGING_MENU_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libphoneapp
+    ${CMAKE_CURRENT_BINARY_DIR}
     )
 
 link_directories(${MESSAGING_MENU_LIBRARY_DIRS})

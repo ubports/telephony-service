@@ -10,8 +10,8 @@ phone-app.cbp
 config.h
 
 phone-app
-PhoneAppApprover/phone-app-approver
-PhoneAppHandler/phone-app-handler
+approver/phone-app-approver
+handler/phone-app-handler
 
 moc_*.cxx
 moc_*.cpp
@@ -27,8 +27,8 @@ debian/*.substvars
 com.canonical.PhoneApp.service
 org.freedesktop.Telepathy.Client.PhoneApp.service
 phoneappadaptor.*
-PhoneAppApprover/phoneappapproveradaptor.*
-PhoneAppHandler/phoneapphandleradaptor.*
+approver/phoneappapproveradaptor.*
+handler/phoneapphandleradaptor.*
 
 Testing
 Ubuntu/PhoneApp/tests/*Test
