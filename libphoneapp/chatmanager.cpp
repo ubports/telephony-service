@@ -160,6 +160,10 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     QString id = channel->targetContact()->id();
     mChannels[id] = channel;
+
+    connect(channel.data(),
+            SIGNAL(messageReceived(Tp::ReceivedMessage)),
+            SLOT(onMessageReceived(Tp::ReceivedMessage)));
     connect(channel.data(),
             SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
             SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
@@ -172,6 +176,10 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
         sendMessage(id, mPendingMessages[id]);
         mPendingMessages.remove(id);
     }
+
+    Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
+        onMessageReceived(message);
+    }
 }
 
 void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
@@ -183,8 +191,7 @@ void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
     }
 
     Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken(), true);
-
-    Q_EMIT unreadMessagesChanged(message.sender()->id());;
+    Q_EMIT unreadMessagesChanged(message.sender()->id());
 }
 
 void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)

@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 
     Tp::registerTypes();
 
-    TelepathyHelper::instance()->registerClients();
+    TelepathyHelper::instance()->registerChannelObserver();
 
     // Connect the textObserver to the channel observer in TelepathyHelper
     TextChannelObserver *textObserver = new TextChannelObserver();

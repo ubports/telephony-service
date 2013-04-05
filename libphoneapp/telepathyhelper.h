@@ -54,8 +54,7 @@ Q_SIGNALS:
     void connectedChanged();
 
 public Q_SLOTS:
-    void initializeTelepathyClients();
-    void registerClients(void);
+    void registerChannelObserver();
 
 protected:
     QStringList supportedProtocols() const;

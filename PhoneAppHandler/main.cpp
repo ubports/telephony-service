@@ -20,6 +20,7 @@
  */
 
 #include "phoneapphandler.h"
+#include "telepathyhelper.h"
 #include <QCoreApplication>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/AbstractClient>
@@ -32,22 +33,8 @@ int main(int argc, char **argv)
 
     Tp::registerTypes();
 
-    QDBusConnection sessionBus = QDBusConnection::sessionBus();
-    Tp::ClientRegistrarPtr registrar = Tp::ClientRegistrar::create(sessionBus,
-                                                                   Tp::AccountFactory::create(sessionBus),
-                                                                   Tp::ConnectionFactory::create(sessionBus, Tp::Features()
-                                                                                                 << Tp::Connection::FeatureCore
-                                                                                                 << Tp::Connection::FeatureSelfContact),
-                                                                   Tp::ChannelFactory::create(sessionBus),
-                                                                   Tp::ContactFactory::create(Tp::Features()
-                                                                                              << Tp::Contact::FeatureAlias
-                                                                                              << Tp::Contact::FeatureAvatarData
-                                                                                              << Tp::Contact::FeatureAvatarToken));
-
-    // register the handler
-    Tp::AbstractClientPtr handler = Tp::AbstractClientPtr::dynamicCast(
-          Tp::SharedPtr<PhoneAppHandler>(new PhoneAppHandler()));
-    registrar->registerClient(handler, "PhoneAppHandler");
+    PhoneAppHandler *handler = new PhoneAppHandler();
+    TelepathyHelper::instance()->registerClient(handler, "PhoneAppHandler");
 
     return app.exec();
 }
