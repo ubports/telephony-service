@@ -69,69 +69,10 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-set(PHONE_APP phone-app)
-
-set(phone_app_HDRS
-    phoneapplication.h
-    phoneappdbus.h)
-
-set(phone_app_SRCS
-    phoneapplication.cpp
-    phoneappdbus.cpp
-    main.cpp)
-
-qt5_add_dbus_adaptor(phone_app_SRCS PhoneApp.xml phoneappdbus.h PhoneAppDBus)
-add_executable(${PHONE_APP}
-    ${phone_app_SRCS}
-    )
-qt5_use_modules(${PHONE_APP} Core DBus Gui Qml Quick)
-
-install(TARGETS ${PHONE_APP}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
-
-install(PROGRAMS ofono-setup
-    DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
-
-file(GLOB QML_JS_FILES *.qml *.js)
-
-configure_file(com.canonical.PhoneApp.service.in com.canonical.PhoneApp.service)
-install(FILES ${CMAKE_BINARY_DIR}/com.canonical.PhoneApp.service DESTINATION share/dbus-1/services)
-
-install(FILES ${QML_JS_FILES}
-    DESTINATION ${PHONE_APP_DIR}
-    )
-
-set(QML_DIRS
-    DetailViewContact
-    DetailViewLiveCall
-    DetailViewVoicemail
-    DetailViewCommunication
-    PanelDialer
-    PanelContacts
-    PanelCommunications
-    Panes
-    Widgets
-    )
-
-install(DIRECTORY ${QML_DIRS}
-    DESTINATION ${PHONE_APP_DIR}
-    )
-
-set(ASSETS_DIR assets)
-
-install(DIRECTORY ${ASSETS_DIR}
-    DESTINATION ${PHONE_APP_DIR}
-    )
-
-install(FILES ${PHONE_APP}.desktop
-    DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
-    )
-
 enable_testing()
 
 add_subdirectory(libphoneapp)
+add_subdirectory(src)
 add_subdirectory(Ubuntu)
 add_subdirectory(approver)
 add_subdirectory(handler)

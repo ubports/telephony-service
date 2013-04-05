@@ -7,7 +7,6 @@ set(qt_SRCS
     )
 
 set(handler_SRCS main.cpp ${qt_SRCS})
-set(desktop_FILES phone-app-handler.desktop)
 qt5_add_dbus_adaptor(handler_SRCS PhoneAppHandler.xml handler/phoneapphandlerdbus.h PhoneAppHandlerDBus)
 
 include_directories(
@@ -27,4 +26,3 @@ target_link_libraries(phone-app-handler
 install(TARGETS phone-app-handler RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES org.freedesktop.Telepathy.Client.PhoneAppHandler.service DESTINATION share/dbus-1/services)
 install(FILES PhoneAppHandler.client DESTINATION share/telepathy/clients)
-install(FILES ${desktop_FILES} DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)

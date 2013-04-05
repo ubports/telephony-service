@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=Phone App Handler
-Comment=Handles messages and calls.
-Icon=phone-app
-Exec=phone-app-handler
-Terminal=true
-Type=Application
-NoDisplay=true
