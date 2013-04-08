@@ -148,7 +148,6 @@ void ChatManager::onAckTimerTriggered()
 
     QMap<QString, QStringList>::const_iterator it = mMessagesToAck.constBegin();
     while (it != mMessagesToAck.constEnd()) {
-        qDebug() << "Acknowleding messages" << it.key() << it.value();
         phoneAppHandler.call("AcknowledgeMessages", it.key(), it.value());
         ++it;
     }
