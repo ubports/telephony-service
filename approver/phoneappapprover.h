@@ -62,7 +62,6 @@ private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
     QMap<Tp::PendingOperation*,Tp::ChannelPtr> mChannels;
     NotifyNotification* mPendingSnapDecision;
-    QMap<QString, QString> mPendingMessages;
 };
 
 #endif // PHONEAPPAPPROVER_H

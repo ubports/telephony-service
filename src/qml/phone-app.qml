@@ -75,22 +75,6 @@ MainView {
         onContactLoaded: mainView.showContactDetails(contact);
     }
 
-    Connections {
-        target: chatManager
-
-        onChatReady: {
-            if (!contactModel.comparePhoneNumbers(phoneNumber, pendingNumber)) {
-                return;
-            }
-
-            if (pendingMessage != "") {
-                chatManager.sendMessage(pendingNumber, pendingMessage);
-                pendingMessage = "";
-                pendingNumber = "";
-            }
-        }
-    }
-
     function switchToTab(index) {
         selectedTabIndex = index
     }
@@ -175,13 +159,7 @@ MainView {
     }
 
     function sendMessage(number, message) {
-        if (chatManager.isChattingToContact(number)) {
-            chatManager.sendMessage(number, message);
-        } else {
-            pendingMessage = message;
-            pendingNumber = number;
-            chatManager.startChat(number);
-        }
+        chatManager.sendMessage(number, message);
     }
 
     function resetView() {
