@@ -43,6 +43,7 @@ public:
 
 public Q_SLOTS:
     Q_NOREPLY void SendMessage(const QString &number, const QString &message);
+    Q_NOREPLY void AcknowledgeMessages(const QString &number, const QStringList &messageIds);
 
 Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);

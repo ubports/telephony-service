@@ -31,92 +31,48 @@ TextHandler::TextHandler(QObject *parent)
 : QObject(parent)
 {
     // track when the account becomes available
-    connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onAccountReady()));
-    // track when the connection becomes available
-    connect(TelepathyHelper::instance(), SIGNAL(connectionChanged()), SLOT(onAccountReady()));
+    connect(TelepathyHelper::instance(),
+            SIGNAL(connectedChanged()),
+            SLOT(onConnectedChanged()));
 }
 
-void TextHandler::onAccountReady()
+void TextHandler::onConnectedChanged()
 {
     if (!TelepathyHelper::instance()->account() || !TelepathyHelper::instance()->account()->connection()) {
         return;
     }
-    Q_FOREACH(const QString &number, mChatPending) {
+
+    // create text channels to send the pending messages
+    Q_FOREACH(const QString &number, mPendingMessages.keys()) {
         startChat(number);
     }
-    mChatPending.clear();
 }
 
 TextHandler *TextHandler::instance()
 {
-    static TextHandler *manager = new TextHandler();
-    return manager;
-}
-
-bool TextHandler::isChattingToContact(const QString &phoneNumber)
-{
-    // if this is not running in the phone application instance,
-    // we only send messages directly if the app is not running
-
-    // if it is running, we assume we can chat to a contact directly
-    if (!isPhoneApplicationInstance() &&
-        isPhoneApplicationRunning()) {
-        return true;
-    }
-
-    return !existingChat(phoneNumber).isNull();
+    static TextHandler *handler = new TextHandler();
+    return handler;
 }
 
 void TextHandler::startChat(const QString &phoneNumber)
 {
-    if (!TelepathyHelper::instance()->account() || !TelepathyHelper::instance()->account()->connection()) {
-        mChatPending << phoneNumber;
-        return;
-    }
-
-    if (!isChattingToContact(phoneNumber)) {
-        // Request the contact to start chatting to
-        Tp::AccountPtr account = TelepathyHelper::instance()->account();
-        connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
-                SIGNAL(finished(Tp::PendingOperation*)),
-                SLOT(onContactsAvailable(Tp::PendingOperation*)));
-    }
-}
-
-void TextHandler::endChat(const QString &phoneNumber)
-{
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
-    if (channel.isNull()) {
-        return;
-    }
-
-    // the phoneNumber might be formatted differently from the phone number used as the key
-    // so use the one from the channel to remove the entries.
-    QString id = channel->targetContact()->id();
-    channel->requestClose();
-    mChannels.remove(id);
-    mContacts.remove(id);
-
-    Q_EMIT unreadMessagesChanged(id);
+    // Request the contact to start chatting to
+    Tp::AccountPtr account = TelepathyHelper::instance()->account();
+    connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
 
 void TextHandler::sendMessage(const QString &phoneNumber, const QString &message)
 {
-    // if the phone-app is running, just send a message using it
-    if (!isPhoneApplicationInstance() &&
-        isPhoneApplicationRunning()) {
-        QDBusInterface phoneApp("com.canonical.PhoneApp",
-                                    "/com/canonical/PhoneApp",
-                                    "com.canonical.PhoneApp");
-
-        phoneApp.call("SendMessage", phoneNumber, message);
-        Q_EMIT messageSent(phoneNumber, message);
+    if (!TelepathyHelper::instance()->connected()) {
+        mPendingMessages[phoneNumber].append(message);
         return;
     }
 
     Tp::TextChannelPtr channel = existingChat(phoneNumber);
     if (channel.isNull()) {
-        mPendingMessages[phoneNumber] = message;
+        mPendingMessages[phoneNumber].append(message);
         startChat(phoneNumber);
         return;
     }
@@ -126,34 +82,21 @@ void TextHandler::sendMessage(const QString &phoneNumber, const QString &message
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
-void TextHandler::acknowledgeMessages(const QString &phoneNumber)
+void TextHandler::acknowledgeMessages(const QString &phoneNumber, const QStringList &messageIds)
 {
     Tp::TextChannelPtr channel = existingChat(phoneNumber);
     if (channel.isNull()) {
         return;
     }
 
-    channel->acknowledge(channel->messageQueue());
-}
-
-int TextHandler::unreadMessagesCount() const
-{
-    int count = 0;
-    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels.values()) {
-        count += channel->messageQueue().count();
+    QList<Tp::ReceivedMessage> messagesToAck;
+    Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
+        if (messageIds.contains(message.messageToken())) {
+            messagesToAck.append(message);
+        }
     }
 
-    return count;
-}
-
-int TextHandler::unreadMessages(const QString &phoneNumber)
-{
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
-    if (channel.isNull()) {
-        return 0;
-    }
-
-    return channel->messageQueue().count();
+    channel->acknowledge(messagesToAck);
 }
 
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
@@ -161,43 +104,20 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
     QString id = channel->targetContact()->id();
     mChannels[id] = channel;
 
-    connect(channel.data(),
-            SIGNAL(messageReceived(Tp::ReceivedMessage)),
-            SLOT(onMessageReceived(Tp::ReceivedMessage)));
-    connect(channel.data(),
-            SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
-            SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
-
-    Q_EMIT chatReady(id);
-    Q_EMIT unreadMessagesChanged(id);
-
-    // if there is a pending message for this number, send it
-    if (mPendingMessages.contains(id)) {
-        sendMessage(id, mPendingMessages[id]);
-        mPendingMessages.remove(id);
+    // check for pending messages for this channel
+    QMap<QString, QStringList>::iterator it = mPendingMessages.begin();
+    while (it != mPendingMessages.end()) {
+        if (ContactModel::comparePhoneNumbers(it.key(), id)) {
+            Q_FOREACH(const QString &message, it.value()) {
+                connect(channel->send(message),
+                        SIGNAL(finished(Tp::PendingOperation*)),
+                        SLOT(onMessageSent(Tp::PendingOperation*)));
+            }
+            it = mPendingMessages.erase(it);
+        } else {
+            ++it;
+        }
     }
-
-    Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
-        onMessageReceived(message);
-    }
-}
-
-void TextHandler::onMessageReceived(const Tp::ReceivedMessage &message)
-{
-    // ignore delivery reports for now
-    // FIXME: we need to handle errors on sending messages at some point
-    if (message.isDeliveryReport()) {
-        return;
-    }
-
-    Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken(), true);
-    Q_EMIT unreadMessagesChanged(message.sender()->id());
-}
-
-void TextHandler::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
-{
-    // emit the signal saying the unread messages for a specific number has changed
-    Q_EMIT unreadMessagesChanged(message.sender()->id());
 }
 
 void TextHandler::onMessageSent(Tp::PendingOperation *op)
@@ -212,33 +132,18 @@ void TextHandler::onMessageSent(Tp::PendingOperation *op)
         qWarning() << "Error sending message:" << psm->errorName() << psm->errorMessage();
         return;
     }
-
-    Q_EMIT messageSent(psm->channel()->targetContact()->id(), psm->message().text());
-}
-
-void TextHandler::acknowledgeMessage(const QString &phoneNumber, const QString &messageId)
-{
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
-    if(channel.isNull() || messageId.isNull()) {
-        return;
-    }
-
-    Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
-        if (message.messageToken() == messageId) {
-            channel->acknowledge(QList<Tp::ReceivedMessage>() << message);
-            break;
-        }
-    }
 }
 
 Tp::TextChannelPtr TextHandler::existingChat(const QString &phoneNumber)
 {
     Tp::TextChannelPtr channel;
-    Q_FOREACH(const QString &key, mChannels.keys()) {
-        if (ContactModel::comparePhoneNumbers(key, phoneNumber)) {
-            channel = mChannels[key];
+    QMap<QString, Tp::TextChannelPtr>::iterator it = mChannels.begin();
+    while (it != mChannels.end()) {
+        if (ContactModel::comparePhoneNumbers(it.key(), phoneNumber)) {
+            channel = it.value();
             break;
         }
+        ++it;
     }
 
     return channel;

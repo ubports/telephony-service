@@ -23,6 +23,7 @@
 
 #include "phoneapphandlerdbus.h"
 #include "phoneapphandleradaptor.h"
+#include "texthandler.h"
 
 // Qt
 #include <QtDBus/QDBusConnection>
@@ -38,8 +39,7 @@ PhoneAppHandlerDBus::~PhoneAppHandlerDBus()
 {
 }
 
-bool
-PhoneAppHandlerDBus::connectToBus()
+bool PhoneAppHandlerDBus::connectToBus()
 {
     bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
     if (!ok) {
@@ -53,5 +53,10 @@ PhoneAppHandlerDBus::connectToBus()
 
 void PhoneAppHandlerDBus::SendMessage(const QString &number, const QString &message)
 {
-    Q_EMIT onMessageSent(number, message);
+    TextHandler::instance()->sendMessage(number, message);
+}
+
+void PhoneAppHandlerDBus::AcknowledgeMessages(const QString &number, const QStringList &messageIds)
+{
+    TextHandler::instance()->acknowledgeMessages(number, messageIds);
 }
