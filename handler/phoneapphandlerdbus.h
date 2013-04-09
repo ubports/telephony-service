@@ -42,8 +42,17 @@ public:
     bool connectToBus();
 
 public Q_SLOTS:
+    // messages related
     Q_NOREPLY void SendMessage(const QString &number, const QString &message);
     Q_NOREPLY void AcknowledgeMessages(const QString &number, const QStringList &messageIds);
+
+    // call related
+    Q_NOREPLY void StartCall(const QString &number);
+    Q_NOREPLY void HangUpCall(const QString &objectPath);
+    Q_NOREPLY void SetHold(const QString &objectPath, bool hold);
+    Q_NOREPLY void SetMuted(const QString &objectPath, bool muted);
+    Q_NOREPLY void SetSpeakerMode(const QString &objectPath, bool enabled);
+    Q_NOREPLY void SendDTMF(const QString &objectPath, const QString &key);
 
 Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);

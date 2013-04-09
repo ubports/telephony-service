@@ -27,9 +27,19 @@
 #include <TelepathyQt/PendingContacts>
 
 #define CANONICAL_IFACE_TELEPHONY "com.canonical.Telephony"
+#define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
+#define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
+#define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
+#define PROPERTY_SPEAKERMODE "SpeakerMode"
 
 typedef QMap<QString, QVariant> dbusQMap;
 Q_DECLARE_METATYPE(dbusQMap)
+
+CallHandler *CallHandler::instance()
+{
+    static CallHandler *self = new CallHandler();
+    return self;
+}
 
 CallHandler::CallHandler(QObject *parent)
 : QObject(parent)
@@ -39,7 +49,9 @@ CallHandler::CallHandler(QObject *parent)
 void CallHandler::startCall(const QString &phoneNumber)
 {
     // check if we are already talking to that phone number
-    // FIXME: reimplement using objectPath
+    if (!existingCall(phoneNumber).isNull()) {
+        return;
+    }
 
     // Request the contact to start audio call
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
@@ -52,9 +64,94 @@ void CallHandler::startCall(const QString &phoneNumber)
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
 
+void CallHandler::hangUpCall(const QString &objectPath)
+{
+    Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
+    if (channel.isNull()) {
+        return;
+    }
+
+    Tp::PendingOperation *pending = channel->hangup();
+    mClosingChannels[pending] = channel;
+    connect(pending,
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onCallHangupFinished(Tp::PendingOperation*)));
+}
+
+void CallHandler::setHold(const QString &objectPath, bool hold)
+{
+    Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
+    if (channel.isNull()) {
+        return;
+    }
+
+    channel->requestHold(hold);
+}
+
+void CallHandler::setMuted(const QString &objectPath, bool muted)
+{
+    Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
+    if (channel.isNull()) {
+        return;
+    }
+
+    // FIXME: replace by a proper TpQt implementation of mute
+    QDBusInterface muteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE);
+    muteInterface.call("RequestMuted", muted);
+}
+
+void CallHandler::setSpeakerMode(const QString &objectPath, bool enabled)
+{
+    Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
+    if (channel.isNull() || !channel->property("hasSpeakerProperty").toBool()) {
+        return;
+    }
+
+    QDBusInterface speakerInterface(channel->busName(), channel->objectPath(), TELEPATHY_CALL_IFACE);
+    speakerInterface.call("turnOnSpeaker", enabled);
+}
+
+void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
+{
+    Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
+    if (channel.isNull()) {
+        return;
+    }
+
+    Q_FOREACH(const Tp::CallContentPtr &content, channel->contents()) {
+        if (content->supportsDTMF()) {
+            bool ok;
+            Tp::DTMFEvent event = (Tp::DTMFEvent)key.toInt(&ok);
+            if (!ok) {
+                 if (!key.compare("*")) {
+                     event = Tp::DTMFEventAsterisk;
+                 } else if (!key.compare("#")) {
+                     event = Tp::DTMFEventHash;
+                 } else {
+                     qWarning() << "Tone not recognized. DTMF failed";
+                     return;
+                 }
+            }
+            content->startDTMFTone(event);
+        }
+    }
+}
+
 void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
-    // FIXME: check what more to do with the call
+    channel->accept();
+
+    // check if the channel has the speakermode property
+    QDBusInterface callChannelIface(channel->busName(), channel->objectPath(), DBUS_PROPERTIES_IFACE);
+    QDBusMessage reply = callChannelIface.call("GetAll", TELEPATHY_CALL_IFACE);
+    QVariantList args = reply.arguments();
+    QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
+    channel->setProperty("hasSpeakerProperty", map.contains(PROPERTY_SPEAKERMODE));
+
+    connect(channel.data(),
+            SIGNAL(invalidated(Tp::DBusProxy*,QString,QString)),
+            SLOT(onCallChannelInvalidated()));
+
     mCallChannels.append(channel);
 }
 
@@ -71,9 +168,60 @@ void CallHandler::onContactsAvailable(Tp::PendingOperation *op)
 
     // start call to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        account->ensureAudioCall(contact, QLatin1String("audio"), QDateTime::currentDateTime(), "org.freedesktop.Telepathy.Client.PhoneApp");
+        account->ensureAudioCall(contact, QLatin1String("audio"), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".PhoneAppHandler");
 
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;
     }
+}
+
+void CallHandler::onCallHangupFinished(Tp::PendingOperation *op)
+{
+    if (!mClosingChannels.contains(op)) {
+        qCritical() << "Channel for pending hangup not found:" << op;
+        return;
+    }
+
+    // Do NOT request the channel closing at this point. It will get closed automatically.
+    // if you request it to be closed, the CallStateEnded will never be reached and the UI
+    // and logging will be broken.
+    Tp::CallChannelPtr channel = mClosingChannels.take(op);
+    mCallChannels.removeAll(channel);
+}
+
+void CallHandler::onCallChannelInvalidated()
+{
+    Tp::CallChannelPtr channel(qobject_cast<Tp::CallChannel*>(sender()));
+
+    if (channel.isNull()) {
+        return;
+    }
+
+    mCallChannels.removeAll(channel);
+}
+
+Tp::CallChannelPtr CallHandler::existingCall(const QString &phoneNumber)
+{
+    Tp::CallChannelPtr channel;
+    Q_FOREACH(const Tp::CallChannelPtr &ch, mCallChannels) {
+        if (ContactModel::comparePhoneNumbers(ch->targetContact()->id(), phoneNumber)) {
+            channel = ch;
+            break;
+        }
+    }
+
+    return channel;
+}
+
+Tp::CallChannelPtr CallHandler::callFromObjectPath(const QString &objectPath)
+{
+    Tp::CallChannelPtr channel;
+    Q_FOREACH(const Tp::CallChannelPtr &ch, mCallChannels) {
+        if (ch->objectPath() == objectPath) {
+            channel = ch;
+            break;
+        }
+    }
+
+    return channel;
 }

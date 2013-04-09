@@ -177,7 +177,6 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[pr]);
-    QString accountId = channel->property("accountId").toString();
 
     Tp::ContactPtr contact = channel->initiatorContact();
     Tp::ChannelDispatchOperationPtr dispatchOp = dispatchOperation(op);

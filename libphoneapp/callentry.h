@@ -69,6 +69,9 @@ class CallEntry : public QObject
     Q_PROPERTY(bool incoming
                READ incoming
                NOTIFY incomingChanged)
+    Q_PROPERTY(bool ringing
+               READ ringing
+               NOTIFY ringingChanged)
     Q_PROPERTY(bool speaker
                READ isSpeakerOn
                WRITE setSpeaker
@@ -95,6 +98,7 @@ public:
 
     bool dialing() const;
     bool incoming() const;
+    bool ringing() const;
     QString phoneNumber() const;
     QString contactAlias() const;
     QString contactAvatar() const;
@@ -107,7 +111,6 @@ public:
 protected Q_SLOTS:
     void onCallStateChanged(Tp::CallState state);
     void onCallFlagsChanged(Tp::CallFlags flags);
-    void onCallHangupFinished(Tp::PendingOperation *op);
     void onMutedChanged(uint state);
     void onSpeakerChanged(bool active);
 
@@ -124,6 +127,7 @@ Q_SIGNALS:
     void phoneNumberChanged();
     void dialingChanged();
     void incomingChanged();
+    void ringingChanged();
     void contactAliasChanged();
     void contactAvatarChanged();
     void elapsedTimeChanged();

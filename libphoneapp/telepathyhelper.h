@@ -42,6 +42,7 @@ public:
     static TelepathyHelper *instance();
     Tp::AccountPtr account() const;
     ChannelObserver *channelObserver() const;
+    QDBusInterface *handlerInterface();
 
     bool connected() const;
 
@@ -82,6 +83,7 @@ private:
     ChannelObserver *mChannelObserver;
     bool mFirstTime;
     bool mConnected;
+    QDBusInterface *mHandlerInterface;
 };
 
 #endif // TELEPATHYHELPER_H

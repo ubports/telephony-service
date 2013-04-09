@@ -431,7 +431,6 @@ MainView {
     Connections {
         target: callManager
         onForegroundCallChanged: {
-            console.log("BLABLA foregroundCallChanged:" + callManager.foregroundCall);
             // if there is no call, or if the views are already loaded, do not continue processing
             if (!callManager.foregroundCall || mainView.voicemail.loaded || mainView.liveCall.loaded) {
                 return;

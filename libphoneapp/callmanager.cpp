@@ -27,6 +27,7 @@
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
+#include <QDBusInterface>
 
 #define CANONICAL_IFACE_TELEPHONY "com.canonical.Telephony"
 
@@ -42,45 +43,24 @@ CallManager *CallManager::instance()
 CallManager::CallManager(QObject *parent)
 : QObject(parent)
 {
-    // we cannot use TelepathyHelper::instance() as we might create a loop
-    mTelepathyHelper = qobject_cast<TelepathyHelper*>(parent);
-    if (mTelepathyHelper) {
-        // track when the account becomes available
-        connect(mTelepathyHelper, SIGNAL(accountReady()), SLOT(onAccountReady()));
-        // track when the connection becomes available
-        connect(mTelepathyHelper, SIGNAL(connectionChanged()), SLOT(onAccountReady()));
-    }
+    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
 }
 
 void CallManager::startCall(const QString &phoneNumber)
 {
-    // check if we are already talking to that phone number
-    Q_FOREACH(const CallEntry *entry, mCallEntries) {
-        if (ContactModel::comparePhoneNumbers(entry->phoneNumber(), phoneNumber)) {
-            return;
-        }
-    }
-
-    // Request the contact to start audio call
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-    if (account->connection() == NULL) {
-        return;
-    }
-
-    connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onContactsAvailable(Tp::PendingOperation*)));
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("StartCall", phoneNumber);
 }
 
-void CallManager::onAccountReady()
+void CallManager::onConnectedChanged()
 {
-    if (!mTelepathyHelper || !mTelepathyHelper->account() || !mTelepathyHelper->account()->connection()) {
+    if (!TelepathyHelper::instance()->connected()) {
         mVoicemailNumber = QString();
         Q_EMIT voicemailNumberChanged();
         return;
     }
 
-    Tp::ConnectionPtr conn(mTelepathyHelper->account()->connection());
+    Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface connIface(busName, objectPath, CANONICAL_IFACE_TELEPHONY);
@@ -107,7 +87,7 @@ QObject *CallManager::foregroundCall() const
         }
     }
 
-    if (call && (call->isActive() || call->isHeld())) {
+    if (call && (call->isActive() || call->isHeld() || !call->incoming())) {
         return call;
     }
 
@@ -171,26 +151,6 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
     Q_EMIT hasBackgroundCallChanged();
     Q_EMIT foregroundCallChanged();
     Q_EMIT backgroundCallChanged();
-}
-
-void CallManager::onContactsAvailable(Tp::PendingOperation *op)
-{
-    Tp::PendingContacts *pc = qobject_cast<Tp::PendingContacts*>(op);
-
-    if (!pc) {
-        qCritical() << "The pending object is not a Tp::PendingContacts";
-        return;
-    }
-
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-
-    // start call to the contacts
-    Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        account->ensureAudioCall(contact, QLatin1String("audio"), QDateTime::currentDateTime(), "org.freedesktop.Telepathy.Client.PhoneApp");
-
-        // hold the ContactPtr to make sure its refcounting stays bigger than 0
-        mContacts[contact->id()] = contact;
-    }
 }
 
 void CallManager::onCallEnded()

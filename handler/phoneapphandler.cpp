@@ -22,7 +22,6 @@
 
 #include "phoneapphandler.h"
 #include "telepathyhelper.h"
-#include "config.h"
 
 #include <TelepathyQt/MethodInvocationContext>
 #include <TelepathyQt/CallChannel>
@@ -48,17 +47,11 @@ void PhoneAppHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &con
                                const QDateTime &userActionTime,
                                const Tp::AbstractClientHandler::HandlerInfo &handlerInfo)
 {
-    // if the class is not in the phone application, we should only handle the channels that
-    // were requested by this instance.
-    if (!isPhoneApplicationInstance()) {
-        QString handler(TP_QT_IFACE_CLIENT + ".PhoneAppHandler");
-        Q_FOREACH(Tp::ChannelRequestPtr channelRequest, requestsSatisfied) {
-            if (channelRequest->preferredHandler() != handler) {
-                context->setFinishedWithError(TP_QT_ERROR_REJECTED,
-                                              "The channel should be handled by org.freedesktop.Telepathy.Client.PhoneApp");
-            }
-        }
-    }
+    Q_UNUSED(account)
+    Q_UNUSED(connection)
+    Q_UNUSED(requestsSatisfied)
+    Q_UNUSED(userActionTime)
+    Q_UNUSED(handlerInfo)
 
     Q_FOREACH(const Tp::ChannelPtr channel, channels) {
         Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);

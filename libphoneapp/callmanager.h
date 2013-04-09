@@ -72,18 +72,15 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
-    void onContactsAvailable(Tp::PendingOperation *op);
     void onCallEnded();
-    void onAccountReady();
+    void onConnectedChanged();
 
 private:
     explicit CallManager(QObject *parent = 0);
     void refreshProperties();
 
     QList<CallEntry*> mCallEntries;
-    QMap<QString, Tp::ContactPtr> mContacts;
     QString mVoicemailNumber;
-    TelepathyHelper *mTelepathyHelper;
 };
 
 #endif // CALLMANAGER_H

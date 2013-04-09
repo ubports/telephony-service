@@ -33,7 +33,8 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mChannelObserver(0),
       mFirstTime(true),
-      mConnected(false)
+      mConnected(false),
+      mHandlerInterface(0)
 {
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
@@ -79,6 +80,19 @@ Tp::AccountPtr TelepathyHelper::account() const
 ChannelObserver *TelepathyHelper::channelObserver() const
 {
     return mChannelObserver;
+}
+
+QDBusInterface *TelepathyHelper::handlerInterface()
+{
+    if (!mHandlerInterface) {
+        mHandlerInterface = new QDBusInterface("com.canonical.PhoneAppHandler",
+                                               "/com/canonical/PhoneAppHandler",
+                                               "com.canonical.PhoneAppHandler",
+                                               QDBusConnection::sessionBus(),
+                                               this);
+    }
+
+    return mHandlerInterface;
 }
 
 bool TelepathyHelper::connected() const

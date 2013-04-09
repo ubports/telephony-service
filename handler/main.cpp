@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "callhandler.h"
 #include "phoneapphandler.h"
 #include "phoneapphandlerdbus.h"
 #include "telepathyhelper.h"
@@ -38,6 +39,8 @@ int main(int argc, char **argv)
     PhoneAppHandler *handler = new PhoneAppHandler();
     TelepathyHelper::instance()->registerClient(handler, "PhoneAppHandler");
 
+    QObject::connect(handler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+                     CallHandler::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
     QObject::connect(handler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
                      TextHandler::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
 

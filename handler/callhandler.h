@@ -34,21 +34,32 @@ class CallHandler : public QObject
     Q_OBJECT
 
 public:
-    explicit CallHandler(QObject *parent = 0);
-    
-    void startCall(const QString &phoneNumber);
+    static CallHandler *instance();
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
+    void startCall(const QString &phoneNumber);
+    void hangUpCall(const QString &objectPath);
+    void setHold(const QString &objectPath, bool hold);
+    void setMuted(const QString &objectPath, bool muted);
+    void setSpeakerMode(const QString &objectPath, bool enabled);
+    void sendDTMF(const QString &objectPath, const QString &key);
+
+protected:
+    Tp::CallChannelPtr existingCall(const QString &phoneNumber);
+    Tp::CallChannelPtr callFromObjectPath(const QString &objectPath);
+
+protected Q_SLOTS:
     void onContactsAvailable(Tp::PendingOperation *op);
+    void onCallHangupFinished(Tp::PendingOperation *op);
+    void onCallChannelInvalidated();
 
 private:
-    void refreshProperties();
+    explicit CallHandler(QObject *parent = 0);
 
     QMap<QString, Tp::ContactPtr> mContacts;
-    QString mVoicemailNumber;
-    TelepathyHelper *mTelepathyHelper;
     QList<Tp::CallChannelPtr> mCallChannels;
+    QMap<Tp::PendingOperation*,Tp::CallChannelPtr> mClosingChannels;
 };
 
 #endif // CALLHANDLER_H

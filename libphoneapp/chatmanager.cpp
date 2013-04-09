@@ -44,11 +44,8 @@ ChatManager *ChatManager::instance()
 
 void ChatManager::sendMessage(const QString &phoneNumber, const QString &message)
 {
-    QDBusInterface phoneAppHandler("com.canonical.PhoneAppHandler",
-                                   "/com/canonical/PhoneAppHandler",
-                                    "com.canonical.PhoneAppHandler");
-
-    phoneAppHandler.call("SendMessage", phoneNumber, message);
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("SendMessage", phoneNumber, message);
 }
 
 int ChatManager::unreadMessagesCount() const
@@ -142,13 +139,11 @@ void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &
 void ChatManager::onAckTimerTriggered()
 {
     // ack all pending messages
-    QDBusInterface phoneAppHandler("com.canonical.PhoneAppHandler",
-                                   "/com/canonical/PhoneAppHandler",
-                                    "com.canonical.PhoneAppHandler");
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
 
     QMap<QString, QStringList>::const_iterator it = mMessagesToAck.constBegin();
     while (it != mMessagesToAck.constEnd()) {
-        phoneAppHandler.call("AcknowledgeMessages", it.key(), it.value());
+        phoneAppHandler->call("AcknowledgeMessages", it.key(), it.value());
         ++it;
     }
 

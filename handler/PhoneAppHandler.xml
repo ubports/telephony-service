@@ -9,6 +9,8 @@
         <dox:d>
           An interface to the phone handler helper application.
         </dox:d>
+
+        <!-- Messages Related -->
         <method name="SendMessage">
             <dox:d><![CDATA[
                Request to send a message to a phone number
@@ -22,6 +24,48 @@
             ]]></dox:d>
             <arg name="number" type="s" direction="in"/>
             <arg name="messageIds" type="as" direction="in"/>
+        </method>
+
+        <!-- Call Related -->
+        <method name="StartCall">
+            <dox:d><![CDATA[
+                Start a call to the given phone number
+            ]]></dox:d>
+            <arg name="number" type="s" direction="in"/>
+        </method>
+        <method name="HangUpCall">
+            <dox:d><![CDATA[
+                Hang up the call at the given objectPath
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+        </method>
+        <method name="SetHold">
+            <dox:d><![CDATA[
+                Set the call at objectPath as (un)held
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="hold" type="b" direction="in"/>
+        </method>
+        <method name="SetMuted">
+            <dox:d><![CDATA[
+                Set the call at objectPath as (un)muted
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="muted" type="b" direction="in"/>
+        </method>
+        <method name="SetSpeakerMode">
+            <dox:d><![CDATA[
+                Change the audio output to use speakers
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="enabled" type="b" direction="in"/>
+        </method>
+        <method name="SendDTMF">
+            <dox:d><![CDATA[
+                Send a DTMF to the given channel
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="key" type="s" direction="in"/>
         </method>
     </interface>
 </node>

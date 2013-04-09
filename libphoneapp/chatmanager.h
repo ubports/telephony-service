@@ -48,7 +48,7 @@ public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
-    void onMessageSent(const Tp::Message &message, const Tp::MessageSendingFlags flags, const QString &text);
+    void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
 
     void acknowledgeMessage(const QString &phoneNumber, const QString &messageId);
 

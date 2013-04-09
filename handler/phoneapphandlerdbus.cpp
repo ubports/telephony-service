@@ -21,6 +21,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "callhandler.h"
 #include "phoneapphandlerdbus.h"
 #include "phoneapphandleradaptor.h"
 #include "texthandler.h"
@@ -59,4 +60,34 @@ void PhoneAppHandlerDBus::SendMessage(const QString &number, const QString &mess
 void PhoneAppHandlerDBus::AcknowledgeMessages(const QString &number, const QStringList &messageIds)
 {
     TextHandler::instance()->acknowledgeMessages(number, messageIds);
+}
+
+void PhoneAppHandlerDBus::StartCall(const QString &number)
+{
+    CallHandler::instance()->startCall(number);
+}
+
+void PhoneAppHandlerDBus::HangUpCall(const QString &objectPath)
+{
+    CallHandler::instance()->hangUpCall(objectPath);
+}
+
+void PhoneAppHandlerDBus::SetHold(const QString &objectPath, bool hold)
+{
+    CallHandler::instance()->setHold(objectPath, hold);
+}
+
+void PhoneAppHandlerDBus::SetMuted(const QString &objectPath, bool muted)
+{
+    CallHandler::instance()->setMuted(objectPath, muted);
+}
+
+void PhoneAppHandlerDBus::SetSpeakerMode(const QString &objectPath, bool enabled)
+{
+    CallHandler::instance()->setSpeakerMode(objectPath, enabled);
+}
+
+void PhoneAppHandlerDBus::SendDTMF(const QString &objectPath, const QString &key)
+{
+    CallHandler::instance()->sendDTMF(objectPath, key);
 }
