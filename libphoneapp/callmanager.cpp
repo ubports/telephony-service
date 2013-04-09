@@ -163,7 +163,8 @@ void CallManager::onCallEnded()
 
     // at this point the entry should be removed
     mCallEntries.removeAll(entry);
-    Q_EMIT callEnded(entry->channel());
+
+    notifyEndedCall(entry->channel());
     Q_EMIT hasCallsChanged();
     Q_EMIT hasBackgroundCallChanged();
     Q_EMIT foregroundCallChanged();
@@ -174,4 +175,36 @@ void CallManager::onCallEnded()
 QString CallManager::getVoicemailNumber()
 {
     return mVoicemailNumber;
+}
+
+
+void CallManager::notifyEndedCall(const Tp::CallChannelPtr &channel)
+{
+    Tp::Contacts contacts = channel->remoteMembers();
+    if (contacts.isEmpty()) {
+        qWarning() << "Call channel had no remote contacts:" << channel;
+        return;
+    }
+
+    QString phoneNumber;
+    // FIXME: handle conference call
+    Q_FOREACH(const Tp::ContactPtr &contact, contacts) {
+        phoneNumber = contact->id();
+        break;
+    }
+
+    // fill the call info
+    QDateTime timestamp = channel->property("timestamp").toDateTime();
+    bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+    QTime duration(0, 0, 0);
+    bool missed = incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer;
+
+    if (!missed) {
+        QDateTime activeTime = channel->property("activeTimestamp").toDateTime();
+        duration = duration.addSecs(activeTime.secsTo(QDateTime::currentDateTime()));
+    }
+
+    // and finally add the entry
+    // just mark it as new if it is missed
+    Q_EMIT callEnded(phoneNumber, incoming, timestamp, duration, missed, missed);
 }

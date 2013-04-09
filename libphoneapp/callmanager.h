@@ -62,7 +62,7 @@ public:
     bool hasBackgroundCall() const;
 
 Q_SIGNALS:
-    void callEnded(const Tp::CallChannelPtr &channel);
+    void callEnded(const QString &phoneNumber, bool incoming, const QDateTime &timestamp, const QTime &duratiom, bool missed, bool newEvent);
     void foregroundCallChanged();
     void backgroundCallChanged();
     void hasCallsChanged();
@@ -78,6 +78,7 @@ public Q_SLOTS:
 private:
     explicit CallManager(QObject *parent = 0);
     void refreshProperties();
+    void notifyEndedCall(const Tp::CallChannelPtr &channel);
 
     QList<CallEntry*> mCallEntries;
     QString mVoicemailNumber;

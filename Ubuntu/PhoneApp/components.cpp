@@ -107,8 +107,8 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     // calls
     connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
             CallManager::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
-    connect(CallManager::instance(), SIGNAL(callEnded(const Tp::CallChannelPtr&)),
-            mCallLogModel, SLOT(onCallEnded(const Tp::CallChannelPtr&)));
+    connect(CallManager::instance(), SIGNAL(callEnded(QString,bool,QDateTime,QTime,bool,bool)),
+            mCallLogModel, SLOT(addCallEvent(QString,bool,QDateTime,QTime,bool,bool)));
     connect(TelepathyLogReader::instance(), SIGNAL(loadedCallEvent(QString,bool,QDateTime,QTime,bool,bool)),
             mCallLogModel, SLOT(addCallEvent(QString,bool,QDateTime,QTime,bool,bool)));
 

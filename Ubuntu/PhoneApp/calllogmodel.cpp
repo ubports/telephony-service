@@ -21,42 +21,10 @@
 
 #include "calllogmodel.h"
 #include "contactmodel.h"
-#include "telepathyhelper.h"
-#include <TelepathyQt/Contact>
 
 CallLogModel::CallLogModel(QObject *parent) :
     ConversationFeedModel(parent)
 {
-}
-
-void CallLogModel::onCallEnded(const Tp::CallChannelPtr &channel)
-{
-    Tp::Contacts contacts = channel->remoteMembers();
-    if (contacts.isEmpty()) {
-        qWarning() << "Call channel had no remote contacts:" << channel;
-        return;
-    }
-
-    QString phoneNumber;
-    // FIXME: handle conference call
-    Q_FOREACH(const Tp::ContactPtr &contact, contacts) {
-        phoneNumber = contact->id();
-        break;
-    }
-
-    // fill the call info
-    QDateTime timestamp = channel->property("timestamp").toDateTime();
-    bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
-    QTime duration(0, 0, 0);
-    bool missed = incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer;
-
-    if (!missed) {
-        QDateTime activeTime = channel->property("activeTimestamp").toDateTime();
-        duration = duration.addSecs(activeTime.secsTo(QDateTime::currentDateTime()));
-    }
-
-    // and finally add the entry
-    addCallEvent(phoneNumber, incoming, timestamp, duration, missed, true);
 }
 
 QString CallLogModel::itemType(const QModelIndex &index) const
