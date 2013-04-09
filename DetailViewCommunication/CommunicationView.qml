@@ -64,8 +64,6 @@ LocalWidgets.PhonePage {
             if (pendingMessage != "") {
                 chatManager.sendMessage(view.phoneNumber, pendingMessage);
                 pendingMessage = "";
-                footer.focus = false;
-                view.phoneNumber = "";
             }
         }
     }
@@ -201,8 +199,8 @@ LocalWidgets.PhonePage {
                 if (itemType == "call") {
                     // call item clicked
                     mainView.callNumber(item.phoneNumber);
-                } else if (item.incoming) {
-                    // incoming message clicked
+                } else {
+                    // message clicked
                     view.phoneNumber = item.phoneNumber
                     footer.focus = true
                 }
@@ -254,8 +252,6 @@ LocalWidgets.PhonePage {
 
             if (chatManager.isChattingToContact(view.phoneNumber)) {
                 chatManager.sendMessage(view.phoneNumber, message);
-                footer.focus = false;
-                view.phoneNumber = "";
             } else {
                 view.pendingMessage = message;
                 chatManager.startChat(view.phoneNumber);
