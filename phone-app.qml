@@ -19,7 +19,7 @@
 import QtQuick 2.0
 import "Widgets" as LocalWidgets
 import Ubuntu.Components 0.1
-import Ubuntu.HUD 0.1 as HUD
+import Ubuntu.HUD 1.0 as HUD
 import Ubuntu.PhoneApp 0.1
 import "PanelContacts"
 import "PanelCommunications"
@@ -476,7 +476,9 @@ MainView {
     HUD.HUD {
         applicationIdentifier: "phone-app" // this must match the .desktop file!
         HUD.Context {
-            toolbar.quitAction.onTriggered: Qt.quit()
+            HUD.QuitAction {
+                onTriggered: Qt.quit()
+            }
 
             HUD.Action {
                 label: "Compose"
