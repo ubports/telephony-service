@@ -13,6 +13,9 @@ override_dh_install:
 override_dh_auto_configure:
 	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Debug
 
+override_dh_auto_test:
+	make -C obj-$(DEB_HOST_GNU_TYPE) test
+
 .PHONY: override_dh_strip
 override_dh_strip:
 	dh_strip --dbg-package=phone-app-dbg
