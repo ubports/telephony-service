@@ -7,3 +7,5 @@ Exec=phone-app %u
 Terminal=false
 Icon=phone-app
 MimeType=x-scheme-handler/contact;x-scheme-handler/call
+X-Ubuntu-Touch=true
+X-Ubuntu-StageHint=SideStage

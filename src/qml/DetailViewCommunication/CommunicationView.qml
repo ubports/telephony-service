@@ -177,8 +177,10 @@ LocalWidgets.PhonePage {
             onClicked: {
                 listView.currentIndex = index
                 if (itemType == "call") {
+                    // call item clicked
                     mainView.callNumber(item.phoneNumber);
                 } else {
+                    // message clicked
                     view.phoneNumber = item.phoneNumber
                     footer.focus = true
                 }
