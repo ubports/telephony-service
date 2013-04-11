@@ -23,6 +23,10 @@ target_link_libraries(phone-app-handler
     phoneapp
     )
 
+configure_file(com.canonical.PhoneAppHandler.service.in com.canonical.PhoneAppHandler.service)
+configure_file(org.freedesktop.Telepathy.Client.PhoneAppHandler.service.in org.freedesktop.Telepathy.Client.PhoneAppHandler.service)
+
 install(TARGETS phone-app-handler RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES org.freedesktop.Telepathy.Client.PhoneAppHandler.service DESTINATION share/dbus-1/services)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.PhoneAppHandler.service DESTINATION share/dbus-1/services)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/com.canonical.PhoneAppHandler.service DESTINATION share/dbus-1/services)
 install(FILES PhoneAppHandler.client DESTINATION share/telepathy/clients)
