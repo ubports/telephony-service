@@ -31,7 +31,7 @@
 #include <ubuntu/ui/ubuntu_ui_session_service.h>
 #endif
 
-#define PHONE_APP_CLIENT TP_QT_IFACE_CLIENT + ".PhoneApp"
+#define PHONE_APP_CLIENT "com.canonical.PhoneApp"
 
 PhoneAppUtils::PhoneAppUtils(QObject *parent) :
     QObject(parent)
