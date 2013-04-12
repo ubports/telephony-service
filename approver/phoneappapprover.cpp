@@ -37,7 +37,7 @@
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/TextChannel>
 
-#define PHONE_APP_CLIENT TP_QT_IFACE_CLIENT + ".PhoneAppHandler"
+#define PHONE_APP_HANDLER TP_QT_IFACE_CLIENT + ".PhoneAppHandler"
 #define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
 
 
@@ -289,10 +289,12 @@ void PhoneAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
 {
     closeSnapDecision();
 
-    // launch the phone-app before dispatching the channel
+    // forward the channel to the handler
+    dispatchOp->handleWith(PHONE_APP_HANDLER);
+
+    // and then launch the phone-app
     PhoneAppUtils::instance()->startPhoneApp();
 
-    dispatchOp->handleWith(PHONE_APP_CLIENT);
     mDispatchOps.removeAll(dispatchOp);
     if (pr) {
         mChannels.remove(pr);
@@ -321,8 +323,8 @@ void PhoneAppApprover::processChannels()
                 continue;
             }
 
-            if (dispatchOperation->possibleHandlers().contains(PHONE_APP_CLIENT)) {
-                dispatchOperation->handleWith(PHONE_APP_CLIENT);
+            if (dispatchOperation->possibleHandlers().contains(PHONE_APP_HANDLER)) {
+                dispatchOperation->handleWith(PHONE_APP_HANDLER);
                 mDispatchOps.removeAll(dispatchOperation);
             }
             // FIXME: this shouldn't happen, but in any case, we need to check what to do when
