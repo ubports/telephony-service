@@ -244,6 +244,8 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
 {
     QString phoneNumber = mMessages[messageId];
     Q_EMIT replyReceived(phoneNumber, reply);
+
+    Q_EMIT messageRead(phoneNumber, messageId);
 }
 
 void MessagingMenu::showMessage(const QString &messageId)

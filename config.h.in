@@ -36,6 +36,14 @@ inline QString phoneAppDirectory() {
     if (isRunningInstalled()) {
         return QString("@CMAKE_INSTALL_PREFIX@/@PHONE_APP_DIR@/");
     } else {
+        return QString("@CMAKE_SOURCE_DIR@/src/qml/");
+    }
+}
+
+inline QString ubuntuPhonePluginPath() {
+    if (isRunningInstalled()) {
+        return QString::null;
+    } else {
         return QString("@CMAKE_SOURCE_DIR@/");
     }
 }

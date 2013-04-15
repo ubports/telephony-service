@@ -166,6 +166,12 @@ bool PhoneApplication::setup()
     m_view->rootContext()->setContextProperty("appLayout", singlePanel ? "singlePane" : "dualPane" );
     m_view->rootContext()->setContextProperty("contactEngine", contactEngine);
     m_view->engine()->setBaseUrl(QUrl::fromLocalFile(phoneAppDirectory()));
+
+    QString pluginPath = ubuntuPhonePluginPath();
+    if (!pluginPath.isNull()) {
+        m_view->engine()->addImportPath(pluginPath);
+    }
+
     m_view->setSource(QUrl::fromLocalFile("phone-app.qml"));
     if (fullScreen) {
         m_view->showFullScreen();

@@ -62,7 +62,8 @@ public:
     void hideVoicemailEntry();
 
 Q_SIGNALS:
-    void replyReceived(const QString phoneNumber, const QString &reply);
+    void replyReceived(const QString &phoneNumber, const QString &reply);
+    void messageRead(const QString &phoneNumber, const QString &messageId);
 
 private Q_SLOTS:
     void sendMessageReply(const QString &messageId, const QString &reply);

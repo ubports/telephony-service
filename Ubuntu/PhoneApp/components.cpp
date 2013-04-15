@@ -22,7 +22,7 @@
 
 #include "components.h"
 #include "telepathyhelper.h"
-#include "channelhandler.h"
+#include "callmanager.h"
 #include "channelobserver.h"
 #include "chatmanager.h"
 #include "calllogmodel.h"
@@ -74,7 +74,7 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
 
     mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", ChatManager::instance());
-    mRootContext->setContextProperty("callManager", TelepathyHelper::instance()->callManager());
+    mRootContext->setContextProperty("callManager", CallManager::instance());
 
     // check which contact engine to use
     QString contactEngine = mRootContext->contextProperty("contactEngine").toString();
@@ -91,6 +91,27 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mConversationModel->addFeedModel(mCallLogModel);
     mConversationModel->addFeedModel(mMessageLogModel);
     mRootContext->setContextProperty("conversationAggregatorModel", mConversationModel);
+
+    TelepathyHelper::instance()->registerChannelObserver();
+
+    // messages
+    connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
+            ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&, const QString&, bool)),
+            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&, const QString&, bool)));
+    connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
+            mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
+    connect(TelepathyLogReader::instance(), SIGNAL(loadedMessageEvent(QString,QString,bool,QDateTime,QString,bool)),
+            mMessageLogModel, SLOT(appendMessage(QString,QString,bool,QDateTime,QString,bool)));
+
+    // calls
+    connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+            CallManager::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+    connect(CallManager::instance(), SIGNAL(callEnded(QString,bool,QDateTime,QTime,bool,bool)),
+            mCallLogModel, SLOT(addCallEvent(QString,bool,QDateTime,QTime,bool,bool)));
+    connect(TelepathyLogReader::instance(), SIGNAL(loadedCallEvent(QString,bool,QDateTime,QTime,bool,bool)),
+            mCallLogModel, SLOT(addCallEvent(QString,bool,QDateTime,QTime,bool,bool)));
+
 }
 
 void Components::registerTypes(const char *uri)
@@ -110,18 +131,6 @@ void Components::registerTypes(const char *uri)
 
 void Components::onAccountReady()
 {
-    connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callEnded(const Tp::CallChannelPtr&)),
-            mCallLogModel, SLOT(onCallEnded(const Tp::CallChannelPtr&)));
-    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&, const QString&, bool)),
-            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&, const QString&, bool)));
-    connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
-            mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
-
-    connect(TelepathyLogReader::instance(), SIGNAL(loadedCallEvent(QString,bool,QDateTime,QTime,bool,bool)),
-            mCallLogModel, SLOT(addCallEvent(QString,bool,QDateTime,QTime,bool,bool)));
-    connect(TelepathyLogReader::instance(), SIGNAL(loadedMessageEvent(QString,QString,bool,QDateTime,QString,bool)),
-            mMessageLogModel, SLOT(appendMessage(QString,QString,bool,QDateTime,QString,bool)));
-
     // QTimer::singleShot() is used here to make sure the slots are executed in the correct thread. If we call the slots directly
     // the items created for those models will be on the wrong thread.
     QTimer::singleShot(0, TelepathyLogReader::instance(), SLOT(fetchLog()));

@@ -10,7 +10,6 @@ set(library_SRCS
     contactphonenumber.cpp
     callentry.cpp
     callmanager.cpp
-    channelhandler.cpp
     channelobserver.cpp
     chatmanager.cpp
     ringtone.cpp

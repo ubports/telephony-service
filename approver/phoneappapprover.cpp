@@ -37,7 +37,7 @@
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/TextChannel>
 
-#define PHONE_APP_CLIENT TP_QT_IFACE_CLIENT + ".PhoneApp"
+#define PHONE_APP_HANDLER TP_QT_IFACE_CLIENT + ".PhoneAppHandler"
 #define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
 
 
@@ -53,6 +53,9 @@ PhoneAppApprover::PhoneAppApprover()
     connect(MessagingMenu::instance(),
             SIGNAL(replyReceived(QString,QString)),
             SLOT(onReplyReceived(QString,QString)));
+    connect(MessagingMenu::instance(), SIGNAL(messageRead(QString,QString)),
+            ChatManager::instance(), SLOT(acknowledgeMessage(QString,QString)));
+
     connect(PhoneAppUtils::instance(),
             SIGNAL(applicationRunningChanged(bool)),
             SLOT(processChannels()));
@@ -174,7 +177,6 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
     Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[pr]);
-    QString accountId = channel->property("accountId").toString();
 
     Tp::ContactPtr contact = channel->initiatorContact();
     Tp::ChannelDispatchOperationPtr dispatchOp = dispatchOperation(op);
@@ -287,10 +289,12 @@ void PhoneAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
 {
     closeSnapDecision();
 
-    // launch the phone-app before dispatching the channel
+    // forward the channel to the handler
+    dispatchOp->handleWith(PHONE_APP_HANDLER);
+
+    // and then launch the phone-app
     PhoneAppUtils::instance()->startPhoneApp();
 
-    dispatchOp->handleWith(PHONE_APP_CLIENT);
     mDispatchOps.removeAll(dispatchOp);
     if (pr) {
         mChannels.remove(pr);
@@ -310,11 +314,6 @@ void PhoneAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
 
 void PhoneAppApprover::processChannels()
 {
-    // if the phone app is not running, do not approve text channels
-    if (!PhoneAppUtils::instance()->isApplicationRunning()) {
-        return;
-    }
-
     Q_FOREACH (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
         QList<Tp::ChannelPtr> channels = dispatchOperation->channels();
         Q_FOREACH (Tp::ChannelPtr channel, channels) {
@@ -324,8 +323,8 @@ void PhoneAppApprover::processChannels()
                 continue;
             }
 
-            if (dispatchOperation->possibleHandlers().contains(PHONE_APP_CLIENT)) {
-                dispatchOperation->handleWith(PHONE_APP_CLIENT);
+            if (dispatchOperation->possibleHandlers().contains(PHONE_APP_HANDLER)) {
+                dispatchOperation->handleWith(PHONE_APP_HANDLER);
                 mDispatchOps.removeAll(dispatchOperation);
             }
             // FIXME: this shouldn't happen, but in any case, we need to check what to do when
@@ -341,24 +340,13 @@ void PhoneAppApprover::onClaimFinished(Tp::PendingOperation* op)
         // TODO do something
         return;
     }
-    Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(mChannels[op]);
+
     Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[op]);
     if (callChannel) {
         Tp::PendingOperation *hangupop = callChannel->hangup(Tp::CallStateChangeReasonUserRequested, TP_QT_ERROR_REJECTED, QString());
         mChannels[hangupop] = callChannel;
         connect(hangupop, SIGNAL(finished(Tp::PendingOperation*)),
                 this, SLOT(onHangupFinished(Tp::PendingOperation*)));
-    }
-
-    if (textChannel) {
-        QString phoneNumber = textChannel->targetContact()->id();
-        QString message = mPendingMessages.take(phoneNumber);
-
-        ChatManager *chatManager = ChatManager::instance();
-        chatManager->onTextChannelAvailable(textChannel);
-        chatManager->sendMessage(phoneNumber, message);
-        chatManager->acknowledgeMessages(phoneNumber);
-        chatManager->endChat(phoneNumber);
     }
 }
 
@@ -416,35 +404,7 @@ void PhoneAppApprover::onCallStateChanged(Tp::CallState state)
 
 void PhoneAppApprover::onReplyReceived(const QString &phoneNumber, const QString &reply)
 {
-    // if the app is running, just send using it
-    if (PhoneAppUtils::instance()->isApplicationRunning()) {
-        ChatManager::instance()->sendMessage(phoneNumber, reply);
-        return;
-    }
-
-    // if it is not, find the channel, claim it, mark messages as read and send the reply.
-    mPendingMessages[phoneNumber] = reply;
-    Tp::ChannelDispatchOperationPtr dispatchOperation;
-    Tp::TextChannelPtr textChannel;
-    Q_FOREACH(const Tp::ChannelDispatchOperationPtr &otherDispatchOperation, mDispatchOps) {
-        Q_FOREACH(const Tp::ChannelPtr &channel, otherDispatchOperation->channels()) {
-            Tp::TextChannelPtr otherTextChannel = Tp::TextChannelPtr::dynamicCast(channel);
-            if (otherTextChannel && ContactModel::comparePhoneNumbers(channel->targetContact()->id(), phoneNumber)) {
-                dispatchOperation = otherDispatchOperation;
-                textChannel = otherTextChannel;
-            }
-        }
-    }
-
-    if (!dispatchOperation.isNull()) {
-        Tp::PendingOperation *claimop = dispatchOperation->claim();
-        mChannels[claimop] = textChannel;
-        connect(claimop, SIGNAL(finished(Tp::PendingOperation*)),
-                this, SLOT(onClaimFinished(Tp::PendingOperation*)));
-    } else {
-        // if there is no dispatch operation, just send using the chatmanager
-        ChatManager::instance()->sendMessage(phoneNumber, reply);
-    }
+    ChatManager::instance()->sendMessage(phoneNumber, reply);
 }
 
 void PhoneAppApprover::closeSnapDecision()

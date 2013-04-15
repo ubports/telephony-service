@@ -43,22 +43,26 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mElapsedTime(QTime::currentTime()),
     mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE),
     mSpeakerInterface(channel->busName(), channel->objectPath(), TELEPATHY_CALL_IFACE),
-    mChannelReady(false),
     mHasSpeakerProperty(false),
     mSpeakerMode(false)
 {
-    connect(mChannel->becomeReady(Tp::Features()
-                                  << Tp::CallChannel::FeatureCore
-                                  << Tp::CallChannel::FeatureCallMembers
-                                  << Tp::CallChannel::FeatureCallState
-                                  << Tp::CallChannel::FeatureContents
-                                  << Tp::CallChannel::FeatureLocalHoldState),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onChannelReady(Tp::PendingOperation*)));
-    connect(channel.data(),
+    setupCallChannel();
+
+    Q_EMIT incomingChanged();
+}
+
+void CallEntry::onSpeakerChanged(bool active)
+{
+    mSpeakerMode = active;
+    Q_EMIT speakerChanged();
+}
+
+void CallEntry::setupCallChannel()
+{
+    connect(mChannel.data(),
             SIGNAL(callStateChanged(Tp::CallState)),
             SLOT(onCallStateChanged(Tp::CallState)));
-    connect(channel.data(),
+    connect(mChannel.data(),
             SIGNAL(callFlagsChanged(Tp::CallFlags)),
             SLOT(onCallFlagsChanged(Tp::CallFlags)));
     connect(mChannel.data(),
@@ -75,12 +79,19 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     if (mHasSpeakerProperty) {
         connect(&mSpeakerInterface, SIGNAL(SpeakerChanged(bool)), SLOT(onSpeakerChanged(bool)));
     }
-}
 
-void CallEntry::onSpeakerChanged(bool active)
-{
-    mSpeakerMode = active;
-    Q_EMIT speakerChanged();
+    onCallStateChanged(mChannel->callState());
+
+    ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(mChannel->targetContact()->id());
+    if (entry) {
+        mContact = entry->contact();
+        Q_EMIT contactAliasChanged();
+        Q_EMIT contactAvatarChanged();
+    }
+
+    Q_EMIT heldChanged();
+    Q_EMIT phoneNumberChanged();
+    Q_EMIT dialingChanged();
 }
 
 void CallEntry::timerEvent(QTimerEvent *event)
@@ -106,13 +117,17 @@ void CallEntry::refreshProperties()
 
 bool CallEntry::dialing() const
 {
-    if (!mChannelReady) {
-        return false;
-    }
+    return !incoming() && (mChannel->callState() == Tp::CallStateInitialised);
+}
 
-    bool isOutgoing = mChannel->initiatorContact() == TelepathyHelper::instance()->account()->connection()->selfContact();
-      
-    return isOutgoing && (mChannel->callState() == Tp::CallStateInitialised);
+bool CallEntry::incoming() const
+{
+    return mChannel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+}
+
+bool CallEntry::ringing() const
+{
+    return mChannel->callFlags() & Tp::CallFlagLocallyRinging;
 }
 
 QString CallEntry::phoneNumber() const
@@ -136,31 +151,19 @@ QString CallEntry::contactAvatar() const
 
 void CallEntry::sendDTMF(const QString &key)
 {
-    Q_FOREACH(const Tp::CallContentPtr &content, mChannel->contents()) {
-        if (content->supportsDTMF()) {
-            bool ok;
-            Tp::DTMFEvent event = (Tp::DTMFEvent)key.toInt(&ok);
-            if (!ok) {
-                 if (!key.compare("*")) {
-                     event = Tp::DTMFEventAsterisk;
-                 } else if (!key.compare("#")) {
-                     event = Tp::DTMFEventHash;
-                 } else {
-                     qWarning() << "Tone not recognized. DTMF failed";
-                     return;
-                 }
-            }
-            content->startDTMFTone(event);
-        }
-    }
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("SendDTMF", mChannel->objectPath(), key);
 }
 
 void CallEntry::endCall()
 {
-    connect(mChannel->hangup(),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onCallHangupFinished(Tp::PendingOperation*)));
-    Q_EMIT callEnded();
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("HangUpCall", mChannel->objectPath());
+}
+
+Tp::CallChannelPtr CallEntry::channel() const
+{
+    return mChannel;
 }
 
 bool CallEntry::isHeld() const
@@ -193,65 +196,33 @@ bool CallEntry::isMuted() const
 
 void CallEntry::setMute(bool value)
 {
-    // Replace this by a Mute interface method call when it
-    // becomes available in telepathy-qt
-    mMuteInterface.call("RequestMuted", value);
-}
-
-void CallEntry::onChannelReady(Tp::PendingOperation *op)
-{
-    if (op->isError()) {
-        qWarning() << "PendingOperation finished with error:" << op->errorName() << op->errorMessage();
-    }
-
-    switch(mChannel->callState()) {
-    case Tp::CallStateActive: 
-        // start timer if this call is already active
-        startTimer(1000);
-        mElapsedTime.start();
-        Q_EMIT callActive();
-        break;
-    case Tp::CallStateInitialised:
-        Q_EMIT dialingChanged();
-    default:
-        // accept the call if it was not accepted yet
-        mChannel->accept();
-    }
-
-    mChannelReady = true;
-
-    ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(mChannel->targetContact()->id());
-    if (entry) {
-        mContact = entry->contact();
-        Q_EMIT contactAliasChanged();
-        Q_EMIT contactAvatarChanged();
-    }
-
-    Q_EMIT heldChanged();
-    Q_EMIT phoneNumberChanged();
-    Q_EMIT dialingChanged();
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("SetMuted", mChannel->objectPath(), value);
 }
 
 void CallEntry::onCallStateChanged(Tp::CallState state)
 {
-    if (state == Tp::CallStateEnded) {
-        endCall();
-    } else if (state == Tp::CallStateActive) {
+    switch (state) {
+    case Tp::CallStateEnded:
+        Q_EMIT callEnded();
+        break;
+    case Tp::CallStateActive:
+        mChannel->setProperty("activeTimestamp", QDateTime::currentDateTime());
         startTimer(1000);
         mElapsedTime.start();
         Q_EMIT callActive();
+        Q_EMIT activeChanged();
+        break;
     }
+
     Q_EMIT dialingChanged();
 }
 
 void CallEntry::onCallFlagsChanged(Tp::CallFlags flags)
 {
-    // TODO: handle ringing
-}
+    Q_UNUSED(flags)
 
-void CallEntry::onCallHangupFinished(Tp::PendingOperation *op)
-{
-    mChannel->requestClose();
+    Q_EMIT ringingChanged();
 }
 
 void CallEntry::setVoicemail(bool voicemail)
@@ -284,8 +255,11 @@ bool CallEntry::isSpeakerOn()
 
 void CallEntry::setSpeaker(bool speaker)
 {
-    if (mHasSpeakerProperty) {
-        mSpeakerInterface.call("turnOnSpeaker", speaker);
+    if (!mHasSpeakerProperty) {
+        return;
     }
+
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("SetSpeakerMode", speaker);
 }
 

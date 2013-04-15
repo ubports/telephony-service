@@ -35,8 +35,6 @@ LocalWidgets.PhonePage {
     property alias filterValue: conversationProxyModel.filterValue
     property string phoneNumber: ""
 
-    property string pendingMessage
-
     title: "Communication"
 
     headerContents: Loader {
@@ -53,30 +51,12 @@ LocalWidgets.PhonePage {
         // FIXME: check how to implement that in the new layout.
     }
 
-    Connections {
-        target: chatManager
-
-        onChatReady: {
-            if (!contactModel.comparePhoneNumbers(phoneNumber, view.phoneNumber)) {
-                return;
-            }
-
-            if (pendingMessage != "") {
-                chatManager.sendMessage(view.phoneNumber, pendingMessage);
-                pendingMessage = "";
-            }
-        }
-    }
-
     Component.onCompleted: {
         if (view.newMessage) {
             headerLoader.focus = true;
             headerLoader.forceActiveFocus()
         }
     }
-
-    // make sure the text channel gets closed after chatting
-    Component.onDestruction: chatManager.endChat(number);
 
     onVisibleChanged: updateActiveChat();
 
@@ -250,12 +230,7 @@ LocalWidgets.PhonePage {
                 view.newMessage = false;
             }
 
-            if (chatManager.isChattingToContact(view.phoneNumber)) {
-                chatManager.sendMessage(view.phoneNumber, message);
-            } else {
-                view.pendingMessage = message;
-                chatManager.startChat(view.phoneNumber);
-            }
+            chatManager.sendMessage(view.phoneNumber, message);
 
             listView.currentIndex = 0;
             listView.positionViewAtIndex(listView.currentIndex, ListView.Begin);

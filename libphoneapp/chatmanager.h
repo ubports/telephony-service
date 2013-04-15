@@ -34,42 +34,36 @@ class ChatManager : public QObject
 public:
     static ChatManager *instance();
 
-    Q_INVOKABLE bool isChattingToContact(const QString &phoneNumber);
-    Q_INVOKABLE void startChat(const QString &phoneNumber);
-    Q_INVOKABLE void endChat(const QString &phoneNumber);
     Q_INVOKABLE void sendMessage(const QString &phoneNumber, const QString &message);
-    Q_INVOKABLE void acknowledgeMessages(const QString &phoneNumber);
 
     int unreadMessagesCount() const;
     int unreadMessages(const QString &phoneNumber);
 
 Q_SIGNALS:
-    void chatReady(const QString &phoneNumber);
     void messageReceived(const QString &phoneNumber, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
     void messageSent(const QString &phoneNumber, const QString &message);
     void unreadMessagesChanged(const QString &phoneNumber);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
-    void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
-    void onMessageSent(Tp::PendingOperation *op);
-    void onAccountReady();
+    void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
 
     void acknowledgeMessage(const QString &phoneNumber, const QString &messageId);
 
 protected:
     Tp::TextChannelPtr existingChat(const QString &phoneNumber);
 
+protected Q_SLOTS:
+    void onAckTimerTriggered();
 
 private:
     explicit ChatManager(QObject *parent = 0);
 
     QMap<QString, Tp::TextChannelPtr> mChannels;
-    QMap<QString, Tp::ContactPtr> mContacts;
-    QMap<QString, QString> mPendingMessages;
-    QList<QString> mChatPending;
+    QMap<QString, QStringList> mMessagesToAck;
+    QTimer mMessagesAckTimer;
 };
 
 #endif // CHATMANAGER_H

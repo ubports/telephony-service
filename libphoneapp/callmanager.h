@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -51,8 +51,8 @@ class CallManager : public QObject
                NOTIFY voicemailNumberChanged)
 
 public:
-    explicit CallManager(QObject *parent = 0);
     
+    static CallManager *instance();
     Q_INVOKABLE void startCall(const QString &phoneNumber);
     Q_INVOKABLE QString getVoicemailNumber();
 
@@ -62,8 +62,7 @@ public:
     bool hasBackgroundCall() const;
 
 Q_SIGNALS:
-    void callReady();
-    void callEnded();
+    void callEnded(const QString &phoneNumber, bool incoming, const QDateTime &timestamp, const QTime &duratiom, bool missed, bool newEvent);
     void foregroundCallChanged();
     void backgroundCallChanged();
     void hasCallsChanged();
@@ -73,17 +72,16 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
-    void onContactsAvailable(Tp::PendingOperation *op);
     void onCallEnded();
-    void onAccountReady();
+    void onConnectedChanged();
 
 private:
+    explicit CallManager(QObject *parent = 0);
     void refreshProperties();
+    void notifyEndedCall(const Tp::CallChannelPtr &channel);
 
     QList<CallEntry*> mCallEntries;
-    QMap<QString, Tp::ContactPtr> mContacts;
     QString mVoicemailNumber;
-    TelepathyHelper *mTelepathyHelper;
 };
 
 #endif // CALLMANAGER_H

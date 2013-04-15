@@ -45,7 +45,7 @@ class PhoneAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
 
     def launch_test_local(self):
         self.app = self.launch_test_application(
-            "../../phone-app", "--test-contacts")
+            "../../src/phone-app", "--test-contacts")
 
     def launch_test_installed(self):
         self.app = self.launch_test_application(

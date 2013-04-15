@@ -23,12 +23,9 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-#include "channelhandler.h"
-
 #include <QQmlContext>
 #include <QQmlExtensionPlugin>
 
-class ChannelHandler;
 class ChannelObserver;
 class CallLogModel;
 class MessageLogModel;

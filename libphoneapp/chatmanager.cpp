@@ -30,21 +30,10 @@
 ChatManager::ChatManager(QObject *parent)
 : QObject(parent)
 {
-    // track when the account becomes available
-    connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onAccountReady()));
-    // track when the connection becomes available
-    connect(TelepathyHelper::instance(), SIGNAL(connectionChanged()), SLOT(onAccountReady()));
-}
-
-void ChatManager::onAccountReady()
-{
-    if (!TelepathyHelper::instance()->account() || !TelepathyHelper::instance()->account()->connection()) {
-        return;
-    }
-    Q_FOREACH(const QString &number, mChatPending) {
-        startChat(number);
-    }
-    mChatPending.clear();
+    // wait one second for other acknowledge calls before acknowledging messages to avoid many round trips
+    mMessagesAckTimer.setInterval(1000);
+    mMessagesAckTimer.setSingleShot(true);
+    connect(&mMessagesAckTimer, SIGNAL(timeout()), SLOT(onAckTimerTriggered()));
 }
 
 ChatManager *ChatManager::instance()
@@ -53,87 +42,10 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
-bool ChatManager::isChattingToContact(const QString &phoneNumber)
-{
-    // if this is not running in the phone application instance,
-    // we only send messages directly if the app is not running
-
-    // if it is running, we assume we can chat to a contact directly
-    if (!isPhoneApplicationInstance() &&
-        isPhoneApplicationRunning()) {
-        return true;
-    }
-
-    return !existingChat(phoneNumber).isNull();
-}
-
-void ChatManager::startChat(const QString &phoneNumber)
-{
-    if (!TelepathyHelper::instance()->account() || !TelepathyHelper::instance()->account()->connection()) {
-        mChatPending << phoneNumber;
-        return;
-    }
-
-    if (!isChattingToContact(phoneNumber)) {
-        // Request the contact to start chatting to
-        Tp::AccountPtr account = TelepathyHelper::instance()->account();
-        connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
-                SIGNAL(finished(Tp::PendingOperation*)),
-                SLOT(onContactsAvailable(Tp::PendingOperation*)));
-    }
-}
-
-void ChatManager::endChat(const QString &phoneNumber)
-{
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
-    if (channel.isNull()) {
-        return;
-    }
-
-    // the phoneNumber might be formatted differently from the phone number used as the key
-    // so use the one from the channel to remove the entries.
-    QString id = channel->targetContact()->id();
-    channel->requestClose();
-    mChannels.remove(id);
-    mContacts.remove(id);
-
-    Q_EMIT unreadMessagesChanged(id);
-}
-
 void ChatManager::sendMessage(const QString &phoneNumber, const QString &message)
 {
-    // if the phone-app is running, just send a message using it
-    if (!isPhoneApplicationInstance() &&
-        isPhoneApplicationRunning()) {
-        QDBusInterface phoneApp("com.canonical.PhoneApp",
-                                    "/com/canonical/PhoneApp",
-                                    "com.canonical.PhoneApp");
-
-        phoneApp.call("SendMessage", phoneNumber, message);
-        Q_EMIT messageSent(phoneNumber, message);
-        return;
-    }
-
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
-    if (channel.isNull()) {
-        mPendingMessages[phoneNumber] = message;
-        startChat(phoneNumber);
-        return;
-    }
-
-    connect(channel->send(message),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onMessageSent(Tp::PendingOperation*)));
-}
-
-void ChatManager::acknowledgeMessages(const QString &phoneNumber)
-{
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
-    if (channel.isNull()) {
-        return;
-    }
-
-    channel->acknowledge(channel->messageQueue());
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("SendMessage", phoneNumber, message);
 }
 
 int ChatManager::unreadMessagesCount() const
@@ -160,17 +72,21 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     QString id = channel->targetContact()->id();
     mChannels[id] = channel;
+
+    connect(channel.data(),
+            SIGNAL(messageReceived(Tp::ReceivedMessage)),
+            SLOT(onMessageReceived(Tp::ReceivedMessage)));
+    connect(channel.data(),
+            SIGNAL(messageSent(Tp::Message,Tp::MessageSendingFlags,QString)),
+            SLOT(onMessageSent(Tp::Message,Tp::MessageSendingFlags,QString)));
     connect(channel.data(),
             SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
             SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
 
-    Q_EMIT chatReady(id);
     Q_EMIT unreadMessagesChanged(id);
 
-    // if there is a pending message for this number, send it
-    if (mPendingMessages.contains(id)) {
-        sendMessage(id, mPendingMessages[id]);
-        mPendingMessages.remove(id);
+    Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
+        onMessageReceived(message);
     }
 }
 
@@ -183,8 +99,7 @@ void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
     }
 
     Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken(), true);
-
-    Q_EMIT unreadMessagesChanged(message.sender()->id());;
+    Q_EMIT unreadMessagesChanged(message.sender()->id());
 }
 
 void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
@@ -193,35 +108,13 @@ void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
     Q_EMIT unreadMessagesChanged(message.sender()->id());
 }
 
-void ChatManager::onMessageSent(Tp::PendingOperation *op)
+void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message)
 {
-    Tp::PendingSendMessage *psm = qobject_cast<Tp::PendingSendMessage*>(op);
-    if(!psm) {
-        qWarning() << "The pending object was not a pending operation:" << op;
-        return;
-    }
+    Q_UNUSED(message)
+    Q_UNUSED(flags)
 
-    if (psm->isError()) {
-        qWarning() << "Error sending message:" << psm->errorName() << psm->errorMessage();
-        return;
-    }
-
-    Q_EMIT messageSent(psm->channel()->targetContact()->id(), psm->message().text());
-}
-
-void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &messageId)
-{
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
-    if(channel.isNull() || messageId.isNull()) {
-        return;
-    }
-
-    Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
-        if (message.messageToken() == messageId) {
-            channel->acknowledge(QList<Tp::ReceivedMessage>() << message);
-            break;
-        }
-    }
+    Tp::TextChannel *channel = qobject_cast<Tp::TextChannel*>(sender());
+    Q_EMIT messageSent(channel->targetContact()->id(), sentMessage.text());
 }
 
 Tp::TextChannelPtr ChatManager::existingChat(const QString &phoneNumber)
@@ -237,23 +130,22 @@ Tp::TextChannelPtr ChatManager::existingChat(const QString &phoneNumber)
     return channel;
 }
 
-void ChatManager::onContactsAvailable(Tp::PendingOperation *op)
+void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &messageId)
 {
-    Tp::PendingContacts *pc = qobject_cast<Tp::PendingContacts*>(op);
+    mMessagesAckTimer.start();
+    mMessagesToAck[phoneNumber].append(messageId);
+}
 
-    if (!pc) {
-        qCritical() << "The pending object is not a Tp::PendingContacts";
-        return;
+void ChatManager::onAckTimerTriggered()
+{
+    // ack all pending messages
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+
+    QMap<QString, QStringList>::const_iterator it = mMessagesToAck.constBegin();
+    while (it != mMessagesToAck.constEnd()) {
+        phoneAppHandler->call("AcknowledgeMessages", it.key(), it.value());
+        ++it;
     }
 
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-
-    // start chatting to the contacts
-    Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        QString handler = TelepathyHelper::instance()->channelHandler()->property("clientName").toString();
-        account->ensureTextChat(contact, QDateTime::currentDateTime(), handler);
-
-        // hold the ContactPtr to make sure its refcounting stays bigger than 0
-        mContacts[contact->id()] = contact;
-    }
+    mMessagesToAck.clear();
 }

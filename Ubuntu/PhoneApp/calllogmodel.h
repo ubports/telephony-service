@@ -25,7 +25,6 @@
 #include "conversationfeedmodel.h"
 #include "conversationfeeditem.h"
 #include <QTime>
-#include <TelepathyQt/CallChannel>
 
 class CallLogEntry : public ConversationFeedItem {
     Q_OBJECT
@@ -59,7 +58,6 @@ public:
 
 public Q_SLOTS:
     void addCallEvent(const QString &phoneNumber, bool incoming, const QDateTime &timestamp, const QTime &duration, bool missed, bool newEvent);
-    void onCallEnded(const Tp::CallChannelPtr &channel);
 
 };
 

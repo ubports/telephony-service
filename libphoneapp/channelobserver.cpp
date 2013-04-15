@@ -23,6 +23,7 @@
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/ChannelClassSpecList>
 #include <TelepathyQt/MethodInvocationContext>
+#include <TelepathyQt/TextChannel>
 
 ChannelObserver::ChannelObserver(QObject *parent) :
     QObject(parent), Tp::AbstractClientObserver(channelFilters(), true)
@@ -33,6 +34,7 @@ Tp::ChannelClassSpecList ChannelObserver::channelFilters() const
 {
     Tp::ChannelClassSpecList specList;
     specList << Tp::ChannelClassSpec::audioCall();
+    specList << Tp::ChannelClassSpec::textChat();
 
     return specList;
 }
@@ -52,21 +54,40 @@ void ChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &co
     Q_UNUSED(observerInfo)
 
     Q_FOREACH (Tp::ChannelPtr channel, channels) {
+        mContexts[channel.data()] = context;
+        mChannels.append(channel);
+
+        connect(channel.data(),
+                SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
+                SLOT(onChannelInvalidated()));
+
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
-        if (!callChannel) {
-            qWarning() << "Observed channel is not a call channel:" << channel;
-            continue;
+        if (callChannel) {
+            Tp::PendingReady *ready = callChannel->becomeReady(Tp::Features()
+                                                               << Tp::CallChannel::FeatureCore
+                                                               << Tp::CallChannel::FeatureCallMembers
+                                                               << Tp::CallChannel::FeatureCallState
+                                                               << Tp::CallChannel::FeatureContents
+                                                               << Tp::CallChannel::FeatureLocalHoldState);
+            connect(ready,
+                    SIGNAL(finished(Tp::PendingOperation*)),
+                    SLOT(onCallChannelReady(Tp::PendingOperation*)));
+            mReadyMap[ready] = callChannel;
         }
 
-        Tp::PendingReady *ready = callChannel->becomeReady(Tp::Features()
-                                                           << Tp::CallChannel::FeatureCore
-                                                           << Tp::CallChannel::FeatureCallMembers
-                                                           << Tp::CallChannel::FeatureCallState);
-        connect(ready,
-                SIGNAL(finished(Tp::PendingOperation*)),
-                SLOT(onCallChannelReady(Tp::PendingOperation*)));
-        mReadyMap[ready] = callChannel;
-        mContexts[callChannel.data()] = context;
+        Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
+        if (textChannel) {
+            Tp::PendingReady *ready = textChannel->becomeReady(Tp::Features()
+                                                               << Tp::TextChannel::FeatureCore
+                                                               << Tp::TextChannel::FeatureChatState
+                                                               << Tp::TextChannel::FeatureMessageCapabilities
+                                                               << Tp::TextChannel::FeatureMessageQueue
+                                                               << Tp::TextChannel::FeatureMessageSentSignal);
+            connect(ready,
+                    SIGNAL(finished(Tp::PendingOperation*)),
+                    SLOT(onTextChannelReady(Tp::PendingOperation*)));
+            mReadyMap[ready] = textChannel;
+        }
     }
 }
 
@@ -97,22 +118,52 @@ void ChannelObserver::onCallChannelReady(Tp::PendingOperation *op)
         callChannel->setProperty("activeTimestamp", QDateTime::currentDateTime());
     }
 
-    connect(callChannel.data(),
-            SIGNAL(callStateChanged(Tp::CallState)),
-            SLOT(onCallStateChanged(Tp::CallState)));
-    connect(callChannel.data(),
-            SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
-            SLOT(onCallChannelInvalidated()));
+    Q_EMIT callChannelAvailable(callChannel);
 
-    mChannels.append(callChannel);
+    checkContextFinished(callChannel.data());
+}
 
-    if (!mContexts.contains(callChannel.data())) {
-        qWarning() << "Context for channel not available:" << callChannel;
+void ChannelObserver::onChannelInvalidated()
+{
+    Tp::ChannelPtr channel(qobject_cast<Tp::Channel*>(sender()));
+    mChannels.removeAll(channel);
+}
+
+void ChannelObserver::onTextChannelReady(Tp::PendingOperation *op)
+{
+    Tp::PendingReady *ready = qobject_cast<Tp::PendingReady*>(op);
+    if (!ready) {
+        qCritical() << "Pending operation is not a pending ready:" << op;
         return;
     }
 
-    Tp::MethodInvocationContextPtr<> context = mContexts[callChannel.data()];
-    mContexts.remove(callChannel.data());
+    if (!mReadyMap.contains(ready)) {
+        qWarning() << "Pending ready finished but not on the map:" << ready;
+        return;
+    }
+
+    Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(mReadyMap[ready]);
+    mReadyMap.remove(ready);
+
+    if (!textChannel) {
+        qWarning() << "Ready channel is not a call channel:" << textChannel;
+        return;
+    }
+
+
+    Q_EMIT textChannelAvailable(textChannel);
+    checkContextFinished(textChannel.data());
+}
+
+void ChannelObserver::checkContextFinished(Tp::Channel *channel)
+{
+    if (!mContexts.contains(channel)) {
+        qWarning() << "Context for channel not available:" << channel;
+        return;
+    }
+
+    Tp::MethodInvocationContextPtr<> context = mContexts[channel];
+    mContexts.remove(channel);
 
     // check if this is the last channel from the context
     Q_FOREACH(Tp::MethodInvocationContextPtr<> otherContext, mContexts.values()) {
@@ -124,31 +175,4 @@ void ChannelObserver::onCallChannelReady(Tp::PendingOperation *op)
     }
 
     context->setFinished();
-}
-
-void ChannelObserver::onCallChannelInvalidated()
-{
-    Tp::CallChannelPtr callChannel(qobject_cast<Tp::CallChannel*>(sender()));
-    mChannels.removeAll(callChannel);
-}
-
-void ChannelObserver::onCallStateChanged(Tp::CallState state)
-{
-    Tp::CallChannelPtr callChannel(qobject_cast<Tp::CallChannel*>(sender()));
-    if (!callChannel || !mChannels.contains(callChannel)) {
-        qWarning() << "The observer knows nothing about the call channel:" << callChannel;
-        return;
-    }
-
-    switch (state) {
-    case Tp::CallStateActive:
-        callChannel->setProperty("activeTimestamp", QDateTime::currentDateTime());
-        break;
-
-    case Tp::CallStateEnded:
-        Q_EMIT callEnded(callChannel);
-        break;
-    default:
-        break;
-    }
 }

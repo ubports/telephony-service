@@ -22,58 +22,45 @@
 
 #include "callmanager.h"
 #include "callentry.h"
+#include "contactmodel.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
+#include <QDBusInterface>
 
 #define CANONICAL_IFACE_TELEPHONY "com.canonical.Telephony"
 
 typedef QMap<QString, QVariant> dbusQMap;
 Q_DECLARE_METATYPE(dbusQMap)
 
+CallManager *CallManager::instance()
+{
+    static CallManager *self = new CallManager();
+    return self;
+}
+
 CallManager::CallManager(QObject *parent)
 : QObject(parent)
 {
-    // we cannot use TelepathyHelper::instance() as we might create a loop
-    mTelepathyHelper = qobject_cast<TelepathyHelper*>(parent);
-    if (mTelepathyHelper) {
-        // track when the account becomes available
-        connect(mTelepathyHelper, SIGNAL(accountReady()), SLOT(onAccountReady()));
-        // track when the connection becomes available
-        connect(mTelepathyHelper, SIGNAL(connectionChanged()), SLOT(onAccountReady()));
-    }
+    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
 }
 
 void CallManager::startCall(const QString &phoneNumber)
 {
-    // check if we are already talking to that phone number
-    Q_FOREACH(const CallEntry *entry, mCallEntries) {
-        if (entry->phoneNumber() == phoneNumber) {
-            return;
-        }
-    }
-
-    // Request the contact to start audio call
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-    if (account->connection() == NULL) {
-        return;
-    }
-
-    connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onContactsAvailable(Tp::PendingOperation*)));
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("StartCall", phoneNumber);
 }
 
-void CallManager::onAccountReady()
+void CallManager::onConnectedChanged()
 {
-    if (!mTelepathyHelper || !mTelepathyHelper->account() || !mTelepathyHelper->account()->connection()) {
+    if (!TelepathyHelper::instance()->connected()) {
         mVoicemailNumber = QString();
         Q_EMIT voicemailNumberChanged();
         return;
     }
 
-    Tp::ConnectionPtr conn(mTelepathyHelper->account()->connection());
+    Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface connIface(busName, objectPath, CANONICAL_IFACE_TELEPHONY);
@@ -86,16 +73,22 @@ void CallManager::onAccountReady()
 
 QObject *CallManager::foregroundCall() const
 {
+    CallEntry *call = 0;
+
     // if we have only one call, return it as being always in foreground
     // even if it is held
     if (mCallEntries.count() == 1) {
-        return mCallEntries.first();
+        call = mCallEntries.first();
     }
 
     Q_FOREACH(CallEntry *entry, mCallEntries) {
-        if (!entry->isHeld()) {
-            return entry;
+        if (entry->isActive() && !entry->isHeld()) {
+            call = entry;
         }
+    }
+
+    if (call && (call->isActive() || call->isHeld() || !call->incoming())) {
+        return call;
     }
 
     return 0;
@@ -147,6 +140,9 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
             SIGNAL(heldChanged()),
             SIGNAL(foregroundCallChanged()));
     connect(entry,
+            SIGNAL(activeChanged()),
+            SIGNAL(foregroundCallChanged()));
+    connect(entry,
             SIGNAL(heldChanged()),
             SIGNAL(backgroundCallChanged()));
 
@@ -155,27 +151,6 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
     Q_EMIT hasBackgroundCallChanged();
     Q_EMIT foregroundCallChanged();
     Q_EMIT backgroundCallChanged();
-    Q_EMIT callReady();
-}
-
-void CallManager::onContactsAvailable(Tp::PendingOperation *op)
-{
-    Tp::PendingContacts *pc = qobject_cast<Tp::PendingContacts*>(op);
-
-    if (!pc) {
-        qCritical() << "The pending object is not a Tp::PendingContacts";
-        return;
-    }
-
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-
-    // start call to the contacts
-    Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        account->ensureAudioCall(contact, QLatin1String("audio"), QDateTime::currentDateTime(), "org.freedesktop.Telepathy.Client.PhoneApp");
-
-        // hold the ContactPtr to make sure its refcounting stays bigger than 0
-        mContacts[contact->id()] = contact;
-    }
 }
 
 void CallManager::onCallEnded()
@@ -188,15 +163,48 @@ void CallManager::onCallEnded()
 
     // at this point the entry should be removed
     mCallEntries.removeAll(entry);
-    entry->deleteLater();
-    Q_EMIT callEnded();
+
+    notifyEndedCall(entry->channel());
     Q_EMIT hasCallsChanged();
     Q_EMIT hasBackgroundCallChanged();
     Q_EMIT foregroundCallChanged();
     Q_EMIT backgroundCallChanged();
+    entry->deleteLater();
 }
 
 QString CallManager::getVoicemailNumber()
 {
     return mVoicemailNumber;
+}
+
+
+void CallManager::notifyEndedCall(const Tp::CallChannelPtr &channel)
+{
+    Tp::Contacts contacts = channel->remoteMembers();
+    if (contacts.isEmpty()) {
+        qWarning() << "Call channel had no remote contacts:" << channel;
+        return;
+    }
+
+    QString phoneNumber;
+    // FIXME: handle conference call
+    Q_FOREACH(const Tp::ContactPtr &contact, contacts) {
+        phoneNumber = contact->id();
+        break;
+    }
+
+    // fill the call info
+    QDateTime timestamp = channel->property("timestamp").toDateTime();
+    bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+    QTime duration(0, 0, 0);
+    bool missed = incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer;
+
+    if (!missed) {
+        QDateTime activeTime = channel->property("activeTimestamp").toDateTime();
+        duration = duration.addSecs(activeTime.secsTo(QDateTime::currentDateTime()));
+    }
+
+    // and finally add the entry
+    // just mark it as new if it is missed
+    Q_EMIT callEnded(phoneNumber, incoming, timestamp, duration, missed, missed);
 }

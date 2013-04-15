@@ -21,7 +21,7 @@
  */
 
 #include "phoneappapproverdbus.h"
-#include "PhoneAppApprover/phoneappapproveradaptor.h"
+#include "phoneappapproveradaptor.h"
 
 // Qt
 #include <QtDBus/QDBusConnection>

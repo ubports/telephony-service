@@ -3,18 +3,19 @@
 import QmlProject 1.1
 
 Project {
-    mainFile: "phone-app.qml"
+    mainFile: "src/qml/phone-app.qml"
 
     /* Include .qml, .js, and image files from current directory and subdirectories */
     QmlFiles {
-        directory: "."
+        directory: "./src/qml"
     }
     JavaScriptFiles {
-        directory: "."
+        directory: "./src/qml"
     }
     ImageFiles {
-        directory: "."
+        directory: "./src/qml"
     }
+
     /* List of plugin directories passed to QML runtime */
-    // importPaths: [ "../exampleplugin" ]
+    importPaths: [ "." ]
 }

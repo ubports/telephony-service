@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CHANNELHANDLER_H
-#define CHANNELHANDLER_H
+#ifndef PHONEAPPHANDLER_H
+#define PHONEAPPHANDLER_H
 
 #include <TelepathyQt/AbstractClientHandler>
 #include <TelepathyQt/PendingReady>
@@ -29,13 +29,13 @@
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/ChannelRequest>
 
-class ChannelHandler : public QObject, public Tp::AbstractClientHandler
+class PhoneAppHandler : public QObject, public Tp::AbstractClientHandler
 {
     Q_OBJECT
 
 public:
-    ChannelHandler(QObject *parent = 0);
-    ~ChannelHandler() { }
+    PhoneAppHandler(QObject *parent = 0);
+    ~PhoneAppHandler() { }
     bool bypassApproval() const;
     void handleChannels(const Tp::MethodInvocationContextPtr<> &context,
                         const Tp::AccountPtr &account,

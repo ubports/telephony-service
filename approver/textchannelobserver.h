@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -23,40 +23,28 @@
 #define TEXTCHANNELOBSERVER_H
 
 #include <QObject>
-#include <TelepathyQt/AbstractClientObserver>
-#include <TelepathyQt/PendingReady>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 
-class TextChannelObserver : public QObject, public Tp::AbstractClientObserver
+class TextChannelObserver : public QObject
 {
     Q_OBJECT
 public:
     explicit TextChannelObserver(QObject *parent = 0);
 
-    Tp::ChannelClassSpecList channelFilters() const;
-
-    void observeChannels(const Tp::MethodInvocationContextPtr<> &context,
-                         const Tp::AccountPtr &account,
-                         const Tp::ConnectionPtr &connection,
-                         const QList<Tp::ChannelPtr> &channels,
-                         const Tp::ChannelDispatchOperationPtr &dispatchOperation,
-                         const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
-                         const Tp::AbstractClientObserver::ObserverInfo &observerInfo);
+public Q_SLOTS:
+    void onTextChannelAvailable(Tp::TextChannelPtr textChannel);
 
 protected:
     void showNotificationForMessage(const Tp::ReceivedMessage &message);
     Tp::TextChannelPtr channelFromPath(const QString &path);
 
 protected Q_SLOTS:
-    void onTextChannelReady(Tp::PendingOperation *op);
     void onTextChannelInvalidated();
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
 
 private:
-    QMap<Tp::Channel*, Tp::MethodInvocationContextPtr<> > mContexts;
-    QMap<Tp::PendingReady*, Tp::ChannelPtr> mReadyMap;
     QList<Tp::TextChannelPtr> mChannels;
 };
 
