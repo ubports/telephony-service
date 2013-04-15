@@ -39,9 +39,9 @@ public:
     PhoneAppHandlerDBus(QObject* parent=0);
     ~PhoneAppHandlerDBus();
 
+public Q_SLOTS:
     bool connectToBus();
 
-public Q_SLOTS:
     // messages related
     Q_NOREPLY void SendMessage(const QString &number, const QString &message);
     Q_NOREPLY void AcknowledgeMessages(const QString &number, const QStringList &messageIds);
