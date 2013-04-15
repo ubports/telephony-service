@@ -41,16 +41,17 @@ int main(int argc, char **argv)
 
     Tp::registerTypes();
 
+    // register the approver
+    PhoneAppApprover *approver = new PhoneAppApprover();
+    TelepathyHelper::instance()->registerClient(approver, "PhoneAppApprover");
+
+    // and the observer
     TelepathyHelper::instance()->registerChannelObserver();
 
     // Connect the textObserver to the channel observer in TelepathyHelper
     TextChannelObserver *textObserver = new TextChannelObserver();
     QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
                      textObserver, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
-
-    // register the approver
-    PhoneAppApprover *approver = new PhoneAppApprover();
-    TelepathyHelper::instance()->registerClient(approver, "PhoneAppApprover");
 
     // we don't need to call anything on the indicator, it will work by itself
     VoiceMailIndicator voiceMailIndicator;
