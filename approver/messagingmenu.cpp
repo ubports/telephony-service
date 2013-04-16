@@ -64,8 +64,6 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
 
     GFile *file = g_file_new_for_path(iconPath.toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
-
-
     MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
                                                                icon,
                                                                contactAlias.toUtf8().data(),
