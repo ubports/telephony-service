@@ -71,8 +71,6 @@ if (HAVE_MESSAGING_MENU_MESSAGE)
     add_definitions(-DHAVE_MESSAGING_MENU_MESSAGE)
 endif (HAVE_MESSAGING_MENU_MESSAGE)
 
-
-
 add_definitions(-DQT_NO_KEYWORDS)
 
 include_directories(
