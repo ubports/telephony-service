@@ -1,3 +1,16 @@
+phone-app (0.59.7) quantal; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Make the usage of messaging-menu-message conditional to its availability.
+  * Split the channel handling functions from the phone-app into a separate
+    process that is just controlled from the UI when necessary
+    (LP: #1090409, #1092301, #1129854).
+
+  [ Michael Terry ]
+  * Run unit tests during build.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 17 Apr 2013 17:19:26 -0300
+
 phone-app (0.59.6) quantal; urgency=low
 
   * Revert the fixes for the conversation view behavior (bugs #1091682 and 
