@@ -7,6 +7,7 @@ include(GNUInstallDirs)
 
 # Check for include files
 include(CheckIncludeFileCXX)
+include(CheckIncludeFile)
 
 include(EnableCoverageReport)
 #####################################################################
@@ -61,6 +62,14 @@ pkg_check_modules(QTGLIB REQUIRED QtGLib-2.0)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
 pkg_check_modules(MESSAGING_MENU REQUIRED messaging-menu)
+
+# Check if the messaging menu has the message header
+set(CMAKE_REQUIRED_INCLUDES ${MESSAGING_MENU_INCLUDE_DIRS})
+check_include_file("messaging-menu-message.h" HAVE_MESSAGING_MENU_MESSAGE)
+
+if (HAVE_MESSAGING_MENU_MESSAGE)
+    add_definitions(-DHAVE_MESSAGING_MENU_MESSAGE)
+endif (HAVE_MESSAGING_MENU_MESSAGE)
 
 add_definitions(-DQT_NO_KEYWORDS)
 

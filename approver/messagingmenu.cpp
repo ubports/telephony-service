@@ -26,6 +26,10 @@
 #include "contactentry.h"
 #include <gio/gio.h>
 
+#ifdef HAVE_MESSAGING_MENU_MESSAGE
+    #include <messaging-menu-message.h>
+#endif
+
 MessagingMenu::MessagingMenu(QObject *parent) :
     QObject(parent), mVoicemailCount(-1)
 {
@@ -43,6 +47,7 @@ MessagingMenu::MessagingMenu(QObject *parent) :
 
 void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text)
 {
+#ifdef HAVE_MESSAGING_MENU_MESSAGE
     // try to get a contact for that phone number
     ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(phoneNumber);
     QString iconPath;
@@ -80,20 +85,24 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
     g_object_unref(file);
     g_object_unref(icon);
     g_object_unref(message);
+#endif
 }
 
 void MessagingMenu::removeMessage(const QString &messageId)
 {
+#ifdef HAVE_MESSAGING_MENU_MESSAGE
     if (!mMessages.contains(messageId)) {
         return;
     }
 
     messaging_menu_app_remove_message_by_id(mMessagesApp, messageId.toUtf8().data());
     mMessages.remove(messageId);
+#endif
 }
 
 void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timestamp)
 {
+#ifdef HAVE_MESSAGING_MENU_MESSAGE
     Call call;
     bool found = false;
     Q_FOREACH(Call callMessage, mCalls) {
@@ -172,10 +181,12 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     g_object_unref(file);
     g_object_unref(icon);
     g_object_unref(message);
+#endif
 }
 
 void MessagingMenu::showVoicemailEntry(int count)
 {
+#ifdef HAVE_MESSAGING_MENU_MESSAGE
     if (!mVoicemailId.isEmpty()) {
         // if the count didn't change, don't do anything
         if (count == mVoicemailCount) {
@@ -202,16 +213,20 @@ void MessagingMenu::showVoicemailEntry(int count)
 
     g_object_unref(icon);
     g_object_unref(message);
+#endif
 }
 
 void MessagingMenu::hideVoicemailEntry()
 {
+#ifdef HAVE_MESSAGING_MENU_MESSAGE
     if (!mVoicemailId.isEmpty()) {
         messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
         mVoicemailId = "";
     }
+#endif
 }
 
+#ifdef HAVE_MESSAGING_MENU_MESSAGE
 void MessagingMenu::messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance)
 {
     QString action(actionId);
@@ -239,6 +254,7 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
         QMetaObject::invokeMethod(instance, "callVoicemail", Q_ARG(QString, messageId));
     }
 }
+#endif
 
 void MessagingMenu::sendMessageReply(const QString &messageId, const QString &reply)
 {
