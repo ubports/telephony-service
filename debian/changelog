@@ -1,3 +1,9 @@
+phone-app (0.59.7-0ubuntu1) UNRELEASED; urgency=low
+
+  * Automatic snapshot from revision 635 (bootstrap)
+
+ -- Didier Roche <didrocks@ubuntu.com>  Thu, 18 Apr 2013 09:39:22 +0200
+
 phone-app (0.59.7) quantal; urgency=low
 
   [ Gustavo Pichorim Boiko ]
