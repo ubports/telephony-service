@@ -81,21 +81,6 @@ bool PhoneApplication::setup()
         return false;
     }
 
-    /* Ubuntu APP Manager gathers info on the list of running applications from the .desktop
-       file specified on the command line with the desktop_file_hint switch. 
-       So app will be launched like this:
-
-       /usr/bin/phone-app --desktop_file_hint=/usr/share/applications/phone-app.desktop
-
-       So remove that argument and continue parsing.
-    */
-    for (int i = arguments.count() - 1; i >=0; --i) {
-        if (arguments[i].startsWith("--desktop_file_hint")) {
-            arguments.removeAt(i);
-        }
-    }
-
-
     if (arguments.contains("--dual-panel")) {
         arguments.removeAll("--dual-panel");
         singlePanel = false;
@@ -131,6 +116,21 @@ bool PhoneApplication::setup()
             }
         } else {
             qCritical("Library qttestability load failed!");
+        }
+    }
+
+    /* Ubuntu APP Manager gathers info on the list of running applications from the .desktop
+       file specified on the command line with the desktop_file_hint switch, and will also pass a stage hint
+       So app will be launched like this:
+
+       /usr/bin/phone-app --desktop_file_hint=/usr/share/applications/phone-app.desktop
+                          --stage_hint=main_stage
+
+       So remove whatever --arg still there before continue parsing
+    */
+    for (int i = arguments.count() - 1; i >=0; --i) {
+        if (arguments[i].startsWith("--")) {
+            arguments.removeAt(i);
         }
     }
 
