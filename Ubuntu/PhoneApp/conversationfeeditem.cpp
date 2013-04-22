@@ -26,6 +26,10 @@ ConversationFeedItem::ConversationFeedItem(QObject *parent) :
 {
 }
 
+ConversationFeedItem::~ConversationFeedItem()
+{
+}
+
 QString ConversationFeedItem::contactId() const
 {
     return mContactId;

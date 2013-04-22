@@ -38,6 +38,11 @@ ConversationFeedModel::ConversationFeedModel(QObject *parent) :
             SLOT(onContactRemoved(const QString&)));
 }
 
+ConversationFeedModel::~ConversationFeedModel()
+{
+    qDeleteAll(mItems);
+}
+
 bool ConversationFeedModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
 {
     if (!index.isValid()) {

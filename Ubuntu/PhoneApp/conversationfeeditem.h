@@ -39,6 +39,7 @@ class ConversationFeedItem : public QObject
 
 public:
     explicit ConversationFeedItem(QObject *parent = 0);
+    virtual ~ConversationFeedItem();
     
     QString contactId() const;
     void setContactId(const QString &value);

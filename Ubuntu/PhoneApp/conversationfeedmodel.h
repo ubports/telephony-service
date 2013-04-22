@@ -32,6 +32,7 @@ class ConversationFeedModel : public QAbstractListModel
     Q_OBJECT
 public:
     explicit ConversationFeedModel(QObject *parent = 0);
+    virtual ~ConversationFeedModel();
 
     enum FeedRoles {
         ContactId = Qt::UserRole,

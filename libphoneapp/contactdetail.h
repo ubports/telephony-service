@@ -43,6 +43,7 @@ class ContactDetail : public QObject
 
 public:
     explicit ContactDetail(const QContactDetail &detail = QContactDetail(), QObject *parent = 0);
+    virtual ~ContactDetail();
 
     enum DetailType {
         Name = QContactDetail::TypeName,
