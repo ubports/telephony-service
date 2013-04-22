@@ -49,7 +49,11 @@ bool ConversationFeedModel::matchesSearch(const QString &searchTerm, const QMode
         return false;
     }
 
-    ConversationFeedItem *entry = dynamic_cast<ConversationFeedItem*>(entryFromIndex(index));
+    ConversationFeedItem *entry = qobject_cast<ConversationFeedItem*>(entryFromIndex(index));
+    if (!entry) {
+        return false;
+    }
+
     bool foundMatch = false;
 
     QString value = entry->contactAlias();
@@ -191,6 +195,10 @@ void ConversationFeedModel::updateLogForContact(ContactEntry *contactEntry)
 void ConversationFeedModel::onItemChanged()
 {
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sender());
+    if (!item) {
+        return;
+    }
+
     QModelIndex index = indexFromEntry(item);
     Q_EMIT dataChanged(index, index);
 }
@@ -229,7 +237,7 @@ void ConversationFeedModel::onContactRemoved(const QString &contactId)
 {
     int count = mItems.count();
     for (int i = 0; i < count; ++i) {
-        ConversationFeedItem *item = dynamic_cast<ConversationFeedItem*>(mItems[i]);
+        ConversationFeedItem *item = mItems[i];
         if (item->contactId() == contactId) {
             clearContactInfo(item);
             Q_EMIT dataChanged(index(i,0), index(i,0));

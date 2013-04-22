@@ -114,6 +114,10 @@ void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::Messag
     Q_UNUSED(flags)
 
     Tp::TextChannel *channel = qobject_cast<Tp::TextChannel*>(sender());
+    if (!channel) {
+        return;
+    }
+
     Q_EMIT messageSent(channel->targetContact()->id(), sentMessage.text());
 }
 

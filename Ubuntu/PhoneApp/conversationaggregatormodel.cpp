@@ -193,6 +193,10 @@ void ConversationAggregatorModel::onRowsInserted(const QModelIndex &parent, int 
     Q_UNUSED(parent)
 
     ConversationFeedModel *model = qobject_cast<ConversationFeedModel*>(sender());
+    if (!model) {
+        return;
+    }
+
     int offset = mModelOffsets[model];
     beginInsertRows(QModelIndex(), start + offset, end + offset);
     updateOffsets();
@@ -201,7 +205,12 @@ void ConversationAggregatorModel::onRowsInserted(const QModelIndex &parent, int 
 
 void ConversationAggregatorModel::onRowsRemoved(const QModelIndex &parent, int start, int end)
 {
+    Q_UNUSED(parent)
     ConversationFeedModel *model = qobject_cast<ConversationFeedModel*>(sender());
+    if (!model) {
+        return;
+    }
+
     int offset = mModelOffsets[model];
     beginRemoveRows(QModelIndex(), start + offset, end + offset);
     updateOffsets();

@@ -113,6 +113,11 @@ bool ContactProxyModel::lessThan(const QModelIndex &left, const QModelIndex &rig
 {
     ContactEntry *leftContact = qobject_cast<ContactEntry*>(left.data(ContactModel::ContactRole).value<QObject*>());
     ContactEntry *rightContact = qobject_cast<ContactEntry*>(right.data(ContactModel::ContactRole).value<QObject*>());
+
+    if (!leftContact || !rightContact) {
+        return false;
+    }
+
     QString leftString = left.data().toString();
     QString rightString = right.data().toString();
 
