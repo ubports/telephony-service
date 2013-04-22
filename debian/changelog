@@ -1,3 +1,11 @@
+phone-app (0.59.9-0ubuntu1) quantal; urgency=low
+
+  * Fix displaying of unread messages in the communication panel by reading the
+    newItem property from the model and not from the item being displayed.
+  * Fix problems found by coverity (LP: #1073224, #1073226, #1073229, #1080956).
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Mon, 22 Apr 2013 17:37:40 -0300
+
 phone-app (0.59.8-0ubuntu1) quantal; urgency=low
 
   [ Didier Roche ]
