@@ -64,7 +64,7 @@ ListItem.Empty {
         anchors.fill: parent
         color: "white"
         opacity: 0.4
-        visible: item && item.newItem
+        visible: model && model.newItem
     }
 
     Row {
