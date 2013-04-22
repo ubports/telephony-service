@@ -142,7 +142,7 @@ QModelIndex ConversationAggregatorModel::mapFromSource(const QModelIndex &source
     }
 
     ConversationFeedModel *model;
-    model = const_cast<ConversationFeedModel*>(qobject_cast<const ConversationFeedModel*>(sourceIndex.model()));
+    model = const_cast<ConversationFeedModel*>(static_cast<const ConversationFeedModel*>(sourceIndex.model()));
     if (!model || !mFeedModels.contains(model)) {
         return QModelIndex();
     }
@@ -192,10 +192,7 @@ void ConversationAggregatorModel::onRowsInserted(const QModelIndex &parent, int 
 {
     Q_UNUSED(parent)
 
-    ConversationFeedModel *model = qobject_cast<ConversationFeedModel*>(sender());
-    if (!model) {
-        return;
-    }
+    ConversationFeedModel *model = static_cast<ConversationFeedModel*>(sender());
 
     int offset = mModelOffsets[model];
     beginInsertRows(QModelIndex(), start + offset, end + offset);
@@ -206,10 +203,7 @@ void ConversationAggregatorModel::onRowsInserted(const QModelIndex &parent, int 
 void ConversationAggregatorModel::onRowsRemoved(const QModelIndex &parent, int start, int end)
 {
     Q_UNUSED(parent)
-    ConversationFeedModel *model = qobject_cast<ConversationFeedModel*>(sender());
-    if (!model) {
-        return;
-    }
+    ConversationFeedModel *model = static_cast<ConversationFeedModel*>(sender());
 
     int offset = mModelOffsets[model];
     beginRemoveRows(QModelIndex(), start + offset, end + offset);
