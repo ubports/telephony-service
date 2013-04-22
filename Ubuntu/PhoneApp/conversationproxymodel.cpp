@@ -179,12 +179,6 @@ void ConversationProxyModel::updateSorting()
 
 QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
 {
-    // FIXME: QSortFilterProxyModel::data() is not virtual so this should not be working at all
-    // https://bugreports.qt-project.org/browse/QTBUG-30718
-    //
-    // but for some reason when using the proxy model in QML it works, so it is an easier solution
-    // for now. But if in Qt6 this doesn´t change to be a virtual method, we better reimplement this
-    // feature in a different way.
     if (!index.isValid()) {
         return QVariant();
     }
