@@ -98,7 +98,7 @@ MessageLogEntry *MessageLogModel::messageById(const QString &messageId)
 {
     if (!messageId.isEmpty()) {
         Q_FOREACH(ConversationFeedItem *entry, mItems) {
-            MessageLogEntry *messageEntry = dynamic_cast<MessageLogEntry*>(entry);
+            MessageLogEntry *messageEntry = qobject_cast<MessageLogEntry*>(entry);
             if (messageEntry && messageEntry->messageId() == messageId) {
                 return messageEntry;
             }
@@ -111,7 +111,7 @@ MessageLogEntry *MessageLogModel::messageById(const QString &messageId)
 bool MessageLogModel::matchesSearch(const QString &searchTerm, const QModelIndex &index) const
 {
     bool foundMatch = false;
-    MessageLogEntry *entry = dynamic_cast<MessageLogEntry*>(entryFromIndex(index));
+    MessageLogEntry *entry = qobject_cast<MessageLogEntry*>(entryFromIndex(index));
     if (!entry) {
         return false;
     }

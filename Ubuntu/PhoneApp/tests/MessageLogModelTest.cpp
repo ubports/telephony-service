@@ -206,6 +206,7 @@ void MessageLogModelTest::testAppendMessage()
 
     // get the item
     MessageLogEntry *entry = qobject_cast<MessageLogEntry*>(messageModel->entryFromIndex(messageModel->index(0)));
+    QVERIFY(entry);
     QCOMPARE(entry->phoneNumber(), phoneNumber);
     QCOMPARE(entry->incoming(), incoming);
     QCOMPARE(entry->timestamp(), timestamp);
@@ -277,6 +278,7 @@ void MessageLogModelTest::testOnMessageSent()
     QCOMPARE(signalSpy.count(), 1);
 
     MessageLogEntry *entry = qobject_cast<MessageLogEntry*>(messageModel->entryFromIndex(messageModel->index(0)));
+    QVERIFY(entry);
     QCOMPARE(entry->phoneNumber(), phoneNumber);
     QCOMPARE(entry->message(), message);
 
@@ -297,6 +299,7 @@ void MessageLogModelTest::testOnMessageReceived()
     QCOMPARE(signalSpy.count(), 1);
 
     MessageLogEntry *entry = qobject_cast<MessageLogEntry*>(messageModel->entryFromIndex(messageModel->index(0)));
+    QVERIFY(entry);
     QCOMPARE(entry->phoneNumber(), phoneNumber);
     QCOMPARE(entry->message(), message);
     QCOMPARE(entry->messageId(), messageId);

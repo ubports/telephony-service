@@ -95,6 +95,11 @@ void ConversationProxyModel::setConversationModel(QObject *value)
         setSourceModel(model);
 
         ConversationAggregatorModel *conversationModel = qobject_cast<ConversationAggregatorModel*>(value);
+        if (!conversationModel) {
+            qCritical() << "Model is not a conversation model" << value;
+            return;
+        }
+
         connect(conversationModel,
                 SIGNAL(rowsInserted(QModelIndex,int,int)),
                 SLOT(onRowsInserted(QModelIndex,int,int)));
@@ -191,6 +196,9 @@ QVariant ConversationProxyModel::data(const QModelIndex &index, int role) const
     QVariant result = QSortFilterProxyModel::data(index, role);
     QVariantMap eventMap;
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+    if (!item) {
+        return QVariant();
+    }
 
     switch (role) {
     case EventsRole:
@@ -251,12 +259,20 @@ bool ConversationProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &
      */
 
     const ConversationAggregatorModel *model = qobject_cast<const ConversationAggregatorModel*>(sourceModel());
+    if (!model) {
+        return false;
+    }
+
     // Start by verifying the search string
     if (!mSearchString.isEmpty()) {
         return model->matchesSearch(mSearchString, sourceIndex);
     }
 
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+    if (!item) {
+        return false;
+    }
+
     if (mGrouped) {
         ConversationGroup group = groupForSourceIndex(sourceIndex);
         return (group.displayedIndex == sourceIndex);
@@ -309,11 +325,10 @@ void ConversationProxyModel::removeGroup(const QString &groupingProperty, const 
 
 void ConversationProxyModel::processGrouping()
 {
-    if (!sourceModel()) {
+    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+    if (!model) {
         return;
     }
-
-    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
 
     mGroupedEntries.clear();
     mPhoneMatch.clear();
@@ -326,8 +341,16 @@ void ConversationProxyModel::processGrouping()
 void ConversationProxyModel::processRowGrouping(int sourceRow)
 {
     ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+    if (!model) {
+        return;
+    }
+
     QModelIndex sourceIndex = model->index(sourceRow, 0, QModelIndex());
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+    if (!item) {
+        return;
+    }
+
     QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
     QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
     ConversationGroup &group = groupForEntry(groupingProperty, propertyValue);
@@ -359,8 +382,16 @@ void ConversationProxyModel::processRowGrouping(int sourceRow)
 void ConversationProxyModel::removeRowFromGroup(int sourceRow, QString groupingProperty, QString propertyValue)
 {
     ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+    if (!model) {
+        return;
+    }
+
     QModelIndex sourceIndex = model->index(sourceRow, 0, QModelIndex());
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+    if (!item) {
+        return;
+    }
+
     if (groupingProperty.isEmpty()) {
         groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
         propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
@@ -401,6 +432,10 @@ void ConversationProxyModel::processTimeSlots()
     for (int i = 0; i < count; ++i) {
         QModelIndex idx = index(i, 0);
         ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(idx.data(ConversationFeedModel::FeedItem).value<QObject*>());
+        if (!item) {
+            return;
+        }
+
         QDateTime itemTimestamp = item->timestamp();
         int minutes = itemTimestamp.secsTo(currentSlot) / 60;
 
@@ -493,10 +528,17 @@ void ConversationProxyModel::onDataChanged(const QModelIndex &topLeft, const QMo
         int start = topLeft.row();
         int end = bottomRight.row();
         ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+        if (!model) {
+            return;
+        }
 
         for (int row = start; row <= end; ++row) {
             QModelIndex sourceIndex = model->index(row, 0, QModelIndex());
             ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+            if (!item) {
+                return;
+            }
+
             QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
             QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
             QString oldGroupingProperty = item->property("groupingProperty").toString();
@@ -517,6 +559,10 @@ void ConversationProxyModel::onDataChanged(const QModelIndex &topLeft, const QMo
 ConversationGroup ConversationProxyModel::groupForSourceIndex(const QModelIndex &sourceIndex) const
 {
     ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+    if (!item) {
+        return ConversationGroup();
+    }
+
     QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
     QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
 

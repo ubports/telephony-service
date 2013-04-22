@@ -76,7 +76,7 @@ Tp::ChannelClassSpecList PhoneAppApprover::channelFilters() const
 
 Tp::ChannelDispatchOperationPtr PhoneAppApprover::dispatchOperation(Tp::PendingOperation *op)
 {
-    Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[op]);
+    Tp::ChannelPtr channel = mChannels[op];
     QString accountId = channel->property("accountId").toString();
     Q_FOREACH (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
         if (dispatchOperation->account()->uniqueIdentifier() == accountId) {
@@ -176,8 +176,12 @@ void delete_event_data(gpointer data) {
 void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
-    Tp::ChannelPtr channel = Tp::ChannelPtr::dynamicCast(mChannels[pr]);
+    if (!pr || !mChannels.contains(pr)) {
+        qWarning() << "PendingOperation is not a PendingReady:" << op;
+        return;
+    }
 
+    Tp::ChannelPtr channel = mChannels[pr];
     Tp::ContactPtr contact = channel->initiatorContact();
     Tp::ChannelDispatchOperationPtr dispatchOp = dispatchOperation(op);
     
@@ -371,6 +375,10 @@ void PhoneAppApprover::onHangupFinished(Tp::PendingOperation* op)
 void PhoneAppApprover::onCallStateChanged(Tp::CallState state)
 {
     Tp::CallChannel *channel = qobject_cast<Tp::CallChannel*>(sender());
+    if (!channel) {
+        return;
+    }
+
     Tp::ChannelDispatchOperationPtr dispatchOperation;
     Q_FOREACH(const Tp::ChannelDispatchOperationPtr &otherDispatchOperation, mDispatchOps) {
         Q_FOREACH(const Tp::ChannelPtr &otherChannel, otherDispatchOperation->channels()) {

@@ -26,6 +26,10 @@ ContactDetail::ContactDetail(const QContactDetail &detail, QObject *parent) :
 {
 }
 
+ContactDetail::~ContactDetail()
+{
+}
+
 int ContactDetail::type() const
 {
     return mDetail.type();

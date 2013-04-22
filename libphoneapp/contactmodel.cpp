@@ -258,7 +258,7 @@ void ContactModel::onContactEntryChanged(ContactEntry *entry)
 void ContactModel::onContactSaved()
 {
     QContactSaveRequest *request = qobject_cast<QContactSaveRequest*>(QObject::sender());
-    if (request->isFinished()) {
+    if (request && request->isFinished()) {
         if (request->error() != QContactManager::NoError) {
             qWarning() << "Failed to save the contact. Error:" << request->error();
             //FIXME: maybe we should map the error codes to texts
@@ -274,7 +274,7 @@ void ContactModel::onContactSaved()
 void ContactModel::onContactRemoved()
 {
     QContactRemoveRequest *request = qobject_cast<QContactRemoveRequest*>(QObject::sender());
-    if (request->isFinished() && request->error() != QContactManager::NoError) {
+    if (request && request->isFinished() && request->error() != QContactManager::NoError) {
         qWarning() << "Failed to remove the contact. Error:" << request->error();
         //FIXME: maybe we should map the error codes to texts
     }

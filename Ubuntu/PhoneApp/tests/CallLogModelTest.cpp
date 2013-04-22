@@ -171,6 +171,7 @@ void CallLogModelTest::testAddCallEvent()
 
     // get the item
     CallLogEntry *entry = qobject_cast<CallLogEntry*>(callModel->entryFromIndex(callModel->index(0)));
+    QVERIFY(entry);
     QCOMPARE(entry->phoneNumber(), phoneNumber);
     QCOMPARE(entry->incoming(), incoming);
     QCOMPARE(entry->timestamp(), timestamp);

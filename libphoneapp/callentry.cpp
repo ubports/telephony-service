@@ -251,6 +251,8 @@ bool CallEntry::isSpeakerOn()
     if (mHasSpeakerProperty) {
         return mSpeakerMode;
     }
+
+    return false;
 }
 
 void CallEntry::setSpeaker(bool speaker)

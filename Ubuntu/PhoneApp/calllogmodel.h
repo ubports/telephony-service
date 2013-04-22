@@ -31,7 +31,7 @@ class CallLogEntry : public ConversationFeedItem {
     Q_PROPERTY(QTime duration READ duration WRITE setDuration NOTIFY durationChanged)
     Q_PROPERTY(bool missed READ missed WRITE setMissed NOTIFY missedChanged)
 public:
-    explicit CallLogEntry(QObject *parent = 0) : ConversationFeedItem(parent) { }
+    explicit CallLogEntry(QObject *parent = 0) : ConversationFeedItem(parent), mMissed(false) { }
     void setDuration(const QTime &duration) { mDuration = duration; Q_EMIT durationChanged(); }
     QTime duration() { return mDuration; }
     void setMissed(bool missed) { mMissed = missed; Q_EMIT missedChanged(); }
