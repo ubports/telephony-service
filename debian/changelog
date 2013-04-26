@@ -1,3 +1,9 @@
+phone-app (0.59.9-0ubuntu2) UNRELEASED; urgency=low
+
+  * Fix holding a channel. It should call the handler to set the call on hold.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 26 Apr 2013 18:18:10 -0300
+
 phone-app (0.59.9-0ubuntu1) quantal; urgency=low
 
   * Fix displaying of unread messages in the communication panel by reading the

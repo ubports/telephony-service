@@ -176,7 +176,8 @@ bool CallEntry::isHeld() const
 
 void CallEntry::setHold(bool hold)
 {
-    mChannel->requestHold(hold);
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("SetHold", mChannel->objectPath(), hold);
 }
 
 void CallEntry::onMutedChanged(uint state)
