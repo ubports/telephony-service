@@ -9,15 +9,14 @@
 
 """Phone App autopilot tests."""
 
-from autopilot.introspection.qt import QtIntrospectionTestMixin
 from autopilot.testcase import AutopilotTestCase
+
+from autopilot.matchers import Eventually
+from testtools.matchers import Equals
 
 from phone_app.emulators.call_panel import CallPanel
 from phone_app.emulators.communication_panel import CommunicationPanel
 from phone_app.emulators.contacts_panel import ContactsPanel
-
-from testtools.matchers import Equals
-from autopilot.matchers import Eventually
 
 import os
 
