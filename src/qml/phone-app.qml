@@ -217,6 +217,7 @@ MainView {
             ItemStyle.class: singlePane ? "new-tabs" : "tabs"
 
             property variant tabPageItems: [ callsTab.page.item, communicationsTab.page.item, contactsTab.page.item ]
+            Component.onCompleted: ItemStyle.style.swipeToSwitchTabs = true
 
             Tab {
                 id: callsTab
