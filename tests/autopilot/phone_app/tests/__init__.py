@@ -9,9 +9,10 @@
 
 """Phone App autopilot tests."""
 
-from autopilot.testcase import AutopilotTestCase
-
+from autopilot.input import Mouse, Touch, Pointer
 from autopilot.matchers import Eventually
+from autopilot.platform import model
+from autopilot.testcase import AutopilotTestCase
 from testtools.matchers import Equals
 
 from phone_app.emulators.call_panel import CallPanel
@@ -25,12 +26,23 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class PhoneAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
+class PhoneAppTestCase(AutopilotTestCase):
     """A common test case class that provides several useful methods for
     Phone App tests.
 
     """
+
+    if model() == 'Desktop':
+        scenarios = [
+        ('with mouse', dict(input_device_class=Mouse)),
+        ]
+    else:
+        scenarios = [
+        ('with touch', dict(input_device_class=Touch)),
+        ]
+
     def setUp(self):
+        self.pointing_device = Pointer(self.input_device_class.create())
         super(PhoneAppTestCase, self).setUp()
 
         # Lets assume we are installed system wide if this file is somewhere in /usr
