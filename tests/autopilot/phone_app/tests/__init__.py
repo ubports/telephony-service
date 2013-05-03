@@ -41,26 +41,36 @@ class PhoneAppTestCase(AutopilotTestCase):
         ('with touch', dict(input_device_class=Touch)),
         ]
 
+    local_location = "../../src/phone-app"
+
     def setUp(self):
         self.pointing_device = Pointer(self.input_device_class.create())
         super(PhoneAppTestCase, self).setUp()
 
         # Lets assume we are installed system wide if this file is somewhere in /usr
-        if os.path.realpath(__file__).startswith("/usr/"):
-            self.launch_test_installed()
-        else:
+        if os.path.exists(self.local_location):
             self.launch_test_local()
+        else:
+            self.launch_test_installed()
 
         main_view = self.get_main_view()
         self.assertThat(main_view.visible, Eventually(Equals(True)))
 
     def launch_test_local(self):
         self.app = self.launch_test_application(
-            "../../src/phone-app", "--test-contacts")
+            self.local_location, "--test-contacts", app_type='qt')
 
     def launch_test_installed(self):
-        self.app = self.launch_test_application(
-               "phone-app", "--test-contacts")
+        if model() == 'Desktop':
+            self.app = self.launch_test_application(
+                "phone-app",
+                "--test-contacts")
+        else:
+            self.app = self.launch_test_application(
+               "phone-app", 
+               "--test-contacts",
+               "--desktop_file_hint=/usr/share/applications/phone-app.desktop",
+               app_type='qt')
 
     def get_main_view(self):
         return self.app.select_single("QQuickView")
