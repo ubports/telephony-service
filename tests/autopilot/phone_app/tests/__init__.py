@@ -47,7 +47,6 @@ class PhoneAppTestCase(AutopilotTestCase):
         self.pointing_device = Pointer(self.input_device_class.create())
         super(PhoneAppTestCase, self).setUp()
 
-        # Lets assume we are installed system wide if this file is somewhere in /usr
         if os.path.exists(self.local_location):
             self.launch_test_local()
         else:
