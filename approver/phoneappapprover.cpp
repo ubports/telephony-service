@@ -38,7 +38,7 @@
 #include <TelepathyQt/TextChannel>
 
 #define PHONE_APP_HANDLER TP_QT_IFACE_CLIENT + ".PhoneAppHandler"
-#define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
+#define TELEPATHY_SPEAKER_IFACE "com.canonical.Telephony.Speaker"
 
 
 PhoneAppApprover::PhoneAppApprover()
@@ -146,7 +146,7 @@ void action_accept(NotifyNotification* notification,
     EventData* eventData = (EventData*) data;
     PhoneAppApprover* approver = (PhoneAppApprover*) eventData->self;
     if (NULL != approver) {
-        QDBusInterface channelIf(eventData->channel->busName(), eventData->channel->objectPath(), TELEPATHY_CALL_IFACE);
+        QDBusInterface channelIf(eventData->channel->busName(), eventData->channel->objectPath(), TELEPATHY_SPEAKER_IFACE);
         channelIf.call("turnOnSpeaker", true);
         approver->onApproved((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp,
                              (Tp::PendingReady *) eventData->pr);

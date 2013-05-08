@@ -25,7 +25,7 @@
 #include <QDebug>
 #include <QDBusReply>
 
-#define CANONICAL_IFACE_TELEPHONY "com.canonical.Telephony"
+#define CANONICAL_VOICEMAIL_IFACE_TELEPHONY "com.canonical.Telephony.Voicemail"
 
 VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
 : QObject(parent),
@@ -61,10 +61,10 @@ void VoiceMailIndicator::onAccountReady()
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    mConnection.connect(busName, objectPath, CANONICAL_IFACE_TELEPHONY, QLatin1String("VoicemailCountChanged"),
+    mConnection.connect(busName, objectPath, CANONICAL_VOICEMAIL_IFACE_TELEPHONY, QLatin1String("VoicemailCountChanged"),
                         this, SLOT(onVoicemailCountChanged(int)));
 
-    mConnection.connect(busName, objectPath, CANONICAL_IFACE_TELEPHONY, QLatin1String("VoicemailIndicatorChanged"),
+    mConnection.connect(busName, objectPath, CANONICAL_VOICEMAIL_IFACE_TELEPHONY, QLatin1String("VoicemailIndicatorChanged"),
                         this, SLOT(onVoicemailIndicatorChanged(bool)));
 
     onVoicemailCountChanged(voicemailCount());
@@ -88,7 +88,7 @@ bool VoiceMailIndicator::voicemailIndicatorVisible()
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_IFACE_TELEPHONY);
+    QDBusInterface connIface(busName, objectPath, CANONICAL_VOICEMAIL_IFACE_TELEPHONY);
     QDBusReply<bool> reply = connIface.call("VoicemailIndicator");
     if (reply.isValid()) {
         return reply.value();
@@ -105,7 +105,7 @@ int VoiceMailIndicator::voicemailCount()
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_IFACE_TELEPHONY);
+    QDBusInterface connIface(busName, objectPath, CANONICAL_VOICEMAIL_IFACE_TELEPHONY);
     QDBusReply<int> reply = connIface.call("VoicemailCount");
     if (reply.isValid()) {
         return reply.value();
