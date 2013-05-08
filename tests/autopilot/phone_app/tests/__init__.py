@@ -9,15 +9,15 @@
 
 """Phone App autopilot tests."""
 
-from autopilot.introspection.qt import QtIntrospectionTestMixin
+from autopilot.input import Mouse, Touch, Pointer
+from autopilot.matchers import Eventually
+from autopilot.platform import model
 from autopilot.testcase import AutopilotTestCase
+from testtools.matchers import Equals
 
 from phone_app.emulators.call_panel import CallPanel
 from phone_app.emulators.communication_panel import CommunicationPanel
 from phone_app.emulators.contacts_panel import ContactsPanel
-
-from testtools.matchers import Equals
-from autopilot.matchers import Eventually
 
 import os
 
@@ -26,30 +26,50 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class PhoneAppTestCase(AutopilotTestCase, QtIntrospectionTestMixin):
+class PhoneAppTestCase(AutopilotTestCase):
     """A common test case class that provides several useful methods for
     Phone App tests.
 
     """
+
+    if model() == 'Desktop':
+        scenarios = [
+        ('with mouse', dict(input_device_class=Mouse)),
+        ]
+    else:
+        scenarios = [
+        ('with touch', dict(input_device_class=Touch)),
+        ]
+
+    local_location = "../../src/phone-app"
+
     def setUp(self):
+        self.pointing_device = Pointer(self.input_device_class.create())
         super(PhoneAppTestCase, self).setUp()
 
-        # Lets assume we are installed system wide if this file is somewhere in /usr
-        if os.path.realpath(__file__).startswith("/usr/"):
-            self.launch_test_installed()
-        else:
+        if os.path.exists(self.local_location):
             self.launch_test_local()
+        else:
+            self.launch_test_installed()
 
         main_view = self.get_main_view()
         self.assertThat(main_view.visible, Eventually(Equals(True)))
 
     def launch_test_local(self):
         self.app = self.launch_test_application(
-            "../../src/phone-app", "--test-contacts")
+            self.local_location, "--test-contacts", app_type='qt')
 
     def launch_test_installed(self):
-        self.app = self.launch_test_application(
-               "phone-app", "--test-contacts")
+        if model() == 'Desktop':
+            self.app = self.launch_test_application(
+                "phone-app",
+                "--test-contacts")
+        else:
+            self.app = self.launch_test_application(
+               "phone-app", 
+               "--test-contacts",
+               "--desktop_file_hint=/usr/share/applications/phone-app.desktop",
+               app_type='qt')
 
     def get_main_view(self):
         return self.app.select_single("QQuickView")
