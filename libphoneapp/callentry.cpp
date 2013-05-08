@@ -32,7 +32,6 @@
 
 #define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
 #define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
-#define TELEPATHY_SPEAKER_IFACE "com.canonical.Telephony.Speaker"
 #define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
 #define PROPERTY_SPEAKERMODE "SpeakerMode"
 
@@ -43,7 +42,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mLocalMuteState(false),
     mElapsedTime(QTime::currentTime()),
     mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE),
-    mSpeakerInterface(channel->busName(), channel->objectPath(), TELEPATHY_SPEAKER_IFACE),
+    mSpeakerInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_SPEAKER_IFACE),
     mHasSpeakerProperty(false),
     mSpeakerMode(false)
 {
@@ -108,7 +107,7 @@ void CallEntry::refreshProperties()
      QVariantList args = reply.arguments();
      QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
 
-     reply = callChannelIface.call("GetAll", TELEPATHY_SPEAKER_IFACE);
+     reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_SPEAKER_IFACE);
      args = reply.arguments();
      QMap<QString, QVariant> map2 = qdbus_cast<QMap<QString, QVariant> >(args[0]);
 

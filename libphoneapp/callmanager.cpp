@@ -29,8 +29,6 @@
 #include <TelepathyQt/PendingContacts>
 #include <QDBusInterface>
 
-#define CANONICAL_VOICEMAIL_IFACE_TELEPHONY "com.canonical.Telephony.Voicemail"
-
 typedef QMap<QString, QVariant> dbusQMap;
 Q_DECLARE_METATYPE(dbusQMap)
 
@@ -63,7 +61,7 @@ void CallManager::onConnectedChanged()
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_VOICEMAIL_IFACE_TELEPHONY);
+    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
     QDBusReply<QString> replyNumber = connIface.call("VoicemailNumber");
     if (replyNumber.isValid()) {
         mVoicemailNumber = replyNumber.value();
