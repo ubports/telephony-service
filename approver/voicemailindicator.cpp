@@ -25,8 +25,6 @@
 #include <QDebug>
 #include <QDBusReply>
 
-#define CANONICAL_IFACE_TELEPHONY "com.canonical.Telephony"
-
 VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
 : QObject(parent),
   mConnection(QDBusConnection::sessionBus())
@@ -61,10 +59,10 @@ void VoiceMailIndicator::onAccountReady()
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    mConnection.connect(busName, objectPath, CANONICAL_IFACE_TELEPHONY, QLatin1String("VoicemailCountChanged"),
+    mConnection.connect(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE, QLatin1String("VoicemailCountChanged"),
                         this, SLOT(onVoicemailCountChanged(int)));
 
-    mConnection.connect(busName, objectPath, CANONICAL_IFACE_TELEPHONY, QLatin1String("VoicemailIndicatorChanged"),
+    mConnection.connect(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE, QLatin1String("VoicemailIndicatorChanged"),
                         this, SLOT(onVoicemailIndicatorChanged(bool)));
 
     onVoicemailCountChanged(voicemailCount());
@@ -88,7 +86,7 @@ bool VoiceMailIndicator::voicemailIndicatorVisible()
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_IFACE_TELEPHONY);
+    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
     QDBusReply<bool> reply = connIface.call("VoicemailIndicator");
     if (reply.isValid()) {
         return reply.value();
@@ -105,7 +103,7 @@ int VoiceMailIndicator::voicemailCount()
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_IFACE_TELEPHONY);
+    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
     QDBusReply<int> reply = connIface.call("VoicemailCount");
     if (reply.isValid()) {
         return reply.value();

@@ -26,9 +26,7 @@
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 
-#define CANONICAL_IFACE_TELEPHONY "com.canonical.Telephony"
 #define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
-#define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
 #define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
 #define PROPERTY_SPEAKERMODE "SpeakerMode"
 
@@ -107,7 +105,7 @@ void CallHandler::setSpeakerMode(const QString &objectPath, bool enabled)
         return;
     }
 
-    QDBusInterface speakerInterface(channel->busName(), channel->objectPath(), TELEPATHY_CALL_IFACE);
+    QDBusInterface speakerInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_SPEAKER_IFACE);
     speakerInterface.call("turnOnSpeaker", enabled);
 }
 
@@ -143,7 +141,7 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 
     // check if the channel has the speakermode property
     QDBusInterface callChannelIface(channel->busName(), channel->objectPath(), DBUS_PROPERTIES_IFACE);
-    QDBusMessage reply = callChannelIface.call("GetAll", TELEPATHY_CALL_IFACE);
+    QDBusMessage reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_SPEAKER_IFACE);
     QVariantList args = reply.arguments();
     QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
     channel->setProperty("hasSpeakerProperty", map.contains(PROPERTY_SPEAKERMODE));

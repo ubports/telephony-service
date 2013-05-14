@@ -42,7 +42,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mLocalMuteState(false),
     mElapsedTime(QTime::currentTime()),
     mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE),
-    mSpeakerInterface(channel->busName(), channel->objectPath(), TELEPATHY_CALL_IFACE),
+    mSpeakerInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_SPEAKER_IFACE),
     mHasSpeakerProperty(false),
     mSpeakerMode(false)
 {
@@ -102,14 +102,25 @@ void CallEntry::timerEvent(QTimerEvent *event)
 void CallEntry::refreshProperties()
 {
      QDBusInterface callChannelIface(mChannel->busName(), mChannel->objectPath(), DBUS_PROPERTIES_IFACE);
+
      QDBusMessage reply = callChannelIface.call("GetAll", TELEPATHY_CALL_IFACE);
      QVariantList args = reply.arguments();
      QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
+
+     reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_SPEAKER_IFACE);
+     args = reply.arguments();
+     QMap<QString, QVariant> map2 = qdbus_cast<QMap<QString, QVariant> >(args[0]);
+
      mProperties.clear();
      QMapIterator<QString, QVariant> i(map);
      while(i.hasNext()) {
          i.next();
          mProperties[i.key()] = i.value();
+     }
+     QMapIterator<QString, QVariant> i2(map2);
+     while(i2.hasNext()) {
+         i2.next();
+         mProperties[i2.key()] = i2.value();
      }
 
      onSpeakerChanged(mProperties[PROPERTY_SPEAKERMODE].toBool());
@@ -263,6 +274,6 @@ void CallEntry::setSpeaker(bool speaker)
     }
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SetSpeakerMode", speaker);
+    phoneAppHandler->call("SetSpeakerMode", mChannel->objectPath(), speaker);
 }
 

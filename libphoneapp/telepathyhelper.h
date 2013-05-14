@@ -31,6 +31,9 @@
 #include <TelepathyQt/Types>
 #include "channelobserver.h"
 
+#define CANONICAL_TELEPHONY_VOICEMAIL_IFACE "com.canonical.Telephony.Voicemail"
+#define CANONICAL_TELEPHONY_SPEAKER_IFACE "com.canonical.Telephony.Speaker"
+
 class TelepathyHelper : public QObject
 {
     Q_OBJECT
