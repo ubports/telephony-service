@@ -199,9 +199,6 @@ LocalWidgets.PhonePage {
     Scrollbar {
         flickableItem: listView
         align: Qt.AlignTrailing
-        __interactive: false
-
-
     }
 
     MessagesFooter {

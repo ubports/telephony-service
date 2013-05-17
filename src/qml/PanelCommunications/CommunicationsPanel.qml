@@ -163,7 +163,6 @@ LocalWidgets.PhonePage {
     Scrollbar {
         flickableItem: communicationsList
         align: Qt.AlignTrailing
-        __interactive: false
     }
 
     LocalWidgets.KeyboardRectangle {
