@@ -34,6 +34,7 @@ Page {
         if (page.header && page.headerContents != null) {
             if (active) {
                 page.header.ItemStyle.delegate = page.headerContents;
+                page.header.height = page.headerContents.height;
             } else {
                 page.headerContents.parent = page;
                 page.header.ItemStyle.delegate = null;

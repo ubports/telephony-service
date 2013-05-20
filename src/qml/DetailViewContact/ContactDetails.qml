@@ -163,7 +163,7 @@ LocalWidgets.PhonePage {
         id: scrollArea
 
         anchors.top: parent.top
-        anchors.bottom: editFooter.top
+        anchors.bottom: keyboard.top
         anchors.left: parent.left
         anchors.right: parent.right
         flickableDirection: Flickable.VerticalFlick
@@ -269,97 +269,6 @@ LocalWidgets.PhonePage {
     Scrollbar {
         flickableItem: scrollArea
         align: Qt.AlignTrailing
-    }
-
-    Item {
-        id: editFooter
-
-        anchors.bottom: keyboard.top
-        anchors.left: parent.left
-        anchors.right: parent.right
-
-        visible: !mainView.singlePane
-        height: visible ? units.gu(5) : 0
-
-        Rectangle {
-            anchors.fill: parent
-            color: "white"
-            opacity: 0.5
-        }
-
-        Rectangle {
-            id: separator
-
-            anchors.top: parent.top
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: units.dp(1)
-            color: "white"
-        }
-
-        Item {
-            id: footerButtons
-
-            anchors.top: separator.bottom
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            Button {
-                id: deleteButton
-
-                height: units.gu(3)
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                anchors.leftMargin: units.gu(1)
-                text: "Delete"
-                opacity: (editable && !added) ? 1.0 : 0.0
-
-                onClicked: {
-                    // FIXME: show a dialog asking for confirmation
-                    contactModel.removeContact(contact);
-                    mainView.resetView();
-                }
-            }
-
-            Button {
-                id: cancelButton
-
-                height: units.gu(3)
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: editSaveButton.left
-                anchors.rightMargin: units.gu(1)
-                text: "Cancel"
-                opacity: (editable) ? 1.0 : 0.0
-                onClicked: {
-                    if (added) {
-                        mainView.resetView();
-                    } else {
-                        contact.revertChanges();
-                        editable = false;
-                    }
-                }
-            }
-
-            Button {
-                id: editSaveButton
-                objectName: "editSaveButton"
-
-                height: units.gu(3)
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: units.gu(1)
-                color: editable ? "#dd4f22" : "#e3e5e8"
-                text: (editable) ? "Save" : "Edit"
-                enabled: !editable || header.contactNameValid
-                onClicked: {
-                    if (!editable) editable = true;
-                    else {
-                        contactDetails.save();
-                    }
-                }
-            }
-        }
     }
 
     LocalWidgets.KeyboardRectangle {
