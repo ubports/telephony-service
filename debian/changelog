@@ -3,6 +3,7 @@ phone-app (0.59.9-0ubuntu2) UNRELEASED; urgency=low
   * Fix holding a channel. It should call the handler to set the call on hold.
   * Change custom telepathy interface names to com.canonical.Telephony.{Feature}
   * Add channel object path as SetSpeakerMode() argument.
+  * Make phone-app depend explicitly on telepathy-ofono2
 
  -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 26 Apr 2013 18:18:10 -0300
 
