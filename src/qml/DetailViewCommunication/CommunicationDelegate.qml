@@ -37,11 +37,20 @@ Item {
 
     height: bubble.height + units.gu(1)
 
-    Component.onCompleted: {
-        if (item.newItem) {
-            item.newItem = false;
+    function acnowledgeItem() {
+        if (!item.newItem || !Qt.application.active) {
+            return;
         }
+
+        item.newItem = false;
     }
+
+    Connections {
+        target: Qt.application
+        onActiveChanged: communicationDelegate.acnowledgeItem()
+    }
+
+    Component.onCompleted: acnowledgeItem()
 
     BorderImage {
         id: bubble
