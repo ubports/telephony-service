@@ -40,6 +40,7 @@ LocalWidgets.PhonePage {
     headerContents: Loader {
         id: headerLoader
         sourceComponent: newMessage ? newHeaderComponent : headerComponent
+        height: units.gu(10)
     }
 
     ContactWatcher {
