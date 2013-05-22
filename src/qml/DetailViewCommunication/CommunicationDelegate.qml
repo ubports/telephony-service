@@ -37,7 +37,7 @@ Item {
 
     height: bubble.height + units.gu(1)
 
-    function acnowledgeItem() {
+    function acknowledgeItem() {
         if (!item.newItem || !Qt.application.active) {
             return;
         }
@@ -47,7 +47,7 @@ Item {
 
     Connections {
         target: Qt.application
-        onActiveChanged: communicationDelegate.acnowledgeItem()
+        onActiveChanged: communicationDelegate.acknowledgeItem()
     }
 
     Component.onCompleted: acnowledgeItem()
