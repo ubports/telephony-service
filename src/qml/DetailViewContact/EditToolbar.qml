@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2013 Canonical Ltd.
+ * Copyright 2013 Canonical Ltd.
  *
  * This file is part of phone-app.
  *
