@@ -72,6 +72,7 @@ Item {
     Row {
         id: buttonsRow
         anchors.right: parent.right
+        anchors.rightMargin: units.gu(2)
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
