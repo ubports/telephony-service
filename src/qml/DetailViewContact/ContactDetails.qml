@@ -40,7 +40,6 @@ LocalWidgets.PhonePage {
     title: "Contact Details"
 
     tools: ToolbarActions {
-        //active: !editable
         lock: editable
 
         Action {
