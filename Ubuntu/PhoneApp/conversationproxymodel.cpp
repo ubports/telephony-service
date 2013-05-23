@@ -379,6 +379,35 @@ void ConversationProxyModel::processRowGrouping(int sourceRow)
     markIndexAsChanged(sourceIndex);
 }
 
+void ConversationProxyModel::processNewItemStatus(int sourceRow)
+{
+    ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
+    if (!model) {
+        return;
+    }
+
+    QModelIndex sourceIndex = model->index(sourceRow, 0, QModelIndex());
+    ConversationFeedItem *item = qobject_cast<ConversationFeedItem*>(sourceIndex.data(ConversationFeedModel::FeedItem).value<QObject*>());
+    if (!item) {
+        return;
+    }
+
+    QString groupingProperty = sourceIndex.data(ConversationFeedModel::GroupingProperty).toString();
+    QString propertyValue = item->property(groupingProperty.toLatin1().data()).toString();
+    ConversationGroup &group = groupForEntry(groupingProperty, propertyValue);
+
+    bool previousNewItem = group.newItem;
+    group.newItem = false;
+
+    Q_FOREACH(const QPersistentModelIndex &index, group.rows) {
+        group.newItem |= model->data(index, ConversationFeedModel::NewItem).toBool();
+    }
+
+    if (previousNewItem != group.newItem) {
+        markIndexAsChanged(group.displayedIndex);
+    }
+}
+
 void ConversationProxyModel::removeRowFromGroup(int sourceRow, QString groupingProperty, QString propertyValue)
 {
     ConversationAggregatorModel *model = qobject_cast<ConversationAggregatorModel*>(sourceModel());
@@ -415,6 +444,7 @@ void ConversationProxyModel::removeRowFromGroup(int sourceRow, QString groupingP
         } else {
             group.displayedIndex = latestIndex;
             group.latestTime = latestTimestamp;
+            processNewItemStatus(group.displayedIndex.row());
             markIndexAsChanged(group.displayedIndex);
         }
     }
@@ -548,6 +578,9 @@ void ConversationProxyModel::onDataChanged(const QModelIndex &topLeft, const QMo
             if (oldGroupingProperty != groupingProperty || oldPropertyValue != propertyValue) {
                 removeRowFromGroup(row, oldGroupingProperty, oldPropertyValue);
                 processRowGrouping(row);
+            } else {
+                // just update the unread status of the group
+                processNewItemStatus(row);
             }
         }
     }

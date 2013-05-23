@@ -121,6 +121,7 @@ protected:
 private Q_SLOTS:
     void processGrouping();
     void processRowGrouping(int sourceRow);
+    void processNewItemStatus(int sourceRow);
     void removeRowFromGroup(int sourceRow, QString groupingProperty = QString::null, QString propertyValue = QString::null);
     void processTimeSlots();
     void triggerDataChanged();
