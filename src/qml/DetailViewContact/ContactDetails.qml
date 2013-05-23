@@ -93,14 +93,23 @@ LocalWidgets.PhonePage {
         backgroundColor: "#ededed"
     }
 
-    function createNewContact() {
-        contact = Qt.createQmlObject("import Ubuntu.PhoneApp 0.1; ContactEntry {}", contactModel);
+    function createNewContact(number) {
+        var newContact = Qt.createQmlObject("import Ubuntu.PhoneApp 0.1; ContactEntry {}", contactModel);
+        if (number != null) {
+            var phoneNumber = Qt.createQmlObject("import Ubuntu.PhoneApp 0.1; ContactPhoneNumber { number: \"" + number + "\"; }", contactModel);
+            newContact.addDetail(phoneNumber);
+        }
+        contact = newContact;
         editable = true;
         added = true;
 
         for (var i = 0; i < detailsList.children.length; i++) {
             var child = detailsList.children[i];
             if (child.detailTypeInfo && child.detailTypeInfo.createOnNew) {
+                // if we already added a phone number, do not add another empty one
+                if (child.detailTypeInfo.newItemType == "ContactPhoneNumber" && number != null) {
+                    continue;
+                }
                 child.appendNewItem();
             }
         }
