@@ -40,6 +40,8 @@ LocalWidgets.PhonePage {
     title: "Contact Details"
 
     tools: ToolbarActions {
+        //active: !editable
+        lock: editable
 
         Action {
             text: "Edit"
@@ -50,6 +52,7 @@ LocalWidgets.PhonePage {
         }
 
         Action {
+            id: deleteAction
             text: "Delete"
             iconSource: Qt.resolvedUrl("../assets/delete.png")
             visible: editable && !added
@@ -62,6 +65,7 @@ LocalWidgets.PhonePage {
         }
 
         Action {
+            id: cancelAction
             text: "Cancel"
             iconSource: Qt.resolvedUrl("../assets/cancel.png")
             visible: editable
@@ -77,6 +81,7 @@ LocalWidgets.PhonePage {
         }
 
         Action {
+            id: saveAction
             text: "Save"
             iconSource: Qt.resolvedUrl("../assets/save.png")
             visible: editable
@@ -163,7 +168,7 @@ LocalWidgets.PhonePage {
         id: scrollArea
 
         anchors.top: parent.top
-        anchors.bottom: keyboard.top
+        anchors.bottom: editToolbar.top
         anchors.left: parent.left
         anchors.right: parent.right
         flickableDirection: Flickable.VerticalFlick
@@ -262,6 +267,23 @@ LocalWidgets.PhonePage {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    EditToolbar {
+        id: editToolbar
+        visible: editable
+        anchors.bottom: keyboard.top
+
+        onDeleteClicked: deleteAction.triggered(editToolbar)
+        onCancelClicked: cancelAction.triggered(editToolbar)
+        onSaveClicked: saveAction.triggered(editToolbar)
+
+        onVisibleChanged: {
+            if (visible) {
+                // hide the toolbar
+                toolbar.opened = false;
             }
         }
     }
