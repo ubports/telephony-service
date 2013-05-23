@@ -50,7 +50,7 @@ Item {
         onActiveChanged: communicationDelegate.acknowledgeItem()
     }
 
-    Component.onCompleted: acnowledgeItem()
+    Component.onCompleted: acknowledgeItem()
 
     BorderImage {
         id: bubble
