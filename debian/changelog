@@ -1,6 +1,6 @@
 phone-app (0.59.10-0ubuntu2) raring; urgency=low
 
-  [ Floriang Bocault ]
+  [ Florian Bocault ]
   * Stop using the private property Scrollbar__interactive. The default value is
     false anyway.
 
