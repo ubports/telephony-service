@@ -54,7 +54,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             value: (detail) ? detail.prefix : ""
-            description: "Prefix"
+            description: i18n.tr("Prefix")
             visible: editor.expanded
         }
 
@@ -65,7 +65,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             value: (detail) ? detail.firstName : ""
-            description: "First"
+            description: i18n.tr("First")
             focus: true
         }
 
@@ -76,7 +76,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             value: (detail) ? detail.middleName : ""
-            description: "Middle"
+            description: i18n.tr("Middle")
             visible: editor.expanded
         }
 
@@ -87,7 +87,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             value: (detail) ? detail.lastName : ""
-            description: "Last"
+            description: i18n.tr("Last")
         }
 
         EditBoxName {
@@ -97,7 +97,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             value: (detail) ? detail.suffix : ""
-            description: "Suffix"
+            description: i18n.tr("Suffix")
             visible: editor.expanded
         }
     }

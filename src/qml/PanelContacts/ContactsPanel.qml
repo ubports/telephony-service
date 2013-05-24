@@ -25,11 +25,11 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 
 LocalWidgets.PhonePage {
     id: contactsPanel
-    title: "Contacts"
+    title: i18n.tr("Contacts")
 
     tools: ToolbarActions {
         Action {
-            text: "Add"
+            text: i18n.tr("Add")
             iconSource: Qt.resolvedUrl("../assets/new-contact.png")
             onTriggered: mainView.createNewContact()
         }
@@ -84,7 +84,7 @@ LocalWidgets.PhonePage {
                 anchors.rightMargin: units.gu(1)
                 height: units.gu(4)
 
-                //placeholderText: "Search"
+                //placeholderText: i18n.tr("Search")
                 Keys.onEscapePressed: text = ""
 
                 primaryItem: AbstractButton {
@@ -119,7 +119,7 @@ LocalWidgets.PhonePage {
                 __leftIconMargin: units.gu(3)
                 __rightIconMargin: units.gu(2)
 
-                text: "Add a new contact"
+                text: i18n.tr("Add a new contact")
                 icon: Qt.resolvedUrl("../assets/add_contacts_icon.png")
                 iconFrame: false
                 onClicked: mainView.createNewContact()

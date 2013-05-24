@@ -22,7 +22,7 @@ import Ubuntu.PhoneApp 0.1
 import "../Widgets" as LocalWidgets
 
 LocalWidgets.PhonePage {
-    title: "Call"
+    title: i18n.tr("Call")
     property string voicemailNumber: callManager.voicemailNumber
     property alias dialNumber: keypadEntry.value
     property alias input: keypadEntry.input
@@ -47,7 +47,7 @@ LocalWidgets.PhonePage {
             anchors.left: parent.left
             anchors.right: parent.right
             focus: true
-            placeHolder: "Enter a number"
+            placeHolder: i18n.tr("Enter a number")
             Keys.forwardTo: [callButton]
         }
 

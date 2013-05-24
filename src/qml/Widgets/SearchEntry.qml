@@ -41,7 +41,7 @@ FocusScope {
     signal rightIconClicked
 
     // FIXME: check why it is not working.
-    //Accessible.name: "Search Entry"
+    //Accessible.name: i18n.tr("Search Entry")
 
     /* Delete search when set in-active */
     onActiveChanged: if (!active) searchInput.text = ""

@@ -51,7 +51,7 @@ Rectangle {
         anchors.margins: units.gu(0.5)
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
-        text: "Swap Calls"
+        text: i18n.tr("Swap Calls")
 
         onClicked: call.held = false
     }

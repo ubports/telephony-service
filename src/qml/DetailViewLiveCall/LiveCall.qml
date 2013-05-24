@@ -33,7 +33,8 @@ LocalWidgets.PhonePage {
     property bool isMuted: call ? call.muted : false
     property alias isDtmf: flipable.flipped
 
-    title: call && call.dialing ? "Dialing" : "Duration " + stopWatch.elapsed
+    // TRANSLATORS: %1 is the duration of the call
+    title: call && call.dialing ? i18n.tr("Dialing") : i18n.tr("Duration %1").arg(stopWatch.elapsed)
     tools: ToolbarActions {
         active: false
         lock: true
@@ -151,7 +152,7 @@ LocalWidgets.PhonePage {
                     anchors.top: picture.top
                     anchors.left: picture.right
                     anchors.leftMargin: units.gu(2)
-                    text: contact ? contact.displayLabel : "Unknown Contact"
+                    text: contact ? contact.displayLabel : i18n.tr("Unknown Contact")
                     color: "#a0a0a2"
                     fontSize: "large"
                 }

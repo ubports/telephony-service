@@ -35,11 +35,12 @@ LocalWidgets.PhonePage {
     property alias filterValue: conversationProxyModel.filterValue
     property string phoneNumber: ""
 
-    title: "Communication"
+    title: i18n.tr("Communication")
 
     headerContents: Loader {
         id: headerLoader
         sourceComponent: newMessage ? newHeaderComponent : headerComponent
+        height: units.gu(10)
     }
 
     ContactWatcher {
@@ -142,7 +143,7 @@ LocalWidgets.PhonePage {
                 elide: Text.ElideRight
                 color: "#333333"
                 opacity: 0.6
-                text: DateUtils.formatFriendlyDate(section);
+                text: DateUtils.formatFriendlyDate(section, i18n);
                 height: paintedHeight + units.gu(2)
                 verticalAlignment: Text.AlignVCenter
             }

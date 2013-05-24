@@ -34,7 +34,7 @@ Item {
         spacing: units.gu(1)
 
         KeypadButton {
-            label: "1"
+            label: i18n.tr("1")
             keycode: Qt.Key_1
             onClicked: keypad.keyPressed(keycode, label)
             onPressAndHold: mainView.callVoicemail()
@@ -42,57 +42,57 @@ Item {
         }
 
         KeypadButton {
-            label: "2"
-            sublabel: "ABC"
+            label: i18n.tr("2")
+            sublabel: i18n.tr("ABC")
             keycode: Qt.Key_2
             onClicked: keypad.keyPressed(keycode, label)
         }
 
         KeypadButton {
-            label: "3"
-            sublabel: "DEF"
+            label: i18n.tr("3")
+            sublabel: i18n.tr("DEF")
             keycode: Qt.Key_3
             onClicked: keypad.keyPressed(keycode, label)
         }
 
         KeypadButton {
-            label: "4"
-            sublabel: "GHI"
+            label: i18n.tr("4")
+            sublabel: i18n.tr("GHI")
             keycode: Qt.Key_4
             onClicked: keypad.keyPressed(keycode, label)
         }
 
         KeypadButton {
-            label: "5"
-            sublabel: "JKL"
+            label: i18n.tr("5")
+            sublabel: i18n.tr("JKL")
             keycode: Qt.Key_5
             onClicked: keypad.keyPressed(keycode, label)
         }
 
         KeypadButton {
-            label: "6"
-            sublabel: "MNO"
+            label: i18n.tr("6")
+            sublabel: i18n.tr("MNO")
             keycode: Qt.Key_6
             onClicked: keypad.keyPressed(keycode, label)
         }
 
         KeypadButton {
-            label: "7"
-            sublabel: "PQRS"
+            label: i18n.tr("7")
+            sublabel: i18n.tr("PQRS")
             keycode: Qt.Key_7
             onClicked: keypad.keyPressed(keycode, label)
         }
 
         KeypadButton {
-            label: "8"
-            sublabel: "TUV"
+            label: i18n.tr("8")
+            sublabel: i18n.tr("TUV")
             keycode: Qt.Key_8
             onClicked: keypad.keyPressed(keycode, label)
         }
 
         KeypadButton {
-            label: "9"
-            sublabel: "WXYZ"
+            label: i18n.tr("9")
+            sublabel: i18n.tr("WXYZ")
             keycode: Qt.Key_9
             onClicked: keypad.keyPressed(keycode, label)
         }
@@ -100,14 +100,14 @@ Item {
         KeypadButton {
             isCorner: true
             corner: Qt.BottomLeftCorner
-            label: "*"
+            label: i18n.tr("*")
             keycode: Qt.Key_Asterisk
             onClicked: keypad.keyPressed(keycode, label)
         }
 
         KeypadButton {
-            label: "0"
-            sublabel: "+"
+            label: i18n.tr("0")
+            sublabel: i18n.tr("+")
             sublabelSize: "medium"
             keycode: Qt.Key_0
             onClicked: keypad.keyPressed(keycode, label)
@@ -117,7 +117,7 @@ Item {
         KeypadButton {
             isCorner: true
             corner: Qt.BottomRightCorner
-            label: "#"
+            label: i18n.tr("#")
             keycode: Qt.Key_ssharp
             onClicked: keypad.keyPressed(keycode, label)
         }
