@@ -63,21 +63,21 @@ function formatFriendlyCallDuration(duration) {
     // FIXME: change this function when we get i18n in the app
     if (hours > 0) {
         if (hours == 1) {
-            text = "1 hour";
+            text = "1 hour call";
         } else {
-            text = hours + " hours";
+            text = hours + " hours call";
         }
     } else if (minutes > 0) {
         if (minutes == 1) {
-            text = "1 minute";
+            text = "1 minute call";
         } else {
-            text = minutes + " minutes";
+            text = minutes + " minutes call";
         }
     } else {
         if (seconds == 1) {
-            text = "1 second";
+            text = "1 second call";
         } else {
-            text = seconds + " seconds";
+            text = seconds + " seconds call";
         }
     }
 
