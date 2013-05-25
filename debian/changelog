@@ -1,3 +1,13 @@
+phone-app (0.59.11-0ubuntu1) raring; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * display toolbar above keyboard when adding/editing contacts
+    fixes lp:1181339
+  * add support for saving a contact from conversation view
+    fixes lp:1181343
+
+ -- Bill Filler <bill.filler@canonical.com>  Fri, 24 May 2013 21:47:54 -0400
+
 phone-app (0.59.10-0ubuntu2) raring; urgency=low
 
   [ Florian Bocault ]
