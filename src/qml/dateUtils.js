@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pragma library
-
 function areSameDay(date1, date2) {
     return date1.getFullYear() == date2.getFullYear()
         && date1.getMonth() == date2.getMonth()
@@ -40,9 +38,9 @@ function friendlyDay(timestamp) {
     var yesterday = new Date();
     yesterday.setDate(today.getDate()-1);
     if (areSameDay(today, date)) {
-        return "Today";
+        return i18n.tr("Today");
     } else if (areSameDay(yesterday, date)) {
-        return "Yesterday";
+        return i18n.tr("Yesterday");
     } else {
         return Qt.formatDate(date, Qt.DefaultLocaleShortDate);
     }
@@ -60,25 +58,12 @@ function formatFriendlyCallDuration(duration) {
     var minutes = time.getMinutes();
     var seconds = time.getSeconds();
 
-    // FIXME: change this function when we get i18n in the app
     if (hours > 0) {
-        if (hours == 1) {
-            text = "1 hour call";
-        } else {
-            text = hours + " hours call";
-        }
+        text = i18n.tr("%d hour call", "%d hours call", hours)
     } else if (minutes > 0) {
-        if (minutes == 1) {
-            text = "1 minute call";
-        } else {
-            text = minutes + " minutes call";
-        }
+        text = i18n.tr("%d minute call", "%d minutes call", minutes)
     } else {
-        if (seconds == 1) {
-            text = "1 second call";
-        } else {
-            text = seconds + " seconds call";
-        }
+        text = i18n.tr("%d second call", "%d seconds call", seconds)
     }
 
     return text;

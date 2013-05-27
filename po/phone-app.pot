@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 11:54-0300\n"
+"POT-Creation-Date: 2013-05-27 15:33-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,10 +16,32 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 #: src/qml/PanelDialer/Keypad.qml:120
 msgid "#"
 msgstr ""
+
+#: src/qml/dateUtils.js:62
+#, c-format
+msgid "%d hour call"
+msgid_plural "%d hours call"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/qml/dateUtils.js:64
+#, c-format
+msgid "%d minute call"
+msgid_plural "%d minutes call"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/qml/dateUtils.js:66
+#, c-format
+msgid "%d second call"
+msgid_plural "%d seconds call"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/qml/PanelDialer/Keypad.qml:103
 msgid "*"
@@ -109,7 +131,7 @@ msgstr ""
 msgid "Calls"
 msgstr ""
 
-#: src/qml/DetailViewContact/ContactDetails.qml:65
+#: src/qml/DetailViewContact/ContactDetails.qml:70
 msgid "Cancel"
 msgstr ""
 
@@ -145,7 +167,7 @@ msgstr ""
 msgid "DEF"
 msgstr ""
 
-#: src/qml/DetailViewContact/ContactDetails.qml:53
+#: src/qml/DetailViewContact/ContactDetails.qml:56
 msgid "Delete"
 msgstr ""
 
@@ -160,7 +182,7 @@ msgstr ""
 msgid "Duration %1"
 msgstr ""
 
-#: src/qml/DetailViewContact/ContactDetails.qml:45
+#: src/qml/DetailViewContact/ContactDetails.qml:46
 msgid "Edit"
 msgstr ""
 
@@ -264,7 +286,7 @@ msgstr ""
 msgid "Reply via SMS"
 msgstr ""
 
-#: src/qml/DetailViewContact/ContactDetails.qml:80
+#: src/qml/DetailViewContact/ContactDetails.qml:87
 msgid "Save"
 msgstr ""
 
@@ -296,6 +318,10 @@ msgstr ""
 msgid "To:"
 msgstr ""
 
+#: src/qml/dateUtils.js:41
+msgid "Today"
+msgstr ""
+
 #: src/qml/DetailViewLiveCall/LiveCall.qml:155
 msgid "Unknown Contact"
 msgstr ""
@@ -317,6 +343,10 @@ msgstr ""
 msgid "Yahoo"
 msgstr ""
 
-#: src/qml/DetailViewCommunication/CommunicationDelegate.qml:91
+#: src/qml/dateUtils.js:43
+msgid "Yesterday"
+msgstr ""
+
+#: src/qml/DetailViewCommunication/CommunicationDelegate.qml:100
 msgid "missed call"
 msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 11:54-0300\n"
+"POT-Creation-Date: 2013-05-27 15:33-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Renato Araujo Oliveira Filho <renato@canonical.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -19,6 +19,27 @@ msgstr ""
 #: src/qml/PanelDialer/Keypad.qml:120
 msgid "#"
 msgstr "#"
+
+#: src/qml/dateUtils.js:62
+#, c-format
+msgid "%d hour call"
+msgid_plural "%d hours call"
+msgstr[0] "chamada de %d hora"
+msgstr[1] "chamada de %d horas"
+
+#: src/qml/dateUtils.js:64
+#, fuzzy, c-format
+msgid "%d minute call"
+msgid_plural "%d minutes call"
+msgstr[0] "chamada de %d minuto"
+msgstr[1] "chamada de %d minutos"
+
+#: src/qml/dateUtils.js:66
+#, fuzzy, c-format
+msgid "%d second call"
+msgid_plural "%d seconds call"
+msgstr[0] "chamada de %d segundo"
+msgstr[1] "chamda de %d segundos"
 
 #: src/qml/PanelDialer/Keypad.qml:103
 msgid "*"
@@ -108,7 +129,7 @@ msgstr "Chamada"
 msgid "Calls"
 msgstr "Chamadas"
 
-#: src/qml/DetailViewContact/ContactDetails.qml:65
+#: src/qml/DetailViewContact/ContactDetails.qml:70
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -144,7 +165,7 @@ msgstr "País"
 msgid "DEF"
 msgstr "DEF"
 
-#: src/qml/DetailViewContact/ContactDetails.qml:53
+#: src/qml/DetailViewContact/ContactDetails.qml:56
 msgid "Delete"
 msgstr "Apagar"
 
@@ -159,13 +180,13 @@ msgstr "Discando"
 msgid "Duration %1"
 msgstr "Duração %1"
 
-#: src/qml/DetailViewContact/ContactDetails.qml:45
+#: src/qml/DetailViewContact/ContactDetails.qml:46
 msgid "Edit"
 msgstr "Editar"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:75
 msgid "Email"
-msgstr ""
+msgstr "Email"
 
 #: src/qml/PanelDialer/DialerView.qml:50
 msgid "Enter a number"
@@ -263,7 +284,7 @@ msgstr "Região"
 msgid "Reply via SMS"
 msgstr "Responder via SMS"
 
-#: src/qml/DetailViewContact/ContactDetails.qml:80
+#: src/qml/DetailViewContact/ContactDetails.qml:87
 msgid "Save"
 msgstr "Salvar"
 
@@ -295,6 +316,10 @@ msgstr "TUV"
 msgid "To:"
 msgstr "Para:"
 
+#: src/qml/dateUtils.js:41
+msgid "Today"
+msgstr "Hoje"
+
 #: src/qml/DetailViewLiveCall/LiveCall.qml:155
 msgid "Unknown Contact"
 msgstr "Contato desconhecido"
@@ -316,6 +341,10 @@ msgstr "Trabalho"
 msgid "Yahoo"
 msgstr "Yahoo"
 
-#: src/qml/DetailViewCommunication/CommunicationDelegate.qml:91
+#: src/qml/dateUtils.js:43
+msgid "Yesterday"
+msgstr "Ontem"
+
+#: src/qml/DetailViewCommunication/CommunicationDelegate.qml:100
 msgid "missed call"
 msgstr "chamada perdida"
