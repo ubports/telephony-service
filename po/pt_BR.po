@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 15:50-0300\n"
+"POT-Creation-Date: 2013-05-27 16:09-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Renato Araujo Oliveira Filho <renato@canonical.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -301,6 +301,10 @@ msgstr "Cep"
 msgid "Prefix"
 msgstr "Prefixo"
 
+#: Ubuntu/PhoneApp/conversationfeedmodel.cpp:275
+msgid "Private number"
+msgstr "Número privado"
+
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:66
 msgid "Region"
 msgstr "Região"
@@ -357,6 +361,10 @@ msgstr "Contato desconhecido"
 #: approver/phoneappapprover.cpp:230
 msgid "Unknown caller"
 msgstr "Contato desconhecido"
+
+#: Ubuntu/PhoneApp/conversationfeedmodel.cpp:279
+msgid "Unknown number"
+msgstr "Número desconhecido"
 
 #: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99
 msgid "Voicemail"

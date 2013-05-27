@@ -24,6 +24,11 @@
 #include "contactmodel.h"
 #include <QContactPhoneNumber>
 
+namespace C {
+#include <libintl.h>
+}
+
+
 ConversationFeedModel::ConversationFeedModel(QObject *parent) :
     QAbstractListModel(parent)
 {
@@ -267,11 +272,11 @@ bool ConversationFeedModel::checkNonStandardNumbers(ConversationFeedItem *item)
     }
 
     if (item->phoneNumber() == QLatin1String("-2")) {
-        item->setContactAlias(QLatin1String("Private number"));
+        item->setContactAlias(QString::fromUtf8(C::dgettext("phone-app", "Private number")));
         item->setPhoneNumber(QLatin1String("-"));
         changed = true;
     } else if (item->phoneNumber() == QLatin1String("-1") || item->phoneNumber() == QLatin1String("#")) {
-        item->setContactAlias(QLatin1String("Unknown number"));
+        item->setContactAlias(QString::fromUtf8(C::dgettext("phone-app", "Unknown number")));
         item->setPhoneNumber(QLatin1String("-"));
         changed = true;
     }

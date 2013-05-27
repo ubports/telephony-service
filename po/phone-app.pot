@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 15:50-0300\n"
+"POT-Creation-Date: 2013-05-27 16:09-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -303,6 +303,10 @@ msgstr ""
 msgid "Prefix"
 msgstr ""
 
+#: Ubuntu/PhoneApp/conversationfeedmodel.cpp:275
+msgid "Private number"
+msgstr ""
+
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:66
 msgid "Region"
 msgstr ""
@@ -358,6 +362,10 @@ msgstr ""
 
 #: approver/phoneappapprover.cpp:230
 msgid "Unknown caller"
+msgstr ""
+
+#: Ubuntu/PhoneApp/conversationfeedmodel.cpp:279
+msgid "Unknown number"
 msgstr ""
 
 #: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99

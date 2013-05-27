@@ -35,7 +35,6 @@
 
 namespace C {
 #include <libintl.h>
-#define _(STRING)    gettext(STRING)
 }
 
 int main(int argc, char **argv)
