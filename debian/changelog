@@ -1,3 +1,10 @@
+phone-app (0.59.11-0ubuntu2) UNRELEASED; urgency=low
+
+  * Prevent the search field from being partially covered by the 
+  view header (LP: 1181362).
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 27 May 2013 14:21:34 -0300
+
 phone-app (0.59.11-0ubuntu1) raring; urgency=low
 
   [ Gustavo Pichorim Boiko ]
