@@ -39,7 +39,7 @@ msgstr[1] "chamada de %d minutos"
 msgid "%d second call"
 msgid_plural "%d seconds call"
 msgstr[0] "chamada de %d segundo"
-msgstr[1] "chamda de %d segundos"
+msgstr[1] "chamada de %d segundos"
 
 #: src/qml/PanelDialer/Keypad.qml:103
 msgid "*"
