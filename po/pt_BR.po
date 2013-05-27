@@ -24,22 +24,22 @@ msgstr "#"
 #, c-format, qt-plural-format
 msgid "%n hour call"
 msgid_plural "%n hours call"
-msgstr[0] "chamada de %d hora"
-msgstr[1] "chamada de %d horas"
+msgstr[0] "chamada de %n hora"
+msgstr[1] "chamada de %n horas"
 
 #: src/qml/dateUtils.js:64
 #, c-format, qt-plural-format
 msgid "%n minute call"
 msgid_plural "%n minutes call"
-msgstr[0] "chamada de %d minuto"
-msgstr[1] "chamada de %d minutos"
+msgstr[0] "chamada de %n minuto"
+msgstr[1] "chamada de %n minutos"
 
 #: src/qml/dateUtils.js:66
 #, c-format, qt-plural-format
 msgid "%n second call"
 msgid_plural "%n seconds call"
-msgstr[0] "chamada de %d segundo"
-msgstr[1] "chamada de %d segundos"
+msgstr[0] "chamada de %n segundo"
+msgstr[1] "chamada de %n segundos"
 
 #: src/qml/PanelDialer/Keypad.qml:103
 msgid "*"
