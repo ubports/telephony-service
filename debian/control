@@ -43,7 +43,7 @@ Depends: ${misc:Depends},
          qtdeclarative5-ubuntu-ui-toolkit-plugin | qt-components-ubuntu,
          telepathy-logger,
          telepathy-mission-control-5,
-         telepathy-ofono,
+         telepathy-ofono2,
          ubuntu-sounds,
 Description: Phone application for Ubuntu
  An application to execute phone tasks such as calling, messaging and contact

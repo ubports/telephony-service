@@ -40,6 +40,7 @@ LocalWidgets.PhonePage {
     title: i18n.tr("Contact Details")
 
     tools: ToolbarActions {
+        lock: editable
 
         Action {
             text: i18n.tr("Edit")
@@ -50,6 +51,8 @@ LocalWidgets.PhonePage {
         }
 
         Action {
+            id: deleteAction
+
             text: i18n.tr("Delete")
             iconSource: Qt.resolvedUrl("../assets/delete.png")
             visible: editable && !added
@@ -62,6 +65,8 @@ LocalWidgets.PhonePage {
         }
 
         Action {
+            id: cancelAction
+
             text: i18n.tr("Cancel")
             iconSource: Qt.resolvedUrl("../assets/cancel.png")
             visible: editable
@@ -77,6 +82,8 @@ LocalWidgets.PhonePage {
         }
 
         Action {
+            id: saveAction
+
             text: i18n.tr("Save")
             iconSource: Qt.resolvedUrl("../assets/save.png")
             visible: editable
@@ -93,14 +100,23 @@ LocalWidgets.PhonePage {
         backgroundColor: "#ededed"
     }
 
-    function createNewContact() {
-        contact = Qt.createQmlObject("import Ubuntu.PhoneApp 0.1; ContactEntry {}", contactModel);
+    function createNewContact(number) {
+        var newContact = Qt.createQmlObject("import Ubuntu.PhoneApp 0.1; ContactEntry {}", contactModel);
+        if (number != null) {
+            var phoneNumber = Qt.createQmlObject("import Ubuntu.PhoneApp 0.1; ContactPhoneNumber { number: \"" + number + "\"; }", contactModel);
+            newContact.addDetail(phoneNumber);
+        }
+        contact = newContact;
         editable = true;
         added = true;
 
         for (var i = 0; i < detailsList.children.length; i++) {
             var child = detailsList.children[i];
             if (child.detailTypeInfo && child.detailTypeInfo.createOnNew) {
+                // if we already added a phone number, do not add another empty one
+                if (child.detailTypeInfo.newItemType == "ContactPhoneNumber" && number != null) {
+                    continue;
+                }
                 child.appendNewItem();
             }
         }
@@ -163,7 +179,7 @@ LocalWidgets.PhonePage {
         id: scrollArea
 
         anchors.top: parent.top
-        anchors.bottom: keyboard.top
+        anchors.bottom: editToolbar.top
         anchors.left: parent.left
         anchors.right: parent.right
         flickableDirection: Flickable.VerticalFlick
@@ -262,6 +278,23 @@ LocalWidgets.PhonePage {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    EditToolbar {
+        id: editToolbar
+        visible: editable
+        anchors.bottom: keyboard.top
+
+        onDeleteClicked: deleteAction.triggered(editToolbar)
+        onCancelClicked: cancelAction.triggered(editToolbar)
+        onSaveClicked: saveAction.triggered(editToolbar)
+
+        onVisibleChanged: {
+            if (visible) {
+                // hide the toolbar
+                toolbar.opened = false;
             }
         }
     }

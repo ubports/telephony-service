@@ -1,8 +1,36 @@
-phone-app (0.59.9-0ubuntu2) UNRELEASED; urgency=low
+phone-app (0.59.11-0ubuntu1) raring; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * display toolbar above keyboard when adding/editing contacts
+    fixes lp:1181339
+  * add support for saving a contact from conversation view
+    fixes lp:1181343
+
+ -- Bill Filler <bill.filler@canonical.com>  Fri, 24 May 2013 21:47:54 -0400
+
+phone-app (0.59.10-0ubuntu2) raring; urgency=low
+
+  [ Florian Bocault ]
+  * Stop using the private property Scrollbar__interactive. The default value is
+    false anyway.
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure the header doesn't overlap the contents in DetailViewCommunication.
+  * Fix the contact details view by forcing the header height to change and by
+    removing the obsolete footer (LP: #1181363).
+  * Update the conversation panel when a message is marked as read.
+
+  [ Tiago Salem Herrmann ]
+  * Make phone-app depend explicitly on telepathy-ofono2.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 22 May 2013 21:33:19 -0300
+
+phone-app (0.59.9-0ubuntu3) raring; urgency=low
 
   * Fix holding a channel. It should call the handler to set the call on hold.
   * Change custom telepathy interface names to com.canonical.Telephony.{Feature}
   * Add channel object path as SetSpeakerMode() argument.
+  * Make phone-app depend explicitly on telepathy-ofono2
 
  -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 26 Apr 2013 18:18:10 -0300
 

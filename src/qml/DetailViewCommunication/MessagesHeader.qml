@@ -84,8 +84,14 @@ BaseMessageHeader {
         width: units.gu(3)
         height: units.gu(3)
 
-        iconSource: "../assets/contacts.png"
-        onClicked: mainView.showContactDetails(contact, true)
-        visible: contact != null
+        iconSource: contact != null ? "../assets/contacts.png" : "../assets/new-contact.png"
+        onClicked: {
+            if (contact != null) {
+                mainView.showContactDetails(contact, true)
+            } else {
+                // in this case the title is the phone number
+                mainView.createNewContact(title);
+            }
+        }
     }
 }

@@ -151,10 +151,10 @@ MainView {
         contactModel.loadContactFromId(contactId);
     }
 
-    function createNewContact() {
+    function createNewContact(number) {
         resetView();
         contactDetails.load()
-        view.createNewContact()
+        view.createNewContact(number)
     }
 
     function startNewMessage() {
