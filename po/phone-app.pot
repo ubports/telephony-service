@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 15:33-0300\n"
+"POT-Creation-Date: 2013-05-27 15:50-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,6 +95,10 @@ msgstr ""
 msgid "ABC"
 msgstr ""
 
+#: approver/phoneappapprover.cpp:269
+msgid "Accept"
+msgstr ""
+
 #: src/qml/phone-app.qml:477 src/qml/PanelContacts/ContactsPanel.qml:32
 msgid "Add"
 msgstr ""
@@ -125,6 +129,23 @@ msgstr ""
 
 #: src/qml/phone-app.qml:234 src/qml/PanelDialer/DialerView.qml:25
 msgid "Call"
+msgstr ""
+
+#: approver/phoneappapprover.cpp:243
+msgid "Caller number is not available"
+msgstr ""
+
+#: approver/phoneappapprover.cpp:240
+#, qt-format
+msgid "Calling from %1"
+msgstr ""
+
+#: approver/phoneappapprover.cpp:236
+msgid "Calling from private number"
+msgstr ""
+
+#: approver/phoneappapprover.cpp:238
+msgid "Calling from unknown number"
 msgstr ""
 
 #: src/qml/Panes/CallEndedPane.qml:22
@@ -165,6 +186,10 @@ msgstr ""
 
 #: src/qml/PanelDialer/Keypad.qml:53
 msgid "DEF"
+msgstr ""
+
+#: approver/phoneappapprover.cpp:275
+msgid "Decline"
 msgstr ""
 
 #: src/qml/DetailViewContact/ContactDetails.qml:56
@@ -286,6 +311,11 @@ msgstr ""
 msgid "Reply via SMS"
 msgstr ""
 
+#: approver/textchannelobserver.cpp:51
+#, qt-format
+msgid "SMS from %1"
+msgstr ""
+
 #: src/qml/DetailViewContact/ContactDetails.qml:87
 msgid "Save"
 msgstr ""
@@ -324,6 +354,10 @@ msgstr ""
 
 #: src/qml/DetailViewLiveCall/LiveCall.qml:155
 msgid "Unknown Contact"
+msgstr ""
+
+#: approver/phoneappapprover.cpp:230
+msgid "Unknown caller"
 msgstr ""
 
 #: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99

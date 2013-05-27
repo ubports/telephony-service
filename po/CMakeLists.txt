@@ -9,6 +9,8 @@ file(GLOB_RECURSE I18N_SRCS RELATIVE ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/src/*.qml
     ${CMAKE_SOURCE_DIR}/src/*.js
     ${CMAKE_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_SOURCE_DIR}/approver/*.cpp
+    ${CMAKE_SOURCE_DIR}/Ubuntu/*.cpp
 )
 
 foreach(PO_FILE ${PO_FILES})

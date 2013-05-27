@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 15:33-0300\n"
+"POT-Creation-Date: 2013-05-27 15:50-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Renato Araujo Oliveira Filho <renato@canonical.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -28,14 +28,14 @@ msgstr[0] "chamada de %d hora"
 msgstr[1] "chamada de %d horas"
 
 #: src/qml/dateUtils.js:64
-#, fuzzy, c-format
+#, c-format
 msgid "%d minute call"
 msgid_plural "%d minutes call"
 msgstr[0] "chamada de %d minuto"
 msgstr[1] "chamada de %d minutos"
 
 #: src/qml/dateUtils.js:66
-#, fuzzy, c-format
+#, c-format
 msgid "%d second call"
 msgid_plural "%d seconds call"
 msgstr[0] "chamada de %d segundo"
@@ -93,6 +93,10 @@ msgstr "9"
 msgid "ABC"
 msgstr "ABC"
 
+#: approver/phoneappapprover.cpp:269
+msgid "Accept"
+msgstr "Aceitar"
+
 #: src/qml/phone-app.qml:477 src/qml/PanelContacts/ContactsPanel.qml:32
 msgid "Add"
 msgstr "Adicionar"
@@ -124,6 +128,23 @@ msgstr "Endereço"
 #: src/qml/phone-app.qml:234 src/qml/PanelDialer/DialerView.qml:25
 msgid "Call"
 msgstr "Chamada"
+
+#: approver/phoneappapprover.cpp:243
+msgid "Caller number is not available"
+msgstr "Número não disponivél"
+
+#: approver/phoneappapprover.cpp:240
+#, qt-format
+msgid "Calling from %1"
+msgstr "Chamando de %1"
+
+#: approver/phoneappapprover.cpp:236
+msgid "Calling from private number"
+msgstr "Chamando de um número privado"
+
+#: approver/phoneappapprover.cpp:238
+msgid "Calling from unknown number"
+msgstr "Chamando de um número desconhecido"
 
 #: src/qml/Panes/CallEndedPane.qml:22
 msgid "Calls"
@@ -164,6 +185,10 @@ msgstr "País"
 #: src/qml/PanelDialer/Keypad.qml:53
 msgid "DEF"
 msgstr "DEF"
+
+#: approver/phoneappapprover.cpp:275
+msgid "Decline"
+msgstr "Rejeitar"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:56
 msgid "Delete"
@@ -284,6 +309,11 @@ msgstr "Região"
 msgid "Reply via SMS"
 msgstr "Responder via SMS"
 
+#: approver/textchannelobserver.cpp:51
+#, qt-format
+msgid "SMS from %1"
+msgstr "SMS de %1"
+
 #: src/qml/DetailViewContact/ContactDetails.qml:87
 msgid "Save"
 msgstr "Salvar"
@@ -322,6 +352,10 @@ msgstr "Hoje"
 
 #: src/qml/DetailViewLiveCall/LiveCall.qml:155
 msgid "Unknown Contact"
+msgstr "Contato desconhecido"
+
+#: approver/phoneappapprover.cpp:230
+msgid "Unknown caller"
 msgstr "Contato desconhecido"
 
 #: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99
