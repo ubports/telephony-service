@@ -1,11 +1,11 @@
-# Brazilian Portuguese translation for webbrowser-app
+# Brazilian Portuguese translation for phone-app
 # Copyright (c) 2013 Canonical Ltd 2013
-# This file is distributed under the same license as the webbrowser-app package.
+# This file is distributed under the same license as the phone-app package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: mediaplayer-app\n"
+"Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-05-27 11:54-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
