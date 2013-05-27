@@ -70,6 +70,10 @@ MainView {
         }
     }
 
+    Component.onCompleted: {
+        i18n.domain = "phone-app"
+    }
+
     Connections {
         target: contactModel
         onContactLoaded: mainView.showContactDetails(contact);

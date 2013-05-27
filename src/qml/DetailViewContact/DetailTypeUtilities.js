@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.pragma library
-
 .import Ubuntu.PhoneApp 0.1 as PhoneApp
 
 var PROTOCOL_LABEL_AIM      = "AIM";
@@ -40,42 +38,44 @@ var PROTOCOL_TYPE_ICQ       = "icq";
 var PROTOCOL_TYPE_JABBER    = "jabber";
 var PROTOCOL_TYPE_OTHER     = "other";
 
-var ADDRESS_LABEL_HOME      = "Home";
-var ADDRESS_LABEL_WORK      = "Work";
-var ADDRESS_LABEL_OTHER     = "Other";
+var detailsSubTypes = [ { value: "Home", label: i18n.tr("Home") },
+                        { value: "Work", label: i18n.tr("Work") },
+                        { value: "Other", label: i18n.tr("Other") } ];
 
-var phoneSubTypes = [ "Mobile", "Home", "Work", "Other" ];
+var phoneSubTypes = [ { value: "Mobile", label: i18n.tr("Mobile") },
+                      { value: "Home", label: i18n.tr("Home") },
+                      { value: "Work", label: i18n.tr("Work") },
+                      { value: "Other", label: i18n.tr("Other") } ];
 
-var emailSubTypes = [ "Home", "Work", "Other" ];
+var emailSubTypes = detailsSubTypes;
+var postalAddressSubTypes = detailsSubTypes;
 
-var postalAddressSubTypes = [ ADDRESS_LABEL_HOME,
-                              ADDRESS_LABEL_WORK,
-                              ADDRESS_LABEL_OTHER ];
 
-var IMSubTypes = [ PROTOCOL_LABEL_GTALK,
-                   PROTOCOL_LABEL_YAHOO,
-                   PROTOCOL_LABEL_SKYPE,
-                   PROTOCOL_LABEL_OTHER ];
+var IMSubTypes = [ { value: PROTOCOL_LABEL_GTALK, label: i18n.tr("Google Talk") },
+                   { value: PROTOCOL_LABEL_YAHOO, label: i18n.tr("Yahoo") },
+                   { value: PROTOCOL_LABEL_SKYPE, label: i18n.tr("Skype") },
+                   { value: PROTOCOL_LABEL_OTHER, label: i18n.tr("Other") } ]
 
 var supportedTypes = [
             {
-                name: "Phone",
+                name: i18n.tr("Phone"),
                 delegateSource: "TextContactDetailsDelegate.qml",
                 items: "phoneNumbers",
-                newItemText: "Add a phone number",
+                newItemText: i18n.tr("Add a phone number"),
                 newItemType: "ContactPhoneNumber",
                 actionIcon: "../assets/messaging_icon_button.png",
                 hasAction: true,
                 displayField: "number",
                 subTypes: phoneSubTypes,
+                subTypesI18N: phoneSubTypes,
                 showSubtype: true,
                 createOnNew: true
             },
             {
-                name: "Email",
+                name: i18n.tr("Email"),
                 delegateSource: "TextContactDetailsDelegate.qml",
                 items: "emails",
-                newItemText: "Add an email address",
+                newItemText: i18n.tr("Add an email address"),
                 newItemType: "ContactEmailAddress",
                 actionIcon: "../assets/contact_icon_email.png",
                 hasAction: false,
@@ -85,10 +85,10 @@ var supportedTypes = [
                 createOnNew: true
             },
             {
-                name: "Address",
+                name: i18n.tr("Address"),
                 delegateSource: "AddressContactDetailsDelegate.qml",
                 items: "addresses",
-                newItemText: "Add a postal address",
+                newItemText: i18n.tr("Add a postal address"),
                 newItemType: "ContactAddress",
                 actionIcon: "../assets/contact_icon_location.png",
                 hasAction: false,
@@ -96,10 +96,10 @@ var supportedTypes = [
                 subTypes: postalAddressSubTypes
             },
             {
-                name: "IM",
+                name: i18n.tr("IM"),
                 delegateSource: "TextContactDetailsDelegate.qml",
                 items: "onlineAccounts",
-                newItemText: "Add an online account",
+                newItemText: i18n.tr("Add an online account"),
                 displayField: "accountUri",
                 newItemType: "ContactOnlineAccount",
                 actionIcon: "../assets/contact_icon_IM.png",
@@ -128,16 +128,18 @@ function getDetailSubType(detail) {
         return "";
     }
 
+    console.debug("Detail:" + detail)
+
     /* Phone numbers have a special field for the subType */
     if (detail.type == PhoneApp.ContactDetail.PhoneNumber) {
         if (detail.contexts.indexOf(PhoneApp.ContactDetail.ContextHome) > -1) {
-            return "Home";
+            return phoneSubTypes[1];
         } else if (detail.contexts.indexOf(PhoneApp.ContactDetail.ContextWork) > -1) {
-            return "Work";
+            return phoneSubTypes[2];
         } else if (detail.subTypes.indexOf(PhoneApp.ContactPhoneNumber.Mobile) > -1) {
-            return "Mobile";
+            return phoneSubTypes[0];
         }
-        return "Other";
+        return phoneSubTypes[3];
     } else if (detail.type == PhoneApp.ContactDetail.InstantMessaging) {
         var protocol = detail.protocol;
         if (protocol == PROTOCOL_TYPE_YAHOO) {
@@ -152,11 +154,11 @@ function getDetailSubType(detail) {
     } else if (detail.type == PhoneApp.ContactDetail.Address) {
         var contexts = detail.contexts
         if (contexts.indexOf(PhoneApp.ContactDetail.ContextHome) > -1) {
-            return ADDRESS_LABEL_HOME;
+            return detailsSubTypes[0];
         } else if (contexts.indexOf(PhoneApp.ContactDetail.ContextWork) > -1) {
-            return ADDRESS_LABEL_WORK;
+            return detailsSubTypes[1];
         } else {
-            return ADDRESS_LABEL_OTHER;
+            return detailsSubTypes[2];
         }
     } else {
         // The backend supports multiple types but we can just handle one,
@@ -176,15 +178,15 @@ function getDetailSubType(detail) {
         }
 
         if (context == PhoneApp.ContactDetail.ContextHome) {
-            return "Home";
+            return detailsSubTypes[0];
         } else if (context == PhoneApp.ContactDetail.ContextWork) {
-            return "Work";
+            return detailsSubTypes[1];
         } else if (subType == PhoneApp.ContactDetail.ContextOther) {
-            return "Other";
+            return detailsSubTypes[2];
         }
     }
 
-    return "Other";
+    return detailsSubTypes[2];
 }
 
 function updateContext(detail, context) {
@@ -200,13 +202,13 @@ function setDetailSubType(detail, newSubType) {
 
     /* Phone numbers have a special field for the subType */
     if (detail.type == PhoneApp.ContactDetail.PhoneNumber) {
-        if (newSubType == "Home") {
+        if (newSubType.value == "Home") {
             detail.contexts = [ PhoneApp.ContactDetail.ContextHome ];
             detail.subTypes = [ PhoneApp.ContactPhoneNumber.Voice ];
-        } else if (newSubType == "Work") {
+        } else if (newSubType.value == "Work") {
             detail.contexts = [ PhoneApp.ContactDetail.ContextWork ];
             detail.subTypes = [ PhoneApp.ContactPhoneNumber.Voice ];
-        } else if (newSubType == "Mobile") {
+        } else if (newSubType.value == "Mobile") {
             detail.contexts = [ ];
             detail.subTypes = [ PhoneApp.ContactPhoneNumber.Mobile ];
         } else {
@@ -214,7 +216,7 @@ function setDetailSubType(detail, newSubType) {
             detail.subTypes = [ ];
         }
     } else if (detail.type == PhoneApp.ContactDetail.InstantMessaging) {
-        var protocol = newSubType;
+        var protocol = newSubType.value;
         if (protocol == PROTOCOL_LABEL_YAHOO) {
             detail.protocol = PROTOCOL_TYPE_YAHOO;
         } else if (protocol == PROTOCOL_LABEL_SKYPE) {
@@ -226,18 +228,18 @@ function setDetailSubType(detail, newSubType) {
             detail.protocol = PROTOCOL_TYPE_OTHER;
         }
     } else if (detail.type == PhoneApp.ContactDetail.Address) {
-        if (newSubType == ADDRESS_LABEL_HOME) {
+        if (newSubType.value == "Home") {
             detail.contexts = [ PhoneApp.ContactDetail.ContextHome ];
-        } else if (newSubType == ADDRESS_LABEL_WORK) {
+        } else if (newSubType.value == "Work") {
             detail.contexts = [ PhoneApp.ContactDetail.ContextWork ];
         } else {
             detail.contexts = [ PhoneApp.ContactDetail.ContextOther ];
         }
     } else {
         var context = -1
-        if (newSubType == "Home") {
+        if (newSubType.value == "Home") {
             context = PhoneApp.ContactDetail.ContextHome;
-        } else if (newSubType == "Work") {
+        } else if (newSubType.value == "Work") {
             context = PhoneApp.ContactDetail.ContextWork;
         } else {
             context = PhoneApp.ContactDetail.ContextOther;
