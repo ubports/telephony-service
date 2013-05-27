@@ -59,11 +59,11 @@ function formatFriendlyCallDuration(duration) {
     var seconds = time.getSeconds();
 
     if (hours > 0) {
-        text = i18n.tr("%d hour call", "%d hours call", hours)
+        text = i18n.tr("%n hour call", "%n hours call", hours)
     } else if (minutes > 0) {
-        text = i18n.tr("%d minute call", "%d minutes call", minutes)
+        text = i18n.tr("%n minute call", "%n minutes call", minutes)
     } else {
-        text = i18n.tr("%d second call", "%d seconds call", seconds)
+        text = i18n.tr("%n second call", "%n seconds call", seconds)
     }
 
     return text;

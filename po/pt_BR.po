@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 16:09-0300\n"
+"POT-Creation-Date: 2013-05-27 16:16-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Renato Araujo Oliveira Filho <renato@canonical.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -21,23 +21,23 @@ msgid "#"
 msgstr "#"
 
 #: src/qml/dateUtils.js:62
-#, c-format
-msgid "%d hour call"
-msgid_plural "%d hours call"
+#, c-format, qt-plural-format
+msgid "%n hour call"
+msgid_plural "%n hours call"
 msgstr[0] "chamada de %d hora"
 msgstr[1] "chamada de %d horas"
 
 #: src/qml/dateUtils.js:64
-#, c-format
-msgid "%d minute call"
-msgid_plural "%d minutes call"
+#, c-format, qt-plural-format
+msgid "%n minute call"
+msgid_plural "%n minutes call"
 msgstr[0] "chamada de %d minuto"
 msgstr[1] "chamada de %d minutos"
 
 #: src/qml/dateUtils.js:66
-#, c-format
-msgid "%d second call"
-msgid_plural "%d seconds call"
+#, c-format, qt-plural-format
+msgid "%n second call"
+msgid_plural "%n seconds call"
 msgstr[0] "chamada de %d segundo"
 msgstr[1] "chamada de %d segundos"
 
