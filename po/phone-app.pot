@@ -1,0 +1,322 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-27 11:54-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/qml/PanelDialer/Keypad.qml:120
+msgid "#"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:103
+msgid "*"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:110
+msgid "+"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:109
+msgid "0"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:37
+msgid "1"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:45
+msgid "2"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:52
+msgid "3"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:59
+msgid "4"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:66
+msgid "5"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:73
+msgid "6"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:80
+msgid "7"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:87
+msgid "8"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:94
+msgid "9"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:46
+msgid "ABC"
+msgstr ""
+
+#: src/qml/phone-app.qml:477 src/qml/PanelContacts/ContactsPanel.qml:32
+msgid "Add"
+msgstr ""
+
+#: src/qml/PanelContacts/ContactsPanel.qml:122
+msgid "Add a new contact"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:64
+msgid "Add a phone number"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:91
+msgid "Add a postal address"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:78
+msgid "Add an email address"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:102
+msgid "Add an online account"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:88
+msgid "Address"
+msgstr ""
+
+#: src/qml/phone-app.qml:234 src/qml/PanelDialer/DialerView.qml:25
+msgid "Call"
+msgstr ""
+
+#: src/qml/Panes/CallEndedPane.qml:22
+msgid "Calls"
+msgstr ""
+
+#: src/qml/DetailViewContact/ContactDetails.qml:65
+msgid "Cancel"
+msgstr ""
+
+#: src/qml/DetailViewCommunication/CommunicationView.qml:38
+msgid "Communication"
+msgstr ""
+
+#: src/qml/DetailViewCommunication/MessagesFooter.qml:87
+#: src/qml/phone-app.qml:472
+#: src/qml/PanelCommunications/CommunicationsPanel.qml:32
+msgid "Compose"
+msgstr ""
+
+#: src/qml/DetailViewContact/ContactDetails.qml:40
+msgid "Contact Details"
+msgstr ""
+
+#: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:267
+#: src/qml/PanelContacts/ContactsPanel.qml:28
+msgid "Contacts"
+msgstr ""
+
+#: src/qml/phone-app.qml:245
+#: src/qml/PanelCommunications/CommunicationsPanel.qml:28
+msgid "Conversations"
+msgstr ""
+
+#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:84
+msgid "Country"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:53
+msgid "DEF"
+msgstr ""
+
+#: src/qml/DetailViewContact/ContactDetails.qml:53
+msgid "Delete"
+msgstr ""
+
+#. TRANSLATORS: %1 is the duration of the call
+#: src/qml/DetailViewVoicemail/Voicemail.qml:94
+#: src/qml/DetailViewLiveCall/LiveCall.qml:37
+msgid "Dialing"
+msgstr ""
+
+#: src/qml/DetailViewLiveCall/LiveCall.qml:37
+#, qt-format
+msgid "Duration %1"
+msgstr ""
+
+#: src/qml/DetailViewContact/ContactDetails.qml:45
+msgid "Edit"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:75
+msgid "Email"
+msgstr ""
+
+#: src/qml/PanelDialer/DialerView.qml:50
+msgid "Enter a number"
+msgstr ""
+
+#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:68
+msgid "First"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:60
+msgid "GHI"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:54
+msgid "Google Talk"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:41
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:46
+msgid "Home"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:99
+msgid "IM"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:67
+msgid "JKL"
+msgstr ""
+
+#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:90
+msgid "Last"
+msgstr ""
+
+#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:57
+msgid "Locality"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:74
+msgid "MNO"
+msgstr ""
+
+#: src/qml/Panes/SelectMessagePane.qml:22
+msgid "Messages"
+msgstr ""
+
+#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:79
+msgid "Middle"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:45
+msgid "Mobile"
+msgstr ""
+
+#: src/qml/phone-app.qml:478
+msgid "New Contact"
+msgstr ""
+
+#: src/qml/phone-app.qml:473
+#: src/qml/PanelCommunications/CommunicationsPanel.qml:136
+msgid "New Message"
+msgstr ""
+
+#: src/qml/OnCallPanel.qml:84
+msgid "On Call"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:43
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:48
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:57
+msgid "Other"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:81
+msgid "PQRS"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:61
+msgid "Phone"
+msgstr ""
+
+#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:75
+msgid "Postal Code"
+msgstr ""
+
+#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:57
+msgid "Prefix"
+msgstr ""
+
+#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:66
+msgid "Region"
+msgstr ""
+
+#: src/qml/DetailViewCommunication/MessagesFooter.qml:87
+msgid "Reply via SMS"
+msgstr ""
+
+#: src/qml/DetailViewContact/ContactDetails.qml:80
+msgid "Save"
+msgstr ""
+
+#: src/qml/DetailViewCommunication/MessagesFooter.qml:102
+msgid "Send"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:56
+msgid "Skype"
+msgstr ""
+
+#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:47
+msgid "Street"
+msgstr ""
+
+#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:100
+msgid "Suffix"
+msgstr ""
+
+#: src/qml/DetailViewLiveCall/BackgroundCall.qml:54
+msgid "Swap Calls"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:88
+msgid "TUV"
+msgstr ""
+
+#: src/qml/DetailViewCommunication/NewMessageHeader.qml:59
+msgid "To:"
+msgstr ""
+
+#: src/qml/DetailViewLiveCall/LiveCall.qml:155
+msgid "Unknown Contact"
+msgstr ""
+
+#: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99
+msgid "Voicemail"
+msgstr ""
+
+#: src/qml/PanelDialer/Keypad.qml:95
+msgid "WXYZ"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:42
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:47
+msgid "Work"
+msgstr ""
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:55
+msgid "Yahoo"
+msgstr ""
+
+#: src/qml/DetailViewCommunication/CommunicationDelegate.qml:91
+msgid "missed call"
+msgstr ""

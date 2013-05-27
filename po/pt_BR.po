@@ -1,0 +1,321 @@
+# Brazilian Portuguese translation for webbrowser-app
+# Copyright (c) 2013 Canonical Ltd 2013
+# This file is distributed under the same license as the webbrowser-app package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: mediaplayer-app\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-27 11:54-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Renato Araujo Oliveira Filho <renato@canonical.com>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/qml/PanelDialer/Keypad.qml:120
+msgid "#"
+msgstr "#"
+
+#: src/qml/PanelDialer/Keypad.qml:103
+msgid "*"
+msgstr "*"
+
+#: src/qml/PanelDialer/Keypad.qml:110
+msgid "+"
+msgstr "+"
+
+#: src/qml/PanelDialer/Keypad.qml:109
+msgid "0"
+msgstr "0"
+
+#: src/qml/PanelDialer/Keypad.qml:37
+msgid "1"
+msgstr "1"
+
+#: src/qml/PanelDialer/Keypad.qml:45
+msgid "2"
+msgstr "2"
+
+#: src/qml/PanelDialer/Keypad.qml:52
+msgid "3"
+msgstr "3"
+
+#: src/qml/PanelDialer/Keypad.qml:59
+msgid "4"
+msgstr "4"
+
+#: src/qml/PanelDialer/Keypad.qml:66
+msgid "5"
+msgstr "5"
+
+#: src/qml/PanelDialer/Keypad.qml:73
+msgid "6"
+msgstr "6"
+
+#: src/qml/PanelDialer/Keypad.qml:80
+msgid "7"
+msgstr "7"
+
+#: src/qml/PanelDialer/Keypad.qml:87
+msgid "8"
+msgstr "8"
+
+#: src/qml/PanelDialer/Keypad.qml:94
+msgid "9"
+msgstr "9"
+
+#: src/qml/PanelDialer/Keypad.qml:46
+msgid "ABC"
+msgstr "ABC"
+
+#: src/qml/phone-app.qml:477 src/qml/PanelContacts/ContactsPanel.qml:32
+msgid "Add"
+msgstr "Adicionar"
+
+#: src/qml/PanelContacts/ContactsPanel.qml:122
+msgid "Add a new contact"
+msgstr "Adicionar um novo contato"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:64
+msgid "Add a phone number"
+msgstr "Adicionar um número de telefone"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:91
+msgid "Add a postal address"
+msgstr "Adicionar um endereço"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:78
+msgid "Add an email address"
+msgstr "Adicionar um endereço de email"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:102
+msgid "Add an online account"
+msgstr "Adicionar uma conta online"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:88
+msgid "Address"
+msgstr "Endereço"
+
+#: src/qml/phone-app.qml:234 src/qml/PanelDialer/DialerView.qml:25
+msgid "Call"
+msgstr "Chamada"
+
+#: src/qml/Panes/CallEndedPane.qml:22
+msgid "Calls"
+msgstr "Chamadas"
+
+#: src/qml/DetailViewContact/ContactDetails.qml:65
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/qml/DetailViewCommunication/CommunicationView.qml:38
+msgid "Communication"
+msgstr "Comunicação"
+
+#: src/qml/DetailViewCommunication/MessagesFooter.qml:87
+#: src/qml/phone-app.qml:472
+#: src/qml/PanelCommunications/CommunicationsPanel.qml:32
+msgid "Compose"
+msgstr "Escrever"
+
+#: src/qml/DetailViewContact/ContactDetails.qml:40
+msgid "Contact Details"
+msgstr "Detalhes do Contato"
+
+#: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:267
+#: src/qml/PanelContacts/ContactsPanel.qml:28
+msgid "Contacts"
+msgstr "Contatos"
+
+#: src/qml/phone-app.qml:245
+#: src/qml/PanelCommunications/CommunicationsPanel.qml:28
+msgid "Conversations"
+msgstr "Conversas"
+
+#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:84
+msgid "Country"
+msgstr "País"
+
+#: src/qml/PanelDialer/Keypad.qml:53
+msgid "DEF"
+msgstr "DEF"
+
+#: src/qml/DetailViewContact/ContactDetails.qml:53
+msgid "Delete"
+msgstr "Apagar"
+
+#. TRANSLATORS: %1 is the duration of the call
+#: src/qml/DetailViewVoicemail/Voicemail.qml:94
+#: src/qml/DetailViewLiveCall/LiveCall.qml:37
+msgid "Dialing"
+msgstr "Discando"
+
+#: src/qml/DetailViewLiveCall/LiveCall.qml:37
+#, qt-format
+msgid "Duration %1"
+msgstr "Duração %1"
+
+#: src/qml/DetailViewContact/ContactDetails.qml:45
+msgid "Edit"
+msgstr "Editar"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:75
+msgid "Email"
+msgstr ""
+
+#: src/qml/PanelDialer/DialerView.qml:50
+msgid "Enter a number"
+msgstr "Entre com um número"
+
+#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:68
+msgid "First"
+msgstr "Primeiro"
+
+#: src/qml/PanelDialer/Keypad.qml:60
+msgid "GHI"
+msgstr "GHI"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:54
+msgid "Google Talk"
+msgstr "Google Talk"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:41
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:46
+msgid "Home"
+msgstr "Casa"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:99
+msgid "IM"
+msgstr "IM"
+
+#: src/qml/PanelDialer/Keypad.qml:67
+msgid "JKL"
+msgstr "JKL"
+
+#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:90
+msgid "Last"
+msgstr "Último"
+
+#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:57
+msgid "Locality"
+msgstr "Localidade"
+
+#: src/qml/PanelDialer/Keypad.qml:74
+msgid "MNO"
+msgstr "MNO"
+
+#: src/qml/Panes/SelectMessagePane.qml:22
+msgid "Messages"
+msgstr "Mensagens"
+
+#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:79
+msgid "Middle"
+msgstr "Meio"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:45
+msgid "Mobile"
+msgstr "Celullar"
+
+#: src/qml/phone-app.qml:478
+msgid "New Contact"
+msgstr "Novo Contato"
+
+#: src/qml/phone-app.qml:473
+#: src/qml/PanelCommunications/CommunicationsPanel.qml:136
+msgid "New Message"
+msgstr "Nova Mensagem"
+
+#: src/qml/OnCallPanel.qml:84
+msgid "On Call"
+msgstr "Em chamada"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:43
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:48
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:57
+msgid "Other"
+msgstr "Outro"
+
+#: src/qml/PanelDialer/Keypad.qml:81
+msgid "PQRS"
+msgstr "PQRS"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:61
+msgid "Phone"
+msgstr "Telefone"
+
+#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:75
+msgid "Postal Code"
+msgstr "Cep"
+
+#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:57
+msgid "Prefix"
+msgstr "Prefixo"
+
+#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:66
+msgid "Region"
+msgstr "Região"
+
+#: src/qml/DetailViewCommunication/MessagesFooter.qml:87
+msgid "Reply via SMS"
+msgstr "Responder via SMS"
+
+#: src/qml/DetailViewContact/ContactDetails.qml:80
+msgid "Save"
+msgstr "Salvar"
+
+#: src/qml/DetailViewCommunication/MessagesFooter.qml:102
+msgid "Send"
+msgstr "Enviar"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:56
+msgid "Skype"
+msgstr "Skype"
+
+#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:47
+msgid "Street"
+msgstr "Rua"
+
+#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:100
+msgid "Suffix"
+msgstr "Sufixo"
+
+#: src/qml/DetailViewLiveCall/BackgroundCall.qml:54
+msgid "Swap Calls"
+msgstr "Alternar Chamadas"
+
+#: src/qml/PanelDialer/Keypad.qml:88
+msgid "TUV"
+msgstr "TUV"
+
+#: src/qml/DetailViewCommunication/NewMessageHeader.qml:59
+msgid "To:"
+msgstr "Para:"
+
+#: src/qml/DetailViewLiveCall/LiveCall.qml:155
+msgid "Unknown Contact"
+msgstr "Contato desconhecido"
+
+#: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99
+msgid "Voicemail"
+msgstr "Caixa de mensagens"
+
+#: src/qml/PanelDialer/Keypad.qml:95
+msgid "WXYZ"
+msgstr "WXYZ"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:42
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:47
+msgid "Work"
+msgstr "Trabalho"
+
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:55
+msgid "Yahoo"
+msgstr "Yahoo"
+
+#: src/qml/DetailViewCommunication/CommunicationDelegate.qml:91
+msgid "missed call"
+msgstr "chamada perdida"
