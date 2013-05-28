@@ -145,7 +145,7 @@ msgstr "Chamada"
 
 #: approver/phoneappapprover.cpp:242
 msgid "Caller number is not available"
-msgstr "Número não disponivél"
+msgstr "Número não disponível"
 
 #: approver/phoneappapprover.cpp:239
 #, qt-format
@@ -294,7 +294,7 @@ msgstr "Meio"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:45
 msgid "Mobile"
-msgstr "Celullar"
+msgstr "Celular"
 
 #: src/qml/phone-app.qml:479
 msgid "New Contact"
