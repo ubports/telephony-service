@@ -202,7 +202,7 @@ void MessagingMenu::showVoicemailEntry(int count)
 
     QString messageBody = C::gettext("Voicemail messages");
     if (count != 0) {
-        messageBody = QString::fromUtf8(C::gettext("%1 voicemail messages").arg(count);
+        messageBody = QString::fromUtf8(C::ngettext("%1 voicemail message", "%1 voicemail messages", count)).arg(count);
     }
 
     GIcon *icon = g_themed_icon_new("indicator-call");

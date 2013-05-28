@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-28 15:34-0300\n"
+"POT-Creation-Date: 2013-05-28 16:30-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Renato Araujo Oliveira Filho <renato@canonical.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -43,8 +43,10 @@ msgstr[1] "chamada de %1 segundos"
 
 #: approver/messagingmenu.cpp:205
 #, qt-format
-msgid "%1 voicemail messages"
-msgstr "%1 mensagens de voz"
+msgid "%1 voicemail message"
+msgid_plural "%1 voicemail messages"
+msgstr[0] "%1 mensagem de voz"
+msgstr[1] "%1 mensagens de voz"
 
 #: src/qml/PanelDialer/Keypad.qml:103
 msgid "*"
