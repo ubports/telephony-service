@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 21:39-0300\n"
+"POT-Creation-Date: 2013-05-28 10:03-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Renato Araujo Oliveira Filho <renato@canonical.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -23,9 +23,9 @@ msgstr "#"
 #: src/qml/dateUtils.js:62
 #, qt-format
 msgid "%1 hour call"
-msgid_plural " %1 hours call"
+msgid_plural "%1 hours call"
 msgstr[0] "chamada de %1 hora"
-msgstr[1] "chamada de %1 hora(s)"
+msgstr[1] "chamada de %1 horas"
 
 #: src/qml/dateUtils.js:64
 #, qt-format
@@ -93,7 +93,7 @@ msgstr "9"
 msgid "ABC"
 msgstr "ABC"
 
-#: approver/phoneappapprover.cpp:269
+#: approver/phoneappapprover.cpp:268
 msgid "Accept"
 msgstr "Aceitar"
 
@@ -129,20 +129,20 @@ msgstr "Endereço"
 msgid "Call"
 msgstr "Chamada"
 
-#: approver/phoneappapprover.cpp:243
+#: approver/phoneappapprover.cpp:242
 msgid "Caller number is not available"
 msgstr "Número não disponivél"
 
-#: approver/phoneappapprover.cpp:240
+#: approver/phoneappapprover.cpp:239
 #, qt-format
 msgid "Calling from %1"
 msgstr "Chamando de %1"
 
-#: approver/phoneappapprover.cpp:236
+#: approver/phoneappapprover.cpp:235
 msgid "Calling from private number"
 msgstr "Chamando de um número privado"
 
-#: approver/phoneappapprover.cpp:238
+#: approver/phoneappapprover.cpp:237
 msgid "Calling from unknown number"
 msgstr "Chamando de um número desconhecido"
 
@@ -186,7 +186,7 @@ msgstr "País"
 msgid "DEF"
 msgstr "DEF"
 
-#: approver/phoneappapprover.cpp:275
+#: approver/phoneappapprover.cpp:274
 msgid "Decline"
 msgstr "Rejeitar"
 
@@ -358,7 +358,7 @@ msgstr "Hoje"
 msgid "Unknown Contact"
 msgstr "Contato desconhecido"
 
-#: approver/phoneappapprover.cpp:230
+#: approver/phoneappapprover.cpp:229
 msgid "Unknown caller"
 msgstr "Contato desconhecido"
 
