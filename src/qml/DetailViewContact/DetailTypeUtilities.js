@@ -67,7 +67,6 @@ var supportedTypes = [
                 hasAction: true,
                 displayField: "number",
                 subTypes: phoneSubTypes,
-                subTypesI18N: phoneSubTypes,
                 showSubtype: true,
                 createOnNew: true
             },
