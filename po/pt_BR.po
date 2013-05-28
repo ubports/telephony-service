@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-27 16:16-0300\n"
+"POT-Creation-Date: 2013-05-27 21:39-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Renato Araujo Oliveira Filho <renato@canonical.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -21,25 +21,25 @@ msgid "#"
 msgstr "#"
 
 #: src/qml/dateUtils.js:62
-#, c-format, qt-plural-format
-msgid "%n hour call"
-msgid_plural "%n hours call"
-msgstr[0] "chamada de %n hora"
-msgstr[1] "chamada de %n horas"
+#, qt-format
+msgid "%1 hour call"
+msgid_plural " %1 hours call"
+msgstr[0] "chamada de %1 hora"
+msgstr[1] "chamada de %1 hora(s)"
 
 #: src/qml/dateUtils.js:64
-#, c-format, qt-plural-format
-msgid "%n minute call"
-msgid_plural "%n minutes call"
-msgstr[0] "chamada de %n minuto"
-msgstr[1] "chamada de %n minutos"
+#, qt-format
+msgid "%1 minute call"
+msgid_plural "%1 minutes call"
+msgstr[0] "chamada de %1 minuto"
+msgstr[1] "chamada de %1 minutos"
 
 #: src/qml/dateUtils.js:66
-#, c-format, qt-plural-format
-msgid "%n second call"
-msgid_plural "%n seconds call"
-msgstr[0] "chamada de %n segundo"
-msgstr[1] "chamada de %n segundos"
+#, qt-format
+msgid "%1 second call"
+msgid_plural "%1 seconds call"
+msgstr[0] "chamada de %1 segundo"
+msgstr[1] "chamada de %1 segundos"
 
 #: src/qml/PanelDialer/Keypad.qml:103
 msgid "*"
