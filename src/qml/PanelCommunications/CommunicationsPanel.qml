@@ -25,11 +25,11 @@ import Ubuntu.Components 0.1
 LocalWidgets.PhonePage {
     id: messageList
     objectName: "communicationPanel"
-    title: "Conversations"
+    title: i18n.tr("Conversations")
     tools: ToolbarActions {
         Action {
             iconSource: Qt.resolvedUrl("../assets/compose.png")
-            text: "Compose"
+            text: i18n.tr("Compose")
             onTriggered: mainView.startNewMessage()
         }
     }
@@ -96,7 +96,7 @@ LocalWidgets.PhonePage {
                 anchors.right: parent.right
                 anchors.rightMargin: units.gu(1)
 
-                //placeholderText: "Search"
+                //placeholderText: i18n.tr("Search")
                 Keys.onEscapePressed: text = ""
                 height: units.gu(4)
 
@@ -133,7 +133,7 @@ LocalWidgets.PhonePage {
 
                 icon: Qt.resolvedUrl("../assets/add_new_message_icon.png")
                 iconFrame: false
-                text: "New Message"
+                text: i18n.tr("New Message")
                 onClicked: mainView.startNewMessage()
                 selected: mainView.communication.loaded && mainView.view.newMessage
             }

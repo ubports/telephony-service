@@ -44,7 +44,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             value: contactModelItem.street
-            description: "Street"
+            description: i18n.tr("Street")
             focus: true
         }
 
@@ -54,7 +54,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             value: contactModelItem.locality
-            description: "Locality"
+            description: i18n.tr("Locality")
         }
 
         AddressEditorField {
@@ -63,7 +63,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             value: contactModelItem.region
-            description: "Region"
+            description: i18n.tr("Region")
         }
 
         AddressEditorField {
@@ -72,7 +72,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             value: contactModelItem.postcode
-            description: "Postal Code"
+            description: i18n.tr("Postal Code")
         }
 
         AddressEditorField {
@@ -81,7 +81,7 @@ FocusScope {
             anchors.left: parent.left
             anchors.right: parent.right
             value: contactModelItem.country
-            description: "Country"
+            description: i18n.tr("Country")
         }
     }
 }

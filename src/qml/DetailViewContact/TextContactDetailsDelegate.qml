@@ -45,13 +45,15 @@ BaseContactDetailsDelegate {
         Label {
             id: subTypeText
 
+            property var subType: detailTypeInfo.showSubtype ? DetailUtils.getDetailSubType(detail) : null
+
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.topMargin: units.gu(1)
             horizontalAlignment: Text.AlignLeft
             height: units.gu(3)
             verticalAlignment: Text.AlignVCenter
-            text: detailTypeInfo.showSubtype ? DetailUtils.getDetailSubType(detail) : detailTypeInfo.name
+            text: subType ? subType.label : detailTypeInfo.name
             fontSize: "small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)

@@ -31,9 +31,13 @@
 #include <TelepathyQt/ReceivedMessage>
 #include <QImage>
 
+namespace C {
+#include <libintl.h>
+}
+
 TextChannelObserver::TextChannelObserver(QObject *parent) :
     QObject(parent)
-{    
+{
 }
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
@@ -44,7 +48,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     }
 
     Tp::ContactPtr contact = message.sender();
-    QString title = QString("SMS from %1").arg(contact->alias());
+    QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(contact->alias());
     QString icon = contact->avatarData().fileName;
     ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(contact->id());
     if (entry) {

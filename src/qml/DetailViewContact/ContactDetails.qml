@@ -37,13 +37,13 @@ LocalWidgets.PhonePage {
 
     onContactChanged: editable = false
 
-    title: "Contact Details"
+    title: i18n.tr("Contact Details")
 
     tools: ToolbarActions {
         lock: editable
 
         Action {
-            text: "Edit"
+            text: i18n.tr("Edit")
             iconSource: Qt.resolvedUrl("../assets/edit.png")
             visible: !editable
             enabled: visible
@@ -52,7 +52,8 @@ LocalWidgets.PhonePage {
 
         Action {
             id: deleteAction
-            text: "Delete"
+
+            text: i18n.tr("Delete")
             iconSource: Qt.resolvedUrl("../assets/delete.png")
             visible: editable && !added
             enabled: visible
@@ -65,7 +66,8 @@ LocalWidgets.PhonePage {
 
         Action {
             id: cancelAction
-            text: "Cancel"
+
+            text: i18n.tr("Cancel")
             iconSource: Qt.resolvedUrl("../assets/cancel.png")
             visible: editable
             enabled: visible
@@ -81,7 +83,8 @@ LocalWidgets.PhonePage {
 
         Action {
             id: saveAction
-            text: "Save"
+
+            text: i18n.tr("Save")
             iconSource: Qt.resolvedUrl("../assets/save.png")
             visible: editable
             enabled: visible

@@ -56,7 +56,7 @@ BaseMessageHeader {
 
         Label {
             id: toText
-            text: "To:"
+            text: i18n.tr("To:")
             fontSize: "small"
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
             anchors {

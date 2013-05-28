@@ -84,7 +84,7 @@ FocusScope {
             Keys.onReturnPressed: sendButton.clicked(null)
             Keys.onEscapePressed: text = ""
             height: units.gu(4)
-            placeholderText: newConversation ? "Compose" : "Reply via SMS"
+            placeholderText: newConversation ? i18n.tr("Compose") : i18n.tr("Reply via SMS")
             autoExpand: true
             maximumLineCount: 0
         }
@@ -99,7 +99,7 @@ FocusScope {
             height: units.gu(4)
             enabled: validRecipient && entry.text != "" && telepathyHelper.connected
             color: "#37b301"
-            text: "Send"
+            text: i18n.tr("Send")
             objectName: "sendMessageButton"
             onClicked: {
                 if(!validRecipient) {
