@@ -18,7 +18,6 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
-import QtQuick.Window 2.0
 import "../Widgets" as LocalWidgets
 import "../PanelDialer"
 import "../"
@@ -364,9 +363,7 @@ LocalWidgets.PhonePage {
         }
     }
 
-    state: (Screen.orientation == Qt.LandscapeOrientation) ||
-           (Screen.orientation == Qt.InvertedLandscapeOrientation) ? "landscape" : ""
-
+    state: width >= units.gu(60) ? "landscape" : ""
     states: [
         State {
             name: "landscape"

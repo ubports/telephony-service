@@ -17,7 +17,6 @@
  */
 
 import QtQuick 2.0
-import QtQuick.Window 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.PhoneApp 0.1
 import "../Widgets" as LocalWidgets
@@ -141,9 +140,7 @@ LocalWidgets.PhonePage {
             }
         }
     }
-
-    state: (Screen.orientation == Qt.LandscapeOrientation) ||
-           (Screen.orientation == Qt.InvertedLandscapeOrientation) ? "landscape" : ""
+    state: width >= units.gu(60) ? "landscape" : ""
     states: [
         State {
             name: "landscape"
@@ -170,7 +167,6 @@ LocalWidgets.PhonePage {
                     left: keypadEntry.right
                     top: undefined
                     bottom: parent.bottom
-                    //verticalCenter: parent.verticalCenter
                 }
             }
 
