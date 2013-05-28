@@ -41,7 +41,6 @@ namespace C {
 #include <libintl.h>
 }
 
-
 #define PHONE_APP_HANDLER TP_QT_IFACE_CLIENT + ".PhoneAppHandler"
 
 PhoneAppApprover::PhoneAppApprover()
