@@ -140,12 +140,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     }
 
     QString text;
-    // TODO: do proper i18n in here.
-    if (call.count > 1) {
-        text = QString("%1 missed calls").arg(call.count);
-    } else {
-        text = QString("1 missed call");
-    }
+    text = QString::fromUtf8(C::ngettext("%1 missed call", "%1 missed calls", call.count)).arg(call.count);
 
     GFile *file = g_file_new_for_path(call.contactIcon.toUtf8().data());
     GIcon *icon = g_file_icon_new(file);

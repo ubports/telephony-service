@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-28 16:30-0300\n"
+"POT-Creation-Date: 2013-05-28 16:33-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,6 +36,13 @@ msgid_plural "%1 minutes call"
 msgstr[0] ""
 msgstr[1] ""
 
+#: approver/messagingmenu.cpp:143
+#, qt-format
+msgid "%1 missed call"
+msgid_plural "%1 missed calls"
+msgstr[0] ""
+msgstr[1] ""
+
 #: src/qml/phone-app.qml:75 src/qml/dateUtils.js:66
 #, qt-format
 msgid "%1 second call"
@@ -43,7 +50,7 @@ msgid_plural "%1 seconds call"
 msgstr[0] ""
 msgstr[1] ""
 
-#: approver/messagingmenu.cpp:205
+#: approver/messagingmenu.cpp:200
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -243,19 +250,19 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: approver/messagingmenu.cpp:166
+#: approver/messagingmenu.cpp:161
 msgid "I missed your call - can you call me now?"
 msgstr ""
 
-#: approver/messagingmenu.cpp:169
+#: approver/messagingmenu.cpp:164
 msgid "I'll be 20 minutes late."
 msgstr ""
 
-#: approver/messagingmenu.cpp:168
+#: approver/messagingmenu.cpp:163
 msgid "I'm busy at the moment. I'll call you later."
 msgstr ""
 
-#: approver/messagingmenu.cpp:167
+#: approver/messagingmenu.cpp:162
 msgid "I'm running late. I'm on my way."
 msgstr ""
 
@@ -355,7 +362,7 @@ msgstr ""
 msgid "Skype"
 msgstr ""
 
-#: approver/messagingmenu.cpp:170
+#: approver/messagingmenu.cpp:165
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr ""
 
@@ -399,7 +406,7 @@ msgstr ""
 msgid "Voicemail"
 msgstr ""
 
-#: approver/messagingmenu.cpp:203
+#: approver/messagingmenu.cpp:198
 msgid "Voicemail messages"
 msgstr ""
 
