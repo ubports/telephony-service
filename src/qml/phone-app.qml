@@ -28,6 +28,7 @@ import "PanelDialer"
 MainView {
     id: mainView
 
+    automaticOrientation: true
     width: singlePane ? units.gu(40) : units.gu(80)
     height: units.gu(71)
 

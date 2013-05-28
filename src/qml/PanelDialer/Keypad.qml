@@ -22,8 +22,13 @@ import Ubuntu.Components 0.1
 Item {
     id: keypad
 
+    property int fontPixelSize: units.dp(43)
+    property int keysWidth: units.gu(11)
+    property int keysHeight: units.gu(8)
+
     width: keys.width
     height: keys.height
+
     signal keyPressed(int keycode, string label)
 
     Grid {
@@ -34,6 +39,9 @@ Item {
         spacing: units.gu(1)
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             label: "1"
             keycode: Qt.Key_1
             onClicked: keypad.keyPressed(keycode, label)
@@ -42,6 +50,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             label: "2"
             sublabel: "ABC"
             keycode: Qt.Key_2
@@ -49,6 +60,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             label: "3"
             sublabel: "DEF"
             keycode: Qt.Key_3
@@ -56,6 +70,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             label: "4"
             sublabel: "GHI"
             keycode: Qt.Key_4
@@ -63,6 +80,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             label: "5"
             sublabel: "JKL"
             keycode: Qt.Key_5
@@ -70,6 +90,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             label: "6"
             sublabel: "MNO"
             keycode: Qt.Key_6
@@ -77,6 +100,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             label: "7"
             sublabel: "PQRS"
             keycode: Qt.Key_7
@@ -84,6 +110,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             label: "8"
             sublabel: "TUV"
             keycode: Qt.Key_8
@@ -91,6 +120,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             label: "9"
             sublabel: "WXYZ"
             keycode: Qt.Key_9
@@ -98,6 +130,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             isCorner: true
             corner: Qt.BottomLeftCorner
             label: "*"
@@ -106,6 +141,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             label: "0"
             sublabel: "+"
             sublabelSize: "medium"
@@ -115,6 +153,9 @@ Item {
         }
 
         KeypadButton {
+            width: keysWidth
+            height: keysHeight
+            labelFontPixelSize: fontPixelSize
             isCorner: true
             corner: Qt.BottomRightCorner
             label: "#"

@@ -18,6 +18,7 @@
 
 import QtQuick 2.0
 import Ubuntu.Components 0.1
+import QtQuick.Window 2.0
 import "../Widgets" as LocalWidgets
 import "../PanelDialer"
 import "../"
@@ -87,7 +88,7 @@ LocalWidgets.PhonePage {
     Flipable {
         id: flipable
         anchors.fill: parent
-        
+
         property bool flipped: false
         transform: Rotation {
             id: rotation
@@ -104,7 +105,7 @@ LocalWidgets.PhonePage {
         }
 
         // avoid events on the wrong view
-        onSideChanged: { 
+        onSideChanged: {
             front.visible = (side == Flipable.Front);
             back.visible = (side == Flipable.Back);
         }
@@ -362,4 +363,115 @@ LocalWidgets.PhonePage {
             }
         }
     }
+
+    state: (Screen.orientation == Qt.LandscapeOrientation) ||
+           (Screen.orientation == Qt.InvertedLandscapeOrientation) ? "landscape" : ""
+
+    states: [
+        State {
+            name: "landscape"
+
+            // Front
+            AnchorChanges {
+                target: header
+                anchors {
+                    left: parent.left
+                    right: undefined
+                    bottom: undefined
+                    top: parent.top
+                }
+            }
+
+            PropertyChanges {
+                target: divider2
+                visible: false
+            }
+
+            AnchorChanges {
+                target: body
+                anchors {
+                    top: parent.top
+                    bottom: undefined
+                    right: parent.right
+                    left: undefined
+                }
+            }
+
+            PropertyChanges {
+                target: body
+                height: units.gu(26)
+            }
+
+            PropertyChanges {
+                target: divider3
+                visible: false
+            }
+
+            AnchorChanges {
+                target: footer
+                anchors {
+                    left: undefined
+                    right: undefined
+                    horizontalCenter: body.horizontalCenter
+                }
+            }
+
+            // back
+            AnchorChanges {
+                target: keypadEntry
+                anchors {
+                    left: parent.left
+                    right: undefined
+                    bottom: undefined
+                    top: keypad.top
+                }
+            }
+
+            PropertyChanges {
+                target: keypadEntry
+                width: parent.width / 2
+                anchors.leftMargin: units.gu(3)
+            }
+
+            AnchorChanges {
+                target: keypad
+                anchors {
+                    horizontalCenter: undefined
+                    right: parent.right
+                    left: keypadEntry.right
+                    top: undefined
+                    bottom: parent.bottom
+                }
+            }
+
+            PropertyChanges {
+                target: keypad
+                keysWidth: units.gu(8)
+                keysHeight: units.gu(6)
+                fontPixelSize: units.dp(30)
+                width: parent.width / 2
+                anchors.leftMargin: units.gu(3)
+                anchors.bottomMargin: units.gu(2)
+            }
+
+            AnchorChanges {
+                target: dialFooter
+                anchors {
+                    left: keypadEntry.left
+                    right: keypadEntry.right
+                }
+            }
+
+            PropertyChanges {
+                target: divider4
+                visible: false
+            }
+
+            PropertyChanges {
+                target: divider5
+                visible: false
+            }
+
+        }
+    ]
 }
