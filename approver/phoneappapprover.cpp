@@ -37,6 +37,10 @@
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/TextChannel>
 
+namespace C {
+#include <libintl.h>
+}
+
 #define PHONE_APP_HANDLER TP_QT_IFACE_CLIENT + ".PhoneAppHandler"
 
 PhoneAppApprover::PhoneAppApprover()
@@ -180,7 +184,7 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
     Tp::ChannelPtr channel = mChannels[pr];
     Tp::ContactPtr contact = channel->initiatorContact();
     Tp::ChannelDispatchOperationPtr dispatchOp = dispatchOperation(op);
-    
+
     if (!dispatchOp) {
         return;
     }
@@ -222,20 +226,20 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
         title = contactEntry->displayLabel();
         icon = contactEntry->avatar().toLocalFile();
     } else {
-        title = "Unknown caller";
+        title = C::gettext("Unknown caller");
     }
 
     QString body;
     if (!contact->id().isEmpty()) {
-        if (contact->id() == "-2") { 
-            body = QString("Calling from private number");
+        if (contact->id() == "-2") {
+            body = QString::fromUtf8(C::gettext("Calling from private number"));
         } else if (contact->id() == "#") {
-            body = QString("Calling from unknown number");
+            body = QString::fromUtf8(C::gettext("Calling from unknown number"));
         } else {
-            body = QString("Calling from %1").arg(contact->id());
+            body = QString::fromUtf8(C::gettext("Calling from %1")).arg(contact->id());
         }
     } else {
-        body = "Caller number is not available";
+        body = C::gettext("Caller number is not available");
     }
 
     if (icon.isEmpty()) {
@@ -261,13 +265,13 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
 
     notify_notification_add_action (notification,
                                     "action_accept",
-                                    "Accept",
+                                    C::gettext("Accept"),
                                     action_accept,
                                     data,
                                     delete_event_data);
     notify_notification_add_action (notification,
                                     "action_decline_1",
-                                    "Decline",
+                                    C::gettext("Decline"),
                                     action_reject,
                                     data,
                                     delete_event_data);
@@ -360,9 +364,9 @@ void PhoneAppApprover::onHangupFinished(Tp::PendingOperation* op)
 
     // FIXME: we do not call requestClose() here because
     // the channel will be forced to close without emiting the proper
-    // stateChanged() signals. This would cause the app 
+    // stateChanged() signals. This would cause the app
     // not to register call events as it would never receive the
-    // "ended" state. Better to check how other connection 
+    // "ended" state. Better to check how other connection
     // managers deal with this case.
     mDispatchOps.removeAll(dispatchOperation(op));
     mChannels.remove(op);

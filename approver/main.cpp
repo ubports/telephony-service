@@ -33,9 +33,16 @@
 #include <TelepathyQt/AccountManager>
 #include <TelepathyQt/Contact>
 
+namespace C {
+#include <libintl.h>
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
+
+    C::bindtextdomain( "phone-app", "/usr/share/locale" );
+    C::textdomain("phone-app");
 
     notify_init("Phone App Approver");
 
