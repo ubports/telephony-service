@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-05-28 10:03-0300\n"
+"POT-Creation-Date: 2013-05-28 15:34-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Renato Araujo Oliveira Filho <renato@canonical.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -34,12 +34,17 @@ msgid_plural "%1 minutes call"
 msgstr[0] "chamada de %1 minuto"
 msgstr[1] "chamada de %1 minutos"
 
-#: src/qml/dateUtils.js:66
+#: src/qml/phone-app.qml:75 src/qml/dateUtils.js:66
 #, qt-format
 msgid "%1 second call"
 msgid_plural "%1 seconds call"
 msgstr[0] "chamada de %1 segundo"
 msgstr[1] "chamada de %1 segundos"
+
+#: approver/messagingmenu.cpp:205
+#, qt-format
+msgid "%1 voicemail messages"
+msgstr "%1 mensagens de voz"
 
 #: src/qml/PanelDialer/Keypad.qml:103
 msgid "*"
@@ -97,7 +102,7 @@ msgstr "ABC"
 msgid "Accept"
 msgstr "Aceitar"
 
-#: src/qml/phone-app.qml:477 src/qml/PanelContacts/ContactsPanel.qml:32
+#: src/qml/phone-app.qml:478 src/qml/PanelContacts/ContactsPanel.qml:32
 msgid "Add"
 msgstr "Adicionar"
 
@@ -125,7 +130,7 @@ msgstr "Adicionar uma conta online"
 msgid "Address"
 msgstr "Endereço"
 
-#: src/qml/phone-app.qml:234 src/qml/PanelDialer/DialerView.qml:25
+#: src/qml/phone-app.qml:235 src/qml/PanelDialer/DialerView.qml:25
 msgid "Call"
 msgstr "Chamada"
 
@@ -159,7 +164,7 @@ msgid "Communication"
 msgstr "Comunicação"
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:87
-#: src/qml/phone-app.qml:472
+#: src/qml/phone-app.qml:473
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:32
 msgid "Compose"
 msgstr "Escrever"
@@ -168,12 +173,12 @@ msgstr "Escrever"
 msgid "Contact Details"
 msgstr "Detalhes do Contato"
 
-#: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:267
+#: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:268
 #: src/qml/PanelContacts/ContactsPanel.qml:28
 msgid "Contacts"
 msgstr "Contatos"
 
-#: src/qml/phone-app.qml:245
+#: src/qml/phone-app.qml:246
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:28
 msgid "Conversations"
 msgstr "Conversas"
@@ -234,6 +239,22 @@ msgstr "Google Talk"
 msgid "Home"
 msgstr "Casa"
 
+#: approver/messagingmenu.cpp:166
+msgid "I missed your call - can you call me now?"
+msgstr "Eu perdi sua ligação - você pode me ligar agora?"
+
+#: approver/messagingmenu.cpp:169
+msgid "I'll be 20 minutes late."
+msgstr "Vou chegar 20 minutos atrasado."
+
+#: approver/messagingmenu.cpp:168
+msgid "I'm busy at the moment. I'll call you later."
+msgstr "Estou ocupado no momento. Te ligo mais tarde."
+
+#: approver/messagingmenu.cpp:167
+msgid "I'm running late. I'm on my way."
+msgstr "Eu estou atrasado. Eu estou a caminho."
+
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:99
 msgid "IM"
 msgstr "IM"
@@ -266,11 +287,11 @@ msgstr "Meio"
 msgid "Mobile"
 msgstr "Celullar"
 
-#: src/qml/phone-app.qml:478
+#: src/qml/phone-app.qml:479
 msgid "New Contact"
 msgstr "Novo Contato"
 
-#: src/qml/phone-app.qml:473
+#: src/qml/phone-app.qml:474
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:136
 msgid "New Message"
 msgstr "Nova Mensagem"
@@ -330,6 +351,10 @@ msgstr "Enviar"
 msgid "Skype"
 msgstr "Skype"
 
+#: approver/messagingmenu.cpp:170
+msgid "Sorry, I'm still busy. I'll call you later."
+msgstr "Descupas, eu continuo ocupado. Eu te ligo depois."
+
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:47
 msgid "Street"
 msgstr "Rua"
@@ -368,6 +393,10 @@ msgstr "Número desconhecido"
 
 #: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99
 msgid "Voicemail"
+msgstr "Caixa de mensagens"
+
+#: approver/messagingmenu.cpp:203
+msgid "Voicemail messages"
 msgstr "Caixa de mensagens"
 
 #: src/qml/PanelDialer/Keypad.qml:95

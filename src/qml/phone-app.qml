@@ -72,6 +72,7 @@ MainView {
 
     Component.onCompleted: {
         i18n.domain = "phone-app"
+        console.debug(i18n.tr("%1 second call", "%1 seconds call", 10).arg(10))
     }
 
     Connections {
