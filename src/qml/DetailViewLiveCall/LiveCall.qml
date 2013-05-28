@@ -372,11 +372,14 @@ LocalWidgets.PhonePage {
             AnchorChanges {
                 target: header
                 anchors {
-                    left: parent.left
-                    right: undefined
-                    bottom: undefined
-                    top: parent.top
+                    right: parent.right
+                    left: undefined
                 }
+            }
+
+            PropertyChanges {
+                target: header
+                width: parent.width / 2
             }
 
             PropertyChanges {
@@ -387,16 +390,17 @@ LocalWidgets.PhonePage {
             AnchorChanges {
                 target: body
                 anchors {
-                    top: parent.top
-                    bottom: undefined
-                    right: parent.right
-                    left: undefined
+                    right: undefined
+                    left: parent.left
+                    verticalCenter: parent.verticalCenter
                 }
             }
 
             PropertyChanges {
                 target: body
                 height: units.gu(26)
+                width: header.width
+                anchors.leftMargin: 0
             }
 
             PropertyChanges {
@@ -407,9 +411,8 @@ LocalWidgets.PhonePage {
             AnchorChanges {
                 target: footer
                 anchors {
-                    left: undefined
-                    right: undefined
-                    horizontalCenter: body.horizontalCenter
+                    left: header.left
+                    right: header.right
                 }
             }
 
@@ -417,8 +420,7 @@ LocalWidgets.PhonePage {
             AnchorChanges {
                 target: keypadEntry
                 anchors {
-                    left: parent.left
-                    right: undefined
+                    left: undefined
                     bottom: undefined
                     top: keypad.top
                 }
@@ -427,15 +429,14 @@ LocalWidgets.PhonePage {
             PropertyChanges {
                 target: keypadEntry
                 width: parent.width / 2
-                anchors.leftMargin: units.gu(3)
+                anchors.rightMargin: units.gu(2)
             }
 
             AnchorChanges {
                 target: keypad
                 anchors {
-                    horizontalCenter: undefined
-                    right: parent.right
-                    left: keypadEntry.right
+                    left: parent.left
+                    right: undefined
                     top: undefined
                     bottom: parent.bottom
                 }

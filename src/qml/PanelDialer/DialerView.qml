@@ -147,8 +147,7 @@ LocalWidgets.PhonePage {
             AnchorChanges {
                 target: keypadEntry
                 anchors {
-                    left: parent.left
-                    right: undefined
+                    left: undefined
                     bottom: undefined
                     top: keypad.top
                 }
@@ -157,14 +156,14 @@ LocalWidgets.PhonePage {
             PropertyChanges {
                 target: keypadEntry
                 width: parent.width / 2
-                anchors.leftMargin: units.gu(3)
+                anchors.rightMargin: units.gu(2)
             }
 
             AnchorChanges {
                 target: keypad
                 anchors {
-                    right: parent.right
-                    left: keypadEntry.right
+                    left: parent.left
+                    right: undefined
                     top: undefined
                     bottom: parent.bottom
                 }
@@ -176,7 +175,7 @@ LocalWidgets.PhonePage {
                 keysHeight: units.gu(6)
                 fontPixelSize: units.dp(30)
                 width: parent.width / 2
-                anchors.leftMargin: units.gu(3)
+                anchors.leftMargin: units.gu(2)
                 anchors.bottomMargin: units.gu(2)
             }
 
