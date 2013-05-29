@@ -26,6 +26,7 @@ Button {
     height: units.gu(8)
 
     property alias label: labelItem.text
+    property alias labelFontPixelSize: labelItem.font.pixelSize
     property alias sublabel: sublabelItem.text
     property alias sublabelSize: sublabelItem.fontSize
     property alias iconSource: subImage.source
@@ -36,9 +37,8 @@ Button {
 
     BorderImage {
         id: shape
-        anchors.centerIn: parent
-        width: units.gu(11)
-        height: units.gu(8)
+
+        anchors.fill: parent
         source: pressed ? "../assets/dialer_pad_bg_pressed.sci" : "../assets/dialer_pad_bg.sci"
     }
 
