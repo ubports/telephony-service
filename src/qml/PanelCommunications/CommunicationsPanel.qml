@@ -26,6 +26,16 @@ LocalWidgets.PhonePage {
     id: messageList
     objectName: "communicationPanel"
     title: i18n.tr("Conversations")
+    onActiveChanged: {
+        // workaround to scroll ListView to the top. 
+        // We currently place the search bar inside the
+        // ListView header, and it is not taken into
+        // account when calculating the header offset.
+        // Ref.: https://bugs.launchpad.net/phone-app/+bug/1181362
+        if (active) {
+            communicationsList.contentY = -communicationsList.headerItem.height-header.height
+        }
+    }
     tools: ToolbarActions {
         Action {
             iconSource: Qt.resolvedUrl("../assets/compose.png")

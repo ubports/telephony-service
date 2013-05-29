@@ -26,6 +26,17 @@ import Ubuntu.Components.ListItems 0.1 as ListItem
 LocalWidgets.PhonePage {
     id: contactsPanel
     title: i18n.tr("Contacts")
+    onActiveChanged: {
+        // workaround to scroll ListView to the top.
+        // We currently place the search bar inside the
+        // ListView header, and it is not taken into
+        // account when calculating the header offset.
+        // Ref.: https://bugs.launchpad.net/phone-app/+bug/1181362
+        if (active) {
+            contactsList.contentY = -contactsList.headerItem.height-
+header.height
+        }
+    }
 
     tools: ToolbarActions {
         Action {
