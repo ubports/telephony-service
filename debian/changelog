@@ -1,8 +1,10 @@
-phone-app (0.59.12-0ubuntu2) UNRELEASED; urgency=low
+phone-app (0.59.12-0ubuntu2) raring; urgency=low
 
   * Allow toggling favorite even when not editing a contact (LP: #1185064).
+  * Prevent the search field from being partially covered by the 
+  view header (LP: 1181362).
 
- -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 29 May 2013 00:10:30 -0300
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 29 May 2013 15:06:30 -0300
 
 phone-app (0.59.12-0ubuntu1) raring; urgency=low
 
@@ -10,13 +12,6 @@ phone-app (0.59.12-0ubuntu1) raring; urgency=low
   * Added i18n support;
 
  -- Renato Araujo Oliveira Filho <renato@canonical.com>  Tue, 28 May 2013 19:48:07 -0300
-
-phone-app (0.59.11-0ubuntu2) UNRELEASED; urgency=low
-
-  * Prevent the search field from being partially covered by the 
-  view header (LP: 1181362).
-
- -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 27 May 2013 14:21:34 -0300
 
 phone-app (0.59.11-0ubuntu1) raring; urgency=low
 
