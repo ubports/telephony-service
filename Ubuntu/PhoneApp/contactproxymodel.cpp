@@ -93,7 +93,7 @@ bool ContactProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     }
 
     if (mFavoriteOnly) {
-        if (!entry->favorite())
+        if (!entry->isFavorite())
             return false;
     }
 
@@ -121,9 +121,9 @@ bool ContactProxyModel::lessThan(const QModelIndex &left, const QModelIndex &rig
     QString leftString = left.data().toString();
     QString rightString = right.data().toString();
 
-    if (leftContact->favorite() == rightContact->favorite()) {
+    if (leftContact->isFavorite() == rightContact->isFavorite()) {
         return leftString.toLower().localeAwareCompare(rightString.toLower()) < 0;
     }
-    return leftContact->favorite();
+    return leftContact->isFavorite();
 }
 

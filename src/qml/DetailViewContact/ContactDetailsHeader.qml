@@ -72,14 +72,14 @@ FocusScope {
         height: units.gu(2)
         width: units.gu(2)
         anchors.rightMargin: units.gu(1)
-        source: contact.favorite ? "../assets/favorite-selected.png" : "../assets/favorite-unselected.png"
+        source: contact.isFavorite ? "../assets/favorite-selected.png" : "../assets/favorite-unselected.png"
 
         MouseArea {
             anchors.centerIn: parent
             height: units.gu(3)
             width: units.gu(3)
             onClicked: {
-                contact.favorite = !contact.favorite
+                contact.isFavorite = !contact.isFavorite
                 if (!editable) {
                     contactDetailsHeader.favoriteSaved()
                 }

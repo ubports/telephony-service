@@ -58,14 +58,14 @@ QString ContactEntry::idString() const
     return id().toString();
 }
 
-bool ContactEntry::favorite() const
+bool ContactEntry::isFavorite() const
 {
     return mContact.detail<QContactFavorite>().isFavorite();
 }
 
 void ContactEntry::setFavorite(bool value)
 {
-    if (value != favorite()) {
+    if (value != isFavorite()) {
         QContactFavorite favorite = mContact.detail<QContactFavorite>();
         favorite.setFavorite(value);
         mContact.saveDetail(&favorite);
@@ -90,7 +90,7 @@ void ContactEntry::setDisplayLabel(const QString &value)
 
 QString ContactEntry::initial() const
 {
-    if (favorite()) {
+    if (isFavorite()) {
         return "Favourites";
     }
     QString label = displayLabel();
