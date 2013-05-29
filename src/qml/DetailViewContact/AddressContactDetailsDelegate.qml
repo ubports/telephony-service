@@ -52,11 +52,14 @@ BaseContactDetailsDelegate {
         Label {
             id: subTypeText
 
+            property var subType: detailTypeInfo.showSubtype ? DetailUtils.getDetailSubType(detail) : null
+
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.topMargin: units.gu(1)
             height: units.gu(3)
-            text: detailTypeInfo.showSubtype ? DetailUtils.getDetailSubType(detail) : detailTypeInfo.name
+
+            text: subType ? subType.label : detailTypeInfo.name
             fontSize: "small"
             verticalAlignment: Text.AlignVCenter
         }

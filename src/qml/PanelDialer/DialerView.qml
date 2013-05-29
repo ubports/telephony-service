@@ -22,7 +22,7 @@ import Ubuntu.PhoneApp 0.1
 import "../Widgets" as LocalWidgets
 
 LocalWidgets.PhonePage {
-    title: "Call"
+    title: i18n.tr("Call")
     property string voicemailNumber: callManager.voicemailNumber
     property alias dialNumber: keypadEntry.value
     property alias input: keypadEntry.input
@@ -37,24 +37,31 @@ LocalWidgets.PhonePage {
     }
 
     FocusScope {
+        id: keypadContainer
+
         anchors.fill: parent
         focus: true
 
         KeypadEntry {
             id: keypadEntry
 
-            anchors.top: parent.top
+            anchors.bottom: keypad.top
             anchors.left: parent.left
             anchors.right: parent.right
+            anchors.bottomMargin: units.gu(2)
+
             focus: true
-            placeHolder: "Enter a number"
+            placeHolder: i18n.tr("Enter a number")
             Keys.forwardTo: [callButton]
         }
 
         Keypad {
             id: keypad
 
-            anchors.top: keypadEntry.bottom
+            anchors.bottom: footer.top
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottomMargin: units.gu(2)
+
             onKeyPressed: {
                 if (input.cursorPosition != 0)  {
                     var position = input.cursorPosition;
@@ -64,8 +71,6 @@ LocalWidgets.PhonePage {
                     keypadEntry.value += label
                 }
             }
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.topMargin: units.gu(3)
         }
 
         Item {
@@ -135,4 +140,57 @@ LocalWidgets.PhonePage {
             }
         }
     }
+    state: width >= units.gu(60) ? "landscape" : ""
+    states: [
+        State {
+            name: "landscape"
+            AnchorChanges {
+                target: keypadEntry
+                anchors {
+                    left: undefined
+                    bottom: undefined
+                    top: keypad.top
+                }
+            }
+
+            PropertyChanges {
+                target: keypadEntry
+                width: parent.width / 2
+                anchors.rightMargin: units.gu(2)
+            }
+
+            AnchorChanges {
+                target: keypad
+                anchors {
+                    left: parent.left
+                    right: undefined
+                    top: undefined
+                    bottom: parent.bottom
+                }
+            }
+
+            PropertyChanges {
+                target: keypad
+                keysWidth: units.gu(8)
+                keysHeight: units.gu(6)
+                fontPixelSize: units.dp(30)
+                width: parent.width / 2
+                anchors.leftMargin: units.gu(2)
+                anchors.bottomMargin: units.gu(2)
+            }
+
+            AnchorChanges {
+                target: footer
+                anchors {
+                    left: keypadEntry.left
+                    right: keypadEntry.right
+                }
+            }
+
+            PropertyChanges {
+                target: divider3
+                visible: false
+            }
+        }
+    ]
 }

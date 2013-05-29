@@ -23,7 +23,7 @@ import "../dateUtils.js" as DateUtils
 Item {
     id: communicationDelegate
     property string itemType
-    property string message: "Test"
+    property string message
     property alias itemIcon: icon.source
     property bool incoming: false
     property variant timestamp
@@ -97,9 +97,9 @@ Item {
             function selectMessage() {
                 if (communicationDelegate.itemType == "call") {
                     if (missed) {
-                        return "missed call";
+                        return i18n.tr("missed call");
                     } else {
-                        return DateUtils.formatFriendlyCallDuration(item.duration) + " call";
+                        return DateUtils.formatFriendlyCallDuration(item.duration);
                     }
                 } else {
                     return communicationDelegate.message;

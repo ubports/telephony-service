@@ -47,6 +47,7 @@
 
 #include <glib-object.h>
 
+
 void Components::initializeEngine(QQmlEngine *engine, const char *uri)
 {
     Q_ASSERT(engine);

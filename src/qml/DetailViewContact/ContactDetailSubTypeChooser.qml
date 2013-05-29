@@ -25,7 +25,7 @@ Item {
 
     property variant detail
     property variant detailTypeInfo
-    property alias selectedValue: selectedText.text
+    property alias selectedValue: selectedText.subType
     property bool active: false
     enabled: visible
     height: subTypesRow.height
@@ -34,17 +34,20 @@ Item {
 
     Label {
         id: selectedText
+
+        property var subType: {
+            // Use first allowed subtype as default in case there's no detail or no subType
+            var subType = DetailUtils.getDetailSubType(detail)
+            if (subType.value == "" && detailTypeInfo.subTypes) return detailTypeInfo.subTypes[0]
+            else return subType
+        }
+
         anchors.left:  subTypesRow.left
         anchors.verticalCenter: subTypesRow.verticalCenter
         fontSize: "small"
         visible: !active
 
-        text: {
-            // Use first allowed subtype as default in case there's no detail or no subType
-            var subType = DetailUtils.getDetailSubType(detail)
-            if (subType == "" && detailTypeInfo.subTypes) return detailTypeInfo.subTypes[0]
-            else return subType
-        }
+        text: subType ? subType.label : ""
     }
 
     MouseArea {
@@ -81,8 +84,8 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     fontSize: "small"
-                    color: text == selectedValue ? "#dd4814" : Qt.rgba(0.4, 0.4, 0.4, 1.0)
-                    text: modelData
+                    color: text == selectedValue.label ? "#dd4814" : Qt.rgba(0.4, 0.4, 0.4, 1.0)
+                    text: modelData.label
                 }
             }
         }

@@ -8,6 +8,7 @@ usr/share/notify-osd/icons/gnome/scalable/status/notification-unknown-call.svg
 usr/share/notify-osd/icons/gnome/scalable/status/notification-unavailable-image-call.svg
 usr/share/notify-osd/icons/gnome/scalable/status/notification-group-call.svg
 usr/share/icons/ubuntu-mono-light/status/*/indicator-call.svg
+usr/share/locale/*/LC_MESSAGES/phone-app.mo
 usr/share/phone-app/*.qml
 usr/share/phone-app/*.js
 usr/share/phone-app/DetailViewCommunication

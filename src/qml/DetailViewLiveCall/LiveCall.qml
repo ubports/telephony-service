@@ -33,7 +33,8 @@ LocalWidgets.PhonePage {
     property bool isMuted: call ? call.muted : false
     property alias isDtmf: flipable.flipped
 
-    title: call && call.dialing ? "Dialing" : "Duration " + stopWatch.elapsed
+    // TRANSLATORS: %1 is the duration of the call
+    title: call && call.dialing ? i18n.tr("Dialing") : i18n.tr("Duration %1").arg(stopWatch.elapsed)
     tools: ToolbarActions {
         active: false
         lock: true
@@ -87,7 +88,7 @@ LocalWidgets.PhonePage {
     Flipable {
         id: flipable
         anchors.fill: parent
-        
+
         property bool flipped: false
         transform: Rotation {
             id: rotation
@@ -104,7 +105,7 @@ LocalWidgets.PhonePage {
         }
 
         // avoid events on the wrong view
-        onSideChanged: { 
+        onSideChanged: {
             front.visible = (side == Flipable.Front);
             back.visible = (side == Flipable.Back);
         }
@@ -151,7 +152,7 @@ LocalWidgets.PhonePage {
                     anchors.top: picture.top
                     anchors.left: picture.right
                     anchors.leftMargin: units.gu(2)
-                    text: contact ? contact.displayLabel : "Unknown Contact"
+                    text: contact ? contact.displayLabel : i18n.tr("Unknown Contact")
                     color: "#a0a0a2"
                     fontSize: "large"
                 }
@@ -362,4 +363,114 @@ LocalWidgets.PhonePage {
             }
         }
     }
+
+    state: width >= units.gu(60) ? "landscape" : ""
+    states: [
+        State {
+            name: "landscape"
+
+            // Front
+            AnchorChanges {
+                target: header
+                anchors {
+                    right: parent.right
+                    left: undefined
+                }
+            }
+
+            PropertyChanges {
+                target: header
+                width: parent.width / 2
+            }
+
+            PropertyChanges {
+                target: divider2
+                visible: false
+            }
+
+            AnchorChanges {
+                target: body
+                anchors {
+                    right: undefined
+                    left: parent.left
+                    verticalCenter: parent.verticalCenter
+                }
+            }
+
+            PropertyChanges {
+                target: body
+                height: units.gu(26)
+                width: header.width
+                anchors.leftMargin: 0
+            }
+
+            PropertyChanges {
+                target: divider3
+                visible: false
+            }
+
+            AnchorChanges {
+                target: footer
+                anchors {
+                    left: header.left
+                    right: header.right
+                }
+            }
+
+            // back
+            AnchorChanges {
+                target: keypadEntry
+                anchors {
+                    left: undefined
+                    bottom: undefined
+                    top: keypad.top
+                }
+            }
+
+            PropertyChanges {
+                target: keypadEntry
+                width: parent.width / 2
+                anchors.rightMargin: units.gu(2)
+            }
+
+            AnchorChanges {
+                target: keypad
+                anchors {
+                    left: parent.left
+                    right: undefined
+                    top: undefined
+                    bottom: parent.bottom
+                }
+            }
+
+            PropertyChanges {
+                target: keypad
+                keysWidth: units.gu(8)
+                keysHeight: units.gu(6)
+                fontPixelSize: units.dp(30)
+                width: parent.width / 2
+                anchors.leftMargin: units.gu(3)
+                anchors.bottomMargin: units.gu(2)
+            }
+
+            AnchorChanges {
+                target: dialFooter
+                anchors {
+                    left: keypadEntry.left
+                    right: keypadEntry.right
+                }
+            }
+
+            PropertyChanges {
+                target: divider4
+                visible: false
+            }
+
+            PropertyChanges {
+                target: divider5
+                visible: false
+            }
+
+        }
+    ]
 }

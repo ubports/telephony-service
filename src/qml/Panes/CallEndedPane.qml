@@ -19,6 +19,6 @@
 import QtQuick 2.0
 
 NotificationPane {
-    title: "Calls"
+    title: i18n.tr("Calls")
     image: "../assets/pane_call_icon.png"
 }

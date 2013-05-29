@@ -28,7 +28,7 @@ LocalWidgets.PhonePage {
     property QtObject call: callManager.foregroundCall
     property string number: callManager.voicemailNumber
 
-    title: "Voicemail"
+    title: i18n.tr("Voicemail")
 
     Component.onDestruction: {
         // if this view was destroyed but we still have
@@ -91,7 +91,7 @@ LocalWidgets.PhonePage {
                 anchors.topMargin: units.gu(2)
                 anchors.top: number.bottom
 
-                text: "Dialing"
+                text: i18n.tr("Dialing")
                 color: "#a0a0a2"
                 style: Text.Sunken
                 styleColor: Qt.rgba(0.0, 0.0, 0.0, 0.5)

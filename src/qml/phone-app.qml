@@ -28,6 +28,7 @@ import "PanelDialer"
 MainView {
     id: mainView
 
+    automaticOrientation: true
     width: singlePane ? units.gu(40) : units.gu(80)
     height: units.gu(71)
 
@@ -68,6 +69,11 @@ MainView {
             mainStack.clear();
             leftPane.parent = mainView;
         }
+    }
+
+    Component.onCompleted: {
+        i18n.domain = "phone-app"
+        console.debug(i18n.tr("%1 second call", "%1 seconds call", 10).arg(10))
     }
 
     Connections {
@@ -227,7 +233,7 @@ MainView {
                 property string panel: "PanelDialer/DialerView.qml"
                 property bool isCurrent: tabs.selectedTabIndex == 0
 
-                title: "Call"
+                title: i18n.tr("Call")
                 iconSource: isCurrent ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
                 page: Loader {
                     source: callsTab.panel
@@ -238,7 +244,7 @@ MainView {
             Tab {
                 id: communicationsTab
                 objectName: "communicationsTab"
-                title: "Conversations"
+                title: i18n.tr("Conversations")
                 iconSource: isCurrent ? "assets/tab_icon_messaging_active.png" : "assets/tab_icon_messaging_inactive.png"
 
                 property string pane: "Panes/SelectMessagePane.qml"
@@ -260,7 +266,7 @@ MainView {
                 property string panel: "PanelContacts/ContactsPanel.qml"
                 property bool isCurrent: tabs.selectedTabIndex == 2
 
-                title: "Contacts"
+                title: i18n.tr("Contacts")
                 iconSource: isCurrent ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
                 page: Loader {
                     source: contactsTab.panel
@@ -465,13 +471,13 @@ MainView {
             }
 
             HUD.Action {
-                label: "Compose"
-                keywords: "New Message"
+                label: i18n.tr("Compose")
+                keywords: i18n.tr("New Message")
                 onTriggered: mainView.startNewMessage()
             }
             HUD.Action {
-                label: "Add"
-                keywords: "New Contact"
+                label: i18n.tr("Add")
+                keywords: i18n.tr("New Contact")
                 onTriggered: mainView.createNewContact()
             }
         }

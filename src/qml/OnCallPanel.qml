@@ -81,7 +81,7 @@ AbstractButton {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            text: "On Call"
+            text: i18n.tr("On Call")
             fontSize: "small"
             elide: Text.ElideRight
             color: Qt.rgba(0.4, 0.4, 0.4, 1.0)
@@ -96,7 +96,7 @@ AbstractButton {
             text: {
                 if (call) {
                     if (call.voicemail) {
-                        "Voicemail"
+                        i18n.tr("Voicemail")
                     } else {
                         call.phoneNumber
                     }
