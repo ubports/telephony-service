@@ -28,6 +28,7 @@ FocusScope {
     property variant editable: false
     property alias contactNameValid: name.valid
     property color backgroundColor: "transparent"
+    signal favoriteSaved()
 
     width: parent.width
     // ensure that there is equal padding at the top and bottom of labelBox
@@ -71,12 +72,18 @@ FocusScope {
         height: units.gu(2)
         width: units.gu(2)
         anchors.rightMargin: units.gu(1)
-        source: contact.isFavorite ? "../assets/favorite-selected.png" : "../assets/favorite-unselected.png"
+        source: contact.favorite ? "../assets/favorite-selected.png" : "../assets/favorite-unselected.png"
 
         MouseArea {
-            enabled: editable
-            anchors.fill: parent
-            onClicked: contact.isFavorite = !contact.isFavorite
+            anchors.centerIn: parent
+            height: units.gu(3)
+            width: units.gu(3)
+            onClicked: {
+                contact.favorite = !contact.favorite
+                if (!editable) {
+                    contactDetailsHeader.favoriteSaved()
+                }
+            }
         }
     }
 

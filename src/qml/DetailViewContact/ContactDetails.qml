@@ -98,6 +98,7 @@ LocalWidgets.PhonePage {
         editable: contactDetails.editable
         focus: true
         backgroundColor: "#ededed"
+        onFavoriteSaved: contactDetails.save()
     }
 
     function createNewContact(number) {
