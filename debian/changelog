@@ -1,4 +1,4 @@
-phone-app (0.59.12-0ubuntu3) UNRELEASED; urgency=low
+phone-app (0.59.12-0ubuntu3) raring; urgency=low
 
   * Set favorite detail as modified when necessary (LP: #1185036).
 
