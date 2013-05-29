@@ -25,7 +25,6 @@ import Ubuntu.Components 0.1
 LocalWidgets.PhonePage {
     id: messageList
     objectName: "communicationPanel"
-    title: "Conversations"
     title: i18n.tr("Conversations")
     onActiveChanged: {
         // workaround to scroll ListView to the top. 
