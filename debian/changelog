@@ -1,3 +1,9 @@
+phone-app (0.59.12-0ubuntu2) UNRELEASED; urgency=low
+
+  * Allow toggling favorite even when not editing a contact (LP: #1185064).
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 29 May 2013 00:10:30 -0300
+
 phone-app (0.59.12-0ubuntu1) raring; urgency=low
 
   * Added rotation support;
