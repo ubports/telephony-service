@@ -1,3 +1,9 @@
+phone-app (0.59.12-0ubuntu4) UNRELEASED; urgency=low
+
+  * Make the search bar always visible on contacts panel
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Thu, 30 May 2013 00:28:19 -0300
+
 phone-app (0.59.12-0ubuntu3) raring; urgency=low
 
   * Set favorite detail as modified when necessary (LP: #1185036).
