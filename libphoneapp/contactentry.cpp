@@ -69,6 +69,7 @@ void ContactEntry::setFavorite(bool value)
         QContactFavorite favorite = mContact.detail<QContactFavorite>();
         favorite.setFavorite(value);
         mContact.saveDetail(&favorite);
+        setModified(true);
         Q_EMIT changed(this);
     }
 }

@@ -1,3 +1,9 @@
+phone-app (0.59.12-0ubuntu3) raring; urgency=low
+
+  * Set favorite detail as modified when necessary (LP: #1185036).
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 29 May 2013 19:14:23 -0300
+
 phone-app (0.59.12-0ubuntu2) raring; urgency=low
 
   * Allow toggling favorite even when not editing a contact (LP: #1185064).
