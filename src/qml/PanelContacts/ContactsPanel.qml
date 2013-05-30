@@ -33,8 +33,7 @@ LocalWidgets.PhonePage {
         // account when calculating the header offset.
         // Ref.: https://bugs.launchpad.net/phone-app/+bug/1181362
         if (active) {
-            contactsList.contentY = -contactsList.headerItem.height-
-header.height
+            contactsList.contentY = -searchBar.height-header.height
         }
     }
 
@@ -54,6 +53,11 @@ header.height
     ContactProxyModel {
         id: contactProxyModel
         model: contactModel
+        onCountChanged: {
+            if (searchQuery != "") {
+                contactsList.contentY = -searchBar.height-header.height
+            }
+        }
     }
 
     Component {
@@ -66,12 +70,58 @@ header.height
         }
     }
 
+    Item {
+        id: searchBar
+        y: contactsPanel.header.y + contactsPanel.header.height + units.gu(1)
+        x: contactsPanel.header.x
+        height: contactsSearchBox.height + units.gu(1)
+        anchors.left: parent.left
+        anchors.right: parent.right
+        z: 1
+
+        TextField {
+            id: contactsSearchBox
+            objectName: "contactsSearchBox"
+
+            anchors.left: parent.left
+            anchors.leftMargin: units.gu(1)
+            anchors.right: parent.right
+            anchors.rightMargin: units.gu(1)
+            height: units.gu(4)
+            z: 2
+
+            //placeholderText: i18n.tr("Search")
+            Keys.onEscapePressed: text = ""
+            onTextChanged: {
+                contactsPanel.header.y = 0
+            }
+
+            primaryItem: AbstractButton {
+                width: units.gu(3)
+                Image {
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: units.gu(0.5)
+                    source: "../assets/search.png"
+                }
+                onClicked: contactsSearchBox.text = ""
+            }
+
+            Binding {
+                target: contactsPanel
+                property: "searchQuery"
+                value: contactsSearchBox.text
+            }
+        }
+    }
+
+
     ListView {
         id: contactsList
         objectName: "contactsList"
 
         anchors.top: parent.top
-        anchors.topMargin: units.gu(1)
+        anchors.topMargin: searchBar.height
         anchors.bottom: keyboard.top
         anchors.left: parent.left
         anchors.right: parent.right
@@ -79,65 +129,7 @@ header.height
         model: contactProxyModel
         cacheBuffer: height * 2
         currentIndex: -1
-
-        header: Column {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            spacing: units.gu(1)
-
-            TextField {
-                id: contactsSearchBox
-                objectName: "contactsSearchBox"
-
-                anchors.left: parent.left
-                anchors.leftMargin: units.gu(1)
-                anchors.right: parent.right
-                anchors.rightMargin: units.gu(1)
-                height: units.gu(4)
-
-                //placeholderText: i18n.tr("Search")
-                Keys.onEscapePressed: text = ""
-
-                primaryItem: AbstractButton {
-                    width: units.gu(3)
-                    Image {
-                        anchors.left: parent.left
-                        anchors.verticalCenter: parent.verticalCenter
-                        anchors.leftMargin: units.gu(0.5)
-                        source: "../assets/search.png"
-                    }
-                    onClicked: contactsSearchBox.text = ""
-                }
-
-                Binding {
-                    target: contactsPanel
-                    property: "searchQuery"
-                    value: contactsSearchBox.text
-                }
-            }
-
-            ListItem.ThinDivider {
-                visible: !mainView.singlePane
-            }
-
-            ListItem.Standard {
-                id: newContact
-
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: visible ? units.gu(4) : 0
-                visible: !mainView.singlePane
-                __leftIconMargin: units.gu(3)
-                __rightIconMargin: units.gu(2)
-
-                text: i18n.tr("Add a new contact")
-                icon: Qt.resolvedUrl("../assets/add_contacts_icon.png")
-                iconFrame: false
-                onClicked: mainView.createNewContact()
-
-                selected: mainView.contactDetails.loaded && mainView.view.added
-            }
-        }
+        z: 0
 
         delegate: Loader {
             id: contactLoader
