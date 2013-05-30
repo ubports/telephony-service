@@ -53,7 +53,11 @@ LocalWidgets.PhonePage {
     ContactProxyModel {
         id: contactProxyModel
         model: contactModel
-        onCountChanged: contactsList.contentY = -searchBar.height-header.height
+        onCountChanged: {
+            if (searchQuery != "") {
+                contactsList.contentY = -searchBar.height-header.height
+            }
+        }
     }
 
     Component {
