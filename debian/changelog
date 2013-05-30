@@ -1,4 +1,4 @@
-phone-app (0.59.12-0ubuntu4) UNRELEASED; urgency=low
+phone-app (0.59.12-0ubuntu4) raring; urgency=low
 
   * Make the search bar always visible on contacts panel
 
