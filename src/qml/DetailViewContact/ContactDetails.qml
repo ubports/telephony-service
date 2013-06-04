@@ -36,14 +36,14 @@ LocalWidgets.PhonePage {
         id: dialog
         Dialog {
             id: dialogue
-            title: "Delete Contact"
+            title: i18n.tr("Delete Contact")
             text: i18n.tr("Are you sure you want to delete this contact?")
             Button {
-                text: "cancel"
+                text: i18n.tr("Cancel")
                 onClicked: PopupUtils.close(dialogue)
             }
             Button {
-                text: "delete"
+                text: i18n.tr("Delete")
                 color: "red"
                 onClicked: {
                     contactModel.removeContact(contact);
