@@ -1,3 +1,9 @@
+phone-app (0.59.12-0ubuntu5) saucy; urgency=low
+
+  * Releasing for saucy.
+
+ -- Sergio Schvezov <sergio.schvezov@canonical.com>  Tue, 04 Jun 2013 11:45:00 -0300
+
 phone-app (0.59.12-0ubuntu4) raring; urgency=low
 
   * Make the search bar always visible on contacts panel
