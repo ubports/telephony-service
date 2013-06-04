@@ -19,6 +19,7 @@
 import QtQuick 2.0
 import Ubuntu.PhoneApp 0.1
 import Ubuntu.Components 0.1
+import Ubuntu.Components.Popups 0.1
 import "../Widgets" as LocalWidgets
 import "../"
 import "DetailTypeUtilities.js" as DetailTypes
@@ -30,6 +31,28 @@ LocalWidgets.PhonePage {
     property alias contact: contactWatcher.contact
     property variant contactId: (contact) ? contact.id : null
     property bool added: false
+
+    Component {
+        id: dialog
+        Dialog {
+            id: dialogue
+            title: "Delete Contact"
+            text: i18n.tr("Are you sure you want to delete this contact?")
+            Button {
+                text: "cancel"
+                onClicked: PopupUtils.close(dialogue)
+            }
+            Button {
+                text: "delete"
+                color: "red"
+                onClicked: {
+                    contactModel.removeContact(contact);
+                    mainView.resetView();
+                    PopupUtils.close(dialogue)
+                }
+            }
+        }
+    }
 
     ContactWatcher {
         id: contactWatcher
@@ -55,12 +78,10 @@ LocalWidgets.PhonePage {
 
             text: i18n.tr("Delete")
             iconSource: Qt.resolvedUrl("../assets/delete.png")
-            visible: editable && !added
+            visible: !editable && !added
             enabled: visible
             onTriggered: {
-                // FIXME: show a dialog asking for confirmation
-                contactModel.removeContact(contact);
-                mainView.resetView();
+                PopupUtils.open(dialog, contactDetails)
             }
         }
 

@@ -76,24 +76,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        //delete, cancel, save
-        Loader {
-            id: deleteButton
-
-            property string text: "Delete"
-            property string iconSource: Qt.resolvedUrl("../assets/delete.png")
-            sourceComponent: toolButtonComponent
-            anchors.verticalCenter: parent.verticalCenter
-            onStatusChanged: {
-                if (item && status == Loader.Ready) {
-                    if (item.hasOwnProperty("clicked")) item.clicked.connect(deleteButton.itemTriggered);
-                }
-            }
-            signal itemTriggered()
-            onItemTriggered: toolbar.deleteClicked()
-            visible: !added
-        }
-
+        // cancel, save
         Loader {
             id: cancelButton
 
