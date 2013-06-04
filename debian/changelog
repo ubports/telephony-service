@@ -1,9 +1,9 @@
-phone-app (0.59.12-0ubuntu6) UNRELEASED; urgency=low
+phone-app (0.59.12-0ubuntu6) saucy; urgency=low
 
   * Move delete action to the main contact detail toolbar
     and add a confirmation dialog (LP: #1185548).
 
- -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Tue, 04 Jun 2013 16:13:45 -0300
+ -- Tiago Salem Herrmann <salem@salem-Aspire-5920>  Tue, 04 Jun 2013 16:16:34 -0300
 
 phone-app (0.59.12-0ubuntu5) saucy; urgency=low
 
