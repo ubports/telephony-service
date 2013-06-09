@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-05-28 16:33-0300\n"
-"PO-Revision-Date: 2013-05-29 17:00+0000\n"
+"PO-Revision-Date: 2013-06-08 09:47+0000\n"
 "Last-Translator: Phillip Sz <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-06-05 06:34+0000\n"
-"X-Generator: Launchpad (build 16660)\n"
+"X-Launchpad-Export-Date: 2013-06-09 06:17+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
 
 #: src/qml/PanelDialer/Keypad.qml:120
 msgid "#"
@@ -40,8 +40,8 @@ msgstr[1] ""
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 verpasster Anruf"
+msgstr[1] "%1 verpasste Anrufe"
 
 #: src/qml/phone-app.qml:75 src/qml/dateUtils.js:66
 #, qt-format
@@ -111,7 +111,7 @@ msgstr "ABC"
 
 #: approver/phoneappapprover.cpp:268
 msgid "Accept"
-msgstr ""
+msgstr "Annehmen"
 
 #: src/qml/phone-app.qml:478 src/qml/PanelContacts/ContactsPanel.qml:32
 msgid "Add"
@@ -119,7 +119,7 @@ msgstr "Hinzufügen"
 
 #: src/qml/PanelContacts/ContactsPanel.qml:122
 msgid "Add a new contact"
-msgstr "Kontakt hinzufügen"
+msgstr "Einen neuen Kontakt hinzufügen"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:64
 msgid "Add a phone number"
@@ -168,21 +168,21 @@ msgstr "Anrufe"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:70
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 #: src/qml/DetailViewCommunication/CommunicationView.qml:38
 msgid "Communication"
-msgstr ""
+msgstr "Mitteilung"
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:87
 #: src/qml/phone-app.qml:473
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:32
 msgid "Compose"
-msgstr ""
+msgstr "Verfassen"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:40
 msgid "Contact Details"
-msgstr ""
+msgstr "Kontaktinformationen"
 
 #: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:268
 #: src/qml/PanelContacts/ContactsPanel.qml:28
@@ -192,11 +192,11 @@ msgstr "Kontakte"
 #: src/qml/phone-app.qml:246
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:28
 msgid "Conversations"
-msgstr ""
+msgstr "Unterhaltungen"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:84
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #: src/qml/PanelDialer/Keypad.qml:53
 msgid "DEF"
@@ -204,22 +204,22 @@ msgstr "DEF"
 
 #: approver/phoneappapprover.cpp:274
 msgid "Decline"
-msgstr ""
+msgstr "Ablehnen"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:56
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #. TRANSLATORS: %1 is the duration of the call
 #: src/qml/DetailViewVoicemail/Voicemail.qml:94
 #: src/qml/DetailViewLiveCall/LiveCall.qml:37
 msgid "Dialing"
-msgstr ""
+msgstr "Wählen"
 
 #: src/qml/DetailViewLiveCall/LiveCall.qml:37
 #, qt-format
 msgid "Duration %1"
-msgstr ""
+msgstr "Dauer %1"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:46
 msgid "Edit"
@@ -231,7 +231,7 @@ msgstr "E-Mail"
 
 #: src/qml/PanelDialer/DialerView.qml:50
 msgid "Enter a number"
-msgstr ""
+msgstr "Geben Sie eine Zahl ein"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:68
 msgid "First"
@@ -248,7 +248,7 @@ msgstr "Google Talk"
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:41
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:46
 msgid "Home"
-msgstr ""
+msgstr "Start"
 
 #: approver/messagingmenu.cpp:161
 msgid "I missed your call - can you call me now?"
@@ -276,11 +276,11 @@ msgstr "JKL"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:90
 msgid "Last"
-msgstr ""
+msgstr "Letzter"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:57
 msgid "Locality"
-msgstr ""
+msgstr "Ortschaft"
 
 #: src/qml/PanelDialer/Keypad.qml:74
 msgid "MNO"
@@ -288,15 +288,15 @@ msgstr "MNO"
 
 #: src/qml/Panes/SelectMessagePane.qml:22
 msgid "Messages"
-msgstr ""
+msgstr "Nachrichten"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:79
 msgid "Middle"
-msgstr ""
+msgstr "Mitte"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:45
 msgid "Mobile"
-msgstr ""
+msgstr "Mobil"
 
 #: src/qml/phone-app.qml:479
 msgid "New Contact"
@@ -305,17 +305,17 @@ msgstr "Neuer Kontakt"
 #: src/qml/phone-app.qml:474
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:136
 msgid "New Message"
-msgstr ""
+msgstr "Neue Nachricht"
 
 #: src/qml/OnCallPanel.qml:84
 msgid "On Call"
-msgstr ""
+msgstr "Beim Anruf"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:43
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:48
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:57
 msgid "Other"
-msgstr ""
+msgstr "Andere"
 
 #: src/qml/PanelDialer/Keypad.qml:81
 msgid "PQRS"
@@ -323,11 +323,11 @@ msgstr "PQRS"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:61
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:75
 msgid "Postal Code"
-msgstr ""
+msgstr "Postleitzahl"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:57
 msgid "Prefix"
@@ -335,7 +335,7 @@ msgstr ""
 
 #: Ubuntu/PhoneApp/conversationfeedmodel.cpp:275
 msgid "Private number"
-msgstr ""
+msgstr "Privatnummer"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:66
 msgid "Region"
@@ -343,12 +343,12 @@ msgstr "Region"
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:87
 msgid "Reply via SMS"
-msgstr ""
+msgstr "Per SMS antworten"
 
 #: approver/textchannelobserver.cpp:51
 #, qt-format
 msgid "SMS from %1"
-msgstr ""
+msgstr "SMS von %1"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:87
 msgid "Save"
@@ -365,6 +365,7 @@ msgstr "Skype"
 #: approver/messagingmenu.cpp:165
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr ""
+"Entschuldigung, ich bin noch beschäftigt. Ich werde Sie später anrufen."
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:47
 msgid "Street"
@@ -384,7 +385,7 @@ msgstr "TUV"
 
 #: src/qml/DetailViewCommunication/NewMessageHeader.qml:59
 msgid "To:"
-msgstr ""
+msgstr "An:"
 
 #: src/qml/dateUtils.js:41
 msgid "Today"
@@ -392,15 +393,15 @@ msgstr "Heute"
 
 #: src/qml/DetailViewLiveCall/LiveCall.qml:155
 msgid "Unknown Contact"
-msgstr ""
+msgstr "Unbekannter Kontakt"
 
 #: approver/phoneappapprover.cpp:229
 msgid "Unknown caller"
-msgstr ""
+msgstr "Unbekannter Anrufer"
 
 #: Ubuntu/PhoneApp/conversationfeedmodel.cpp:279
 msgid "Unknown number"
-msgstr ""
+msgstr "Unbekannte Nummer"
 
 #: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99
 msgid "Voicemail"
@@ -417,7 +418,7 @@ msgstr "WXYZ"
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:42
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:47
 msgid "Work"
-msgstr ""
+msgstr "Geschäftlich"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:55
 msgid "Yahoo"
@@ -429,4 +430,4 @@ msgstr "Gestern"
 
 #: src/qml/DetailViewCommunication/CommunicationDelegate.qml:100
 msgid "missed call"
-msgstr ""
+msgstr "verpasster Anruf"
