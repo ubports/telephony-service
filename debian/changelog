@@ -1,3 +1,10 @@
+phone-app (0.59.13-0ubuntu1) saucy; urgency=low
+
+  * Bumping the version to avoid some launchpad/ppa issues for a rebuild
+    against the correct dependencies.
+
+ -- Sergio Schvezov <sergio.schvezov@canonical.com>  Mon, 10 Jun 2013 13:04:32 -0300
+
 phone-app (0.59.12-0ubuntu6) saucy; urgency=low
 
   * Move delete action to the main contact detail toolbar
