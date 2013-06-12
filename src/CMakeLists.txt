@@ -27,7 +27,17 @@ install(TARGETS ${PHONE_APP}
 
 configure_file(com.canonical.PhoneApp.service.in com.canonical.PhoneApp.service)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/com.canonical.PhoneApp.service DESTINATION share/dbus-1/services)
-install(FILES ${PHONE_APP}.desktop
+
+# Handle i18n in the desktop file
+set(DESKTOP_FILE ${PHONE_APP}.desktop)
+file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE})
+file(STRINGS ${DESKTOP_FILE}.in DESKTOP_FILE_CONTENTS)
+foreach(LINE ${DESKTOP_FILE_CONTENTS})
+    string(REGEX REPLACE "tr\\\(\"(.*)\"\\\)" "\\1" LINE "${LINE}")
+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE} "${LINE}\n")
+endforeach(LINE)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE}
     DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
     )
 

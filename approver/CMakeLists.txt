@@ -9,7 +9,6 @@ set(qt_SRCS
     )
 
 set(approver_SRCS main.cpp ${qt_SRCS})
-set(desktop_FILES phone-app-sms.desktop phone-app-call.desktop)
 qt5_add_dbus_adaptor(approver_SRCS PhoneAppApprover.xml approver/phoneappapproverdbus.h PhoneAppApproverDBus)
 
 include_directories(
@@ -41,7 +40,21 @@ configure_file(org.freedesktop.Telepathy.Client.PhoneAppApprover.service.in org.
 install(TARGETS phone-app-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.PhoneAppApprover.service DESTINATION share/dbus-1/services)
 install(FILES PhoneAppApprover.client DESTINATION share/telepathy/clients)
-install(FILES ${desktop_FILES} DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
-install(FILES phone-app-approver.desktop DESTINATION /etc/xdg/autostart)
+
+# Handle i18n in desktop files
+set(desktop_FILES phone-app-sms.desktop phone-app-call.desktop phone-app-approver.desktop)
+
+foreach(DESKTOP_FILE ${desktop_FILES})
+    file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE})
+    file(STRINGS ${DESKTOP_FILE}.in DESKTOP_FILE_CONTENTS)
+    foreach(LINE ${DESKTOP_FILE_CONTENTS})
+        string(REGEX REPLACE "tr\\\(\"(.*)\"\\\)" "\\1" LINE "${LINE}")
+        file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE} "${LINE}\n")
+    endforeach(LINE)
+endforeach(DESKTOP_FILE)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/phone-app-sms.desktop ${CMAKE_CURRENT_BINARY_DIR}/phone-app-call.desktop
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/phone-app-approver.desktop DESTINATION /etc/xdg/autostart)
 
 add_subdirectory(icons)
