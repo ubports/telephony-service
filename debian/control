@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: cmake,
                debhelper (>= 9),
-               gettext,
+               dh-translations,
                libgl1-mesa-dev | libgl-dev,
                libgles2-mesa-dev,
                libicu-dev,

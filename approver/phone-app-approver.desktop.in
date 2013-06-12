@@ -1,9 +1,10 @@
 [Desktop Entry]
-Name=Phone App Approver
-Comment=Handles incoming messages, calls and indicators.
+Name=tr("Phone App Approver")
+Comment=tr("Handles incoming messages, calls and indicators")
 Icon=phone-app
 Exec=phone-app-approver
 Terminal=false
 Type=Application
 NoDisplay=true
 X-GNOME-Autostart-enabled=true
+X-Ubuntu-Gettext-Domain=phone-app

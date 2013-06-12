@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: phone-app\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-05-28 16:33-0300\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-06-12 16:19-0300\n"
 "PO-Revision-Date: 2013-06-05 08:08+0000\n"
 "Last-Translator: David Planella <david.planella@ubuntu.com>\n"
 "Language-Team: Catalan <ca@li.org>\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,7 +19,7 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-06-06 06:29+0000\n"
 "X-Generator: Launchpad (build 16667)\n"
 
-#: src/qml/PanelDialer/Keypad.qml:120
+#: src/qml/PanelDialer/Keypad.qml:161
 msgid "#"
 msgstr "#"
 
@@ -43,7 +44,7 @@ msgid_plural "%1 missed calls"
 msgstr[0] "%1 trucada perduda"
 msgstr[1] "%1 trucades perdudes"
 
-#: src/qml/phone-app.qml:75 src/qml/dateUtils.js:66
+#: src/qml/phone-app.qml:76 src/qml/dateUtils.js:66
 #, qt-format
 msgid "%1 second call"
 msgid_plural "%1 seconds call"
@@ -57,55 +58,55 @@ msgid_plural "%1 voicemail messages"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/qml/PanelDialer/Keypad.qml:103
+#: src/qml/PanelDialer/Keypad.qml:138
 msgid "*"
 msgstr "*"
 
-#: src/qml/PanelDialer/Keypad.qml:110
+#: src/qml/PanelDialer/Keypad.qml:148
 msgid "+"
 msgstr "+"
 
-#: src/qml/PanelDialer/Keypad.qml:109
+#: src/qml/PanelDialer/Keypad.qml:147
 msgid "0"
 msgstr "0"
 
-#: src/qml/PanelDialer/Keypad.qml:37
+#: src/qml/PanelDialer/Keypad.qml:45
 msgid "1"
 msgstr "1"
 
-#: src/qml/PanelDialer/Keypad.qml:45
+#: src/qml/PanelDialer/Keypad.qml:56
 msgid "2"
 msgstr "2"
 
-#: src/qml/PanelDialer/Keypad.qml:52
+#: src/qml/PanelDialer/Keypad.qml:66
 msgid "3"
 msgstr "3"
 
-#: src/qml/PanelDialer/Keypad.qml:59
+#: src/qml/PanelDialer/Keypad.qml:76
 msgid "4"
 msgstr "4"
 
-#: src/qml/PanelDialer/Keypad.qml:66
+#: src/qml/PanelDialer/Keypad.qml:86
 msgid "5"
 msgstr "5"
 
-#: src/qml/PanelDialer/Keypad.qml:73
+#: src/qml/PanelDialer/Keypad.qml:96
 msgid "6"
 msgstr "6"
 
-#: src/qml/PanelDialer/Keypad.qml:80
+#: src/qml/PanelDialer/Keypad.qml:106
 msgid "7"
 msgstr "7"
 
-#: src/qml/PanelDialer/Keypad.qml:87
+#: src/qml/PanelDialer/Keypad.qml:116
 msgid "8"
 msgstr "8"
 
-#: src/qml/PanelDialer/Keypad.qml:94
+#: src/qml/PanelDialer/Keypad.qml:126
 msgid "9"
 msgstr "9"
 
-#: src/qml/PanelDialer/Keypad.qml:46
+#: src/qml/PanelDialer/Keypad.qml:57
 msgid "ABC"
 msgstr "ABC"
 
@@ -113,35 +114,35 @@ msgstr "ABC"
 msgid "Accept"
 msgstr "Accepta"
 
-#: src/qml/phone-app.qml:478 src/qml/PanelContacts/ContactsPanel.qml:32
+#: src/qml/PanelContacts/ContactsPanel.qml:42 src/qml/phone-app.qml:479
 msgid "Add"
 msgstr "Afegeix"
-
-#: src/qml/PanelContacts/ContactsPanel.qml:122
-msgid "Add a new contact"
-msgstr "Afegeix un contacte nou"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:64
 msgid "Add a phone number"
 msgstr "Afegeix un número de telèfon"
 
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:91
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:90
 msgid "Add a postal address"
 msgstr "Afegeix una adreça postal"
 
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:78
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:77
 msgid "Add an email address"
 msgstr "Afegeix una adreça electrònica"
 
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:102
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:101
 msgid "Add an online account"
 msgstr "Afegeix un compte en línia"
 
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:88
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:87
 msgid "Address"
 msgstr "Adreça"
 
-#: src/qml/phone-app.qml:235 src/qml/PanelDialer/DialerView.qml:25
+#: src/qml/DetailViewContact/ContactDetails.qml:40
+msgid "Are you sure you want to delete this contact?"
+msgstr ""
+
+#: src/qml/phone-app.qml:236 src/qml/PanelDialer/DialerView.qml:25
 msgid "Call"
 msgstr "Trucada"
 
@@ -166,7 +167,9 @@ msgstr "S'està trucant des d'un número desconegut"
 msgid "Calls"
 msgstr "Trucades"
 
-#: src/qml/DetailViewContact/ContactDetails.qml:70
+#: src/qml/DetailViewContact/ContactDetails.qml:42
+#: src/qml/DetailViewContact/ContactDetails.qml:91
+#: src/qml/DetailViewContact/EditToolbar.qml:83
 msgid "Cancel"
 msgstr "Cancel·la"
 
@@ -175,21 +178,21 @@ msgid "Communication"
 msgstr "Comunicació"
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:87
-#: src/qml/phone-app.qml:473
-#: src/qml/PanelCommunications/CommunicationsPanel.qml:32
+#: src/qml/phone-app.qml:474
+#: src/qml/PanelCommunications/CommunicationsPanel.qml:42
 msgid "Compose"
 msgstr "Escriviu un missatge"
 
-#: src/qml/DetailViewContact/ContactDetails.qml:40
+#: src/qml/DetailViewContact/ContactDetails.qml:63
 msgid "Contact Details"
 msgstr "Detalls del contacte"
 
-#: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:268
 #: src/qml/PanelContacts/ContactsPanel.qml:28
+#: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:269
 msgid "Contacts"
 msgstr "Contactes"
 
-#: src/qml/phone-app.qml:246
+#: src/qml/phone-app.qml:247
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:28
 msgid "Conversations"
 msgstr "Converses"
@@ -198,7 +201,7 @@ msgstr "Converses"
 msgid "Country"
 msgstr "País"
 
-#: src/qml/PanelDialer/Keypad.qml:53
+#: src/qml/PanelDialer/Keypad.qml:67
 msgid "DEF"
 msgstr "DEF"
 
@@ -206,9 +209,15 @@ msgstr "DEF"
 msgid "Decline"
 msgstr "Rebutja"
 
-#: src/qml/DetailViewContact/ContactDetails.qml:56
+#: src/qml/DetailViewContact/ContactDetails.qml:46
+#: src/qml/DetailViewContact/ContactDetails.qml:79
 msgid "Delete"
 msgstr "Suprimeix"
+
+#: src/qml/DetailViewContact/ContactDetails.qml:39
+#, fuzzy
+msgid "Delete Contact"
+msgstr "Contacte nou"
 
 #. TRANSLATORS: %1 is the duration of the call
 #: src/qml/DetailViewVoicemail/Voicemail.qml:94
@@ -221,15 +230,15 @@ msgstr "S'està marcant"
 msgid "Duration %1"
 msgstr "Durada: %1"
 
-#: src/qml/DetailViewContact/ContactDetails.qml:46
+#: src/qml/DetailViewContact/ContactDetails.qml:69
 msgid "Edit"
 msgstr "Edita"
 
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:75
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:74
 msgid "Email"
 msgstr "Correu electrònic"
 
-#: src/qml/PanelDialer/DialerView.qml:50
+#: src/qml/PanelDialer/DialerView.qml:54
 msgid "Enter a number"
 msgstr "Introduïu un número"
 
@@ -237,13 +246,17 @@ msgstr "Introduïu un número"
 msgid "First"
 msgstr "Nom"
 
-#: src/qml/PanelDialer/Keypad.qml:60
+#: src/qml/PanelDialer/Keypad.qml:77
 msgid "GHI"
 msgstr "GHI"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:54
 msgid "Google Talk"
 msgstr "Google Talk"
+
+#: approver/phone-app-approver.desktop.in:3
+msgid "Handles incoming messages, calls and indicators"
+msgstr ""
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:41
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:46
@@ -266,11 +279,11 @@ msgstr ""
 msgid "I'm running late. I'm on my way."
 msgstr ""
 
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:99
+#: src/qml/DetailViewContact/DetailTypeUtilities.js:98
 msgid "IM"
 msgstr "Missatgeria instantània"
 
-#: src/qml/PanelDialer/Keypad.qml:67
+#: src/qml/PanelDialer/Keypad.qml:87
 msgid "JKL"
 msgstr "JKL"
 
@@ -282,7 +295,7 @@ msgstr "Cognoms"
 msgid "Locality"
 msgstr "Localitat"
 
-#: src/qml/PanelDialer/Keypad.qml:74
+#: src/qml/PanelDialer/Keypad.qml:97
 msgid "MNO"
 msgstr "MNO"
 
@@ -298,12 +311,12 @@ msgstr ""
 msgid "Mobile"
 msgstr "Mòbil"
 
-#: src/qml/phone-app.qml:479
+#: src/qml/phone-app.qml:480
 msgid "New Contact"
 msgstr "Contacte nou"
 
-#: src/qml/phone-app.qml:474
-#: src/qml/PanelCommunications/CommunicationsPanel.qml:136
+#: src/qml/phone-app.qml:475
+#: src/qml/PanelCommunications/CommunicationsPanel.qml:146
 msgid "New Message"
 msgstr "Missatge nou"
 
@@ -317,13 +330,33 @@ msgstr "En una trucada"
 msgid "Other"
 msgstr "Altres"
 
-#: src/qml/PanelDialer/Keypad.qml:81
+#: src/qml/PanelDialer/Keypad.qml:107
 msgid "PQRS"
 msgstr "PQRS"
 
+#: src/phone-app.desktop.in:3
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:61
 msgid "Phone"
 msgstr "Telèfon"
+
+#: src/phone-app.desktop.in:4
+#, fuzzy
+msgid "Phone App"
+msgstr "Telèfon"
+
+#: approver/phone-app-approver.desktop.in:2
+msgid "Phone App Approver"
+msgstr ""
+
+#: approver/phone-app-call.desktop.in:3
+#, fuzzy
+msgid "Phone Calls"
+msgstr "En una trucada"
+
+#: src/phone-app.desktop.in:5
+#, fuzzy
+msgid "Phone application"
+msgstr "Comunicació"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:75
 msgid "Postal Code"
@@ -345,12 +378,17 @@ msgstr "Regió"
 msgid "Reply via SMS"
 msgstr "Contesta per missatge de text"
 
+#: approver/phone-app-sms.desktop.in:3
+msgid "SMS"
+msgstr ""
+
 #: approver/textchannelobserver.cpp:51
 #, qt-format
 msgid "SMS from %1"
 msgstr "Missatge de text d'en/na %1"
 
-#: src/qml/DetailViewContact/ContactDetails.qml:87
+#: src/qml/DetailViewContact/ContactDetails.qml:108
+#: src/qml/DetailViewContact/EditToolbar.qml:99
 msgid "Save"
 msgstr "Desa"
 
@@ -378,7 +416,7 @@ msgstr "Sufix"
 msgid "Swap Calls"
 msgstr ""
 
-#: src/qml/PanelDialer/Keypad.qml:88
+#: src/qml/PanelDialer/Keypad.qml:117
 msgid "TUV"
 msgstr "TUV"
 
@@ -410,7 +448,7 @@ msgstr ""
 msgid "Voicemail messages"
 msgstr ""
 
-#: src/qml/PanelDialer/Keypad.qml:95
+#: src/qml/PanelDialer/Keypad.qml:127
 msgid "WXYZ"
 msgstr ""
 
@@ -430,3 +468,6 @@ msgstr ""
 #: src/qml/DetailViewCommunication/CommunicationDelegate.qml:100
 msgid "missed call"
 msgstr ""
+
+#~ msgid "Add a new contact"
+#~ msgstr "Afegeix un contacte nou"

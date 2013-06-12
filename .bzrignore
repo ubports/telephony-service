@@ -25,7 +25,9 @@ debian/*.debhelper.log
 debian/*.substvars
 
 src/*.service
+src/*.desktop
 handler/*.service
+approver/*.desktop
 approver/*.service
 phoneappadaptor.*
 approver/phoneappapproveradaptor.*
