@@ -24,4 +24,15 @@ class Utils(object):
         row = item.get_children_by_type("QQuickRow")[0]
         return row.get_children_by_type("QQuickLoader")[index].get_children_by_type("Button")[0]
 
+    def get_conversations_tab_button(self):
+        return self.app.select_single("AbstractButton", buttonIndex=4)
 
+    def get_contacts_tab_button(self):
+        return self.app.select_single("AbstractButton", buttonIndex=5)
+
+    def get_conversations_pane(self):
+        return self.app.select_single(
+            "PageStack", objectName="communicationsStack")
+
+    def get_contacts_pane(self):
+        return self.app.select_single("PageStack", objectName="contactsStack")

@@ -23,7 +23,7 @@ class TestCommunicationPanel(PhoneAppTestCase):
     def setUp(self):
         super(TestCommunicationPanel, self).setUp()
         communication_page = self.communication_panel.get_communication_page()
-        self.move_to_next_tab()
+        self.switch_to_conversation_tab()
         self.assertThat(communication_page.isCurrent, Eventually(Equals(True)))
 
     def click_new_message_button(self):

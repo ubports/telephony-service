@@ -345,6 +345,7 @@ MainView {
 
         PageStack {
             id: callsStack
+            objectName: "callsStack"
             property string source: callsTab.pane
             property bool isCurrent: tabs.selectedTabIndex == liveCall.tab
             anchors.fill: parent
@@ -365,6 +366,7 @@ MainView {
 
         PageStack {
             id: communicationsStack
+            objectName: "communicationsStack"
             property string source: communicationsTab.pane
             property bool isCurrent: tabs.selectedTabIndex == communication.tab
             anchors.fill: parent
@@ -385,6 +387,7 @@ MainView {
 
         PageStack {
             id: contactsStack
+            objectName: "contactsStack"
             property string source: contactsTab.pane
             property bool isCurrent: tabs.selectedTabIndex == contactDetails.tab
             anchors.fill: parent

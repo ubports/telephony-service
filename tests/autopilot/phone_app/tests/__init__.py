@@ -13,14 +13,16 @@ from autopilot.input import Mouse, Touch, Pointer
 from autopilot.matchers import Eventually
 from autopilot.platform import model
 from autopilot.testcase import AutopilotTestCase
-from testtools.matchers import Equals
+from testtools.matchers import Equals, GreaterThan
 
 from phone_app.emulators.call_panel import CallPanel
 from phone_app.emulators.communication_panel import CommunicationPanel
 from phone_app.emulators.contacts_panel import ContactsPanel
 
-import os
+from phone_app.emulators.utils import Utils
 
+import os
+from time import sleep
 import logging
 
 logger = logging.getLogger(__name__)
@@ -75,29 +77,48 @@ class PhoneAppTestCase(AutopilotTestCase):
         return self.app.select_single("QQuickView")
 
     def get_tabs(self):
-        return self.app.select_single("Tabs")
+        """Returns the top tabs bar."""
+        return self.app.select_single("NewTabBar")
 
-    def move_to_next_tab(self, retries=2):
-        main_view = self.get_main_view()
-        tabs = self.get_tabs()
-        currentTab = tabs.selectedTabIndex
-        start_x = main_view.x + main_view.width * 0.85
-        stop_x = main_view.x + main_view.width * 0.15
-        y_line = main_view.y + main_view.height * 0.5
-        self.pointing_device.drag(start_x, y_line, stop_x, y_line)
+    def click_item(self, item, delay=0.1):
+        """Does a mouse click on the passed item, and moved the mouse there
+           before"""
+        # In jenkins test may fail because we don't wait before clicking the
+        # target so we add a little delay before click.
+        if model() == 'Desktop' and delay <= 0.25:
+            delay = 0.25
 
-        # This is usually done very early and sometimes the app is
-        # painted too slow to make the first swipe grab.
-        # As this is just a helper function and not an actual test case
-        # lets give it another (max. retries) chance when it fails.
-        try:
-            self.assertThat(tabs.selectedTabIndex, Eventually(Equals(currentTab + 1)))
-        except:
-            if retries > 0:
-                logger.warning("Failed to switch tab. Retrying...")
-                self.move_to_next_tab(retries-1)
-            else:
-                logger.warning("Failed to switch tab. Giving up... Test may fail!")
+        self.pointing_device.move_to_object(item)
+        sleep(delay)
+        self.pointing_device.click()
+
+    def switch_to_conversation_tab(self):
+        tabs_bar = self.get_tabs()
+        conversation_pane = self.utils.get_conversations_pane()
+        self.click_item(tabs_bar)
+
+        conversations_tab_button = self.utils.get_conversations_tab_button()
+        self.assertThat(conversations_tab_button.opacity,
+                        Eventually(GreaterThan(0.35)))
+        self.click_item(conversations_tab_button)
+
+        self.assertThat(conversation_pane.isCurrent, Eventually(Equals(True)))
+
+    def switch_to_contacts_tab(self):
+        tabs_bar = self.get_tabs()
+        contacts_pane = self.utils.get_contacts_pane()
+        
+        x, y, w, h = tabs_bar.globalRect
+        tx = x + (w - 5)
+        ty = y + h / 2
+        self.pointing_device.drag(tx, ty, tx / 3, ty)
+
+        contacts_tab_button = self.utils.get_contacts_tab_button()
+        self.assertThat(contacts_tab_button.opacity,
+                        Eventually(GreaterThan(0.35)))
+        self.click_item(contacts_tab_button)
+
+        self.assertThat(contacts_pane.isCurrent, Eventually(Equals(True)))
 
     def reveal_toolbar(self):
         main_view = self.get_main_view()
@@ -117,3 +138,7 @@ class PhoneAppTestCase(AutopilotTestCase):
     @property
     def contacts_panel(self):
         return ContactsPanel(self.app)
+
+    @property
+    def utils(self):
+        return Utils(self.app)
