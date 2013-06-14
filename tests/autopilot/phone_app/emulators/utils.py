@@ -20,9 +20,8 @@ class Utils(object):
     def get_tool_button(self, index):
         """Returns the toolbar button at position `index`"""
         tool_bar = self.get_tool_bar()
-        item = tool_bar.get_children_by_type("QQuickItem")[0]
-        row = item.get_children_by_type("QQuickRow")[0]
-        return row.get_children_by_type("QQuickLoader")[index].get_children_by_type("Button")[0]
+        buttons = tool_bar.select_many("Button")
+        return buttons[index+1]
 
     def get_conversations_tab_button(self):
         return self.app.select_single("AbstractButton", buttonIndex=4)
