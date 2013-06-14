@@ -59,6 +59,16 @@ FocusScope {
         clip: true
         opacity: 0.9
 
+        // Use a custom cursor that does not blink to avoid extra CPU usage.
+        // https://bugs.launchpad.net/phone-app/+bug/1188669
+        cursorDelegate: Rectangle {
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: 1
+            color: Qt.rgba(0,0,0,0.5)
+        }
+
+
         // force cursor to be always visible
         onCursorVisibleChanged: {
             if (!cursorVisible)
