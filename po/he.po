@@ -1,4 +1,4 @@
-# Chinese (Simplified) translation for phone-app
+# Hebrew translation for phone-app
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the phone-app package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
@@ -8,49 +8,54 @@ msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-12 16:43-0300\n"
-"PO-Revision-Date: 2013-06-13 11:42+0000\n"
-"Last-Translator: Anthony Wong <anthony.wong@canonical.com>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"PO-Revision-Date: 2013-06-13 09:42+0000\n"
+"Last-Translator: Yaron <sh.yaron@gmail.com>\n"
+"Language-Team: Hebrew <he@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Launchpad-Export-Date: 2013-06-14 07:05+0000\n"
 "X-Generator: Launchpad (build 16667)\n"
 
 #: src/qml/PanelDialer/Keypad.qml:161
 msgid "#"
-msgstr "#"
+msgstr "מס׳"
 
 #: src/qml/dateUtils.js:62
 #, qt-format
 msgid "%1 hour call"
 msgid_plural "%1 hours call"
-msgstr[0] "%1 小时通话"
+msgstr[0] "שיחה של שעה %1"
+msgstr[1] "שיחה של %1 שעות"
 
 #: src/qml/dateUtils.js:64
 #, qt-format
 msgid "%1 minute call"
 msgid_plural "%1 minutes call"
-msgstr[0] "%1 分钟通话"
+msgstr[0] "שיחה של דקה %1"
+msgstr[1] "שיחה של %1 דקות"
 
 #: approver/messagingmenu.cpp:143
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
-msgstr[0] "%1 个未接来电"
+msgstr[0] "שיחה %1 שלא נענתה"
+msgstr[1] "%1 שיחות שלא נענו"
 
 #: src/qml/phone-app.qml:76 src/qml/dateUtils.js:66
 #, qt-format
 msgid "%1 second call"
 msgid_plural "%1 seconds call"
-msgstr[0] "%1 秒通话"
+msgstr[0] "שיחה של שנייה %1"
+msgstr[1] "שיחה של %1 שניות"
 
 #: approver/messagingmenu.cpp:200
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
-msgstr[0] "%1 个语音信息"
+msgstr[0] "הודעה %1 בתא הקולי"
+msgstr[1] "%1 הודעות בתא הקולי"
 
 #: src/qml/PanelDialer/Keypad.qml:138
 msgid "*"
@@ -102,146 +107,146 @@ msgstr "9"
 
 #: src/qml/PanelDialer/Keypad.qml:57
 msgid "ABC"
-msgstr "ABC"
+msgstr "אבג"
 
 #: approver/phoneappapprover.cpp:268
 msgid "Accept"
-msgstr "接听"
+msgstr "קבלה"
 
 #: src/qml/PanelContacts/ContactsPanel.qml:42 src/qml/phone-app.qml:479
 msgid "Add"
-msgstr "添加"
+msgstr "הוספה"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:64
 msgid "Add a phone number"
-msgstr "添加电话号码"
+msgstr "הוספת מספר טלפון"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:90
 msgid "Add a postal address"
-msgstr "添加通讯地址"
+msgstr "הוספת מען למכתבים"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:77
 msgid "Add an email address"
-msgstr "添加 email 地址"
+msgstr "הוספת כתובת דוא״ל"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:101
 msgid "Add an online account"
-msgstr "添加在线账户"
+msgstr "הוספת חשבון מקוון"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:87
 msgid "Address"
-msgstr "地址"
+msgstr "כתובת"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:40
 msgid "Are you sure you want to delete this contact?"
-msgstr ""
+msgstr "האם אכן למחוק את איש הקשר?"
 
 #: src/qml/phone-app.qml:236 src/qml/PanelDialer/DialerView.qml:25
 msgid "Call"
-msgstr "拨号"
+msgstr "להתקשר"
 
 #: approver/phoneappapprover.cpp:242
 msgid "Caller number is not available"
-msgstr "没有对方来电号码"
+msgstr "מספר המען אינו זמין"
 
 #: approver/phoneappapprover.cpp:239
 #, qt-format
 msgid "Calling from %1"
-msgstr "%1 的来电"
+msgstr "שיחה מ%1"
 
 #: approver/phoneappapprover.cpp:235
 msgid "Calling from private number"
-msgstr "私人号码来电"
+msgstr "שיחה ממספר פרטי"
 
 #: approver/phoneappapprover.cpp:237
 msgid "Calling from unknown number"
-msgstr "陌生号码来电"
+msgstr "שיחה ממספר לא ידוע"
 
 #: src/qml/Panes/CallEndedPane.qml:22
 msgid "Calls"
-msgstr "通话"
+msgstr "שיחות"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:42
 #: src/qml/DetailViewContact/ContactDetails.qml:91
 #: src/qml/DetailViewContact/EditToolbar.qml:83
 msgid "Cancel"
-msgstr "取消"
+msgstr "ביטול"
 
 #: src/qml/DetailViewCommunication/CommunicationView.qml:38
 msgid "Communication"
-msgstr "通讯"
+msgstr "תקשורת"
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:87
 #: src/qml/phone-app.qml:474
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:42
 msgid "Compose"
-msgstr "编写"
+msgstr "כתיבה"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:63
 msgid "Contact Details"
-msgstr "联系人详情"
+msgstr "פרטי איש קשר"
 
 #: src/qml/PanelContacts/ContactsPanel.qml:28
 #: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:269
 msgid "Contacts"
-msgstr "联系人"
+msgstr "אנשי קשר"
 
 #: src/qml/phone-app.qml:247
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:28
 msgid "Conversations"
-msgstr "会话"
+msgstr "דיונים"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:84
 msgid "Country"
-msgstr "国家/地区"
+msgstr "מדינה"
 
 #: src/qml/PanelDialer/Keypad.qml:67
 msgid "DEF"
-msgstr "DEF"
+msgstr "אבג"
 
 #: approver/phoneappapprover.cpp:274
 msgid "Decline"
-msgstr "拒绝"
+msgstr "דחיה"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:46
 #: src/qml/DetailViewContact/ContactDetails.qml:79
 msgid "Delete"
-msgstr "删除"
+msgstr "מחיקה"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:39
 msgid "Delete Contact"
-msgstr "删除联系人"
+msgstr "מחיקת איש הקשר"
 
 #. TRANSLATORS: %1 is the duration of the call
 #: src/qml/DetailViewVoicemail/Voicemail.qml:94
 #: src/qml/DetailViewLiveCall/LiveCall.qml:37
 msgid "Dialing"
-msgstr "正在拨号"
+msgstr "בחיוג"
 
 #: src/qml/DetailViewLiveCall/LiveCall.qml:37
 #, qt-format
 msgid "Duration %1"
-msgstr "通话时长 %1"
+msgstr "משך %1"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:69
 msgid "Edit"
-msgstr "编辑"
+msgstr "עריכה"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:74
 msgid "Email"
-msgstr "电邮地址"
+msgstr "דוא״ל"
 
 #: src/qml/PanelDialer/DialerView.qml:54
 msgid "Enter a number"
-msgstr "输入一个号码"
+msgstr "נא להזין מספר"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:68
 msgid "First"
-msgstr "名字"
+msgstr "ראשון"
 
 #: src/qml/PanelDialer/Keypad.qml:77
 msgid "GHI"
-msgstr "GHI"
+msgstr "מםנן"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:54
 msgid "Google Talk"
@@ -249,142 +254,142 @@ msgstr "Google Talk"
 
 #: approver/phone-app-approver.desktop.in:3
 msgid "Handles incoming messages, calls and indicators"
-msgstr ""
+msgstr "טיפול בהודעות נכנסות, בשיחות ובהתרעות"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:41
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:46
 msgid "Home"
-msgstr "主页"
+msgstr "בית"
 
 #: approver/messagingmenu.cpp:161
 msgid "I missed your call - can you call me now?"
-msgstr "我错过了您的电话，您可以现在打给我吗？"
+msgstr "פספסתי את שיחתך - אפשר להתקשר אלי בחזרה?"
 
 #: approver/messagingmenu.cpp:164
 msgid "I'll be 20 minutes late."
-msgstr "我将会迟到20分钟。"
+msgstr "אאחר ב־20 דקות."
 
 #: approver/messagingmenu.cpp:163
 msgid "I'm busy at the moment. I'll call you later."
-msgstr "现在正忙，待会儿回您电话。"
+msgstr "אין לי אפשרות לענות כרגע. אתקשר מאוחר יותר."
 
 #: approver/messagingmenu.cpp:162
 msgid "I'm running late. I'm on my way."
-msgstr "快迟到了，我这就动身。"
+msgstr "אאחר. אני בדרך."
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:98
 msgid "IM"
-msgstr "即时通讯"
+msgstr "הודעה מיידית"
 
 #: src/qml/PanelDialer/Keypad.qml:87
 msgid "JKL"
-msgstr "JKL"
+msgstr "יכךל"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:90
 msgid "Last"
-msgstr "姓氏"
+msgstr "אחרון"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:57
 msgid "Locality"
-msgstr "城市"
+msgstr "מיקום"
 
 #: src/qml/PanelDialer/Keypad.qml:97
 msgid "MNO"
-msgstr "MNO"
+msgstr "זחט"
 
 #: src/qml/Panes/SelectMessagePane.qml:22
 msgid "Messages"
-msgstr "信息"
+msgstr "הודעות"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:79
 msgid "Middle"
-msgstr "中间名"
+msgstr "אמצע"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:45
 msgid "Mobile"
-msgstr "手机"
+msgstr "נייד"
 
 #: src/qml/phone-app.qml:480
 msgid "New Contact"
-msgstr "新增联系人"
+msgstr "איש קשר חדש"
 
 #: src/qml/phone-app.qml:475
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:146
 msgid "New Message"
-msgstr "新消息"
+msgstr "הודעה חדשה"
 
 #: src/qml/OnCallPanel.qml:84
 msgid "On Call"
-msgstr "正在通话"
+msgstr "בשיחה"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:43
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:48
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:57
 msgid "Other"
-msgstr "其它"
+msgstr "אחר"
 
 #: src/qml/PanelDialer/Keypad.qml:107
 msgid "PQRS"
-msgstr "PQRS"
+msgstr "רשת"
 
 #: src/phone-app.desktop.in:3
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:61
 msgid "Phone"
-msgstr "电话"
+msgstr "טלפון"
 
 #: src/phone-app.desktop.in:4
 msgid "Phone App"
-msgstr ""
+msgstr "יישום טלפון"
 
 #: approver/phone-app-approver.desktop.in:2
 msgid "Phone App Approver"
-msgstr ""
+msgstr "מאשר יישום הטלפון"
 
 #: approver/phone-app-call.desktop.in:3
 msgid "Phone Calls"
-msgstr ""
+msgstr "שיחות טלפון"
 
 #: src/phone-app.desktop.in:5
 msgid "Phone application"
-msgstr ""
+msgstr "יישום טלפון"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:75
 msgid "Postal Code"
-msgstr "邮政编码"
+msgstr "מיקוד"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:57
 msgid "Prefix"
-msgstr "名称前缀"
+msgstr "קידומת"
 
 #: Ubuntu/PhoneApp/conversationfeedmodel.cpp:275
 msgid "Private number"
-msgstr "私人号码"
+msgstr "מספר פרטי"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:66
 msgid "Region"
-msgstr "地区"
+msgstr "אזור"
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:87
 msgid "Reply via SMS"
-msgstr "以短信回复"
+msgstr "תגובה ב־SMS"
 
 #: approver/phone-app-sms.desktop.in:3
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #: approver/textchannelobserver.cpp:51
 #, qt-format
 msgid "SMS from %1"
-msgstr "来自 %1 的短信"
+msgstr "SMS מאת %1"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:108
 #: src/qml/DetailViewContact/EditToolbar.qml:99
 msgid "Save"
-msgstr "保存"
+msgstr "שמירה"
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:102
 msgid "Send"
-msgstr "发送"
+msgstr "שליחה"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:56
 msgid "Skype"
@@ -392,69 +397,69 @@ msgstr "Skype"
 
 #: approver/messagingmenu.cpp:165
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr "抱歉，我还在忙，待会儿给您回电话。"
+msgstr "עדיין עסוק. אתקשר מאוחר יותר. סליחה."
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:47
 msgid "Street"
-msgstr "街道"
+msgstr "רחוב"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:100
 msgid "Suffix"
-msgstr "名称后缀"
+msgstr "סיומת"
 
 #: src/qml/DetailViewLiveCall/BackgroundCall.qml:54
 msgid "Swap Calls"
-msgstr "切换通话"
+msgstr "החלפת שיחות"
 
 #: src/qml/PanelDialer/Keypad.qml:117
 msgid "TUV"
-msgstr "TUV"
+msgstr "צץק"
 
 #: src/qml/DetailViewCommunication/NewMessageHeader.qml:59
 msgid "To:"
-msgstr "至:"
+msgstr "אל:"
 
 #: src/qml/dateUtils.js:41
 msgid "Today"
-msgstr "今天"
+msgstr "היום"
 
 #: src/qml/DetailViewLiveCall/LiveCall.qml:155
 msgid "Unknown Contact"
-msgstr "未知联系人"
+msgstr "איש קשר לא ידוע"
 
 #: approver/phoneappapprover.cpp:229
 msgid "Unknown caller"
-msgstr "未知来电者"
+msgstr "מתקשר לא ידוע"
 
 #: Ubuntu/PhoneApp/conversationfeedmodel.cpp:279
 msgid "Unknown number"
-msgstr "陌生号码"
+msgstr "מספר לא ידוע"
 
 #: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99
 msgid "Voicemail"
-msgstr "语音信箱"
+msgstr "תא קולי"
 
 #: approver/messagingmenu.cpp:198
 msgid "Voicemail messages"
-msgstr "语音信箱信息"
+msgstr "הודעות בתא הקולי"
 
 #: src/qml/PanelDialer/Keypad.qml:127
 msgid "WXYZ"
-msgstr "WXYZ"
+msgstr "סעפף"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:42
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:47
 msgid "Work"
-msgstr "公司"
+msgstr "עבודה"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:55
 msgid "Yahoo"
-msgstr "雅虎"
+msgstr "Yahoo"
 
 #: src/qml/dateUtils.js:43
 msgid "Yesterday"
-msgstr "昨天"
+msgstr "אתמול"
 
 #: src/qml/DetailViewCommunication/CommunicationDelegate.qml:100
 msgid "missed call"
-msgstr "未接来电"
+msgstr "שיחה שלא נענתה"
