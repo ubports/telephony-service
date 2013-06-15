@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-06-12 16:43-0300\n"
-"PO-Revision-Date: 2013-06-04 12:03+0000\n"
-"Last-Translator: Renato Araujo Oliveira Filho <Unknown>\n"
+"PO-Revision-Date: 2013-06-14 21:06+0000\n"
+"Last-Translator: Rafael Neri <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2013-06-13 06:09+0000\n"
+"X-Launchpad-Export-Date: 2013-06-15 06:21+0000\n"
 "X-Generator: Launchpad (build 16667)\n"
 "Language: pt_BR\n"
 
@@ -140,7 +140,7 @@ msgstr "Endereço"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:40
 msgid "Are you sure you want to delete this contact?"
-msgstr ""
+msgstr "Você tem certeza de que deseja excluir este contato?"
 
 #: src/qml/phone-app.qml:236 src/qml/PanelDialer/DialerView.qml:25
 msgid "Call"
@@ -216,7 +216,7 @@ msgstr "Apagar"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:39
 msgid "Delete Contact"
-msgstr ""
+msgstr "Excluir contato"
 
 #. TRANSLATORS: %1 is the duration of the call
 #: src/qml/DetailViewVoicemail/Voicemail.qml:94
@@ -255,7 +255,7 @@ msgstr "Google Talk"
 
 #: approver/phone-app-approver.desktop.in:3
 msgid "Handles incoming messages, calls and indicators"
-msgstr ""
+msgstr "Manipula as mensagens recebidas, chamadas e indicadores"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:41
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:46
@@ -340,19 +340,19 @@ msgstr "Telefone"
 
 #: src/phone-app.desktop.in:4
 msgid "Phone App"
-msgstr ""
+msgstr "Phone App"
 
 #: approver/phone-app-approver.desktop.in:2
 msgid "Phone App Approver"
-msgstr ""
+msgstr "Aprovador do Phone App"
 
 #: approver/phone-app-call.desktop.in:3
 msgid "Phone Calls"
-msgstr ""
+msgstr "Chamadas telefônicas"
 
 #: src/phone-app.desktop.in:5
 msgid "Phone application"
-msgstr ""
+msgstr "Aplicativo de telefone"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:75
 msgid "Postal Code"
@@ -376,7 +376,7 @@ msgstr "Responder via SMS"
 
 #: approver/phone-app-sms.desktop.in:3
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #: approver/textchannelobserver.cpp:51
 #, qt-format
