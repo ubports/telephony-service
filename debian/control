@@ -39,12 +39,12 @@ Depends: ${misc:Depends},
          qtdeclarative5-hud1.0,
          libicu48,
          libnotify4,
-         notify-osd,
          qtdeclarative5-ubuntu-ui-toolkit-plugin | qt-components-ubuntu,
          telepathy-logger,
          telepathy-mission-control-5,
          telepathy-ofono2,
          ubuntu-sounds,
+Recommends: unity8 (>= 7.81.0~),
 Description: Phone application for Ubuntu
  An application to execute phone tasks such as calling, messaging and contact
  management.
