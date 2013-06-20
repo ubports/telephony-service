@@ -1,3 +1,10 @@
+phone-app (0.59.13-0ubuntu5) UNRELEASED; urgency=low
+
+  * debian/control
+    - depend on libfolks-eds25
+
+ -- Ken VanDine <ken.vandine@canonical.com>  Thu, 20 Jun 2013 11:39:02 -0400
+
 phone-app (0.59.13-0ubuntu4) saucy; urgency=low
 
   * Do not depend on notify-osd, recommend unity8 (>= 7.81.0~) instead.
