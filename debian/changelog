@@ -1,9 +1,13 @@
-phone-app (0.59.13-0ubuntu5) UNRELEASED; urgency=low
+phone-app (0.59.13-0ubuntu6) saucy; urgency=low
 
+  [ Ken VanDine ]
   * debian/control
     - depend on libfolks-eds25
 
- -- Ken VanDine <ken.vandine@canonical.com>  Thu, 20 Jun 2013 11:39:02 -0400
+  [ Gustavo Pichorim Boiko ]
+  * Remove desktop file and application binary links.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 21 Jun 2013 14:44:42 -0300
 
 phone-app (0.59.13-0ubuntu4) saucy; urgency=low
 
