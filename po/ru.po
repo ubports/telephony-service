@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-12 16:43-0300\n"
-"PO-Revision-Date: 2013-06-16 05:59+0000\n"
-"Last-Translator: Eugene Marshal <Unknown>\n"
+"PO-Revision-Date: 2013-06-20 10:34+0000\n"
+"Last-Translator: Den <epicodes@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-06-17 06:21+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-06-21 06:07+0000\n"
+"X-Generator: Launchpad (build 16677)\n"
 
 #: src/qml/PanelDialer/Keypad.qml:161
 msgid "#"
@@ -176,7 +176,7 @@ msgstr "Отмена"
 
 #: src/qml/DetailViewCommunication/CommunicationView.qml:38
 msgid "Communication"
-msgstr ""
+msgstr "Связь"
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:87
 #: src/qml/phone-app.qml:474
@@ -196,7 +196,7 @@ msgstr "Контакты"
 #: src/qml/phone-app.qml:247
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:28
 msgid "Conversations"
-msgstr ""
+msgstr "Диалоги"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:84
 msgid "Country"
@@ -248,7 +248,7 @@ msgstr "Первый"
 
 #: src/qml/PanelDialer/Keypad.qml:77
 msgid "GHI"
-msgstr ""
+msgstr "GHI"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:54
 msgid "Google Talk"
@@ -285,7 +285,7 @@ msgstr "IM"
 
 #: src/qml/PanelDialer/Keypad.qml:87
 msgid "JKL"
-msgstr ""
+msgstr "JKL"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:90
 msgid "Last"
@@ -297,7 +297,7 @@ msgstr "Местоположение"
 
 #: src/qml/PanelDialer/Keypad.qml:97
 msgid "MNO"
-msgstr ""
+msgstr "MNO"
 
 #: src/qml/Panes/SelectMessagePane.qml:22
 msgid "Messages"
@@ -332,7 +332,7 @@ msgstr "Прочее"
 
 #: src/qml/PanelDialer/Keypad.qml:107
 msgid "PQRS"
-msgstr ""
+msgstr "PQRS"
 
 #: src/phone-app.desktop.in:3
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:61
@@ -341,7 +341,7 @@ msgstr "Телефон"
 
 #: src/phone-app.desktop.in:4
 msgid "Phone App"
-msgstr ""
+msgstr "Телефон"
 
 #: approver/phone-app-approver.desktop.in:2
 msgid "Phone App Approver"
@@ -382,7 +382,7 @@ msgstr "SMS"
 #: approver/textchannelobserver.cpp:51
 #, qt-format
 msgid "SMS from %1"
-msgstr ""
+msgstr "SMS от %1"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:108
 #: src/qml/DetailViewContact/EditToolbar.qml:99
@@ -415,7 +415,7 @@ msgstr ""
 
 #: src/qml/PanelDialer/Keypad.qml:117
 msgid "TUV"
-msgstr ""
+msgstr "TUV"
 
 #: src/qml/DetailViewCommunication/NewMessageHeader.qml:59
 msgid "To:"
@@ -447,7 +447,7 @@ msgstr "Голосовые сообщения"
 
 #: src/qml/PanelDialer/Keypad.qml:127
 msgid "WXYZ"
-msgstr ""
+msgstr "WXYZ"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:42
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:47

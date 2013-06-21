@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-12 16:43-0300\n"
-"PO-Revision-Date: 2013-06-14 13:38+0000\n"
+"PO-Revision-Date: 2013-06-20 12:31+0000\n"
 "Last-Translator: Hélion du Mas des Bourboux <helion331990@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2013-06-15 06:21+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-06-21 06:07+0000\n"
+"X-Generator: Launchpad (build 16677)\n"
 
 #: src/qml/PanelDialer/Keypad.qml:161
 msgid "#"
@@ -115,23 +115,23 @@ msgstr ""
 
 #: src/qml/PanelContacts/ContactsPanel.qml:42 src/qml/phone-app.qml:479
 msgid "Add"
-msgstr ""
+msgstr "Ajouter"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:64
 msgid "Add a phone number"
-msgstr ""
+msgstr "Ajouter un numéro de téléphone"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:90
 msgid "Add a postal address"
-msgstr ""
+msgstr "Ajouter une adresse postale"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:77
 msgid "Add an email address"
-msgstr ""
+msgstr "Ajouter une adresse courriel"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:101
 msgid "Add an online account"
-msgstr ""
+msgstr "Ajouter un compte en ligne"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:87
 msgid "Address"
@@ -139,7 +139,7 @@ msgstr "Adresse"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:40
 msgid "Are you sure you want to delete this contact?"
-msgstr ""
+msgstr "Voulez-vous vraiment supprimer ce contact ?"
 
 #: src/qml/phone-app.qml:236 src/qml/PanelDialer/DialerView.qml:25
 msgid "Call"
@@ -184,17 +184,17 @@ msgstr ""
 
 #: src/qml/DetailViewContact/ContactDetails.qml:63
 msgid "Contact Details"
-msgstr ""
+msgstr "Détails du contact"
 
 #: src/qml/PanelContacts/ContactsPanel.qml:28
 #: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:269
 msgid "Contacts"
-msgstr ""
+msgstr "Contacts"
 
 #: src/qml/phone-app.qml:247
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:28
 msgid "Conversations"
-msgstr ""
+msgstr "Conversations"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:84
 msgid "Country"
@@ -215,7 +215,7 @@ msgstr ""
 
 #: src/qml/DetailViewContact/ContactDetails.qml:39
 msgid "Delete Contact"
-msgstr ""
+msgstr "Supprimer le contact"
 
 #. TRANSLATORS: %1 is the duration of the call
 #: src/qml/DetailViewVoicemail/Voicemail.qml:94
@@ -230,7 +230,7 @@ msgstr ""
 
 #: src/qml/DetailViewContact/ContactDetails.qml:69
 msgid "Edit"
-msgstr ""
+msgstr "Modifier"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:74
 msgid "Email"
@@ -238,7 +238,7 @@ msgstr "Courriel"
 
 #: src/qml/PanelDialer/DialerView.qml:54
 msgid "Enter a number"
-msgstr ""
+msgstr "Composer un numéro"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:68
 msgid "First"
@@ -250,7 +250,7 @@ msgstr ""
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:54
 msgid "Google Talk"
-msgstr ""
+msgstr "Google Talk"
 
 #: approver/phone-app-approver.desktop.in:3
 msgid "Handles incoming messages, calls and indicators"
@@ -263,7 +263,7 @@ msgstr ""
 
 #: approver/messagingmenu.cpp:161
 msgid "I missed your call - can you call me now?"
-msgstr ""
+msgstr "J'ai manqué votre appel - pouvez-vous m'appeler maintenant ?"
 
 #: approver/messagingmenu.cpp:164
 msgid "I'll be 20 minutes late."
