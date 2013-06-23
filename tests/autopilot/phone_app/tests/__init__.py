@@ -109,9 +109,9 @@ class PhoneAppTestCase(AutopilotTestCase):
         contacts_pane = self.utils.get_contacts_pane()
         
         x, y, w, h = tabs_bar.globalRect
-        tx = x + (w - 5)
+        tx = x + (w - w / 8)
         ty = y + h / 2
-        self.pointing_device.drag(tx, ty, tx / 3, ty)
+        self.pointing_device.drag(tx, ty, tx / 8, ty)
 
         contacts_tab_button = self.utils.get_contacts_tab_button()
         self.assertThat(contacts_tab_button.opacity,
