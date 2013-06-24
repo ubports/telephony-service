@@ -1,3 +1,9 @@
+phone-app (0.59.14-0ubuntu1) saucy; urgency=low
+
+  * Force rebuild.
+
+ -- Sergio Schvezov <sergio.schvezov@canonical.com>  Mon, 24 Jun 2013 18:25:16 -0300
+
 phone-app (0.59.13-0ubuntu6) saucy; urgency=low
 
   [ Ken VanDine ]
