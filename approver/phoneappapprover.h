@@ -58,6 +58,7 @@ private Q_SLOTS:
     void onCallStateChanged(Tp::CallState state);
     void onReplyReceived(const QString &phoneNumber, const QString &reply);
     void closeSnapDecision();
+    void onMessageRead(const QString &phoneNumber, const QString &encodedMessageId);
     void onAcceptCallRequested();
     void onRejectCallRequested();
 

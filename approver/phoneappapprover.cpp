@@ -63,7 +63,7 @@ PhoneAppApprover::PhoneAppApprover()
             SIGNAL(replyReceived(QString,QString)),
             SLOT(onReplyReceived(QString,QString)));
     connect(MessagingMenu::instance(), SIGNAL(messageRead(QString,QString)),
-            ChatManager::instance(), SLOT(acknowledgeMessage(QString,QString)));
+            this, SLOT(onMessageRead(QString,QString)));
 
     connect(PhoneAppUtils::instance(),
             SIGNAL(applicationRunningChanged(bool)),
@@ -73,6 +73,13 @@ PhoneAppApprover::PhoneAppApprover()
 PhoneAppApprover::~PhoneAppApprover()
 {
 }
+
+void PhoneAppApprover::onMessageRead(const QString &phoneNumber, const QString &encodedMessageId)
+{
+    QString messageId(QByteArray::fromHex(encodedMessageId.toUtf8()));
+    ChatManager::instance()->acknowledgeMessage(phoneNumber, messageId);
+}
+
 
 Tp::ChannelClassSpecList PhoneAppApprover::channelFilters() const
 {
