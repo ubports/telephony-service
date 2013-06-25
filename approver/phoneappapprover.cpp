@@ -48,8 +48,15 @@ PhoneAppApprover::PhoneAppApprover()
   mPendingSnapDecision(NULL)
 {
     PhoneAppApproverDBus *dbus = new PhoneAppApproverDBus();
-    connect(dbus, SIGNAL(onMessageSent(const QString&, const QString&)),
-                  SLOT(onReplyReceived(const QString&, const QString&)));
+    connect(dbus,
+            SIGNAL(onMessageSent(const QString&, const QString&)),
+            SLOT(onReplyReceived(const QString&, const QString&)));
+    connect(dbus,
+            SIGNAL(acceptCallRequested()),
+            SLOT(onAcceptCallRequested()));
+    connect(dbus,
+            SIGNAL(rejectCallRequested()),
+            SLOT(onRejectCallRequested()));
     dbus->connectToBus();
 
     connect(MessagingMenu::instance(),
@@ -142,7 +149,6 @@ public:
     PhoneAppApprover* self;
     Tp::ChannelDispatchOperationPtr dispatchOp;
     Tp::ChannelPtr channel;
-    Tp::PendingReady *pr;
 };
 
 void action_accept(NotifyNotification* notification,
@@ -155,8 +161,7 @@ void action_accept(NotifyNotification* notification,
     EventData* eventData = (EventData*) data;
     PhoneAppApprover* approver = (PhoneAppApprover*) eventData->self;
     if (NULL != approver) {
-        approver->onApproved((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp,
-                             (Tp::PendingReady *) eventData->pr);
+        approver->onApproved((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp);
     }
 }
 
@@ -170,8 +175,7 @@ void action_reject(NotifyNotification* notification,
     EventData* eventData = (EventData*) data;
     PhoneAppApprover* approver = (PhoneAppApprover*) eventData->self;
     if (NULL != approver) {
-        approver->onRejected((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp,
-                             (Tp::ChannelPtr) eventData->channel);
+        approver->onRejected((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp);
     }
 }
 
@@ -196,7 +200,7 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
         return;
     }
 
-    Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[pr]);
+    Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
     if (!callChannel) {
         return;
     }
@@ -206,7 +210,7 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
     if (isIncoming && !callChannel->isRequested() && callChannel->callState() == Tp::CallStateInitialised) {
         callChannel->setRinging();
     } else {
-        onApproved(dispatchOp, NULL);
+        onApproved(dispatchOp);
         return;
     }
 
@@ -222,7 +226,6 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
     data->self = this;
     data->dispatchOp = dispatchOp;
     data->channel = channel;
-    data->pr = pr;
 
     // try to find the contact in the ContactModel
     ContactEntry *contactEntry = ContactModel::instance()->contactFromPhoneNumber(contact->id());
@@ -293,10 +296,11 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
 
     // play a ringtone
     Ringtone::instance()->playIncomingCallSound();
+
+    mChannels.remove(pr);
 }
 
-void PhoneAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
-                                      Tp::PendingReady *pr)
+void PhoneAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
 {
     closeSnapDecision();
 
@@ -307,20 +311,40 @@ void PhoneAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
     PhoneAppUtils::instance()->startPhoneApp();
 
     mDispatchOps.removeAll(dispatchOp);
-    if (pr) {
-        mChannels.remove(pr);
-    }
 }
 
-void PhoneAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
-                                      Tp::ChannelPtr channel)
+void PhoneAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
 {
     Tp::PendingOperation *claimop = dispatchOp->claim();
-    mChannels[claimop] = channel;
+    // assume there is just one channel in the dispatchOp for calls
+    mChannels[claimop] = dispatchOp->channels().first();
     connect(claimop, SIGNAL(finished(Tp::PendingOperation*)),
             this, SLOT(onClaimFinished(Tp::PendingOperation*)));
 
     Ringtone::instance()->stopIncomingCallSound();
+}
+
+Tp::ChannelDispatchOperationPtr PhoneAppApprover::dispatchOperationForIncomingCall()
+{
+    Tp::ChannelDispatchOperationPtr callDispatchOp;
+
+    // find the call channel in the dispatch operations
+    Q_FOREACH(Tp::ChannelDispatchOperationPtr dispatchOp, mDispatchOps) {
+        Q_FOREACH(Tp::ChannelPtr channel, dispatchOp->channels()) {
+            Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
+            // FIXME: maybe we need to check the call state too?
+            if (!callChannel.isNull()) {
+                callDispatchOp = dispatchOp;
+                break;
+            }
+        }
+
+        if (!callDispatchOp.isNull()) {
+            break;
+        }
+    }
+
+    return callDispatchOp;
 }
 
 void PhoneAppApprover::processChannels()
@@ -413,7 +437,7 @@ void PhoneAppApprover::onCallStateChanged(Tp::CallState state)
         // add the missed call to the messaging menu
         MessagingMenu::instance()->addCall(channel->targetContact()->id(), QDateTime::currentDateTime());
     } else if (state == Tp::CallStateActive) {
-        onApproved(dispatchOperation, NULL);
+        onApproved(dispatchOperation);
     }
 }
 
@@ -430,5 +454,29 @@ void PhoneAppApprover::closeSnapDecision()
     }
 
     Ringtone::instance()->stopIncomingCallSound();
+}
+
+void PhoneAppApprover::onAcceptCallRequested()
+{
+    if (!mPendingSnapDecision) {
+        return;
+    }
+
+    Tp::ChannelDispatchOperationPtr callDispatchOp = dispatchOperationForIncomingCall();
+    if (!callDispatchOp.isNull()) {
+        onApproved(callDispatchOp);
+    }
+}
+
+void PhoneAppApprover::onRejectCallRequested()
+{
+    if (!mPendingSnapDecision) {
+        return;
+    }
+
+    Tp::ChannelDispatchOperationPtr callDispatchOp = dispatchOperationForIncomingCall();
+    if (!callDispatchOp.isNull()) {
+        onRejected(callDispatchOp);
+    }
 }
 
