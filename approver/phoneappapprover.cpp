@@ -444,6 +444,10 @@ void PhoneAppApprover::onAcceptCallRequested()
                 break;
             }
         }
+
+        if (!callDispatchOp.isNull()) {
+            break;
+        }
     }
 
     if (!callDispatchOp.isNull()) {
