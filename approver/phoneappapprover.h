@@ -44,10 +44,8 @@ public:
     void addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                               const Tp::ChannelDispatchOperationPtr &dispatchOperation);
     Tp::ChannelDispatchOperationPtr dispatchOperation(Tp::PendingOperation *op);
-    void onApproved(Tp::ChannelDispatchOperationPtr dispatchOp,
-                    Tp::PendingReady *pr);
-    void onRejected(Tp::ChannelDispatchOperationPtr dispatchOp,
-                    Tp::ChannelPtr channel);
+    void onApproved(Tp::ChannelDispatchOperationPtr dispatchOp);
+    void onRejected(Tp::ChannelDispatchOperationPtr dispatchOp);
 
 private Q_SLOTS:
     void processChannels();
@@ -57,6 +55,8 @@ private Q_SLOTS:
     void onCallStateChanged(Tp::CallState state);
     void onReplyReceived(const QString &phoneNumber, const QString &reply);
     void closeSnapDecision();
+    void onAcceptCallRequested();
+    void onRejectCallRequested();
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
