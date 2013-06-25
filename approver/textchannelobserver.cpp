@@ -72,8 +72,9 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     g_object_unref(G_OBJECT(notification));
 
-    // and add the message to the messaging menu
-    MessagingMenu::instance()->addMessage(contact->id(), message.messageToken(), message.received(), message.text());
+    // and add the message to the messaging menu (use hex format to avoid invalid characters)  
+    QByteArray token(message.messageToken().toUtf8()); 
+    MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), message.text());
     Ringtone::instance()->playIncomingMessageSound();
 }
 
