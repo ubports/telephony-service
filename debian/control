@@ -43,7 +43,7 @@ Depends: ${misc:Depends},
          qtdeclarative5-ubuntu-ui-toolkit-plugin | qt-components-ubuntu,
          telepathy-logger,
          telepathy-mission-control-5,
-         telepathy-ofono2,
+         telepathy-ofono,
          ubuntu-sounds,
 Recommends: unity8 (>= 7.81.0~),
 Description: Phone application for Ubuntu

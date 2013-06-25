@@ -1,3 +1,10 @@
+phone-app (0.59.15) saucy; urgency=low
+
+  * debian/control: depend on telepathy-ofono instead, same as
+    telepathy-ofono2 but provided by the archive
+
+ -- Ricardo Salveti de Araujo <ricardo.salveti@canonical.com>  Tue, 25 Jun 2013 01:24:47 -0300
+
 phone-app (0.59.14) saucy; urgency=low
 
   * Force rebuild.
