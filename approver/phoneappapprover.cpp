@@ -317,6 +317,29 @@ void PhoneAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
     Ringtone::instance()->stopIncomingCallSound();
 }
 
+Tp::ChannelDispatchOperationPtr PhoneAppApprover::dispatchOperationForIncomingCall()
+{
+    Tp::ChannelDispatchOperationPtr callDispatchOp;
+
+    // find the call channel in the dispatch operations
+    Q_FOREACH(Tp::ChannelDispatchOperationPtr dispatchOp, mDispatchOps) {
+        Q_FOREACH(Tp::ChannelPtr channel, dispatchOp->channels()) {
+            Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
+            // FIXME: maybe we need to check the call state too?
+            if (!callChannel.isNull()) {
+                callDispatchOp = dispatchOp;
+                break;
+            }
+        }
+
+        if (!callDispatchOp.isNull()) {
+            break;
+        }
+    }
+
+    return callDispatchOp;
+}
+
 void PhoneAppApprover::processChannels()
 {
     Q_FOREACH (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
@@ -432,24 +455,7 @@ void PhoneAppApprover::onAcceptCallRequested()
         return;
     }
 
-    Tp::ChannelDispatchOperationPtr callDispatchOp;
-
-    // find the call channel in the dispatch operations
-    Q_FOREACH(Tp::ChannelDispatchOperationPtr dispatchOp, mDispatchOps) {
-        Q_FOREACH(Tp::ChannelPtr channel, dispatchOp->channels()) {
-            Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
-            // FIXME: maybe we need to check the call state too?
-            if (!callChannel.isNull()) {
-                callDispatchOp = dispatchOp;
-                break;
-            }
-        }
-
-        if (!callDispatchOp.isNull()) {
-            break;
-        }
-    }
-
+    Tp::ChannelDispatchOperationPtr callDispatchOp = dispatchOperationForIncomingCall();
     if (!callDispatchOp.isNull()) {
         onApproved(callDispatchOp);
     }
@@ -461,20 +467,7 @@ void PhoneAppApprover::onRejectCallRequested()
         return;
     }
 
-    Tp::ChannelDispatchOperationPtr callDispatchOp;
-
-    // find the call channel in the dispatch operations
-    Q_FOREACH(Tp::ChannelDispatchOperationPtr dispatchOp, mDispatchOps) {
-        Q_FOREACH(Tp::ChannelPtr channel, dispatchOp->channels()) {
-            Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
-            // FIXME: maybe we need to check the call state too?
-            if (!callChannel.isNull()) {
-                callDispatchOp = dispatchOp;
-                break;
-            }
-        }
-    }
-
+    Tp::ChannelDispatchOperationPtr callDispatchOp = dispatchOperationForIncomingCall();
     if (!callDispatchOp.isNull()) {
         onRejected(callDispatchOp);
     }

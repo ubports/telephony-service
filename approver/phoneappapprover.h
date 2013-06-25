@@ -47,6 +47,9 @@ public:
     void onApproved(Tp::ChannelDispatchOperationPtr dispatchOp);
     void onRejected(Tp::ChannelDispatchOperationPtr dispatchOp);
 
+protected:
+    Tp::ChannelDispatchOperationPtr dispatchOperationForIncomingCall();
+
 private Q_SLOTS:
     void processChannels();
     void onChannelReady(Tp::PendingOperation *op);
