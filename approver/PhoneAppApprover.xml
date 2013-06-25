@@ -16,5 +16,17 @@
             <arg name="number" type="s" direction="in"/>
             <arg name="message" type="s" direction="in"/>
         </method>
+        <method name="AcceptCall">
+            <dox:d><![CDATA[
+                Accept any incoming call and launches the phone-app.
+                If there is no incoming call, this method does nothing.
+            ]]></dox:d>
+        </method>
+        <method name="RejectCall">
+            <dox:d><![CDATA[
+                Reject any incoming call. If there is no incoming call,
+                this method has no effect.
+            ]]></dox:d>
+        </method>
     </interface>
 </node>

@@ -54,3 +54,13 @@ void PhoneAppApproverDBus::SendMessage(const QString &number, const QString &mes
 {
     Q_EMIT onMessageSent(number, message);
 }
+
+void PhoneAppApproverDBus::AcceptCall()
+{
+    Q_EMIT acceptCallRequested();
+}
+
+void PhoneAppApproverDBus::RejectCall()
+{
+    Q_EMIT rejectCallRequested();
+}
