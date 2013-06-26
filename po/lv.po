@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-12 16:43-0300\n"
-"PO-Revision-Date: 2013-06-18 16:18+0000\n"
+"PO-Revision-Date: 2013-06-25 09:49+0000\n"
 "Last-Translator: Klavs Anson <anson.klavs@gmail.com>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-06-19 06:17+0000\n"
-"X-Generator: Launchpad (build 16673)\n"
+"X-Launchpad-Export-Date: 2013-06-26 06:19+0000\n"
+"X-Generator: Launchpad (build 16681)\n"
 
 #: src/qml/PanelDialer/Keypad.qml:161
 msgid "#"
@@ -108,7 +108,7 @@ msgstr "8"
 
 #: src/qml/PanelDialer/Keypad.qml:126
 msgid "9"
-msgstr ""
+msgstr "9"
 
 #: src/qml/PanelDialer/Keypad.qml:57
 msgid "ABC"
