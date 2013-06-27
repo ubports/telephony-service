@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-12 16:43-0300\n"
-"PO-Revision-Date: 2013-06-13 17:52+0000\n"
-"Last-Translator: admresdeserv. <jeanmarc.gailis@gmail.com>\n"
+"PO-Revision-Date: 2013-06-25 09:49+0000\n"
+"Last-Translator: Klavs Anson <anson.klavs@gmail.com>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-06-14 07:05+0000\n"
-"X-Generator: Launchpad (build 16667)\n"
+"X-Launchpad-Export-Date: 2013-06-26 06:19+0000\n"
+"X-Generator: Launchpad (build 16681)\n"
 
 #: src/qml/PanelDialer/Keypad.qml:161
 msgid "#"
@@ -34,30 +34,33 @@ msgstr[2] "%1 stundu zvans"
 #, qt-format
 msgid "%1 minute call"
 msgid_plural "%1 minutes call"
-msgstr[0] "%1 minutas zvans"
-msgstr[1] "%1 minutu zvans"
-msgstr[2] "%1 minutu zvans"
+msgstr[0] "%1 minutes zvans"
+msgstr[1] "%1 minušu zvans"
+msgstr[2] "%1 minušu zvans"
 
 #: approver/messagingmenu.cpp:143
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 neatbildēts zvans"
+msgstr[1] "%1 neatbildētu zvanu"
+msgstr[2] "%1 neatbildētu zvanu"
 
 #: src/qml/phone-app.qml:76 src/qml/dateUtils.js:66
 #, qt-format
 msgid "%1 second call"
 msgid_plural "%1 seconds call"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 sekundes zvans"
+msgstr[1] "%1 sekunžu zvans"
+msgstr[2] "%1 sekunžu zvans"
 
 #: approver/messagingmenu.cpp:200
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 balss pasta ziņa"
+msgstr[1] "%1 balss pasta ziņas"
+msgstr[2] "%1 balss pasta ziņas"
 
 #: src/qml/PanelDialer/Keypad.qml:138
 msgid "*"
@@ -105,7 +108,7 @@ msgstr "8"
 
 #: src/qml/PanelDialer/Keypad.qml:126
 msgid "9"
-msgstr ""
+msgstr "9"
 
 #: src/qml/PanelDialer/Keypad.qml:57
 msgid "ABC"
@@ -121,15 +124,15 @@ msgstr "Pievienot"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:64
 msgid "Add a phone number"
-msgstr "Pievienot telefona numurs"
+msgstr "Pievienot telefona numuru"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:90
 msgid "Add a postal address"
-msgstr "Pievienot pastu indekssu"
+msgstr "Pievienot pasta indekssu"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:77
 msgid "Add an email address"
-msgstr "Pievienot epastu adresi"
+msgstr "Pievienot epasta adresi"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:101
 msgid "Add an online account"
@@ -145,24 +148,24 @@ msgstr "Vai tiešām vēlaties dzēst šo kontaktu?"
 
 #: src/qml/phone-app.qml:236 src/qml/PanelDialer/DialerView.qml:25
 msgid "Call"
-msgstr "Piezvanīt"
+msgstr "Zvanīt"
 
 #: approver/phoneappapprover.cpp:242
 msgid "Caller number is not available"
-msgstr ""
+msgstr "Zvanītais numurs nav pieejams"
 
 #: approver/phoneappapprover.cpp:239
 #, qt-format
 msgid "Calling from %1"
-msgstr ""
+msgstr "Zvana no %1"
 
 #: approver/phoneappapprover.cpp:235
 msgid "Calling from private number"
-msgstr ""
+msgstr "Zvanīšana no privātā numura"
 
 #: approver/phoneappapprover.cpp:237
 msgid "Calling from unknown number"
-msgstr ""
+msgstr "Zvanīšana no nezināma numura"
 
 #: src/qml/Panes/CallEndedPane.qml:22
 msgid "Calls"
@@ -200,268 +203,268 @@ msgstr "Sarunas"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:84
 msgid "Country"
-msgstr ""
+msgstr "Valsts"
 
 #: src/qml/PanelDialer/Keypad.qml:67
 msgid "DEF"
-msgstr ""
+msgstr "DEF"
 
 #: approver/phoneappapprover.cpp:274
 msgid "Decline"
-msgstr ""
+msgstr "Noraidīt"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:46
 #: src/qml/DetailViewContact/ContactDetails.qml:79
 msgid "Delete"
-msgstr ""
+msgstr "Dzēst"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:39
 msgid "Delete Contact"
-msgstr ""
+msgstr "Dzēst Kontaktu"
 
 #. TRANSLATORS: %1 is the duration of the call
 #: src/qml/DetailViewVoicemail/Voicemail.qml:94
 #: src/qml/DetailViewLiveCall/LiveCall.qml:37
 msgid "Dialing"
-msgstr ""
+msgstr "Zvanīsana"
 
 #: src/qml/DetailViewLiveCall/LiveCall.qml:37
 #, qt-format
 msgid "Duration %1"
-msgstr ""
+msgstr "Ilgums %1"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:69
 msgid "Edit"
-msgstr ""
+msgstr "Rediģēt"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:74
 msgid "Email"
-msgstr ""
+msgstr "E-pasts"
 
 #: src/qml/PanelDialer/DialerView.qml:54
 msgid "Enter a number"
-msgstr ""
+msgstr "Ievadīt numuru"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:68
 msgid "First"
-msgstr ""
+msgstr "Pirmais"
 
 #: src/qml/PanelDialer/Keypad.qml:77
 msgid "GHI"
-msgstr ""
+msgstr "GHI"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:54
 msgid "Google Talk"
-msgstr ""
+msgstr "Google Talk"
 
 #: approver/phone-app-approver.desktop.in:3
 msgid "Handles incoming messages, calls and indicators"
-msgstr ""
+msgstr "Pārvalda ienākošās ziņas, zvanus un indikātorus"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:41
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:46
 msgid "Home"
-msgstr ""
+msgstr "Mājas"
 
 #: approver/messagingmenu.cpp:161
 msgid "I missed your call - can you call me now?"
-msgstr ""
+msgstr "Es nokavēju tavu zvanu - vai vari man piezvanīt tagad?"
 
 #: approver/messagingmenu.cpp:164
 msgid "I'll be 20 minutes late."
-msgstr ""
+msgstr "Es nokavēšu 20 minūtes."
 
 #: approver/messagingmenu.cpp:163
 msgid "I'm busy at the moment. I'll call you later."
-msgstr ""
+msgstr "Es esmu aizņemts. Es tev vēlak piezvanīšu."
 
 #: approver/messagingmenu.cpp:162
 msgid "I'm running late. I'm on my way."
-msgstr ""
+msgstr "Es esmu aizkavējies. Es tūlīt būšu."
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:98
 msgid "IM"
-msgstr ""
+msgstr "IM"
 
 #: src/qml/PanelDialer/Keypad.qml:87
 msgid "JKL"
-msgstr ""
+msgstr "JKL"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:90
 msgid "Last"
-msgstr ""
+msgstr "Pēdējais"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:57
 msgid "Locality"
-msgstr ""
+msgstr "Apgabals"
 
 #: src/qml/PanelDialer/Keypad.qml:97
 msgid "MNO"
-msgstr ""
+msgstr "MNO"
 
 #: src/qml/Panes/SelectMessagePane.qml:22
 msgid "Messages"
-msgstr ""
+msgstr "Ziņojumi"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:79
 msgid "Middle"
-msgstr ""
+msgstr "Vidū"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:45
 msgid "Mobile"
-msgstr ""
+msgstr "Mobilais"
 
 #: src/qml/phone-app.qml:480
 msgid "New Contact"
-msgstr ""
+msgstr "Jauns Kontakts"
 
 #: src/qml/phone-app.qml:475
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:146
 msgid "New Message"
-msgstr ""
+msgstr "Jauna Ziņa"
 
 #: src/qml/OnCallPanel.qml:84
 msgid "On Call"
-msgstr ""
+msgstr "Zvanā"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:43
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:48
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:57
 msgid "Other"
-msgstr ""
+msgstr "Citi"
 
 #: src/qml/PanelDialer/Keypad.qml:107
 msgid "PQRS"
-msgstr ""
+msgstr "PQRS"
 
 #: src/phone-app.desktop.in:3
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:61
 msgid "Phone"
-msgstr ""
+msgstr "Tālrunis"
 
 #: src/phone-app.desktop.in:4
 msgid "Phone App"
-msgstr ""
+msgstr "Telefona Aplikācija"
 
 #: approver/phone-app-approver.desktop.in:2
 msgid "Phone App Approver"
-msgstr ""
+msgstr "Telefona Aplikācijas Apstiprinātājs"
 
 #: approver/phone-app-call.desktop.in:3
 msgid "Phone Calls"
-msgstr ""
+msgstr "Tālruņa zvani"
 
 #: src/phone-app.desktop.in:5
 msgid "Phone application"
-msgstr ""
+msgstr "Telefona Aplikācija"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:75
 msgid "Postal Code"
-msgstr ""
+msgstr "Pasta indekss"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:57
 msgid "Prefix"
-msgstr ""
+msgstr "Priedēklis"
 
 #: Ubuntu/PhoneApp/conversationfeedmodel.cpp:275
 msgid "Private number"
-msgstr ""
+msgstr "Privātais numurs"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:66
 msgid "Region"
-msgstr ""
+msgstr "Reģions"
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:87
 msgid "Reply via SMS"
-msgstr ""
+msgstr "Atbildēt ar SMS"
 
 #: approver/phone-app-sms.desktop.in:3
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #: approver/textchannelobserver.cpp:51
 #, qt-format
 msgid "SMS from %1"
-msgstr ""
+msgstr "SMS no %1"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:108
 #: src/qml/DetailViewContact/EditToolbar.qml:99
 msgid "Save"
-msgstr ""
+msgstr "Saglabāt"
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:102
 msgid "Send"
-msgstr ""
+msgstr "Sūtīt"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:56
 msgid "Skype"
-msgstr ""
+msgstr "Skype"
 
 #: approver/messagingmenu.cpp:165
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr ""
+msgstr "Piedod es vēl esmu aizņemts. Es tev piezvanīšu vēlāk."
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:47
 msgid "Street"
-msgstr ""
+msgstr "Iela"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:100
 msgid "Suffix"
-msgstr ""
+msgstr "Priedēklis"
 
 #: src/qml/DetailViewLiveCall/BackgroundCall.qml:54
 msgid "Swap Calls"
-msgstr ""
+msgstr "Apmainīt Zvanus"
 
 #: src/qml/PanelDialer/Keypad.qml:117
 msgid "TUV"
-msgstr ""
+msgstr "TUV"
 
 #: src/qml/DetailViewCommunication/NewMessageHeader.qml:59
 msgid "To:"
-msgstr ""
+msgstr "Uz:"
 
 #: src/qml/dateUtils.js:41
 msgid "Today"
-msgstr ""
+msgstr "Šodien"
 
 #: src/qml/DetailViewLiveCall/LiveCall.qml:155
 msgid "Unknown Contact"
-msgstr ""
+msgstr "Nezināms Kontakts"
 
 #: approver/phoneappapprover.cpp:229
 msgid "Unknown caller"
-msgstr ""
+msgstr "Nezināms zvanītājs"
 
 #: Ubuntu/PhoneApp/conversationfeedmodel.cpp:279
 msgid "Unknown number"
-msgstr ""
+msgstr "Nezināms numurs"
 
 #: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99
 msgid "Voicemail"
-msgstr ""
+msgstr "Balss pasts"
 
 #: approver/messagingmenu.cpp:198
 msgid "Voicemail messages"
-msgstr ""
+msgstr "Balss pasta ziņas"
 
 #: src/qml/PanelDialer/Keypad.qml:127
 msgid "WXYZ"
-msgstr ""
+msgstr "WXYZ"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:42
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:47
 msgid "Work"
-msgstr ""
+msgstr "Darbs"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:55
 msgid "Yahoo"
-msgstr ""
+msgstr "Yahoo"
 
 #: src/qml/dateUtils.js:43
 msgid "Yesterday"
-msgstr ""
+msgstr "Vakar"
 
 #: src/qml/DetailViewCommunication/CommunicationDelegate.qml:100
 msgid "missed call"
-msgstr ""
+msgstr "nokavētie zvani"

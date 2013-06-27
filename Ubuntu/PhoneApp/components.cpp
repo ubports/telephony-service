@@ -54,9 +54,6 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
 
     Q_UNUSED(uri);
 
-    // needed for tp-logger
-    g_type_init();
-
     // Initialize telepathy types
     Tp::registerTypes();
     //Tp::enableDebug(true);
