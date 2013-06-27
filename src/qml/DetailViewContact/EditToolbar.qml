@@ -43,7 +43,7 @@ StyledItem {
                 anchors.fill: parent
                 onClicked: parent.clicked()
             }
-            style: Theme.createStyleComponent("ToolbarButtonDelegate.qml", toolButton)
+            style: Theme.createStyleComponent("ToolbarButtonStyle.qml", toolButton)
         }
     }
 
@@ -109,5 +109,5 @@ StyledItem {
         }
     }
 
-    style: Theme.createStyleComponent("ToolbarDelegate.qml", toolbar)
+    style: Theme.createStyleComponent("ToolbarStyle.qml", toolbar)
 }
