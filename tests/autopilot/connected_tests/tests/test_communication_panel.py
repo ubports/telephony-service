@@ -68,4 +68,3 @@ class TestCommunicationPanel(PhoneAppTestCase):
         """Test will wait and wait till a new sms arrives."""
         sms_item = self.communication_panel.get_sms_list_item(1)
         self.assertThat(sms_item.title, Eventually(Equals(self.RECEIVED_SMS_NUMBER)))
-

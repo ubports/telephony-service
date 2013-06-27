@@ -17,10 +17,12 @@ from testtools.matchers import Equals, GreaterThan
 
 from connected_tests.emulators.call_panel import CallPanel
 from connected_tests.emulators.communication_panel import CommunicationPanel
-from connected_tests.emulators.utils import Utils
 
 import os
 import shutil
+import ConfigParser
+
+config_file = os.path.expanduser('~/.testnumbers.cfg')
 
 
 class PhoneAppTestCase(AutopilotTestCase):
@@ -29,13 +31,16 @@ class PhoneAppTestCase(AutopilotTestCase):
 
     """
 
-    PHONE_NUMBER = '999'
-    CALL_WAIT = 2
-    CALL_DURATION = 5
-    SEND_SMS_NUMBER = '811'
-    RECEIVED_SMS_NUMBER = '8182'
-    SEND_SMS_TEXT = "Hey!"
-    RECEIVED_SMS_TEXT = "Yo!"
+    config = ConfigParser.ConfigParser()
+    config.read(config_file)
+
+    PHONE_NUMBER = config.get('connected_variables', 'dial_number')
+    SEND_SMS_NUMBER = config.get('connected_variables', 'sms_send_number')
+    RECEIVED_SMS_NUMBER = config.get('connected_variables', 'sms_receive_num')
+    CALL_WAIT = config.getint('connected_variables', 'call_wait_time')
+    CALL_DURATION = config.getint('connected_variables', 'outgoing_call_duration')
+    SEND_SMS_TEXT = config.get('connected_variables', 'sms_send_text')
+    RECEIVED_SMS_TEXT = config.get('connected_variables', 'sms_expect_text')
     TYPING_DELAY=0.01
     HOME = os.path.expanduser("~")
     BACKUP = HOME + "/.local/share/TpLogger/logs/ofono_ofono_account0.backup/"

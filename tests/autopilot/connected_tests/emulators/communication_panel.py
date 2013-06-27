@@ -94,7 +94,7 @@ class CommunicationPanel(object):
             retries = retries - 1
 
         return items.select_many(
-            "CommunicationDelegate", objectName="messageDetailItem")[index-1]
+            "CommunicationDelegate", objectName="messageDetailItem")[items.count-index]
 
     def get_call_list_tem(self, index):
         """Returns the message item in the main communication view."""
@@ -112,5 +112,5 @@ class CommunicationPanel(object):
             items = communication_panel.select_single("QQuickListView")
             retries = retries - 1
 
-        loader = items.select_many("QQuickLoader")[index-1]
+        loader = items.select_many("QQuickLoader")[items.count-index]
         return loader.select_single("CommunicationDelegate")
