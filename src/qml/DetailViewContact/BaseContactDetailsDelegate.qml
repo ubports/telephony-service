@@ -244,7 +244,7 @@ FocusScope {
             width: units.gu(2)
             height: units.gu(2)
             iconSource: "../assets/icon_edit_remove.png"
-            ItemStyle.class: "transparent-button"
+            color: "transparent"
             visible: editingActive
             enabled: visible
 

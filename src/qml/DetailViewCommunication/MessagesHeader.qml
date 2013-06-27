@@ -77,7 +77,7 @@ BaseMessageHeader {
 
     Button {
         id: contactDetailsButton
-        ItemStyle.class: "transparent-button"
+        color: "transparent"
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         anchors.margins: units.gu(2)

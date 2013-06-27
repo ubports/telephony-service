@@ -24,7 +24,7 @@ Button {
 
     property alias iconSource: icon.source
     property bool selected: false
-    ItemStyle.class: "transparent"
+    color: "transparent"
 
     width: units.gu(9)
     height: units.gu(9)

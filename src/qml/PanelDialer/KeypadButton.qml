@@ -33,7 +33,7 @@ Button {
     property int keycode
     property bool isCorner: false
     property int corner
-    ItemStyle.class: "transparent"
+    color: "transparent"
 
     BorderImage {
         id: shape

@@ -41,5 +41,5 @@ Button {
         source: icon
         fillMode: Image.PreserveAspectFit
     }
-    ItemStyle.class: "transparent"
+    color: "transparent"
 }
