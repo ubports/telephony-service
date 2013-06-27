@@ -262,10 +262,7 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
 
     notification = notify_notification_new (title.toStdString().c_str(),
                                             body.toStdString().c_str(),
-                                            NULL);
-    notify_notification_set_hint_string(notification,
-                                        "image_path",
-                                        icon.toStdString().c_str());
+                                            icon.toStdString().c_str());
     notify_notification_set_hint_string(notification,
                                         "x-canonical-snap-decisions",
                                         "true");
