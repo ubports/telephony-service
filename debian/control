@@ -74,3 +74,14 @@ Depends: ${misc:Depends},
          python-autopilot,
 Description: autopilot tests for phone-app
  This package contains the autopilot tests for phone-app
+
+Package: phone-app-connected-autopilot
+Architecture: all
+Section: debug
+Priority: extra
+Depends: ${misc:Depends},
+         phone-app (= ${binary:Version}),
+         libautopilot-qt,
+         python-autopilot
+Description: connected autopilot tests for phone-app
+ This package contains the connected autopilot tests for phone-app
