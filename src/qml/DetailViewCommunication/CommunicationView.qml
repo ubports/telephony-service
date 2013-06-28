@@ -152,6 +152,7 @@ LocalWidgets.PhonePage {
 
         delegate: CommunicationDelegate {
             id: communicationDelegate
+            objectName: model.itemType === 'message' ? 'messageDetailItem' : 'callDetailItem'
 
             itemType: model.itemType
             incoming: model.incoming
