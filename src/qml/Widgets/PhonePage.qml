@@ -24,7 +24,7 @@ Page {
     id: page
     property string source
     property int previousTab: -1
-    property variant headerContents: null
+    property Component headerContents: null
 
     onActiveChanged: updateHeader()
     onHeaderChanged: updateHeader()
@@ -34,10 +34,8 @@ Page {
         if (page.header && page.headerContents != null) {
             if (active) {
                 page.header.style = page.headerContents;
-                page.header.height = page.headerContents.height;
             } else {
-                page.headerContents.parent = page;
-                page.header.style = null;
+                page.header.style = Theme.createStyleComponent("HeaderStyle.qml", page.header);
             }
         }
     }

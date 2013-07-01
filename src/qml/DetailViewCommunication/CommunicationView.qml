@@ -37,11 +37,7 @@ LocalWidgets.PhonePage {
 
     title: i18n.tr("Communication")
 
-    headerContents: Loader {
-        id: headerLoader
-        sourceComponent: newMessage ? newHeaderComponent : headerComponent
-        height: units.gu(10)
-    }
+    headerContents:  newMessage ? newHeaderComponent : headerComponent
 
     ContactWatcher {
         id: contactWatcher

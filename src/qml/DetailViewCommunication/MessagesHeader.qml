@@ -28,6 +28,7 @@ BaseMessageHeader {
     property string title
 
     height: icon.height + units.gu(4)
+    implicitHeight: icon.height + units.gu(4)
 
     UbuntuShape {
         id: icon
