@@ -199,6 +199,7 @@ LocalWidgets.PhonePage {
                     height: childrenRect.height
 
                     LiveCallKeypadButton {
+                        objectName: "pauseStartButton"
                         iconSource: selected ? "../assets/play.png" : "../assets/pause.png"
                         selected: liveCall.onHold
                         onClicked: {
@@ -209,6 +210,7 @@ LocalWidgets.PhonePage {
                     }
 
                     LiveCallKeypadButton {
+                        objectName: "speakerButton"
                         iconSource: selected ? "../assets/speaker.png" : "../assets/speaker-mute.png"
                         selected: liveCall.isSpeaker
                         onClicked: {
@@ -219,6 +221,7 @@ LocalWidgets.PhonePage {
                     }
 
                     LiveCallKeypadButton {
+                        objectName: "muteButton"
                         iconSource: selected ? "../assets/microphone-mute.png" : "../assets/microphone.png"
                         selected: liveCall.isMuted
                         onClicked: {
@@ -236,6 +239,7 @@ LocalWidgets.PhonePage {
                     }
 
                     LiveCallKeypadButton {
+                        objectName: "showKeypad"
                         iconSource: "../assets/keypad.png"
                         selected: liveCall.isDtmf
                         onClicked: {

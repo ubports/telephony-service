@@ -39,6 +39,7 @@ Item {
         spacing: units.gu(1)
 
         KeypadButton {
+            objectName: "buttonOne"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -50,6 +51,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonTwo"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -60,6 +62,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonThree"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -70,6 +73,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonFour"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -80,6 +84,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonFive"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -90,6 +95,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonSix"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -100,6 +106,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonSeven"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -110,6 +117,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonEight"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -120,6 +128,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonNine"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -130,6 +139,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonAsterisk"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -141,6 +151,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonZero"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
@@ -153,6 +164,7 @@ Item {
         }
 
         KeypadButton {
+            objectName: "buttonHash"
             width: keysWidth
             height: keysHeight
             labelFontPixelSize: fontPixelSize
