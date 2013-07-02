@@ -33,7 +33,9 @@ FocusScope {
     width: parent.width
     // ensure that there is equal padding at the top and bottom of labelBox
     height: editable ? Math.max(labelBox.height + labelBox.anchors.topMargin * 2, units.gu(10)) : units.gu(12)
+    implicitHeight: editable ? Math.max(labelBox.height + labelBox.anchors.topMargin * 2, units.gu(10)) : units.gu(12)
     Behavior on height { LocalWidgets.StandardAnimation {}}
+    Behavior on implicitHeight { LocalWidgets.StandardAnimation {}}
 
     function save() {
         name.save()

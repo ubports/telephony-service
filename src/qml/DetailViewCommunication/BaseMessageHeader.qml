@@ -23,6 +23,7 @@ FocusScope {
 
     width: units.gu(72)
     height: units.gu(5)
+    implicitHeight: units.gu(5)
 
     Rectangle {
         anchors.fill: parent

@@ -28,6 +28,7 @@ BaseMessageHeader {
     property string title
 
     height: icon.height + units.gu(4)
+    implicitHeight: icon.height + units.gu(4)
 
     UbuntuShape {
         id: icon
@@ -77,7 +78,7 @@ BaseMessageHeader {
 
     Button {
         id: contactDetailsButton
-        ItemStyle.class: "transparent-button"
+        color: "transparent"
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         anchors.margins: units.gu(2)

@@ -17,11 +17,10 @@
  */
 
 import QtQuick 2.0
-import Ubuntu.Components 0.1 as Theming
+import Ubuntu.Components 0.1
 
-Item {
+StyledItem {
     id: toolbar
-    Theming.ItemStyle.class: "toolbar"
     height: visible ? units.gu(6.5) : 0
     anchors.left: parent.left
     anchors.right: parent.right
@@ -32,9 +31,8 @@ Item {
 
     Component {
         id: toolButtonComponent
-        Item {
+        StyledItem {
             id: toolButton
-            Theming.ItemStyle.class: "toolbar-button"
             property string text: parent && parent.text ? parent.text : ""
             property url iconSource: parent && parent.iconSource ? parent.iconSource : ""
             signal clicked()
@@ -45,6 +43,7 @@ Item {
                 anchors.fill: parent
                 onClicked: parent.clicked()
             }
+            style: Theme.createStyleComponent("ToolbarButtonStyle.qml", toolButton)
         }
     }
 
@@ -109,4 +108,6 @@ Item {
             onItemTriggered: toolbar.saveClicked()
         }
     }
+
+    style: Theme.createStyleComponent("ToolbarStyle.qml", toolbar)
 }
