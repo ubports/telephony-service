@@ -127,26 +127,6 @@ LocalWidgets.PhonePage {
                     value: search.text
                 }
             }
-
-            ListItem.ThinDivider {
-                visible: !mainView.singlePane
-            }
-
-            ListItem.Standard {
-                id: newMessage
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: visible ? units.gu(4) : 0
-                visible: !mainView.singlePane
-                __leftIconMargin: units.gu(2)
-                __rightIconMargin: units.gu(2)
-
-                icon: Qt.resolvedUrl("../assets/add_new_message_icon.png")
-                iconFrame: false
-                text: i18n.tr("New Message")
-                onClicked: mainView.startNewMessage()
-                selected: mainView.communication.loaded && mainView.view.newMessage
-            }
         }
 
         // We are not using sections right now, re-enable that in the future in case the

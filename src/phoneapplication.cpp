@@ -43,8 +43,6 @@ static void printUsage(const QStringList& arguments)
              << "[message://PHONE_NUMBER]"
              << "[messageId://MESSAGE_ID]"
              << "[voicemail://]"
-             << "[--dual-panel]"
-             << "[--single-panel]"
              << "[--fullscreen]"
              << "[--test-contacts]"
              << "[--help]"
@@ -61,7 +59,6 @@ PhoneApplication::PhoneApplication(int &argc, char **argv)
 bool PhoneApplication::setup()
 {
     static QList<QString> validSchemes;
-    bool singlePanel = true;
     bool fullScreen = false;
     QString contactEngine = "folks";
 
@@ -79,16 +76,6 @@ bool PhoneApplication::setup()
     if (arguments.contains("--help")) {
         printUsage(arguments);
         return false;
-    }
-
-    if (arguments.contains("--dual-panel")) {
-        arguments.removeAll("--dual-panel");
-        singlePanel = false;
-    }
-
-    if (arguments.contains("--single-panel")) {
-        arguments.removeAll("--single-panel");
-        singlePanel = true;
     }
 
     if (arguments.contains("--fullscreen")) {
@@ -163,7 +150,6 @@ bool PhoneApplication::setup()
     m_view->rootContext()->setContextProperty("application", this);
     m_view->rootContext()->setContextProperty("contactKey", contactKey);
     m_view->rootContext()->setContextProperty("dbus", m_dbus);
-    m_view->rootContext()->setContextProperty("appLayout", singlePanel ? "singlePane" : "dualPane" );
     m_view->rootContext()->setContextProperty("contactEngine", contactEngine);
     m_view->engine()->setBaseUrl(QUrl::fromLocalFile(phoneAppDirectory()));
 
