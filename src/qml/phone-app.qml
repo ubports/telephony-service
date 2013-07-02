@@ -68,7 +68,7 @@ MainView {
     Component.onCompleted: {
         i18n.domain = "phone-app"
         console.debug(i18n.tr("%1 second call", "%1 seconds call", 10).arg(10))
-        mainStack.push(leftPane);
+        mainStack.push(mainPane);
     }
 
     Connections {
@@ -197,7 +197,7 @@ MainView {
         anchors.fill: parent
 
         Item {
-            id: leftPane
+            id: mainPane
 
             anchors.left: parent.left
             anchors.top: parent.top
