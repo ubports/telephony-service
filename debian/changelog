@@ -1,3 +1,19 @@
+phone-app (0.59.17) saucy; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Use AbstractButton as the base for all custom buttons in phone-app.
+  * Update phone-app to work with the new theming.
+
+  [ Mirco Müller ]
+  * Don't use the image_path hint to pass an avatar-icon, because the notification-backend
+    does not support it yet. Instead use notify_notification_new()s icon-parameter directly
+    (LP: #1194629).
+
+  [ Omer Akram ]
+  * Adds initial packaging for the network connected tests.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 02 Jul 2013 19:48:46 -0300
+
 phone-app (0.59.16) saucy; urgency=low
 
   [ Renato Araujo Oliveira Filho ]
