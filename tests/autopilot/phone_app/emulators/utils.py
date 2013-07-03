@@ -31,7 +31,7 @@ class Utils(object):
 
     def get_conversations_pane(self):
         return self.app.select_single(
-            "PageStack", objectName="communicationsStack")
+            "Tab", objectName="communicationsTab")
 
     def get_contacts_pane(self):
-        return self.app.select_single("PageStack", objectName="contactsStack")
+        return self.app.select_single("Tab", objectName="contactsTab")

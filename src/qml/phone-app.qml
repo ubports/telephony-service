@@ -29,13 +29,17 @@ MainView {
     id: mainView
 
     automaticOrientation: true
-    width: singlePane ? units.gu(40) : units.gu(80)
+    width: units.gu(40)
     height: units.gu(71)
 
-    state: appLayout
-    property bool singlePane: state == "singlePane"
-    property alias viewStack: rightPaneStacks.currentStack
-    property alias view: rightPaneStacks.currentItem
+    property alias viewStack: mainStack
+    property variant view: {
+        if (mainStack.depth == 1) {
+            return tabs.tabPageItems[tabs.selectedTabIndex];
+        }
+        return mainStack.currentPage
+    }
+
     property alias selectedTabIndex: tabs.selectedTabIndex
     property QtObject call: callManager.foregroundCall
 
@@ -61,19 +65,10 @@ MainView {
         }
     }
 
-    onSinglePaneChanged: {
-        if (singlePane) {
-            mainStack.clear();
-            mainStack.push(leftPane);
-        } else {
-            mainStack.clear();
-            leftPane.parent = mainView;
-        }
-    }
-
     Component.onCompleted: {
         i18n.domain = "phone-app"
         console.debug(i18n.tr("%1 second call", "%1 seconds call", 10).arg(10))
+        mainStack.push(mainPane);
     }
 
     Connections {
@@ -138,7 +133,7 @@ MainView {
     }
 
     function endCall() {
-        var callStack = singlePane ? mainStack : rightPaneStacks.stacks[liveCall.tab]
+        var callStack = mainStack
         if (callStack.currentPage.source == liveCall.source || callStack.currentPage.source == voicemail.source) {
             callStack.pop();
         }
@@ -169,12 +164,8 @@ MainView {
     }
 
     function resetView() {
-        if (singlePane) {
-            while (viewStack.depth > 1) {
-                viewStack.pop();
-            }
-        } else {
-            viewStack.clear();
+        while (viewStack.depth > 1) {
+            viewStack.pop();
         }
     }
 
@@ -204,230 +195,74 @@ MainView {
     PageStack {
         id: mainStack
         anchors.fill: parent
-        visible: singlePane
-    }
 
-    Item {
-        id: leftPane
+        Item {
+            id: mainPane
 
-        anchors.left: parent.left
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.right: singlePane ? parent.right : undefined
-        width: singlePane ? undefined : units.gu(31)
-        parent: singlePane ? mainStack : mainView
-
-        Tabs {
-            id: tabs
-            anchors.fill: parent
-
-            property variant tabPageItems: [ callsTab.page.item, communicationsTab.page.item, contactsTab.page.item ]
-
-            Tab {
-                id: callsTab
-                objectName: "callsTab"
-
-                property string pane: "Panes/CallEndedPane.qml"
-                property string panel: "PanelDialer/DialerView.qml"
-                property bool isCurrent: tabs.selectedTabIndex == 0
-
-                title: i18n.tr("Call")
-                iconSource: isCurrent ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
-                page: Loader {
-                    source: callsTab.panel
-                    anchors.fill: parent
-                }
-            }
-
-            Tab {
-                id: communicationsTab
-                objectName: "communicationsTab"
-                title: i18n.tr("Conversations")
-                iconSource: isCurrent ? "assets/tab_icon_messaging_active.png" : "assets/tab_icon_messaging_inactive.png"
-
-                property string pane: "Panes/SelectMessagePane.qml"
-                property string panel: "PanelCommunications/CommunicationsPanel.qml"
-                property bool isCurrent: tabs.selectedTabIndex == 1
-
-                page: Loader {
-                    source: communicationsTab.panel
-                    asynchronous: true
-                    anchors.fill: parent
-                }
-            }
-
-            Tab {
-                id: contactsTab
-                objectName: "contactsTab"
-
-                property string pane: "Panes/SelectContactPane.qml"
-                property string panel: "PanelContacts/ContactsPanel.qml"
-                property bool isCurrent: tabs.selectedTabIndex == 2
-
-                title: i18n.tr("Contacts")
-                iconSource: isCurrent ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
-                page: Loader {
-                    source: contactsTab.panel
-                    asynchronous: true
-                    anchors.fill: parent
-                }
-            }
-        }
-
-        Rectangle {
-            id: border
-
+            anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
-            width: units.dp(1)
-            color: "white"
-            opacity: 0.3
-            visible: !singlePane
-        }
 
-        OnCallPanel {
-            anchors.left: leftPane.left
-            anchors.right: leftPane.right
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: shown ? 0 : -height
-            Behavior on anchors.bottomMargin { LocalWidgets.StandardAnimation {}}
-            z: 1
+            Tabs {
+                id: tabs
+                anchors.fill: parent
 
-            property bool shown
-            shown: {
-                if (mainView.singlePane) {
-                    return false;
-                }
+                property variant tabPageItems: [ callsTab.page.item, communicationsTab.page.item, contactsTab.page.item ]
 
-                if (!callManager.hasCalls) {
-                    return false
-                } else {
-                    if (isVoicemailActive() && !mainView.voicemail.loaded) {
-                        return true
-                    } else if (!isVoicemailActive() && !mainView.liveCall.loaded) {
-                        return true
+                Tab {
+                    id: callsTab
+                    objectName: "callsTab"
+
+                    property string pane: "Panes/CallEndedPane.qml"
+                    property string panel: "PanelDialer/DialerView.qml"
+                    property bool isCurrent: tabs.selectedTabIndex == 0
+
+                    title: i18n.tr("Call")
+                    iconSource: isCurrent ? "assets/tab_icon_call_active.png" : "assets/tab_icon_call_inactive.png"
+                    page: Loader {
+                        source: callsTab.panel
+                        anchors.fill: parent
                     }
                 }
-                return false
-            }
 
-            onClicked: isVoicemailActive() ? mainView.showVoicemail() : mainView.showLiveCall()
+                Tab {
+                    id: communicationsTab
+                    objectName: "communicationsTab"
+                    title: i18n.tr("Conversations")
+                    iconSource: isCurrent ? "assets/tab_icon_messaging_active.png" : "assets/tab_icon_messaging_inactive.png"
+
+                    property string pane: "Panes/SelectMessagePane.qml"
+                    property string panel: "PanelCommunications/CommunicationsPanel.qml"
+                    property bool isCurrent: tabs.selectedTabIndex == 1
+
+                    page: Loader {
+                        source: communicationsTab.panel
+                        asynchronous: true
+                        anchors.fill: parent
+                    }
+                }
+
+                Tab {
+                    id: contactsTab
+                    objectName: "contactsTab"
+
+                    property string pane: "Panes/SelectContactPane.qml"
+                    property string panel: "PanelContacts/ContactsPanel.qml"
+                    property bool isCurrent: tabs.selectedTabIndex == 2
+
+                    title: i18n.tr("Contacts")
+                    iconSource: isCurrent ? "assets/tab_icon_contacts_active.png" : "assets/tab_icon_contacts_inactive.png"
+                    page: Loader {
+                        source: contactsTab.panel
+                        asynchronous: true
+                        anchors.fill: parent
+                    }
+                }
+            }
         }
     }
 
-    Item {
-        id: rightPaneStacks
-
-        property variant currentStack: singlePane ? mainStack : stacks[tabs.selectedTabIndex]
-        property variant currentItem: {
-            if (singlePane && currentStack.depth == 1) {
-                return tabs.tabPageItems[tabs.selectedTabIndex];
-            }
-
-            if (currentStack != undefined) {
-                return currentStack.currentPage;
-            }
-            return undefined;
-        }
-        property variant stacks: [ callsStack, communicationsStack, contactsStack ]
-
-        anchors.fill: parent
-        parent: rightPane
-        visible: !singlePane
-
-        /* Instantiate a PageStack per tab and keep its loaded content alive.
-           That makes the application stateful.
-           Ref.: https://bugs.launchpad.net/newyork/+bug/1017659
-        */
-
-        PageStack {
-            id: callsStack
-            objectName: "callsStack"
-            property string source: callsTab.pane
-            property bool isCurrent: tabs.selectedTabIndex == liveCall.tab
-            anchors.fill: parent
-            visible: isCurrent
-
-            onSourceChanged: {
-                callsStack.clear();
-                callsStack.push(Qt.resolvedUrl(source));
-                callsStack.currentPage.source = Qt.resolvedUrl(source);
-            }
-
-            Component.onCompleted: {
-                callsStack.clear();
-                callsStack.push(Qt.resolvedUrl(source));
-                callsStack.currentPage.source = Qt.resolvedUrl(source);
-            }
-        }
-
-        PageStack {
-            id: communicationsStack
-            objectName: "communicationsStack"
-            property string source: communicationsTab.pane
-            property bool isCurrent: tabs.selectedTabIndex == communication.tab
-            anchors.fill: parent
-            visible: isCurrent
-
-            onSourceChanged: {
-                communicationsStack.clear();
-                communicationsStack.push(Qt.resolvedUrl(source));
-                communicationsStack.currentPage.source = Qt.resolvedUrl(source);
-            }
-
-            Component.onCompleted: {
-                communicationsStack.clear();
-                communicationsStack.push(Qt.resolvedUrl(source));
-                communicationsStack.currentPage.source = Qt.resolvedUrl(source);
-            }
-        }
-
-        PageStack {
-            id: contactsStack
-            objectName: "contactsStack"
-            property string source: contactsTab.pane
-            property bool isCurrent: tabs.selectedTabIndex == contactDetails.tab
-            anchors.fill: parent
-            visible: singlePane || isCurrent
-
-            onSourceChanged: {
-                contactsStack.clear();
-                contactsStack.push(Qt.resolvedUrl(source));
-                contactsStack.currentPage.source = Qt.resolvedUrl(source);
-            }
-
-            Component.onCompleted: {
-                contactsStack.clear();
-                contactsStack.push(Qt.resolvedUrl(source));
-                contactsStack.currentPage.source = Qt.resolvedUrl(source);
-            }
-        }
-
-    }
-
-    Item {
-        id: rightPane
-        anchors.left: leftPane.right
-        anchors.right: parent.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        visible: !singlePane
-
-        Rectangle {
-            anchors.fill: parent
-            color: "#ebebeb"
-        }
-
-        Image {
-            id: rightPaneBorder
-
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            source: "assets/detailview_left_border.png"
-        }
-    }
 
     Connections {
         target: telepathyHelper
@@ -444,7 +279,7 @@ MainView {
                 return;
             }
 
-            var currentPage = singlePane ? mainView.view : rightPaneStacks.stacks[dialer.tab].currentPage
+            var currentPage = mainView.view
             if (currentPage.source == dialer.source) {
                 currentPage.dialNumber = ""
             }
