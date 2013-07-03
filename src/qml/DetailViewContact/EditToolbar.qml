@@ -49,6 +49,7 @@ StyledItem {
 
     Loader {
         id: backButton
+        objectName: "contactBackButton"
         sourceComponent: toolButtonComponent
 
         property string text: tools.back.text
@@ -78,6 +79,7 @@ StyledItem {
         // cancel, save
         Loader {
             id: cancelButton
+            objectName: "contactCancelButton"
 
             property string text: i18n.tr("Cancel")
             property string iconSource: Qt.resolvedUrl("../assets/cancel.png")
@@ -94,6 +96,7 @@ StyledItem {
 
         Loader {
             id: saveButton
+            objectName: "contactSaveButton"
 
             property string text: i18n.tr("Save")
             property string iconSource: Qt.resolvedUrl("../assets/save.png")

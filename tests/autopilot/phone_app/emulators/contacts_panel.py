@@ -57,4 +57,4 @@ class ContactsPanel(Utils):
 
     def get_contact_save_button(self):
         """Returns the contact save button."""
-        return self.get_tool_button(3)
+        return self.app.select_single("QQuickLoader", objectName="contactSaveButton")

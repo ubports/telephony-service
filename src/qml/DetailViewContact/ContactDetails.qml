@@ -32,6 +32,8 @@ LocalWidgets.PhonePage {
     property variant contactId: (contact) ? contact.id : null
     property bool added: false
 
+    signal saveRequested();
+
     Component {
         id: dialog
         Dialog {
@@ -120,6 +122,11 @@ LocalWidgets.PhonePage {
         focus: true
         backgroundColor: "#ededed"
         onFavoriteSaved: contactDetails.save()
+
+        Connections {
+            target: contactDetails
+            onSaveRequested: header.save();
+        }
     }
 
     function createNewContact(number) {
@@ -153,7 +160,7 @@ LocalWidgets.PhonePage {
            However that other way doesn't work since we can't guarantee that all
            delegates have received the signal before we call contact.save() here.
         */
-        header.save();
+        contactDetails.saveRequested();
 
         var addedDetails = [];
         for (var i = 0; i < detailsList.children.length; i++) {
