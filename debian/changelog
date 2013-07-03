@@ -1,3 +1,10 @@
+phone-app (0.59.18) saucy; urgency=low
+
+  * Get rid of the dual panel layout support. This is obsolete for a long time now.
+  * Fix saving contacts after editing or creating new.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Wed, 03 Jul 2013 18:57:14 -0300
+
 phone-app (0.59.17) saucy; urgency=low
 
   [ Gustavo Pichorim Boiko ]
