@@ -73,7 +73,6 @@ class TestContactsPanel(PhoneAppTestCase):
 
         self.assertThat(contact_details.visible, Eventually(Equals(True)))
 
-    @unittest.skip("Interacting with a locked toolbar is complex")
     def test_add_new_contact_with_name(self):
         """Test adding a contact with first and last names set."""
         self.click_add_contact()
@@ -88,7 +87,6 @@ class TestContactsPanel(PhoneAppTestCase):
         self.pointing_device.click()
         self.keyboard.type("LastName")
 
-        self.reveal_toolbar()
         save_button = self.contacts_panel.get_contact_save_button()
         self.pointing_device.move_to_object(save_button)
         self.pointing_device.click()
