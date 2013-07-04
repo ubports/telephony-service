@@ -31,9 +31,9 @@ LocalWidgets.PhonePage {
         return mainView.isVoicemailActive();
     }
 
-    tools: ToolbarActions {
-        active: false
-        lock: true
+    tools: ToolbarItems {
+        opened: false
+        locked: true
     }
 
     FocusScope {

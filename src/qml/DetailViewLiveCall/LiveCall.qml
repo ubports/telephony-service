@@ -35,9 +35,9 @@ LocalWidgets.PhonePage {
 
     // TRANSLATORS: %1 is the duration of the call
     title: call && call.dialing ? i18n.tr("Dialing") : i18n.tr("Duration %1").arg(stopWatch.elapsed)
-    tools: ToolbarActions {
-        active: false
-        lock: true
+    tools: ToolbarItems {
+        opened: false
+        locked: true
     }
 
     function endCall() {

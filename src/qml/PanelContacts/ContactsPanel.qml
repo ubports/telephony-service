@@ -37,8 +37,10 @@ LocalWidgets.PhonePage {
         }
     }
 
-    tools: ToolbarActions {
-        Action {
+    tools: ToolbarItems {
+        ToolbarButton {
+            id: addButton
+            objectName: "contactAddButton"
             text: i18n.tr("Add")
             iconSource: Qt.resolvedUrl("../assets/new-contact.png")
             onTriggered: mainView.createNewContact()
