@@ -321,9 +321,9 @@ LocalWidgets.PhonePage {
         visible: editable
         anchors.bottom: keyboard.top
 
-        onDeleteClicked: deleteAction.triggered(editToolbar)
-        onCancelClicked: cancelAction.triggered(editToolbar)
-        onSaveClicked: saveAction.triggered(editToolbar)
+        onDeleteClicked: deleteButton.triggered(editToolbar)
+        onCancelClicked: cancelButton.triggered(editToolbar)
+        onSaveClicked: saveButton.triggered(editToolbar)
 
         onVisibleChanged: {
             if (visible) {
