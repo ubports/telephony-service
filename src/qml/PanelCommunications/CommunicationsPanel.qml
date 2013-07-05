@@ -36,8 +36,10 @@ LocalWidgets.PhonePage {
             communicationsList.contentY = -communicationsList.headerItem.height-header.height
         }
     }
-    tools: ToolbarActions {
-        Action {
+    tools: ToolbarItems {
+        ToolbarButton {
+            id: composeButton
+            objectName: "conversationComposeButton"
             iconSource: Qt.resolvedUrl("../assets/compose.png")
             text: i18n.tr("Compose")
             onTriggered: mainView.startNewMessage()

@@ -28,7 +28,7 @@ class CommunicationPanel(Utils):
     def get_new_message_button(self):
         """Returns 'New Message' list item."""
         tool_bar = self.get_tool_bar()
-        return self.get_tool_button(0)
+        return self.get_tool_button("conversationComposeButton")
 
     def get_communication_view(self):
         """Returns the CommunicationView."""

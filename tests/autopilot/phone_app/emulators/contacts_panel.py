@@ -33,7 +33,7 @@ class ContactsPanel(Utils):
 
     def get_add_contact_button(self):
         """Returns the 'Add a new contact' list item."""
-        return self.get_tool_button(0)
+        return self.get_tool_button("contactAddButton")
 
     def get_contact_list(self):
         """Returns the contact list item."""
@@ -53,7 +53,7 @@ class ContactsPanel(Utils):
 
     def get_contact_edit_button(self):
         """Returns the contact edit button."""
-        return self.get_tool_button(0)
+        return self.get_tool_button("contactEditButton")
 
     def get_contact_save_button(self):
         """Returns the contact save button."""

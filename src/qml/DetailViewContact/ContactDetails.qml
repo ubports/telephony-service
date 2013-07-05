@@ -64,10 +64,12 @@ LocalWidgets.PhonePage {
 
     title: i18n.tr("Contact Details")
 
-    tools: ToolbarActions {
-        lock: editable
+    tools: ToolbarItems {
+        locked: editable
 
-        Action {
+        ToolbarButton {
+            id: editButton
+            objectName: "contactEditButton"
             text: i18n.tr("Edit")
             iconSource: Qt.resolvedUrl("../assets/edit.png")
             visible: !editable
@@ -75,8 +77,9 @@ LocalWidgets.PhonePage {
             onTriggered: editable = true
         }
 
-        Action {
-            id: deleteAction
+        ToolbarButton {
+            id: deleteButton
+            objectName: "contactDeleteButton"
 
             text: i18n.tr("Delete")
             iconSource: Qt.resolvedUrl("../assets/delete.png")
@@ -87,8 +90,9 @@ LocalWidgets.PhonePage {
             }
         }
 
-        Action {
-            id: cancelAction
+        ToolbarButton {
+            id: cancelButton
+            objectName: "contactCancelButton"
 
             text: i18n.tr("Cancel")
             iconSource: Qt.resolvedUrl("../assets/cancel.png")
@@ -104,8 +108,9 @@ LocalWidgets.PhonePage {
             }
         }
 
-        Action {
-            id: saveAction
+        ToolbarButton {
+            id: saveButton
+            objectName: "contactSaveButton"
 
             text: i18n.tr("Save")
             iconSource: Qt.resolvedUrl("../assets/save.png")
@@ -316,9 +321,9 @@ LocalWidgets.PhonePage {
         visible: editable
         anchors.bottom: keyboard.top
 
-        onDeleteClicked: deleteAction.triggered(editToolbar)
-        onCancelClicked: cancelAction.triggered(editToolbar)
-        onSaveClicked: saveAction.triggered(editToolbar)
+        onDeleteClicked: deleteButton.triggered(editToolbar)
+        onCancelClicked: cancelButton.triggered(editToolbar)
+        onSaveClicked: saveButton.triggered(editToolbar)
 
         onVisibleChanged: {
             if (visible) {

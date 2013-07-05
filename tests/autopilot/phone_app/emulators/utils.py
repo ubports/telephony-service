@@ -17,11 +17,9 @@ class Utils(object):
         """Returns the toolbar in the main events view."""
         return self.app.select_single("Toolbar")
 
-    def get_tool_button(self, index):
-        """Returns the toolbar button at position `index`"""
-        tool_bar = self.get_tool_bar()
-        buttons = tool_bar.select_many("Button")
-        return buttons[index+1]
+    def get_tool_button(self, name):
+        """Returns the toolbar button named `name`"""
+        return self.app.select_single("ActionItem", objectName=name)
 
     def get_conversations_tab_button(self):
         return self.app.select_single("AbstractButton", buttonIndex=4)
