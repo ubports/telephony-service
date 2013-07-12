@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-12 16:43-0300\n"
-"PO-Revision-Date: 2013-06-28 18:57+0000\n"
-"Last-Translator: Adolfo Jayme Barrientos <fitoschido@gmail.com>\n"
+"PO-Revision-Date: 2013-07-11 10:47+0000\n"
+"Last-Translator: pros90 <pablorosillo92@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:27+0000\n"
+"X-Launchpad-Export-Date: 2013-07-12 06:35+0000\n"
 "X-Generator: Launchpad (build 16696)\n"
 
 #: src/qml/PanelDialer/Keypad.qml:161
@@ -238,7 +238,7 @@ msgstr "Correo electrónico"
 
 #: src/qml/PanelDialer/DialerView.qml:54
 msgid "Enter a number"
-msgstr ""
+msgstr "Introduzca un número"
 
 #: src/qml/DetailViewContact/NameContactDetailsEditor.qml:68
 msgid "First"
