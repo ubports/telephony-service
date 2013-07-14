@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: phone-app\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-12 16:43-0300\n"
-"PO-Revision-Date: 2013-05-29 05:25+0000\n"
+"PO-Revision-Date: 2013-07-13 08:49+0000\n"
 "Last-Translator: Pyae Sone <Unknown>\n"
 "Language-Team: Burmese <my@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:26+0000\n"
+"X-Launchpad-Export-Date: 2013-07-14 06:00+0000\n"
 "X-Generator: Launchpad (build 16696)\n"
 
 #: src/qml/PanelDialer/Keypad.qml:161
@@ -134,7 +134,7 @@ msgstr "လိပ်စာ"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:40
 msgid "Are you sure you want to delete this contact?"
-msgstr ""
+msgstr "ဒီဆက်သွယ်ရမည့်လူစာရင်းကိုဖျက်ချင်တာသေချာပြီလား။"
 
 #: src/qml/phone-app.qml:236 src/qml/PanelDialer/DialerView.qml:25
 msgid "Call"
@@ -210,7 +210,7 @@ msgstr "ဖျက်မည်"
 
 #: src/qml/DetailViewContact/ContactDetails.qml:39
 msgid "Delete Contact"
-msgstr ""
+msgstr "ဒီဆက်သွယ်ရမည့်စာရင်းကိုဖျက်မည်။"
 
 #. TRANSLATORS: %1 is the duration of the call
 #: src/qml/DetailViewVoicemail/Voicemail.qml:94
@@ -249,7 +249,7 @@ msgstr "Google Talk"
 
 #: approver/phone-app-approver.desktop.in:3
 msgid "Handles incoming messages, calls and indicators"
-msgstr ""
+msgstr "အဝင်စာများ၊ ခေါ်ဆိုမှု့များ၊နှင့် indicators များကိုခန့်ခွဲမည်"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:41
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:46
@@ -334,7 +334,7 @@ msgstr "ဖုန်း"
 
 #: src/phone-app.desktop.in:4
 msgid "Phone App"
-msgstr ""
+msgstr "ဖုန်း app"
 
 #: approver/phone-app-approver.desktop.in:2
 msgid "Phone App Approver"
@@ -342,11 +342,11 @@ msgstr ""
 
 #: approver/phone-app-call.desktop.in:3
 msgid "Phone Calls"
-msgstr ""
+msgstr "ဖုန်းခေါ်ဆိုမည်"
 
 #: src/phone-app.desktop.in:5
 msgid "Phone application"
-msgstr ""
+msgstr "ဖုန်း application"
 
 #: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:75
 msgid "Postal Code"
@@ -370,7 +370,7 @@ msgstr "SMS နှင့်ပြန်ဖြေမည်"
 
 #: approver/phone-app-sms.desktop.in:3
 msgid "SMS"
-msgstr ""
+msgstr "စာတိုပို့စနစ်"
 
 #: approver/textchannelobserver.cpp:51
 #, qt-format
@@ -436,11 +436,11 @@ msgstr "အသံmail"
 
 #: approver/messagingmenu.cpp:198
 msgid "Voicemail messages"
-msgstr ""
+msgstr "အသံနှင့်စာများ"
 
 #: src/qml/PanelDialer/Keypad.qml:127
 msgid "WXYZ"
-msgstr ""
+msgstr "WXYZ"
 
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:42
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:47
