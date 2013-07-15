@@ -1,4 +1,4 @@
-project(phone-app)
+project(telephony-service)
 cmake_minimum_required(VERSION 2.8)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
@@ -26,8 +26,6 @@ IF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
   ENABLE_COVERAGE_REPORT(TARGETS ${PHONE_APP})
 ENDIF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
 
-set(PHONE_APP_DIR ${CMAKE_INSTALL_DATADIR}/phone-app)
-
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
@@ -43,10 +41,10 @@ configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 find_package(Qt5Core)
 find_package(Qt5Contacts)
 find_package(Qt5DBus)
-find_package(Qt5Gui)
+#find_package(Qt5Gui)
 find_package(Qt5Multimedia)
 find_package(Qt5Qml)
-find_package(Qt5Quick)
+#find_package(Qt5Quick)
 find_package(Qt5Test)
 
 execute_process(
@@ -81,11 +79,9 @@ include_directories(
 enable_testing()
 
 add_subdirectory(libphoneapp)
-add_subdirectory(src)
 add_subdirectory(Ubuntu)
 add_subdirectory(approver)
 add_subdirectory(handler)
 add_subdirectory(tools)
 add_subdirectory(icons)
-add_subdirectory(tests)
 add_subdirectory(po)

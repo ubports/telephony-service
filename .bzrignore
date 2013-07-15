@@ -5,11 +5,10 @@ cmake_install.cmake
 install_manifest.txt
 
 *.user
-phone-app.cbp
+*.cbp
 
 config.h
 
-phone-app
 approver/phone-app-approver
 handler/phone-app-handler
 
@@ -29,7 +28,6 @@ src/*.desktop
 handler/*.service
 approver/*.desktop
 approver/*.service
-phoneappadaptor.*
 approver/phoneappapproveradaptor.*
 handler/phoneapphandleradaptor.*
 

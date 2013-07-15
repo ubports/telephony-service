@@ -1,19 +1,15 @@
-project(phone-app-translations)
+project(telephony-service-translations)
 
 # for dh_translations to extract the domain
 # (regarding syntax consistency, see http://pad.lv/1181187)
-set (GETTEXT_PACKAGE "phone-app")
+set (GETTEXT_PACKAGE "telephony-service")
 
 include(FindGettext)
 
-set(DOMAIN phone-app)
+set(DOMAIN telephony-service)
 set(POT_FILE ${DOMAIN}.pot)
 file(GLOB PO_FILES *.po)
 file(GLOB_RECURSE I18N_SRCS RELATIVE ${CMAKE_SOURCE_DIR}
-    ${CMAKE_SOURCE_DIR}/src/*.desktop.in
-    ${CMAKE_SOURCE_DIR}/src/*.qml
-    ${CMAKE_SOURCE_DIR}/src/*.js
-    ${CMAKE_SOURCE_DIR}/src/*.cpp
     ${CMAKE_SOURCE_DIR}/approver/*.cpp
     ${CMAKE_SOURCE_DIR}/approver/*.desktop.in
     ${CMAKE_SOURCE_DIR}/Ubuntu/*.cpp
