@@ -6,40 +6,21 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: phone-app\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2013-06-12 16:43-0300\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-07-15 16:15-0300\n"
 "PO-Revision-Date: 2013-06-13 10:08+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2013-07-11 06:27+0000\n"
 "X-Generator: Launchpad (build 16696)\n"
 
-#: src/qml/PanelDialer/Keypad.qml:161
-msgid "#"
-msgstr "#"
-
-#: src/qml/dateUtils.js:62
-#, qt-format
-msgid "%1 hour call"
-msgid_plural "%1 hours call"
-msgstr[0] "%1-годинний дзвінок"
-msgstr[1] "%1-годинний дзвінок"
-msgstr[2] "%1-годинний дзвінок"
-
-#: src/qml/dateUtils.js:64
-#, qt-format
-msgid "%1 minute call"
-msgid_plural "%1 minutes call"
-msgstr[0] "%1-хвилинний дзвінок"
-msgstr[1] "%1-хвилинний дзвінок"
-msgstr[2] "%1-хвилинний дзвінок"
-
-#: approver/messagingmenu.cpp:143
+#: approver/messagingmenu.cpp:147
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -47,15 +28,7 @@ msgstr[0] "%1 пропущений дзвінок"
 msgstr[1] "%1 пропущені дзвінки"
 msgstr[2] "%1 пропущених дзвінків"
 
-#: src/qml/phone-app.qml:76 src/qml/dateUtils.js:66
-#, qt-format
-msgid "%1 second call"
-msgid_plural "%1 seconds call"
-msgstr[0] "%1-секундний дзвінок"
-msgstr[1] "%1-секундний дзвінок"
-msgstr[2] "%1-секундний дзвінок"
-
-#: approver/messagingmenu.cpp:200
+#: approver/messagingmenu.cpp:204
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -63,289 +36,50 @@ msgstr[0] "%1 голосове повідомлення"
 msgstr[1] "%1 голосових повідомлення"
 msgstr[2] "%1 голосових повідомлень"
 
-#: src/qml/PanelDialer/Keypad.qml:138
-msgid "*"
-msgstr "*"
-
-#: src/qml/PanelDialer/Keypad.qml:148
-msgid "+"
-msgstr "+"
-
-#: src/qml/PanelDialer/Keypad.qml:147
-msgid "0"
-msgstr "0"
-
-#: src/qml/PanelDialer/Keypad.qml:45
-msgid "1"
-msgstr "1"
-
-#: src/qml/PanelDialer/Keypad.qml:56
-msgid "2"
-msgstr "2"
-
-#: src/qml/PanelDialer/Keypad.qml:66
-msgid "3"
-msgstr "3"
-
-#: src/qml/PanelDialer/Keypad.qml:76
-msgid "4"
-msgstr "4"
-
-#: src/qml/PanelDialer/Keypad.qml:86
-msgid "5"
-msgstr "5"
-
-#: src/qml/PanelDialer/Keypad.qml:96
-msgid "6"
-msgstr "6"
-
-#: src/qml/PanelDialer/Keypad.qml:106
-msgid "7"
-msgstr "7"
-
-#: src/qml/PanelDialer/Keypad.qml:116
-msgid "8"
-msgstr "8"
-
-#: src/qml/PanelDialer/Keypad.qml:126
-msgid "9"
-msgstr "9"
-
-#: src/qml/PanelDialer/Keypad.qml:57
-msgid "ABC"
-msgstr "АБВГ"
-
-#: approver/phoneappapprover.cpp:268
+#: approver/phoneappapprover.cpp:275
 msgid "Accept"
 msgstr "Прийняти"
 
-#: src/qml/PanelContacts/ContactsPanel.qml:42 src/qml/phone-app.qml:479
-msgid "Add"
-msgstr "Додати"
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:64
-msgid "Add a phone number"
-msgstr "Додати телефонний номер"
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:90
-msgid "Add a postal address"
-msgstr "Додати поштову адресу"
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:77
-msgid "Add an email address"
-msgstr "Додати адресу електронної пошти"
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:101
-msgid "Add an online account"
-msgstr "Додати обліковий запису у мережі"
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:87
-msgid "Address"
-msgstr "Адреса"
-
-#: src/qml/DetailViewContact/ContactDetails.qml:40
-msgid "Are you sure you want to delete this contact?"
-msgstr "Вилучити ці записи контактів?"
-
-#: src/qml/phone-app.qml:236 src/qml/PanelDialer/DialerView.qml:25
-msgid "Call"
-msgstr "Дзвінок"
-
-#: approver/phoneappapprover.cpp:242
+#: approver/phoneappapprover.cpp:252
 msgid "Caller number is not available"
 msgstr "Номер вхідного дзвінка недоступний"
 
-#: approver/phoneappapprover.cpp:239
+#: approver/phoneappapprover.cpp:249
 #, qt-format
 msgid "Calling from %1"
 msgstr "Дзвінок від %1"
 
-#: approver/phoneappapprover.cpp:235
+#: approver/phoneappapprover.cpp:245
 msgid "Calling from private number"
 msgstr "Дзвінок з приватного номера"
 
-#: approver/phoneappapprover.cpp:237
+#: approver/phoneappapprover.cpp:247
 msgid "Calling from unknown number"
 msgstr "Дзвінок з невідомого номера"
 
-#: src/qml/Panes/CallEndedPane.qml:22
-msgid "Calls"
-msgstr "Дзвінки"
-
-#: src/qml/DetailViewContact/ContactDetails.qml:42
-#: src/qml/DetailViewContact/ContactDetails.qml:91
-#: src/qml/DetailViewContact/EditToolbar.qml:83
-msgid "Cancel"
-msgstr "Скасувати"
-
-#: src/qml/DetailViewCommunication/CommunicationView.qml:38
-msgid "Communication"
-msgstr "Зв’язок"
-
-#: src/qml/DetailViewCommunication/MessagesFooter.qml:87
-#: src/qml/phone-app.qml:474
-#: src/qml/PanelCommunications/CommunicationsPanel.qml:42
-msgid "Compose"
-msgstr "Написати"
-
-#: src/qml/DetailViewContact/ContactDetails.qml:63
-msgid "Contact Details"
-msgstr "Подробиці щодо запису контакту"
-
-#: src/qml/PanelContacts/ContactsPanel.qml:28
-#: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:269
-msgid "Contacts"
-msgstr "Контакти"
-
-#: src/qml/phone-app.qml:247
-#: src/qml/PanelCommunications/CommunicationsPanel.qml:28
-msgid "Conversations"
-msgstr "Спілкування"
-
-#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:84
-msgid "Country"
-msgstr "Країна"
-
-#: src/qml/PanelDialer/Keypad.qml:67
-msgid "DEF"
-msgstr "ДЕЄЖЗ"
-
-#: approver/phoneappapprover.cpp:274
+#: approver/phoneappapprover.cpp:281
 msgid "Decline"
 msgstr "Відхилити"
-
-#: src/qml/DetailViewContact/ContactDetails.qml:46
-#: src/qml/DetailViewContact/ContactDetails.qml:79
-msgid "Delete"
-msgstr "Вилучити"
-
-#: src/qml/DetailViewContact/ContactDetails.qml:39
-msgid "Delete Contact"
-msgstr "Вилучити контакт"
-
-#. TRANSLATORS: %1 is the duration of the call
-#: src/qml/DetailViewVoicemail/Voicemail.qml:94
-#: src/qml/DetailViewLiveCall/LiveCall.qml:37
-msgid "Dialing"
-msgstr "Набирання"
-
-#: src/qml/DetailViewLiveCall/LiveCall.qml:37
-#, qt-format
-msgid "Duration %1"
-msgstr "Тривалість: %1"
-
-#: src/qml/DetailViewContact/ContactDetails.qml:69
-msgid "Edit"
-msgstr "Змінити"
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:74
-msgid "Email"
-msgstr "Ел. пошта"
-
-#: src/qml/PanelDialer/DialerView.qml:54
-msgid "Enter a number"
-msgstr "Введіть номер"
-
-#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:68
-msgid "First"
-msgstr "Перший"
-
-#: src/qml/PanelDialer/Keypad.qml:77
-msgid "GHI"
-msgstr "ІЇИЙКЛ"
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:54
-msgid "Google Talk"
-msgstr "Google Talk"
 
 #: approver/phone-app-approver.desktop.in:3
 msgid "Handles incoming messages, calls and indicators"
 msgstr "Обробляє вхідні повідомлення, дзвінки та працює з індикаторами"
 
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:41
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:46
-msgid "Home"
-msgstr "Домівка"
-
-#: approver/messagingmenu.cpp:161
+#: approver/messagingmenu.cpp:165
 msgid "I missed your call - can you call me now?"
 msgstr "Мною пропущено Ваш дзвінок. Можете передзвонити?"
 
-#: approver/messagingmenu.cpp:164
+#: approver/messagingmenu.cpp:168
 msgid "I'll be 20 minutes late."
 msgstr "Буду за 20 хвилин."
 
-#: approver/messagingmenu.cpp:163
+#: approver/messagingmenu.cpp:167
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Зараз не можу поговорити. Передзвоню пізніше."
 
-#: approver/messagingmenu.cpp:162
+#: approver/messagingmenu.cpp:166
 msgid "I'm running late. I'm on my way."
 msgstr "Запізнююся. У дорозі."
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:98
-msgid "IM"
-msgstr "МП"
-
-#: src/qml/PanelDialer/Keypad.qml:87
-msgid "JKL"
-msgstr "МНОП"
-
-#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:90
-msgid "Last"
-msgstr "Останній"
-
-#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:57
-msgid "Locality"
-msgstr "Район"
-
-#: src/qml/PanelDialer/Keypad.qml:97
-msgid "MNO"
-msgstr "РСТУ"
-
-#: src/qml/Panes/SelectMessagePane.qml:22
-msgid "Messages"
-msgstr "Повідомлення"
-
-#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:79
-msgid "Middle"
-msgstr "Середина"
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:45
-msgid "Mobile"
-msgstr "Мобільний"
-
-#: src/qml/phone-app.qml:480
-msgid "New Contact"
-msgstr "Новий контакт"
-
-#: src/qml/phone-app.qml:475
-#: src/qml/PanelCommunications/CommunicationsPanel.qml:146
-msgid "New Message"
-msgstr "Нове повідомлення"
-
-#: src/qml/OnCallPanel.qml:84
-msgid "On Call"
-msgstr "Дзвінок"
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:43
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:48
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:57
-msgid "Other"
-msgstr "Інше"
-
-#: src/qml/PanelDialer/Keypad.qml:107
-msgid "PQRS"
-msgstr "ФХЦЧ"
-
-#: src/phone-app.desktop.in:3
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:61
-msgid "Phone"
-msgstr "Телефон"
-
-#: src/phone-app.desktop.in:4
-msgid "Phone App"
-msgstr "Програма-телефон"
 
 #: approver/phone-app-approver.desktop.in:2
 msgid "Phone App Approver"
@@ -355,117 +89,281 @@ msgstr "Підтверджувач дзвінків"
 msgid "Phone Calls"
 msgstr "Телефонні дзвінки"
 
-#: src/phone-app.desktop.in:5
-msgid "Phone application"
-msgstr "Програма-телефон"
-
-#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:75
-msgid "Postal Code"
-msgstr "Поштовий індекс"
-
-#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:57
-msgid "Prefix"
-msgstr "Префікс"
-
-#: Ubuntu/PhoneApp/conversationfeedmodel.cpp:275
-msgid "Private number"
-msgstr "Приватний номер"
-
-#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:66
-msgid "Region"
-msgstr "Область/Регіон"
-
-#: src/qml/DetailViewCommunication/MessagesFooter.qml:87
-msgid "Reply via SMS"
-msgstr "Відповісти СМС"
-
 #: approver/phone-app-sms.desktop.in:3
 msgid "SMS"
 msgstr "СМС"
 
-#: approver/textchannelobserver.cpp:51
+#: approver/textchannelobserver.cpp:49
 #, qt-format
 msgid "SMS from %1"
 msgstr "СМС від %1"
 
-#: src/qml/DetailViewContact/ContactDetails.qml:108
-#: src/qml/DetailViewContact/EditToolbar.qml:99
-msgid "Save"
-msgstr "Зберегти"
-
-#: src/qml/DetailViewCommunication/MessagesFooter.qml:102
-msgid "Send"
-msgstr "Надіслати"
-
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:56
-msgid "Skype"
-msgstr "Скайп"
-
-#: approver/messagingmenu.cpp:165
+#: approver/messagingmenu.cpp:169
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Вибачте, не можу звільнитися. Передзвоню пізніше."
 
-#: src/qml/DetailViewContact/AddressContactDetailsEditor.qml:47
-msgid "Street"
-msgstr "Вулиця"
-
-#: src/qml/DetailViewContact/NameContactDetailsEditor.qml:100
-msgid "Suffix"
-msgstr "Суфікс"
-
-#: src/qml/DetailViewLiveCall/BackgroundCall.qml:54
-msgid "Swap Calls"
-msgstr "Перемкнути дзвінки"
-
-#: src/qml/PanelDialer/Keypad.qml:117
-msgid "TUV"
-msgstr "ШЩ"
-
-#: src/qml/DetailViewCommunication/NewMessageHeader.qml:59
-msgid "To:"
-msgstr "Кому:"
-
-#: src/qml/dateUtils.js:41
-msgid "Today"
-msgstr "Сьогодні"
-
-#: src/qml/DetailViewLiveCall/LiveCall.qml:155
-msgid "Unknown Contact"
-msgstr "Невідомий контакт"
-
-#: approver/phoneappapprover.cpp:229
+#: approver/phoneappapprover.cpp:239
 msgid "Unknown caller"
 msgstr "Невідома особа"
 
-#: Ubuntu/PhoneApp/conversationfeedmodel.cpp:279
-msgid "Unknown number"
-msgstr "Невідомий номер"
-
-#: src/qml/DetailViewVoicemail/Voicemail.qml:31 src/qml/OnCallPanel.qml:99
-msgid "Voicemail"
-msgstr "Голосова пошта"
-
-#: approver/messagingmenu.cpp:198
+#: approver/messagingmenu.cpp:202
 msgid "Voicemail messages"
 msgstr "Повідомлення голосової пошти"
 
-#: src/qml/PanelDialer/Keypad.qml:127
-msgid "WXYZ"
-msgstr "ЬЮЯ"
+#~ msgid "#"
+#~ msgstr "#"
 
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:42
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:47
-msgid "Work"
-msgstr "Робочий"
+#~ msgid "%1 hour call"
+#~ msgid_plural "%1 hours call"
+#~ msgstr[0] "%1-годинний дзвінок"
+#~ msgstr[1] "%1-годинний дзвінок"
+#~ msgstr[2] "%1-годинний дзвінок"
 
-#: src/qml/DetailViewContact/DetailTypeUtilities.js:55
-msgid "Yahoo"
-msgstr "Yahoo"
+#~ msgid "%1 minute call"
+#~ msgid_plural "%1 minutes call"
+#~ msgstr[0] "%1-хвилинний дзвінок"
+#~ msgstr[1] "%1-хвилинний дзвінок"
+#~ msgstr[2] "%1-хвилинний дзвінок"
 
-#: src/qml/dateUtils.js:43
-msgid "Yesterday"
-msgstr "Вчора"
+#~ msgid "%1 second call"
+#~ msgid_plural "%1 seconds call"
+#~ msgstr[0] "%1-секундний дзвінок"
+#~ msgstr[1] "%1-секундний дзвінок"
+#~ msgstr[2] "%1-секундний дзвінок"
 
-#: src/qml/DetailViewCommunication/CommunicationDelegate.qml:100
-msgid "missed call"
-msgstr "пропущений дзвінок"
+#~ msgid "*"
+#~ msgstr "*"
+
+#~ msgid "+"
+#~ msgstr "+"
+
+#~ msgid "0"
+#~ msgstr "0"
+
+#~ msgid "1"
+#~ msgstr "1"
+
+#~ msgid "2"
+#~ msgstr "2"
+
+#~ msgid "3"
+#~ msgstr "3"
+
+#~ msgid "4"
+#~ msgstr "4"
+
+#~ msgid "5"
+#~ msgstr "5"
+
+#~ msgid "6"
+#~ msgstr "6"
+
+#~ msgid "7"
+#~ msgstr "7"
+
+#~ msgid "8"
+#~ msgstr "8"
+
+#~ msgid "9"
+#~ msgstr "9"
+
+#~ msgid "ABC"
+#~ msgstr "АБВГ"
+
+#~ msgid "Add"
+#~ msgstr "Додати"
+
+#~ msgid "Add a phone number"
+#~ msgstr "Додати телефонний номер"
+
+#~ msgid "Add a postal address"
+#~ msgstr "Додати поштову адресу"
+
+#~ msgid "Add an email address"
+#~ msgstr "Додати адресу електронної пошти"
+
+#~ msgid "Add an online account"
+#~ msgstr "Додати обліковий запису у мережі"
+
+#~ msgid "Address"
+#~ msgstr "Адреса"
+
+#~ msgid "Are you sure you want to delete this contact?"
+#~ msgstr "Вилучити ці записи контактів?"
+
+#~ msgid "Call"
+#~ msgstr "Дзвінок"
+
+#~ msgid "Calls"
+#~ msgstr "Дзвінки"
+
+#~ msgid "Cancel"
+#~ msgstr "Скасувати"
+
+#~ msgid "Communication"
+#~ msgstr "Зв’язок"
+
+#~ msgid "Compose"
+#~ msgstr "Написати"
+
+#~ msgid "Contact Details"
+#~ msgstr "Подробиці щодо запису контакту"
+
+#~ msgid "Contacts"
+#~ msgstr "Контакти"
+
+#~ msgid "Conversations"
+#~ msgstr "Спілкування"
+
+#~ msgid "Country"
+#~ msgstr "Країна"
+
+#~ msgid "DEF"
+#~ msgstr "ДЕЄЖЗ"
+
+#~ msgid "Delete"
+#~ msgstr "Вилучити"
+
+#~ msgid "Delete Contact"
+#~ msgstr "Вилучити контакт"
+
+#~ msgid "Dialing"
+#~ msgstr "Набирання"
+
+#~ msgid "Duration %1"
+#~ msgstr "Тривалість: %1"
+
+#~ msgid "Edit"
+#~ msgstr "Змінити"
+
+#~ msgid "Email"
+#~ msgstr "Ел. пошта"
+
+#~ msgid "Enter a number"
+#~ msgstr "Введіть номер"
+
+#~ msgid "First"
+#~ msgstr "Перший"
+
+#~ msgid "GHI"
+#~ msgstr "ІЇИЙКЛ"
+
+#~ msgid "Google Talk"
+#~ msgstr "Google Talk"
+
+#~ msgid "Home"
+#~ msgstr "Домівка"
+
+#~ msgid "IM"
+#~ msgstr "МП"
+
+#~ msgid "JKL"
+#~ msgstr "МНОП"
+
+#~ msgid "Last"
+#~ msgstr "Останній"
+
+#~ msgid "Locality"
+#~ msgstr "Район"
+
+#~ msgid "MNO"
+#~ msgstr "РСТУ"
+
+#~ msgid "Messages"
+#~ msgstr "Повідомлення"
+
+#~ msgid "Middle"
+#~ msgstr "Середина"
+
+#~ msgid "Mobile"
+#~ msgstr "Мобільний"
+
+#~ msgid "New Contact"
+#~ msgstr "Новий контакт"
+
+#~ msgid "New Message"
+#~ msgstr "Нове повідомлення"
+
+#~ msgid "On Call"
+#~ msgstr "Дзвінок"
+
+#~ msgid "Other"
+#~ msgstr "Інше"
+
+#~ msgid "PQRS"
+#~ msgstr "ФХЦЧ"
+
+#~ msgid "Phone"
+#~ msgstr "Телефон"
+
+#~ msgid "Phone App"
+#~ msgstr "Програма-телефон"
+
+#~ msgid "Phone application"
+#~ msgstr "Програма-телефон"
+
+#~ msgid "Postal Code"
+#~ msgstr "Поштовий індекс"
+
+#~ msgid "Prefix"
+#~ msgstr "Префікс"
+
+#~ msgid "Private number"
+#~ msgstr "Приватний номер"
+
+#~ msgid "Region"
+#~ msgstr "Область/Регіон"
+
+#~ msgid "Reply via SMS"
+#~ msgstr "Відповісти СМС"
+
+#~ msgid "Save"
+#~ msgstr "Зберегти"
+
+#~ msgid "Send"
+#~ msgstr "Надіслати"
+
+#~ msgid "Skype"
+#~ msgstr "Скайп"
+
+#~ msgid "Street"
+#~ msgstr "Вулиця"
+
+#~ msgid "Suffix"
+#~ msgstr "Суфікс"
+
+#~ msgid "Swap Calls"
+#~ msgstr "Перемкнути дзвінки"
+
+#~ msgid "TUV"
+#~ msgstr "ШЩ"
+
+#~ msgid "To:"
+#~ msgstr "Кому:"
+
+#~ msgid "Today"
+#~ msgstr "Сьогодні"
+
+#~ msgid "Unknown Contact"
+#~ msgstr "Невідомий контакт"
+
+#~ msgid "Unknown number"
+#~ msgstr "Невідомий номер"
+
+#~ msgid "Voicemail"
+#~ msgstr "Голосова пошта"
+
+#~ msgid "WXYZ"
+#~ msgstr "ЬЮЯ"
+
+#~ msgid "Work"
+#~ msgstr "Робочий"
+
+#~ msgid "Yahoo"
+#~ msgstr "Yahoo"
+
+#~ msgid "Yesterday"
+#~ msgstr "Вчора"
+
+#~ msgid "missed call"
+#~ msgstr "пропущений дзвінок"
