@@ -1,1 +1,1 @@
-add_subdirectory(PhoneApp)
+add_subdirectory(Telephony)

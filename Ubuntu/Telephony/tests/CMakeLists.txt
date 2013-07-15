@@ -1,6 +1,6 @@
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/Ubuntu/PhoneApp
+    ${CMAKE_SOURCE_DIR}/Ubuntu/Telephony
     )
 
 macro(generate_tests)

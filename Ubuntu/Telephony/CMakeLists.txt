@@ -31,7 +31,7 @@ target_link_libraries(phone-qml
     phoneapp
     )
 
-set(PLUGIN_DIR ${QT_INSTALL_QML}/Ubuntu/PhoneApp)
+set(PLUGIN_DIR ${QT_INSTALL_QML}/Ubuntu/Telephony)
 install(TARGETS phone-qml DESTINATION ${PLUGIN_DIR})
 install(FILES qmldir DESTINATION ${PLUGIN_DIR})
 

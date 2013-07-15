@@ -114,7 +114,7 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
 
 void Components::registerTypes(const char *uri)
 {
-    // @uri PhoneApp
+    // @uri Telephony
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
     qmlRegisterType<ConversationProxyModel>(uri, 0, 1, "ConversationProxyModel");
     qmlRegisterType<ContactEntry>(uri, 0, 1, "ContactEntry");
