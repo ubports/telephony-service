@@ -15,8 +15,5 @@ macro(generate_tests)
     endforeach(test)
 endmacro(generate_tests)
 
-generate_tests(
-    ContactModelTest
-    ContactEntryTest
-    ContactDetailsTest
-    )
+#generate_tests(
+#    )

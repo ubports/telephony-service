@@ -21,11 +21,9 @@
  */
 
 #include "callentry.h"
-#include "contactentry.h"
-#include "contactmodel.h"
 #include "telepathyhelper.h"
-#include <QTime>
 #include <QContactAvatar>
+#include <QTime>
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/Connection>
@@ -82,12 +80,15 @@ void CallEntry::setupCallChannel()
 
     onCallStateChanged(mChannel->callState());
 
+    /*
+    FIXME: reimplement using a QContactManager and get the contact from there
     ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(mChannel->targetContact()->id());
     if (entry) {
         mContact = entry->contact();
         Q_EMIT contactAliasChanged();
         Q_EMIT contactAvatarChanged();
     }
+    */
 
     Q_EMIT heldChanged();
     Q_EMIT phoneNumberChanged();

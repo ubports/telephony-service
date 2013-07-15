@@ -21,7 +21,7 @@
  */
 
 #include "callhandler.h"
-#include "contactmodel.h"
+#include "phoneutils.h"
 #include "telepathyhelper.h"
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
@@ -202,7 +202,7 @@ Tp::CallChannelPtr CallHandler::existingCall(const QString &phoneNumber)
 {
     Tp::CallChannelPtr channel;
     Q_FOREACH(const Tp::CallChannelPtr &ch, mCallChannels) {
-        if (ContactModel::comparePhoneNumbers(ch->targetContact()->id(), phoneNumber)) {
+        if (PhoneUtils::comparePhoneNumbers(ch->targetContact()->id(), phoneNumber)) {
             channel = ch;
             break;
         }

@@ -26,7 +26,6 @@
 #include "telepathyhelper.h"
 #include "textchannelobserver.h"
 #include "voicemailindicator.h"
-#include "contactmodel.h"
 #include <QCoreApplication>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/AbstractClient>
@@ -63,9 +62,6 @@ int main(int argc, char **argv)
     // we don't need to call anything on the indicator, it will work by itself
     VoiceMailIndicator voiceMailIndicator;
     Q_UNUSED(voiceMailIndicator);
-
-    // create the contact model so that contacts are already loaded
-    ContactModel::instance();
 
     return app.exec();
 }

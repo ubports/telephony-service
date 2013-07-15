@@ -25,19 +25,6 @@
 #include "callmanager.h"
 #include "channelobserver.h"
 #include "chatmanager.h"
-#include "calllogmodel.h"
-#include "contactmodel.h"
-#include "contactentry.h"
-#include "contactproxymodel.h"
-#include "contactdetail.h"
-#include "contactaddress.h"
-#include "contactemailaddress.h"
-#include "contactname.h"
-#include "contactonlineaccount.h"
-#include "contactphonenumber.h"
-#include "conversationaggregatormodel.h"
-#include "conversationproxymodel.h"
-#include "messagelogmodel.h"
 #include "telepathylogreader.h"
 
 #include <QQmlEngine>
@@ -74,62 +61,26 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("chatManager", ChatManager::instance());
     mRootContext->setContextProperty("callManager", CallManager::instance());
 
-    // check which contact engine to use
-    QString contactEngine = mRootContext->contextProperty("contactEngine").toString();
-    if (contactEngine.isNull()) {
-        contactEngine = "folks";
-    }
-    mRootContext->setContextProperty("contactModel", ContactModel::instance(contactEngine));
-
-    mCallLogModel = new CallLogModel(mRootContext);
-    mMessageLogModel = new MessageLogModel(mRootContext);
-    connect(mMessageLogModel, SIGNAL(messageRead(QString,QString)),
-            ChatManager::instance(), SLOT(acknowledgeMessage(QString,QString)));
-    mConversationModel = new ConversationAggregatorModel(mRootContext);
-    mConversationModel->addFeedModel(mCallLogModel);
-    mConversationModel->addFeedModel(mMessageLogModel);
-    mRootContext->setContextProperty("conversationAggregatorModel", mConversationModel);
-
     TelepathyHelper::instance()->registerChannelObserver();
 
     // messages
     connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
             ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
-    connect(ChatManager::instance(), SIGNAL(messageReceived(const QString&, const QString&, const QDateTime&, const QString&, bool)),
-            mMessageLogModel, SLOT(onMessageReceived(const QString&, const QString&, const QDateTime&, const QString&, bool)));
-    connect(ChatManager::instance(), SIGNAL(messageSent(const QString&, const QString&)),
-            mMessageLogModel, SLOT(onMessageSent(const QString&, const QString&)));
-    connect(TelepathyLogReader::instance(), SIGNAL(loadedMessageEvent(QString,QString,bool,QDateTime,QString,bool)),
-            mMessageLogModel, SLOT(appendMessage(QString,QString,bool,QDateTime,QString,bool)));
 
     // calls
     connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
             CallManager::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
-    connect(CallManager::instance(), SIGNAL(callEnded(QString,bool,QDateTime,QTime,bool,bool)),
-            mCallLogModel, SLOT(addCallEvent(QString,bool,QDateTime,QTime,bool,bool)));
-    connect(TelepathyLogReader::instance(), SIGNAL(loadedCallEvent(QString,bool,QDateTime,QTime,bool,bool)),
-            mCallLogModel, SLOT(addCallEvent(QString,bool,QDateTime,QTime,bool,bool)));
-
 }
 
 void Components::registerTypes(const char *uri)
 {
     // @uri Telephony
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
-    qmlRegisterType<ConversationProxyModel>(uri, 0, 1, "ConversationProxyModel");
-    qmlRegisterType<ContactEntry>(uri, 0, 1, "ContactEntry");
-    qmlRegisterType<ContactProxyModel>(uri, 0, 1, "ContactProxyModel");
-    qmlRegisterType<ContactDetail>(uri, 0, 1, "ContactDetail");
-    qmlRegisterType<ContactAddress>(uri, 0, 1, "ContactAddress");
-    qmlRegisterType<ContactEmailAddress>(uri, 0, 1, "ContactEmailAddress");
-    qmlRegisterType<ContactName>(uri, 0, 1, "ContactName");
-    qmlRegisterType<ContactOnlineAccount>(uri, 0, 1, "ContactOnlineAccount");
-    qmlRegisterType<ContactPhoneNumber>(uri, 0, 1, "ContactPhoneNumber");
 }
 
 void Components::onAccountReady()
 {
     // QTimer::singleShot() is used here to make sure the slots are executed in the correct thread. If we call the slots directly
     // the items created for those models will be on the wrong thread.
-    QTimer::singleShot(0, TelepathyLogReader::instance(), SLOT(fetchLog()));
+    //QTimer::singleShot(0, TelepathyLogReader::instance(), SLOT(fetchLog()));
 }

@@ -20,8 +20,8 @@
  */
 
 #include "chatmanager.h"
-#include "contactmodel.h"
 #include "telepathyhelper.h"
+#include "phoneutils.h"
 #include "config.h"
 
 #include <TelepathyQt/ContactManager>
@@ -125,7 +125,7 @@ Tp::TextChannelPtr ChatManager::existingChat(const QString &phoneNumber)
 {
     Tp::TextChannelPtr channel;
     Q_FOREACH(const QString &key, mChannels.keys()) {
-        if (ContactModel::comparePhoneNumbers(key, phoneNumber)) {
+        if (PhoneUtils::comparePhoneNumbers(key, phoneNumber)) {
             channel = mChannels[key];
             break;
         }

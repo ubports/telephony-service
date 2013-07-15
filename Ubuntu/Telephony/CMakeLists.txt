@@ -1,15 +1,7 @@
 # QML plugin
 
 set(plugin_SRCS
-    calllogmodel.cpp
-    contactproxymodel.cpp
-    conversationfeeditem.cpp
-    conversationfeedmodel.cpp
-    conversationaggregatormodel.cpp
-    conversationproxymodel.cpp
     components.cpp
-    messagelogmodel.cpp
-    telepathylogreader.cpp
     )
 
 include_directories(

@@ -24,8 +24,6 @@
 #include "phoneapputils.h"
 #include "messagingmenu.h"
 #include "chatmanager.h"
-#include "contactmodel.h"
-#include "contactentry.h"
 #include "config.h"
 #include "ringtone.h"
 
@@ -228,16 +226,18 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
     data->channel = channel;
 
     // try to find the contact in the ContactModel
-    ContactEntry *contactEntry = ContactModel::instance()->contactFromPhoneNumber(contact->id());
     // if the contact is not known, the alias and the number will be the same
     QString title;
-    QString icon;
+    QString icon;    
+    /*FIXME: reimplement using QContactManager
+    ContactEntry *contactEntry = ContactModel::instance()->contactFromPhoneNumber(contact->id());
     if (contactEntry) {
         title = contactEntry->displayLabel();
         icon = contactEntry->avatar().toLocalFile();
     } else {
+    */
         title = C::gettext("Unknown caller");
-    }
+    //}
 
     QString body;
     if (!contact->id().isEmpty()) {

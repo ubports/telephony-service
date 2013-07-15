@@ -21,9 +21,10 @@
 
 #include "config.h"
 #include "phoneapputils.h"
+#include "phoneutils.h"
 #include "messagingmenu.h"
-#include "contactmodel.h"
-#include "contactentry.h"
+#include <QDateTime>
+#include <QDebug>
 #include <gio/gio.h>
 
 namespace C {
@@ -53,14 +54,16 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
 {
 #ifdef HAVE_MESSAGING_MENU_MESSAGE
     // try to get a contact for that phone number
-    ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(phoneNumber);
     QString iconPath;
     QString contactAlias = phoneNumber;
+
+    /*FIXME: update the code to use a standard QContactManager
+    ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(phoneNumber);
 
     if (contact) {
         iconPath = contact->avatar().toLocalFile();
         contactAlias = contact->displayLabel();
-    }
+    }*/
 
     if (iconPath.isNull()) {
         iconPath = phoneAppDirectory() + "/assets/avatar-default@18.png";
@@ -110,7 +113,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     Call call;
     bool found = false;
     Q_FOREACH(Call callMessage, mCalls) {
-        if (ContactModel::comparePhoneNumbers(callMessage.number, phoneNumber)) {
+        if (PhoneUtils::comparePhoneNumbers(callMessage.number, phoneNumber)) {
             call = callMessage;
             found = true;
             mCalls.removeOne(callMessage);
@@ -122,13 +125,14 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     }
 
     if (!found) {
+            /*FIXME: update the code to work using a plain QContactManager
             ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(phoneNumber);
             if (contact) {
                 call.contactAlias = contact->displayLabel();
                 call.contactIcon = contact->avatar().toLocalFile();
-            } else {
+            } else {*/
                 call.contactAlias = phoneNumber;
-            }
+            //}
             call.number = phoneNumber;
             call.count = 0;
     }

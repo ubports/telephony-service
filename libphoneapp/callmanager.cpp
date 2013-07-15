@@ -22,7 +22,6 @@
 
 #include "callmanager.h"
 #include "callentry.h"
-#include "contactmodel.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/ContactManager>

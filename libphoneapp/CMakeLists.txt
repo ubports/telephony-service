@@ -1,17 +1,9 @@
 set(library_SRCS
-    contactmodel.cpp
-    contactaddress.cpp
-    contactdetail.cpp
-    contactemailaddress.cpp
-    contactentry.cpp
-    contactmodel.cpp
-    contactname.cpp
-    contactonlineaccount.cpp
-    contactphonenumber.cpp
     callentry.cpp
     callmanager.cpp
     channelobserver.cpp
     chatmanager.cpp
+    phoneutils.cpp
     ringtone.cpp
     telepathyhelper.cpp
     )

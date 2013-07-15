@@ -15,11 +15,5 @@ macro(generate_tests)
     endforeach(test)
 endmacro(generate_tests)
 
-generate_tests(
-    CallLogModelTest
-    ContactProxyModelTest
-    ConversationAggregatorModelTest
-    ConversationFeedItemTest
-    ConversationFeedModelTest
-    MessageLogModelTest
-    )
+#generate_tests(
+#    )

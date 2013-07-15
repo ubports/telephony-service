@@ -22,8 +22,6 @@
 #include <libnotify/notify.h>
 #include "textchannelobserver.h"
 #include "messagingmenu.h"
-#include "contactmodel.h"
-#include "contactentry.h"
 #include "config.h"
 #include "ringtone.h"
 #include <TelepathyQt/AvatarData>
@@ -50,11 +48,13 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     Tp::ContactPtr contact = message.sender();
     QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(contact->alias());
     QString icon = contact->avatarData().fileName;
+    /*FIXME: reimplement using QContactManager
     ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(contact->id());
     if (entry) {
         title = QString("SMS from %1").arg(entry->displayLabel());
         icon = entry->avatar().toLocalFile();
     }
+    */
 
     if (icon.isEmpty()) {
         icon = phoneAppDirectory() + "/assets/avatar-default@18.png";

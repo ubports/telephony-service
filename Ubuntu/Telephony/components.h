@@ -26,12 +26,6 @@
 #include <QQmlContext>
 #include <QQmlExtensionPlugin>
 
-class ChannelObserver;
-class CallLogModel;
-class MessageLogModel;
-class ContactModel;
-class ConversationAggregatorModel;
-
 class Components : public QQmlExtensionPlugin
 {
     Q_OBJECT
@@ -46,9 +40,6 @@ private Q_SLOTS:
 
 private:
     QQmlContext *mRootContext;
-    ConversationAggregatorModel *mConversationModel;
-    CallLogModel *mCallLogModel;
-    MessageLogModel *mMessageLogModel;
 };
 
 #endif // COMPONENTS_H
