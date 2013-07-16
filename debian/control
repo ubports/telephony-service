@@ -1,4 +1,4 @@
-Source: phone-app
+Source: telephony-service
 Section: x11
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
@@ -12,7 +12,6 @@ Build-Depends: cmake,
                libnotify-dev,
                libqtgstreamer-dev,
                libtelepathy-qt5-dev,
-               libtelepathy-logger-qt5-dev,
                libubuntu-platform-api1-dev [armhf],
                pkg-config,
                python,
@@ -25,64 +24,37 @@ Standards-Version: 3.9.4
 # If you don't have commit rights to lp:phone-app but need to upload
 # packaging changes, just go ahead.  The developers will notice and sync
 # up the code again.
-Vcs-Bzr: lp:phone-app
-Vcs-Browser: https://bazaar.launchpad.net/~phablet-team/phone-app/trunk/files
+Vcs-Bzr: lp:telephony-service
+Vcs-Browser: https://bazaar.launchpad.net/~phablet-team/telephony-service/trunk/files
 
-Package: phone-app
-Architecture: i386 amd64 armhf
-Replaces: telephony-app
-Conflicts: telephony-app
+Package: telephony-service
+Architecture: any
 Depends: ${misc:Depends},
          ${shlibs:Depends},
-         dbus-x11,
-         dconf-cli,
-         qtdeclarative5-hud1.0,
-         libfolks-eds25,
-         libicu48,
          libnotify4,
-         qtdeclarative5-ubuntu-ui-toolkit-plugin | qt-components-ubuntu,
-         telepathy-logger,
          telepathy-mission-control-5,
          telepathy-ofono,
          ubuntu-sounds,
-Recommends: unity8 (>= 7.81.0~),
-Description: Phone application for Ubuntu
- An application to execute phone tasks such as calling, messaging and contact
- management.
+Description: Telephony service components for Ubuntu
+ The backend components providing the telephony features such as calling and
+ texting.
 
-Package: phone-app-dbg
-Architecture: i386 amd64 armhf
-Section: debug
-Priority: extra
-Conflicts: telephony-app-dbg
-Replaces: telephony-app-dbg
-Depends: ${misc:Depends},
-         phone-app (= ${binary:Version}),
-Description: debugging symbols for phone-app
- This package contains the debugging symbols for phone-app
-
-Package: phone-app-autopilot
-Architecture: all
-Section: debug
-Priority: extra
-Conflicts: telephony-app-autopilot
-Replaces: telephony-app-autopilot
-Depends: ${misc:Depends},
-         autopilot-qt5,
-         libqt5test5,
-         libqt5widgets5,
-         phone-app (>= ${binary:Version}),
-         python-autopilot,
-Description: autopilot tests for phone-app
- This package contains the autopilot tests for phone-app
-
-Package: phone-app-connected-autopilot
-Architecture: all
+Package: telephony-service-dbg
+Architecture: any
 Section: debug
 Priority: extra
 Depends: ${misc:Depends},
-         phone-app (= ${binary:Version}),
-         libautopilot-qt,
-         python-autopilot
-Description: connected autopilot tests for phone-app
- This package contains the connected autopilot tests for phone-app
+         telephony-service (= ${binary:Version}),
+Description: debugging symbols for telephony-service
+ This package contains the debugging symbols for telephony-service
+
+Package: qtdeclarative5-ubuntu-telephony-plugin
+Architecture: any
+Section: debug
+Priority: extra
+Depends: ${misc:Depends},
+         telephony-service (>= ${binary:Version}),
+Description: QML plugin providing the telephony features
+ This package contains the QML plugin providing the features from the telephony
+ service to applications.
+
