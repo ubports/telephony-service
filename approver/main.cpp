@@ -22,7 +22,7 @@
 
 #include <libnotify/notify.h>
 
-#include "phoneappapprover.h"
+#include "approver.h"
 #include "telepathyhelper.h"
 #include "textchannelobserver.h"
 #include "voicemailindicator.h"
@@ -40,16 +40,16 @@ int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
 
-    C::bindtextdomain( "phone-app", "/usr/share/locale" );
-    C::textdomain("phone-app");
+    C::bindtextdomain( "telephony-service", "/usr/share/locale" );
+    C::textdomain("telephony-service");
 
-    notify_init("Phone App Approver");
+    notify_init(C::gettext("Telephony Service Approver"));
 
     Tp::registerTypes();
 
     // register the approver
-    PhoneAppApprover *approver = new PhoneAppApprover();
-    TelepathyHelper::instance()->registerClient(approver, "PhoneAppApprover");
+    Approver *approver = new Approver();
+    TelepathyHelper::instance()->registerClient(approver, "TelephonyServiceApprover");
 
     // and the observer
     TelepathyHelper::instance()->registerChannelObserver();

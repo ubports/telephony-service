@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PHONEAPPAPPROVER_H
-#define PHONEAPPAPPROVER_H
+#ifndef APPROVER_H
+#define APPROVER_H
 
 #include <glib.h>
 #include <unistd.h>
@@ -31,13 +31,13 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/ChannelDispatchOperation>
 
-class PhoneAppApprover : public QObject, public Tp::AbstractClientApprover
+class Approver : public QObject, public Tp::AbstractClientApprover
 {
     Q_OBJECT
 
 public:
-    PhoneAppApprover();
-    ~PhoneAppApprover();
+    Approver();
+    ~Approver();
 
     Tp::ChannelClassSpecList channelFilters() const;
 
@@ -68,4 +68,4 @@ private:
     NotifyNotification* mPendingSnapDecision;
 };
 
-#endif // PHONEAPPAPPROVER_H
+#endif // APPROVER_H

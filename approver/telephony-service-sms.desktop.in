@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=tr("SMS")
+Exec=telephony-service-approver
+Icon=telephony-service-message
+NoDisplay=true
+X-Ubuntu-Gettext-Domain=telephony-service

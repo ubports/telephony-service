@@ -20,7 +20,7 @@
  */
 
 #include "config.h"
-#include "phoneapputils.h"
+#include "applicationutils.h"
 #include "phoneutils.h"
 #include "messagingmenu.h"
 #include <QDateTime>
@@ -35,17 +35,18 @@ namespace C {
     #include <messaging-menu-message.h>
 #endif
 
+#define SOURCE_ID "telephony-service-approver"
 MessagingMenu::MessagingMenu(QObject *parent) :
     QObject(parent), mVoicemailCount(-1)
 {
-    GIcon *icon = g_icon_new_for_string("phone-app", NULL);
-    mMessagesApp = messaging_menu_app_new("phone-app-sms.desktop");
+    GIcon *icon = g_icon_new_for_string("telephony-service-approver", NULL);
+    mMessagesApp = messaging_menu_app_new("telephony-service-sms.desktop");
     messaging_menu_app_register(mMessagesApp);
-    messaging_menu_app_append_source(mMessagesApp, "phone-app", icon, "Phone App");
+    messaging_menu_app_append_source(mMessagesApp, SOURCE_ID, icon, C::gettext("Telephony Service"));
 
-    mCallsApp = messaging_menu_app_new("phone-app-call.desktop");
+    mCallsApp = messaging_menu_app_new("telephony-service-call.desktop");
     messaging_menu_app_register(mCallsApp);
-    messaging_menu_app_append_source(mCallsApp, "phone-app", icon, "Phone App");
+    messaging_menu_app_append_source(mCallsApp, SOURCE_ID, icon, C::gettext("Telephony Service"));
 
     g_object_unref(icon);
 }
@@ -87,7 +88,7 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
 
     // save the phone number to use in the actions
     mMessages[messageId] = phoneNumber;
-    messaging_menu_app_append_message(mMessagesApp, message, "phone-app", true);
+    messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
 
     g_object_unref(file);
     g_object_unref(icon);
@@ -177,7 +178,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
                                       messages // predefined values
                                       );
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
-    messaging_menu_app_append_message(mCallsApp, message, "phone-app", true);
+    messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
     mCalls.append(call);
 
     g_object_unref(messages);
@@ -271,7 +272,7 @@ void MessagingMenu::showMessage(const QString &messageId)
 {
     QString phoneNumber = mMessages[messageId];
 
-    PhoneAppUtils::instance()->startPhoneApp();
+    ApplicationUtils::instance()->startPhoneApp();
     QDBusInterface mPhoneAppInterface("com.canonical.PhoneApp",
                            "/com/canonical/PhoneApp",
                            "com.canonical.PhoneApp");
@@ -281,10 +282,10 @@ void MessagingMenu::showMessage(const QString &messageId)
 
 void MessagingMenu::callBack(const QString &messageId)
 {
-    PhoneAppUtils::instance()->startPhoneApp();
+    ApplicationUtils::instance()->startPhoneApp();
 
     QString phoneNumber = callFromMessageId(messageId).number;
-    qDebug() << "PhoneApp/MessagingMenu: Calling back" << phoneNumber;
+    qDebug() << "TelephonyService/MessagingMenu: Calling back" << phoneNumber;
     QDBusInterface mPhoneAppInterface("com.canonical.PhoneApp",
                            "/com/canonical/PhoneApp",
                            "com.canonical.PhoneApp");
@@ -295,14 +296,14 @@ void MessagingMenu::callBack(const QString &messageId)
 void MessagingMenu::replyWithMessage(const QString &messageId, const QString &reply)
 {
     QString phoneNumber = callFromMessageId(messageId).number;
-    qDebug() << "PhoneApp/MessagingMenu: Replying to call" << phoneNumber << "with text" << reply;
+    qDebug() << "TelephonyService/MessagingMenu: Replying to call" << phoneNumber << "with text" << reply;
     Q_EMIT replyReceived(phoneNumber, reply);
 }
 
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
-    qDebug() << "PhoneApp/MessagingMenu: Calling voicemail for messageId" << messageId;
-    PhoneAppUtils::instance()->startPhoneApp();
+    qDebug() << "TelephonyService/MessagingMenu: Calling voicemail for messageId" << messageId;
+    ApplicationUtils::instance()->startPhoneApp();
     QDBusInterface mPhoneAppInterface("com.canonical.PhoneApp",
                            "/com/canonical/PhoneApp",
                            "com.canonical.PhoneApp");

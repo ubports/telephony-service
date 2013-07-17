@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PHONEAPPROVERDBUS_H
-#define PHONEAPPROVERDBUS_H
+#ifndef APPROVERDBUS_H
+#define APPROVERDBUS_H
 
 #include <QtCore/QObject>
 #include <QtDBus/QDBusContext>
@@ -30,13 +30,13 @@
 /**
  * DBus interface for the phone approver
  */
-class PhoneAppApproverDBus : public QObject, protected QDBusContext
+class ApproverDBus : public QObject, protected QDBusContext
 {
     Q_OBJECT
 
 public:
-    PhoneAppApproverDBus(QObject* parent=0);
-    ~PhoneAppApproverDBus();
+    ApproverDBus(QObject* parent=0);
+    ~ApproverDBus();
 
     bool connectToBus();
 
@@ -51,4 +51,4 @@ Q_SIGNALS:
     void rejectCallRequested();
 };
 
-#endif // PHONEAPPROVERDBUS_H
+#endif // APPROVERDBUS_H

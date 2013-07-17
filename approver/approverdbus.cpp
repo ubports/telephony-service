@@ -20,47 +20,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "phoneappapproverdbus.h"
-#include "phoneappapproveradaptor.h"
+#include "approverdbus.h"
+#include "approveradaptor.h"
 
 // Qt
 #include <QtDBus/QDBusConnection>
 
-static const char* DBUS_SERVICE = "com.canonical.PhoneAppApprover";
-static const char* DBUS_OBJECT_PATH = "/com/canonical/PhoneAppApprover";
+static const char* DBUS_SERVICE = "com.canonical.Approver";
+static const char* DBUS_OBJECT_PATH = "/com/canonical/Approver";
 
-PhoneAppApproverDBus::PhoneAppApproverDBus(QObject* parent) : QObject(parent)
+ApproverDBus::ApproverDBus(QObject* parent) : QObject(parent)
 {
 }
 
-PhoneAppApproverDBus::~PhoneAppApproverDBus()
+ApproverDBus::~ApproverDBus()
 {
 }
 
 bool
-PhoneAppApproverDBus::connectToBus()
+ApproverDBus::connectToBus()
 {
     bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
     if (!ok) {
         return false;
     }
-    new PhoneAppApproverAdaptor(this);
+    new TelephonyServiceApproverAdaptor(this);
     QDBusConnection::sessionBus().registerObject(DBUS_OBJECT_PATH, this);
 
     return true;
 }
 
-void PhoneAppApproverDBus::SendMessage(const QString &number, const QString &message)
+void ApproverDBus::SendMessage(const QString &number, const QString &message)
 {
     Q_EMIT onMessageSent(number, message);
 }
 
-void PhoneAppApproverDBus::AcceptCall()
+void ApproverDBus::AcceptCall()
 {
     Q_EMIT acceptCallRequested();
 }
 
-void PhoneAppApproverDBus::RejectCall()
+void ApproverDBus::RejectCall()
 {
     Q_EMIT rejectCallRequested();
 }

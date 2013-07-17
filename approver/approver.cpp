@@ -19,9 +19,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "phoneappapprover.h"
-#include "phoneappapproverdbus.h"
-#include "phoneapputils.h"
+#include "approver.h"
+#include "approverdbus.h"
+#include "applicationutils.h"
 #include "messagingmenu.h"
 #include "chatmanager.h"
 #include "config.h"
@@ -39,13 +39,13 @@ namespace C {
 #include <libintl.h>
 }
 
-#define PHONE_APP_HANDLER TP_QT_IFACE_CLIENT + ".PhoneAppHandler"
+#define PHONE_APP_HANDLER TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler"
 
-PhoneAppApprover::PhoneAppApprover()
+Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
   mPendingSnapDecision(NULL)
 {
-    PhoneAppApproverDBus *dbus = new PhoneAppApproverDBus();
+    ApproverDBus *dbus = new ApproverDBus();
     connect(dbus,
             SIGNAL(onMessageSent(const QString&, const QString&)),
             SLOT(onReplyReceived(const QString&, const QString&)));
@@ -63,23 +63,23 @@ PhoneAppApprover::PhoneAppApprover()
     connect(MessagingMenu::instance(), SIGNAL(messageRead(QString,QString)),
             this, SLOT(onMessageRead(QString,QString)));
 
-    connect(PhoneAppUtils::instance(),
+    connect(ApplicationUtils::instance(),
             SIGNAL(applicationRunningChanged(bool)),
             SLOT(processChannels()));
 }
 
-PhoneAppApprover::~PhoneAppApprover()
+Approver::~Approver()
 {
 }
 
-void PhoneAppApprover::onMessageRead(const QString &phoneNumber, const QString &encodedMessageId)
+void Approver::onMessageRead(const QString &phoneNumber, const QString &encodedMessageId)
 {
     QString messageId(QByteArray::fromHex(encodedMessageId.toUtf8()));
     ChatManager::instance()->acknowledgeMessage(phoneNumber, messageId);
 }
 
 
-Tp::ChannelClassSpecList PhoneAppApprover::channelFilters() const
+Tp::ChannelClassSpecList Approver::channelFilters() const
 {
     Tp::ChannelClassSpecList specList;
     specList << Tp::ChannelClassSpec::audioCall();
@@ -88,7 +88,7 @@ Tp::ChannelClassSpecList PhoneAppApprover::channelFilters() const
     return specList;
 }
 
-Tp::ChannelDispatchOperationPtr PhoneAppApprover::dispatchOperation(Tp::PendingOperation *op)
+Tp::ChannelDispatchOperationPtr Approver::dispatchOperation(Tp::PendingOperation *op)
 {
     Tp::ChannelPtr channel = mChannels[op];
     QString accountId = channel->property("accountId").toString();
@@ -100,7 +100,7 @@ Tp::ChannelDispatchOperationPtr PhoneAppApprover::dispatchOperation(Tp::PendingO
     return Tp::ChannelDispatchOperationPtr();
 }
 
-void PhoneAppApprover::addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
+void Approver::addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                                         const Tp::ChannelDispatchOperationPtr &dispatchOperation)
 {
     bool willHandle = false;
@@ -144,7 +144,7 @@ void PhoneAppApprover::addDispatchOperation(const Tp::MethodInvocationContextPtr
 
 class EventData {
 public:
-    PhoneAppApprover* self;
+    Approver* self;
     Tp::ChannelDispatchOperationPtr dispatchOp;
     Tp::ChannelPtr channel;
 };
@@ -157,7 +157,7 @@ void action_accept(NotifyNotification* notification,
     Q_UNUSED(action);
 
     EventData* eventData = (EventData*) data;
-    PhoneAppApprover* approver = (PhoneAppApprover*) eventData->self;
+    Approver* approver = (Approver*) eventData->self;
     if (NULL != approver) {
         approver->onApproved((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp);
     }
@@ -171,7 +171,7 @@ void action_reject(NotifyNotification* notification,
     Q_UNUSED(action);
 
     EventData* eventData = (EventData*) data;
-    PhoneAppApprover* approver = (PhoneAppApprover*) eventData->self;
+    Approver* approver = (Approver*) eventData->self;
     if (NULL != approver) {
         approver->onRejected((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp);
     }
@@ -182,7 +182,7 @@ void delete_event_data(gpointer data) {
     delete (EventData*) data;
 }
 
-void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
+void Approver::onChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
     if (!pr || !mChannels.contains(pr)) {
@@ -297,7 +297,7 @@ void PhoneAppApprover::onChannelReady(Tp::PendingOperation *op)
     mChannels.remove(pr);
 }
 
-void PhoneAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
+void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
 {
     closeSnapDecision();
 
@@ -305,12 +305,12 @@ void PhoneAppApprover::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
     dispatchOp->handleWith(PHONE_APP_HANDLER);
 
     // and then launch the phone-app
-    PhoneAppUtils::instance()->startPhoneApp();
+    ApplicationUtils::instance()->startPhoneApp();
 
     mDispatchOps.removeAll(dispatchOp);
 }
 
-void PhoneAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
+void Approver::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
 {
     Tp::PendingOperation *claimop = dispatchOp->claim();
     // assume there is just one channel in the dispatchOp for calls
@@ -321,7 +321,7 @@ void PhoneAppApprover::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
     Ringtone::instance()->stopIncomingCallSound();
 }
 
-Tp::ChannelDispatchOperationPtr PhoneAppApprover::dispatchOperationForIncomingCall()
+Tp::ChannelDispatchOperationPtr Approver::dispatchOperationForIncomingCall()
 {
     Tp::ChannelDispatchOperationPtr callDispatchOp;
 
@@ -344,7 +344,7 @@ Tp::ChannelDispatchOperationPtr PhoneAppApprover::dispatchOperationForIncomingCa
     return callDispatchOp;
 }
 
-void PhoneAppApprover::processChannels()
+void Approver::processChannels()
 {
     Q_FOREACH (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
         QList<Tp::ChannelPtr> channels = dispatchOperation->channels();
@@ -365,7 +365,7 @@ void PhoneAppApprover::processChannels()
     }
 }
 
-void PhoneAppApprover::onClaimFinished(Tp::PendingOperation* op)
+void Approver::onClaimFinished(Tp::PendingOperation* op)
 {
     if(!op || op->isError()) {
         qDebug() << "onClaimFinished() error";
@@ -382,7 +382,7 @@ void PhoneAppApprover::onClaimFinished(Tp::PendingOperation* op)
     }
 }
 
-void PhoneAppApprover::onHangupFinished(Tp::PendingOperation* op)
+void Approver::onHangupFinished(Tp::PendingOperation* op)
 {
     if(!op || op->isError()) {
         qDebug() << "onHangupFinished() error";
@@ -400,7 +400,7 @@ void PhoneAppApprover::onHangupFinished(Tp::PendingOperation* op)
     mChannels.remove(op);
 }
 
-void PhoneAppApprover::onCallStateChanged(Tp::CallState state)
+void Approver::onCallStateChanged(Tp::CallState state)
 {
     Tp::CallChannel *channel = qobject_cast<Tp::CallChannel*>(sender());
     if (!channel) {
@@ -438,12 +438,12 @@ void PhoneAppApprover::onCallStateChanged(Tp::CallState state)
     }
 }
 
-void PhoneAppApprover::onReplyReceived(const QString &phoneNumber, const QString &reply)
+void Approver::onReplyReceived(const QString &phoneNumber, const QString &reply)
 {
     ChatManager::instance()->sendMessage(phoneNumber, reply);
 }
 
-void PhoneAppApprover::closeSnapDecision()
+void Approver::closeSnapDecision()
 {
     if (mPendingSnapDecision != NULL) {
         notify_notification_close(mPendingSnapDecision, NULL);
@@ -453,7 +453,7 @@ void PhoneAppApprover::closeSnapDecision()
     Ringtone::instance()->stopIncomingCallSound();
 }
 
-void PhoneAppApprover::onAcceptCallRequested()
+void Approver::onAcceptCallRequested()
 {
     if (!mPendingSnapDecision) {
         return;
@@ -465,7 +465,7 @@ void PhoneAppApprover::onAcceptCallRequested()
     }
 }
 
-void PhoneAppApprover::onRejectCallRequested()
+void Approver::onRejectCallRequested()
 {
     if (!mPendingSnapDecision) {
         return;

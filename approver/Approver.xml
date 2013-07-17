@@ -5,7 +5,7 @@
 
       An interface to the phone application.
     ]]></dox:d>
-    <interface name="com.canonical.PhoneAppApprover" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+    <interface name="com.canonical.TelephonyServiceApprover" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
         <dox:d>
           An interface to the phone approver application.
         </dox:d>

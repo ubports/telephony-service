@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "phoneapputils.h"
+#include "applicationutils.h"
 #include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -33,7 +33,7 @@
 
 #define PHONE_APP_CLIENT "com.canonical.PhoneApp"
 
-PhoneAppUtils::PhoneAppUtils(QObject *parent) :
+ApplicationUtils::ApplicationUtils(QObject *parent) :
     QObject(parent)
 {
     // Setup a DBus watcher to check if the phone-app is running
@@ -57,13 +57,13 @@ PhoneAppUtils::PhoneAppUtils(QObject *parent) :
 }
 
 
-PhoneAppUtils *PhoneAppUtils::instance()
+ApplicationUtils *ApplicationUtils::instance()
 {
-    static PhoneAppUtils *self = new PhoneAppUtils();
+    static ApplicationUtils *self = new ApplicationUtils();
     return self;
 }
 
-void PhoneAppUtils::onServiceRegistered(const QString &serviceName)
+void ApplicationUtils::onServiceRegistered(const QString &serviceName)
 {
     // for now we are only watching the phone-app service, so no need to use/compare the
     // service name
@@ -73,7 +73,7 @@ void PhoneAppUtils::onServiceRegistered(const QString &serviceName)
     Q_EMIT applicationRunningChanged(mPhoneAppRunning);
 }
 
-void PhoneAppUtils::onServiceUnregistered(const QString &serviceName)
+void ApplicationUtils::onServiceUnregistered(const QString &serviceName)
 {
     // for now we are only watching the phone-app service, so no need to use/compare the
     // service name
@@ -83,7 +83,7 @@ void PhoneAppUtils::onServiceUnregistered(const QString &serviceName)
     Q_EMIT applicationRunningChanged(mPhoneAppRunning);
 }
 
-void PhoneAppUtils::startPhoneApp()
+void ApplicationUtils::startPhoneApp()
 {
 #ifdef USE_UBUNTU_PLATFORM_API
     qDebug() << "Starting phone-app...";
@@ -98,7 +98,7 @@ void PhoneAppUtils::startPhoneApp()
 #endif
 }
 
-bool PhoneAppUtils::isApplicationRunning()
+bool ApplicationUtils::isApplicationRunning()
 {
     return mPhoneAppRunning;
 }

@@ -1,10 +1,10 @@
 [Desktop Entry]
-Name=tr("Phone App Approver")
+Name=tr("Telephony Service Approver")
 Comment=tr("Handles incoming messages, calls and indicators")
-Icon=phone-app
-Exec=phone-app-approver
+Icon=telephony-service-approver
+Exec=telephony-service-approver
 Terminal=false
 Type=Application
 NoDisplay=true
 X-GNOME-Autostart-enabled=true
-X-Ubuntu-Gettext-Domain=phone-app
+X-Ubuntu-Gettext-Domain=telephony-service

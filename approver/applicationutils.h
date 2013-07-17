@@ -19,17 +19,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PHONEAPPUTILS_H
-#define PHONEAPPUTILS_H
+#ifndef APPLICATIONUTILS_H
+#define APPLICATIONUTILS_H
 
 #include <QObject>
 #include <QDBusServiceWatcher>
 
-class PhoneAppUtils : public QObject
+class ApplicationUtils : public QObject
 {
     Q_OBJECT
 public:
-    static PhoneAppUtils *instance();
+    static ApplicationUtils *instance();
 
     void startPhoneApp();
     bool isApplicationRunning();
@@ -42,11 +42,11 @@ protected Q_SLOTS:
     void onServiceUnregistered(const QString &serviceName);
 
 private:
-    explicit PhoneAppUtils(QObject *parent = 0);
+    explicit ApplicationUtils(QObject *parent = 0);
 
     QDBusServiceWatcher mPhoneAppWatcher;
     bool mPhoneAppRunning;
 
 };
 
-#endif // PHONEAPPUTILS_H
+#endif // APPLICATIONUTILS_H
