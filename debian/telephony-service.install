@@ -11,4 +11,3 @@ usr/share/locale/*/LC_MESSAGES/telephony-service.mo
 usr/share/telepathy/clients/PhoneApp*.client
 usr/bin/*phone-app*
 usr/bin/ofono-setup
-usr/bin/csv2logger.py

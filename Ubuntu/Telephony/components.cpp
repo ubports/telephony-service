@@ -25,15 +25,10 @@
 #include "callmanager.h"
 #include "channelobserver.h"
 #include "chatmanager.h"
-#include "telepathylogreader.h"
 
 #include <QQmlEngine>
 #include <qqml.h>
 #include <TelepathyQt/Debug>
-#include <TelepathyLoggerQt/Init>
-
-#include <glib-object.h>
-
 
 void Components::initializeEngine(QQmlEngine *engine, const char *uri)
 {
@@ -45,10 +40,6 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     Tp::registerTypes();
     //Tp::enableDebug(true);
     Tp::enableWarnings(true);
-    Tpl::init();
-
-    // trigger the log reader construction
-    TelepathyLogReader::instance();
 
     mRootContext = engine->rootContext();
     Q_ASSERT(mRootContext);
