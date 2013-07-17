@@ -16,9 +16,9 @@ include_directories(
     )
 
 
-add_library(phoneapp STATIC ${library_SRCS} ${library_HDRS})
-target_link_libraries(phoneapp ${TP_QT5_LIBRARIES})
+add_library(telephonyservice STATIC ${library_SRCS} ${library_HDRS})
+target_link_libraries(telephonyservice ${TP_QT5_LIBRARIES})
 
-qt5_use_modules(phoneapp Contacts Core DBus Multimedia Qml Quick)
+qt5_use_modules(telephonyservice Contacts Core DBus Multimedia Qml Quick)
 
 add_subdirectory(tests)

@@ -1,2 +1,2 @@
 module Ubuntu.Telephony
-plugin phone-qml
+plugin telephonyservice-qml

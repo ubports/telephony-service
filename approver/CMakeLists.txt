@@ -15,7 +15,7 @@ include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${NOTIFY_INCLUDE_DIRS}
     ${MESSAGING_MENU_INCLUDE_DIRS}
-    ${CMAKE_SOURCE_DIR}/libphoneapp
+    ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
     )
 
@@ -33,7 +33,7 @@ target_link_libraries(telephony-service-approver
     ${NOTIFY_LIBRARIES}
     ${MESSAGING_MENU_LIBRARIES}
     ${UBUNTU_APP_LIB}
-    phoneapp
+    telephonyservice
     )
 
 configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service.in org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service)

@@ -11,7 +11,7 @@ qt5_add_dbus_adaptor(handler_SRCS Handler.xml handler/handlerdbus.h HandlerDBus)
 
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
-    ${CMAKE_SOURCE_DIR}/libphoneapp
+    ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
     )
 
@@ -20,7 +20,7 @@ qt5_use_modules(telephony-service-handler Contacts Core DBus Qml)
 
 target_link_libraries(telephony-service-handler
     ${TP_QT5_LIBRARIES}
-    phoneapp
+    telephonyservice
     )
 
 configure_file(com.canonical.TelephonyServiceHandler.service.in com.canonical.TelephonyServiceHandler.service)
