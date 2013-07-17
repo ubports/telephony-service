@@ -5,7 +5,7 @@
 
       An interface to the phone application.
     ]]></dox:d>
-    <interface name="com.canonical.PhoneAppHandler" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+    <interface name="com.canonical.TelephonyServiceHandler" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
         <dox:d>
           An interface to the phone handler helper application.
         </dox:d>

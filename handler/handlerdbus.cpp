@@ -22,72 +22,72 @@
  */
 
 #include "callhandler.h"
-#include "phoneapphandlerdbus.h"
-#include "phoneapphandleradaptor.h"
+#include "handlerdbus.h"
+#include "handleradaptor.h"
 #include "texthandler.h"
 
 // Qt
 #include <QtDBus/QDBusConnection>
 
-static const char* DBUS_SERVICE = "com.canonical.PhoneAppHandler";
-static const char* DBUS_OBJECT_PATH = "/com/canonical/PhoneAppHandler";
+static const char* DBUS_SERVICE = "com.canonical.TelephonyServiceHandler";
+static const char* DBUS_OBJECT_PATH = "/com/canonical/TelephonyServiceHandler";
 
-PhoneAppHandlerDBus::PhoneAppHandlerDBus(QObject* parent) : QObject(parent)
+HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent)
 {
 }
 
-PhoneAppHandlerDBus::~PhoneAppHandlerDBus()
+HandlerDBus::~HandlerDBus()
 {
 }
 
-bool PhoneAppHandlerDBus::connectToBus()
+bool HandlerDBus::connectToBus()
 {
     bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
     if (!ok) {
         return false;
     }
-    new PhoneAppHandlerAdaptor(this);
+    new TelephonyServiceHandlerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(DBUS_OBJECT_PATH, this);
 
     return true;
 }
 
-void PhoneAppHandlerDBus::SendMessage(const QString &number, const QString &message)
+void HandlerDBus::SendMessage(const QString &number, const QString &message)
 {
     TextHandler::instance()->sendMessage(number, message);
 }
 
-void PhoneAppHandlerDBus::AcknowledgeMessages(const QString &number, const QStringList &messageIds)
+void HandlerDBus::AcknowledgeMessages(const QString &number, const QStringList &messageIds)
 {
     TextHandler::instance()->acknowledgeMessages(number, messageIds);
 }
 
-void PhoneAppHandlerDBus::StartCall(const QString &number)
+void HandlerDBus::StartCall(const QString &number)
 {
     CallHandler::instance()->startCall(number);
 }
 
-void PhoneAppHandlerDBus::HangUpCall(const QString &objectPath)
+void HandlerDBus::HangUpCall(const QString &objectPath)
 {
     CallHandler::instance()->hangUpCall(objectPath);
 }
 
-void PhoneAppHandlerDBus::SetHold(const QString &objectPath, bool hold)
+void HandlerDBus::SetHold(const QString &objectPath, bool hold)
 {
     CallHandler::instance()->setHold(objectPath, hold);
 }
 
-void PhoneAppHandlerDBus::SetMuted(const QString &objectPath, bool muted)
+void HandlerDBus::SetMuted(const QString &objectPath, bool muted)
 {
     CallHandler::instance()->setMuted(objectPath, muted);
 }
 
-void PhoneAppHandlerDBus::SetSpeakerMode(const QString &objectPath, bool enabled)
+void HandlerDBus::SetSpeakerMode(const QString &objectPath, bool enabled)
 {
     CallHandler::instance()->setSpeakerMode(objectPath, enabled);
 }
 
-void PhoneAppHandlerDBus::SendDTMF(const QString &objectPath, const QString &key)
+void HandlerDBus::SendDTMF(const QString &objectPath, const QString &key)
 {
     CallHandler::instance()->sendDTMF(objectPath, key);
 }

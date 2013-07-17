@@ -20,8 +20,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PHONEAPPHANDLER_H
-#define PHONEAPPHANDLER_H
+#ifndef HANDLER_H
+#define HANDLER_H
 
 #include <TelepathyQt/AbstractClientHandler>
 #include <TelepathyQt/PendingReady>
@@ -29,13 +29,13 @@
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/ChannelRequest>
 
-class PhoneAppHandler : public QObject, public Tp::AbstractClientHandler
+class Handler : public QObject, public Tp::AbstractClientHandler
 {
     Q_OBJECT
 
 public:
-    PhoneAppHandler(QObject *parent = 0);
-    ~PhoneAppHandler() { }
+    Handler(QObject *parent = 0);
+    ~Handler() { }
     bool bypassApproval() const;
     void handleChannels(const Tp::MethodInvocationContextPtr<> &context,
                         const Tp::AccountPtr &account,
@@ -58,4 +58,4 @@ private:
     QMap<Tp::PendingReady*, Tp::ChannelPtr> mReadyRequests;
 };
 
-#endif
+#endif // HANDLER_H

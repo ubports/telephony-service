@@ -20,8 +20,8 @@
  */
 
 #include "callhandler.h"
-#include "phoneapphandler.h"
-#include "phoneapphandlerdbus.h"
+#include "handler.h"
+#include "handlerdbus.h"
 #include "telepathyhelper.h"
 #include "texthandler.h"
 #include <QCoreApplication>
@@ -36,15 +36,15 @@ int main(int argc, char **argv)
 
     Tp::registerTypes();
 
-    PhoneAppHandler *handler = new PhoneAppHandler();
-    TelepathyHelper::instance()->registerClient(handler, "PhoneAppHandler");
+    Handler *handler = new Handler();
+    TelepathyHelper::instance()->registerClient(handler, "TelephonyServiceHandler");
 
     QObject::connect(handler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
                      CallHandler::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
     QObject::connect(handler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
                      TextHandler::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
 
-    PhoneAppHandlerDBus dbus;
+    HandlerDBus dbus;
 
     QObject::connect(TelepathyHelper::instance(), SIGNAL(accountReady()),
                      &dbus, SLOT(connectToBus()));

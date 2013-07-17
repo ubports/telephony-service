@@ -21,8 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef PHONEAPPHANDLERDBUS_H
-#define PHONEAPPHANDLERDBUS_H
+#ifndef HANDLERDBUS_H
+#define HANDLERDBUS_H
 
 #include <QtCore/QObject>
 #include <QtDBus/QDBusContext>
@@ -31,13 +31,13 @@
 /**
  * DBus interface for the phone approver
  */
-class PhoneAppHandlerDBus : public QObject, protected QDBusContext
+class HandlerDBus : public QObject, protected QDBusContext
 {
     Q_OBJECT
 
 public:
-    PhoneAppHandlerDBus(QObject* parent=0);
-    ~PhoneAppHandlerDBus();
+    HandlerDBus(QObject* parent=0);
+    ~HandlerDBus();
 
 public Q_SLOTS:
     bool connectToBus();
@@ -58,4 +58,4 @@ Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);
 };
 
-#endif // PHONEAPPROVERDBUS_H
+#endif // HANDLERDBUS_H

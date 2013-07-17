@@ -20,7 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "phoneapphandler.h"
+#include "handler.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/MethodInvocationContext>
@@ -29,23 +29,23 @@
 #include <TelepathyQt/ChannelClassSpec>
 #include <TelepathyQt/PendingReady>
 
-PhoneAppHandler::PhoneAppHandler(QObject *parent)
+Handler::Handler(QObject *parent)
     : QObject(parent), Tp::AbstractClientHandler(channelFilters())
 {
 }
 
-bool PhoneAppHandler::bypassApproval() const
+bool Handler::bypassApproval() const
 {
     return false;
 }
 
-void PhoneAppHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
-                               const Tp::AccountPtr &account,
-                               const Tp::ConnectionPtr &connection,
-                               const QList<Tp::ChannelPtr> &channels,
-                               const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
-                               const QDateTime &userActionTime,
-                               const Tp::AbstractClientHandler::HandlerInfo &handlerInfo)
+void Handler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
+                             const Tp::AccountPtr &account,
+                             const Tp::ConnectionPtr &connection,
+                             const QList<Tp::ChannelPtr> &channels,
+                             const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
+                             const QDateTime &userActionTime,
+                             const Tp::AbstractClientHandler::HandlerInfo &handlerInfo)
 {
     Q_UNUSED(account)
     Q_UNUSED(connection)
@@ -86,7 +86,7 @@ void PhoneAppHandler::handleChannels(const Tp::MethodInvocationContextPtr<> &con
     context->setFinished();
 }
 
-Tp::ChannelClassSpecList PhoneAppHandler::channelFilters()
+Tp::ChannelClassSpecList Handler::channelFilters()
 {
     Tp::ChannelClassSpecList specList;
     specList << Tp::ChannelClassSpec::audioCall();
@@ -95,7 +95,7 @@ Tp::ChannelClassSpecList PhoneAppHandler::channelFilters()
     return specList;
 }
 
-void PhoneAppHandler::onTextChannelReady(Tp::PendingOperation *op)
+void Handler::onTextChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
 
@@ -117,7 +117,7 @@ void PhoneAppHandler::onTextChannelReady(Tp::PendingOperation *op)
     Q_EMIT textChannelAvailable(textChannel);
 }
 
-void PhoneAppHandler::onCallChannelReady(Tp::PendingOperation *op)
+void Handler::onCallChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
 
