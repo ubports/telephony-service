@@ -162,7 +162,7 @@ void TextHandler::onContactsAvailable(Tp::PendingOperation *op)
 
     // start chatting to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        account->ensureTextChat(contact, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".PhoneAppHandler");
+        account->ensureTextChat(contact, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
 
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;
