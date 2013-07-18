@@ -1,13 +1,13 @@
-# Swedish translation for phone-app
+# Swedish translation for telephony-service
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the phone-app package.
+# This file is distributed under the same license as the telephony-service package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: phone-app\n"
+"Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-18 13:40-0300\n"
+"POT-Creation-Date: 2013-07-18 13:55-0300\n"
 "PO-Revision-Date: 2013-07-02 13:46+0000\n"
 "Last-Translator: Joachim Johansson <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"

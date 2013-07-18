@@ -1,13 +1,13 @@
-# Arabic translation for phone-app
+# Arabic translation for telephony-service
 # Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
-# This file is distributed under the same license as the phone-app package.
+# This file is distributed under the same license as the telephony-service package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: phone-app\n"
+"Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-18 13:40-0300\n"
+"POT-Creation-Date: 2013-07-18 13:55-0300\n"
 "PO-Revision-Date: 2013-06-14 18:40+0000\n"
 "Last-Translator: Ibrahim Saed <ibraheem5000@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"

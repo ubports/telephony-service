@@ -5,13 +5,13 @@
  *  Ugo Riboni <ugo.riboni@canonical.com>
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
- * This file is part of phone-app.
+ * This file is part of telephony-service.
  *
- * phone-app is free software; you can redistribute it and/or modify
+ * telephony-service is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * phone-app is distributed in the hope that it will be useful,
+ * telephony-service is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.

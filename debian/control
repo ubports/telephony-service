@@ -21,7 +21,7 @@ Build-Depends: cmake,
                qtmultimedia5-dev (>= 5.0),
                qtpim5-dev (>= 5),
 Standards-Version: 3.9.4
-# If you don't have commit rights to lp:phone-app but need to upload
+# If you don't have commit rights to lp:telephony-service but need to upload
 # packaging changes, just go ahead.  The developers will notice and sync
 # up the code again.
 Vcs-Bzr: lp:telephony-service

@@ -43,7 +43,7 @@ msgid_plural "%1 missed calls"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/qml/phone-app.qml:76 src/qml/dateUtils.js:66
+#: src/qml/telephony-service.qml:76 src/qml/dateUtils.js:66
 #, qt-format
 msgid "%1 second call"
 msgid_plural "%1 seconds call"
@@ -113,7 +113,7 @@ msgstr ""
 msgid "Accept"
 msgstr ""
 
-#: src/qml/PanelContacts/ContactsPanel.qml:42 src/qml/phone-app.qml:479
+#: src/qml/PanelContacts/ContactsPanel.qml:42 src/qml/telephony-service.qml:479
 msgid "Add"
 msgstr ""
 
@@ -141,7 +141,7 @@ msgstr ""
 msgid "Are you sure you want to delete this contact?"
 msgstr ""
 
-#: src/qml/phone-app.qml:236 src/qml/PanelDialer/DialerView.qml:25
+#: src/qml/telephony-service.qml:236 src/qml/PanelDialer/DialerView.qml:25
 msgid "Call"
 msgstr ""
 
@@ -177,7 +177,7 @@ msgid "Communication"
 msgstr ""
 
 #: src/qml/DetailViewCommunication/MessagesFooter.qml:87
-#: src/qml/phone-app.qml:474
+#: src/qml/telephony-service.qml:474
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:42
 msgid "Compose"
 msgstr ""
@@ -187,11 +187,11 @@ msgid "Contact Details"
 msgstr ""
 
 #: src/qml/PanelContacts/ContactsPanel.qml:28
-#: src/qml/Panes/SelectContactPane.qml:22 src/qml/phone-app.qml:269
+#: src/qml/Panes/SelectContactPane.qml:22 src/qml/telephony-service.qml:269
 msgid "Contacts"
 msgstr ""
 
-#: src/qml/phone-app.qml:247
+#: src/qml/telephony-service.qml:247
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:28
 msgid "Conversations"
 msgstr ""
@@ -252,7 +252,7 @@ msgstr ""
 msgid "Google Talk"
 msgstr ""
 
-#: approver/phone-app-approver.desktop.in:3
+#: approver/telephony-service-approver.desktop.in:3
 msgid "Handles incoming messages, calls and indicators"
 msgstr ""
 
@@ -309,11 +309,11 @@ msgstr ""
 msgid "Mobile"
 msgstr ""
 
-#: src/qml/phone-app.qml:480
+#: src/qml/telephony-service.qml:480
 msgid "New Contact"
 msgstr ""
 
-#: src/qml/phone-app.qml:475
+#: src/qml/telephony-service.qml:475
 #: src/qml/PanelCommunications/CommunicationsPanel.qml:146
 msgid "New Message"
 msgstr ""
@@ -332,24 +332,24 @@ msgstr ""
 msgid "PQRS"
 msgstr ""
 
-#: src/phone-app.desktop.in:3
+#: src/telephony-service.desktop.in:3
 #: src/qml/DetailViewContact/DetailTypeUtilities.js:61
 msgid "Phone"
 msgstr ""
 
-#: src/phone-app.desktop.in:4
+#: src/telephony-service.desktop.in:4
 msgid "Phone App"
 msgstr ""
 
-#: approver/phone-app-approver.desktop.in:2
+#: approver/telephony-service-approver.desktop.in:2
 msgid "Phone App Approver"
 msgstr ""
 
-#: approver/phone-app-call.desktop.in:3
+#: approver/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
 msgstr ""
 
-#: src/phone-app.desktop.in:5
+#: src/telephony-service.desktop.in:5
 msgid "Phone application"
 msgstr ""
 
@@ -373,7 +373,7 @@ msgstr ""
 msgid "Reply via SMS"
 msgstr ""
 
-#: approver/phone-app-sms.desktop.in:3
+#: approver/telephony-service-sms.desktop.in:3
 msgid "SMS"
 msgstr ""
 

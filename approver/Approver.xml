@@ -18,7 +18,7 @@
         </method>
         <method name="AcceptCall">
             <dox:d><![CDATA[
-                Accept any incoming call and launches the phone-app.
+                Accept any incoming call and launches the telephony-service.
                 If there is no incoming call, this method does nothing.
             ]]></dox:d>
         </method>
