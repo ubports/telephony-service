@@ -4,13 +4,13 @@
  * Authors:
  *    Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
- * This file is part of phone-app.
+ * This file is part of telephony-service.
  *
- * phone-app is free software; you can redistribute it and/or modify
+ * telephony-service is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
- * phone-app is distributed in the hope that it will be useful,
+ * telephony-service is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -20,8 +20,8 @@
  */
 
 #include "callhandler.h"
-#include "phoneapphandler.h"
-#include "phoneapphandlerdbus.h"
+#include "handler.h"
+#include "handlerdbus.h"
 #include "telepathyhelper.h"
 #include "texthandler.h"
 #include <QCoreApplication>
@@ -36,15 +36,15 @@ int main(int argc, char **argv)
 
     Tp::registerTypes();
 
-    PhoneAppHandler *handler = new PhoneAppHandler();
-    TelepathyHelper::instance()->registerClient(handler, "PhoneAppHandler");
+    Handler *handler = new Handler();
+    TelepathyHelper::instance()->registerClient(handler, "TelephonyServiceHandler");
 
     QObject::connect(handler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
                      CallHandler::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
     QObject::connect(handler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
                      TextHandler::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
 
-    PhoneAppHandlerDBus dbus;
+    HandlerDBus dbus;
 
     QObject::connect(TelepathyHelper::instance(), SIGNAL(accountReady()),
                      &dbus, SLOT(connectToBus()));

@@ -75,7 +75,7 @@ include_directories(
 
 enable_testing()
 
-add_subdirectory(libphoneapp)
+add_subdirectory(libtelephonyservice)
 add_subdirectory(Ubuntu)
 add_subdirectory(approver)
 add_subdirectory(handler)

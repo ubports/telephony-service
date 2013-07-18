@@ -9,8 +9,8 @@ install_manifest.txt
 
 config.h
 
-approver/phone-app-approver
-handler/phone-app-handler
+approver/telephony-service-approver
+handler/telephony-service-handler
 
 moc_*.cxx
 moc_*.cpp
@@ -28,8 +28,8 @@ src/*.desktop
 handler/*.service
 approver/*.desktop
 approver/*.service
-approver/phoneappapproveradaptor.*
-handler/phoneapphandleradaptor.*
+approver/approveradaptor.*
+handler/handleradaptor.*
 
 Testing
 Ubuntu/PhoneApp/tests/*Test

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=tr("Telephony Service Approver")
+Comment=tr("Handles incoming messages, calls and indicators")
+Icon=telephony-service-approver
+Exec=telephony-service-approver
+Terminal=false
+Type=Application
+NoDisplay=true
+X-GNOME-Autostart-enabled=true
+X-Ubuntu-Gettext-Domain=telephony-service

@@ -1,0 +1,32 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+    <dox:d><![CDATA[
+      @mainpage
+
+      An interface to the phone application.
+    ]]></dox:d>
+    <interface name="com.canonical.TelephonyServiceApprover" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+        <dox:d>
+          An interface to the phone approver application.
+        </dox:d>
+        <method name="SendMessage">
+            <dox:d><![CDATA[
+               Request to send a message to a contact.
+            ]]></dox:d>
+            <arg name="number" type="s" direction="in"/>
+            <arg name="message" type="s" direction="in"/>
+        </method>
+        <method name="AcceptCall">
+            <dox:d><![CDATA[
+                Accept any incoming call and launches the telephony-service.
+                If there is no incoming call, this method does nothing.
+            ]]></dox:d>
+        </method>
+        <method name="RejectCall">
+            <dox:d><![CDATA[
+                Reject any incoming call. If there is no incoming call,
+                this method has no effect.
+            ]]></dox:d>
+        </method>
+    </interface>
+</node>

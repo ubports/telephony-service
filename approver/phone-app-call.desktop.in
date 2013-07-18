@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=tr("Phone Calls")
-Exec=phone-app
-Icon=phone-app-call
-NoDisplay=true
-X-Ubuntu-Gettext-Domain=phone-app

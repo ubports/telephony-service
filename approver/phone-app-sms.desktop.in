@@ -1,7 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=tr("SMS")
-Exec=phone-app
-Icon=phone-app-message
-NoDisplay=true
-X-Ubuntu-Gettext-Domain=phone-app
