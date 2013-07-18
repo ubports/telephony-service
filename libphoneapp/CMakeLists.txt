@@ -10,9 +10,6 @@ set(library_SRCS
 
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
-    ${TPL_QT5_INCLUDE_DIRS}
-    ${QTGLIB_INCLUDE_DIRS}
-    ${GLIB_INCLUDE_DIRS}
     )
 
 

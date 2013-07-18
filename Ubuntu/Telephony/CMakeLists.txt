@@ -6,9 +6,6 @@ set(plugin_SRCS
 
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
-    ${TPL_QT5_INCLUDE_DIRS}
-    ${QTGLIB_INCLUDE_DIRS}
-    ${GLIB_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libphoneapp
     )
 
@@ -18,8 +15,6 @@ qt5_use_modules(phone-qml Contacts Core Qml Quick)
 
 target_link_libraries(phone-qml
     ${TP_QT5_LIBRARIES}
-    ${TPL_QT5_LIBRARIES}
-    ${GLIB_LIBRARIES}
     phoneapp
     )
 
