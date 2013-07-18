@@ -85,9 +85,9 @@ ChannelObserver *TelepathyHelper::channelObserver() const
 QDBusInterface *TelepathyHelper::handlerInterface()
 {
     if (!mHandlerInterface) {
-        mHandlerInterface = new QDBusInterface("com.canonical.PhoneAppHandler",
-                                               "/com/canonical/PhoneAppHandler",
-                                               "com.canonical.PhoneAppHandler",
+        mHandlerInterface = new QDBusInterface("com.canonical.TelephonyServiceHandler",
+                                               "/com/canonical/TelephonyServiceHandler",
+                                               "com.canonical.TelephonyServiceHandler",
                                                QDBusConnection::sessionBus(),
                                                this);
     }
@@ -105,11 +105,7 @@ void TelepathyHelper::registerChannelObserver()
 {
     // check if this instance is running on the main phone application
     // or if it is just the plugin imported somewhere else
-    QString observerName = "PhoneAppObserver";
-
-    if (!isPhoneApplicationInstance()) {
-        observerName = "PhonePluginObserver";
-    }
+    QString observerName = "TelephonyPluginObserver";
 
     mChannelObserver = new ChannelObserver(this);
     registerClient(mChannelObserver, observerName);

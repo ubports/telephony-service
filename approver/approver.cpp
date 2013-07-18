@@ -39,7 +39,7 @@ namespace C {
 #include <libintl.h>
 }
 
-#define PHONE_APP_HANDLER TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler"
+#define TELEPHONY_SERVICE_HANDLER TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler"
 
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
@@ -302,7 +302,7 @@ void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
     closeSnapDecision();
 
     // forward the channel to the handler
-    dispatchOp->handleWith(PHONE_APP_HANDLER);
+    dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
 
     // and then launch the phone-app
     ApplicationUtils::instance()->startPhoneApp();
@@ -355,8 +355,8 @@ void Approver::processChannels()
                 continue;
             }
 
-            if (dispatchOperation->possibleHandlers().contains(PHONE_APP_HANDLER)) {
-                dispatchOperation->handleWith(PHONE_APP_HANDLER);
+            if (dispatchOperation->possibleHandlers().contains(TELEPHONY_SERVICE_HANDLER)) {
+                dispatchOperation->handleWith(TELEPHONY_SERVICE_HANDLER);
                 mDispatchOps.removeAll(dispatchOperation);
             }
             // FIXME: this shouldn't happen, but in any case, we need to check what to do when
