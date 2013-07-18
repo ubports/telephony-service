@@ -20,8 +20,8 @@ override_dh_translations:
 	# Override dh_translations to work around http://pad.lv/1183262.
 	# Unfortunately, the default build directory is not exposed
 	# (see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=601774).
-	$(MAKE) -C obj-$(DEB_HOST_GNU_TYPE) phone-app.pot
+	$(MAKE) -C obj-$(DEB_HOST_GNU_TYPE) telephony-service.pot
 
 .PHONY: override_dh_strip
 override_dh_strip:
-	dh_strip --dbg-package=phone-app-dbg
+	dh_strip --dbg-package=telephony-service-dbg

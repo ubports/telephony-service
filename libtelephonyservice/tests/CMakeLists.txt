@@ -8,7 +8,6 @@ macro(generate_tests)
         add_executable(${test} ${test}.cpp)
         qt5_use_modules(${test} Contacts Core DBus Qml Test)
         target_link_libraries(${test}
-            ${TPL_QT5_LIBRARIES}
             telephonyservice
             )
         add_test(${test} ${CMAKE_CURRENT_BINARY_DIR}/${test} -xunitxml -o ${CMAKE_BINARY_DIR}/test_${test}.xml)
