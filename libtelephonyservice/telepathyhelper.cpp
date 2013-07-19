@@ -72,6 +72,11 @@ TelepathyHelper *TelepathyHelper::instance()
     return helper;
 }
 
+QString TelepathyHelper::accountId() const
+{
+    return mAccount->uniqueIdentifier();
+}
+
 Tp::AccountPtr TelepathyHelper::account() const
 {
     return mAccount;
@@ -223,6 +228,8 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
     if (accountSet->accounts().count() > 1) {
         qWarning() << "There are more than just one account of type" << mAccount->protocolName();
     }
+
+    Q_EMIT accountIdChanged();
 
     initializeAccount();
 }

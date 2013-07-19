@@ -1,6 +1,7 @@
 # QML plugin
 
 set(plugin_SRCS
+    contactwatcher.cpp
     components.cpp
     )
 
