@@ -10,7 +10,7 @@ QTCONTACTS_USE_NAMESPACE
 class ContactWatcher : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString id READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(QString contactId READ contactId WRITE setContactId NOTIFY contactIdChanged)
     Q_PROPERTY(QString avatar READ avatar NOTIFY avatarChanged)
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged)
     Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
@@ -20,8 +20,8 @@ public:
 
     static QContactManager *engineInstance();
 
-    QString id() const;
-    void setId(const QString &id);
+    QString contactId() const;
+    void setContactId(const QString &contactId);
     QString avatar() const;
     QString alias() const;
     QString phoneNumber() const;
@@ -29,7 +29,7 @@ public:
     bool isUnknown() const;
     
 Q_SIGNALS:
-    void idChanged();
+    void contactIdChanged();
     void avatarChanged();
     void aliasChanged();
     void phoneNumberChanged();
@@ -43,7 +43,7 @@ protected Q_SLOTS:
     void resultsAvailable();
 
 private:
-    QString mId;
+    QString mContactId;
     QString mAvatar;
     QString mAlias;
     QString mPhoneNumber;

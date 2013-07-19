@@ -28,22 +28,22 @@ ContactWatcher::ContactWatcher(QObject *parent) :
             SLOT(onContactsRemoved(QList<QContactId>)));
 }
 
-void ContactWatcher::setId(const QString &id)
+void ContactWatcher::setContactId(const QString &contactId)
 {
-    qDebug() << "setId" << id;
-    mId = id;
+    qDebug() << "setContactId" << contactId;
+    mContactId = contactId;
     QContactFetchByIdRequest *request = new QContactFetchByIdRequest(this);
     QList<QContactId> ids;
-    ids << QContactId::fromString(id);
+    ids << QContactId::fromString(contactId);
     request->setIds(ids);
     connect(request, SIGNAL(stateChanged(QContactAbstractRequest::State)), SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
     request->setManager(mContactManager);
     request->start();
 }
 
-QString ContactWatcher::id() const
+QString ContactWatcher::contactId() const
 {
-    return mId;
+    return mContactId;
 }
 
 QString ContactWatcher::avatar() const
@@ -103,6 +103,17 @@ void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
 void ContactWatcher::resultsAvailable()
 {
     qDebug() << "resultsAvailable";
+    QContactFetchRequest *request = qobject_cast<QContactFetchRequest*>(sender());
+    if (request->contacts().size() > 0) {
+        QContact contact = request->contacts().at(0);
+        mContactId = contact.id().toString();
+        mAvatar = QContactAvatar(contact.detail(QContactDetail::TypeAvatar)).imageUrl().toString();
+        mAlias = QContactDisplayLabel(contact.detail(QContactDetail::TypeDisplayLabel)).label();
+        qDebug() << mContactId << mAvatar << mAlias;
+        Q_EMIT contactIdChanged();
+        Q_EMIT avatarChanged();
+        Q_EMIT aliasChanged();
+    }
 }
 
 void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
@@ -110,16 +121,6 @@ void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
     qDebug() << "requestChanged";
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest*>(sender());
     if (state == QContactAbstractRequest::FinishedState) {
-        if (request->contacts().size() > 0) {
-            QContact contact = request->contacts().at(0);
-            mId = contact.id().toString();
-            mAvatar = QContactAvatar(contact.detail(QContactDetail::TypeAvatar)).imageUrl().toString();
-            mAlias = QContactDisplayLabel(contact.detail(QContactDetail::TypeDisplayLabel)).label();
-            qDebug() << mId << mAvatar << mAlias;
-            Q_EMIT idChanged();
-            Q_EMIT avatarChanged();
-            Q_EMIT aliasChanged();
-        }
         request->deleteLater();
     }
 }
