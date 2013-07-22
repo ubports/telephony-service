@@ -81,7 +81,6 @@ QString ContactWatcher::phoneNumber() const
 
 void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
 {
-    qDebug() << "setPhoneNumber" << phoneNumber;
     mPhoneNumber = phoneNumber;
     if (phoneNumber.isEmpty()) {
         mAlias.clear();
