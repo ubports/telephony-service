@@ -1,3 +1,24 @@
+/*
+ * Copyright (C) 2013 Canonical, Ltd.
+ *
+ * Authors:
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *
+ * This file is part of telephony-service.
+ *
+ * telephony-service is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * telephony-service is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef CONTACTWATCHER_H
 #define CONTACTWATCHER_H
 
@@ -10,7 +31,7 @@ QTCONTACTS_USE_NAMESPACE
 class ContactWatcher : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString contactId READ contactId WRITE setContactId NOTIFY contactIdChanged)
+    Q_PROPERTY(QString contactId READ contactId NOTIFY contactIdChanged)
     Q_PROPERTY(QString avatar READ avatar NOTIFY avatarChanged)
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged)
     Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
@@ -21,7 +42,6 @@ public:
     static QContactManager *engineInstance();
 
     QString contactId() const;
-    void setContactId(const QString &contactId);
     QString avatar() const;
     QString alias() const;
     QString phoneNumber() const;
@@ -43,11 +63,11 @@ protected Q_SLOTS:
     void resultsAvailable();
 
 private:
+    void searchByPhoneNumber(const QString &phoneNumber);
     QString mContactId;
     QString mAvatar;
     QString mAlias;
     QString mPhoneNumber;
-    bool mIsUnknown;
     QContactManager *mContactManager;
 };
 

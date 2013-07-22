@@ -1,3 +1,24 @@
+/*
+ * Copyright (C) 2013 Canonical, Ltd.
+ *
+ * Authors:
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *
+ * This file is part of telephony-service.
+ *
+ * telephony-service is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * telephony-service is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "contactwatcher.h"
 #include <QContactManager>
 #include <QContactFetchByIdRequest>
@@ -5,6 +26,7 @@
 #include <QContactAvatar>
 #include <QContactDisplayLabel>
 #include <QContactDetailFilter>
+#include <QContactPhoneNumber>
 
 QContactManager *ContactWatcher::engineInstance()
 {
@@ -13,8 +35,7 @@ QContactManager *ContactWatcher::engineInstance()
 }
 
 ContactWatcher::ContactWatcher(QObject *parent) :
-    QObject(parent),
-    mIsUnknown(true)
+    QObject(parent)
 {
     mContactManager = engineInstance();
     connect(mContactManager,
@@ -28,15 +49,12 @@ ContactWatcher::ContactWatcher(QObject *parent) :
             SLOT(onContactsRemoved(QList<QContactId>)));
 }
 
-void ContactWatcher::setContactId(const QString &contactId)
+void ContactWatcher::searchByPhoneNumber(const QString &phoneNumber)
 {
-    qDebug() << "setContactId" << contactId;
-    mContactId = contactId;
-    QContactFetchByIdRequest *request = new QContactFetchByIdRequest(this);
-    QList<QContactId> ids;
-    ids << QContactId::fromString(contactId);
-    request->setIds(ids);
+    QContactFetchRequest *request = new QContactFetchRequest(this);
+    request->setFilter(QContactPhoneNumber::match(phoneNumber));
     connect(request, SIGNAL(stateChanged(QContactAbstractRequest::State)), SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
+    connect(request, SIGNAL(resultsAvailable()), SLOT(resultsAvailable()));
     request->setManager(mContactManager);
     request->start();
 }
@@ -64,63 +82,88 @@ QString ContactWatcher::phoneNumber() const
 void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
 {
     qDebug() << "setPhoneNumber" << phoneNumber;
-    if (phoneNumber.isEmpty())
-        return;
     mPhoneNumber = phoneNumber;
+    if (phoneNumber.isEmpty()) {
+        mAlias.clear();
+        mContactId.clear();
+        mAvatar.clear();
+        Q_EMIT contactIdChanged();
+        Q_EMIT avatarChanged();
+        Q_EMIT aliasChanged();
+        Q_EMIT isUnknownChanged();
+        return;
+    }
 
-    QContactFetchRequest *request = new QContactFetchRequest(this);
-    QContactDetailFilter filter;
-    filter.setMatchFlags(QContactFilter::MatchPhoneNumber);
-    filter.setDetailType(QContactDetail::TypePhoneNumber);
-    filter.setValue(phoneNumber);
-    request->setFilter(filter);
-    connect(request, SIGNAL(stateChanged(QContactAbstractRequest::State)), SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
-    connect(request, SIGNAL(resultsAvailable()), SLOT(resultsAvailable()));
-    request->setManager(mContactManager);
-    request->start();
+    searchByPhoneNumber(mPhoneNumber);
 }
 
 bool ContactWatcher::isUnknown() const
 {
-    return mIsUnknown;
+    return mContactId.isEmpty();
 }
 
 
 void ContactWatcher::onContactsAdded(QList<QContactId> ids)
 {
+    // ignore this signal if we have a contact already
+    // or if we have no phone number set
+    if (!mContactId.isEmpty() || mPhoneNumber.isEmpty())
+        return;
 
+    searchByPhoneNumber(mPhoneNumber);
 }
 
 void ContactWatcher::onContactsChanged(QList<QContactId> ids)
 {
-
+    if (!mContactId.isEmpty() && ids.contains(QContactId::fromString(mContactId)) && !mPhoneNumber.isEmpty()) {
+        searchByPhoneNumber(mPhoneNumber);
+    }
 }
 
 void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
 {
-
+    if (!mContactId.isEmpty() && ids.contains(QContactId::fromString(mContactId)) && !mPhoneNumber.isEmpty()) {
+        // this contact got removed, so check if we have another one that matches this phoneNumber
+        searchByPhoneNumber(mPhoneNumber);
+    } else {
+        mAlias.clear();
+        mContactId.clear();
+        mAvatar.clear();
+        Q_EMIT contactIdChanged();
+        Q_EMIT avatarChanged();
+        Q_EMIT aliasChanged();
+        Q_EMIT isUnknownChanged();
+    }
 }
+
 void ContactWatcher::resultsAvailable()
 {
     qDebug() << "resultsAvailable";
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest*>(sender());
-    if (request->contacts().size() > 0) {
+    if (request && request->contacts().size() > 0) {
         QContact contact = request->contacts().at(0);
         mContactId = contact.id().toString();
         mAvatar = QContactAvatar(contact.detail(QContactDetail::TypeAvatar)).imageUrl().toString();
         mAlias = QContactDisplayLabel(contact.detail(QContactDetail::TypeDisplayLabel)).label();
         qDebug() << mContactId << mAvatar << mAlias;
-        Q_EMIT contactIdChanged();
-        Q_EMIT avatarChanged();
-        Q_EMIT aliasChanged();
+    } else {
+        qDebug() << "no contacts found for number" << mPhoneNumber;
+        mAlias.clear();
+        mContactId.clear();
+        mAvatar.clear();
     }
+
+    Q_EMIT contactIdChanged();
+    Q_EMIT avatarChanged();
+    Q_EMIT aliasChanged();
+    Q_EMIT isUnknownChanged();
 }
 
 void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
 {
     qDebug() << "requestChanged";
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest*>(sender());
-    if (state == QContactAbstractRequest::FinishedState) {
+    if (request && state == QContactAbstractRequest::FinishedState) {
         request->deleteLater();
     }
 }
