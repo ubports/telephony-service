@@ -107,8 +107,9 @@ void ContactWatcher::onContactsAdded(QList<QContactId> ids)
 {
     // ignore this signal if we have a contact already
     // or if we have no phone number set
-    if (!mContactId.isEmpty() || mPhoneNumber.isEmpty())
+    if (!mContactId.isEmpty() || mPhoneNumber.isEmpty()) {
         return;
+    }
 
     searchByPhoneNumber(mPhoneNumber);
 }
@@ -123,7 +124,8 @@ void ContactWatcher::onContactsChanged(QList<QContactId> ids)
 void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
 {
     if (!mContactId.isEmpty() && ids.contains(QContactId::fromString(mContactId)) && !mPhoneNumber.isEmpty()) {
-        // this contact got removed, so check if we have another one that matches this phoneNumber
+        // this contact got removed, so check if we have another one that matches this phoneNumber before
+        // before considering this contact unknown
         searchByPhoneNumber(mPhoneNumber);
     } else {
         mAlias.clear();
@@ -138,16 +140,16 @@ void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
 
 void ContactWatcher::resultsAvailable()
 {
-    qDebug() << "resultsAvailable";
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest*>(sender());
     if (request && request->contacts().size() > 0) {
+        // use the first match
         QContact contact = request->contacts().at(0);
         mContactId = contact.id().toString();
         mAvatar = QContactAvatar(contact.detail(QContactDetail::TypeAvatar)).imageUrl().toString();
         mAlias = QContactDisplayLabel(contact.detail(QContactDetail::TypeDisplayLabel)).label();
         qDebug() << mContactId << mAvatar << mAlias;
     } else {
-        qDebug() << "no contacts found for number" << mPhoneNumber;
+        qDebug() << "no contacts found for number " << mPhoneNumber;
         mAlias.clear();
         mContactId.clear();
         mAvatar.clear();
@@ -161,7 +163,6 @@ void ContactWatcher::resultsAvailable()
 
 void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
 {
-    qDebug() << "requestChanged";
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest*>(sender());
     if (request && state == QContactAbstractRequest::FinishedState) {
         request->deleteLater();
