@@ -74,7 +74,10 @@ TelepathyHelper *TelepathyHelper::instance()
 
 QString TelepathyHelper::accountId() const
 {
-    return mAccount->uniqueIdentifier();
+    if (mAccount) {
+        return mAccount->uniqueIdentifier();
+    }
+    return QString();
 }
 
 Tp::AccountPtr TelepathyHelper::account() const
