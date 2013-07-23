@@ -38,6 +38,7 @@ class TelepathyHelper : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
+    Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
 
 public:
     ~TelepathyHelper();
@@ -48,6 +49,7 @@ public:
     QDBusInterface *handlerInterface();
 
     bool connected() const;
+    QString accountId() const;
 
     void registerClient(Tp::AbstractClient *client, QString name);
 
@@ -56,6 +58,7 @@ Q_SIGNALS:
     void accountReady();
     void connectionChanged();
     void connectedChanged();
+    void accountIdChanged();
 
 public Q_SLOTS:
     void registerChannelObserver();

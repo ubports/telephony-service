@@ -25,6 +25,7 @@
 #include "callmanager.h"
 #include "channelobserver.h"
 #include "chatmanager.h"
+#include "contactwatcher.h"
 
 #include <QQmlEngine>
 #include <qqml.h>
@@ -67,6 +68,7 @@ void Components::registerTypes(const char *uri)
 {
     // @uri Telephony
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
+    qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");
 }
 
 void Components::onAccountReady()
