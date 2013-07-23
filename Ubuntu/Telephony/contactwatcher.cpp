@@ -37,14 +37,13 @@ QContactManager *ContactWatcher::engineInstance()
 ContactWatcher::ContactWatcher(QObject *parent) :
     QObject(parent)
 {
-    mContactManager = engineInstance();
-    connect(mContactManager,
+    connect(engineInstance(),
             SIGNAL(contactsAdded(QList<QContactId>)),
             SLOT(onContactsAdded(QList<QContactId>)));
-    connect(mContactManager,
+    connect(engineInstance(),
             SIGNAL(contactsChanged(QList<QContactId>)),
             SLOT(onContactsChanged(QList<QContactId>)));
-    connect(mContactManager,
+    connect(engineInstance(),
             SIGNAL(contactsRemoved(QList<QContactId>)),
             SLOT(onContactsRemoved(QList<QContactId>)));
 }
@@ -55,7 +54,7 @@ void ContactWatcher::searchByPhoneNumber(const QString &phoneNumber)
     request->setFilter(QContactPhoneNumber::match(phoneNumber));
     connect(request, SIGNAL(stateChanged(QContactAbstractRequest::State)), SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
     connect(request, SIGNAL(resultsAvailable()), SLOT(resultsAvailable()));
-    request->setManager(mContactManager);
+    request->setManager(engineInstance());
     request->start();
 }
 
@@ -82,6 +81,7 @@ QString ContactWatcher::phoneNumber() const
 void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
 {
     mPhoneNumber = phoneNumber;
+    Q_EMIT phoneNumberChanged();
     if (phoneNumber.isEmpty()) {
         mAlias.clear();
         mContactId.clear();
@@ -123,7 +123,7 @@ void ContactWatcher::onContactsChanged(QList<QContactId> ids)
 void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
 {
     if (!mContactId.isEmpty() && ids.contains(QContactId::fromString(mContactId)) && !mPhoneNumber.isEmpty()) {
-        // this contact got removed, so check if we have another one that matches this phoneNumber before
+        // this contact got removed, so check if we have another one that matches this phoneNumber
         // before considering this contact unknown
         searchByPhoneNumber(mPhoneNumber);
     } else {

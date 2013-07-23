@@ -68,7 +68,6 @@ private:
     QString mAvatar;
     QString mAlias;
     QString mPhoneNumber;
-    QContactManager *mContactManager;
 };
 
 #endif // CONTACTWATCHER_H
