@@ -54,6 +54,7 @@ Section: debug
 Priority: extra
 Depends: ${misc:Depends},
          telephony-service (>= ${binary:Version}),
+         qtcontact5-galera,
 Description: QML plugin providing the telephony features
  This package contains the QML plugin providing the features from the telephony
  service to applications.
