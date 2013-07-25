@@ -34,6 +34,7 @@ Depends: ${misc:Depends},
          libnotify4,
          telepathy-mission-control-5,
          telepathy-ofono,
+         history-service,
          ubuntu-sounds,
 Description: Telephony service components for Ubuntu
  The backend components providing the telephony features such as calling and
@@ -55,6 +56,7 @@ Priority: extra
 Depends: ${misc:Depends},
          telephony-service (>= ${binary:Version}),
          qtcontact5-galera,
+         telepathy-ofono,
 Description: QML plugin providing the telephony features
  This package contains the QML plugin providing the features from the telephony
  service to applications.
