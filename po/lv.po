@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-18 13:55-0300\n"
+"POT-Creation-Date: 2013-07-29 22:20+0000\n"
 "PO-Revision-Date: 2013-06-25 09:49+0000\n"
 "Last-Translator: Klavs Anson <anson.klavs@gmail.com>\n"
 "Language-Team: Latvian <lv@li.org>\n"
@@ -35,28 +35,28 @@ msgstr[0] "%1 balss pasta ziņa"
 msgstr[1] "%1 balss pasta ziņas"
 msgstr[2] "%1 balss pasta ziņas"
 
-#: approver/approver.cpp:275
+#: approver/approver.cpp:271
 msgid "Accept"
 msgstr "Piekrist"
 
-#: approver/approver.cpp:252
+#: approver/approver.cpp:248
 msgid "Caller number is not available"
 msgstr "Zvanītais numurs nav pieejams"
 
-#: approver/approver.cpp:249
+#: approver/approver.cpp:245
 #, qt-format
 msgid "Calling from %1"
 msgstr "Zvana no %1"
 
-#: approver/approver.cpp:245
+#: approver/approver.cpp:241
 msgid "Calling from private number"
 msgstr "Zvanīšana no privātā numura"
 
-#: approver/approver.cpp:247
+#: approver/approver.cpp:243
 msgid "Calling from unknown number"
 msgstr "Zvanīšana no nezināma numura"
 
-#: approver/approver.cpp:281
+#: approver/approver.cpp:277
 msgid "Decline"
 msgstr "Noraidīt"
 
@@ -105,7 +105,7 @@ msgstr ""
 msgid "Telephony Service Approver"
 msgstr ""
 
-#: approver/approver.cpp:239
+#: approver/approver.cpp:235
 msgid "Unknown caller"
 msgstr "Nezināms zvanītājs"
 
