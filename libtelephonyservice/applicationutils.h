@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2013 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -28,14 +28,29 @@
 class ApplicationUtils : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(Application)
+    Q_PROPERTY(bool addressbookAppRunning READ addressbookAppRunning NOTIFY addressbookAppRunningChanged)
+    Q_PROPERTY(bool dialerAppRunning READ dialerAppRunning NOTIFY dialerAppRunningChanged)
+    Q_PROPERTY(bool messagingAppRunning READ messagingAppRunning NOTIFY messagingAppRunningChanged)
+
 public:
     static ApplicationUtils *instance();
 
-    void startPhoneApp();
-    bool isApplicationRunning();
+    Q_INVOKABLE void switchToAddressbookApp(const QString &argument = QString::null);
+    Q_INVOKABLE void switchToDialerApp(const QString &argument = QString::null);
+    Q_INVOKABLE void switchToMessagingApp(const QString &argument = QString::null);
+
+    bool addressbookAppRunning();
+    bool dialerAppRunning();
+    bool messagingAppRunning();
 
 Q_SIGNALS:
-    void applicationRunningChanged(bool running);
+    void addressbookAppRunningChanged(bool running);
+    void dialerAppRunningChanged(bool running);
+    void messagingAppRunningChanged(bool running);
+
+protected:
+    bool checkApplicationRunning(const QString &serviceName);
 
 protected Q_SLOTS:
     void onServiceRegistered(const QString &serviceName);
@@ -44,8 +59,10 @@ protected Q_SLOTS:
 private:
     explicit ApplicationUtils(QObject *parent = 0);
 
-    QDBusServiceWatcher mPhoneAppWatcher;
-    bool mPhoneAppRunning;
+    QDBusServiceWatcher mApplicationWatcher;
+    bool mAddressbookAppRunning;
+    bool mDialerAppRunning;
+    bool mMessagingAppRunning;
 
 };
 

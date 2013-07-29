@@ -1,6 +1,5 @@
 
 set(qt_SRCS
-    applicationutils.cpp
     approver.cpp
     approverdbus.cpp
     messagingmenu.cpp

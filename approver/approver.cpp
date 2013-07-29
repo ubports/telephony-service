@@ -62,10 +62,6 @@ Approver::Approver()
             SLOT(onReplyReceived(QString,QString)));
     connect(MessagingMenu::instance(), SIGNAL(messageRead(QString,QString)),
             this, SLOT(onMessageRead(QString,QString)));
-
-    connect(ApplicationUtils::instance(),
-            SIGNAL(applicationRunningChanged(bool)),
-            SLOT(processChannels()));
 }
 
 Approver::~Approver()
@@ -304,8 +300,8 @@ void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
     // forward the channel to the handler
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
 
-    // and then launch the telephony-service
-    ApplicationUtils::instance()->startPhoneApp();
+    // and then launch the dialer-app
+    ApplicationUtils::instance()->switchToDialerApp();
 
     mDispatchOps.removeAll(dispatchOp);
 }

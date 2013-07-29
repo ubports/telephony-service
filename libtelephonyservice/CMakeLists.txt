@@ -1,4 +1,5 @@
 set(library_SRCS
+    applicationutils.cpp
     callentry.cpp
     callmanager.cpp
     channelobserver.cpp
