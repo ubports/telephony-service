@@ -29,7 +29,6 @@
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 #include <QContactAvatar>
-#include <QContactDisplayLabel>
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
 #include <QImage>
@@ -70,7 +69,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
         if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
-            displayLabel = contact.detail<QContactDisplayLabel>().label();
+            displayLabel = ContactUtils::formatContactName(contact);
             avatar = contact.detail<QContactAvatar>().imageUrl().toLocalFile();
         }
 

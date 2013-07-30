@@ -25,7 +25,6 @@
 #include <QContactFetchByIdRequest>
 #include <QContactFetchRequest>
 #include <QContactAvatar>
-#include <QContactDisplayLabel>
 #include <QContactDetailFilter>
 #include <QContactPhoneNumber>
 
@@ -140,7 +139,7 @@ void ContactWatcher::resultsAvailable()
         QContact contact = request->contacts().at(0);
         mContactId = contact.id().toString();
         mAvatar = QContactAvatar(contact.detail(QContactDetail::TypeAvatar)).imageUrl().toString();
-        mAlias = QContactDisplayLabel(contact.detail(QContactDetail::TypeDisplayLabel)).label();
+        mAlias = ContactUtils::formatContactName(contact);
         qDebug() << mContactId << mAvatar << mAlias;
     } else {
         qDebug() << "no contacts found for number " << mPhoneNumber;

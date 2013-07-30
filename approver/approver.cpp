@@ -29,7 +29,6 @@
 #include "ringtone.h"
 
 #include <QContactAvatar>
-#include <QContactDisplayLabel>
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
 #include <QDebug>
@@ -282,7 +281,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         if (request && request->contacts().size() > 0) {
             // use the first match
             QContact contact = request->contacts().at(0);
-            QString displayLabel = contact.detail<QContactDisplayLabel>().label();
+            QString displayLabel = ContactUtils::formatContactName(contact);
             QString avatar = contact.detail<QContactAvatar>().imageUrl().toString();
 
             if (displayLabel.isEmpty()) {

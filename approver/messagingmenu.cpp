@@ -25,7 +25,6 @@
 #include "phoneutils.h"
 #include "messagingmenu.h"
 #include <QContactAvatar>
-#include <QContactDisplayLabel>
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
 #include <QDateTime>
@@ -83,7 +82,7 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
 
         if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
-            displayLabel = contact.detail<QContactDisplayLabel>().label();
+            displayLabel = ContactUtils::formatContactName(contact);
             avatar = contact.detail<QContactAvatar>().imageUrl().toString();
         }
 
@@ -180,7 +179,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
         Call newCall = call;
         if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
-            QString displayLabel = contact.detail<QContactDisplayLabel>().label();
+            QString displayLabel = ContactUtils::formatContactName(contact);
             QString avatar = contact.detail<QContactAvatar>().imageUrl().toLocalFile();
 
             if (!displayLabel.isEmpty()) {

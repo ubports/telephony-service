@@ -25,10 +25,7 @@
 
 #include <QObject>
 #include <QTime>
-#include <QContact>
 #include <TelepathyQt/CallChannel>
-
-QTCONTACTS_USE_NAMESPACE
 
 class CallEntry : public QObject
 {
@@ -49,13 +46,6 @@ class CallEntry : public QObject
     Q_PROPERTY(QString phoneNumber
                READ phoneNumber
                NOTIFY phoneNumberChanged)
-
-    Q_PROPERTY(QString contactAlias
-               READ contactAlias
-               NOTIFY contactAliasChanged)
-    Q_PROPERTY(QString contactAvatar
-               READ contactAvatar
-               NOTIFY contactAvatarChanged)
 
     Q_PROPERTY(int elapsedTime
                READ elapsedTime
@@ -100,8 +90,6 @@ public:
     bool incoming() const;
     bool ringing() const;
     QString phoneNumber() const;
-    QString contactAlias() const;
-    QString contactAvatar() const;
 
     Q_INVOKABLE void sendDTMF(const QString &key);
     Q_INVOKABLE void endCall();
@@ -128,8 +116,6 @@ Q_SIGNALS:
     void dialingChanged();
     void incomingChanged();
     void ringingChanged();
-    void contactAliasChanged();
-    void contactAvatarChanged();
     void elapsedTimeChanged();
     void speakerChanged();
     
@@ -140,7 +126,6 @@ private:
     QDBusInterface mMuteInterface;
     QDBusInterface mSpeakerInterface;
     QMap<QString, QVariant> mProperties;
-    QContact mContact;
     bool mVoicemail;
     bool mLocalMuteState;
     QTime mElapsedTime;
