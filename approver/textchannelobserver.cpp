@@ -23,15 +23,22 @@
 #include "textchannelobserver.h"
 #include "messagingmenu.h"
 #include "config.h"
+#include "contactutils.h"
 #include "ringtone.h"
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
+#include <QContactAvatar>
+#include <QContactDisplayLabel>
+#include <QContactFetchRequest>
+#include <QContactPhoneNumber>
 #include <QImage>
 
 namespace C {
 #include <libintl.h>
 }
+
+QTCONTACTS_USE_NAMESPACE
 
 TextChannelObserver::TextChannelObserver(QObject *parent) :
     QObject(parent)
@@ -46,36 +53,54 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     }
 
     Tp::ContactPtr contact = message.sender();
-    QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(contact->alias());
-    QString icon = contact->avatarData().fileName;
-    /*FIXME: reimplement using QContactManager
-    ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(contact->id());
-    if (entry) {
-        title = QString("SMS from %1").arg(entry->displayLabel());
-        icon = entry->avatar().toLocalFile();
-    }
-    */
 
-    if (icon.isEmpty()) {
-        icon = phoneAppDirectory() + "/assets/avatar-default@18.png";
-    }
+    // try to match the contact info
+    QContactFetchRequest *request = new QContactFetchRequest(this);
+    request->setFilter(QContactPhoneNumber::match(contact->id()));
 
-    // show the notification
-    NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
-                                                               message.text().toStdString().c_str(),
-                                                               icon.toStdString().c_str());
-    GError *error = NULL;
-    if (!notify_notification_show(notification, &error)) {
-        qWarning() << "Failed to show message notification:" << error->message;
-        g_error_free (error);
-    }
+    // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
+    QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, message, contact]() {
+        // only process the results after the finished state is reached
+        if (request->state() != QContactAbstractRequest::FinishedState) {
+            return;
+        }
 
-    g_object_unref(G_OBJECT(notification));
+        QString displayLabel;
+        QString avatar;
 
-    // and add the message to the messaging menu (use hex format to avoid invalid characters)  
-    QByteArray token(message.messageToken().toUtf8()); 
-    MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), message.text());
-    Ringtone::instance()->playIncomingMessageSound();
+        if (request->contacts().size() > 0) {
+            QContact contact = request->contacts().at(0);
+            displayLabel = contact.detail<QContactDisplayLabel>().label();
+            avatar = contact.detail<QContactAvatar>().imageUrl().toLocalFile();
+        }
+
+        QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(displayLabel.isEmpty() ? contact->alias() : displayLabel);
+
+        if (avatar.isEmpty()) {
+            avatar = telephonyServiceDir() + "/assets/avatar-default@18.png";
+        }
+
+        qDebug() << title << avatar;
+        // show the notification
+        NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
+                                                                   message.text().toStdString().c_str(),
+                                                                   avatar.toStdString().c_str());
+        GError *error = NULL;
+        if (!notify_notification_show(notification, &error)) {
+            qWarning() << "Failed to show message notification:" << error->message;
+            g_error_free (error);
+        }
+
+        g_object_unref(G_OBJECT(notification));
+
+        // and add the message to the messaging menu (use hex format to avoid invalid characters)
+        QByteArray token(message.messageToken().toUtf8());
+        MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), message.text());
+        Ringtone::instance()->playIncomingMessageSound();
+    });
+
+    request->setManager(ContactUtils::sharedManager());
+    request->start();
 }
 
 Tp::TextChannelPtr TextChannelObserver::channelFromPath(const QString &path)

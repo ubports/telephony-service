@@ -3,6 +3,7 @@ set(library_SRCS
     callmanager.cpp
     channelobserver.cpp
     chatmanager.cpp
+    contactutils.cpp
     phoneutils.cpp
     ringtone.cpp
     telepathyhelper.cpp

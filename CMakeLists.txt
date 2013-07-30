@@ -36,6 +36,8 @@ if (USE_UBUNTU_PLATFORM_API)
     add_definitions(-DUSE_UBUNTU_PLATFORM_API)
 endif (USE_UBUNTU_PLATFORM_API)
 
+set(TELEPHONY_SERVICE_DIR ${CMAKE_INSTALL_DATADIR}/telephony-service)
+
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
 find_package(Qt5Core)
@@ -74,6 +76,12 @@ include_directories(
     )
 
 enable_testing()
+
+add_definitions(-std=c++11)
+
+# install assets
+set(ASSETS_DIR assets)
+install(DIRECTORY ${ASSETS_DIR} DESTINATION ${TELEPHONY_SERVICE_DIR})
 
 add_subdirectory(libtelephonyservice)
 add_subdirectory(Ubuntu)
