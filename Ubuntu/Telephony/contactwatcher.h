@@ -39,8 +39,6 @@ class ContactWatcher : public QObject
 public:
     explicit ContactWatcher(QObject *parent = 0);
 
-    static QContactManager *engineInstance();
-
     QString contactId() const;
     QString avatar() const;
     QString alias() const;
