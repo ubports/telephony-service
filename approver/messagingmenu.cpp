@@ -271,26 +271,14 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
 void MessagingMenu::showMessage(const QString &messageId)
 {
     QString phoneNumber = mMessages[messageId];
-
-    ApplicationUtils::instance()->startPhoneApp();
-    QDBusInterface mPhoneAppInterface("com.canonical.PhoneApp",
-                           "/com/canonical/PhoneApp",
-                           "com.canonical.PhoneApp");
-
-    mPhoneAppInterface.call("ShowMessages", phoneNumber);
+    ApplicationUtils::instance()->switchToMessagingApp(QString("messages://%1").arg(phoneNumber));
 }
 
 void MessagingMenu::callBack(const QString &messageId)
 {
-    ApplicationUtils::instance()->startPhoneApp();
-
     QString phoneNumber = callFromMessageId(messageId).number;
     qDebug() << "TelephonyService/MessagingMenu: Calling back" << phoneNumber;
-    QDBusInterface mPhoneAppInterface("com.canonical.PhoneApp",
-                           "/com/canonical/PhoneApp",
-                           "com.canonical.PhoneApp");
-
-    mPhoneAppInterface.call("CallNumber", phoneNumber);
+    ApplicationUtils::instance()->switchToDialerApp(QString("call://%1").arg(phoneNumber));
 }
 
 void MessagingMenu::replyWithMessage(const QString &messageId, const QString &reply)
@@ -303,12 +291,7 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
     qDebug() << "TelephonyService/MessagingMenu: Calling voicemail for messageId" << messageId;
-    ApplicationUtils::instance()->startPhoneApp();
-    QDBusInterface mPhoneAppInterface("com.canonical.PhoneApp",
-                           "/com/canonical/PhoneApp",
-                           "com.canonical.PhoneApp");
-
-    mPhoneAppInterface.call("ShowVoicemail");
+    ApplicationUtils::instance()->switchToDialerApp("voicemail://");
 }
 
 Call MessagingMenu::callFromMessageId(const QString &messageId)

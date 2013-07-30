@@ -1,6 +1,5 @@
 
 set(qt_SRCS
-    applicationutils.cpp
     approver.cpp
     approverdbus.cpp
     messagingmenu.cpp
@@ -24,15 +23,10 @@ link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
 add_executable(telephony-service-approver ${approver_SRCS} ${approver_HDRS})
 qt5_use_modules(telephony-service-approver Contacts Core DBus Gui Multimedia Qml)
 
-if (USE_UBUNTU_PLATFORM_API)
-    set(UBUNTU_APP_LIB "-lubuntu_application_api")
-endif (USE_UBUNTU_PLATFORM_API)
-
 target_link_libraries(telephony-service-approver
     ${TP_QT5_LIBRARIES}
     ${NOTIFY_LIBRARIES}
     ${MESSAGING_MENU_LIBRARIES}
-    ${UBUNTU_APP_LIB}
     telephonyservice
     )
 
