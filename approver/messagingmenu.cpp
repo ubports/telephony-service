@@ -21,8 +21,12 @@
 
 #include "config.h"
 #include "applicationutils.h"
+#include "contactutils.h"
 #include "phoneutils.h"
 #include "messagingmenu.h"
+#include <QContactAvatar>
+#include <QContactFetchRequest>
+#include <QContactPhoneNumber>
 #include <QDateTime>
 #include <QDebug>
 #include <gio/gio.h>
@@ -36,6 +40,9 @@ namespace C {
 #endif
 
 #define SOURCE_ID "telephony-service-approver"
+
+QTCONTACTS_USE_NAMESPACE
+
 MessagingMenu::MessagingMenu(QObject *parent) :
     QObject(parent), mVoicemailCount(-1)
 {
@@ -55,44 +62,65 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
 {
 #ifdef HAVE_MESSAGING_MENU_MESSAGE
     // try to get a contact for that phone number
-    QString iconPath;
+    QString iconPath = telephonyServiceDir() + "/assets/avatar-default@18.png";
     QString contactAlias = phoneNumber;
 
-    /*FIXME: update the code to use a standard QContactManager
-    ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(phoneNumber);
+    // try to match the contact info
+    QContactFetchRequest *request = new QContactFetchRequest(this);
+    request->setFilter(QContactPhoneNumber::match(phoneNumber));
 
-    if (contact) {
-        iconPath = contact->avatar().toLocalFile();
-        contactAlias = contact->displayLabel();
-    }*/
+    // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
+    QObject::connect(request, &QContactAbstractRequest::stateChanged,
+                     [request, phoneNumber, messageId, text, timestamp, iconPath, contactAlias, this]() {
+        // only process the results after the finished state is reached
+        if (request->state() != QContactAbstractRequest::FinishedState) {
+            return;
+        }
 
-    if (iconPath.isNull()) {
-        iconPath = phoneAppDirectory() + "/assets/avatar-default@18.png";
-    }
+        QString displayLabel;
+        QString avatar;
 
-    GFile *file = g_file_new_for_path(iconPath.toUtf8().data());
-    GIcon *icon = g_file_icon_new(file);
-    MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
-                                                               icon,
-                                                               contactAlias.toUtf8().data(),
-                                                               NULL,
-                                                               text.toUtf8().data(),
-                                                               timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
-    messaging_menu_message_add_action(message,
-                                      "quickReply",
-                                      NULL, // label
-                                      G_VARIANT_TYPE("s"),
-                                      NULL // predefined values
-                                      );
-    g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::messageActivateCallback), this);
+        if (request->contacts().size() > 0) {
+            QContact contact = request->contacts().at(0);
+            displayLabel = ContactUtils::formatContactName(contact);
+            avatar = contact.detail<QContactAvatar>().imageUrl().toString();
+        }
 
-    // save the phone number to use in the actions
-    mMessages[messageId] = phoneNumber;
-    messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
+        if (displayLabel.isEmpty()) {
+            displayLabel = contactAlias;
+        }
 
-    g_object_unref(file);
-    g_object_unref(icon);
-    g_object_unref(message);
+        if (avatar.isEmpty()) {
+            avatar = iconPath;
+        }
+
+        GFile *file = g_file_new_for_path(avatar.toUtf8().data());
+        GIcon *icon = g_file_icon_new(file);
+        MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
+                                                                   icon,
+                                                                   displayLabel.toUtf8().data(),
+                                                                   NULL,
+                                                                   text.toUtf8().data(),
+                                                                   timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
+        messaging_menu_message_add_action(message,
+                                          "quickReply",
+                                          NULL, // label
+                                          G_VARIANT_TYPE("s"),
+                                          NULL // predefined values
+                                          );
+        g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::messageActivateCallback), this);
+
+        // save the phone number to use in the actions
+        mMessages[messageId] = phoneNumber;
+        messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
+
+        g_object_unref(file);
+        g_object_unref(icon);
+        g_object_unref(message);
+    });
+
+    request->setManager(ContactUtils::sharedManager());
+    request->start();
 #endif
 }
 
@@ -126,65 +154,85 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     }
 
     if (!found) {
-            /*FIXME: update the code to work using a plain QContactManager
-            ContactEntry *contact = ContactModel::instance()->contactFromPhoneNumber(phoneNumber);
-            if (contact) {
-                call.contactAlias = contact->displayLabel();
-                call.contactIcon = contact->avatar().toLocalFile();
-            } else {*/
-                call.contactAlias = phoneNumber;
-            //}
-            call.number = phoneNumber;
-            call.count = 0;
+        call.contactAlias = phoneNumber;
+        call.contactIcon = telephonyServiceDir() + "/assets/avatar-default@18.png";
+        call.number = phoneNumber;
+        call.count = 0;
     }
 
     call.count++;
 
-    if (call.contactIcon.isEmpty()) {
-        call.contactIcon = phoneAppDirectory() + "/assets/avatar-default@18.png";
-    }
-
     QString text;
     text = QString::fromUtf8(C::ngettext("%1 missed call", "%1 missed calls", call.count)).arg(call.count);
 
-    GFile *file = g_file_new_for_path(call.contactIcon.toUtf8().data());
-    GIcon *icon = g_file_icon_new(file);
-    MessagingMenuMessage *message = messaging_menu_message_new(call.number.toUtf8().data(),
-                                                               icon,
-                                                               call.contactAlias.toUtf8().data(),
-                                                               NULL,
-                                                               text.toUtf8().data(),
-                                                               timestamp.toMSecsSinceEpoch() * 1000);  // the value is expected to be in microseconds
-    call.messageId = messaging_menu_message_get_id(message);
-    messaging_menu_message_add_action(message,
-                                      "callBack",
-                                      NULL, // label
-                                      NULL, // argument type
-                                      NULL // predefined values
-                                      );
-    const char *predefinedMessages[] = {
-            C::gettext("I missed your call - can you call me now?"),
-            C::gettext("I'm running late. I'm on my way."),
-            C::gettext("I'm busy at the moment. I'll call you later."),
-            C::gettext("I'll be 20 minutes late."),
-            C::gettext("Sorry, I'm still busy. I'll call you later."),
-            0
-            };
-    GVariant *messages = g_variant_new_strv(predefinedMessages, -1);
-    messaging_menu_message_add_action(message,
-                                      "replyWithMessage",
-                                      NULL, // label
-                                      G_VARIANT_TYPE("s"),
-                                      messages // predefined values
-                                      );
-    g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
-    messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
-    mCalls.append(call);
+    // try to match the contact info
+    QContactFetchRequest *request = new QContactFetchRequest(this);
+    request->setFilter(QContactPhoneNumber::match(phoneNumber));
 
-    g_object_unref(messages);
-    g_object_unref(file);
-    g_object_unref(icon);
-    g_object_unref(message);
+    // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
+    QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, call, text, timestamp, this]() {
+        // only process the results after the finished state is reached
+        if (request->state() != QContactAbstractRequest::FinishedState) {
+            return;
+        }
+
+        Call newCall = call;
+        if (request->contacts().size() > 0) {
+            QContact contact = request->contacts().at(0);
+            QString displayLabel = ContactUtils::formatContactName(contact);
+            QString avatar = contact.detail<QContactAvatar>().imageUrl().toLocalFile();
+
+            if (!displayLabel.isEmpty()) {
+                newCall.contactAlias = displayLabel;
+            }
+
+            if (!avatar.isEmpty()) {
+                newCall.contactIcon = avatar;
+            }
+        }
+
+        GFile *file = g_file_new_for_path(call.contactIcon.toUtf8().data());
+        GIcon *icon = g_file_icon_new(file);
+        MessagingMenuMessage *message = messaging_menu_message_new(newCall.number.toUtf8().data(),
+                                                                   icon,
+                                                                   newCall.contactAlias.toUtf8().data(),
+                                                                   NULL,
+                                                                   text.toUtf8().data(),
+                                                                   timestamp.toMSecsSinceEpoch() * 1000);  // the value is expected to be in microseconds
+        newCall.messageId = messaging_menu_message_get_id(message);
+        messaging_menu_message_add_action(message,
+                                          "callBack",
+                                          NULL, // label
+                                          NULL, // argument type
+                                          NULL // predefined values
+                                          );
+        const char *predefinedMessages[] = {
+                C::gettext("I missed your call - can you call me now?"),
+                C::gettext("I'm running late. I'm on my way."),
+                C::gettext("I'm busy at the moment. I'll call you later."),
+                C::gettext("I'll be 20 minutes late."),
+                C::gettext("Sorry, I'm still busy. I'll call you later."),
+                0
+                };
+        GVariant *messages = g_variant_new_strv(predefinedMessages, -1);
+        messaging_menu_message_add_action(message,
+                                          "replyWithMessage",
+                                          NULL, // label
+                                          G_VARIANT_TYPE("s"),
+                                          messages // predefined values
+                                          );
+        g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
+        messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
+        mCalls.append(newCall);
+
+        g_object_unref(messages);
+        g_object_unref(file);
+        g_object_unref(icon);
+        g_object_unref(message);
+    });
+
+    request->setManager(ContactUtils::sharedManager());
+    request->start();
 #endif
 }
 

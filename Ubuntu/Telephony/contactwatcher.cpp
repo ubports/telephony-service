@@ -20,30 +20,24 @@
  */
 
 #include "contactwatcher.h"
+#include "contactutils.h"
 #include <QContactManager>
 #include <QContactFetchByIdRequest>
 #include <QContactFetchRequest>
 #include <QContactAvatar>
-#include <QContactDisplayLabel>
 #include <QContactDetailFilter>
 #include <QContactPhoneNumber>
-
-QContactManager *ContactWatcher::engineInstance()
-{
-    static QContactManager* manager = new QContactManager("galera");
-    return manager;
-}
 
 ContactWatcher::ContactWatcher(QObject *parent) :
     QObject(parent)
 {
-    connect(engineInstance(),
+    connect(ContactUtils::sharedManager(),
             SIGNAL(contactsAdded(QList<QContactId>)),
             SLOT(onContactsAdded(QList<QContactId>)));
-    connect(engineInstance(),
+    connect(ContactUtils::sharedManager(),
             SIGNAL(contactsChanged(QList<QContactId>)),
             SLOT(onContactsChanged(QList<QContactId>)));
-    connect(engineInstance(),
+    connect(ContactUtils::sharedManager(),
             SIGNAL(contactsRemoved(QList<QContactId>)),
             SLOT(onContactsRemoved(QList<QContactId>)));
 }
@@ -54,7 +48,7 @@ void ContactWatcher::searchByPhoneNumber(const QString &phoneNumber)
     request->setFilter(QContactPhoneNumber::match(phoneNumber));
     connect(request, SIGNAL(stateChanged(QContactAbstractRequest::State)), SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
     connect(request, SIGNAL(resultsAvailable()), SLOT(resultsAvailable()));
-    request->setManager(engineInstance());
+    request->setManager(ContactUtils::sharedManager());
     request->start();
 }
 
@@ -145,7 +139,7 @@ void ContactWatcher::resultsAvailable()
         QContact contact = request->contacts().at(0);
         mContactId = contact.id().toString();
         mAvatar = QContactAvatar(contact.detail(QContactDetail::TypeAvatar)).imageUrl().toString();
-        mAlias = QContactDisplayLabel(contact.detail(QContactDetail::TypeDisplayLabel)).label();
+        mAlias = ContactUtils::formatContactName(contact);
         qDebug() << mContactId << mAvatar << mAlias;
     } else {
         qDebug() << "no contacts found for number " << mPhoneNumber;

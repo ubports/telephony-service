@@ -25,8 +25,12 @@
 #include "messagingmenu.h"
 #include "chatmanager.h"
 #include "config.h"
+#include "contactutils.h"
 #include "ringtone.h"
 
+#include <QContactAvatar>
+#include <QContactFetchRequest>
+#include <QContactPhoneNumber>
 #include <QDebug>
 
 #include <TelepathyQt/PendingReady>
@@ -40,6 +44,8 @@ namespace C {
 }
 
 #define TELEPHONY_SERVICE_HANDLER TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler"
+
+QTCONTACTS_USE_NAMESPACE
 
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
@@ -221,21 +227,10 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
     data->dispatchOp = dispatchOp;
     data->channel = channel;
 
-    // try to find the contact in the ContactModel
-    // if the contact is not known, the alias and the number will be the same
-    QString title;
-    QString icon;    
-    /*FIXME: reimplement using QContactManager
-    ContactEntry *contactEntry = ContactModel::instance()->contactFromPhoneNumber(contact->id());
-    if (contactEntry) {
-        title = contactEntry->displayLabel();
-        icon = contactEntry->avatar().toLocalFile();
-    } else {
-    */
-        title = C::gettext("Unknown caller");
-    //}
-
+    QString title = C::gettext("Unknown caller");
+    QString icon = telephonyServiceDir() + "/assets/avatar-default@18.png";
     QString body;
+
     if (!contact->id().isEmpty()) {
         if (contact->id() == "-2") {
             body = QString::fromUtf8(C::gettext("Calling from private number"));
@@ -246,14 +241,6 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         }
     } else {
         body = C::gettext("Caller number is not available");
-    }
-
-    if (icon.isEmpty()) {
-        if (!contact->avatarData().fileName.isEmpty()) {
-            icon = contact->avatarData().fileName;
-        } else {
-            icon = phoneAppDirectory() + "/assets/avatar-default@18.png";
-        }
     }
 
     notification = notify_notification_new (title.toStdString().c_str(),
@@ -280,6 +267,42 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                     delete_event_data);
 
     mPendingSnapDecision = notification;
+
+    // try to match the contact info
+    QContactFetchRequest *request = new QContactFetchRequest(this);
+    request->setFilter(QContactPhoneNumber::match(contact->id()));
+
+    // lambda function to update the notification
+    QObject::connect(request, &QContactAbstractRequest::resultsAvailable, [request, notification, title, body, icon]() {
+        if (request && request->contacts().size() > 0) {
+            // use the first match
+            QContact contact = request->contacts().at(0);
+            QString displayLabel = ContactUtils::formatContactName(contact);
+            QString avatar = contact.detail<QContactAvatar>().imageUrl().toString();
+
+            if (displayLabel.isEmpty()) {
+                displayLabel = title;
+            }
+
+            if (avatar.isEmpty()) {
+                avatar = icon;
+            }
+
+            notify_notification_update(notification,
+                                       displayLabel.toStdString().c_str(),
+                                       body.toStdString().c_str(),
+                                       avatar.toStdString().c_str());
+
+            GError *error = NULL;
+            if (!notify_notification_show(notification, &error)) {
+                qWarning() << "Failed to show snap decision:" << error->message;
+                g_error_free (error);
+            }
+        }
+    });
+
+    request->setManager(ContactUtils::sharedManager());
+    request->start();
 
     GError *error = NULL;
     if (!notify_notification_show(notification, &error)) {

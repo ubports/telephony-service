@@ -22,7 +22,7 @@
 
 #include "callentry.h"
 #include "telepathyhelper.h"
-#include <QContactAvatar>
+
 #include <QTime>
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/PendingReady>
@@ -79,16 +79,6 @@ void CallEntry::setupCallChannel()
     }
 
     onCallStateChanged(mChannel->callState());
-
-    /*
-    FIXME: reimplement using a QContactManager and get the contact from there
-    ContactEntry *entry = ContactModel::instance()->contactFromPhoneNumber(mChannel->targetContact()->id());
-    if (entry) {
-        mContact = entry->contact();
-        Q_EMIT contactAliasChanged();
-        Q_EMIT contactAvatarChanged();
-    }
-    */
 
     Q_EMIT heldChanged();
     Q_EMIT phoneNumberChanged();
@@ -148,17 +138,6 @@ QString CallEntry::phoneNumber() const
         return "";
     }
     return mChannel->targetContact()->id();
-}
-
-QString CallEntry::contactAlias() const
-{
-    return mContact.detail<QContactDisplayLabel>().label();
-}
-
-QString CallEntry::contactAvatar() const
-{
-    QContactAvatar avatar = mContact.detail<QContactAvatar>();
-    return avatar.imageUrl().toString();
 }
 
 void CallEntry::sendDTMF(const QString &key)
