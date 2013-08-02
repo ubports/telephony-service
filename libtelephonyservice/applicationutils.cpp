@@ -33,7 +33,7 @@
 #include <ubuntu/ui/ubuntu_ui_session_service.h>
 #endif
 
-#define ADDRESSBOOK_APP_SERVICE "com.canonical.AddressbookApp"
+#define ADDRESSBOOK_APP_SERVICE "com.canonical.AddressBookApp"
 #define DIALER_APP_SERVICE "com.canonical.DialerApp"
 #define MESSAGING_APP_SERVICE "com.canonical.MessagingApp"
 
@@ -111,9 +111,9 @@ void ApplicationUtils::switchToAddressbookApp(const QString &argument)
     }
 
     if (!argument.isEmpty()) {
-        QDBusInterface addressbookApp("com.canonical.AddressbookApp",
-                                    "/com/canonical/AddressbookApp",
-                                    "com.canonical.AddressbookApp");
+        QDBusInterface addressbookApp("com.canonical.AddressBookApp",
+                                    "/com/canonical/AddressBookApp",
+                                    "com.canonical.AddressBookApp");
         addressbookApp.call("SendAppMessage", argument);
     }
 
