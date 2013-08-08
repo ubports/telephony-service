@@ -40,6 +40,10 @@ Ringtone *Ringtone::instance()
 
 void Ringtone::playIncomingCallSound()
 {
+    if (mSoundSettings.get("silentMode") == true) {
+        return;
+    }
+
     if (mCallAudioPlayer.state() == QMediaPlayer::PlayingState) {
         return;
     }
@@ -55,6 +59,10 @@ void Ringtone::stopIncomingCallSound()
 
 void Ringtone::playIncomingMessageSound()
 {
+    if (mSoundSettings.get("silentMode") == true) {
+        return;
+    }
+
     if (mMessageAudioPlayer.state() == QMediaPlayer::PlayingState) {
         return;
     }
