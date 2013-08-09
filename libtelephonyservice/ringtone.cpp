@@ -22,12 +22,11 @@
 #include "ringtone.h"
 #include <QDebug>
 
-#define SOUND_PATH "/usr/share/sounds/ubuntu/stereo/"
 Ringtone::Ringtone(QObject *parent) :
     QObject(parent),
-    mCallAudioPlayer(this), mCallAudioPlaylist(this), mMessageAudioPlayer(this)
+    mCallAudioPlayer(this), mCallAudioPlaylist(this), mMessageAudioPlayer(this), mSoundSettings("com.ubuntu.touch.sound")
 {
-    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(SOUND_PATH "phone-incoming-call.ogg"));
+    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(mSoundSettings.get("incomingCallSound").toString()));
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
     mCallAudioPlaylist.setCurrentIndex(0);
 }
@@ -41,6 +40,10 @@ Ringtone *Ringtone::instance()
 
 void Ringtone::playIncomingCallSound()
 {
+    if (mSoundSettings.get("silentMode") == true) {
+        return;
+    }
+
     if (mCallAudioPlayer.state() == QMediaPlayer::PlayingState) {
         return;
     }
@@ -56,11 +59,15 @@ void Ringtone::stopIncomingCallSound()
 
 void Ringtone::playIncomingMessageSound()
 {
+    if (mSoundSettings.get("silentMode") == true) {
+        return;
+    }
+
     if (mMessageAudioPlayer.state() == QMediaPlayer::PlayingState) {
         return;
     }
 
-    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(SOUND_PATH "message-new-instant.ogg"));
+    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(mSoundSettings.get("incomingMessageSound").toString()));
     mMessageAudioPlayer.play();
 }
 

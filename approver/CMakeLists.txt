@@ -14,6 +14,7 @@ include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${NOTIFY_INCLUDE_DIRS}
     ${MESSAGING_MENU_INCLUDE_DIRS}
+    ${GSETTINGS_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
     )
@@ -27,6 +28,7 @@ target_link_libraries(telephony-service-approver
     ${TP_QT5_LIBRARIES}
     ${NOTIFY_LIBRARIES}
     ${MESSAGING_MENU_LIBRARIES}
+    ${GSETTINGS_LIBRARIES}
     telephonyservice
     )
 

@@ -22,6 +22,7 @@
 #ifndef RINGTONE_H
 #define RINGTONE_H
 
+#include <QGSettings>
 #include <QObject>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
@@ -47,6 +48,7 @@ private:
     QMediaPlaylist mCallAudioPlaylist;
 
     QMediaPlayer mMessageAudioPlayer;
+    QGSettings mSoundSettings;
 };
 
 #endif // RINGTONE_H
