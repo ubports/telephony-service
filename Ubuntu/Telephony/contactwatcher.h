@@ -35,6 +35,8 @@ class ContactWatcher : public QObject
     Q_PROPERTY(QString avatar READ avatar NOTIFY avatarChanged)
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged)
     Q_PROPERTY(QString phoneNumber READ phoneNumber WRITE setPhoneNumber NOTIFY phoneNumberChanged)
+    Q_PROPERTY(QList<int> phoneNumberSubTypes READ phoneNumberSubTypes NOTIFY phoneNumberSubTypesChanged)
+    Q_PROPERTY(QList<int> phoneNumberContexts READ phoneNumberContexts NOTIFY phoneNumberContextsChanged)
     Q_PROPERTY(bool isUnknown READ isUnknown NOTIFY isUnknownChanged)
 public:
     explicit ContactWatcher(QObject *parent = 0);
@@ -44,6 +46,8 @@ public:
     QString alias() const;
     QString phoneNumber() const;
     void setPhoneNumber(const QString &phoneNumber);
+    QList<int> phoneNumberSubTypes() const;
+    QList<int> phoneNumberContexts() const;
     bool isUnknown() const;
     
 Q_SIGNALS:
@@ -51,6 +55,8 @@ Q_SIGNALS:
     void avatarChanged();
     void aliasChanged();
     void phoneNumberChanged();
+    void phoneNumberSubTypesChanged();
+    void phoneNumberContextsChanged();
     void isUnknownChanged();
 
 protected Q_SLOTS:
@@ -66,6 +72,8 @@ private:
     QString mAvatar;
     QString mAlias;
     QString mPhoneNumber;
+    QList<int> mPhoneNumberSubTypes;
+    QList<int> mPhoneNumberContexts;
 };
 
 #endif // CONTACTWATCHER_H

@@ -21,6 +21,7 @@
 
 #include "contactwatcher.h"
 #include "contactutils.h"
+#include "phoneutils.h"
 #include <QContactManager>
 #include <QContactFetchByIdRequest>
 #include <QContactFetchRequest>
@@ -72,6 +73,16 @@ QString ContactWatcher::phoneNumber() const
     return mPhoneNumber;
 }
 
+QList<int> ContactWatcher::phoneNumberSubTypes() const
+{
+    return mPhoneNumberSubTypes;
+}
+
+QList<int> ContactWatcher::phoneNumberContexts() const
+{
+    return mPhoneNumberContexts;
+}
+
 void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
 {
     mPhoneNumber = phoneNumber;
@@ -80,9 +91,13 @@ void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
         mAlias.clear();
         mContactId.clear();
         mAvatar.clear();
+        mPhoneNumberSubTypes.clear();
+        mPhoneNumberContexts.clear();
         Q_EMIT contactIdChanged();
         Q_EMIT avatarChanged();
         Q_EMIT aliasChanged();
+        Q_EMIT phoneNumberSubTypesChanged();
+        Q_EMIT phoneNumberContextsChanged();
         Q_EMIT isUnknownChanged();
         return;
     }
@@ -109,24 +124,38 @@ void ContactWatcher::onContactsAdded(QList<QContactId> ids)
 
 void ContactWatcher::onContactsChanged(QList<QContactId> ids)
 {
-    if (!mContactId.isEmpty() && ids.contains(QContactId::fromString(mContactId)) && !mPhoneNumber.isEmpty()) {
+    // check for changes even if we have this contact already,
+    // as the number might have changed, thus invalidating the current contact
+    if (!mPhoneNumber.isEmpty()) {
         searchByPhoneNumber(mPhoneNumber);
     }
 }
 
 void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
 {
-    if (!mContactId.isEmpty() && ids.contains(QContactId::fromString(mContactId)) && !mPhoneNumber.isEmpty()) {
+    bool currentContactRemoved =  false;
+    Q_FOREACH (const QContactId &contactId, ids) {
+        if(contactId.toString() == mContactId) {
+            currentContactRemoved = true;
+            break;
+        }
+    }
+
+    if (!mContactId.isEmpty() && currentContactRemoved && !mPhoneNumber.isEmpty()) {
         // this contact got removed, so check if we have another one that matches this phoneNumber
         // before considering this contact unknown
         searchByPhoneNumber(mPhoneNumber);
-    } else {
+    } else if (currentContactRemoved) {
         mAlias.clear();
         mContactId.clear();
         mAvatar.clear();
+        mPhoneNumberSubTypes.clear();
+        mPhoneNumberContexts.clear();
         Q_EMIT contactIdChanged();
         Q_EMIT avatarChanged();
         Q_EMIT aliasChanged();
+        Q_EMIT phoneNumberSubTypesChanged();
+        Q_EMIT phoneNumberContextsChanged();
         Q_EMIT isUnknownChanged();
     }
 }
@@ -140,17 +169,26 @@ void ContactWatcher::resultsAvailable()
         mContactId = contact.id().toString();
         mAvatar = QContactAvatar(contact.detail(QContactDetail::TypeAvatar)).imageUrl().toString();
         mAlias = ContactUtils::formatContactName(contact);
-        qDebug() << mContactId << mAvatar << mAlias;
+        Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
+            if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mPhoneNumber)) {
+                mPhoneNumberSubTypes = phoneNumber.subTypes();
+                mPhoneNumberContexts = phoneNumber.contexts();
+            }
+        }
     } else {
         qDebug() << "no contacts found for number " << mPhoneNumber;
         mAlias.clear();
         mContactId.clear();
         mAvatar.clear();
+        mPhoneNumberSubTypes.clear();
+        mPhoneNumberContexts.clear();
     }
 
     Q_EMIT contactIdChanged();
     Q_EMIT avatarChanged();
     Q_EMIT aliasChanged();
+    Q_EMIT phoneNumberSubTypesChanged();
+    Q_EMIT phoneNumberContextsChanged();
     Q_EMIT isUnknownChanged();
 }
 
