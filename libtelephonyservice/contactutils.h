@@ -29,7 +29,7 @@ QTCONTACTS_USE_NAMESPACE
 
 namespace ContactUtils
 {
-    QContactManager *sharedManager();
+    QContactManager *sharedManager(const QString &engine = "galera");
     QString formatContactName(const QContact &contact);
 }
 
