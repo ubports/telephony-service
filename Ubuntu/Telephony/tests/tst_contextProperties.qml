@@ -1,9 +1,6 @@
 /*
  * Copyright (C) 2013 Canonical, Ltd.
  *
- * Authors:
- *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
- *
  * This file is part of telephony-service.
  *
  * telephony-service is free software; you can redistribute it and/or modify
@@ -19,18 +16,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CONTACTUTILS_H
-#define CONTACTUTILS_H
+import QtQuick 2.0
+import QtTest 1.0
+import Ubuntu.Telephony 0.1
 
-#include <QContactManager>
-#include <QContact>
+TestCase {
+    id: contextPropertiesTest
+    name: "ContextPropertiesTest"
 
-QTCONTACTS_USE_NAMESPACE
+    function test_applicationUtils() {
+        verify(applicationUtils != undefined, "applicationUtils is not defined");
+    }
 
-namespace ContactUtils
-{
-    QContactManager *sharedManager(const QString &engine = "galera");
-    QString formatContactName(const QContact &contact);
+    function test_telepathyHelper() {
+        verify(telepathyHelper != undefined, "telepathyHelper is not defined");
+    }
+
+    function test_chatManager() {
+        verify(chatManager != undefined, "chatManager is not defined");
+    }
+
+    function test_callManager() {
+        verify(callManager != undefined, "callManager is not defined");
+    }
 }
-
-#endif // CONTACTUTILS_H

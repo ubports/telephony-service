@@ -141,11 +141,8 @@ void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
         }
     }
 
-    if (!mContactId.isEmpty() && currentContactRemoved && !mPhoneNumber.isEmpty()) {
-        // this contact got removed, so check if we have another one that matches this phoneNumber
-        // before considering this contact unknown
-        searchByPhoneNumber(mPhoneNumber);
-    } else if (currentContactRemoved) {
+    // if the current contact got removed, clear it before trying to search for a new one
+    if (currentContactRemoved) {
         mAlias.clear();
         mContactId.clear();
         mAvatar.clear();
@@ -157,6 +154,10 @@ void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
         Q_EMIT phoneNumberSubTypesChanged();
         Q_EMIT phoneNumberContextsChanged();
         Q_EMIT isUnknownChanged();
+
+        if (!mPhoneNumber.isEmpty()) {
+            searchByPhoneNumber(mPhoneNumber);
+        }
     }
 }
 
@@ -175,21 +176,14 @@ void ContactWatcher::resultsAvailable()
                 mPhoneNumberContexts = phoneNumber.contexts();
             }
         }
-    } else {
-        qDebug() << "no contacts found for number " << mPhoneNumber;
-        mAlias.clear();
-        mContactId.clear();
-        mAvatar.clear();
-        mPhoneNumberSubTypes.clear();
-        mPhoneNumberContexts.clear();
-    }
 
-    Q_EMIT contactIdChanged();
-    Q_EMIT avatarChanged();
-    Q_EMIT aliasChanged();
-    Q_EMIT phoneNumberSubTypesChanged();
-    Q_EMIT phoneNumberContextsChanged();
-    Q_EMIT isUnknownChanged();
+        Q_EMIT contactIdChanged();
+        Q_EMIT avatarChanged();
+        Q_EMIT aliasChanged();
+        Q_EMIT phoneNumberSubTypesChanged();
+        Q_EMIT phoneNumberContextsChanged();
+        Q_EMIT isUnknownChanged();
+    }
 }
 
 void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
@@ -197,5 +191,21 @@ void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest*>(sender());
     if (request && state == QContactAbstractRequest::FinishedState) {
         request->deleteLater();
+
+        // if we got no results and we had a contact previously, we need to clear the data
+        if (request->contacts().isEmpty() && !mContactId.isEmpty()) {
+            mAlias.clear();
+            mContactId.clear();
+            mAvatar.clear();
+            mPhoneNumberSubTypes.clear();
+            mPhoneNumberContexts.clear();
+
+            Q_EMIT contactIdChanged();
+            Q_EMIT avatarChanged();
+            Q_EMIT aliasChanged();
+            Q_EMIT phoneNumberSubTypesChanged();
+            Q_EMIT phoneNumberContextsChanged();
+            Q_EMIT isUnknownChanged();
+        }
     }
 }

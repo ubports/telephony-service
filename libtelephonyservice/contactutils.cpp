@@ -27,9 +27,9 @@ QTCONTACTS_USE_NAMESPACE
 namespace ContactUtils
 {
 
-QContactManager *sharedManager()
+QContactManager *sharedManager(const QString &engine)
 {
-    static QContactManager *instance = new QContactManager("galera");
+    static QContactManager *instance = new QContactManager(engine);
     return instance;
 }
 
