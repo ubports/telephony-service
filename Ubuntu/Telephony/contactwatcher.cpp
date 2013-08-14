@@ -141,11 +141,8 @@ void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
         }
     }
 
-    if (!mContactId.isEmpty() && currentContactRemoved && !mPhoneNumber.isEmpty()) {
-        // this contact got removed, so check if we have another one that matches this phoneNumber
-        // before considering this contact unknown
-        searchByPhoneNumber(mPhoneNumber);
-    } else if (currentContactRemoved) {
+    // if the current contact got removed, clear it before trying to search for a new one
+    if (currentContactRemoved) {
         mAlias.clear();
         mContactId.clear();
         mAvatar.clear();
@@ -157,6 +154,10 @@ void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
         Q_EMIT phoneNumberSubTypesChanged();
         Q_EMIT phoneNumberContextsChanged();
         Q_EMIT isUnknownChanged();
+
+        if (!mPhoneNumber.isEmpty()) {
+            searchByPhoneNumber(mPhoneNumber);
+        }
     }
 }
 
