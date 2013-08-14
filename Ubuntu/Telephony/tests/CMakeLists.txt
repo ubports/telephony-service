@@ -14,6 +14,15 @@ macro(generate_tests)
     endforeach(test)
 endmacro(generate_tests)
 
+
 generate_tests(
     ContactWatcherTest
     )
+
+file(GLOB QML_TESTS *.qml)
+
+# make the files visible on qtcreator
+add_custom_target(telephonyservice_QMLTESTS ALL SOURCES ${QML_TESTS})
+
+
+add_test(qmltests qmltestrunner -import ${CMAKE_BINARY_DIR} -xunitxml -o ${CMAKE_BINARY_DIR}/test_qmltests.xml)
