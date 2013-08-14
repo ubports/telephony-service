@@ -24,5 +24,4 @@ file(GLOB QML_TESTS *.qml)
 # make the files visible on qtcreator
 add_custom_target(telephonyservice_QMLTESTS ALL SOURCES ${QML_TESTS})
 
-
-add_test(qmltests qmltestrunner -import ${CMAKE_BINARY_DIR} -xunitxml -o ${CMAKE_BINARY_DIR}/test_qmltests.xml)
+add_test(qmltests qmltestrunner -input ${CMAKE_CURRENT_SOURCE_DIR} -import ${CMAKE_BINARY_DIR} -xunitxml -o ${CMAKE_BINARY_DIR}/test_qmltests.xml)
