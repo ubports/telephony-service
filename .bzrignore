@@ -32,8 +32,8 @@ approver/approveradaptor.*
 handler/handleradaptor.*
 
 Testing
-Ubuntu/PhoneApp/tests/*Test
-libphoneapp/tests/*Test
+Ubuntu/Telephony/tests/*Test
+libtelephonyservice/tests/*Test
 CTestTestfile.cmake
 test_*.xml
 
