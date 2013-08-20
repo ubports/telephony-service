@@ -52,7 +52,7 @@ int main(int argc, char **argv)
     TelepathyHelper::instance()->registerClient(approver, "TelephonyServiceApprover");
 
     // and the observer
-    TelepathyHelper::instance()->registerChannelObserver();
+    TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceObserver");
 
     // Connect the textObserver to the channel observer in TelepathyHelper
     TextChannelObserver *textObserver = new TextChannelObserver();

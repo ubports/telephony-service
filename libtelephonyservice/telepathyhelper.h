@@ -61,7 +61,7 @@ Q_SIGNALS:
     void accountIdChanged();
 
 public Q_SLOTS:
-    void registerChannelObserver();
+    void registerChannelObserver(const QString &observerName = QString::null);
 
 protected:
     QStringList supportedProtocols() const;

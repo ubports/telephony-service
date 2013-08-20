@@ -109,14 +109,16 @@ bool TelepathyHelper::connected() const
 }
 
 
-void TelepathyHelper::registerChannelObserver()
+void TelepathyHelper::registerChannelObserver(const QString &observerName)
 {
-    // check if this instance is running on the main phone application
-    // or if it is just the plugin imported somewhere else
-    QString observerName = "TelephonyPluginObserver";
+    QString name = observerName;
+
+    if (name.isEmpty()) {
+        name = "TelephonyPluginObserver";
+    }
 
     mChannelObserver = new ChannelObserver(this);
-    registerClient(mChannelObserver, observerName);
+    registerClient(mChannelObserver, name);
     Q_EMIT channelObserverCreated(mChannelObserver);
 }
 

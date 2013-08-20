@@ -33,9 +33,12 @@ target_link_libraries(telephony-service-approver
     )
 
 configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service.in org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service)
+configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceObserver.service.in org.freedesktop.Telepathy.Client.TelephonyServiceObserver.service)
 install(TARGETS telephony-service-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service DESTINATION share/dbus-1/services)
-install(FILES TelephonyServiceApprover.client DESTINATION share/telepathy/clients)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service
+              ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceObserver.service
+        DESTINATION share/dbus-1/services)
+install(FILES TelephonyServiceApprover.client TelephonyServiceObserver.client DESTINATION share/telepathy/clients)
 
 # Handle i18n in desktop files
 set(desktop_FILES telephony-service-sms.desktop telephony-service-call.desktop telephony-service-approver.desktop)
