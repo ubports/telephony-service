@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "applicationutils.h"
 #include "callhandler.h"
 #include "handler.h"
 #include "handlerdbus.h"
@@ -35,6 +36,12 @@ int main(int argc, char **argv)
     QCoreApplication app(argc, argv);
 
     Tp::registerTypes();
+
+    // check if there is already an instance of the handler running
+    if (ApplicationUtils::checkApplicationRunning(TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler")) {
+        qDebug() << "Found another instance of the approver. Quitting.";
+        return 1;
+    }
 
     Handler *handler = new Handler();
     TelepathyHelper::instance()->registerClient(handler, "TelephonyServiceHandler");

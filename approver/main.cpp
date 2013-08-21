@@ -22,6 +22,7 @@
 
 #include <libnotify/notify.h>
 
+#include "applicationutils.h"
 #include "approver.h"
 #include "telepathyhelper.h"
 #include "textchannelobserver.h"
@@ -46,6 +47,12 @@ int main(int argc, char **argv)
     notify_init(C::gettext("Telephony Service Approver"));
 
     Tp::registerTypes();
+
+    // check if there is already an instance of the approver running
+    if (ApplicationUtils::checkApplicationRunning(TP_QT_IFACE_CLIENT + ".TelephonyServiceApprover")) {
+        qDebug() << "Found another instance of the approver. Quitting.";
+        return 1;
+    }
 
     // register the approver
     Approver *approver = new Approver();

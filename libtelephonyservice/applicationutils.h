@@ -43,14 +43,13 @@ public:
     bool addressbookAppRunning();
     bool dialerAppRunning();
     bool messagingAppRunning();
+    static bool checkApplicationRunning(const QString &serviceName);
 
 Q_SIGNALS:
     void addressbookAppRunningChanged(bool running);
     void dialerAppRunningChanged(bool running);
     void messagingAppRunningChanged(bool running);
 
-protected:
-    bool checkApplicationRunning(const QString &serviceName);
 
 protected Q_SLOTS:
     void onServiceRegistered(const QString &serviceName);
