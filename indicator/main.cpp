@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 
     Tp::registerTypes();
 
-    // check if there is already an instance of the approver running
+    // check if there is already an instance of the indicator running
     if (ApplicationUtils::checkApplicationRunning(TP_QT_IFACE_CLIENT + ".TelephonyServiceIndicator")) {
         qDebug() << "Found another instance of the indicator. Quitting.";
         return 1;
