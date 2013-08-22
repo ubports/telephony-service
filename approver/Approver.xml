@@ -9,13 +9,6 @@
         <dox:d>
           An interface to the phone approver application.
         </dox:d>
-        <method name="SendMessage">
-            <dox:d><![CDATA[
-               Request to send a message to a contact.
-            ]]></dox:d>
-            <arg name="number" type="s" direction="in"/>
-            <arg name="message" type="s" direction="in"/>
-        </method>
         <method name="AcceptCall">
             <dox:d><![CDATA[
                 Accept any incoming call and launches the telephony-service.

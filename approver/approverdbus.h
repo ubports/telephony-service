@@ -41,12 +41,10 @@ public:
     bool connectToBus();
 
 public Q_SLOTS:
-    Q_NOREPLY void SendMessage(const QString &number, const QString &message);
     Q_NOREPLY void AcceptCall();
     Q_NOREPLY void RejectCall();
 
 Q_SIGNALS:
-    void onMessageSent(const QString &number, const QString &message);
     void acceptCallRequested();
     void rejectCallRequested();
 };

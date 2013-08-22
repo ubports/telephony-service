@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2013 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -19,33 +19,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TEXTCHANNELOBSERVER_H
-#define TEXTCHANNELOBSERVER_H
+#ifndef CALLCHANNELOBSERVER_H
+#define CALLCHANNELOBSERVER_H
 
 #include <QObject>
-#include <TelepathyQt/TextChannel>
-#include <TelepathyQt/ReceivedMessage>
+#include <TelepathyQt/CallChannel>
 
-class TextChannelObserver : public QObject
+class CallChannelObserver : public QObject
 {
     Q_OBJECT
 public:
-    explicit TextChannelObserver(QObject *parent = 0);
+    explicit CallChannelObserver(QObject *parent = 0);
 
 public Q_SLOTS:
-    void onTextChannelAvailable(Tp::TextChannelPtr textChannel);
+    void onCallChannelAvailable(Tp::CallChannelPtr callChannel);
 
-protected:
-    void showNotificationForMessage(const Tp::ReceivedMessage &message);
-    Tp::TextChannelPtr channelFromPath(const QString &path);
+Q_SIGNALS:
+    void callEnded(Tp::CallChannelPtr callChannel);
 
 protected Q_SLOTS:
-    void onTextChannelInvalidated();
-    void onMessageReceived(const Tp::ReceivedMessage &message);
-    void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
+    void onCallStateChanged(Tp::CallState state);
 
 private:
-    QList<Tp::TextChannelPtr> mChannels;
+    QList<Tp::CallChannelPtr> mChannels;
 };
 
-#endif // TEXTCHANNELOBSERVER_H
+#endif // CALLCHANNELOBSERVER_H

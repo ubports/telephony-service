@@ -2,9 +2,6 @@
 set(qt_SRCS
     approver.cpp
     approverdbus.cpp
-    messagingmenu.cpp
-    textchannelobserver.cpp
-    voicemailindicator.cpp
     )
 
 set(approver_SRCS main.cpp ${qt_SRCS})
@@ -33,27 +30,6 @@ target_link_libraries(telephony-service-approver
     )
 
 configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service.in org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service)
-configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceObserver.service.in org.freedesktop.Telepathy.Client.TelephonyServiceObserver.service)
 install(TARGETS telephony-service-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service
-              ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceObserver.service
-        DESTINATION share/dbus-1/services)
-install(FILES TelephonyServiceApprover.client TelephonyServiceObserver.client DESTINATION share/telepathy/clients)
-
-# Handle i18n in desktop files
-set(desktop_FILES telephony-service-sms.desktop telephony-service-call.desktop telephony-service-approver.desktop)
-
-foreach(DESKTOP_FILE ${desktop_FILES})
-    file(REMOVE ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE})
-    file(STRINGS ${DESKTOP_FILE}.in DESKTOP_FILE_CONTENTS)
-    foreach(LINE ${DESKTOP_FILE_CONTENTS})
-        string(REGEX REPLACE "tr\\\(\"(.*)\"\\\)" "\\1" LINE "${LINE}")
-        file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_FILE} "${LINE}\n")
-    endforeach(LINE)
-endforeach(DESKTOP_FILE)
-
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/telephony-service-sms.desktop ${CMAKE_CURRENT_BINARY_DIR}/telephony-service-call.desktop
-        DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/telephony-service-approver.desktop DESTINATION /etc/xdg/autostart)
-
-add_subdirectory(icons)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service DESTINATION share/dbus-1/services)
+install(FILES TelephonyServiceApprover.client DESTINATION share/telepathy/clients)
