@@ -24,22 +24,19 @@ Build-Depends: cmake,
                qtmultimedia5-dev (>= 5.0),
                qtpim5-dev (>= 5),
 Standards-Version: 3.9.4
-# If you don't have commit rights to lp:telephony-service but need to upload
-# packaging changes, just go ahead.  The developers will notice and sync
-# up the code again.
 Vcs-Bzr: lp:telephony-service
 Vcs-Browser: https://bazaar.launchpad.net/~phablet-team/telephony-service/trunk/files
 
 Package: telephony-service
 Architecture: any
-Depends: ${misc:Depends},
-         ${shlibs:Depends},
-         gsettings-ubuntu-touch-schemas (>= 0.0.1+13.10.20130730),
+Depends: gsettings-ubuntu-touch-schemas (>= 0.0.1+13.10.20130730),
+         history-service,
          libnotify4,
          telepathy-mission-control-5,
          telepathy-ofono,
-         history-service,
          ubuntu-sounds,
+         ${misc:Depends},
+         ${shlibs:Depends},
 Description: Telephony service components for Ubuntu
  The backend components providing the telephony features such as calling and
  texting.
@@ -48,8 +45,8 @@ Package: telephony-service-dbg
 Architecture: any
 Section: debug
 Priority: extra
-Depends: ${misc:Depends},
-         telephony-service (= ${binary:Version}),
+Depends: telephony-service (= ${binary:Version}),
+         ${misc:Depends},
 Description: debugging symbols for telephony-service
  This package contains the debugging symbols for telephony-service
 
@@ -57,11 +54,10 @@ Package: qtdeclarative5-ubuntu-telephony-plugin
 Architecture: any
 Section: debug
 Priority: extra
-Depends: ${misc:Depends},
-         telephony-service (>= ${binary:Version}),
-         qtcontact5-galera,
+Depends: qtcontact5-galera,
          telepathy-ofono,
+         telephony-service (>= ${binary:Version}),
+         ${misc:Depends},
 Description: QML plugin providing the telephony features
  This package contains the QML plugin providing the features from the telephony
  service to applications.
-
