@@ -1,5 +1,9 @@
-telephony-service (0.1-0ubuntu2) UNRELEASED; urgency=low
+telephony-service (0.1-0ubuntu1) UNRELEASED; urgency=low
 
+  [ Gustavo Pichorim Boiko ]
   * Initial release
 
- -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 16 Jul 2013 17:51:47 -0300
+  [ Timo Jyrinki ]
+  * Automatic snapshot from revision 730 (bootstrap) 
+
+ -- Timo Jyrinki <timo-jyrinki@ubuntu.com>  Fri, 23 Aug 2013 13:52:45 +0300
