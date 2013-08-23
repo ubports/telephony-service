@@ -1,5 +1,5 @@
 Source: telephony-service
-Section: x11
+Section: libs
 Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: cmake,
@@ -24,11 +24,15 @@ Build-Depends: cmake,
                qtmultimedia5-dev (>= 5.0),
                qtpim5-dev (>= 5),
 Standards-Version: 3.9.4
-Vcs-Bzr: lp:telephony-service
-Vcs-Browser: https://bazaar.launchpad.net/~phablet-team/telephony-service/trunk/files
+Homepage: https://launchpad.net/telephony-service
+# If you aren't a member of ~phablet-team but need to upload packaging changes,
+# just go ahead.  ~phablet-team will notice and sync up the code again.
+Vcs-Bzr: https://code.launchpad.net/~phablet-team/telephony-service/trunk
 
 Package: telephony-service
 Architecture: any
+Multi-Arch: foreign
+Pre-Depends: dpkg (>= 1.15.6~)
 Depends: gsettings-ubuntu-touch-schemas (>= 0.0.1+13.10.20130730),
          history-service,
          libnotify4,
@@ -37,9 +41,26 @@ Depends: gsettings-ubuntu-touch-schemas (>= 0.0.1+13.10.20130730),
          ubuntu-sounds,
          ${misc:Depends},
          ${shlibs:Depends},
-Description: Telephony service components for Ubuntu
- The backend components providing the telephony features such as calling and
- texting.
+Description: Telephony service components for Ubuntu - backend
+ Telephony service components for Ubuntu.
+ .
+ This package contains the backend components providing the telephony 
+ features such as calling and texting.
+
+Package: qtdeclarative5-ubuntu-telephony0.1
+Architecture: any
+Multi-Arch: same
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: qtcontact5-galera,
+         telepathy-ofono,
+         telephony-service (>= ${binary:Version}),
+         ${misc:Depends},
+         ${shlibs:Depends},
+Description: Telephony service components for Ubuntu - QML plugin
+ Telephony service components for Ubuntu.
+ .
+ This package contains the QML plugin providing the features from the telephony
+ service to applications.
 
 Package: telephony-service-dbg
 Architecture: any
@@ -47,17 +68,8 @@ Section: debug
 Priority: extra
 Depends: telephony-service (= ${binary:Version}),
          ${misc:Depends},
-Description: debugging symbols for telephony-service
+Description: Telephony service components for Ubuntu - debugging symbols
+ Telephony service components for Ubuntu.
+ .
  This package contains the debugging symbols for telephony-service
 
-Package: qtdeclarative5-ubuntu-telephony-plugin
-Architecture: any
-Section: debug
-Priority: extra
-Depends: qtcontact5-galera,
-         telepathy-ofono,
-         telephony-service (>= ${binary:Version}),
-         ${misc:Depends},
-Description: QML plugin providing the telephony features
- This package contains the QML plugin providing the features from the telephony
- service to applications.
