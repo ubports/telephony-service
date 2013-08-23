@@ -50,11 +50,6 @@ ApproverDBus::connectToBus()
     return true;
 }
 
-void ApproverDBus::SendMessage(const QString &number, const QString &message)
-{
-    Q_EMIT onMessageSent(number, message);
-}
-
 void ApproverDBus::AcceptCall()
 {
     Q_EMIT acceptCallRequested();

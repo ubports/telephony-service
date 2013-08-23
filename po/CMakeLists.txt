@@ -11,7 +11,9 @@ set(POT_FILE ${DOMAIN}.pot)
 file(GLOB PO_FILES *.po)
 file(GLOB_RECURSE I18N_SRCS RELATIVE ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/approver/*.cpp
-    ${CMAKE_SOURCE_DIR}/approver/*.desktop.in
+    ${CMAKE_SOURCE_DIR}/handler/*.cpp
+    ${CMAKE_SOURCE_DIR}/indicator/*.desktop.in
+    ${CMAKE_SOURCE_DIR}/indicator/*.cpp
     ${CMAKE_SOURCE_DIR}/Ubuntu/*.cpp
 )
 

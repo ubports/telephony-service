@@ -1,4 +1,3 @@
-etc/xdg/autostart/telephony-service-approver.desktop
 usr/share/icons/hicolor/*/apps/telephony-service*.png
 usr/share/icons/ubuntu-mono-dark/status/*/indicator-call.svg
 usr/share/applications/telephony-service*.desktop

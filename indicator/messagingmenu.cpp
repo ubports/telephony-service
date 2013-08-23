@@ -39,14 +39,14 @@ namespace C {
     #include <messaging-menu-message.h>
 #endif
 
-#define SOURCE_ID "telephony-service-approver"
+#define SOURCE_ID "telephony-service-indicator"
 
 QTCONTACTS_USE_NAMESPACE
 
 MessagingMenu::MessagingMenu(QObject *parent) :
     QObject(parent), mVoicemailCount(-1)
 {
-    GIcon *icon = g_icon_new_for_string("telephony-service-approver", NULL);
+    GIcon *icon = g_icon_new_for_string("telephony-service-indicator", NULL);
     mMessagesApp = messaging_menu_app_new("telephony-service-sms.desktop");
     messaging_menu_app_register(mMessagesApp);
     messaging_menu_app_append_source(mMessagesApp, SOURCE_ID, icon, C::gettext("Telephony Service"));

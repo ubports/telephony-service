@@ -22,6 +22,7 @@
 #include <libnotify/notify.h>
 #include "textchannelobserver.h"
 #include "messagingmenu.h"
+#include "chatmanager.h"
 #include "config.h"
 #include "contactutils.h"
 #include "ringtone.h"
@@ -42,6 +43,12 @@ QTCONTACTS_USE_NAMESPACE
 TextChannelObserver::TextChannelObserver(QObject *parent) :
     QObject(parent)
 {
+    connect(MessagingMenu::instance(),
+            SIGNAL(replyReceived(QString,QString)),
+            SLOT(onReplyReceived(QString,QString)));
+    connect(MessagingMenu::instance(),
+            SIGNAL(messageRead(QString,QString)),
+            SLOT(onMessageRead(QString,QString)));
 }
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
@@ -147,4 +154,15 @@ void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
 {
     MessagingMenu::instance()->removeMessage(message.messageToken());
+}
+
+void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QString &reply)
+{
+    ChatManager::instance()->sendMessage(phoneNumber, reply);
+}
+
+void TextChannelObserver::onMessageRead(const QString &phoneNumber, const QString &encodedMessageId)
+{
+    QString messageId(QByteArray::fromHex(encodedMessageId.toUtf8()));
+    ChatManager::instance()->acknowledgeMessage(phoneNumber, messageId);
 }

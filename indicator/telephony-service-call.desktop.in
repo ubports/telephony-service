@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=tr("Phone Calls")
-Exec=telephony-service-approver
+Exec=telephony-service-indicator
 Icon=telephony-service-call
 NoDisplay=true
 X-Ubuntu-Gettext-Domain=telephony-service
