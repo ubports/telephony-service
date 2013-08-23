@@ -22,6 +22,7 @@
 
 #include "telepathyhelper.h"
 #include "chatmanager.h"
+#include "callmanager.h"
 #include "config.h"
 
 #include <TelepathyQt/AccountSet>
@@ -119,7 +120,26 @@ void TelepathyHelper::registerChannelObserver(const QString &observerName)
 
     mChannelObserver = new ChannelObserver(this);
     registerClient(mChannelObserver, name);
+
+    // messages
+    connect(mChannelObserver, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
+            ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+
+    // calls
+    connect(mChannelObserver, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+            CallManager::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+
     Q_EMIT channelObserverCreated(mChannelObserver);
+}
+
+void TelepathyHelper::unregisterChannelObserver()
+{
+    Tp::AbstractClientPtr clientPtr(mChannelObserver);
+    if (clientPtr) {
+        mClientRegistrar->unregisterClient(clientPtr);
+    }
+    mChannelObserver->deleteLater();
+    mChannelObserver = NULL;
 }
 
 QStringList TelepathyHelper::supportedProtocols() const
