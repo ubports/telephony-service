@@ -118,6 +118,10 @@ void TelepathyHelper::registerChannelObserver(const QString &observerName)
         name = "TelephonyPluginObserver";
     }
 
+    if (mChannelObserver) {
+        mChannelObserver->deleteLater();
+    }
+
     mChannelObserver = new ChannelObserver(this);
     registerClient(mChannelObserver, name);
 
