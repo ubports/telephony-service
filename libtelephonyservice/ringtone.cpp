@@ -20,25 +20,17 @@
  */
 
 #include "ringtone.h"
-#include <QDebug>
 
-Ringtone::Ringtone(QObject *parent) :
-    QObject(parent),
-    mCallAudioPlayer(this), mCallAudioPlaylist(this), mMessageAudioPlayer(this), mSoundSettings("com.ubuntu.touch.sound")
+RingtoneWorker::RingtoneWorker(QObject *parent) :
+    QObject(parent), mCallAudioPlayer(this), mCallAudioPlaylist(this),
+    mMessageAudioPlayer(this), mSoundSettings("com.ubuntu.touch.sound")
 {
     mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(mSoundSettings.get("incomingCallSound").toString()));
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
     mCallAudioPlaylist.setCurrentIndex(0);
 }
 
-
-Ringtone *Ringtone::instance()
-{
-    static Ringtone *self = new Ringtone();
-    return self;
-}
-
-void Ringtone::playIncomingCallSound()
+void RingtoneWorker::playIncomingCallSound()
 {
     if (mSoundSettings.get("silentMode") == true) {
         return;
@@ -52,12 +44,12 @@ void Ringtone::playIncomingCallSound()
     mCallAudioPlayer.play();
 }
 
-void Ringtone::stopIncomingCallSound()
+void RingtoneWorker::stopIncomingCallSound()
 {
     mCallAudioPlayer.stop();
 }
 
-void Ringtone::playIncomingMessageSound()
+void RingtoneWorker::playIncomingMessageSound()
 {
     if (mSoundSettings.get("silentMode") == true) {
         return;
@@ -71,8 +63,47 @@ void Ringtone::playIncomingMessageSound()
     mMessageAudioPlayer.play();
 }
 
-void Ringtone::stopIncomingMessageSound()
+void RingtoneWorker::stopIncomingMessageSound()
 {
     mMessageAudioPlayer.stop();
 }
 
+Ringtone::Ringtone(QObject *parent) :
+    QObject(parent)
+{
+    mWorker = new RingtoneWorker(this);
+    mWorker->moveToThread(&mThread);
+    mThread.start();
+}
+
+Ringtone::~Ringtone()
+{
+    mThread.quit();
+    mThread.wait();
+}
+
+Ringtone *Ringtone::instance()
+{
+    static Ringtone *self = new Ringtone();
+    return self;
+}
+
+void Ringtone::playIncomingCallSound()
+{
+    QMetaObject::invokeMethod(mWorker, "playIncomingCallSound", Qt::QueuedConnection);
+}
+
+void Ringtone::stopIncomingCallSound()
+{
+    QMetaObject::invokeMethod(mWorker, "stopIncomingCallSound", Qt::QueuedConnection);
+}
+
+void Ringtone::playIncomingMessageSound()
+{
+    QMetaObject::invokeMethod(mWorker, "playIncomingMessageSound", Qt::QueuedConnection);
+}
+
+void Ringtone::stopIncomingMessageSound()
+{
+    QMetaObject::invokeMethod(mWorker, "stopIncomingMessageSound", Qt::QueuedConnection);
+}
