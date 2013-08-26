@@ -3,6 +3,7 @@
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
+export DPKG_GENSYMBOLS_CHECK_LEVEL=4
 
 override_dh_install:
 	dh_install --fail-missing
@@ -22,6 +23,3 @@ override_dh_translations:
 	# (see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=601774).
 	$(MAKE) -C obj-$(DEB_HOST_GNU_TYPE) telephony-service.pot
 
-.PHONY: override_dh_strip
-override_dh_strip:
-	dh_strip --dbg-package=telephony-service-dbg
