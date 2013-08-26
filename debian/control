@@ -62,14 +62,3 @@ Description: Telephony service components for Ubuntu - QML plugin
  This package contains the QML plugin providing the features from the telephony
  service to applications.
 
-Package: telephony-service-dbg
-Architecture: any
-Section: debug
-Priority: extra
-Depends: telephony-service (= ${binary:Version}),
-         ${misc:Depends},
-Description: Telephony service components for Ubuntu - debugging symbols
- Telephony service components for Ubuntu.
- .
- This package contains the debugging symbols for telephony-service
-
