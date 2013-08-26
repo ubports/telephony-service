@@ -1,4 +1,4 @@
-telephony-service (0.1-0ubuntu1) UNRELEASED; urgency=low
+telephony-service (0.1+13.10.20130826.1-0ubuntu1) saucy; urgency=low
 
   [ Gustavo Pichorim Boiko ]
   * Initial release
@@ -6,4 +6,15 @@ telephony-service (0.1-0ubuntu1) UNRELEASED; urgency=low
   [ Timo Jyrinki ]
   * Automatic snapshot from revision 730 (bootstrap) 
 
- -- Timo Jyrinki <timo-jyrinki@ubuntu.com>  Fri, 23 Aug 2013 13:52:45 +0300
+  [ Gustavo Pichorim Boiko ]
+  * Create a new daemon to host the indicators and OSD to get that code
+    out of the approver.
+
+  [ Tiago Salem Herrmann ]
+  * register observer only when necessary add
+    unregisterChannelObserver() method. (LP: #1208869)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 733
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 26 Aug 2013 19:14:38 +0000
