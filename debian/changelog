@@ -1,3 +1,14 @@
+telephony-service (0.1+13.10.20130827.2-0ubuntu1) saucy; urgency=low
+
+  [ Bill Filler ]
+  * Add Conflicts and Replaces phone-app such that both can't be
+    installed at the same time.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 736
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 27 Aug 2013 14:55:22 +0000
+
 telephony-service (0.1+13.10.20130827-0ubuntu1) saucy; urgency=low
 
   * Automatic snapshot from revision 734
