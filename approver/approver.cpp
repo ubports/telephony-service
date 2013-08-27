@@ -22,7 +22,6 @@
 #include "approver.h"
 #include "approverdbus.h"
 #include "applicationutils.h"
-#include "messagingmenu.h"
 #include "chatmanager.h"
 #include "config.h"
 #include "contactutils.h"
@@ -53,33 +52,17 @@ Approver::Approver()
 {
     ApproverDBus *dbus = new ApproverDBus();
     connect(dbus,
-            SIGNAL(onMessageSent(const QString&, const QString&)),
-            SLOT(onReplyReceived(const QString&, const QString&)));
-    connect(dbus,
             SIGNAL(acceptCallRequested()),
             SLOT(onAcceptCallRequested()));
     connect(dbus,
             SIGNAL(rejectCallRequested()),
             SLOT(onRejectCallRequested()));
     dbus->connectToBus();
-
-    connect(MessagingMenu::instance(),
-            SIGNAL(replyReceived(QString,QString)),
-            SLOT(onReplyReceived(QString,QString)));
-    connect(MessagingMenu::instance(), SIGNAL(messageRead(QString,QString)),
-            this, SLOT(onMessageRead(QString,QString)));
 }
 
 Approver::~Approver()
 {
 }
-
-void Approver::onMessageRead(const QString &phoneNumber, const QString &encodedMessageId)
-{
-    QString messageId(QByteArray::fromHex(encodedMessageId.toUtf8()));
-    ChatManager::instance()->acknowledgeMessage(phoneNumber, messageId);
-}
-
 
 Tp::ChannelClassSpecList Approver::channelFilters() const
 {
@@ -450,16 +433,9 @@ void Approver::onCallStateChanged(Tp::CallState state)
         }
 
         closeSnapDecision();
-        // add the missed call to the messaging menu
-        MessagingMenu::instance()->addCall(channel->targetContact()->id(), QDateTime::currentDateTime());
     } else if (state == Tp::CallStateActive) {
         onApproved(dispatchOperation);
     }
-}
-
-void Approver::onReplyReceived(const QString &phoneNumber, const QString &reply)
-{
-    ChatManager::instance()->sendMessage(phoneNumber, reply);
 }
 
 void Approver::closeSnapDecision()

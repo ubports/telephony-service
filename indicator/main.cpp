@@ -23,8 +23,10 @@
 #include <libnotify/notify.h>
 
 #include "applicationutils.h"
-#include "approver.h"
+#include "callchannelobserver.h"
 #include "telepathyhelper.h"
+#include "textchannelobserver.h"
+#include "voicemailindicator.h"
 #include <QCoreApplication>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/AbstractClient>
@@ -42,19 +44,30 @@ int main(int argc, char **argv)
     C::bindtextdomain( "telephony-service", "/usr/share/locale" );
     C::textdomain("telephony-service");
 
-    notify_init(C::gettext("Telephony Service Approver"));
+    notify_init(C::gettext("Telephony Service Indicator"));
 
     Tp::registerTypes();
 
-    // check if there is already an instance of the approver running
-    if (ApplicationUtils::checkApplicationRunning(TP_QT_IFACE_CLIENT + ".TelephonyServiceApprover")) {
-        qDebug() << "Found another instance of the approver. Quitting.";
+    // check if there is already an instance of the indicator running
+    if (ApplicationUtils::checkApplicationRunning(TP_QT_IFACE_CLIENT + ".TelephonyServiceIndicator")) {
+        qDebug() << "Found another instance of the indicator. Quitting.";
         return 1;
     }
 
-    // register the approver
-    Approver *approver = new Approver();
-    TelepathyHelper::instance()->registerClient(approver, "TelephonyServiceApprover");
+    // register the observer
+    TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceIndicator");
+
+    // Connect the textObserver and the callObserver to the channel observer in TelepathyHelper
+    CallChannelObserver *callObserver = new CallChannelObserver();
+    TextChannelObserver *textObserver = new TextChannelObserver();
+    QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
+                     textObserver, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+    QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+                     callObserver, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+
+    // we don't need to call anything on the indicator, it will work by itself
+    VoiceMailIndicator voiceMailIndicator;
+    Q_UNUSED(voiceMailIndicator);
 
     return app.exec();
 }

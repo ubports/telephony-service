@@ -55,15 +55,6 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("chatManager", ChatManager::instance());
     mRootContext->setContextProperty("callManager", CallManager::instance());
 
-    TelepathyHelper::instance()->registerChannelObserver();
-
-    // messages
-    connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
-            ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
-
-    // calls
-    connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
-            CallManager::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
 }
 
 void Components::registerTypes(const char *uri)
