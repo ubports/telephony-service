@@ -22,16 +22,37 @@
 #ifndef RINGTONE_H
 #define RINGTONE_H
 
-#include <QGSettings>
 #include <QObject>
+#include <QThread>
+#include <QGSettings>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include <QFile>
+
+class RingtoneWorker : public QObject
+{
+    Q_OBJECT
+public:
+    RingtoneWorker(QObject *parent = 0);
+
+public Q_SLOTS:
+    void playIncomingCallSound();
+    void stopIncomingCallSound();
+    void playIncomingMessageSound();
+    void stopIncomingMessageSound();
+private:
+    QMediaPlayer mCallAudioPlayer;
+    QMediaPlaylist mCallAudioPlaylist;
+
+    QMediaPlayer mMessageAudioPlayer;
+    QGSettings mSoundSettings;
+};
 
 class Ringtone : public QObject
 {
     Q_OBJECT
 public:
+    ~Ringtone();
     static Ringtone *instance();
 
 public Q_SLOTS:
@@ -43,12 +64,8 @@ public Q_SLOTS:
 
 private:
     explicit Ringtone(QObject *parent = 0);
-
-    QMediaPlayer mCallAudioPlayer;
-    QMediaPlaylist mCallAudioPlaylist;
-
-    QMediaPlayer mMessageAudioPlayer;
-    QGSettings mSoundSettings;
+    RingtoneWorker *mWorker;
+    QThread mThread;
 };
 
 #endif // RINGTONE_H
