@@ -33,6 +33,8 @@ Package: telephony-service
 Architecture: any
 Multi-Arch: foreign
 Pre-Depends: dpkg (>= 1.15.6~)
+Conflicts: phone-app
+Replaces: phone-app
 Depends: gsettings-ubuntu-touch-schemas (>= 0.0.1+13.10.20130730),
          history-service,
          libnotify4,
