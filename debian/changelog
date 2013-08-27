@@ -1,3 +1,9 @@
+telephony-service (0.1+13.10.20130827-0ubuntu1) saucy; urgency=low
+
+  * Automatic snapshot from revision 734
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 27 Aug 2013 02:43:17 +0000
+
 telephony-service (0.1+13.10.20130826.1-0ubuntu1) saucy; urgency=low
 
   [ Gustavo Pichorim Boiko ]
