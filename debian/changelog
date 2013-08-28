@@ -1,3 +1,14 @@
+telephony-service (0.1+13.10.20130828.1-0ubuntu1) saucy; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Run the mediaplayer calls in a separate thread to avoid locking the
+    approver.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 738
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 28 Aug 2013 11:48:47 +0000
+
 telephony-service (0.1+13.10.20130827.2-0ubuntu1) saucy; urgency=low
 
   [ Bill Filler ]
