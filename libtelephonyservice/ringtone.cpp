@@ -25,7 +25,6 @@ RingtoneWorker::RingtoneWorker(QObject *parent) :
     QObject(parent), mCallAudioPlayer(this), mCallAudioPlaylist(this),
     mMessageAudioPlayer(this), mSoundSettings("com.ubuntu.touch.sound")
 {
-    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(mSoundSettings.get("incomingCallSound").toString()));
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
     mCallAudioPlaylist.setCurrentIndex(0);
 }
@@ -40,6 +39,8 @@ void RingtoneWorker::playIncomingCallSound()
         return;
     }
 
+    mCallAudioPlaylist.clear();
+    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(mSoundSettings.get("incomingCallSound").toString()));
     mCallAudioPlayer.setPlaylist(&mCallAudioPlaylist);
     mCallAudioPlayer.play();
 }
