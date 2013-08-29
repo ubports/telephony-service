@@ -41,6 +41,7 @@ Depends: gsettings-ubuntu-touch-schemas (>= 0.0.1+13.10.20130730),
          telepathy-mission-control-5,
          telepathy-ofono,
          ubuntu-sounds,
+         dconf-cli,
          ${misc:Depends},
          ${shlibs:Depends},
 Description: Telephony service components for Ubuntu - backend
