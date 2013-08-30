@@ -1,3 +1,14 @@
+telephony-service (0.1+13.10.20130830.3-0ubuntu1) saucy; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Reload the ringtone file path from settings every time the playing
+    of it is requested to make sure it uses the latest preferences.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 742
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 30 Aug 2013 20:33:17 +0000
+
 telephony-service (0.1+13.10.20130830.2-0ubuntu1) saucy; urgency=low
 
   [ Loïc Minier ]
