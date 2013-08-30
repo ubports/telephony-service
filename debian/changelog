@@ -1,3 +1,14 @@
+telephony-service (0.1+13.10.20130830.2-0ubuntu1) saucy; urgency=low
+
+  [ Loïc Minier ]
+  * Let telephony-service depend on dconf-cli as /usr/bin/ofono-setup
+    calls /usr/bin/dconf.
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 740
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 30 Aug 2013 13:26:54 +0000
+
 telephony-service (0.1+13.10.20130828.1-0ubuntu1) saucy; urgency=low
 
   [ Gustavo Pichorim Boiko ]
