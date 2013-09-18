@@ -72,6 +72,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
+    void onChannelObserverUnregistered();
     void onCallEnded();
     void onConnectedChanged();
 

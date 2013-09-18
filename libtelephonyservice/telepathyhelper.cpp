@@ -144,6 +144,7 @@ void TelepathyHelper::unregisterChannelObserver()
     }
     mChannelObserver->deleteLater();
     mChannelObserver = NULL;
+    Q_EMIT channelObserverUnregistered();
 }
 
 QStringList TelepathyHelper::supportedProtocols() const

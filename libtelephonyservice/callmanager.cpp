@@ -41,6 +41,16 @@ CallManager::CallManager(QObject *parent)
 : QObject(parent)
 {
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
+    connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
+}
+
+void CallManager::onChannelObserverUnregistered()
+{
+    mCallEntries.clear();
+    Q_EMIT hasCallsChanged();
+    Q_EMIT hasBackgroundCallChanged();
+    Q_EMIT foregroundCallChanged();
+    Q_EMIT backgroundCallChanged();
 }
 
 void CallManager::startCall(const QString &phoneNumber)
@@ -76,19 +86,25 @@ QObject *CallManager::foregroundCall() const
     // even if it is held
     if (mCallEntries.count() == 1) {
         call = mCallEntries.first();
-    }
-
-    Q_FOREACH(CallEntry *entry, mCallEntries) {
-        if (entry->isActive() && !entry->isHeld()) {
-            call = entry;
+    } else {
+        Q_FOREACH(CallEntry *entry, mCallEntries) {
+            if (entry->isActive() && !entry->isHeld()) {
+                call = entry;
+                break;
+            }
         }
     }
 
-    if (call && (call->isActive() || call->isHeld() || !call->incoming())) {
-        return call;
+    if (!call) {
+        return 0;
     }
 
-    return 0;
+    // incoming calls cant be considered foreground calls
+    if (call->ringing()) {
+        return 0;
+    }
+
+    return call;
 }
 
 QObject *CallManager::backgroundCall() const
