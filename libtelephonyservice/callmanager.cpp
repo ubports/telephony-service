@@ -141,10 +141,6 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
         entry->setVoicemail(true);
     }
 
-    if (channel->isRequested()) {
-        entry->setSpeaker(true);
-    }
-
     mCallEntries.append(entry);
     connect(entry,
             SIGNAL(callEnded()),
