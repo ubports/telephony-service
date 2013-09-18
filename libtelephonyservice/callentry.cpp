@@ -129,7 +129,7 @@ bool CallEntry::incoming() const
 
 bool CallEntry::ringing() const
 {
-    return mChannel->callFlags() & Tp::CallFlagLocallyRinging;
+    return incoming() && (mChannel->callState() == Tp::CallStateInitialised);
 }
 
 QString CallEntry::phoneNumber() const
