@@ -99,7 +99,7 @@ QObject *CallManager::foregroundCall() const
         return 0;
     }
 
-    // incoming calls cant be considered foreground calls
+    // incoming but not yet answered calls cant be considered foreground calls
     if (call->ringing()) {
         return 0;
     }
