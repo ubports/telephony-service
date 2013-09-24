@@ -59,15 +59,15 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
 
     mMetricSent = mMetricManager->add(MetricParameters(SENT_STATISTICS_ID).formatString("<b>%1</b> text messages sent today")
                                         .emptyDataString("No text messages sent today").textDomain(APP_ID).minimum(0.0));
-    mMetricRecv = mMetricManager->add(MetricParameters(RECV_STATISTICS_ID).formatString("<b>%1</b> text messages received today")
+    mMetricReceived = mMetricManager->add(MetricParameters(RECV_STATISTICS_ID).formatString("<b>%1</b> text messages received today")
                                         .emptyDataString("No text messages received today").textDomain(APP_ID).minimum(0.0));
 }
 
-void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
+bool TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
 {
     // do not place notification items for scrollback messages
     if (message.isScrollback() || message.isDeliveryReport() || message.isRescued()) {
-        return;
+        return false;
     }
 
     Tp::ContactPtr contact = message.sender();
@@ -80,7 +80,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, message, contact]() {
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
-            return;
+            return true;
         }
 
         QString displayLabel;
@@ -119,6 +119,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     request->setManager(ContactUtils::sharedManager());
     request->start();
+    return true;
 }
 
 Tp::TextChannelPtr TextChannelObserver::channelFromPath(const QString &path)
@@ -163,8 +164,9 @@ void TextChannelObserver::onTextChannelInvalidated()
 
 void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 {
-    showNotificationForMessage(message);
-    mMetricRecv->increment();
+    if (showNotificationForMessage(message)) {
+        mMetricReceived->increment();
+    }
 }
 
 void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &message)

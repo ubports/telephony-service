@@ -39,7 +39,7 @@ public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr textChannel);
 
 protected:
-    void showNotificationForMessage(const Tp::ReceivedMessage &message);
+    bool showNotificationForMessage(const Tp::ReceivedMessage &message);
     Tp::TextChannelPtr channelFromPath(const QString &path);
 
 protected Q_SLOTS:
@@ -55,7 +55,7 @@ private:
 
     UserMetricsInput::MetricManagerPtr mMetricManager;
     UserMetricsInput::MetricPtr mMetricSent;
-    UserMetricsInput::MetricPtr mMetricRecv;
+    UserMetricsInput::MetricPtr mMetricReceived;
 };
 
 #endif // TEXTCHANNELOBSERVER_H
