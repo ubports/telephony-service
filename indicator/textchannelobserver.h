@@ -25,6 +25,9 @@
 #include <QObject>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
+#include <libusermetricsinput/MetricManager.h>
+
+using namespace UserMetricsInput;
 
 class TextChannelObserver : public QObject
 {
@@ -45,9 +48,14 @@ protected Q_SLOTS:
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
     void onReplyReceived(const QString &phoneNumber, const QString &reply);
     void onMessageRead(const QString &phoneNumber, const QString &encodedMessageId);
+    void onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString);
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
+
+    UserMetricsInput::MetricManagerPtr mMetricManager;
+    UserMetricsInput::MetricPtr mMetricSent;
+    UserMetricsInput::MetricPtr mMetricRecv;
 };
 
 #endif // TEXTCHANNELOBSERVER_H

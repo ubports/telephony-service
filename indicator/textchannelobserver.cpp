@@ -40,8 +40,15 @@ namespace C {
 
 QTCONTACTS_USE_NAMESPACE
 
+const QString APP_ID = QString("telephony-service");
+const QString RECV_STATISTICS_ID = QString("text-messages-received");
+const QString SENT_STATISTICS_ID = QString("text-messages-sent");
+
+using namespace UserMetricsInput;
+
 TextChannelObserver::TextChannelObserver(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    mMetricManager(MetricManager::getInstance())
 {
     connect(MessagingMenu::instance(),
             SIGNAL(replyReceived(QString,QString)),
@@ -49,6 +56,11 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
     connect(MessagingMenu::instance(),
             SIGNAL(messageRead(QString,QString)),
             SLOT(onMessageRead(QString,QString)));
+
+    mMetricSent = mMetricManager->add(MetricParameters(SENT_STATISTICS_ID).formatString("<b>%1</b> text messages sent today")
+                                        .emptyDataString("No text messages sent today").textDomain(APP_ID).minimum(0.0));
+    mMetricRecv = mMetricManager->add(MetricParameters(RECV_STATISTICS_ID).formatString("<b>%1</b> text messages received today")
+                                        .emptyDataString("No text messages received today").textDomain(APP_ID).minimum(0.0));
 }
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
@@ -131,6 +143,9 @@ void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
     connect(textChannel.data(),
             SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
             SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
+    connect(textChannel.data(),
+            SIGNAL(messageSent(Tp::Message,Tp::MessageSendingFlags,QString)),
+            SLOT(onMessageSent(Tp::Message,Tp::MessageSendingFlags,QString)));
 
     mChannels.append(textChannel);
 
@@ -149,6 +164,7 @@ void TextChannelObserver::onTextChannelInvalidated()
 void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     showNotificationForMessage(message);
+    mMetricRecv->increment();
 }
 
 void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
@@ -165,4 +181,9 @@ void TextChannelObserver::onMessageRead(const QString &phoneNumber, const QStrin
 {
     QString messageId(QByteArray::fromHex(encodedMessageId.toUtf8()));
     ChatManager::instance()->acknowledgeMessage(phoneNumber, messageId);
+}
+
+void TextChannelObserver::onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString)
+{
+    mMetricSent->increment();
 }
