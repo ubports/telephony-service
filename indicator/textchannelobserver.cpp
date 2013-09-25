@@ -103,7 +103,6 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     request->setManager(ContactUtils::sharedManager());
     request->start();
-    return;
 }
 
 Tp::TextChannelPtr TextChannelObserver::channelFromPath(const QString &path)
