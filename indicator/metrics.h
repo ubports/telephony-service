@@ -3,6 +3,7 @@
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Ugo Riboni <ugo.riboni@canonical.com>
  *
  * This file is part of telephony-service.
  *
