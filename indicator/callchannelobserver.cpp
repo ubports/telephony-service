@@ -67,7 +67,7 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
         // update the metrics
         Metrics::instance()->increment(incoming ? Metrics::IncomingCalls : Metrics::OutgoingCalls);
         if (activeTimestamp.isValid()) {
-            double minutes = activeTimestamp.secsTo(QDateTime::currentDateTime()) / 60;
+            double minutes = activeTimestamp.secsTo(QDateTime::currentDateTime()) / 60.;
             Metrics::instance()->increment(Metrics::CallDurations, qRound(minutes * 100) / 100);
         }
         break;
