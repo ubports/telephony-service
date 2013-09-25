@@ -63,13 +63,8 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
                                         .emptyDataString("No text messages received today").textDomain(APP_ID).minimum(0.0));
 }
 
-bool TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
+void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
 {
-    // do not place notification items for scrollback messages
-    if (message.isScrollback() || message.isDeliveryReport() || message.isRescued()) {
-        return false;
-    }
-
     Tp::ContactPtr contact = message.sender();
 
     // try to match the contact info
@@ -80,7 +75,7 @@ bool TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, message, contact]() {
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
-            return true;
+            return;
         }
 
         QString displayLabel;
@@ -119,7 +114,7 @@ bool TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     request->setManager(ContactUtils::sharedManager());
     request->start();
-    return true;
+    return;
 }
 
 Tp::TextChannelPtr TextChannelObserver::channelFromPath(const QString &path)
@@ -152,7 +147,11 @@ void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
 
     // notify all the messages from the channel
     Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
-        showNotificationForMessage(message);
+        // do not place notification items for scrollback messages
+        if (!message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
+            showNotificationForMessage(message);
+            mMetricReceived->increment();
+        }
     }
 }
 
@@ -164,7 +163,9 @@ void TextChannelObserver::onTextChannelInvalidated()
 
 void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 {
-    if (showNotificationForMessage(message)) {
+    // do not place notification items for scrollback messages
+    if (!message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
+        showNotificationForMessage(message);
         mMetricReceived->increment();
     }
 }

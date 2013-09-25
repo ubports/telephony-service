@@ -39,7 +39,7 @@ public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr textChannel);
 
 protected:
-    bool showNotificationForMessage(const Tp::ReceivedMessage &message);
+    void showNotificationForMessage(const Tp::ReceivedMessage &message);
     Tp::TextChannelPtr channelFromPath(const QString &path);
 
 protected Q_SLOTS:
