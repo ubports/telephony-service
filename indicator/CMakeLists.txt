@@ -2,6 +2,7 @@
 set(qt_SRCS
     callchannelobserver.cpp
     messagingmenu.cpp
+    metrics.cpp
     textchannelobserver.cpp
     voicemailindicator.cpp
     )

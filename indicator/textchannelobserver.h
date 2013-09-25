@@ -25,9 +25,6 @@
 #include <QObject>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
-#include <libusermetricsinput/MetricManager.h>
-
-using namespace UserMetricsInput;
 
 class TextChannelObserver : public QObject
 {
@@ -52,10 +49,6 @@ protected Q_SLOTS:
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
-
-    UserMetricsInput::MetricManagerPtr mMetricManager;
-    UserMetricsInput::MetricPtr mMetricSent;
-    UserMetricsInput::MetricPtr mMetricReceived;
 };
 
 #endif // TEXTCHANNELOBSERVER_H

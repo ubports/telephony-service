@@ -22,6 +22,7 @@
 #include <libnotify/notify.h>
 #include "textchannelobserver.h"
 #include "messagingmenu.h"
+#include "metrics.h"
 #include "chatmanager.h"
 #include "config.h"
 #include "contactutils.h"
@@ -40,15 +41,8 @@ namespace C {
 
 QTCONTACTS_USE_NAMESPACE
 
-const QString APP_ID = QString("telephony-service");
-const QString RECV_STATISTICS_ID = QString("text-messages-received");
-const QString SENT_STATISTICS_ID = QString("text-messages-sent");
-
-using namespace UserMetricsInput;
-
 TextChannelObserver::TextChannelObserver(QObject *parent) :
-    QObject(parent),
-    mMetricManager(MetricManager::getInstance())
+    QObject(parent)
 {
     connect(MessagingMenu::instance(),
             SIGNAL(replyReceived(QString,QString)),
@@ -56,11 +50,6 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
     connect(MessagingMenu::instance(),
             SIGNAL(messageRead(QString,QString)),
             SLOT(onMessageRead(QString,QString)));
-
-    mMetricSent = mMetricManager->add(MetricParameters(SENT_STATISTICS_ID).formatString("<b>%1</b> text messages sent today")
-                                        .emptyDataString("No text messages sent today").textDomain(APP_ID).minimum(0.0));
-    mMetricReceived = mMetricManager->add(MetricParameters(RECV_STATISTICS_ID).formatString("<b>%1</b> text messages received today")
-                                        .emptyDataString("No text messages received today").textDomain(APP_ID).minimum(0.0));
 }
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
@@ -147,11 +136,7 @@ void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
 
     // notify all the messages from the channel
     Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
-        // do not place notification items for scrollback messages
-        if (!message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
-            showNotificationForMessage(message);
-            mMetricReceived->increment();
-        }
+        onMessageReceived(message);
     }
 }
 
@@ -166,7 +151,7 @@ void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
     // do not place notification items for scrollback messages
     if (!message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
         showNotificationForMessage(message);
-        mMetricReceived->increment();
+        Metrics::instance()->increment(Metrics::ReceivedMessages);
     }
 }
 
@@ -188,5 +173,5 @@ void TextChannelObserver::onMessageRead(const QString &phoneNumber, const QStrin
 
 void TextChannelObserver::onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString)
 {
-    mMetricSent->increment();
+    Metrics::instance()->increment(Metrics::SentMessages);
 }
