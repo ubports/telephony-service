@@ -22,6 +22,7 @@
 #include <libnotify/notify.h>
 #include "textchannelobserver.h"
 #include "messagingmenu.h"
+#include "metrics.h"
 #include "chatmanager.h"
 #include "config.h"
 #include "contactutils.h"
@@ -53,11 +54,6 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
 {
-    // do not place notification items for scrollback messages
-    if (message.isScrollback() || message.isDeliveryReport() || message.isRescued()) {
-        return;
-    }
-
     Tp::ContactPtr contact = message.sender();
 
     // try to match the contact info
@@ -131,12 +127,15 @@ void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
     connect(textChannel.data(),
             SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
             SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
+    connect(textChannel.data(),
+            SIGNAL(messageSent(Tp::Message,Tp::MessageSendingFlags,QString)),
+            SLOT(onMessageSent(Tp::Message,Tp::MessageSendingFlags,QString)));
 
     mChannels.append(textChannel);
 
     // notify all the messages from the channel
     Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
-        showNotificationForMessage(message);
+        onMessageReceived(message);
     }
 }
 
@@ -148,7 +147,11 @@ void TextChannelObserver::onTextChannelInvalidated()
 
 void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 {
-    showNotificationForMessage(message);
+    // do not place notification items for scrollback messages
+    if (!message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
+        showNotificationForMessage(message);
+        Metrics::instance()->increment(Metrics::ReceivedMessages);
+    }
 }
 
 void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
@@ -165,4 +168,9 @@ void TextChannelObserver::onMessageRead(const QString &phoneNumber, const QStrin
 {
     QString messageId(QByteArray::fromHex(encodedMessageId.toUtf8()));
     ChatManager::instance()->acknowledgeMessage(phoneNumber, messageId);
+}
+
+void TextChannelObserver::onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString)
+{
+    Metrics::instance()->increment(Metrics::SentMessages);
 }

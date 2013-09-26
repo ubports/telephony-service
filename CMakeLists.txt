@@ -60,6 +60,7 @@ pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
 pkg_check_modules(MESSAGING_MENU REQUIRED messaging-menu)
 pkg_check_modules(GSETTINGS REQUIRED gsettings-qt)
+pkg_check_modules(UserMetrics REQUIRED libusermetricsinput-1)
 
 # Check if the messaging menu has the message header
 set(CMAKE_REQUIRED_INCLUDES ${MESSAGING_MENU_INCLUDE_DIRS})

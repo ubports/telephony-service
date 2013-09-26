@@ -24,6 +24,7 @@
 
 #include "applicationutils.h"
 #include "callchannelobserver.h"
+#include "metrics.h"
 #include "telepathyhelper.h"
 #include "textchannelobserver.h"
 #include "voicemailindicator.h"
@@ -68,6 +69,9 @@ int main(int argc, char **argv)
     // we don't need to call anything on the indicator, it will work by itself
     VoiceMailIndicator voiceMailIndicator;
     Q_UNUSED(voiceMailIndicator);
+
+    // instanciate the metrics helper
+    Metrics::instance();
 
     return app.exec();
 }

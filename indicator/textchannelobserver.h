@@ -45,6 +45,7 @@ protected Q_SLOTS:
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
     void onReplyReceived(const QString &phoneNumber, const QString &reply);
     void onMessageRead(const QString &phoneNumber, const QString &encodedMessageId);
+    void onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString);
 
 private:
     QList<Tp::TextChannelPtr> mChannels;

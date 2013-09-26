@@ -21,6 +21,8 @@
 
 #include "callchannelobserver.h"
 #include "messagingmenu.h"
+#include "metrics.h"
+#include "telepathyhelper.h"
 #include <TelepathyQt/Contact>
 
 CallChannelObserver::CallChannelObserver(QObject *parent) :
@@ -51,6 +53,9 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
         return;
     }
 
+    bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+    QDateTime activeTimestamp = channel->property("activeTimestamp").toDateTime();
+
     switch (state) {
     case Tp::CallStateEnded:
         Q_EMIT callEnded(channel);
@@ -58,6 +63,13 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
         // FIXME: handle conf call
         MessagingMenu::instance()->addCall(channel->targetContact()->id(), QDateTime::currentDateTime());
         mChannels.removeOne(channel);
+
+        // update the metrics
+        Metrics::instance()->increment(incoming ? Metrics::IncomingCalls : Metrics::OutgoingCalls);
+        if (activeTimestamp.isValid()) {
+            double minutes = activeTimestamp.secsTo(QDateTime::currentDateTime()) / 60.;
+            Metrics::instance()->increment(Metrics::CallDurations, qRound(minutes * 100) / 100);
+        }
         break;
     case Tp::CallStateActive:
         channel->setProperty("activeTimestamp", QDateTime::currentDateTime());

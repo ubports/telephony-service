@@ -2,6 +2,7 @@
 set(qt_SRCS
     callchannelobserver.cpp
     messagingmenu.cpp
+    metrics.cpp
     textchannelobserver.cpp
     voicemailindicator.cpp
     )
@@ -15,6 +16,7 @@ include_directories(
     ${GSETTINGS_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${UserMetrics_INCLUDE_DIRS}
     )
 
 link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
@@ -27,6 +29,7 @@ target_link_libraries(telephony-service-indicator
     ${NOTIFY_LIBRARIES}
     ${MESSAGING_MENU_LIBRARIES}
     ${GSETTINGS_LIBRARIES}
+    ${UserMetrics_LIBRARIES}
     telephonyservice
     )
 
