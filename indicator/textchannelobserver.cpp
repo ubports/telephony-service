@@ -73,13 +73,13 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
             displayLabel = ContactUtils::formatContactName(contact);
-            avatar = contact.detail<QContactAvatar>().imageUrl().toLocalFile();
+            avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
         }
 
         QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(displayLabel.isEmpty() ? contact->alias() : displayLabel);
 
         if (avatar.isEmpty()) {
-            avatar = telephonyServiceDir() + "/assets/avatar-default@18.png";
+            avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
         }
 
         qDebug() << title << avatar;
