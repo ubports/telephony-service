@@ -1,3 +1,15 @@
+telephony-service (0.1+13.10.20131001.4-0ubuntu1) saucy; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Handle exceptions that might occur as a result of metric service
+    usage.
+  * Properly encode the contact avatar image path. (LP: #1224095)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 749
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 01 Oct 2013 21:20:46 +0000
+
 telephony-service (0.1+13.10.20130926.1-0ubuntu1) saucy; urgency=low
 
   [ Gustavo Pichorim Boiko ]
