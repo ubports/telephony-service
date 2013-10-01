@@ -60,7 +60,11 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     QContactFetchRequest *request = new QContactFetchRequest(this);
     request->setFilter(QContactPhoneNumber::match(contact->id()));
 
-    // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
+    // add the message to the messaging menu (use hex format to avoid invalid characters)
+    QByteArray token(message.messageToken().toUtf8());
+    MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), message.text());
+
+    // place the notify-notification item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, message, contact]() {
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
@@ -95,9 +99,6 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
         g_object_unref(G_OBJECT(notification));
 
-        // and add the message to the messaging menu (use hex format to avoid invalid characters)
-        QByteArray token(message.messageToken().toUtf8());
-        MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), message.text());
         Ringtone::instance()->playIncomingMessageSound();
     });
 
