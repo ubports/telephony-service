@@ -126,6 +126,10 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
                                         data,
                                         delete_notification_data);
 
+        notify_notification_set_hint_string(notification,
+                                            "x-canonical-switch-to-application",
+                                            "true");
+
         GError *error = NULL;
         if (!notify_notification_show(notification, &error)) {
             qWarning() << "Failed to show message notification:" << error->message;
