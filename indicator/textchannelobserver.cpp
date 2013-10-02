@@ -88,7 +88,11 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     QContactFetchRequest *request = new QContactFetchRequest(this);
     request->setFilter(QContactPhoneNumber::match(contact->id()));
 
-    // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
+    // add the message to the messaging menu (use hex format to avoid invalid characters)
+    QByteArray token(message.messageToken().toUtf8());
+    MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), message.text());
+
+    // place the notify-notification item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, message, contact]() {
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
@@ -101,13 +105,13 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
             displayLabel = ContactUtils::formatContactName(contact);
-            avatar = contact.detail<QContactAvatar>().imageUrl().toLocalFile();
+            avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
         }
 
         QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(displayLabel.isEmpty() ? contact->alias() : displayLabel);
 
         if (avatar.isEmpty()) {
-            avatar = telephonyServiceDir() + "/assets/avatar-default@18.png";
+            avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
         }
 
         qDebug() << title << avatar;
@@ -136,9 +140,6 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
             g_error_free (error);
         }
 
-        // and add the message to the messaging menu (use hex format to avoid invalid characters)
-        QByteArray token(message.messageToken().toUtf8());
-        MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), message.text());
         Ringtone::instance()->playIncomingMessageSound();
     });
 

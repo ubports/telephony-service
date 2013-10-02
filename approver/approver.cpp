@@ -211,7 +211,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
     data->channel = channel;
 
     QString title = C::gettext("Unknown caller");
-    QString icon = telephonyServiceDir() + "/assets/avatar-default@18.png";
+    QString icon = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
     QString body;
 
     if (!contact->id().isEmpty()) {
@@ -261,7 +261,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
             // use the first match
             QContact contact = request->contacts().at(0);
             QString displayLabel = ContactUtils::formatContactName(contact);
-            QString avatar = contact.detail<QContactAvatar>().imageUrl().toString();
+            QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
 
             if (displayLabel.isEmpty()) {
                 displayLabel = title;

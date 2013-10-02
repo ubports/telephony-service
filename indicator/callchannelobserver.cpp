@@ -54,14 +54,18 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
     }
 
     bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+    bool missed = incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer;
     QDateTime activeTimestamp = channel->property("activeTimestamp").toDateTime();
 
     switch (state) {
     case Tp::CallStateEnded:
         Q_EMIT callEnded(channel);
         // add the missed call to the messaging menu
-        // FIXME: handle conf call
-        MessagingMenu::instance()->addCall(channel->targetContact()->id(), QDateTime::currentDateTime());
+        if (missed) {
+            // FIXME: handle conf call
+            MessagingMenu::instance()->addCall(channel->targetContact()->id(), QDateTime::currentDateTime());
+        }
+
         mChannels.removeOne(channel);
 
         // update the metrics
