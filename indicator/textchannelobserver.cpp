@@ -21,6 +21,7 @@
 
 #include <libnotify/notify.h>
 #include "textchannelobserver.h"
+#include "applicationutils.h"
 #include "messagingmenu.h"
 #include "metrics.h"
 #include "chatmanager.h"
@@ -40,6 +41,33 @@ namespace C {
 }
 
 QTCONTACTS_USE_NAMESPACE
+
+// notification handling
+
+class NotificationData {
+public:
+    QString phoneNumber;
+};
+
+void notification_action(NotifyNotification* notification, char *action, gpointer data)
+{
+    Q_UNUSED(notification);
+    Q_UNUSED(action);
+
+    NotificationData *notificationData = (NotificationData*) data;
+    if (notificationData != NULL) {
+        // launch the messaging-app to show the message
+        ApplicationUtils::instance()->switchToMessagingApp(QString("messages://%1").arg(notificationData->phoneNumber));
+    }
+    g_object_unref(notification);
+}
+
+void delete_notification_data(gpointer data)
+{
+    if (data != NULL) {
+        delete (NotificationData*) data;
+    }
+}
 
 TextChannelObserver::TextChannelObserver(QObject *parent) :
     QObject(parent)
@@ -91,13 +119,26 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
                                                                    message.text().toStdString().c_str(),
                                                                    avatar.toStdString().c_str());
+
+        // add the callback action
+        NotificationData *data = new NotificationData();
+        data->phoneNumber = contact->id();
+        notify_notification_add_action (notification,
+                                        "notification_action",
+                                        C::gettext("View message"),
+                                        notification_action,
+                                        data,
+                                        delete_notification_data);
+
+        notify_notification_set_hint_string(notification,
+                                            "x-canonical-switch-to-application",
+                                            "true");
+
         GError *error = NULL;
         if (!notify_notification_show(notification, &error)) {
             qWarning() << "Failed to show message notification:" << error->message;
             g_error_free (error);
         }
-
-        g_object_unref(G_OBJECT(notification));
 
         Ringtone::instance()->playIncomingMessageSound();
     });
