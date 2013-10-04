@@ -24,10 +24,6 @@ TestCase {
     id: contextPropertiesTest
     name: "ContextPropertiesTest"
 
-    function test_applicationUtils() {
-        verify(applicationUtils != undefined, "applicationUtils is not defined");
-    }
-
     function test_telepathyHelper() {
         verify(telepathyHelper != undefined, "telepathyHelper is not defined");
     }

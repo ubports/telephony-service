@@ -21,7 +21,6 @@
  */
 
 #include "components.h"
-#include "applicationutils.h"
 #include "telepathyhelper.h"
 #include "callmanager.h"
 #include "channelobserver.h"
@@ -50,7 +49,6 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
             SIGNAL(accountReady()),
             SLOT(onAccountReady()));
 
-    mRootContext->setContextProperty("applicationUtils", ApplicationUtils::instance());
     mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", ChatManager::instance());
     mRootContext->setContextProperty("callManager", CallManager::instance());

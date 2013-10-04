@@ -21,7 +21,6 @@
 
 #include "approver.h"
 #include "approverdbus.h"
-#include "applicationutils.h"
 #include "chatmanager.h"
 #include "config.h"
 #include "contactutils.h"
@@ -31,6 +30,7 @@
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
 #include <QDebug>
+#include <QDesktopServices>
 
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/ChannelClassSpec>
@@ -307,7 +307,7 @@ void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
 
     // and then launch the dialer-app
-    ApplicationUtils::instance()->switchToDialerApp();
+    QDesktopServices::openUrl(QUrl("application:///dialer-app.desktop"));
 
     mDispatchOps.removeAll(dispatchOp);
 }

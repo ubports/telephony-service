@@ -31,8 +31,6 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/ChannelDispatchOperation>
 
-class ApplicationUtils;
-
 class Approver : public QObject, public Tp::AbstractClientApprover
 {
     Q_OBJECT

@@ -29,35 +29,9 @@
 #include <QProcess>
 #include <TelepathyQt/Constants>
 
-#ifdef USE_UBUNTU_PLATFORM_API
-#include <ubuntu/ui/ubuntu_ui_session_service.h>
-#endif
-
-#define ADDRESSBOOK_APP_SERVICE "com.canonical.AddressBookApp"
-#define DIALER_APP_SERVICE "com.canonical.DialerApp"
-#define MESSAGING_APP_SERVICE "com.canonical.MessagingApp"
-
 ApplicationUtils::ApplicationUtils(QObject *parent) :
     QObject(parent)
 {
-    // Setup a DBus watcher to check if the telephony-service is running
-    mApplicationWatcher.setConnection(QDBusConnection::sessionBus());
-    mApplicationWatcher.setWatchMode(QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
-    mApplicationWatcher.addWatchedService(ADDRESSBOOK_APP_SERVICE);
-    mApplicationWatcher.addWatchedService(DIALER_APP_SERVICE);
-    mApplicationWatcher.addWatchedService(MESSAGING_APP_SERVICE);
-
-    connect(&mApplicationWatcher,
-            SIGNAL(serviceRegistered(const QString&)),
-            SLOT(onServiceRegistered(const QString&)));
-    connect(&mApplicationWatcher,
-            SIGNAL(serviceUnregistered(const QString&)),
-            SLOT(onServiceUnregistered(const QString&)));
-
-
-    mAddressbookAppRunning = checkApplicationRunning(ADDRESSBOOK_APP_SERVICE);
-    mDialerAppRunning = checkApplicationRunning(DIALER_APP_SERVICE);
-    mMessagingAppRunning = checkApplicationRunning(MESSAGING_APP_SERVICE);
 }
 
 ApplicationUtils *ApplicationUtils::instance()
@@ -65,128 +39,6 @@ ApplicationUtils *ApplicationUtils::instance()
     static ApplicationUtils *self = new ApplicationUtils();
     return self;
 }
-
-void ApplicationUtils::onServiceRegistered(const QString &serviceName)
-{
-    if (serviceName == ADDRESSBOOK_APP_SERVICE) {
-        mAddressbookAppRunning = true;
-        Q_EMIT addressbookAppRunningChanged(true);
-    } else if (serviceName == DIALER_APP_SERVICE) {
-        mDialerAppRunning = true;
-        Q_EMIT dialerAppRunningChanged(true);
-    } else if (serviceName == MESSAGING_APP_SERVICE) {
-        mMessagingAppRunning = true;
-        Q_EMIT messagingAppRunningChanged(true);
-    }
-}
-
-void ApplicationUtils::onServiceUnregistered(const QString &serviceName)
-{
-    if (serviceName == ADDRESSBOOK_APP_SERVICE) {
-        mAddressbookAppRunning = false;
-        Q_EMIT addressbookAppRunningChanged(false);
-    } else if (serviceName == DIALER_APP_SERVICE) {
-        mDialerAppRunning = false;
-        Q_EMIT dialerAppRunningChanged(false);
-    } else if (serviceName == MESSAGING_APP_SERVICE) {
-        mMessagingAppRunning = false;
-        Q_EMIT messagingAppRunningChanged(false);
-    }
-}
-
-void ApplicationUtils::switchToAddressbookApp(const QString &argument)
-{
-    qDebug() << "Starting address-book-app...";
-#ifdef USE_UBUNTU_PLATFORM_API
-    ubuntu_ui_session_trigger_switch_to_well_known_application(ADDRESSBOOK_APP);
-#else
-    if (!mAddressbookAppRunning) {
-        QProcess::startDetached("address-book-app");
-    }
-#endif
-
-    // block until the app is registered
-    while (!mAddressbookAppRunning) {
-        QCoreApplication::processEvents();
-    }
-
-    if (!argument.isEmpty()) {
-        QDBusInterface addressbookApp("com.canonical.AddressBookApp",
-                                    "/com/canonical/AddressBookApp",
-                                    "com.canonical.AddressBookApp");
-        addressbookApp.call("SendAppMessage", argument);
-    }
-
-    qDebug() << "... succeeded!";
-}
-
-void ApplicationUtils::switchToDialerApp(const QString &argument)
-{
-    qDebug() << "Starting dialer-app...";
-#ifdef USE_UBUNTU_PLATFORM_API
-    ubuntu_ui_session_trigger_switch_to_well_known_application(DIALER_APP);
-#else
-    if (!mDialerAppRunning) {
-        QProcess::startDetached("dialer-app");
-    }
-#endif
-
-    // block until the app is registered
-    while (!mDialerAppRunning) {
-        QCoreApplication::processEvents();
-    }
-
-    if (!argument.isEmpty()) {
-        QDBusInterface dialerApp("com.canonical.DialerApp",
-                                 "/com/canonical/DialerApp",
-                                 "com.canonical.DialerApp");
-        dialerApp.call("SendAppMessage", argument);
-    }
-
-    qDebug() << "... succeeded!";
-}
-
-void ApplicationUtils::switchToMessagingApp(const QString &argument)
-{
-    qDebug() << "Starting messaging-app...";
-#ifdef USE_UBUNTU_PLATFORM_API
-    ubuntu_ui_session_trigger_switch_to_well_known_application(MESSAGING_APP);
-#else
-    if (!mMessagingAppRunning) {
-        QProcess::startDetached("messaging-app");
-    }
-#endif
-
-    // block until the app is registered
-    while (!mMessagingAppRunning) {
-        QCoreApplication::processEvents();
-    }
-
-    if (!argument.isEmpty()) {
-        QDBusInterface messagingApp("com.canonical.MessagingApp",
-                                    "/com/canonical/MessagingApp",
-                                    "com.canonical.MessagingApp");
-        messagingApp.call("SendAppMessage", argument);
-    }
-
-    qDebug() << "... succeeded!";
-}
-
-bool ApplicationUtils::addressbookAppRunning()
-{
-    return mAddressbookAppRunning;
-}
-
-bool ApplicationUtils::dialerAppRunning()
-{
-    return mDialerAppRunning;
-}
-
-bool ApplicationUtils::messagingAppRunning()
-{
-    return mMessagingAppRunning;
-}
-
 
 bool ApplicationUtils::checkApplicationRunning(const QString &serviceName)
 {
