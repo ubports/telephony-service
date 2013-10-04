@@ -1,3 +1,18 @@
+telephony-service (0.1+13.10.20131004.1-0ubuntu1) saucy; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Improve the placing of items in the messaging menu by addressing the
+    following points: - Add messages to the messaging menu even before
+    the contact matching happens for the OSD notifications - Add only
+    missed calls to the messaging menu (instead of adding all calls).
+    (LP: #1220848)
+  * Make it possible to click in the OSD notifications. (LP: #1227718)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 752
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 04 Oct 2013 07:23:24 +0000
+
 telephony-service (0.1+13.10.20131001.4-0ubuntu1) saucy; urgency=low
 
   [ Gustavo Pichorim Boiko ]
