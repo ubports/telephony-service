@@ -62,14 +62,6 @@ pkg_check_modules(MESSAGING_MENU REQUIRED messaging-menu)
 pkg_check_modules(GSETTINGS REQUIRED gsettings-qt)
 pkg_check_modules(UserMetrics REQUIRED libusermetricsinput-1)
 
-# Check if the messaging menu has the message header
-set(CMAKE_REQUIRED_INCLUDES ${MESSAGING_MENU_INCLUDE_DIRS})
-check_include_file("messaging-menu-message.h" HAVE_MESSAGING_MENU_MESSAGE)
-
-if (HAVE_MESSAGING_MENU_MESSAGE)
-    add_definitions(-DHAVE_MESSAGING_MENU_MESSAGE)
-endif (HAVE_MESSAGING_MENU_MESSAGE)
-
 add_definitions(-DQT_NO_KEYWORDS)
 
 include_directories(
