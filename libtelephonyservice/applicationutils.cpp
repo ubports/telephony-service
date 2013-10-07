@@ -50,3 +50,7 @@ bool ApplicationUtils::checkApplicationRunning(const QString &serviceName)
 
     return result;
 }
+
+void ApplicationUtils::openUrl(const QUrl &url)
+{
+}

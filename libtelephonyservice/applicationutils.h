@@ -24,6 +24,7 @@
 
 #include <QObject>
 #include <QDBusServiceWatcher>
+#include <QUrl>
 
 class ApplicationUtils : public QObject
 {
@@ -32,6 +33,7 @@ class ApplicationUtils : public QObject
 public:
     static ApplicationUtils *instance();
     static bool checkApplicationRunning(const QString &serviceName);
+    static void openUrl(const QUrl &url);
 
 private:
     explicit ApplicationUtils(QObject *parent = 0);
