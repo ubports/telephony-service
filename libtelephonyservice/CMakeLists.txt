@@ -15,8 +15,12 @@ include_directories(
     ${GSETTINGS_INCLUDE_DIRS}
     )
 
+if (USE_UBUNTU_PLATFORM_API)
+    set(UBUNTU_APP_LIB "-lubuntu_application_api")
+endif (USE_UBUNTU_PLATFORM_API)
+
 add_library(telephonyservice STATIC ${library_SRCS} ${library_HDRS})
-target_link_libraries(telephonyservice ${TP_QT5_LIBRARIES} ${GSETTINGS_LIBRARIES})
+target_link_libraries(telephonyservice ${TP_QT5_LIBRARIES} ${UBUNTU_APP_LIB} ${GSETTINGS_LIBRARIES})
 
 qt5_use_modules(telephonyservice Contacts Core DBus Multimedia Qml Quick)
 

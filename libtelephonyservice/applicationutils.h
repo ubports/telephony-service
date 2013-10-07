@@ -33,7 +33,7 @@ class ApplicationUtils : public QObject
 public:
     static ApplicationUtils *instance();
     static bool checkApplicationRunning(const QString &serviceName);
-    static void openUrl(const QUrl &url);
+    static bool openUrl(const QUrl &url);
 
 private:
     explicit ApplicationUtils(QObject *parent = 0);

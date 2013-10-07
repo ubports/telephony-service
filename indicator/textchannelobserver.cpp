@@ -20,6 +20,7 @@
  */
 
 #include <libnotify/notify.h>
+#include "applicationutils.h"
 #include "textchannelobserver.h"
 #include "messagingmenu.h"
 #include "metrics.h"
@@ -33,7 +34,6 @@
 #include <QContactAvatar>
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
-#include <QDesktopServices>
 #include <QImage>
 
 namespace C {
@@ -57,7 +57,7 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
     NotificationData *notificationData = (NotificationData*) data;
     if (notificationData != NULL) {
         // launch the messaging-app to show the message
-        QDesktopServices::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(notificationData->phoneNumber))));
+        ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(notificationData->phoneNumber))));
     }
     g_object_unref(notification);
 }

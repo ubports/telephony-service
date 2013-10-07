@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "applicationutils.h"
 #include "config.h"
 #include "contactutils.h"
 #include "phoneutils.h"
@@ -28,7 +29,6 @@
 #include <QContactPhoneNumber>
 #include <QDateTime>
 #include <QDebug>
-#include <QDesktopServices>
 #include <gio/gio.h>
 
 namespace C {
@@ -319,14 +319,14 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
 void MessagingMenu::showMessage(const QString &messageId)
 {
     QString phoneNumber = mMessages[messageId];
-    QDesktopServices::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(phoneNumber))));
+    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(phoneNumber))));
 }
 
 void MessagingMenu::callBack(const QString &messageId)
 {
     QString phoneNumber = callFromMessageId(messageId).number;
     qDebug() << "TelephonyService/MessagingMenu: Calling back" << phoneNumber;
-    QDesktopServices::openUrl(QString("tel:///%1").arg(QString(QUrl::toPercentEncoding(phoneNumber))));
+    ApplicationUtils::openUrl(QString("tel:///%1").arg(QString(QUrl::toPercentEncoding(phoneNumber))));
 }
 
 void MessagingMenu::replyWithMessage(const QString &messageId, const QString &reply)
@@ -339,7 +339,7 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
     qDebug() << "TelephonyService/MessagingMenu: Calling voicemail for messageId" << messageId;
-    QDesktopServices::openUrl(QUrl("tel:///voicemail"));
+    ApplicationUtils::openUrl(QUrl("tel:///voicemail"));
 }
 
 Call MessagingMenu::callFromMessageId(const QString &messageId)

@@ -29,6 +29,11 @@
 #include <QProcess>
 #include <TelepathyQt/Constants>
 
+#ifdef USE_UBUNTU_PLATFORM_API
+#include <ubuntu/application/url_dispatcher/service.h>
+#include <ubuntu/application/url_dispatcher/session.h>
+#endif
+
 ApplicationUtils::ApplicationUtils(QObject *parent) :
     QObject(parent)
 {
@@ -51,6 +56,16 @@ bool ApplicationUtils::checkApplicationRunning(const QString &serviceName)
     return result;
 }
 
-void ApplicationUtils::openUrl(const QUrl &url)
+bool ApplicationUtils::openUrl(const QUrl &url)
 {
+#ifdef USE_UBUNTU_PLATFORM_API
+    UAUrlDispatcherSession* session = ua_url_dispatcher_session();
+    if (!session)
+        return false;
+
+    ua_url_dispatcher_session_open(session, url.toEncoded().constData(), NULL, NULL);
+
+    free(session);
+#endif
+    return true;
 }
