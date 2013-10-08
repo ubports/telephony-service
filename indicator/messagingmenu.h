@@ -54,10 +54,8 @@ public:
 
     void addCall(const QString &phoneNumber, const QDateTime &timestamp);
 
-#ifdef HAVE_MESSAGING_MENU_MESSAGE
     static void messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
     static void callsActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
-#endif
 
     void showVoicemailEntry(int count);
     void hideVoicemailEntry();
