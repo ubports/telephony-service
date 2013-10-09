@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "config.h"
 #include "applicationutils.h"
+#include "config.h"
 #include "contactutils.h"
 #include "phoneutils.h"
 #include "messagingmenu.h"
@@ -304,14 +304,14 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
 void MessagingMenu::showMessage(const QString &messageId)
 {
     QString phoneNumber = mMessages[messageId];
-    ApplicationUtils::instance()->switchToMessagingApp(QString("messages://%1").arg(phoneNumber));
+    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(phoneNumber))));
 }
 
 void MessagingMenu::callBack(const QString &messageId)
 {
     QString phoneNumber = callFromMessageId(messageId).number;
     qDebug() << "TelephonyService/MessagingMenu: Calling back" << phoneNumber;
-    ApplicationUtils::instance()->switchToDialerApp(QString("call://%1").arg(phoneNumber));
+    ApplicationUtils::openUrl(QString("tel:///%1").arg(QString(QUrl::toPercentEncoding(phoneNumber))));
 }
 
 void MessagingMenu::replyWithMessage(const QString &messageId, const QString &reply)
@@ -324,7 +324,7 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
     qDebug() << "TelephonyService/MessagingMenu: Calling voicemail for messageId" << messageId;
-    ApplicationUtils::instance()->switchToDialerApp("voicemail://");
+    ApplicationUtils::openUrl(QUrl("tel:///voicemail"));
 }
 
 Call MessagingMenu::callFromMessageId(const QString &messageId)

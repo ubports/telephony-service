@@ -20,8 +20,8 @@
  */
 
 #include <libnotify/notify.h>
-#include "textchannelobserver.h"
 #include "applicationutils.h"
+#include "textchannelobserver.h"
 #include "messagingmenu.h"
 #include "metrics.h"
 #include "chatmanager.h"
@@ -57,7 +57,7 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
     NotificationData *notificationData = (NotificationData*) data;
     if (notificationData != NULL) {
         // launch the messaging-app to show the message
-        ApplicationUtils::instance()->switchToMessagingApp(QString("messages://%1").arg(notificationData->phoneNumber));
+        ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(notificationData->phoneNumber))));
     }
     g_object_unref(notification);
 }

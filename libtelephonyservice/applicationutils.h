@@ -24,45 +24,19 @@
 
 #include <QObject>
 #include <QDBusServiceWatcher>
+#include <QUrl>
 
 class ApplicationUtils : public QObject
 {
     Q_OBJECT
-    Q_ENUMS(Application)
-    Q_PROPERTY(bool addressbookAppRunning READ addressbookAppRunning NOTIFY addressbookAppRunningChanged)
-    Q_PROPERTY(bool dialerAppRunning READ dialerAppRunning NOTIFY dialerAppRunningChanged)
-    Q_PROPERTY(bool messagingAppRunning READ messagingAppRunning NOTIFY messagingAppRunningChanged)
 
 public:
     static ApplicationUtils *instance();
-
-    Q_INVOKABLE void switchToAddressbookApp(const QString &argument = QString::null);
-    Q_INVOKABLE void switchToDialerApp(const QString &argument = QString::null);
-    Q_INVOKABLE void switchToMessagingApp(const QString &argument = QString::null);
-
-    bool addressbookAppRunning();
-    bool dialerAppRunning();
-    bool messagingAppRunning();
     static bool checkApplicationRunning(const QString &serviceName);
-
-Q_SIGNALS:
-    void addressbookAppRunningChanged(bool running);
-    void dialerAppRunningChanged(bool running);
-    void messagingAppRunningChanged(bool running);
-
-
-protected Q_SLOTS:
-    void onServiceRegistered(const QString &serviceName);
-    void onServiceUnregistered(const QString &serviceName);
+    static bool openUrl(const QUrl &url);
 
 private:
     explicit ApplicationUtils(QObject *parent = 0);
-
-    QDBusServiceWatcher mApplicationWatcher;
-    bool mAddressbookAppRunning;
-    bool mDialerAppRunning;
-    bool mMessagingAppRunning;
-
 };
 
 #endif // APPLICATIONUTILS_H
