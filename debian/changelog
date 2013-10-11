@@ -1,3 +1,16 @@
+telephony-service (0.1+13.10.20131011-0ubuntu1) saucy; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Make the existence of messaging-menu-message.h mandatory, failing
+    the build if it is not there.
+  * Use the URL dispatcher to invoke the dialer and messaging apps. (LP:
+    #1234903)
+
+  [ Ubuntu daily release ]
+  * Automatic snapshot from revision 755
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 11 Oct 2013 08:47:29 +0000
+
 telephony-service (0.1+13.10.20131004.1-0ubuntu1) saucy; urgency=low
 
   [ Gustavo Pichorim Boiko ]
