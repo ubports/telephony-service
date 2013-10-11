@@ -34,7 +34,7 @@ public:
     QString number;
     int count;
     QString contactAlias;
-    QString contactIcon;
+    QUrl contactIcon;
     QString messageId;
 
     bool operator==(const Call &other) {
