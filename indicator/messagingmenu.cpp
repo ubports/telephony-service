@@ -58,7 +58,7 @@ MessagingMenu::MessagingMenu(QObject *parent) :
 void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text)
 {
     // try to get a contact for that phone number
-    QString iconPath = telephonyServiceDir() + "/assets/avatar-default@18.png";
+    QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
     QString contactAlias = phoneNumber;
 
     // try to match the contact info
@@ -74,12 +74,12 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
         }
 
         QString displayLabel;
-        QString avatar;
+        QUrl avatar;
 
         if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
             displayLabel = ContactUtils::formatContactName(contact);
-            avatar = contact.detail<QContactAvatar>().imageUrl().toString();
+            avatar = contact.detail<QContactAvatar>().imageUrl();
         }
 
         if (displayLabel.isEmpty()) {
@@ -90,7 +90,7 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
             avatar = iconPath;
         }
 
-        GFile *file = g_file_new_for_path(avatar.toUtf8().data());
+        GFile *file = g_file_new_for_uri(avatar.toString().toUtf8().data());
         GIcon *icon = g_file_icon_new(file);
         MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
                                                                    icon,
@@ -147,7 +147,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
 
     if (!found) {
         call.contactAlias = phoneNumber;
-        call.contactIcon = telephonyServiceDir() + "/assets/avatar-default@18.png";
+        call.contactIcon = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
         call.number = phoneNumber;
         call.count = 0;
     }
@@ -172,7 +172,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
         if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
             QString displayLabel = ContactUtils::formatContactName(contact);
-            QString avatar = contact.detail<QContactAvatar>().imageUrl().toLocalFile();
+            QUrl avatar = contact.detail<QContactAvatar>().imageUrl();
 
             if (!displayLabel.isEmpty()) {
                 newCall.contactAlias = displayLabel;
@@ -183,7 +183,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
             }
         }
 
-        GFile *file = g_file_new_for_path(call.contactIcon.toUtf8().data());
+        GFile *file = g_file_new_for_uri(newCall.contactIcon.toString().toUtf8().data());
         GIcon *icon = g_file_icon_new(file);
         MessagingMenuMessage *message = messaging_menu_message_new(newCall.number.toUtf8().data(),
                                                                    icon,
