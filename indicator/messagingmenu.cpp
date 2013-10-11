@@ -183,7 +183,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
             }
         }
 
-        GFile *file = g_file_new_for_path(call.contactIcon.toUtf8().data());
+        GFile *file = g_file_new_for_path(newCall.contactIcon.toUtf8().data());
         GIcon *icon = g_file_icon_new(file);
         MessagingMenuMessage *message = messaging_menu_message_new(newCall.number.toUtf8().data(),
                                                                    icon,
