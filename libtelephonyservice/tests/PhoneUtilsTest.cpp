@@ -49,6 +49,9 @@ void PhoneUtilsTest::testComparePhoneNumbers_data()
     QTest::newRow("both numbers with semicolon") << "22222222;1" << "22222222;2" << true;
     QTest::newRow("short/emergency numbers") << "190" << "190" << true;
     QTest::newRow("different numbers") << "12345678" << "1234567" << false;
+    QTest::newRow("both non phone numbers") << "abcdefg" << "abcdefg" << true;
+    QTest::newRow("different non phone numbers") << "abcdefg" << "bcdefg" << false;
+    QTest::newRow("phone number and custom string") << "abc12345678" << "12345678" << false;
     // FIXME: check what other cases we need to test here"
 }
 
@@ -58,7 +61,7 @@ void PhoneUtilsTest::testComparePhoneNumbers()
     QFETCH(QString, number2);
     QFETCH(bool, expectedResult);
 
-    bool result = PhoneUtils::comparePhoneNumbers(number1, number2);
+    bool result = PhoneUtils::isSameContact(number1, number2);
     QCOMPARE(result, expectedResult);
 }
 

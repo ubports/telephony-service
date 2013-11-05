@@ -202,7 +202,7 @@ Tp::CallChannelPtr CallHandler::existingCall(const QString &phoneNumber)
 {
     Tp::CallChannelPtr channel;
     Q_FOREACH(const Tp::CallChannelPtr &ch, mCallChannels) {
-        if (PhoneUtils::comparePhoneNumbers(ch->targetContact()->id(), phoneNumber)) {
+        if (PhoneUtils::isSameContact(ch->targetContact()->id(), phoneNumber)) {
             channel = ch;
             break;
         }

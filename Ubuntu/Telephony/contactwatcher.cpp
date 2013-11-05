@@ -171,7 +171,7 @@ void ContactWatcher::resultsAvailable()
         mAvatar = QContactAvatar(contact.detail(QContactDetail::TypeAvatar)).imageUrl().toString();
         mAlias = ContactUtils::formatContactName(contact);
         Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
-            if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mPhoneNumber)) {
+            if (PhoneUtils::isSameContact(phoneNumber.number(), mPhoneNumber)) {
                 mPhoneNumberSubTypes = phoneNumber.subTypes();
                 mPhoneNumberContexts = phoneNumber.contexts();
             }
