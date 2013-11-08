@@ -27,11 +27,11 @@ class PhoneUtilsTest : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
-    void testComparePhoneNumbers_data();
-    void testComparePhoneNumbers();
+    void testIsSameContact_data();
+    void testIsSameContact();
 };
 
-void PhoneUtilsTest::testComparePhoneNumbers_data()
+void PhoneUtilsTest::testIsSameContact_data()
 {
     QTest::addColumn<QString>("number1");
     QTest::addColumn<QString>("number2");
@@ -55,7 +55,7 @@ void PhoneUtilsTest::testComparePhoneNumbers_data()
     // FIXME: check what other cases we need to test here"
 }
 
-void PhoneUtilsTest::testComparePhoneNumbers()
+void PhoneUtilsTest::testIsSameContact()
 {
     QFETCH(QString, number1);
     QFETCH(QString, number2);
