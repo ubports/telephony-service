@@ -34,9 +34,22 @@ bool PhoneUtils::comparePhoneNumbers(const QString &number1, const QString &numb
 
 bool PhoneUtils::isSameContact(const QString &a, const QString &b)
 {
-    if (PhoneNumberUtils::isPhoneNumber(a) && PhoneNumberUtils::isPhoneNumber(b)) {
+    if (isPhoneNumber(a) && isPhoneNumber(b)) {
         return PhoneNumberUtils::compareLoosely(a, b);
     }
     // if at least one of the id's is not a phone number, then perform a simple string comparison
     return a == b;
 }
+
+bool PhoneUtils::isPhoneNumber(const QString &identifier) {
+    // remove all non diable digits
+    QString finalNumber = QString(identifier).replace(QRegExp("[p+*#(),;-]"),"");
+    finalNumber = finalNumber.replace(QRegExp("(\\s+)"), "");
+    // if empty, the number is invalid
+    if (finalNumber.isEmpty())
+        return false;
+
+    finalNumber = finalNumber.replace(QRegExp("(\\d+)"), "");
+    return finalNumber.isEmpty();
+}
+

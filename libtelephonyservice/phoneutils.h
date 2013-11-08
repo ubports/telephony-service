@@ -31,6 +31,7 @@ public:
     explicit PhoneUtils(QObject *parent = 0);
     Q_INVOKABLE static bool comparePhoneNumbers(const QString &number1, const QString &number2);
     Q_INVOKABLE static bool isSameContact(const QString &a, const QString &b);
+    Q_INVOKABLE static bool isPhoneNumber(const QString &identifier);
     
 };
 
