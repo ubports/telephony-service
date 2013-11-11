@@ -107,7 +107,7 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
     // check for pending messages for this channel
     QMap<QString, QStringList>::iterator it = mPendingMessages.begin();
     while (it != mPendingMessages.end()) {
-        if (PhoneUtils::isSameContact(it.key(), id)) {
+        if (PhoneUtils::comparePhoneNumbers(it.key(), id)) {
             Q_FOREACH(const QString &message, it.value()) {
                 connect(channel->send(message),
                         SIGNAL(finished(Tp::PendingOperation*)),
@@ -139,7 +139,7 @@ Tp::TextChannelPtr TextHandler::existingChat(const QString &phoneNumber)
     Tp::TextChannelPtr channel;
     QMap<QString, Tp::TextChannelPtr>::iterator it = mChannels.begin();
     while (it != mChannels.end()) {
-        if (PhoneUtils::isSameContact(it.key(), phoneNumber)) {
+        if (PhoneUtils::comparePhoneNumbers(it.key(), phoneNumber)) {
             channel = it.value();
             break;
         }

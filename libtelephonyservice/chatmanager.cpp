@@ -125,7 +125,7 @@ Tp::TextChannelPtr ChatManager::existingChat(const QString &phoneNumber)
 {
     Tp::TextChannelPtr channel;
     Q_FOREACH(const QString &key, mChannels.keys()) {
-        if (PhoneUtils::isSameContact(key, phoneNumber)) {
+        if (PhoneUtils::comparePhoneNumbers(key, phoneNumber)) {
             channel = mChannels[key];
             break;
         }

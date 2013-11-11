@@ -134,7 +134,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     Call call;
     bool found = false;
     Q_FOREACH(Call callMessage, mCalls) {
-        if (PhoneUtils::isSameContact(callMessage.number, phoneNumber)) {
+        if (PhoneUtils::comparePhoneNumbers(callMessage.number, phoneNumber)) {
             call = callMessage;
             found = true;
             mCalls.removeOne(callMessage);

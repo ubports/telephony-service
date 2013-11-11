@@ -29,16 +29,12 @@ PhoneUtils::PhoneUtils(QObject *parent) :
 
 bool PhoneUtils::comparePhoneNumbers(const QString &number1, const QString &number2)
 {
-    return PhoneNumberUtils::compareLoosely(number1, number2);
-}
-
-bool PhoneUtils::isSameContact(const QString &a, const QString &b)
-{
-    if (isPhoneNumber(a) && isPhoneNumber(b)) {
-        return PhoneNumberUtils::compareLoosely(a, b);
+    if (isPhoneNumber(number1) && isPhoneNumber(number2)) {
+        return PhoneNumberUtils::compareLoosely(number1, number2);
     }
+
     // if at least one of the id's is not a phone number, then perform a simple string comparison
-    return a == b;
+    return number1 == number2;
 }
 
 bool PhoneUtils::isPhoneNumber(const QString &identifier) {

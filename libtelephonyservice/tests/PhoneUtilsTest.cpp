@@ -27,11 +27,37 @@ class PhoneUtilsTest : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
-    void testIsSameContact_data();
-    void testIsSameContact();
+    void testIsPhoneNumber_data();
+    void testIsPhoneNumber();
+    void testComparePhoneNumbers_data();
+    void testComparePhoneNumbers();
 };
 
-void PhoneUtilsTest::testIsSameContact_data()
+void PhoneUtilsTest::testIsPhoneNumber_data()
+{
+    QTest::addColumn<QString>("number");
+    QTest::addColumn<bool>("expectedResult");
+
+    QTest::newRow("simple number") << "12345678" << true;
+    QTest::newRow("number with dash") << "1234-5678" << true;
+    QTest::newRow("number with area code") << "(123)12345678" << true;
+    QTest::newRow("number with extension") << "12345678#123" << true;
+    QTest::newRow("number with comma") << "33333333,1,1" << true;
+    QTest::newRow("number with semicolon") << "33333333;1" << true;
+    QTest::newRow("short/emergency number") << "190" << true;
+    QTest::newRow("non phone numbers") << "abcdefg" << false;
+}
+
+void PhoneUtilsTest::testIsPhoneNumber()
+{
+    QFETCH(QString, number);
+    QFETCH(bool, expectedResult);
+
+    bool result = PhoneUtils::isPhoneNumber(number);
+    QCOMPARE(result, expectedResult);
+}
+
+void PhoneUtilsTest::testComparePhoneNumbers_data()
 {
     QTest::addColumn<QString>("number1");
     QTest::addColumn<QString>("number2");
@@ -55,13 +81,13 @@ void PhoneUtilsTest::testIsSameContact_data()
     // FIXME: check what other cases we need to test here"
 }
 
-void PhoneUtilsTest::testIsSameContact()
+void PhoneUtilsTest::testComparePhoneNumbers()
 {
     QFETCH(QString, number1);
     QFETCH(QString, number2);
     QFETCH(bool, expectedResult);
 
-    bool result = PhoneUtils::isSameContact(number1, number2);
+    bool result = PhoneUtils::comparePhoneNumbers(number1, number2);
     QCOMPARE(result, expectedResult);
 }
 
