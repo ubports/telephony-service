@@ -19,6 +19,8 @@
 #ifndef PHONENUMBERUTILS_H
 #define PHONENUMBERUTILS_H
 
+#include <QRegExp>
+
 namespace PhoneNumberUtils
 {
 

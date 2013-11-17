@@ -27,9 +27,35 @@ class PhoneUtilsTest : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
+    void testIsPhoneNumber_data();
+    void testIsPhoneNumber();
     void testComparePhoneNumbers_data();
     void testComparePhoneNumbers();
 };
+
+void PhoneUtilsTest::testIsPhoneNumber_data()
+{
+    QTest::addColumn<QString>("number");
+    QTest::addColumn<bool>("expectedResult");
+
+    QTest::newRow("simple number") << "12345678" << true;
+    QTest::newRow("number with dash") << "1234-5678" << true;
+    QTest::newRow("number with area code") << "(123)12345678" << true;
+    QTest::newRow("number with extension") << "12345678#123" << true;
+    QTest::newRow("number with comma") << "33333333,1,1" << true;
+    QTest::newRow("number with semicolon") << "33333333;1" << true;
+    QTest::newRow("short/emergency number") << "190" << true;
+    QTest::newRow("non phone numbers") << "abcdefg" << false;
+}
+
+void PhoneUtilsTest::testIsPhoneNumber()
+{
+    QFETCH(QString, number);
+    QFETCH(bool, expectedResult);
+
+    bool result = PhoneUtils::isPhoneNumber(number);
+    QCOMPARE(result, expectedResult);
+}
 
 void PhoneUtilsTest::testComparePhoneNumbers_data()
 {
@@ -49,6 +75,9 @@ void PhoneUtilsTest::testComparePhoneNumbers_data()
     QTest::newRow("both numbers with semicolon") << "22222222;1" << "22222222;2" << true;
     QTest::newRow("short/emergency numbers") << "190" << "190" << true;
     QTest::newRow("different numbers") << "12345678" << "1234567" << false;
+    QTest::newRow("both non phone numbers") << "abcdefg" << "abcdefg" << true;
+    QTest::newRow("different non phone numbers") << "abcdefg" << "bcdefg" << false;
+    QTest::newRow("phone number and custom string") << "abc12345678" << "12345678" << false;
     // FIXME: check what other cases we need to test here"
 }
 
