@@ -93,6 +93,7 @@ void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
     const bool isUnknown = phoneNumber.startsWith("x-ofono-unknown");
 
     mPhoneNumber = phoneNumber;
+    mInteractive = true;
     Q_EMIT phoneNumberChanged();
     if (mPhoneNumber.isEmpty() || isPrivate || isUnknown) {
         mAlias.clear();
@@ -100,13 +101,11 @@ void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
         mAvatar.clear();
         mPhoneNumberSubTypes.clear();
         mPhoneNumberContexts.clear();
-        mInteractive = true;
+        mInteractive = false;
 
         if (isPrivate) {
-            mInteractive = false;
             mAlias = C::gettext("Private Number");
         } else if (isUnknown) {
-            mInteractive = false;
             mAlias = C::gettext("Unknown Number");
         }
 
@@ -120,6 +119,7 @@ void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
         return;
     }
 
+    Q_EMIT interactiveChanged();
     searchByPhoneNumber(mPhoneNumber);
 }
 
@@ -194,7 +194,6 @@ void ContactWatcher::resultsAvailable()
         mContactId = contact.id().toString();
         mAvatar = QContactAvatar(contact.detail(QContactDetail::TypeAvatar)).imageUrl().toString();
         mAlias = ContactUtils::formatContactName(contact);
-        mInteractive = true;
         Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
             if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mPhoneNumber)) {
                 mPhoneNumberSubTypes = phoneNumber.subTypes();
@@ -208,7 +207,6 @@ void ContactWatcher::resultsAvailable()
         Q_EMIT phoneNumberSubTypesChanged();
         Q_EMIT phoneNumberContextsChanged();
         Q_EMIT isUnknownChanged();
-        Q_EMIT interactiveChanged();
     }
 }
 
