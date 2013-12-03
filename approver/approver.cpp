@@ -215,9 +215,9 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
     QString body;
 
     if (!contact->id().isEmpty()) {
-        if (contact->id() == "-2") {
+        if (contact->id().startsWith("x-ofono-private")) {
             body = QString::fromUtf8(C::gettext("Calling from private number"));
-        } else if (contact->id() == "#") {
+        } else if (contact->id().startsWith("x-ofono-unknown")) {
             body = QString::fromUtf8(C::gettext("Calling from unknown number"));
         } else {
             body = QString::fromUtf8(C::gettext("Calling from %1")).arg(contact->id());

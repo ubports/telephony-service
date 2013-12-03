@@ -38,6 +38,7 @@ class ContactWatcher : public QObject
     Q_PROPERTY(QList<int> phoneNumberSubTypes READ phoneNumberSubTypes NOTIFY phoneNumberSubTypesChanged)
     Q_PROPERTY(QList<int> phoneNumberContexts READ phoneNumberContexts NOTIFY phoneNumberContextsChanged)
     Q_PROPERTY(bool isUnknown READ isUnknown NOTIFY isUnknownChanged)
+    Q_PROPERTY(bool interactive READ interactive NOTIFY interactiveChanged)
 public:
     explicit ContactWatcher(QObject *parent = 0);
 
@@ -49,6 +50,7 @@ public:
     QList<int> phoneNumberSubTypes() const;
     QList<int> phoneNumberContexts() const;
     bool isUnknown() const;
+    bool interactive() const;
     
 Q_SIGNALS:
     void contactIdChanged();
@@ -58,6 +60,7 @@ Q_SIGNALS:
     void phoneNumberSubTypesChanged();
     void phoneNumberContextsChanged();
     void isUnknownChanged();
+    void interactiveChanged();
 
 protected Q_SLOTS:
     void onContactsAdded(QList<QContactId> ids);
@@ -74,6 +77,7 @@ private:
     QString mPhoneNumber;
     QList<int> mPhoneNumberSubTypes;
     QList<int> mPhoneNumberContexts;
+    bool mInteractive;
 };
 
 #endif // CONTACTWATCHER_H
