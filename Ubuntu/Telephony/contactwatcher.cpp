@@ -34,7 +34,7 @@ namespace C {
 }
 
 ContactWatcher::ContactWatcher(QObject *parent) :
-    QObject(parent)
+    QObject(parent), mInteractive(true)
 {
     connect(ContactUtils::sharedManager(),
             SIGNAL(contactsAdded(QList<QContactId>)),
@@ -170,14 +170,12 @@ void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
         mAvatar.clear();
         mPhoneNumberSubTypes.clear();
         mPhoneNumberContexts.clear();
-        mInteractive = true;
         Q_EMIT contactIdChanged();
         Q_EMIT avatarChanged();
         Q_EMIT aliasChanged();
         Q_EMIT phoneNumberSubTypesChanged();
         Q_EMIT phoneNumberContextsChanged();
         Q_EMIT isUnknownChanged();
-        Q_EMIT interactiveChanged();
 
         if (!mPhoneNumber.isEmpty()) {
             searchByPhoneNumber(mPhoneNumber);
@@ -223,7 +221,6 @@ void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
             mAvatar.clear();
             mPhoneNumberSubTypes.clear();
             mPhoneNumberContexts.clear();
-            mInteractive = true;
 
             Q_EMIT contactIdChanged();
             Q_EMIT avatarChanged();
@@ -231,7 +228,6 @@ void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
             Q_EMIT phoneNumberSubTypesChanged();
             Q_EMIT phoneNumberContextsChanged();
             Q_EMIT isUnknownChanged();
-            Q_EMIT interactiveChanged();
         }
     }
 }
