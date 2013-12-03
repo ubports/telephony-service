@@ -29,6 +29,10 @@
 #include <QContactDetailFilter>
 #include <QContactPhoneNumber>
 
+namespace C {
+#include <libintl.h>
+}
+
 ContactWatcher::ContactWatcher(QObject *parent) :
     QObject(parent)
 {
@@ -85,20 +89,34 @@ QList<int> ContactWatcher::phoneNumberContexts() const
 
 void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
 {
+    const bool isPrivate = phoneNumber.startsWith("x-ofono-private");
+    const bool isUnknown = phoneNumber.startsWith("x-ofono-unknown");
+
     mPhoneNumber = phoneNumber;
     Q_EMIT phoneNumberChanged();
-    if (phoneNumber.isEmpty()) {
+    if (mPhoneNumber.isEmpty() || isPrivate || isUnknown) {
         mAlias.clear();
         mContactId.clear();
         mAvatar.clear();
         mPhoneNumberSubTypes.clear();
         mPhoneNumberContexts.clear();
+        mInteractive = true;
+
+        if (isPrivate) {
+            mInteractive = false;
+            mAlias = C::gettext("Private Number");
+        } else if (isUnknown) {
+            mInteractive = false;
+            mAlias = C::gettext("Unknown Number");
+        }
+
         Q_EMIT contactIdChanged();
         Q_EMIT avatarChanged();
         Q_EMIT aliasChanged();
         Q_EMIT phoneNumberSubTypesChanged();
         Q_EMIT phoneNumberContextsChanged();
         Q_EMIT isUnknownChanged();
+        Q_EMIT interactiveChanged();
         return;
     }
 
@@ -110,6 +128,10 @@ bool ContactWatcher::isUnknown() const
     return mContactId.isEmpty();
 }
 
+bool ContactWatcher::interactive() const
+{
+    return mInteractive;
+}
 
 void ContactWatcher::onContactsAdded(QList<QContactId> ids)
 {
@@ -148,12 +170,14 @@ void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
         mAvatar.clear();
         mPhoneNumberSubTypes.clear();
         mPhoneNumberContexts.clear();
+        mInteractive = true;
         Q_EMIT contactIdChanged();
         Q_EMIT avatarChanged();
         Q_EMIT aliasChanged();
         Q_EMIT phoneNumberSubTypesChanged();
         Q_EMIT phoneNumberContextsChanged();
         Q_EMIT isUnknownChanged();
+        Q_EMIT interactiveChanged();
 
         if (!mPhoneNumber.isEmpty()) {
             searchByPhoneNumber(mPhoneNumber);
@@ -170,6 +194,7 @@ void ContactWatcher::resultsAvailable()
         mContactId = contact.id().toString();
         mAvatar = QContactAvatar(contact.detail(QContactDetail::TypeAvatar)).imageUrl().toString();
         mAlias = ContactUtils::formatContactName(contact);
+        mInteractive = true;
         Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
             if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mPhoneNumber)) {
                 mPhoneNumberSubTypes = phoneNumber.subTypes();
@@ -183,6 +208,7 @@ void ContactWatcher::resultsAvailable()
         Q_EMIT phoneNumberSubTypesChanged();
         Q_EMIT phoneNumberContextsChanged();
         Q_EMIT isUnknownChanged();
+        Q_EMIT interactiveChanged();
     }
 }
 
@@ -199,6 +225,7 @@ void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
             mAvatar.clear();
             mPhoneNumberSubTypes.clear();
             mPhoneNumberContexts.clear();
+            mInteractive = true;
 
             Q_EMIT contactIdChanged();
             Q_EMIT avatarChanged();
@@ -206,6 +233,7 @@ void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
             Q_EMIT phoneNumberSubTypesChanged();
             Q_EMIT phoneNumberContextsChanged();
             Q_EMIT isUnknownChanged();
+            Q_EMIT interactiveChanged();
         }
     }
 }
