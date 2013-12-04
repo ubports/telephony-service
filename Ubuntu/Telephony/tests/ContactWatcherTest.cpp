@@ -40,6 +40,8 @@ private Q_SLOTS:
     void testClearAfterContactChanged();
     void testContactRemoval();
     void testClearPhoneNumber();
+    void testInteractiveProperty_data();
+    void testInteractiveProperty();
 
 private:
     QContact createContact(const QString &firstName,
@@ -348,6 +350,30 @@ void ContactWatcherTest::testClearPhoneNumber()
     QCOMPARE(watcher.isUnknown(), true);
 
     clearManager();
+}
+
+void ContactWatcherTest::testInteractiveProperty_data()
+{
+    QTest::addColumn<QString>("phoneNumber");
+    QTest::addColumn<bool>("interactive");
+
+    QTest::newRow("valid phone number") << "98765432" << true;
+    QTest::newRow("ofono private phone number") << "x-ofono-private" << false;
+    QTest::newRow("ofono unknown number") << "x-ofono-unknown" << false;
+    QTest::newRow("empty phone number") << "" << false;
+}
+
+void ContactWatcherTest::testInteractiveProperty()
+{
+    QFETCH(QString, phoneNumber);
+    QFETCH(bool, interactive);
+
+    ContactWatcher watcher;
+    QSignalSpy spy(&watcher, SIGNAL(interactiveChanged()));
+
+    watcher.setPhoneNumber(phoneNumber);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(watcher.interactive(), interactive);
 }
 
 QContact ContactWatcherTest::createContact(const QString &firstName,
