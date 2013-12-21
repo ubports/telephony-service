@@ -26,10 +26,13 @@
 #include <unistd.h>
 #include <libnotify/notify.h>
 
+#include <QContact>
 #include <QMap>
 #include <TelepathyQt/AbstractClientApprover>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/ChannelDispatchOperation>
+
+class GreeterContacts;
 
 class Approver : public QObject, public Tp::AbstractClientApprover
 {
@@ -59,11 +62,16 @@ private Q_SLOTS:
     void closeSnapDecision();
     void onAcceptCallRequested();
     void onRejectCallRequested();
+    void updateNotification(const QtContacts::QContact &contact);
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
     QMap<Tp::PendingOperation*,Tp::ChannelPtr> mChannels;
     NotifyNotification* mPendingSnapDecision;
+    GreeterContacts *mGreeterContacts;
+    QString mDefaultTitle;
+    QString mDefaultIcon;
+    QString mCachedBody;
 };
 
 #endif // APPROVER_H
