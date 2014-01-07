@@ -43,3 +43,8 @@ test_*.xml
 coverage*
 
 po/*.gmo
+
+handler/tests/HandlerTest
+handler/tests/dbus-test-wrapper.sh
+handler/tests/mock/mockconnectionadaptor.*
+handler/tests/mock/telepathy-mock
