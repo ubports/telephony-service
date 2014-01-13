@@ -7,7 +7,6 @@ Build-Depends: cmake,
                dh-translations,
                libgl1-mesa-dev | libgl-dev,
                libgles2-mesa-dev,
-               libgsettings-qt-dev,
                libicu-dev,
                libmessaging-menu-dev,
                libnotify-dev,
@@ -36,8 +35,7 @@ Multi-Arch: foreign
 Pre-Depends: dpkg (>= 1.15.6~)
 Conflicts: phone-app
 Replaces: phone-app
-Depends: gsettings-ubuntu-touch-schemas (>= 0.0.1+13.10.20130730),
-         history-service,
+Depends: history-service,
          libnotify4,
          telepathy-mission-control-5,
          telepathy-ofono,
