@@ -35,7 +35,8 @@ Multi-Arch: foreign
 Pre-Depends: dpkg (>= 1.15.6~)
 Conflicts: phone-app
 Replaces: phone-app
-Depends: history-service,
+Depends: accountsservice-ubuntu-touch-schemas,
+         history-service,
          libnotify4,
          telepathy-mission-control-5,
          telepathy-ofono,
