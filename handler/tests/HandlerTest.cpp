@@ -31,6 +31,7 @@ private Q_SLOTS:
     void initTestCase();
     void testMakingCalls();
     void testHangUpCall();
+    void testSendMessage();
 
 private:
     Approver *mApprover;
@@ -98,6 +99,20 @@ void HandlerTest::testHangUpCall()
     QSignalSpy callEndedSpy(MockController::instance(), SIGNAL(callEnded(QString)));
     HandlerController::instance()->hangUpCall(objectPath);
     QTRY_COMPARE(callEndedSpy.count(), 1);
+}
+
+void HandlerTest::testSendMessage()
+{
+    QString recipient("22222222");
+    QString message("Hello, world!");
+    QSignalSpy messageSentSpy(MockController::instance(), SIGNAL(messageSent(QString,QVariantMap)));
+    HandlerController::instance()->sendMessage(recipient, message);
+    QTRY_COMPARE(messageSentSpy.count(), 1);
+    QString sentMessage = messageSentSpy.first().first().toString();
+    QVariantMap messageProperties = messageSentSpy.first().last().value<QVariantMap>();
+    QCOMPARE(sentMessage, message);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
 }
 
 QTEST_MAIN(HandlerTest)
