@@ -40,7 +40,9 @@ public:
 Q_SIGNALS:
     // signals that will be relayed into the bus
     void MessageSent(const QString &mesasge, const QVariantMap &properties);
-    void CallReceived(const QVariantMap &properties);
+    void CallReceived(const QString &callerId);
+    void CallEnded(const QString &callerId);
+    void CallStateChanged(const QString &callerId, const QString &objectPath, const QString &state);
 
 private:
     MockConnectionAdaptor *mAdaptor;

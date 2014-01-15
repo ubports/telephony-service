@@ -46,12 +46,17 @@ public:
     void onDTMFStartTone(uchar event, Tp::DBusError *error);
     void onDTMFStopTone(Tp::DBusError *error);
 
+    QString objectPath() const;
+
 public Q_SLOTS:
     void setCallState(const QString &state);
     void init();
 
 
     void onOfonoMuteChanged(bool mute);
+
+Q_SIGNALS:
+    void callStateChanged(MockCallChannel *channel, const QString &state);
 
 private:
     QString mObjPath;

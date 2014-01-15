@@ -287,7 +287,12 @@ Tp::BaseChannelPtr MockConnection::createCallChannel(uint targetHandleType,
 
     mCallChannels[requestedId] = new MockCallChannel(this, requestedId, state, targetHandle);
     QObject::connect(mCallChannels[requestedId], SIGNAL(destroyed()), SLOT(onCallChannelClosed()));
+    QObject::connect(mCallChannels[requestedId], SIGNAL(callStateChanged(MockCallChannel*,QString)), SLOT(onCallStateChanged(MockCallChannel*,QString)));
     qDebug() << mCallChannels[requestedId];
+
+    if (!mIncomingCalls.contains(requestedId)) {
+        Q_EMIT callReceived(requestedId);
+    }
     return mCallChannels[requestedId]->baseChannel();
 }
 
@@ -356,7 +361,19 @@ void MockConnection::onCallChannelClosed()
         QString key = mCallChannels.key(channel);
         qDebug() << "call channel closed for number " << key;
         mCallChannels.remove(key);
+        mIncomingCalls.removeAll(key);
+        Q_EMIT callEnded(key);
     }
+}
+
+void MockConnection::onCallStateChanged(MockCallChannel *channel, const QString &state)
+{
+    const QString key = mCallChannels.key(channel);
+    if (key.isEmpty()) {
+        return;
+    }
+
+    Q_EMIT callStateChanged(key, channel->objectPath(), state);
 }
 
 uint MockConnection::ensureHandle(const QString &id)
@@ -392,6 +409,7 @@ void MockConnection::placeCall(const QVariantMap &properties)
     qDebug() << "handle" << handle;
 
     mInitialCallStatus[callerId] = state;
+    mIncomingCalls.append(callerId);
 
     Tp::BaseChannelPtr channel  = ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_CALL, Tp::HandleTypeContact, handle, yours, initiatorHandle, false, &error);
     if (error.isValid() || channel.isNull()) {
@@ -407,6 +425,7 @@ void MockConnection::hangupCall(const QString &callerId)
     }
 
     mCallChannels[callerId]->setCallState("disconnected");
+    mIncomingCalls.removeAll(callerId);
 }
 
 void MockConnection::setCallState(const QString &phoneNumber, const QString &state)

@@ -28,7 +28,10 @@ MockController::MockController(QObject *parent) :
     QObject(parent),
     mMockInterface(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE)
 {
-    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "MessageSent", this, SIGNAL(MessageSent(QString, QVariantMap)));
+    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "MessageSent", this, SIGNAL(messageSent(QString, QVariantMap)));
+    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "CallReceived", this, SIGNAL(callReceived(QString)));
+    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "CallEnded", this, SIGNAL(callEnded(QString)));
+    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "CallStateChanged", this, SIGNAL(callStateChanged(QString,QString,QString)));
 }
 
 MockController *MockController::instance()

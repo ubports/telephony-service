@@ -152,6 +152,11 @@ void MockCallChannel::onDTMFStopTone(Tp::DBusError *error)
 {
 }
 
+QString MockCallChannel::objectPath() const
+{
+    return mBaseChannel->objectPath();
+}
+
 MockCallChannel::~MockCallChannel()
 {
     qDebug() << "call channel closed";
@@ -203,4 +208,6 @@ void MockCallChannel::setCallState(const QString &state)
     }
 
     mState = state;
+
+    Q_EMIT callStateChanged(this, state);
 }

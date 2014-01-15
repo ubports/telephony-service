@@ -72,6 +72,9 @@ public:
     ~MockConnection();
 Q_SIGNALS:
     void messageSent(const QString &message, const QVariantMap &info);
+    void callReceived(const QString &callerId);
+    void callEnded(const QString &callerId);
+    void callStateChanged(const QString &callerId, const QString &objectPath, const QString &state);
 
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &info);
@@ -80,6 +83,7 @@ public Q_SLOTS:
     void setCallState(const QString &phoneNumber, const QString &state);
     void onTextChannelClosed();
     void onCallChannelClosed();
+    void onCallStateChanged(MockCallChannel *channel, const QString &state);
     void onMessageRead(const QString &id);
 
 private:
@@ -96,6 +100,7 @@ private:
     Tp::SimplePresence mRequestedSelfPresence;
 
     MockConnectionDBus *mDBus;
+    QStringList mIncomingCalls;
 };
 
 #endif

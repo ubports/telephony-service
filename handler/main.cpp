@@ -39,7 +39,7 @@ int main(int argc, char **argv)
 
     // check if there is already an instance of the handler running
     if (ApplicationUtils::checkApplicationRunning(TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler")) {
-        qDebug() << "Found another instance of the approver. Quitting.";
+        qDebug() << "Found another instance of the handler. Quitting.";
         return 1;
     }
 

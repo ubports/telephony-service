@@ -31,7 +31,10 @@ public:
     static MockController *instance();
 
 Q_SIGNALS:
-    void MessageSent(const QString &message, const QVariantMap &properties);
+    void messageSent(const QString &message, const QVariantMap &properties);
+    void callReceived(const QString &callerId);
+    void callEnded(const QString &callerId);
+    void callStateChanged(const QString &callerId, const QString &objectPath, const QString &state);
 
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &properties);

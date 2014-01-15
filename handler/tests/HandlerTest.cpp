@@ -18,18 +18,86 @@
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
+#include "handlercontroller.h"
+#include "mockcontroller.h"
+#include "approver.h"
+#include "telepathyhelper.h"
 
 class HandlerTest : public QObject
 {
     Q_OBJECT
 
 private Q_SLOTS:
-    void testHangUp();
+    void initTestCase();
+    void testMakingCalls();
+    void testHangUpCall();
+
+private:
+    Approver *mApprover;
 };
 
-void HandlerTest::testHangUp()
+void HandlerTest::initTestCase()
 {
-    QVERIFY(true);
+    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(accountReady()));
+    QTRY_COMPARE(spy.count(), 1);
+    QTRY_VERIFY(TelepathyHelper::instance()->connected());
+
+    // register the approver
+    mApprover = new Approver(this);
+    TelepathyHelper::instance()->registerClient(mApprover, "TelephonyTestApprover");
+    // Tp-qt does not set registered status to approvers
+    QTRY_VERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(TELEPHONY_SERVICE_APPROVER));
+
+    // we need to wait in order to give telepathy time to notify about the approver
+    QTest::qWait(3000);
+}
+
+void HandlerTest::testMakingCalls()
+{
+    QString callerId("1234567");
+    QSignalSpy callReceivedSpy(MockController::instance(), SIGNAL(callReceived(QString)));
+    HandlerController::instance()->startCall(callerId);
+    QTRY_COMPARE(callReceivedSpy.count(), 1);
+    QCOMPARE(callReceivedSpy.first().first().toString(), callerId);
+
+    MockController::instance()->hangupCall(callerId);
+}
+
+void HandlerTest::testHangUpCall()
+{
+    QString callerId("7654321");
+
+    QVariantMap properties;
+    properties["Caller"] = callerId;
+    properties["State"] = "incoming";
+
+    QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
+    MockController::instance()->placeCall(properties);
+
+    // wait for the channel to hit the approver
+    QTRY_COMPARE(approverCallSpy.count(), 1);
+    mApprover->acceptCall();
+
+    // wait until the call state is "accepted"
+    QSignalSpy callStateSpy(MockController::instance(), SIGNAL(callStateChanged(QString,QString,QString)));
+    QString state;
+    QString objectPath;
+    int tries = 0;
+    while (state != "active" && tries < 5) {
+        QTRY_COMPARE(callStateSpy.count(), 1);
+        objectPath = callStateSpy.first()[1].toString();
+        state = callStateSpy.first()[2].toString();
+        callStateSpy.clear();
+        tries++;
+    }
+
+    QCOMPARE(state, QString("active"));
+    QVERIFY(!objectPath.isEmpty());
+
+    // and finally request the hangup
+    QSignalSpy callEndedSpy(MockController::instance(), SIGNAL(callEnded(QString)));
+    HandlerController::instance()->hangUpCall(objectPath);
+    QTRY_COMPARE(callEndedSpy.count(), 1);
 }
 
 QTEST_MAIN(HandlerTest)

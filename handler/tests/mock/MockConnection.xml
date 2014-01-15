@@ -41,16 +41,29 @@
             <dox:d><![CDATA[
                 A message was sent from the client.
             ]]></dox:d>
-            <arg name="message" type="s" direction="in"/>
-            <arg name="properties" type="a{sv}" direction="in"/>
+            <arg name="message" type="s"/>
+            <arg name="properties" type="a{sv}"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
         </signal>
         <signal name="CallReceived">
             <dox:d><![CDATA[
                 A call was made from the client
             ]]></dox:d>
-            <arg name="properties" type="a{sv}" direction="in"/>
-            <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
+            <arg name="callerId" type="s"/>
+        </signal>
+        <signal name="CallEnded">
+            <dox:d><![CDATA[
+                A call was ended
+            ]]></dox:d>
+            <arg name="callerId" type="s"/>
+        </signal>
+        <signal name="CallStateChanged">
+            <dox:d><![CDATA[
+                The state of a call has changed
+            ]]></dox:d>
+            <arg name="callerId" type="s"/>
+            <arg name="objectPath" type="s"/>
+            <arg name="state" type="s"/>
         </signal>
     </interface>
 </node>

@@ -10,8 +10,7 @@ macro(generate_test TESTNAME USE_DBUS)
     if (${USE_DBUS})
         set(TEST_COMMAND -p ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} -p -xunitxml -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
         add_test(${TESTNAME} ${DBUS_RUNNER} --keep-env
-                                            --task ${CMAKE_CURRENT_BINARY_DIR}/mock/telepathy-mock --ignore-return
-                                            --task ${CMAKE_CURRENT_BINARY_DIR}/../telephony-service-handler --ignore-return
+                                            --task dbus-monitor --ignore-return
                                             --task ${CMAKE_CURRENT_BINARY_DIR}/dbus-test-wrapper.sh ${TEST_COMMAND})
     else (${USE_DBUS})
         add_test(${TESTNAME} ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} -xunitxml -o ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
@@ -40,7 +39,7 @@ endmacro(generate_test)
 configure_file(dbus-test-wrapper.sh.in ${CMAKE_CURRENT_BINARY_DIR}/dbus-test-wrapper.sh)
 
 if (DBUS_RUNNER)
-    generate_test(HandlerTest True telepathyhelper.cpp mockcontroller.cpp approver.cpp)
+    generate_test(HandlerTest True telepathyhelper.cpp handlercontroller.cpp mockcontroller.cpp approver.cpp)
 endif(DBUS_RUNNER)
 
 add_subdirectory(mock)
