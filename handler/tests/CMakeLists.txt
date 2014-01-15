@@ -32,7 +32,6 @@ macro(generate_test TESTNAME USE_DBUS)
                           TIMEOUT 30)
     target_link_libraries(${TESTNAME}
                           ${TP_QT5_LIBRARIES}
-                          historyservice
                          )
 endmacro(generate_test)
 
