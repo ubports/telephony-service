@@ -30,3 +30,5 @@ install(TARGETS telephony-service-handler RUNTIME DESTINATION ${CMAKE_INSTALL_BI
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceHandler.service DESTINATION share/dbus-1/services)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/com.canonical.TelephonyServiceHandler.service DESTINATION share/dbus-1/services)
 install(FILES TelephonyServiceHandler.client DESTINATION share/telepathy/clients)
+
+add_subdirectory(tests)

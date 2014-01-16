@@ -1,30 +1,25 @@
-/*
- * Copyright (C) 2012 Canonical, Ltd.
+/**
+ * Copyright (C) 2013 Canonical, Ltd.
  *
- * Authors:
- *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
- *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License version 3, as published by
+ * the Free Software Foundation.
  *
- * This file is part of telephony-service.
- *
- * telephony-service is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 3.
- *
- * telephony-service is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranties of MERCHANTABILITY,
+ * SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * Authors: 
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  */
 
 #include "telepathyhelper.h"
-#include "chatmanager.h"
-#include "callmanager.h"
-#include "config.h"
-
+#include <TelepathyQt/AbstractClient>
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/PendingReady>
@@ -32,11 +27,13 @@
 
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
-      mChannelObserver(0),
+      //mChannelObserver(0),
       mFirstTime(true),
       mConnected(false),
       mHandlerInterface(0)
 {
+    Tp::registerTypes();
+
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
                      << Tp::Contact::FeatureAvatarData
@@ -86,30 +83,19 @@ Tp::AccountPtr TelepathyHelper::account() const
     return mAccount;
 }
 
+/*
 ChannelObserver *TelepathyHelper::channelObserver() const
 {
     return mChannelObserver;
 }
-
-QDBusInterface *TelepathyHelper::handlerInterface()
-{
-    if (!mHandlerInterface) {
-        mHandlerInterface = new QDBusInterface("com.canonical.TelephonyServiceHandler",
-                                               "/com/canonical/TelephonyServiceHandler",
-                                               "com.canonical.TelephonyServiceHandler",
-                                               QDBusConnection::sessionBus(),
-                                               this);
-    }
-
-    return mHandlerInterface;
-}
+*/
 
 bool TelepathyHelper::connected() const
 {
     return mConnected;
 }
 
-
+/*
 void TelepathyHelper::registerChannelObserver(const QString &observerName)
 {
     QString name = observerName;
@@ -146,14 +132,12 @@ void TelepathyHelper::unregisterChannelObserver()
     mChannelObserver = NULL;
     Q_EMIT channelObserverUnregistered();
 }
+*/
 
 QStringList TelepathyHelper::supportedProtocols() const
 {
     QStringList protocols;
-    protocols << "ufa"
-              << "tel"
-              << "ofono"
-              << "mock"; // used for tests
+    protocols << "mock";
     return protocols;
 }
 
