@@ -60,7 +60,7 @@ void VoiceMailIndicator::onAccountReady()
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     mConnection.connect(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE, QLatin1String("VoicemailCountChanged"),
-                        this, SLOT(onVoicemailCountChanged(int)));
+                        this, SLOT(onVoicemailCountChanged(uint)));
 
     mConnection.connect(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE, QLatin1String("VoicemailIndicatorChanged"),
                         this, SLOT(onVoicemailIndicatorChanged(bool)));
@@ -94,7 +94,7 @@ bool VoiceMailIndicator::voicemailIndicatorVisible()
     return false;
 }
 
-int VoiceMailIndicator::voicemailCount()
+uint VoiceMailIndicator::voicemailCount()
 {
     if (!checkConnected()) {
         return 0;
@@ -104,14 +104,14 @@ int VoiceMailIndicator::voicemailCount()
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
-    QDBusReply<int> reply = connIface.call("VoicemailCount");
+    QDBusReply<uint> reply = connIface.call("VoicemailCount");
     if (reply.isValid()) {
         return reply.value();
     }
-    return false;
+    return 0;
 }
 
-void VoiceMailIndicator::onVoicemailCountChanged(int count)
+void VoiceMailIndicator::onVoicemailCountChanged(uint count)
 {
     onVoicemailIndicatorChanged(voicemailIndicatorVisible());
 }
