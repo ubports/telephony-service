@@ -37,14 +37,6 @@ VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
     }
 }
 
-void VoiceMailIndicator::showVoicemailOnApp()
-{
-    QDBusInterface phoneApp("com.canonical.PhoneApp",
-                                "/com/canonical/PhoneApp",
-                                "com.canonical.PhoneApp");
-    phoneApp.call("ShowVoicemail");
-}
-
 bool VoiceMailIndicator::checkConnected()
 {
     return TelepathyHelper::instance()->account() && TelepathyHelper::instance()->account()->connection();
