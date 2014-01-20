@@ -45,6 +45,7 @@ public:
                               const Tp::ChannelDispatchOperationPtr &dispatchOperation);
     Tp::ChannelDispatchOperationPtr dispatchOperation(Tp::PendingOperation *op);
     void onApproved(Tp::ChannelDispatchOperationPtr dispatchOp);
+    void onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp);
     void onRejected(Tp::ChannelDispatchOperationPtr dispatchOp);
 
 protected:
@@ -57,6 +58,7 @@ private Q_SLOTS:
     void onHangupFinished(Tp::PendingOperation* op);
     void onCallStateChanged(Tp::CallState state);
     void closeSnapDecision();
+    void onHangupAndAcceptCallRequested();
     void onAcceptCallRequested();
     void onRejectCallRequested();
 

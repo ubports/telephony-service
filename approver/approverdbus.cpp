@@ -50,6 +50,11 @@ ApproverDBus::connectToBus()
     return true;
 }
 
+void ApproverDBus::HangUpAndAcceptCall()
+{
+    Q_EMIT hangUpAndAcceptCallRequested();
+}
+
 void ApproverDBus::AcceptCall()
 {
     Q_EMIT acceptCallRequested();
