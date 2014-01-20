@@ -257,6 +257,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                     delete_event_data);
 
     // FIXME: uncomment this code once snap decisions support more than two actions and stacked buttons
+    /*
     if (CallManager::instance()->hasCalls()) {
         notify_notification_add_action (notification,
                                         "action_hangup_and_accept",
@@ -265,6 +266,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                         data,
                                         delete_event_data);
     }
+    */
 
     notify_notification_add_action (notification,
                                     "action_decline_1",
