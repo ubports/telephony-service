@@ -10,7 +10,6 @@ macro(generate_test TESTNAME USE_DBUS)
     if (${USE_DBUS})
         set(TEST_COMMAND -p ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} -p -xunitxml -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
         add_test(${TESTNAME} ${DBUS_RUNNER} --keep-env
-                                            --task dbus-monitor --ignore-return
                                             --task ${CMAKE_CURRENT_BINARY_DIR}/dbus-test-wrapper.sh ${TEST_COMMAND})
     else (${USE_DBUS})
         add_test(${TESTNAME} ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} -xunitxml -o ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
