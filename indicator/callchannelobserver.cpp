@@ -68,11 +68,11 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
         if (missed) {
             // FIXME: handle conf call
             MessagingMenu::instance()->addCall(channel->targetContact()->id(), QDateTime::currentDateTime());
+        } else {
+            // and show a notification
+            // FIXME: handle conf call
+            CallNotification::instance()->showNotificationForCall(QStringList() << channel->targetContact()->id(), CallNotification::CallEnded);
         }
-
-        // and show a notification
-        // FIXME: handle conf call
-        CallNotification::instance()->showNotificationForCall(QStringList() << channel->targetContact()->id(), CallNotification::CallEnded);
 
         mChannels.removeOne(channel);
 
