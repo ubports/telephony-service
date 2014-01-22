@@ -64,9 +64,9 @@ void MockConnectionDBus::PlaceIncomingMessage(const QString &message, const QVar
     mConnection->placeIncomingMessage(message, properties);
 }
 
-void MockConnectionDBus::PlaceCall(const QVariantMap &properties)
+QString MockConnectionDBus::PlaceCall(const QVariantMap &properties)
 {
-    mConnection->placeCall(properties);
+    return mConnection->placeCall(properties);
 }
 
 void MockConnectionDBus::HangupCall(const QString &callerId)

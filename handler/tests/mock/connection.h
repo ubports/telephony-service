@@ -70,6 +70,8 @@ public:
                                          uint targetHandle, Tp::DBusError *error);
 
     ~MockConnection();
+
+    QString placeCall(const QVariantMap &properties);
 Q_SIGNALS:
     void messageSent(const QString &message, const QVariantMap &info);
     void callReceived(const QString &callerId);
@@ -78,7 +80,6 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &info);
-    void placeCall(const QVariantMap &properties);
     void hangupCall(const QString &callerId);
     void setCallState(const QString &phoneNumber, const QString &state);
     void onTextChannelClosed();
