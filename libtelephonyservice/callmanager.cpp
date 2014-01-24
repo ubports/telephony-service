@@ -156,7 +156,7 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
             SIGNAL(backgroundCallChanged()));
     connect(entry,
             SIGNAL(activeChanged()),
-            SIGNAL(hasBackgroundCallChanged());
+            SIGNAL(hasBackgroundCallChanged()));
 
     // FIXME: check which of those signals we really need to emit here
     Q_EMIT hasCallsChanged();
