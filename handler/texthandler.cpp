@@ -27,6 +27,11 @@
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 
+template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStringList &key2) 
+{ 
+    return key1.size() > key2.size();  // sort by operator> !
+}
+
 TextHandler::TextHandler(QObject *parent)
 : QObject(parent)
 {
@@ -43,8 +48,8 @@ void TextHandler::onConnectedChanged()
     }
 
     // create text channels to send the pending messages
-    Q_FOREACH(const QString &number, mPendingMessages.keys()) {
-        startChat(number);
+    Q_FOREACH(const QStringList& phoneNumbers, mPendingMessages.keys()) {
+        startChat(phoneNumbers);
     }
 }
 
@@ -54,26 +59,41 @@ TextHandler *TextHandler::instance()
     return handler;
 }
 
-void TextHandler::startChat(const QString &phoneNumber)
+void TextHandler::startChat(const QStringList &phoneNumbers)
 {
     // Request the contact to start chatting to
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
-    connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
+    connect(account->connection()->contactManager()->contactsForIdentifiers(phoneNumbers),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
 
-void TextHandler::sendMessage(const QString &phoneNumber, const QString &message)
+void TextHandler::startChat(const Tp::Contacts &contacts)
+{
+    qDebug() << "TextHandler::startChat" << contacts;
+    Tp::AccountPtr account = TelepathyHelper::instance()->account();
+
+    Tp::ContactPtr firstContact = contacts.values()[0];
+    account->ensureTextChat(firstContact, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    // start chatting to the contacts
+    Q_FOREACH(Tp::ContactPtr contact, contacts) {
+        // hold the ContactPtr to make sure its refcounting stays bigger than 0
+        mContacts[contact->id()] = contact;
+    }
+    mPendingMembers[firstContact->id()] = contacts;
+}
+
+void TextHandler::sendMessage(const QStringList &phoneNumbers, const QString &message)
 {
     if (!TelepathyHelper::instance()->connected()) {
-        mPendingMessages[phoneNumber].append(message);
+        mPendingMessages[phoneNumbers].append(message);
         return;
     }
 
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
+    Tp::TextChannelPtr channel = existingChat(phoneNumbers);
     if (channel.isNull()) {
-        mPendingMessages[phoneNumber].append(message);
-        startChat(phoneNumber);
+        mPendingMessages[phoneNumbers].append(message);
+        startChat(phoneNumbers);
         return;
     }
 
@@ -82,9 +102,9 @@ void TextHandler::sendMessage(const QString &phoneNumber, const QString &message
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
-void TextHandler::acknowledgeMessages(const QString &phoneNumber, const QStringList &messageIds)
+void TextHandler::acknowledgeMessages(const QStringList &phoneNumbers, const QStringList &messageIds)
 {
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
+    Tp::TextChannelPtr channel = existingChat(phoneNumbers);
     if (channel.isNull()) {
         return;
     }
@@ -102,20 +122,31 @@ void TextHandler::acknowledgeMessages(const QString &phoneNumber, const QStringL
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     QString id = channel->targetContact()->id();
-    mChannels[id] = channel;
 
+    mChannels.append(channel);
+
+    connect(channel->groupAddContacts(mPendingMembers[id].toList()), 
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(processPendingMessages(Tp::PendingOperation*)));
+    mPendingMembers.remove(id);
+}
+
+void TextHandler::processPendingMessages(Tp::PendingOperation *op)
+{
     // check for pending messages for this channel
-    QMap<QString, QStringList>::iterator it = mPendingMessages.begin();
-    while (it != mPendingMessages.end()) {
-        if (PhoneUtils::comparePhoneNumbers(it.key(), id)) {
-            Q_FOREACH(const QString &message, it.value()) {
-                connect(channel->send(message),
-                        SIGNAL(finished(Tp::PendingOperation*)),
-                        SLOT(onMessageSent(Tp::PendingOperation*)));
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
+        QMap<QStringList, QStringList>::iterator it = mPendingMessages.begin();
+        while (it != mPendingMessages.end()) {
+            if (existingChat(it.key()) == channel) {
+                Q_FOREACH(const QString &message, it.value()) {
+                    connect(channel->send(message),
+                            SIGNAL(finished(Tp::PendingOperation*)),
+                            SLOT(onMessageSent(Tp::PendingOperation*)));
+                }
+                it = mPendingMessages.erase(it);
+            } else {
+                ++it;
             }
-            it = mPendingMessages.erase(it);
-        } else {
-            ++it;
         }
     }
 }
@@ -134,18 +165,31 @@ void TextHandler::onMessageSent(Tp::PendingOperation *op)
     }
 }
 
-Tp::TextChannelPtr TextHandler::existingChat(const QString &phoneNumber)
+Tp::TextChannelPtr TextHandler::existingChat(const QStringList &phoneNumbers)
 {
     Tp::TextChannelPtr channel;
-    QMap<QString, Tp::TextChannelPtr>::iterator it = mChannels.begin();
-    while (it != mChannels.end()) {
-        if (PhoneUtils::comparePhoneNumbers(it.key(), phoneNumber)) {
-            channel = it.value();
-            break;
-        }
-        ++it;
-    }
 
+    QList<Tp::TextChannelPtr>::iterator it = mChannels.begin();
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
+        int count = 0;
+        qDebug() << phoneNumbers.size() << channel->groupContacts(false).size();
+        if (channel->groupContacts(false).size() != phoneNumbers.size()) {
+            continue;
+        }
+        Q_FOREACH(const QString &phoneNumberNew, phoneNumbers) {
+            Q_FOREACH(const Tp::ContactPtr &phoneNumberOld, channel->groupContacts(false)) {
+                if (PhoneUtils::comparePhoneNumbers(phoneNumberOld->id(), phoneNumberNew)) {
+                    count++;
+                }
+            }
+        }
+        qDebug() << count << phoneNumbers;
+        if (count == phoneNumbers.size()) {
+            qDebug() << "channel found";
+            return channel;
+        }
+    }
+    qDebug() << "channel not found" << channel;
     return channel;
 }
 
@@ -157,14 +201,7 @@ void TextHandler::onContactsAvailable(Tp::PendingOperation *op)
         qCritical() << "The pending object is not a Tp::PendingContacts";
         return;
     }
-
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-
-    // start chatting to the contacts
-    Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        account->ensureTextChat(contact, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
-
-        // hold the ContactPtr to make sure its refcounting stays bigger than 0
-        mContacts[contact->id()] = contact;
-    }
+    startChat(pc->contacts().toSet());
 }
+
+

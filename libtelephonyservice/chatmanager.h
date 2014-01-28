@@ -34,10 +34,10 @@ class ChatManager : public QObject
 public:
     static ChatManager *instance();
 
-    Q_INVOKABLE void sendMessage(const QString &phoneNumber, const QString &message);
+    Q_INVOKABLE void sendMessage(const QStringList &phoneNumbers, const QString &message);
 
     int unreadMessagesCount() const;
-    int unreadMessages(const QString &phoneNumber);
+    int unreadMessages(const QStringList &phoneNumbers);
 
 Q_SIGNALS:
     void messageReceived(const QString &phoneNumber, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
@@ -53,7 +53,7 @@ public Q_SLOTS:
     void acknowledgeMessage(const QString &phoneNumber, const QString &messageId);
 
 protected:
-    Tp::TextChannelPtr existingChat(const QString &phoneNumber);
+    Tp::TextChannelPtr existingChat(const QStringList &phoneNumbers);
 
 protected Q_SLOTS:
     void onAckTimerTriggered();
@@ -61,7 +61,7 @@ protected Q_SLOTS:
 private:
     explicit ChatManager(QObject *parent = 0);
 
-    QMap<QString, Tp::TextChannelPtr> mChannels;
+    QList<Tp::TextChannelPtr> mChannels;
     QMap<QString, QStringList> mMessagesToAck;
     QTimer mMessagesAckTimer;
 };

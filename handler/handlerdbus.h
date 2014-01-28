@@ -43,8 +43,8 @@ public Q_SLOTS:
     bool connectToBus();
 
     // messages related
-    Q_NOREPLY void SendMessage(const QString &number, const QString &message);
-    Q_NOREPLY void AcknowledgeMessages(const QString &number, const QStringList &messageIds);
+    Q_NOREPLY void SendMessage(const QStringList &number, const QString &message);
+    Q_NOREPLY void AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds);
 
     // call related
     Q_NOREPLY void StartCall(const QString &number);

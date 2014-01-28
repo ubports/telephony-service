@@ -52,14 +52,14 @@ bool HandlerDBus::connectToBus()
     return true;
 }
 
-void HandlerDBus::SendMessage(const QString &number, const QString &message)
+void HandlerDBus::SendMessage(const QStringList &numbers, const QString &message)
 {
-    TextHandler::instance()->sendMessage(number, message);
+    TextHandler::instance()->sendMessage(numbers, message);
 }
 
-void HandlerDBus::AcknowledgeMessages(const QString &number, const QStringList &messageIds)
+void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds)
 {
-    TextHandler::instance()->acknowledgeMessages(number, messageIds);
+    TextHandler::instance()->acknowledgeMessages(numbers, messageIds);
 }
 
 void HandlerDBus::StartCall(const QString &number)

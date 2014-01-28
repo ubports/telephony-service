@@ -42,25 +42,25 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
-void ChatManager::sendMessage(const QString &phoneNumber, const QString &message)
+void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &message)
 {
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMessage", phoneNumber, message);
+    phoneAppHandler->call("SendMessage", phoneNumbers, message);
 }
 
 int ChatManager::unreadMessagesCount() const
 {
     int count = 0;
-    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels.values()) {
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         count += channel->messageQueue().count();
     }
 
     return count;
 }
 
-int ChatManager::unreadMessages(const QString &phoneNumber)
+int ChatManager::unreadMessages(const QStringList &phoneNumbers)
 {
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
+    Tp::TextChannelPtr channel = existingChat(phoneNumbers);
     if (channel.isNull()) {
         return 0;
     }
@@ -71,7 +71,7 @@ int ChatManager::unreadMessages(const QString &phoneNumber)
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     QString id = channel->targetContact()->id();
-    mChannels[id] = channel;
+    mChannels.append(channel);
 
     connect(channel.data(),
             SIGNAL(messageReceived(Tp::ReceivedMessage)),
@@ -121,14 +121,27 @@ void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::Messag
     Q_EMIT messageSent(channel->targetContact()->id(), sentMessage.text());
 }
 
-Tp::TextChannelPtr ChatManager::existingChat(const QString &phoneNumber)
+Tp::TextChannelPtr ChatManager::existingChat(const QStringList &phoneNumbers)
 {
     Tp::TextChannelPtr channel;
-    Q_FOREACH(const QString &key, mChannels.keys()) {
-        if (PhoneUtils::comparePhoneNumbers(key, phoneNumber)) {
-            channel = mChannels[key];
-            break;
+
+    QList<Tp::TextChannelPtr>::iterator it = mChannels.begin();
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
+        int count = 0;
+        if (channel->groupContacts(false).size() != phoneNumbers.size()) {
+            continue;
         }
+        Q_FOREACH(const QString &phoneNumberNew, phoneNumbers) {
+            Q_FOREACH(const Tp::ContactPtr &phoneNumberOld, channel->groupContacts(false)) {
+                if (PhoneUtils::comparePhoneNumbers(phoneNumberOld->id(), phoneNumberNew)) {
+                    count++;
+                }
+            }
+        }
+        if (count == phoneNumbers.size()) {
+            return channel;
+        }
+
     }
 
     return channel;

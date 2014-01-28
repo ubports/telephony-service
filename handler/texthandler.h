@@ -32,27 +32,30 @@ class TextHandler : public QObject
     Q_OBJECT
 public:
     static TextHandler *instance();
-    void startChat(const QString &phoneNumber);
+    void startChat(const QStringList &phoneNumber);
+    void startChat(const Tp::Contacts &contacts);
 
 public Q_SLOTS:
-    void sendMessage(const QString &phoneNumber, const QString &message);
-    void acknowledgeMessages(const QString &phoneNumber, const QStringList &messageIds);
+    void sendMessage(const QStringList &phoneNumber, const QString &message);
+    void acknowledgeMessages(const QStringList &phoneNumber, const QStringList &messageIds);
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageSent(Tp::PendingOperation *op);
     void onConnectedChanged();
+    void processPendingMessages(Tp::PendingOperation *op);
 
 protected:
-    Tp::TextChannelPtr existingChat(const QString &phoneNumber);
+    Tp::TextChannelPtr existingChat(const QStringList &phoneNumber);
 
 private:
     explicit TextHandler(QObject *parent = 0);
 
-    QMap<QString, Tp::TextChannelPtr> mChannels;
+    QList<Tp::TextChannelPtr> mChannels;
     QMap<QString, Tp::ContactPtr> mContacts;
-    QMap<QString, QStringList> mPendingMessages;
+    QMap<QStringList, QStringList> mPendingMessages;
+    QMap<QString, Tp::Contacts> mPendingMembers;
 };
 
 #endif // TEXTHANDLER_H
