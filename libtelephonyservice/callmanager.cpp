@@ -225,7 +225,7 @@ int CallManager::activeCallsCount() const
 {
     int count = 0;
     Q_FOREACH(const CallEntry *entry, mCallEntries) {
-        if (entry->isActive()) {
+        if (entry->isActive() || entry->dialing()) {
             count++;
         }
     }
