@@ -68,15 +68,15 @@ void RingtoneWorker::onChanged(QString interface,
                                QStringList invalidatedProperties)
 {
     Q_UNUSED (interface);
-    Q_UNUSED (invalidatedProperties);
+    Q_UNUSED (changedProperties);
 
-    if (changedProperties.contains("SilentMode"))
+    if (invalidatedProperties.contains("SilentMode"))
         mSilentMode = getUserProperty("SilentMode").toBool();
 
-    if (changedProperties.contains("IncomingCallSound"))
+    if (invalidatedProperties.contains("IncomingCallSound"))
         mIncomingCallSound = getUserProperty("IncomingCallSound").toString();
 
-    if (changedProperties.contains("IncomingMessageSound"))
+    if (invalidatedProperties.contains("IncomingMessageSound"))
         mIncomingMessageSound = getUserProperty("IncomingMessageSound").toString();
 }
 
