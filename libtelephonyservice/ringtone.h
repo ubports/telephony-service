@@ -48,8 +48,8 @@ public Q_SLOTS:
 
 
 private Q_SLOTS:
-    void slotChanged(QString, QVariantMap, QStringList);
-    void slotNameOwnerChanged(QString, QString, QString);
+    void onChanged(QString, QVariantMap, QStringList);
+    void onNameOwnerChanged(QString, QString, QString);
 
 private:
     QMediaPlayer mCallAudioPlayer;

@@ -44,16 +44,16 @@ RingtoneWorker::RingtoneWorker(QObject *parent) :
     connect (&mServiceWatcher,
              SIGNAL (serviceOwnerChanged (QString, QString, QString)),
              this,
-             SLOT (slotNameOwnerChanged (QString, QString, QString)));
+             SLOT (onNameOwnerChanged (QString, QString, QString)));
 
     if (mAccountsserviceIface.isValid()) {
         setUpInterface();
     }
 }
 
-void RingtoneWorker::slotNameOwnerChanged(QString name,
-                                          QString oldOwner,
-                                          QString newOwner)
+void RingtoneWorker::onNameOwnerChanged(QString name,
+                                        QString oldOwner,
+                                        QString newOwner)
 {
     Q_UNUSED (oldOwner);
     Q_UNUSED (newOwner);
@@ -63,9 +63,9 @@ void RingtoneWorker::slotNameOwnerChanged(QString name,
     setUpInterface();
 }
 
-void RingtoneWorker::slotChanged(QString interface,
-                                 QVariantMap changedProperties,
-                                 QStringList invalidatedProperties)
+void RingtoneWorker::onChanged(QString interface,
+                               QVariantMap changedProperties,
+                               QStringList invalidatedProperties)
 {
     Q_UNUSED (interface);
     Q_UNUSED (invalidatedProperties);
@@ -95,7 +95,7 @@ void RingtoneWorker::setUpInterface()
             "org.freedesktop.DBus.Properties",
             "PropertiesChanged",
             this,
-            SLOT(slotChanged(QString, QVariantMap, QStringList)));
+            SLOT(onChanged(QString, QVariantMap, QStringList)));
 
         mSilentMode = getUserProperty("SilentMode").toBool();
         mIncomingCallSound = getUserProperty("IncomingCallSound").toString();
