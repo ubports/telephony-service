@@ -57,7 +57,7 @@ public:
     static void messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
     static void callsActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
 
-    void showVoicemailEntry(int count);
+    void showVoicemailEntry(uint count);
     void hideVoicemailEntry();
 
 Q_SIGNALS:

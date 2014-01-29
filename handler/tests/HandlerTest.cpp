@@ -1,0 +1,119 @@
+/*
+ * Copyright (C) 2013 Canonical, Ltd.
+ *
+ * This file is part of telephony-service.
+ *
+ * telephony-service is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; version 3.
+ *
+ * telephony-service is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <QtCore/QObject>
+#include <QtTest/QtTest>
+#include "handlercontroller.h"
+#include "mockcontroller.h"
+#include "approver.h"
+#include "telepathyhelper.h"
+
+class HandlerTest : public QObject
+{
+    Q_OBJECT
+
+private Q_SLOTS:
+    void initTestCase();
+    void testMakingCalls();
+    void testHangUpCall();
+    void testSendMessage();
+
+private:
+    Approver *mApprover;
+};
+
+void HandlerTest::initTestCase()
+{
+    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(accountReady()));
+    QTRY_COMPARE(spy.count(), 1);
+    QTRY_VERIFY(TelepathyHelper::instance()->connected());
+
+    // register the approver
+    mApprover = new Approver(this);
+    TelepathyHelper::instance()->registerClient(mApprover, "TelephonyTestApprover");
+    // Tp-qt does not set registered status to approvers
+    QTRY_VERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(TELEPHONY_SERVICE_APPROVER));
+
+    // we need to wait in order to give telepathy time to notify about the approver
+    QTest::qWait(3000);
+}
+
+void HandlerTest::testMakingCalls()
+{
+    QString callerId("1234567");
+    QSignalSpy callReceivedSpy(MockController::instance(), SIGNAL(callReceived(QString)));
+    HandlerController::instance()->startCall(callerId);
+    QTRY_COMPARE(callReceivedSpy.count(), 1);
+    QCOMPARE(callReceivedSpy.first().first().toString(), callerId);
+
+    MockController::instance()->hangupCall(callerId);
+}
+
+void HandlerTest::testHangUpCall()
+{
+    QString callerId("7654321");
+
+    QVariantMap properties;
+    properties["Caller"] = callerId;
+    properties["State"] = "incoming";
+
+    QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
+    MockController::instance()->placeCall(properties);
+
+    // wait for the channel to hit the approver
+    QTRY_COMPARE(approverCallSpy.count(), 1);
+    mApprover->acceptCall();
+
+    // wait until the call state is "accepted"
+    QSignalSpy callStateSpy(MockController::instance(), SIGNAL(callStateChanged(QString,QString,QString)));
+    QString state;
+    QString objectPath;
+    int tries = 0;
+    while (state != "active" && tries < 5) {
+        QTRY_COMPARE(callStateSpy.count(), 1);
+        objectPath = callStateSpy.first()[1].toString();
+        state = callStateSpy.first()[2].toString();
+        callStateSpy.clear();
+        tries++;
+    }
+
+    QCOMPARE(state, QString("active"));
+    QVERIFY(!objectPath.isEmpty());
+
+    // and finally request the hangup
+    QSignalSpy callEndedSpy(MockController::instance(), SIGNAL(callEnded(QString)));
+    HandlerController::instance()->hangUpCall(objectPath);
+    QTRY_COMPARE(callEndedSpy.count(), 1);
+}
+
+void HandlerTest::testSendMessage()
+{
+    QString recipient("22222222");
+    QString message("Hello, world!");
+    QSignalSpy messageSentSpy(MockController::instance(), SIGNAL(messageSent(QString,QVariantMap)));
+    HandlerController::instance()->sendMessage(recipient, message);
+    QTRY_COMPARE(messageSentSpy.count(), 1);
+    QString sentMessage = messageSentSpy.first().first().toString();
+    QVariantMap messageProperties = messageSentSpy.first().last().value<QVariantMap>();
+    QCOMPARE(sentMessage, message);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
+}
+
+QTEST_MAIN(HandlerTest)
+#include "HandlerTest.moc"

@@ -18,7 +18,7 @@ override_dh_auto_configure:
 	                     -DCMAKE_INSTALL_LOCALSTATEDIR="/var"
 
 override_dh_auto_test:
-	make -C obj-$(DEB_HOST_GNU_TYPE) test
+	QT_QPA_PLATFORM=minimal CTEST_OUTPUT_ON_FAILURE=1 make -C obj-$(DEB_HOST_GNU_TYPE) test
 
 override_dh_translations:
 	# Override dh_translations to work around http://pad.lv/1183262.

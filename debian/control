@@ -4,8 +4,10 @@ Priority: optional
 Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 Build-Depends: cmake,
                dbus-test-runner,
+               dconf-cli,
                debhelper (>= 9),
                dh-translations,
+               gnome-keyring,
                libgl1-mesa-dev | libgl-dev,
                libgles2-mesa-dev,
                libgsettings-qt-dev,
@@ -25,6 +27,7 @@ Build-Depends: cmake,
                qtmultimedia5-dev (>= 5.0),
                qtpim5-dev (>= 5),
                libusermetricsinput1-dev,
+               telepathy-mission-control-5,
 Standards-Version: 3.9.4
 Homepage: https://launchpad.net/telephony-service
 # If you aren't a member of ~phablet-team but need to upload packaging changes,
