@@ -23,6 +23,7 @@
 #include "callentry.h"
 #include "telepathyhelper.h"
 
+#include <QDBusReply>
 #include <QTime>
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/PendingReady>
@@ -38,13 +39,17 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mChannel(channel),
     mVoicemail(false),
     mLocalMuteState(false),
-    mElapsedTime(QTime::currentTime()),
     mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE),
     mSpeakerInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_SPEAKER_IFACE),
     mHasSpeakerProperty(false),
     mSpeakerMode(false)
 {
     setupCallChannel();
+
+    // connect to the DBus signal
+    connect(TelepathyHelper::instance()->handlerInterface(),
+            SIGNAL(CallPropertiesChanged(QString, QVariantMap)),
+            SLOT(onCallPropertiesChanged(QString,QVariantMap)));
 
     Q_EMIT incomingChanged();
 }
@@ -53,6 +58,14 @@ void CallEntry::onSpeakerChanged(bool active)
 {
     mSpeakerMode = active;
     Q_EMIT speakerChanged();
+}
+
+void CallEntry::onCallPropertiesChanged(const QString &objectPath, const QVariantMap &properties)
+{
+    if (objectPath != mChannel->objectPath()) {
+        return;
+    }
+    updateChannelProperties(properties);
 }
 
 void CallEntry::setupCallChannel()
@@ -83,6 +96,35 @@ void CallEntry::setupCallChannel()
     Q_EMIT heldChanged();
     Q_EMIT phoneNumberChanged();
     Q_EMIT dialingChanged();
+}
+
+void CallEntry::updateChannelProperties(const QVariantMap &properties)
+{
+    QVariantMap props = properties;
+    // fetch the properties if the map is empty
+    if (props.isEmpty()) {
+        QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+        QDBusReply<QVariantMap> reply = phoneAppHandler->call("GetCallProperties", mChannel->objectPath());
+        if (!reply.isValid()) {
+            return;
+        }
+
+        props = reply.value();
+    }
+
+    QDateTime timestamp;
+    if (props.contains("timestamp")) {
+        props["timestamp"].value<QDBusArgument>() >> timestamp;
+    }
+    if (props.contains("activeTimestamp")) {
+        props["activeTimestamp"].value<QDBusArgument>() >> mActiveTimestamp;
+    }
+
+    mChannel->setProperty("dtmfString", props["dtmfString"]);
+    mChannel->setProperty("timestamp", timestamp);
+    mChannel->setProperty("activeTimestamp", mActiveTimestamp);
+
+    Q_EMIT dtmfStringChanged();
 }
 
 void CallEntry::timerEvent(QTimerEvent *event)
@@ -140,6 +182,11 @@ QString CallEntry::phoneNumber() const
     return mChannel->targetContact()->id();
 }
 
+QString CallEntry::dtmfString() const
+{
+    return mChannel->property("dtmfString").toString();
+}
+
 void CallEntry::sendDTMF(const QString &key)
 {
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
@@ -194,14 +241,15 @@ void CallEntry::setMute(bool value)
 
 void CallEntry::onCallStateChanged(Tp::CallState state)
 {
+    // fetch the channel properties from the handler
+    updateChannelProperties();
+
     switch (state) {
     case Tp::CallStateEnded:
         Q_EMIT callEnded();
         break;
     case Tp::CallStateActive:
-        mChannel->setProperty("activeTimestamp", QDateTime::currentDateTime());
         startTimer(1000);
-        mElapsedTime.start();
         Q_EMIT callActive();
         Q_EMIT activeChanged();
         break;
@@ -230,7 +278,10 @@ bool CallEntry::isVoicemail() const
 
 int CallEntry::elapsedTime() const
 {
-    return mElapsedTime.secsTo(QTime::currentTime());
+    if (!mActiveTimestamp.isValid()) {
+        return 0;
+    }
+    return mActiveTimestamp.secsTo(QDateTime::currentDateTimeUtc());
 }
 
 bool CallEntry::isActive() const
