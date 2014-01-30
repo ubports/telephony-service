@@ -70,17 +70,18 @@ void TextHandler::startChat(const QStringList &phoneNumbers)
 
 void TextHandler::startChat(const Tp::Contacts &contacts)
 {
-    qDebug() << "TextHandler::startChat" << contacts;
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
 
-    Tp::ContactPtr firstContact = contacts.values()[0];
-    account->ensureTextChat(firstContact, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    if (contacts.size() == 1) {
+        account->ensureTextChat(contacts.values()[0], QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    } else {
+        account->createConferenceTextChat(QList<Tp::ChannelPtr>(), contacts.toList(), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    }
     // start chatting to the contacts
     Q_FOREACH(Tp::ContactPtr contact, contacts) {
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;
     }
-    mPendingMembers[firstContact->id()] = contacts;
 }
 
 void TextHandler::sendMessage(const QStringList &phoneNumbers, const QString &message)
@@ -121,18 +122,8 @@ void TextHandler::acknowledgeMessages(const QStringList &phoneNumbers, const QSt
 
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
-    QString id = channel->targetContact()->id();
-
     mChannels.append(channel);
 
-    connect(channel->groupAddContacts(mPendingMembers[id].toList()), 
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(processPendingMessages(Tp::PendingOperation*)));
-    mPendingMembers.remove(id);
-}
-
-void TextHandler::processPendingMessages(Tp::PendingOperation *op)
-{
     // check for pending messages for this channel
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         QMap<QStringList, QStringList>::iterator it = mPendingMessages.begin();
@@ -169,10 +160,8 @@ Tp::TextChannelPtr TextHandler::existingChat(const QStringList &phoneNumbers)
 {
     Tp::TextChannelPtr channel;
 
-    QList<Tp::TextChannelPtr>::iterator it = mChannels.begin();
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
-        qDebug() << phoneNumbers.size() << channel->groupContacts(false).size();
         if (channel->groupContacts(false).size() != phoneNumbers.size()) {
             continue;
         }
@@ -183,13 +172,10 @@ Tp::TextChannelPtr TextHandler::existingChat(const QStringList &phoneNumbers)
                 }
             }
         }
-        qDebug() << count << phoneNumbers;
         if (count == phoneNumbers.size()) {
-            qDebug() << "channel found";
             return channel;
         }
     }
-    qDebug() << "channel not found" << channel;
     return channel;
 }
 

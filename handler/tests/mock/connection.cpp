@@ -297,7 +297,7 @@ Tp::BaseChannelPtr MockConnection::createCallChannel(uint targetHandleType,
 }
 
 Tp::BaseChannelPtr MockConnection::createChannel(const QString& channelType, uint targetHandleType,
-                                               uint targetHandle, Tp::DBusError *error)
+                                               uint targetHandle, const QVariantMap &hints, Tp::DBusError *error)
 {
     qDebug() << "MockConnection::createChannel" << targetHandle;
     if( (targetHandleType != Tp::HandleTypeContact) || targetHandle == 0 || !mHandles.keys().contains(targetHandle)) {
@@ -335,7 +335,7 @@ void MockConnection::placeIncomingMessage(const QString &message, const QVariant
     Tp::DBusError error;
     bool yours;
     uint handle = newHandle(sender);
-    ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_TEXT,Tp::HandleTypeContact, handle, yours, handle, false, &error);
+    ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_TEXT,Tp::HandleTypeContact, handle, yours, handle, false, QVariantMap(), &error);
     if(error.isValid()) {
         qWarning() << "Error creating channel for incoming message" << error.name() << error.message();
         return;
@@ -411,7 +411,7 @@ void MockConnection::placeCall(const QVariantMap &properties)
     mInitialCallStatus[callerId] = state;
     mIncomingCalls.append(callerId);
 
-    Tp::BaseChannelPtr channel  = ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_CALL, Tp::HandleTypeContact, handle, yours, initiatorHandle, false, &error);
+    Tp::BaseChannelPtr channel  = ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_CALL, Tp::HandleTypeContact, handle, yours, initiatorHandle, false, QVariantMap(), &error);
     if (error.isValid() || channel.isNull()) {
         qWarning() << "error creating the channel " << error.name() << error.message();
         return;

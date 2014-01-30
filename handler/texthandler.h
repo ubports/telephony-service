@@ -44,7 +44,6 @@ protected Q_SLOTS:
     void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageSent(Tp::PendingOperation *op);
     void onConnectedChanged();
-    void processPendingMessages(Tp::PendingOperation *op);
 
 protected:
     Tp::TextChannelPtr existingChat(const QStringList &phoneNumber);
@@ -55,7 +54,6 @@ private:
     QList<Tp::TextChannelPtr> mChannels;
     QMap<QString, Tp::ContactPtr> mContacts;
     QMap<QStringList, QStringList> mPendingMessages;
-    QMap<QString, Tp::Contacts> mPendingMembers;
 };
 
 #endif // TEXTHANDLER_H
