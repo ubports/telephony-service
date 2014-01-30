@@ -78,7 +78,7 @@ void CallManager::onConnectedChanged()
     }
 }
 
-QObject *CallManager::foregroundCall() const
+CallEntry *CallManager::foregroundCall() const
 {
     CallEntry *call = 0;
 
@@ -107,7 +107,7 @@ QObject *CallManager::foregroundCall() const
     return call;
 }
 
-QObject *CallManager::backgroundCall() const
+CallEntry *CallManager::backgroundCall() const
 {
     // if we have only one call, assume there is no call in background
     // even if the foreground call is held
@@ -126,12 +126,12 @@ QObject *CallManager::backgroundCall() const
 
 bool CallManager::hasCalls() const
 {
-    return !mCallEntries.isEmpty();
+    return activeCallsCount() > 0;
 }
 
 bool CallManager::hasBackgroundCall() const
 {
-    return mCallEntries.count() > 1;
+    return activeCallsCount() > 1;
 }
 
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
@@ -154,6 +154,9 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
     connect(entry,
             SIGNAL(heldChanged()),
             SIGNAL(backgroundCallChanged()));
+    connect(entry,
+            SIGNAL(activeChanged()),
+            SIGNAL(hasBackgroundCallChanged()));
 
     // FIXME: check which of those signals we really need to emit here
     Q_EMIT hasCallsChanged();
@@ -216,4 +219,16 @@ void CallManager::notifyEndedCall(const Tp::CallChannelPtr &channel)
     // and finally add the entry
     // just mark it as new if it is missed
     Q_EMIT callEnded(phoneNumber, incoming, timestamp, duration, missed, missed);
+}
+
+int CallManager::activeCallsCount() const
+{
+    int count = 0;
+    Q_FOREACH(const CallEntry *entry, mCallEntries) {
+        if (entry->isActive() || entry->dialing()) {
+            count++;
+        }
+    }
+
+    return count;
 }
