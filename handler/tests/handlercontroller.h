@@ -29,6 +29,8 @@ class HandlerController : public QObject
 public:
     static HandlerController *instance();
 
+    QVariantMap getCallProperties(const QString &objectPath);
+
 public Q_SLOTS:
     void startCall(const QString &number);
     void hangUpCall(const QString &objectPath);
@@ -39,6 +41,9 @@ public Q_SLOTS:
 
     void sendMessage(const QString &number, const QString &message);
     void acknowledgeMessages(const QString &number, const QStringList &messageIds);
+
+Q_SIGNALS:
+    void callPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
 
 private:
     explicit HandlerController(QObject *parent = 0);
