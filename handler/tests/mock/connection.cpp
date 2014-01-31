@@ -384,7 +384,7 @@ uint MockConnection::ensureHandle(const QString &id)
     return newHandle(id);
 }
 
-void MockConnection::placeCall(const QVariantMap &properties)
+QString MockConnection::placeCall(const QVariantMap &properties)
 {
     qDebug() << "new call" << properties;
 
@@ -394,7 +394,7 @@ void MockConnection::placeCall(const QVariantMap &properties)
     QString state = properties["State"].toString();
 
     if (mCallChannels.contains(callerId)) {
-        return;
+        return mCallChannels[callerId]->objectPath();
     }
 
     uint handle = ensureHandle(callerId);
@@ -414,8 +414,10 @@ void MockConnection::placeCall(const QVariantMap &properties)
     Tp::BaseChannelPtr channel  = ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_CALL, Tp::HandleTypeContact, handle, yours, initiatorHandle, false, &error);
     if (error.isValid() || channel.isNull()) {
         qWarning() << "error creating the channel " << error.name() << error.message();
-        return;
+        return QString();
     }
+
+    return channel->objectPath();
 }
 
 void MockConnection::hangupCall(const QString &callerId)

@@ -41,10 +41,12 @@ public:
     bool connectToBus();
 
 public Q_SLOTS:
+    Q_NOREPLY void HangUpAndAcceptCall();
     Q_NOREPLY void AcceptCall();
     Q_NOREPLY void RejectCall();
 
 Q_SIGNALS:
+    void hangUpAndAcceptCallRequested();
     void acceptCallRequested();
     void rejectCallRequested();
 };

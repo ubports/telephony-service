@@ -19,6 +19,7 @@
  */
 
 #include "mockcontroller.h"
+#include <QDBusReply>
 
 #define MOCK_SERVICE "com.canonical.MockConnection"
 #define MOCK_OBJECT "/com/canonical/MockConnection"
@@ -45,9 +46,10 @@ void MockController::placeIncomingMessage(const QString &message, const QVariant
     mMockInterface.call("PlaceIncomingMessage", message, properties);
 }
 
-void MockController::placeCall(const QVariantMap &properties)
+QString MockController::placeCall(const QVariantMap &properties)
 {
-    mMockInterface.call("PlaceCall", properties);
+    QDBusReply<QString> reply = mMockInterface.call("PlaceCall", properties);
+    return reply;
 }
 
 void MockController::hangupCall(const QString &callerId)

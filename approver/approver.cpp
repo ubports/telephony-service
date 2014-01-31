@@ -22,10 +22,13 @@
 #include "approver.h"
 #include "approverdbus.h"
 #include "applicationutils.h"
+#include "callnotification.h"
 #include "chatmanager.h"
 #include "config.h"
 #include "contactutils.h"
 #include "ringtone.h"
+#include "callmanager.h"
+#include "callentry.h"
 
 #include <QContactAvatar>
 #include <QContactFetchRequest>
@@ -134,9 +137,7 @@ public:
     Tp::ChannelPtr channel;
 };
 
-void action_accept(NotifyNotification* notification,
-                   char*               action,
-                   gpointer            data)
+void action_accept(NotifyNotification *notification, char *action, gpointer data)
 {
     Q_UNUSED(notification);
     Q_UNUSED(action);
@@ -148,9 +149,19 @@ void action_accept(NotifyNotification* notification,
     }
 }
 
-void action_reject(NotifyNotification* notification,
-                   char*               action,
-                   gpointer            data)
+void action_hangup_and_accept(NotifyNotification *notification, char *action, gpointer data)
+{
+    Q_UNUSED(notification);
+    Q_UNUSED(action);
+
+    EventData *eventData = (EventData*) data;
+    Approver *approver = (Approver*) eventData->self;
+    if (approver != NULL) {
+        approver->onHangUpAndApproved((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp);
+    }
+}
+
+void action_reject(NotifyNotification *notification, char *action, gpointer data)
 {
     Q_UNUSED(notification);
     Q_UNUSED(action);
@@ -236,12 +247,27 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                         "x-canonical-private-button-tint",
                                         "true");
 
+    QString acceptTitle = CallManager::instance()->hasCalls() ? C::gettext("Hold + Answer") :
+                                                                C::gettext("Accept");
     notify_notification_add_action (notification,
                                     "action_accept",
-                                    C::gettext("Accept"),
+                                    acceptTitle.toLocal8Bit().data(),
                                     action_accept,
                                     data,
                                     delete_event_data);
+
+    // FIXME: uncomment this code once snap decisions support more than two actions and stacked buttons
+    /*
+    if (CallManager::instance()->hasCalls()) {
+        notify_notification_add_action (notification,
+                                        "action_hangup_and_accept",
+                                        C::gettext("End + Answer"),
+                                        action_hangup_and_accept,
+                                        data,
+                                        delete_event_data);
+    }
+    */
+
     notify_notification_add_action (notification,
                                     "action_decline_1",
                                     C::gettext("Decline"),
@@ -302,6 +328,24 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
 {
     closeSnapDecision();
+
+    // forward the channel to the handler
+    dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
+
+    // and then launch the dialer-app
+    ApplicationUtils::openUrl(QUrl("application:///dialer-app.desktop"));
+
+    mDispatchOps.removeAll(dispatchOp);
+}
+
+void Approver::onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
+{
+    closeSnapDecision();
+
+    // hangup existing calls
+    if (CallManager::instance()->foregroundCall()) {
+        CallManager::instance()->foregroundCall()->endCall();
+    }
 
     // forward the channel to the handler
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
@@ -378,6 +422,7 @@ void Approver::onClaimFinished(Tp::PendingOperation* op)
     Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[op]);
     if (callChannel) {
         Tp::PendingOperation *hangupop = callChannel->hangup(Tp::CallStateChangeReasonUserRequested, TP_QT_ERROR_REJECTED, QString());
+        CallNotification::instance()->showNotificationForCall(QStringList() << callChannel->targetContact()->id(), CallNotification::CallRejected);
         mChannels[hangupop] = callChannel;
         connect(hangupop, SIGNAL(finished(Tp::PendingOperation*)),
                 this, SLOT(onHangupFinished(Tp::PendingOperation*)));
@@ -446,6 +491,18 @@ void Approver::closeSnapDecision()
     }
 
     Ringtone::instance()->stopIncomingCallSound();
+}
+
+void Approver::onHangupAndAcceptCallRequested()
+{
+    if (!mPendingSnapDecision) {
+        return;
+    }
+
+    Tp::ChannelDispatchOperationPtr callDispatchOp = dispatchOperationForIncomingCall();
+    if (!callDispatchOp.isNull()) {
+        onHangUpAndApproved(callDispatchOp);
+    }
 }
 
 void Approver::onAcceptCallRequested()

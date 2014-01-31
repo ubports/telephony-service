@@ -22,6 +22,7 @@
                 Simulates an incoming call
             ]]></dox:d>
             <arg name="properties" type="a{sv}" direction="in"/>
+            <arg name="objectpath" type="s" direction="out"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
         </method>
         <method name="HangupCall">
