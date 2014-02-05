@@ -42,6 +42,7 @@ CallManager::CallManager(QObject *parent)
 {
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
+    connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
 }
 
 void CallManager::onChannelObserverUnregistered()
@@ -124,14 +125,41 @@ CallEntry *CallManager::backgroundCall() const
     return 0;
 }
 
+QList<CallEntry *> CallManager::activeCalls() const
+{
+    QList<CallEntry*> calls;
+    Q_FOREACH(CallEntry *entry, mCallEntries) {
+        if (entry->isActive() || entry->dialing()) {
+            calls << entry;
+        }
+    }
+
+    return calls;
+}
+
+QQmlListProperty<CallEntry> CallManager::calls()
+{
+    return QQmlListProperty<CallEntry>(this, 0, callsCount, callAt);
+}
+
 bool CallManager::hasCalls() const
 {
-    return activeCallsCount() > 0;
+    return activeCalls().count() > 0;
 }
 
 bool CallManager::hasBackgroundCall() const
 {
-    return activeCallsCount() > 1;
+    return activeCalls().count() > 1;
+}
+
+int CallManager::callsCount(QQmlListProperty<CallEntry> *p)
+{
+    return CallManager::instance()->activeCalls().count();
+}
+
+CallEntry *CallManager::callAt(QQmlListProperty<CallEntry> *p, int index)
+{
+    return CallManager::instance()->activeCalls()[index];
 }
 
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
@@ -219,16 +247,4 @@ void CallManager::notifyEndedCall(const Tp::CallChannelPtr &channel)
     // and finally add the entry
     // just mark it as new if it is missed
     Q_EMIT callEnded(phoneNumber, incoming, timestamp, duration, missed, missed);
-}
-
-int CallManager::activeCallsCount() const
-{
-    int count = 0;
-    Q_FOREACH(const CallEntry *entry, mCallEntries) {
-        if (entry->isActive() || entry->dialing()) {
-            count++;
-        }
-    }
-
-    return count;
 }
