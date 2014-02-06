@@ -66,6 +66,9 @@ class CallEntry : public QObject
                READ isSpeakerOn
                WRITE setSpeaker
                NOTIFY speakerChanged)
+    Q_PROPERTY(QString dtmfString
+               READ dtmfString
+               NOTIFY dtmfStringChanged)
 
 public:
     explicit CallEntry(const Tp::CallChannelPtr &channel, QObject *parent = 0);
@@ -90,6 +93,7 @@ public:
     bool incoming() const;
     bool ringing() const;
     QString phoneNumber() const;
+    QString dtmfString() const;
 
     Q_INVOKABLE void sendDTMF(const QString &key);
     Q_INVOKABLE void endCall();
@@ -101,9 +105,11 @@ protected Q_SLOTS:
     void onCallFlagsChanged(Tp::CallFlags flags);
     void onMutedChanged(uint state);
     void onSpeakerChanged(bool active);
+    void onCallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
 
 protected:
     void setupCallChannel();
+    void updateChannelProperties(const QVariantMap &properties = QVariantMap());
 
 Q_SIGNALS:
     void callEnded();
@@ -113,6 +119,7 @@ Q_SIGNALS:
     void mutedChanged();
     void voicemailChanged();
     void phoneNumberChanged();
+    void dtmfStringChanged();
     void dialingChanged();
     void incomingChanged();
     void ringingChanged();
@@ -128,7 +135,7 @@ private:
     QMap<QString, QVariant> mProperties;
     bool mVoicemail;
     bool mLocalMuteState;
-    QTime mElapsedTime;
+    QDateTime mActiveTimestamp;
     bool mHasSpeakerProperty;
     bool mSpeakerMode;
 };
