@@ -1,3 +1,17 @@
+telephony-service (0.1+14.04.20140206-0ubuntu1) trusty; urgency=low
+
+  [ Michael Terry ]
+  * Share current call contact info with the greeter.
+
+  [ Gustavo Pichorim Boiko ]
+  * Get the active timestamp for calls from the handler, as the observer
+    is unregistered every time the application goes out of focus. This
+    ensures that the call duration will always be correct. Save also the
+    DTMF string so that the application can restore that info too after
+    it is send to background and back to foreground. (LP: #1225939)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 06 Feb 2014 14:19:38 +0000
+
 telephony-service (0.1+14.04.20140130-0ubuntu1) trusty; urgency=low
 
   [ Gustavo Pichorim Boiko ]
