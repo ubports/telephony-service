@@ -1,0 +1,17 @@
+<node>
+  <interface name="com.canonical.TelephonyServiceApprover">
+
+    <annotation name="org.freedesktop.Accounts.VendorExtension" value="true"/>
+
+    <annotation name="org.freedesktop.Accounts.Authentication.ChangeOwn"
+                value="com.canonical.TelephonyServiceApprover.ChangeOwn"/>
+
+    <annotation name="org.freedesktop.Accounts.Authentication.ReadAny"
+                value="com.canonical.TelephonyServiceApprover.ReadAny"/>
+
+    <property name="CurrentContact" type="a{sv}" access="readwrite">
+      <annotation name="org.freedesktop.Accounts.DefaultValue" value="{}"/>
+    </property>
+
+  </interface>
+</node>

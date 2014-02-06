@@ -1,0 +1,6 @@
+[Allow LightDM to read TelephonyServiceApprover fields]
+Identity=unix-user:lightdm
+Action=com.canonical.TelephonyServiceApprover.ReadAny
+ResultAny=no
+ResultInactive=yes
+ResultActive=yes
