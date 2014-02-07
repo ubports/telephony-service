@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<policyconfig>
+        <action id="com.canonical.TelephonyServiceApprover.ChangeOwn">
+                <defaults>
+                        <allow_any>no</allow_any>
+                        <allow_inactive>yes</allow_inactive>
+                        <allow_active>yes</allow_active>
+                </defaults>
+        </action>
+
+        <action id="com.canonical.TelephonyServiceApprover.ReadAny">
+                <defaults>
+                        <allow_any>no</allow_any>
+                        <allow_inactive>no</allow_inactive>
+                        <allow_active>no</allow_active>
+                </defaults>
+        </action>
+</policyconfig>

@@ -32,6 +32,7 @@ private Q_SLOTS:
     void testMakingCalls();
     void testHangUpCall();
     void testCallHold();
+    void testCallProperties();
     void testSendMessage();
 
 private:
@@ -122,6 +123,61 @@ void HandlerTest::testCallHold()
     QCOMPARE(callStateSpy.first()[2].toString(), QString("active"));
 
     MockController::instance()->hangupCall(callerId);
+}
+
+void HandlerTest::testCallProperties()
+{
+    QString callerId("7654321");
+
+    QVariantMap properties;
+    properties["Caller"] = callerId;
+    properties["State"] = "incoming";
+
+    QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
+    QSignalSpy handlerCallPropertiesSpy(HandlerController::instance(), SIGNAL(callPropertiesChanged(QString,QVariantMap)));
+    MockController::instance()->placeCall(properties);
+
+    // wait for the channel to hit the approver
+    QTRY_COMPARE(approverCallSpy.count(), 1);
+    mApprover->acceptCall();
+
+    // wait until the call properties are changed
+    QTRY_COMPARE(handlerCallPropertiesSpy.count(), 1);
+    QString objectPath = handlerCallPropertiesSpy.first()[0].toString();
+    QVariantMap propsFromSignal = handlerCallPropertiesSpy.first()[1].toMap();
+    QVERIFY(!propsFromSignal.isEmpty());
+    QDateTime activeTimestampFromSignal;
+    QDateTime timestampFromSignal;
+    propsFromSignal["activeTimestamp"].value<QDBusArgument>() >> activeTimestampFromSignal;
+    propsFromSignal["timestamp"].value<QDBusArgument>() >> timestampFromSignal;
+    QVERIFY(activeTimestampFromSignal.isValid());
+    QVERIFY(timestampFromSignal.isValid());
+
+    // and try to get the properties using the method
+    QVariantMap propsFromMethod = HandlerController::instance()->getCallProperties(objectPath);
+    QVERIFY(!propsFromMethod.isEmpty());
+    QDateTime activeTimestampFromMethod;
+    QDateTime timestampFromMethod;
+    propsFromMethod["activeTimestamp"].value<QDBusArgument>() >> activeTimestampFromMethod;
+    propsFromMethod["timestamp"].value<QDBusArgument>() >> timestampFromMethod;
+    QCOMPARE(activeTimestampFromSignal, activeTimestampFromMethod);
+    QCOMPARE(timestampFromSignal, timestampFromMethod);
+
+    // now send some DTMF tones and check if the property is properly updated
+    handlerCallPropertiesSpy.clear();
+    QString dtmfString("1234*#");
+    for (int i = 0; i < dtmfString.length(); ++i) {
+        HandlerController::instance()->sendDTMF(objectPath, QString(dtmfString[i]));
+    }
+    QTRY_COMPARE(handlerCallPropertiesSpy.count(), dtmfString.length());
+    propsFromSignal = handlerCallPropertiesSpy.last()[1].toMap();
+    propsFromMethod = HandlerController::instance()->getCallProperties(objectPath);
+    QString dtmfStringFromSignal = propsFromSignal["dtmfString"].toString();
+    QString dtmfStringFromMethod = propsFromMethod["dtmfString"].toString();
+    QCOMPARE(dtmfStringFromSignal, dtmfString);
+    QCOMPARE(dtmfStringFromMethod, dtmfString);
+
+    HandlerController::instance()->hangUpCall(objectPath);
 }
 
 void HandlerTest::testSendMessage()

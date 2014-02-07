@@ -26,6 +26,7 @@
 #include "chatmanager.h"
 #include "config.h"
 #include "contactutils.h"
+#include "greetercontacts.h"
 #include "ringtone.h"
 #include "callmanager.h"
 #include "callentry.h"
@@ -51,8 +52,12 @@ QTCONTACTS_USE_NAMESPACE
 
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
-  mPendingSnapDecision(NULL)
+  mPendingSnapDecision(NULL),
+  mGreeterContacts(NULL)
 {
+    mDefaultTitle = C::gettext("Unknown caller");
+    mDefaultIcon = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
+
     ApproverDBus *dbus = new ApproverDBus();
     connect(dbus,
             SIGNAL(acceptCallRequested()),
@@ -61,6 +66,12 @@ Approver::Approver()
             SIGNAL(rejectCallRequested()),
             SLOT(onRejectCallRequested()));
     dbus->connectToBus();
+
+    if (qgetenv("XDG_SESSION_CLASS") == "greeter") {
+        mGreeterContacts = new GreeterContacts(this);
+        connect(mGreeterContacts, SIGNAL(contactUpdated(QtContacts::QContact)),
+                this, SLOT(updateNotification(QtContacts::QContact)));
+    }
 }
 
 Approver::~Approver()
@@ -178,6 +189,34 @@ void delete_event_data(gpointer data) {
     delete (EventData*) data;
 }
 
+void Approver::updateNotification(const QContact &contact)
+{
+    if (!mPendingSnapDecision)
+        return;
+
+    QString displayLabel = ContactUtils::formatContactName(contact);
+    QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+
+    if (displayLabel.isEmpty()) {
+        displayLabel = mDefaultTitle;
+    }
+
+    if (avatar.isEmpty()) {
+        avatar = mDefaultIcon;
+    }
+
+    notify_notification_update(mPendingSnapDecision,
+                               displayLabel.toStdString().c_str(),
+                               mCachedBody.toStdString().c_str(),
+                               avatar.toStdString().c_str());
+
+    GError *error = NULL;
+    if (!notify_notification_show(mPendingSnapDecision, &error)) {
+        qWarning() << "Failed to show snap decision:" << error->message;
+        g_error_free (error);
+    }
+}
+
 void Approver::onChannelReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
@@ -221,25 +260,21 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
     data->dispatchOp = dispatchOp;
     data->channel = channel;
 
-    QString title = C::gettext("Unknown caller");
-    QString icon = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
-    QString body;
-
     if (!contact->id().isEmpty()) {
         if (contact->id().startsWith("x-ofono-private")) {
-            body = QString::fromUtf8(C::gettext("Calling from private number"));
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
         } else if (contact->id().startsWith("x-ofono-unknown")) {
-            body = QString::fromUtf8(C::gettext("Calling from unknown number"));
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
         } else {
-            body = QString::fromUtf8(C::gettext("Calling from %1")).arg(contact->id());
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(contact->id());
         }
     } else {
-        body = C::gettext("Caller number is not available");
+        mCachedBody = C::gettext("Caller number is not available");
     }
 
-    notification = notify_notification_new (title.toStdString().c_str(),
-                                            body.toStdString().c_str(),
-                                            icon.toStdString().c_str());
+    notification = notify_notification_new (mDefaultTitle.toStdString().c_str(),
+                                            mCachedBody.toStdString().c_str(),
+                                            mDefaultIcon.toStdString().c_str());
     notify_notification_set_hint_string(notification,
                                         "x-canonical-snap-decisions",
                                         "true");
@@ -277,41 +312,29 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 
     mPendingSnapDecision = notification;
 
-    // try to match the contact info
-    QContactFetchRequest *request = new QContactFetchRequest(this);
-    request->setFilter(QContactPhoneNumber::match(contact->id()));
+    if (mGreeterContacts) { // we're in the greeter's session
+        mGreeterContacts->setFilter(QContactPhoneNumber::match(contact->id()));
+    } else {
+        // try to match the contact info
+        QContactFetchRequest *request = new QContactFetchRequest(this);
+        request->setFilter(QContactPhoneNumber::match(contact->id()));
 
-    // lambda function to update the notification
-    QObject::connect(request, &QContactAbstractRequest::resultsAvailable, [request, notification, title, body, icon]() {
-        if (request && request->contacts().size() > 0) {
-            // use the first match
-            QContact contact = request->contacts().at(0);
-            QString displayLabel = ContactUtils::formatContactName(contact);
-            QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+        // lambda function to update the notification
+        QObject::connect(request, &QContactAbstractRequest::resultsAvailable, [this, request]() {
+            if (request && request->contacts().size() > 0) {
+                // use the first match
+                QContact contact = request->contacts().at(0);
 
-            if (displayLabel.isEmpty()) {
-                displayLabel = title;
+                updateNotification(contact);
+
+                // Also notify greeter via AccountsService
+                GreeterContacts::emitContact(contact);
             }
+        });
 
-            if (avatar.isEmpty()) {
-                avatar = icon;
-            }
-
-            notify_notification_update(notification,
-                                       displayLabel.toStdString().c_str(),
-                                       body.toStdString().c_str(),
-                                       avatar.toStdString().c_str());
-
-            GError *error = NULL;
-            if (!notify_notification_show(notification, &error)) {
-                qWarning() << "Failed to show snap decision:" << error->message;
-                g_error_free (error);
-            }
-        }
-    });
-
-    request->setManager(ContactUtils::sharedManager());
-    request->start();
+        request->setManager(ContactUtils::sharedManager());
+        request->start();
+    }
 
     GError *error = NULL;
     if (!notify_notification_show(notification, &error)) {
