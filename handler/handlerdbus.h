@@ -54,6 +54,11 @@ public Q_SLOTS:
     Q_NOREPLY void SetSpeakerMode(const QString &objectPath, bool enabled);
     Q_NOREPLY void SendDTMF(const QString &objectPath, const QString &key);
 
+    // conference call related
+    Q_NOREPLY void CreateConferenceCall(const QStringList &objectPaths);
+    Q_NOREPLY void MergeCall(const QString &conferenceObjectPath, const QString &callObjectPath);
+    Q_NOREPLY void SplitCall(const QString &objectPath);
+
 Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);
 };

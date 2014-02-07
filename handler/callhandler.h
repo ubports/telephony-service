@@ -45,9 +45,15 @@ public Q_SLOTS:
     void setSpeakerMode(const QString &objectPath, bool enabled);
     void sendDTMF(const QString &objectPath, const QString &key);
 
+    // conference call related
+    void createConferenceCall(const QStringList &objectPaths);
+    void mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath);
+    void splitCall(const QString &objectPath);
+
 protected:
     Tp::CallChannelPtr existingCall(const QString &phoneNumber);
     Tp::CallChannelPtr callFromObjectPath(const QString &objectPath);
+    Tp::CallChannelPtr conferenceFromObjectPath(const QString &objectPath);
 
 protected Q_SLOTS:
     void onContactsAvailable(Tp::PendingOperation *op);
@@ -59,6 +65,7 @@ private:
 
     QMap<QString, Tp::ContactPtr> mContacts;
     QList<Tp::CallChannelPtr> mCallChannels;
+    QList<Tp::CallChannelPtr> mConferenceCallChannels;
     QMap<Tp::PendingOperation*,Tp::CallChannelPtr> mClosingChannels;
 };
 
