@@ -31,6 +31,42 @@
 typedef QMap<QString, QVariant> dbusQMap;
 Q_DECLARE_METATYPE(dbusQMap)
 
+QList<CallEntry *> CallManager::takeCalls(const QList<Tp::ChannelPtr> callChannels)
+{
+    QList<CallEntry*> entries;
+
+    // run through the current calls and check which ones we find
+    Q_FOREACH(CallEntry *entry, mCallEntries) {
+        if (callChannels.contains(entry->channel())) {
+            mCallEntries.removeAll(entry);
+            entries << entry;
+            entry->disconnect(this);
+        }
+    }
+
+    // FIXME: check which of those signals we really need to emit here
+    Q_EMIT hasCallsChanged();
+    Q_EMIT hasBackgroundCallChanged();
+    Q_EMIT foregroundCallChanged();
+    Q_EMIT backgroundCallChanged();
+
+    return entries;
+}
+
+void CallManager::addCalls(const QList<CallEntry *> entries)
+{
+    Q_FOREACH (CallEntry *entry, entries) {
+        mCallEntries << entry;
+        setupCallEntry(entry);
+    }
+
+    // FIXME: check which of those signals we really need to emit here
+    Q_EMIT hasCallsChanged();
+    Q_EMIT hasBackgroundCallChanged();
+    Q_EMIT foregroundCallChanged();
+    Q_EMIT backgroundCallChanged();
+}
+
 CallManager *CallManager::instance()
 {
     static CallManager *self = new CallManager();
@@ -42,6 +78,22 @@ CallManager::CallManager(QObject *parent)
 {
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
+}
+
+void CallManager::setupCallEntry(CallEntry *entry)
+{
+    connect(entry,
+            SIGNAL(callEnded()),
+            SLOT(onCallEnded()));
+    connect(entry,
+            SIGNAL(heldChanged()),
+            SIGNAL(foregroundCallChanged()));
+    connect(entry,
+            SIGNAL(activeChanged()),
+            SIGNAL(foregroundCallChanged()));
+    connect(entry,
+            SIGNAL(heldChanged()),
+            SIGNAL(backgroundCallChanged()));
 }
 
 void CallManager::onChannelObserverUnregistered()
@@ -142,18 +194,6 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
     }
 
     mCallEntries.append(entry);
-    connect(entry,
-            SIGNAL(callEnded()),
-            SLOT(onCallEnded()));
-    connect(entry,
-            SIGNAL(heldChanged()),
-            SIGNAL(foregroundCallChanged()));
-    connect(entry,
-            SIGNAL(activeChanged()),
-            SIGNAL(foregroundCallChanged()));
-    connect(entry,
-            SIGNAL(heldChanged()),
-            SIGNAL(backgroundCallChanged()));
 
     // FIXME: check which of those signals we really need to emit here
     Q_EMIT hasCallsChanged();
@@ -173,7 +213,7 @@ void CallManager::onCallEnded()
     // at this point the entry should be removed
     mCallEntries.removeAll(entry);
 
-    notifyEndedCall(entry->channel());
+    Q_EMIT callEnded(entry);
     Q_EMIT hasCallsChanged();
     Q_EMIT hasBackgroundCallChanged();
     Q_EMIT foregroundCallChanged();
@@ -184,36 +224,4 @@ void CallManager::onCallEnded()
 QString CallManager::getVoicemailNumber()
 {
     return mVoicemailNumber;
-}
-
-
-void CallManager::notifyEndedCall(const Tp::CallChannelPtr &channel)
-{
-    Tp::Contacts contacts = channel->remoteMembers();
-    if (contacts.isEmpty()) {
-        qWarning() << "Call channel had no remote contacts:" << channel;
-        return;
-    }
-
-    QString phoneNumber;
-    // FIXME: handle conference call
-    Q_FOREACH(const Tp::ContactPtr &contact, contacts) {
-        phoneNumber = contact->id();
-        break;
-    }
-
-    // fill the call info
-    QDateTime timestamp = channel->property("timestamp").toDateTime();
-    bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
-    QTime duration(0, 0, 0);
-    bool missed = incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer;
-
-    if (!missed) {
-        QDateTime activeTime = channel->property("activeTimestamp").toDateTime();
-        duration = duration.addSecs(activeTime.secsTo(QDateTime::currentDateTime()));
-    }
-
-    // and finally add the entry
-    // just mark it as new if it is missed
-    Q_EMIT callEnded(phoneNumber, incoming, timestamp, duration, missed, missed);
 }

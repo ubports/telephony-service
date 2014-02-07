@@ -51,7 +51,6 @@ class CallManager : public QObject
                NOTIFY voicemailNumberChanged)
 
 public:
-    
     static CallManager *instance();
     Q_INVOKABLE void startCall(const QString &phoneNumber);
     Q_INVOKABLE QString getVoicemailNumber();
@@ -61,8 +60,12 @@ public:
     bool hasCalls() const;
     bool hasBackgroundCall() const;
 
+    // conference related members
+    QList<CallEntry*> takeCalls(const QList<Tp::ChannelPtr> callChannels);
+    void addCalls(const QList<CallEntry*> entries);
+
 Q_SIGNALS:
-    void callEnded(const QString &phoneNumber, bool incoming, const QDateTime &timestamp, const QTime &duratiom, bool missed, bool newEvent);
+    void callEnded(CallEntry *entry);
     void foregroundCallChanged();
     void backgroundCallChanged();
     void hasCallsChanged();
@@ -79,7 +82,7 @@ public Q_SLOTS:
 private:
     explicit CallManager(QObject *parent = 0);
     void refreshProperties();
-    void notifyEndedCall(const Tp::CallChannelPtr &channel);
+    void setupCallEntry(CallEntry *entry);
 
     QList<CallEntry*> mCallEntries;
     QString mVoicemailNumber;
