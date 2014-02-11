@@ -112,14 +112,11 @@ void MockCallChannel::onOfonoMuteChanged(bool mute)
 
 void MockCallChannel::onHoldStateChanged(const Tp::LocalHoldState &state, const Tp::LocalHoldStateReason &reason, Tp::DBusError *error)
 {
-#if 0
-    FIXME: reimplement
-    if (state == Tp::LocalHoldStateHeld && this->state() == "active") {
-        mConnection->voiceCallManager()->swapCalls();
-    } else if (state == Tp::LocalHoldStateUnheld && this->state() == "held") {
-        mConnection->voiceCallManager()->swapCalls();
+    if (state == Tp::LocalHoldStateHeld && mState == "active") {
+        setCallState("held");
+    } else if (state == Tp::LocalHoldStateUnheld && mState == "held") {
+        setCallState("active");
     }
-#endif
 }
 
 void MockCallChannel::onMuteStateChanged(const Tp::LocalMuteState &state, Tp::DBusError *error)

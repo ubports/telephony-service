@@ -33,7 +33,7 @@ public:
 
     bool connectToBus();
     void PlaceIncomingMessage(const QString &message, const QVariantMap &properties);
-    void PlaceCall(const QVariantMap &properties);
+    QString PlaceCall(const QVariantMap &properties);
     void HangupCall(const QString &callerId);
     void SetCallState(const QString &phoneNumber, const QString &state);
 

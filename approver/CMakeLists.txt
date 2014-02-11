@@ -2,6 +2,7 @@
 set(qt_SRCS
     approver.cpp
     approverdbus.cpp
+    greetercontacts.cpp
     )
 
 set(approver_SRCS main.cpp ${qt_SRCS})
@@ -18,6 +19,7 @@ include_directories(
 link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
 
 add_executable(telephony-service-approver ${approver_SRCS} ${approver_HDRS})
+set_target_properties(telephony-service-approver PROPERTIES COMPILE_DEFINITIONS AS_BUSNAME=systemBus)
 qt5_use_modules(telephony-service-approver Contacts Core DBus Gui Multimedia Qml)
 
 target_link_libraries(telephony-service-approver
@@ -31,3 +33,14 @@ configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service
 install(TARGETS telephony-service-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service DESTINATION share/dbus-1/services)
 install(FILES TelephonyServiceApprover.client DESTINATION share/telepathy/clients)
+install(FILES 50-com.canonical.TelephonyServiceApprover.pkla DESTINATION "${CMAKE_INSTALL_LOCALSTATEDIR}/lib/polkit-1/localauthority/10-vendor.d")
+install(FILES com.canonical.TelephonyServiceApprover.policy DESTINATION share/polkit-1/actions)
+install(FILES com.canonical.TelephonyServiceApprover.xml DESTINATION share/dbus-1/interfaces)
+
+# Create accountsservice symlink for above dbus interface
+install(CODE "
+execute_process(COMMAND mkdir -p \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/accountsservice/interfaces\")
+execute_process(COMMAND ln -sf ../../dbus-1/interfaces/com.canonical.TelephonyServiceApprover.xml \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/accountsservice/interfaces\")
+    ")
+
+add_subdirectory(tests)

@@ -86,5 +86,22 @@
             ]]></dox:d>
             <arg name="objectPath" type="s" direction="in"/>
         </method>
+        <method name="GetCallProperties">
+            <dox:d><![CDATA[
+                Get the properties of a given call channel
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="properties" type="a{sv}" direction="out"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+        </method>
+        <signal name="CallPropertiesChanged">
+            <dox:d><![CDATA[
+                The properties of a given call changed.
+            ]]></dox:d>
+            <arg name="objectPath" type="s"/>
+            <arg name="properties" type="a{sv}"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+        </signal>
     </interface>
 </node>

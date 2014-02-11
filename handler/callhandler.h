@@ -35,6 +35,7 @@ class CallHandler : public QObject
 
 public:
     static CallHandler *instance();
+    QVariantMap getCallProperties(const QString &objectPath);
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
@@ -50,6 +51,9 @@ public Q_SLOTS:
     void mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath);
     void splitCall(const QString &objectPath);
 
+Q_SIGNALS:
+    void callPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
+
 protected:
     Tp::CallChannelPtr existingCall(const QString &phoneNumber);
     Tp::CallChannelPtr callFromObjectPath(const QString &objectPath);
@@ -59,6 +63,7 @@ protected Q_SLOTS:
     void onContactsAvailable(Tp::PendingOperation *op);
     void onCallHangupFinished(Tp::PendingOperation *op);
     void onCallChannelInvalidated();
+    void onCallStateChanged(Tp::CallState state);
 
 private:
     explicit CallHandler(QObject *parent = 0);

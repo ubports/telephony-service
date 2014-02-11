@@ -1,9 +1,6 @@
 /*
  * Copyright (C) 2013 Canonical, Ltd.
  *
- * Authors:
- *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
- *
  * This file is part of telephony-service.
  *
  * telephony-service is free software; you can redistribute it and/or modify
@@ -19,30 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CALLCHANNELOBSERVER_H
-#define CALLCHANNELOBSERVER_H
+#include <pwd.h>
 
-#include <QObject>
-#include <TelepathyQt/CallChannel>
-
-class CallChannelObserver : public QObject
+struct passwd *
+getpwnam (const char *name)
 {
-    Q_OBJECT
-public:
-    explicit CallChannelObserver(QObject *parent = 0);
+    if (strcmp(name, "testuser") != 0)
+        return 0;
 
-public Q_SLOTS:
-    void onCallChannelAvailable(Tp::CallChannelPtr callChannel);
+    static struct passwd user_passwd = {0};
+    user_passwd.pw_name = "testuser";
+    user_passwd.pw_uid = 12345;
+    user_passwd.pw_gid = 12345;
 
-Q_SIGNALS:
-    void callEnded(Tp::CallChannelPtr callChannel);
+    return &user_passwd;
+}
 
-protected Q_SLOTS:
-    void onCallStateChanged(Tp::CallState state);
-    void onHoldChanged();
-
-private:
-    QList<Tp::CallChannelPtr> mChannels;
-};
-
-#endif // CALLCHANNELOBSERVER_H
+uid_t getuid ()
+{
+    return 12345;
+}

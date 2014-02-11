@@ -76,6 +76,9 @@ class CallEntry : public QObject
                READ isSpeakerOn
                WRITE setSpeaker
                NOTIFY speakerChanged)
+    Q_PROPERTY(QString dtmfString
+               READ dtmfString
+               NOTIFY dtmfStringChanged)
 
 public:
     explicit CallEntry(const Tp::CallChannelPtr &channel, QObject *parent = 0);
@@ -102,6 +105,7 @@ public:
     QString phoneNumber() const;
     QQmlListProperty<CallEntry> calls();
     bool isConference() const;
+    QString dtmfString() const;
 
     Q_INVOKABLE void sendDTMF(const QString &key);
     Q_INVOKABLE void endCall();
@@ -117,6 +121,7 @@ protected Q_SLOTS:
     void onCallFlagsChanged(Tp::CallFlags flags);
     void onMutedChanged(uint state);
     void onSpeakerChanged(bool active);
+    void onCallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
 
     // conference related stuff
     void onConferenceChannelMerged(const Tp::ChannelPtr &channel);
@@ -125,6 +130,7 @@ protected Q_SLOTS:
 
 protected:
     void setupCallChannel();
+    void updateChannelProperties(const QVariantMap &properties = QVariantMap());
 
 Q_SIGNALS:
     void callEnded();
@@ -136,6 +142,7 @@ Q_SIGNALS:
     void phoneNumberChanged();
     void callsChanged();
     void isConferenceChanged();
+    void dtmfStringChanged();
     void dialingChanged();
     void incomingChanged();
     void ringingChanged();
@@ -151,7 +158,7 @@ private:
     QMap<QString, QVariant> mProperties;
     bool mVoicemail;
     bool mLocalMuteState;
-    QTime mElapsedTime;
+    QDateTime mActiveTimestamp;
     bool mHasSpeakerProperty;
     bool mSpeakerMode;
     QList<CallEntry*> mCalls;

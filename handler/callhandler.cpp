@@ -39,6 +39,31 @@ CallHandler *CallHandler::instance()
     return self;
 }
 
+QVariantMap CallHandler::getCallProperties(const QString &objectPath)
+{
+    QVariantMap properties;
+    Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
+    if (!channel) {
+        return properties;
+    }
+
+    QVariant property = channel->property("timestamp");
+    if (property.isValid()) {
+        properties["timestamp"] = property;
+    }
+
+    property = channel->property("activeTimestamp");
+    if (property.isValid()) {
+        properties["activeTimestamp"] = property;
+    }
+    property = channel->property("dtmfString");
+    if (property.isValid()) {
+        properties["dtmfString"] = property;
+    }
+
+    return properties;
+}
+
 CallHandler::CallHandler(QObject *parent)
 : QObject(parent)
 {
@@ -116,6 +141,11 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
         return;
     }
 
+    // save the dtmfString to send to clients that request it
+    QString dtmfString = channel->property("dtmfString").toString();
+    dtmfString += key;
+    channel->setProperty("dtmfString", dtmfString);
+
     Q_FOREACH(const Tp::CallContentPtr &content, channel->contents()) {
         if (content->supportsDTMF()) {
             bool ok;
@@ -133,6 +163,8 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
             content->startDTMFTone(event);
         }
     }
+
+    Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
 }
 
 void CallHandler::createConferenceCall(const QStringList &objectPaths)
@@ -194,10 +226,14 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
     QVariantList args = reply.arguments();
     QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
     channel->setProperty("hasSpeakerProperty", map.contains(PROPERTY_SPEAKERMODE));
+    channel->setProperty("timestamp", QDateTime::currentDateTimeUtc());
 
     connect(channel.data(),
             SIGNAL(invalidated(Tp::DBusProxy*,QString,QString)),
             SLOT(onCallChannelInvalidated()));
+    connect(channel.data(),
+            SIGNAL(callStateChanged(Tp::CallState)),
+            SLOT(onCallStateChanged(Tp::CallState)));
 
     if (channel->isConference()) {
         mConferenceCallChannels.append(channel);
@@ -256,6 +292,21 @@ void CallHandler::onCallChannelInvalidated()
         mConferenceCallChannels.removeAll(channel);
     } else {
         mCallChannels.removeAll(channel);
+    }
+}
+
+void CallHandler::onCallStateChanged(Tp::CallState state)
+{
+    Tp::CallChannelPtr channel(qobject_cast<Tp::CallChannel*>(sender()));
+    if (!channel) {
+        return;
+    }
+
+    switch (state) {
+    case Tp::CallStateActive:
+        channel->setProperty("activeTimestamp", QDateTime::currentDateTimeUtc());
+        Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
+        break;
     }
 }
 

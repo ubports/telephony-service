@@ -78,6 +78,7 @@ CallManager::CallManager(QObject *parent)
 {
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
+    connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
 }
 
 void CallManager::setupCallEntry(CallEntry *entry)
@@ -130,7 +131,7 @@ void CallManager::onConnectedChanged()
     }
 }
 
-QObject *CallManager::foregroundCall() const
+CallEntry *CallManager::foregroundCall() const
 {
     CallEntry *call = 0;
 
@@ -159,7 +160,7 @@ QObject *CallManager::foregroundCall() const
     return call;
 }
 
-QObject *CallManager::backgroundCall() const
+CallEntry *CallManager::backgroundCall() const
 {
     // if we have only one call, assume there is no call in background
     // even if the foreground call is held
@@ -176,14 +177,41 @@ QObject *CallManager::backgroundCall() const
     return 0;
 }
 
+QList<CallEntry *> CallManager::activeCalls() const
+{
+    QList<CallEntry*> calls;
+    Q_FOREACH(CallEntry *entry, mCallEntries) {
+        if (entry->isActive() || entry->dialing()) {
+            calls << entry;
+        }
+    }
+
+    return calls;
+}
+
+QQmlListProperty<CallEntry> CallManager::calls()
+{
+    return QQmlListProperty<CallEntry>(this, 0, callsCount, callAt);
+}
+
 bool CallManager::hasCalls() const
 {
-    return !mCallEntries.isEmpty();
+    return activeCalls().count() > 0;
 }
 
 bool CallManager::hasBackgroundCall() const
 {
-    return mCallEntries.count() > 1;
+    return activeCalls().count() > 1;
+}
+
+int CallManager::callsCount(QQmlListProperty<CallEntry> *p)
+{
+    return CallManager::instance()->activeCalls().count();
+}
+
+CallEntry *CallManager::callAt(QQmlListProperty<CallEntry> *p, int index)
+{
+    return CallManager::instance()->activeCalls()[index];
 }
 
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
@@ -194,6 +222,21 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
     }
 
     mCallEntries.append(entry);
+    connect(entry,
+            SIGNAL(callEnded()),
+            SLOT(onCallEnded()));
+    connect(entry,
+            SIGNAL(heldChanged()),
+            SIGNAL(foregroundCallChanged()));
+    connect(entry,
+            SIGNAL(activeChanged()),
+            SIGNAL(foregroundCallChanged()));
+    connect(entry,
+            SIGNAL(heldChanged()),
+            SIGNAL(backgroundCallChanged()));
+    connect(entry,
+            SIGNAL(activeChanged()),
+            SIGNAL(hasBackgroundCallChanged()));
 
     // FIXME: check which of those signals we really need to emit here
     Q_EMIT hasCallsChanged();

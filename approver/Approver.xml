@@ -15,6 +15,12 @@
                 If there is no incoming call, this method does nothing.
             ]]></dox:d>
         </method>
+        <method name="HangUpAndAcceptCall">
+            <dox:d><![CDATA[
+                Hang up an existing call, accept any incoming call and launches the telephony-service.
+                If there is no incoming call, this method does nothing.
+            ]]></dox:d>
+        </method>
         <method name="RejectCall">
             <dox:d><![CDATA[
                 Reject any incoming call. If there is no incoming call,

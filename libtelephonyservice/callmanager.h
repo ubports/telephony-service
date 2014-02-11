@@ -23,6 +23,7 @@
 #ifndef CALLMANAGER_H
 #define CALLMANAGER_H
 
+#include <QQmlListProperty>
 #include <QtCore/QMap>
 #include <QDBusInterface>
 #include <TelepathyQt/CallChannel>
@@ -49,6 +50,9 @@ class CallManager : public QObject
     Q_PROPERTY(QString voicemailNumber
                READ getVoicemailNumber
                NOTIFY voicemailNumberChanged)
+    Q_PROPERTY(QQmlListProperty<CallEntry> calls
+                   READ calls
+                   NOTIFY callsChanged)
 
 public:
     static CallManager *instance();
@@ -57,8 +61,10 @@ public:
     Q_INVOKABLE void mergeCalls(CallEntry *firstCall, CallEntry *secondCall);
     Q_INVOKABLE void splitCall(CallEntry *callEntry);
 
-    QObject *foregroundCall() const;
-    QObject *backgroundCall() const;
+    CallEntry *foregroundCall() const;
+    CallEntry *backgroundCall() const;
+    QList<CallEntry *> activeCalls() const;
+    QQmlListProperty<CallEntry> calls();
     bool hasCalls() const;
     bool hasBackgroundCall() const;
 
@@ -66,10 +72,15 @@ public:
     QList<CallEntry*> takeCalls(const QList<Tp::ChannelPtr> callChannels);
     void addCalls(const QList<CallEntry*> entries);
 
+    // QQmlListProperty helpers
+    static int callsCount(QQmlListProperty<CallEntry> *p);
+    static CallEntry* callAt(QQmlListProperty<CallEntry> *p, int index);
+
 Q_SIGNALS:
     void callEnded(CallEntry *entry);
     void foregroundCallChanged();
     void backgroundCallChanged();
+    void callsChanged();
     void hasCallsChanged();
     void hasBackgroundCallChanged();
     void speakerChanged();
@@ -86,7 +97,7 @@ private:
     void refreshProperties();
     void setupCallEntry(CallEntry *entry);
 
-    QList<CallEntry*> mCallEntries;
+    mutable QList<CallEntry*> mCallEntries;
     QString mVoicemailNumber;
 };
 

@@ -19,6 +19,7 @@
 
 #include <QStringList>
 #include "handlercontroller.h"
+#include <QDBusReply>
 
 #define HANDLER_SERVICE "com.canonical.TelephonyServiceHandler"
 #define HANDLER_OBJECT "/com/canonical/TelephonyServiceHandler"
@@ -34,6 +35,20 @@ HandlerController::HandlerController(QObject *parent) :
     QObject(parent),
     mHandlerInterface(HANDLER_SERVICE, HANDLER_OBJECT, HANDLER_INTERFACE)
 {
+    connect(&mHandlerInterface,
+            SIGNAL(CallPropertiesChanged(QString, QVariantMap)),
+            SIGNAL(callPropertiesChanged(QString, QVariantMap)));
+}
+
+QVariantMap HandlerController::getCallProperties(const QString &objectPath)
+{
+    QVariantMap properties;
+    QDBusReply<QVariantMap> reply = mHandlerInterface.call("GetCallProperties", objectPath);
+    if (reply.isValid()) {
+        properties = reply.value();
+    }
+
+    return properties;
 }
 
 void HandlerController::startCall(const QString &number)
