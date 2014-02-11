@@ -54,6 +54,8 @@ public:
     static CallManager *instance();
     Q_INVOKABLE void startCall(const QString &phoneNumber);
     Q_INVOKABLE QString getVoicemailNumber();
+    Q_INVOKABLE void mergeCalls(CallEntry *firstCall, CallEntry *secondCall);
+    Q_INVOKABLE void splitCall(CallEntry *callEntry);
 
     QObject *foregroundCall() const;
     QObject *backgroundCall() const;

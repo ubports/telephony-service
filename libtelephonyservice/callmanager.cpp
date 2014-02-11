@@ -225,3 +225,24 @@ QString CallManager::getVoicemailNumber()
 {
     return mVoicemailNumber;
 }
+
+void CallManager::mergeCalls(CallEntry *firstCall, CallEntry *secondCall)
+{
+    QDBusInterface *handlerInterface = TelepathyHelper::instance()->handlerInterface();
+    // if there is already a conference call, just merge the remaining channels
+    // in the existing conference
+    if (firstCall->isConference() || secondCall->isConference()) {
+        CallEntry *conferenceCall = firstCall->isConference() ? firstCall : secondCall;
+        CallEntry *otherCall = firstCall->isConference() ? secondCall : firstCall;
+        handlerInterface->call("MergeCall", conferenceCall->channel()->objectPath(), otherCall->channel()->objectPath());
+    } else {
+        handlerInterface->call("CreateConferenceCall", QStringList() << firstCall->channel()->objectPath()
+                                                                     << secondCall->channel()->objectPath());
+    }
+}
+
+void CallManager::splitCall(CallEntry *callEntry)
+{
+    QDBusInterface *handlerInterface = TelepathyHelper::instance()->handlerInterface();
+    handlerInterface->call("SplitCall", callEntry->channel()->objectPath());
+}
