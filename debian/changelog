@@ -1,3 +1,11 @@
+telephony-service (0.1+14.04.20140214.1-0ubuntu1) trusty; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Disable the displaying of notifications for calls. This is not
+    required anymore in the new designs.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 14 Feb 2014 16:16:29 +0000
+
 telephony-service (0.1+14.04.20140206-0ubuntu1) trusty; urgency=low
 
   [ Michael Terry ]
