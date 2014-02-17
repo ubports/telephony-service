@@ -203,7 +203,7 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
 
 void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QString &reply)
 {
-    ChatManager::instance()->sendMessage(phoneNumber, reply);
+    ChatManager::instance()->sendMessage(QStringList() << phoneNumber, reply);
 }
 
 void TextChannelObserver::onMessageRead(const QString &phoneNumber, const QString &encodedMessageId)

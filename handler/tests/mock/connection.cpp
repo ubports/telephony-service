@@ -297,7 +297,7 @@ Tp::BaseChannelPtr MockConnection::createCallChannel(uint targetHandleType,
 }
 
 Tp::BaseChannelPtr MockConnection::createChannel(const QString& channelType, uint targetHandleType,
-                                               uint targetHandle,  const QVariantMap &hints, Tp::DBusError *error)
+                                               uint targetHandle, const QVariantMap &hints, Tp::DBusError *error)
 {
     qDebug() << "MockConnection::createChannel" << targetHandle;
     if( (targetHandleType != Tp::HandleTypeContact) || targetHandle == 0 || !mHandles.keys().contains(targetHandle)) {

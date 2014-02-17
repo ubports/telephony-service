@@ -15,14 +15,14 @@
             <dox:d><![CDATA[
                Request to send a message to a phone number
             ]]></dox:d>
-            <arg name="number" type="s" direction="in"/>
+            <arg name="numbers" type="as" direction="in"/>
             <arg name="message" type="s" direction="in"/>
         </method>
         <method name="AcknowledgeMessages">
             <dox:d><![CDATA[
                 Request messages to be acknowledged (marked as read)
             ]]></dox:d>
-            <arg name="number" type="s" direction="in"/>
+            <arg name="numbers" type="as" direction="in"/>
             <arg name="messageIds" type="as" direction="in"/>
         </method>
 

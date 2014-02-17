@@ -17,6 +17,7 @@
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  */
 
+#include <QStringList>
 #include "handlercontroller.h"
 #include <QDBusReply>
 
@@ -82,7 +83,7 @@ void HandlerController::sendDTMF(const QString &objectPath, const QString &key)
 
 void HandlerController::sendMessage(const QString &number, const QString &message)
 {
-    mHandlerInterface.call("SendMessage", number, message);
+    mHandlerInterface.call("SendMessage", QStringList() << number, message);
 }
 
 void HandlerController::acknowledgeMessages(const QString &number, const QStringList &messageIds)
