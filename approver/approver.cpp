@@ -22,10 +22,14 @@
 #include "approver.h"
 #include "approverdbus.h"
 #include "applicationutils.h"
+#include "callnotification.h"
 #include "chatmanager.h"
 #include "config.h"
 #include "contactutils.h"
+#include "greetercontacts.h"
 #include "ringtone.h"
+#include "callmanager.h"
+#include "callentry.h"
 
 #include <QContactAvatar>
 #include <QContactFetchRequest>
@@ -48,8 +52,12 @@ QTCONTACTS_USE_NAMESPACE
 
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
-  mPendingSnapDecision(NULL)
+  mPendingSnapDecision(NULL),
+  mGreeterContacts(NULL)
 {
+    mDefaultTitle = C::gettext("Unknown caller");
+    mDefaultIcon = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
+
     ApproverDBus *dbus = new ApproverDBus();
     connect(dbus,
             SIGNAL(acceptCallRequested()),
@@ -58,6 +66,12 @@ Approver::Approver()
             SIGNAL(rejectCallRequested()),
             SLOT(onRejectCallRequested()));
     dbus->connectToBus();
+
+    if (qgetenv("XDG_SESSION_CLASS") == "greeter") {
+        mGreeterContacts = new GreeterContacts(this);
+        connect(mGreeterContacts, SIGNAL(contactUpdated(QtContacts::QContact)),
+                this, SLOT(updateNotification(QtContacts::QContact)));
+    }
 }
 
 Approver::~Approver()
@@ -134,9 +148,7 @@ public:
     Tp::ChannelPtr channel;
 };
 
-void action_accept(NotifyNotification* notification,
-                   char*               action,
-                   gpointer            data)
+void action_accept(NotifyNotification *notification, char *action, gpointer data)
 {
     Q_UNUSED(notification);
     Q_UNUSED(action);
@@ -148,9 +160,19 @@ void action_accept(NotifyNotification* notification,
     }
 }
 
-void action_reject(NotifyNotification* notification,
-                   char*               action,
-                   gpointer            data)
+void action_hangup_and_accept(NotifyNotification *notification, char *action, gpointer data)
+{
+    Q_UNUSED(notification);
+    Q_UNUSED(action);
+
+    EventData *eventData = (EventData*) data;
+    Approver *approver = (Approver*) eventData->self;
+    if (approver != NULL) {
+        approver->onHangUpAndApproved((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp);
+    }
+}
+
+void action_reject(NotifyNotification *notification, char *action, gpointer data)
 {
     Q_UNUSED(notification);
     Q_UNUSED(action);
@@ -165,6 +187,34 @@ void action_reject(NotifyNotification* notification,
 void delete_event_data(gpointer data) {
     if (NULL != data)
     delete (EventData*) data;
+}
+
+void Approver::updateNotification(const QContact &contact)
+{
+    if (!mPendingSnapDecision)
+        return;
+
+    QString displayLabel = ContactUtils::formatContactName(contact);
+    QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+
+    if (displayLabel.isEmpty()) {
+        displayLabel = mDefaultTitle;
+    }
+
+    if (avatar.isEmpty()) {
+        avatar = mDefaultIcon;
+    }
+
+    notify_notification_update(mPendingSnapDecision,
+                               displayLabel.toStdString().c_str(),
+                               mCachedBody.toStdString().c_str(),
+                               avatar.toStdString().c_str());
+
+    GError *error = NULL;
+    if (!notify_notification_show(mPendingSnapDecision, &error)) {
+        qWarning() << "Failed to show snap decision:" << error->message;
+        g_error_free (error);
+    }
 }
 
 void Approver::onChannelReady(Tp::PendingOperation *op)
@@ -210,25 +260,21 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
     data->dispatchOp = dispatchOp;
     data->channel = channel;
 
-    QString title = C::gettext("Unknown caller");
-    QString icon = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
-    QString body;
-
     if (!contact->id().isEmpty()) {
         if (contact->id().startsWith("x-ofono-private")) {
-            body = QString::fromUtf8(C::gettext("Calling from private number"));
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
         } else if (contact->id().startsWith("x-ofono-unknown")) {
-            body = QString::fromUtf8(C::gettext("Calling from unknown number"));
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
         } else {
-            body = QString::fromUtf8(C::gettext("Calling from %1")).arg(contact->id());
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(contact->id());
         }
     } else {
-        body = C::gettext("Caller number is not available");
+        mCachedBody = C::gettext("Caller number is not available");
     }
 
-    notification = notify_notification_new (title.toStdString().c_str(),
-                                            body.toStdString().c_str(),
-                                            icon.toStdString().c_str());
+    notification = notify_notification_new (mDefaultTitle.toStdString().c_str(),
+                                            mCachedBody.toStdString().c_str(),
+                                            mDefaultIcon.toStdString().c_str());
     notify_notification_set_hint_string(notification,
                                         "x-canonical-snap-decisions",
                                         "true");
@@ -236,12 +282,27 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                         "x-canonical-private-button-tint",
                                         "true");
 
+    QString acceptTitle = CallManager::instance()->hasCalls() ? C::gettext("Hold + Answer") :
+                                                                C::gettext("Accept");
     notify_notification_add_action (notification,
                                     "action_accept",
-                                    C::gettext("Accept"),
+                                    acceptTitle.toLocal8Bit().data(),
                                     action_accept,
                                     data,
                                     delete_event_data);
+
+    // FIXME: uncomment this code once snap decisions support more than two actions and stacked buttons
+    /*
+    if (CallManager::instance()->hasCalls()) {
+        notify_notification_add_action (notification,
+                                        "action_hangup_and_accept",
+                                        C::gettext("End + Answer"),
+                                        action_hangup_and_accept,
+                                        data,
+                                        delete_event_data);
+    }
+    */
+
     notify_notification_add_action (notification,
                                     "action_decline_1",
                                     C::gettext("Decline"),
@@ -251,41 +312,29 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 
     mPendingSnapDecision = notification;
 
-    // try to match the contact info
-    QContactFetchRequest *request = new QContactFetchRequest(this);
-    request->setFilter(QContactPhoneNumber::match(contact->id()));
+    if (mGreeterContacts) { // we're in the greeter's session
+        mGreeterContacts->setFilter(QContactPhoneNumber::match(contact->id()));
+    } else {
+        // try to match the contact info
+        QContactFetchRequest *request = new QContactFetchRequest(this);
+        request->setFilter(QContactPhoneNumber::match(contact->id()));
 
-    // lambda function to update the notification
-    QObject::connect(request, &QContactAbstractRequest::resultsAvailable, [request, notification, title, body, icon]() {
-        if (request && request->contacts().size() > 0) {
-            // use the first match
-            QContact contact = request->contacts().at(0);
-            QString displayLabel = ContactUtils::formatContactName(contact);
-            QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+        // lambda function to update the notification
+        QObject::connect(request, &QContactAbstractRequest::resultsAvailable, [this, request]() {
+            if (request && request->contacts().size() > 0) {
+                // use the first match
+                QContact contact = request->contacts().at(0);
 
-            if (displayLabel.isEmpty()) {
-                displayLabel = title;
+                updateNotification(contact);
+
+                // Also notify greeter via AccountsService
+                GreeterContacts::emitContact(contact);
             }
+        });
 
-            if (avatar.isEmpty()) {
-                avatar = icon;
-            }
-
-            notify_notification_update(notification,
-                                       displayLabel.toStdString().c_str(),
-                                       body.toStdString().c_str(),
-                                       avatar.toStdString().c_str());
-
-            GError *error = NULL;
-            if (!notify_notification_show(notification, &error)) {
-                qWarning() << "Failed to show snap decision:" << error->message;
-                g_error_free (error);
-            }
-        }
-    });
-
-    request->setManager(ContactUtils::sharedManager());
-    request->start();
+        request->setManager(ContactUtils::sharedManager());
+        request->start();
+    }
 
     GError *error = NULL;
     if (!notify_notification_show(notification, &error)) {
@@ -302,6 +351,24 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
 {
     closeSnapDecision();
+
+    // forward the channel to the handler
+    dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
+
+    // and then launch the dialer-app
+    ApplicationUtils::openUrl(QUrl("application:///dialer-app.desktop"));
+
+    mDispatchOps.removeAll(dispatchOp);
+}
+
+void Approver::onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
+{
+    closeSnapDecision();
+
+    // hangup existing calls
+    if (CallManager::instance()->foregroundCall()) {
+        CallManager::instance()->foregroundCall()->endCall();
+    }
 
     // forward the channel to the handler
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
@@ -378,6 +445,7 @@ void Approver::onClaimFinished(Tp::PendingOperation* op)
     Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(mChannels[op]);
     if (callChannel) {
         Tp::PendingOperation *hangupop = callChannel->hangup(Tp::CallStateChangeReasonUserRequested, TP_QT_ERROR_REJECTED, QString());
+        CallNotification::instance()->showNotificationForCall(QStringList() << callChannel->targetContact()->id(), CallNotification::CallRejected);
         mChannels[hangupop] = callChannel;
         connect(hangupop, SIGNAL(finished(Tp::PendingOperation*)),
                 this, SLOT(onHangupFinished(Tp::PendingOperation*)));
@@ -446,6 +514,18 @@ void Approver::closeSnapDecision()
     }
 
     Ringtone::instance()->stopIncomingCallSound();
+}
+
+void Approver::onHangupAndAcceptCallRequested()
+{
+    if (!mPendingSnapDecision) {
+        return;
+    }
+
+    Tp::ChannelDispatchOperationPtr callDispatchOp = dispatchOperationForIncomingCall();
+    if (!callDispatchOp.isNull()) {
+        onHangUpAndApproved(callDispatchOp);
+    }
 }
 
 void Approver::onAcceptCallRequested()

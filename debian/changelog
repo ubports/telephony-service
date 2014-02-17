@@ -1,3 +1,47 @@
+telephony-service (0.1+14.04.20140214.1-0ubuntu1) trusty; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Disable the displaying of notifications for calls. This is not
+    required anymore in the new designs.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 14 Feb 2014 16:16:29 +0000
+
+telephony-service (0.1+14.04.20140206-0ubuntu1) trusty; urgency=low
+
+  [ Michael Terry ]
+  * Share current call contact info with the greeter.
+
+  [ Gustavo Pichorim Boiko ]
+  * Get the active timestamp for calls from the handler, as the observer
+    is unregistered every time the application goes out of focus. This
+    ensures that the call duration will always be correct. Save also the
+    DTMF string so that the application can restore that info too after
+    it is send to background and back to foreground. (LP: #1225939)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 06 Feb 2014 14:19:38 +0000
+
+telephony-service (0.1+14.04.20140130-0ubuntu1) trusty; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Add the infrastructure to write tests for the handler, and write
+    tests for the most important bits of it.
+  * Make the dbus-based tests more robust. (LP: #1270778)
+  * Improve the support for handling multiple calls by: Using a
+    different approach to detect background calls in the QML plugin.
+    Make it possible to hangup the active call to answer an incoming
+    one. Show notifications when calls are put on hold, when they are
+    rejected and when they end. .
+
+  [ Timo Jyrinki ]
+  * Use QT_QPA_PLATFORM=minimal to fix test failures (LP: #1270770).
+    (LP: #1270770)
+
+  [ Tiago Salem Herrmann ]
+  * Fix default action for missed calls. Add voicemail entries to the
+    messaging menu.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 30 Jan 2014 17:08:38 +0000
+
 telephony-service (0.1+14.04.20131205-0ubuntu1) trusty; urgency=low
 
   [ Gustavo Pichorim Boiko ]

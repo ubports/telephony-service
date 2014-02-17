@@ -31,9 +31,12 @@ private Q_SLOTS:
     void initTestCase();
     void testMakingCalls();
     void testHangUpCall();
+    void testCallHold();
+    void testCallProperties();
     void testSendMessage();
 
 private:
+    void waitForCallActive(const QString &callerId);
     Approver *mApprover;
 };
 
@@ -73,32 +76,108 @@ void HandlerTest::testHangUpCall()
     properties["State"] = "incoming";
 
     QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
+    QString objectPath = MockController::instance()->placeCall(properties);
+    QVERIFY(!objectPath.isEmpty());
+
+    // wait for the channel to hit the approver
+    QTRY_COMPARE(approverCallSpy.count(), 1);
+    mApprover->acceptCall();
+
+    waitForCallActive(callerId);
+
+    // and finally request the hangup
+    QSignalSpy callEndedSpy(MockController::instance(), SIGNAL(callEnded(QString)));
+    HandlerController::instance()->hangUpCall(objectPath);
+    QTRY_COMPARE(callEndedSpy.count(), 1);
+}
+
+void HandlerTest::testCallHold()
+{
+    QString callerId("44444444");
+
+    QVariantMap properties;
+    properties["Caller"] = callerId;
+    properties["State"] = "incoming";
+
+    QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
+    QString objectPath = MockController::instance()->placeCall(properties);
+    QVERIFY(!objectPath.isEmpty());
+
+    // wait for the channel to hit the approver
+    QTRY_COMPARE(approverCallSpy.count(), 1);
+    mApprover->acceptCall();
+
+    waitForCallActive(callerId);
+
+    QSignalSpy callStateSpy(MockController::instance(), SIGNAL(callStateChanged(QString,QString,QString)));
+
+    // set the call on hold
+    HandlerController::instance()->setHold(objectPath, true);
+    QTRY_COMPARE(callStateSpy.count(), 1);
+    QCOMPARE(callStateSpy.first()[2].toString(), QString("held"));
+
+    // and now set it as unheld again
+    callStateSpy.clear();
+    HandlerController::instance()->setHold(objectPath, false);
+    QTRY_COMPARE(callStateSpy.count(), 1);
+    QCOMPARE(callStateSpy.first()[2].toString(), QString("active"));
+
+    MockController::instance()->hangupCall(callerId);
+}
+
+void HandlerTest::testCallProperties()
+{
+    QString callerId("7654321");
+
+    QVariantMap properties;
+    properties["Caller"] = callerId;
+    properties["State"] = "incoming";
+
+    QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
+    QSignalSpy handlerCallPropertiesSpy(HandlerController::instance(), SIGNAL(callPropertiesChanged(QString,QVariantMap)));
     MockController::instance()->placeCall(properties);
 
     // wait for the channel to hit the approver
     QTRY_COMPARE(approverCallSpy.count(), 1);
     mApprover->acceptCall();
 
-    // wait until the call state is "accepted"
-    QSignalSpy callStateSpy(MockController::instance(), SIGNAL(callStateChanged(QString,QString,QString)));
-    QString state;
-    QString objectPath;
-    int tries = 0;
-    while (state != "active" && tries < 5) {
-        QTRY_COMPARE(callStateSpy.count(), 1);
-        objectPath = callStateSpy.first()[1].toString();
-        state = callStateSpy.first()[2].toString();
-        callStateSpy.clear();
-        tries++;
+    // wait until the call properties are changed
+    QTRY_COMPARE(handlerCallPropertiesSpy.count(), 1);
+    QString objectPath = handlerCallPropertiesSpy.first()[0].toString();
+    QVariantMap propsFromSignal = handlerCallPropertiesSpy.first()[1].toMap();
+    QVERIFY(!propsFromSignal.isEmpty());
+    QDateTime activeTimestampFromSignal;
+    QDateTime timestampFromSignal;
+    propsFromSignal["activeTimestamp"].value<QDBusArgument>() >> activeTimestampFromSignal;
+    propsFromSignal["timestamp"].value<QDBusArgument>() >> timestampFromSignal;
+    QVERIFY(activeTimestampFromSignal.isValid());
+    QVERIFY(timestampFromSignal.isValid());
+
+    // and try to get the properties using the method
+    QVariantMap propsFromMethod = HandlerController::instance()->getCallProperties(objectPath);
+    QVERIFY(!propsFromMethod.isEmpty());
+    QDateTime activeTimestampFromMethod;
+    QDateTime timestampFromMethod;
+    propsFromMethod["activeTimestamp"].value<QDBusArgument>() >> activeTimestampFromMethod;
+    propsFromMethod["timestamp"].value<QDBusArgument>() >> timestampFromMethod;
+    QCOMPARE(activeTimestampFromSignal, activeTimestampFromMethod);
+    QCOMPARE(timestampFromSignal, timestampFromMethod);
+
+    // now send some DTMF tones and check if the property is properly updated
+    handlerCallPropertiesSpy.clear();
+    QString dtmfString("1234*#");
+    for (int i = 0; i < dtmfString.length(); ++i) {
+        HandlerController::instance()->sendDTMF(objectPath, QString(dtmfString[i]));
     }
+    QTRY_COMPARE(handlerCallPropertiesSpy.count(), dtmfString.length());
+    propsFromSignal = handlerCallPropertiesSpy.last()[1].toMap();
+    propsFromMethod = HandlerController::instance()->getCallProperties(objectPath);
+    QString dtmfStringFromSignal = propsFromSignal["dtmfString"].toString();
+    QString dtmfStringFromMethod = propsFromMethod["dtmfString"].toString();
+    QCOMPARE(dtmfStringFromSignal, dtmfString);
+    QCOMPARE(dtmfStringFromMethod, dtmfString);
 
-    QCOMPARE(state, QString("active"));
-    QVERIFY(!objectPath.isEmpty());
-
-    // and finally request the hangup
-    QSignalSpy callEndedSpy(MockController::instance(), SIGNAL(callEnded(QString)));
     HandlerController::instance()->hangUpCall(objectPath);
-    QTRY_COMPARE(callEndedSpy.count(), 1);
 }
 
 void HandlerTest::testSendMessage()
@@ -113,6 +192,28 @@ void HandlerTest::testSendMessage()
     QCOMPARE(sentMessage, message);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
+}
+
+void HandlerTest::waitForCallActive(const QString &callerId)
+{
+    // wait until the call state is "accepted"
+    QSignalSpy callStateSpy(MockController::instance(), SIGNAL(callStateChanged(QString,QString,QString)));
+    QString state;
+    QString objectPath;
+    QString caller;
+    int tries = 0;
+    while (state != "active" && caller != callerId && tries < 5) {
+        QTRY_COMPARE(callStateSpy.count(), 1);
+        caller = callStateSpy.first()[0].toString();
+        objectPath = callStateSpy.first()[1].toString();
+        state = callStateSpy.first()[2].toString();
+        callStateSpy.clear();
+        tries++;
+    }
+
+    QCOMPARE(caller, callerId);
+    QCOMPARE(state, QString("active"));
+    QVERIFY(!objectPath.isEmpty());
 }
 
 QTEST_MAIN(HandlerTest)

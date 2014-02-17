@@ -33,6 +33,8 @@ QContactManager *sharedManager(const QString &engine)
     return instance;
 }
 
+// Note: update GreeterContacts::mapToContact() if this function is modified
+// to use more than just first and last names.
 QString formatContactName(const QContact &contact)
 {
     QContactName name = contact.detail<QContactName>();

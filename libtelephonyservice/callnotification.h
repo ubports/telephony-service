@@ -19,30 +19,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CALLCHANNELOBSERVER_H
-#define CALLCHANNELOBSERVER_H
+#ifndef CALLNOTIFICATION_H
+#define CALLNOTIFICATION_H
 
 #include <QObject>
-#include <TelepathyQt/CallChannel>
 
-class CallChannelObserver : public QObject
+class CallNotification : public QObject
 {
     Q_OBJECT
 public:
-    explicit CallChannelObserver(QObject *parent = 0);
+    enum NotificationReason {
+        CallHeld,
+        CallEnded,
+        CallRejected
+    };
 
 public Q_SLOTS:
-    void onCallChannelAvailable(Tp::CallChannelPtr callChannel);
-
-Q_SIGNALS:
-    void callEnded(Tp::CallChannelPtr callChannel);
-
-protected Q_SLOTS:
-    void onCallStateChanged(Tp::CallState state);
-    void onHoldChanged();
+    static CallNotification *instance();
+    void showNotificationForCall(const QStringList &participants, NotificationReason reason);
 
 private:
-    QList<Tp::CallChannelPtr> mChannels;
+    explicit CallNotification(QObject *parent = 0);
 };
 
-#endif // CALLCHANNELOBSERVER_H
+#endif // CALLNOTIFICATION_H

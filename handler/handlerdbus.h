@@ -39,6 +39,8 @@ public:
     HandlerDBus(QObject* parent=0);
     ~HandlerDBus();
 
+    QVariantMap GetCallProperties(const QString &objectPath);
+
 public Q_SLOTS:
     bool connectToBus();
 
@@ -56,6 +58,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);
+    void CallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
 };
 
 #endif // HANDLERDBUS_H

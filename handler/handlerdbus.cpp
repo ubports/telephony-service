@@ -34,10 +34,18 @@ static const char* DBUS_OBJECT_PATH = "/com/canonical/TelephonyServiceHandler";
 
 HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent)
 {
+    connect(CallHandler::instance(),
+            SIGNAL(callPropertiesChanged(QString,QVariantMap)),
+            SIGNAL(CallPropertiesChanged(QString,QVariantMap)));
 }
 
 HandlerDBus::~HandlerDBus()
 {
+}
+
+QVariantMap HandlerDBus::GetCallProperties(const QString &objectPath)
+{
+    return CallHandler::instance()->getCallProperties(objectPath);
 }
 
 bool HandlerDBus::connectToBus()
