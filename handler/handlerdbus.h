@@ -40,6 +40,7 @@ public:
     ~HandlerDBus();
 
     QVariantMap GetCallProperties(const QString &objectPath);
+    bool HasCalls();
 
 public Q_SLOTS:
     bool connectToBus();

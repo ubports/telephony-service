@@ -126,7 +126,21 @@ CallEntry *CallManager::backgroundCall() const
 
 bool CallManager::hasCalls() const
 {
-    return activeCallsCount() > 0;
+    // check if the callmanager already has active calls
+    if (activeCallsCount() > 0) {
+        return true;
+    }
+
+    // if that's not the case, query the teleophony-service-handler for the availability of calls
+    // this is done only to get the live call view on clients as soon as possible, even before the
+    // telepathy observer is configured
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    QDBusReply<bool> reply = phoneAppHandler->call("HasCalls");
+    if (reply.isValid()) {
+        return reply.value();
+    }
+
+    return false;
 }
 
 bool CallManager::hasBackgroundCall() const
