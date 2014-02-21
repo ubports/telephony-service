@@ -216,15 +216,20 @@ void GreeterContacts::emitContact(const QContact &contact)
         // evolution.  And rather than give world-readable permissions to our
         // evolution dir, we minimize the damage by copying the image to a new
         // more accessible location.
-        // TODO: This is not ideal because this new location is still
-        // world-readable and thus leaks a contact picture and because if the
-        // user's home directory is encrypted, LightDM can't read it.
-        // Hopefully LightDM will soon allow a /run/user style location for
-        // users to share data with it.
+
+        // Clean up from previous (poor) implementation of this method
         QFile imageFile(QDir::home().filePath(".telephony-service-contact-image"));
         imageFile.remove();
-        if (QFile(map.value("Image").toString()).copy(imageFile.fileName())) {
-            map.insert("Image", imageFile.fileName());
+
+        // Now copy into greeter data dir, if one is set
+        QString path = qgetenv("XDG_GREETER_DATA_DIR");
+        if (!path.isEmpty()) {
+            QDir(path).mkdir("telephony-service"); // create namespaced subdir
+            path += "/telephony-service/contact-image";
+            QFile(path).remove(); // copy() won't overwrite, so remove before
+            if (QFile(map.value("Image").toString()).copy(path)) {
+                map.insert("Image", path);
+            }
         }
     }
 
