@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <libnotify/notify.h>
 #include "applicationutils.h"
+#include "greetercontacts.h"
 #include "textchannelobserver.h"
 #include "messagingmenu.h"
 #include "metrics.h"
@@ -47,6 +47,8 @@ QTCONTACTS_USE_NAMESPACE
 class NotificationData {
 public:
     QString phoneNumber;
+    QString alias;
+    QString message;
 };
 
 void notification_action(NotifyNotification* notification, char *action, gpointer data)
@@ -62,15 +64,17 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
     g_object_unref(notification);
 }
 
-void delete_notification_data(gpointer data)
+void notification_closed(NotifyNotification *notification, QMap<NotifyNotification*, NotificationData*> *map)
 {
+    NotificationData *data = map->take(notification);
     if (data != NULL) {
-        delete (NotificationData*) data;
+        delete data;
     }
 }
 
 TextChannelObserver::TextChannelObserver(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    mGreeterContacts(NULL)
 {
     connect(MessagingMenu::instance(),
             SIGNAL(replyReceived(QString,QString)),
@@ -78,73 +82,131 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
     connect(MessagingMenu::instance(),
             SIGNAL(messageRead(QString,QString)),
             SLOT(onMessageRead(QString,QString)));
+
+    if (qgetenv("XDG_SESSION_CLASS") == "greeter") {
+        mGreeterContacts = new GreeterContacts(this);
+        connect(mGreeterContacts, SIGNAL(contactUpdated(QtContacts::QContact)),
+                this, SLOT(updateNotifications(QtContacts::QContact)));
+    }
+}
+
+TextChannelObserver::~TextChannelObserver()
+{
+    if (mGreeterContacts)
+        delete mGreeterContacts;
+
+    QMap<NotifyNotification*, NotificationData*>::const_iterator i = mNotifications.constBegin();
+    while (i != mNotifications.constEnd()) {
+        NotifyNotification *notification = i.key();
+        NotificationData *data = i.value();
+        g_signal_handlers_disconnect_by_data(notification, &mNotifications);
+        delete data;
+        ++i;
+    }
+    mNotifications.clear();
 }
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
 {
     Tp::ContactPtr contact = message.sender();
 
-    // try to match the contact info
-    QContactFetchRequest *request = new QContactFetchRequest(this);
-    request->setFilter(QContactPhoneNumber::match(contact->id()));
-
     // add the message to the messaging menu (use hex format to avoid invalid characters)
     QByteArray token(message.messageToken().toUtf8());
     MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), message.text());
 
-    // place the notify-notification item only after the contact fetch request is finished, as we can´t simply update
-    QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, message, contact]() {
-        // only process the results after the finished state is reached
-        if (request->state() != QContactAbstractRequest::FinishedState) {
-            return;
+    QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(contact->alias());
+    QString avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
+
+    qDebug() << title << avatar;
+    // show the notification
+    NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
+                                                               message.text().toStdString().c_str(),
+                                                               avatar.toStdString().c_str());
+
+    // Bundle the data we need for later updating
+    NotificationData *data = new NotificationData();
+    data->phoneNumber = contact->id();
+    data->alias = contact->alias();
+    data->message = message.text();
+    mNotifications.insert(notification, data);
+
+    // add the callback action
+    notify_notification_add_action (notification,
+                                    "notification_action",
+                                    C::gettext("View message"),
+                                    notification_action,
+                                    data,
+                                    NULL /* will be deleted when closed */);
+
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-switch-to-application",
+                                        "true");
+
+    g_signal_connect(notification, "closed", G_CALLBACK(notification_closed), &mNotifications);
+
+    if (mGreeterContacts) { // we're in the greeter's session
+        mGreeterContacts->setFilter(QContactPhoneNumber::match(contact->id()));
+    } else {
+        // try to match the contact info
+        QContactFetchRequest *request = new QContactFetchRequest(this);
+        request->setFilter(QContactPhoneNumber::match(contact->id()));
+
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request]() {
+            // only process the results after the finished state is reached
+            if (request->state() != QContactAbstractRequest::FinishedState &&
+                request->contacts().size() > 0) {
+                return;
+            }
+
+            QContact contact = request->contacts().at(0);        
+            updateNotifications(contact);
+
+            // Notify greeter via AccountsService about this contact so it
+            // can show the details if our session is locked.
+            GreeterContacts::emitContact(contact);
+        });
+
+        request->setManager(ContactUtils::sharedManager());
+        request->start();
+    }
+
+    GError *error = NULL;
+    if (!notify_notification_show(notification, &error)) {
+        qWarning() << "Failed to show message notification:" << error->message;
+        g_error_free (error);
+    }
+
+    Ringtone::instance()->playIncomingMessageSound();
+}
+
+void TextChannelObserver::updateNotifications(const QContact &contact)
+{
+    QMap<NotifyNotification*, NotificationData*>::const_iterator i = mNotifications.constBegin();
+    while (i != mNotifications.constEnd()) {
+        NotifyNotification *notification = i.key();
+        NotificationData *data = i.value();
+        if (data->phoneNumber == contact.detail<QContactPhoneNumber>().number()) {
+            QString displayLabel = ContactUtils::formatContactName(contact);
+            QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
+            QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+
+            if (avatar.isEmpty()) {
+                avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
+            }
+
+            notify_notification_update(notification,
+                                       title.toStdString().c_str(),
+                                       data->message.toStdString().c_str(),
+                                       avatar.toStdString().c_str());
+
+            GError *error = NULL;
+            if (!notify_notification_show(notification, &error)) {
+                qWarning() << "Failed to show message notification:" << error->message;
+                g_error_free (error);
+            }
         }
-
-        QString displayLabel;
-        QString avatar;
-
-        if (request->contacts().size() > 0) {
-            QContact contact = request->contacts().at(0);
-            displayLabel = ContactUtils::formatContactName(contact);
-            avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
-        }
-
-        QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(displayLabel.isEmpty() ? contact->alias() : displayLabel);
-
-        if (avatar.isEmpty()) {
-            avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
-        }
-
-        qDebug() << title << avatar;
-        // show the notification
-        NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
-                                                                   message.text().toStdString().c_str(),
-                                                                   avatar.toStdString().c_str());
-
-        // add the callback action
-        NotificationData *data = new NotificationData();
-        data->phoneNumber = contact->id();
-        notify_notification_add_action (notification,
-                                        "notification_action",
-                                        C::gettext("View message"),
-                                        notification_action,
-                                        data,
-                                        delete_notification_data);
-
-        notify_notification_set_hint_string(notification,
-                                            "x-canonical-switch-to-application",
-                                            "true");
-
-        GError *error = NULL;
-        if (!notify_notification_show(notification, &error)) {
-            qWarning() << "Failed to show message notification:" << error->message;
-            g_error_free (error);
-        }
-
-        Ringtone::instance()->playIncomingMessageSound();
-    });
-
-    request->setManager(ContactUtils::sharedManager());
-    request->start();
+        ++i;
+    }
 }
 
 Tp::TextChannelPtr TextChannelObserver::channelFromPath(const QString &path)

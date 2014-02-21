@@ -76,6 +76,8 @@ Approver::Approver()
 
 Approver::~Approver()
 {
+    if (mGreeterContacts)
+        delete mGreeterContacts;
 }
 
 Tp::ChannelClassSpecList Approver::channelFilters() const
