@@ -71,11 +71,6 @@ CallHandler::CallHandler(QObject *parent)
 
 void CallHandler::startCall(const QString &phoneNumber)
 {
-    // check if we are already talking to that phone number
-    if (!existingCall(phoneNumber).isNull()) {
-        return;
-    }
-
     // Request the contact to start audio call
     Tp::AccountPtr account = TelepathyHelper::instance()->account();
     if (account->connection() == NULL) {
