@@ -43,6 +43,10 @@ CallNotification *CallNotification::instance()
 
 void CallNotification::showNotificationForCall(const QStringList &participants, CallNotification::NotificationReason reason)
 {
+
+// FIXME: the new designs don't have on screen notifications, and that's why they are disabled here
+// in case that changes again in the future, just remove the #if 0
+#if 0
     QString title;
     bool isConference = participants.count() > 1;
 
@@ -101,4 +105,5 @@ void CallNotification::showNotificationForCall(const QStringList &participants, 
 
     request->setManager(ContactUtils::sharedManager());
     request->start();
+#endif
 }
