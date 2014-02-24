@@ -71,6 +71,7 @@ void CallEntry::onCallPropertiesChanged(const QString &objectPath, const QVarian
 
 void CallEntry::onConferenceChannelMerged(const Tp::ChannelPtr &channel)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     QList<CallEntry*> entries = CallManager::instance()->takeCalls(QList<Tp::ChannelPtr>() << channel);
     if (entries.isEmpty()) {
         return;
@@ -86,12 +87,13 @@ void CallEntry::onConferenceChannelMerged(const Tp::ChannelPtr &channel)
 
 void CallEntry::onConferenceChannelRemoved(const Tp::ChannelPtr &channel, const Tp::Channel::GroupMemberChangeDetails &details)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Q_FOREACH(CallEntry *entry, mCalls) {
         Tp::ChannelPtr entryChannel = entry->channel();
         if (entryChannel == channel) {
+            CallManager::instance()->addCalls(QList<CallEntry*>() << entry);
             mCalls.removeAll(entry);
             entry->disconnect(this);
-            CallManager::instance()->addCalls(QList<CallEntry*>() << entry);
             Q_EMIT callsChanged();
             break;
         }
@@ -100,6 +102,7 @@ void CallEntry::onConferenceChannelRemoved(const Tp::ChannelPtr &channel, const 
 
 void CallEntry::onInternalCallEnded()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     CallEntry *entry = qobject_cast<CallEntry*>(sender());
     mCalls.removeAll(entry);
     Q_EMIT callsChanged();
@@ -123,21 +126,13 @@ void CallEntry::setupCallChannel()
             SLOT(onMutedChanged(uint)));
 
     if (mChannel->isConference()) {
+        qDebug() << "BLABLA: Yeah! got a conference!";
         connect(mChannel.data(),
                 SIGNAL(conferenceChannelMerged(Tp::ChannelPtr)),
                 SLOT(onConferenceChannelMerged(Tp::ChannelPtr)));
         connect(mChannel.data(),
                 SIGNAL(conferenceChannelRemoved(Tp::ChannelPtr, Tp::Channel::GroupMemberChangeDetails)),
                 SLOT(onConferenceChannelRemoved(Tp::ChannelPtr,Tp::Channel::GroupMemberChangeDetails)));
-
-        mCalls = CallManager::instance()->takeCalls(mChannel->conferenceChannels());
-        Q_FOREACH(CallEntry *entry, mCalls) {
-              connect(entry,
-                      SIGNAL(callEnded()),
-                      SLOT(onInternalCallEnded()));
-        }
-
-        Q_EMIT callsChanged();
     }
 
     refreshProperties();
@@ -232,7 +227,7 @@ bool CallEntry::ringing() const
 
 QString CallEntry::phoneNumber() const
 {
-    if (!mChannel->actualFeatures().contains(Tp::CallChannel::FeatureCore)) {
+    if (mChannel->isConference() || !mChannel->actualFeatures().contains(Tp::CallChannel::FeatureCore)) {
         return "";
     }
     return mChannel->targetContact()->id();
@@ -286,6 +281,16 @@ CallEntry *CallEntry::callAt(QQmlListProperty<CallEntry> *p, int index)
         return 0;
     }
     return entry->mCalls[index];
+}
+
+void CallEntry::addCall(CallEntry *call)
+{
+    mCalls << call;
+    connect(call,
+            SIGNAL(callEnded()),
+            SLOT(onInternalCallEnded()));
+
+    Q_EMIT callsChanged();
 }
 
 bool CallEntry::isHeld() const

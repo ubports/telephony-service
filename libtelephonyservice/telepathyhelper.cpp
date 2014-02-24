@@ -26,6 +26,7 @@
 #include "config.h"
 
 #include <TelepathyQt/AccountSet>
+#include <TelepathyQt/ChannelClassSpec>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/PendingAccount>
@@ -49,6 +50,9 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
 
     Tp::ChannelFactoryPtr channelFactory = Tp::ChannelFactory::create(QDBusConnection::sessionBus());
     channelFactory->addCommonFeatures(Tp::Channel::FeatureCore);
+
+    // FIXME: at some point this needs to be fixed in tp-qt itself.
+    channelFactory->setSubclassFor<Tp::CallChannel>(audioConferenceSpec());
 
     mAccountManager = Tp::AccountManager::create(
             Tp::AccountFactory::create(QDBusConnection::sessionBus(), mAccountFeatures),
@@ -233,6 +237,16 @@ void TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
             object->setProperty("clientName", TP_QT_IFACE_CLIENT + "." + name );
         }
     }
+}
+
+Tp::ChannelClassSpec TelepathyHelper::audioConferenceSpec()
+{
+    static Tp::ChannelClassSpec spec;
+    if (!spec.isValid()) {
+        spec = Tp::ChannelClassSpec(TP_QT_IFACE_CHANNEL_TYPE_CALL, Tp::HandleTypeNone);
+        spec.setCallInitialAudioFlag();
+    }
+    return spec;
 }
 
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)

@@ -72,6 +72,7 @@ void Handler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
 
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (callChannel) {
+            qDebug() << "BLABLA: got call channel, isConference:" << callChannel->isConference();
             Tp::PendingReady *pr = callChannel->becomeReady(Tp::Features()
                                              << Tp::CallChannel::FeatureCore
                                              << Tp::CallChannel::FeatureCallState
@@ -89,6 +90,7 @@ void Handler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
 Tp::ChannelClassSpecList Handler::channelFilters()
 {
     Tp::ChannelClassSpecList specList;
+    specList << TelepathyHelper::audioConferenceSpec();
     specList << Tp::ChannelClassSpec::audioCall();
     specList << Tp::ChannelClassSpec::textChat();
 

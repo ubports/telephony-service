@@ -116,6 +116,8 @@ public:
     static int callsCount(QQmlListProperty<CallEntry> *p);
     static CallEntry* callAt(QQmlListProperty<CallEntry> *p, int index);
 
+    void addCall(CallEntry *call);
+
 protected Q_SLOTS:
     void onCallStateChanged(Tp::CallState state);
     void onCallFlagsChanged(Tp::CallFlags flags);

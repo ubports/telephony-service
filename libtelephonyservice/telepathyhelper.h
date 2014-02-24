@@ -53,6 +53,9 @@ public:
 
     void registerClient(Tp::AbstractClient *client, QString name);
 
+    // pre-populated channel class specs for conferences
+    static Tp::ChannelClassSpec audioConferenceSpec();
+
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
     void channelObserverUnregistered();

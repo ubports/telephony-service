@@ -89,6 +89,7 @@ void CallHandler::startCall(const QString &phoneNumber)
 
 void CallHandler::hangUpCall(const QString &objectPath)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
     if (channel.isNull()) {
         return;
@@ -169,6 +170,7 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
 
 void CallHandler::createConferenceCall(const QStringList &objectPaths)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     // FIXME: check if we need to verify some stuff before requesting the
     // conference call
     // Request the contact to start audio call
@@ -194,9 +196,10 @@ void CallHandler::createConferenceCall(const QStringList &objectPaths)
 
 void CallHandler::mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath)
 {
-    Tp::CallChannelPtr conferenceChannel = conferenceFromObjectPath(conferenceObjectPath);
+    qDebug() << __PRETTY_FUNCTION__;
+    Tp::CallChannelPtr conferenceChannel = callFromObjectPath(conferenceObjectPath);
     Tp::CallChannelPtr callChannel = callFromObjectPath(callObjectPath);
-    if (!conferenceChannel || !callChannel) {
+    if (!conferenceChannel || !callChannel || !conferenceChannel->isConference()) {
         qWarning() << "No valid channels found.";
         return;
     }
@@ -207,6 +210,7 @@ void CallHandler::mergeCall(const QString &conferenceObjectPath, const QString &
 
 void CallHandler::splitCall(const QString &objectPath)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
     if (!channel) {
         return;
@@ -218,6 +222,7 @@ void CallHandler::splitCall(const QString &objectPath)
 
 void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     channel->accept();
 
     // check if the channel has the speakermode property
@@ -235,11 +240,7 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
             SIGNAL(callStateChanged(Tp::CallState)),
             SLOT(onCallStateChanged(Tp::CallState)));
 
-    if (channel->isConference()) {
-        mConferenceCallChannels.append(channel);
-    } else {
-        mCallChannels.append(channel);
-    }
+    mCallChannels.append(channel);
 }
 
 void CallHandler::onContactsAvailable(Tp::PendingOperation *op)
@@ -273,11 +274,7 @@ void CallHandler::onCallHangupFinished(Tp::PendingOperation *op)
     // if you request it to be closed, the CallStateEnded will never be reached and the UI
     // and logging will be broken.
     Tp::CallChannelPtr channel = mClosingChannels.take(op);
-    if (channel->isConference()) {
-        mConferenceCallChannels.removeAll(channel);
-    } else {
-        mCallChannels.removeAll(channel);
-    }
+    mCallChannels.removeAll(channel);
 }
 
 void CallHandler::onCallChannelInvalidated()
@@ -288,11 +285,7 @@ void CallHandler::onCallChannelInvalidated()
         return;
     }
 
-    if (channel->isConference()) {
-        mConferenceCallChannels.removeAll(channel);
-    } else {
-        mCallChannels.removeAll(channel);
-    }
+    mCallChannels.removeAll(channel);
 }
 
 void CallHandler::onCallStateChanged(Tp::CallState state)
@@ -314,6 +307,10 @@ Tp::CallChannelPtr CallHandler::existingCall(const QString &phoneNumber)
 {
     Tp::CallChannelPtr channel;
     Q_FOREACH(const Tp::CallChannelPtr &ch, mCallChannels) {
+        if (ch->isConference()) {
+            continue;
+        }
+
         if (PhoneUtils::comparePhoneNumbers(ch->targetContact()->id(), phoneNumber)) {
             channel = ch;
             break;
@@ -327,19 +324,6 @@ Tp::CallChannelPtr CallHandler::callFromObjectPath(const QString &objectPath)
 {
     Tp::CallChannelPtr channel;
     Q_FOREACH(const Tp::CallChannelPtr &ch, mCallChannels) {
-        if (ch->objectPath() == objectPath) {
-            channel = ch;
-            break;
-        }
-    }
-
-    return channel;
-}
-
-Tp::CallChannelPtr CallHandler::conferenceFromObjectPath(const QString &objectPath)
-{
-    Tp::CallChannelPtr channel;
-    Q_FOREACH(const Tp::CallChannelPtr &ch, mConferenceCallChannels) {
         if (ch->objectPath() == objectPath) {
             channel = ch;
             break;

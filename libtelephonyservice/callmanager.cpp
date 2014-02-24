@@ -31,8 +31,23 @@
 typedef QMap<QString, QVariant> dbusQMap;
 Q_DECLARE_METATYPE(dbusQMap)
 
+CallManager *CallManager::instance()
+{
+    static CallManager *self = new CallManager();
+    return self;
+}
+
+CallManager::CallManager(QObject *parent)
+: QObject(parent), mConferenceCall(0)
+{
+    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
+    connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
+    connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
+}
+
 QList<CallEntry *> CallManager::takeCalls(const QList<Tp::ChannelPtr> callChannels)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     QList<CallEntry*> entries;
 
     // run through the current calls and check which ones we find
@@ -55,6 +70,7 @@ QList<CallEntry *> CallManager::takeCalls(const QList<Tp::ChannelPtr> callChanne
 
 void CallManager::addCalls(const QList<CallEntry *> entries)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Q_FOREACH (CallEntry *entry, entries) {
         mCallEntries << entry;
         setupCallEntry(entry);
@@ -65,20 +81,6 @@ void CallManager::addCalls(const QList<CallEntry *> entries)
     Q_EMIT hasBackgroundCallChanged();
     Q_EMIT foregroundCallChanged();
     Q_EMIT backgroundCallChanged();
-}
-
-CallManager *CallManager::instance()
-{
-    static CallManager *self = new CallManager();
-    return self;
-}
-
-CallManager::CallManager(QObject *parent)
-: QObject(parent)
-{
-    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
-    connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
-    connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
 }
 
 void CallManager::setupCallEntry(CallEntry *entry)
@@ -99,6 +101,7 @@ void CallManager::setupCallEntry(CallEntry *entry)
 
 void CallManager::onChannelObserverUnregistered()
 {
+    mConferenceCall = 0;
     mCallEntries.clear();
     Q_EMIT hasCallsChanged();
     Q_EMIT hasBackgroundCallChanged();
@@ -137,10 +140,11 @@ CallEntry *CallManager::foregroundCall() const
 
     // if we have only one call, return it as being always in foreground
     // even if it is held
-    if (mCallEntries.count() == 1) {
-        call = mCallEntries.first();
+    QList<CallEntry*> calls = activeCalls();
+    if (calls.count() == 1) {
+        call = calls.first();
     } else {
-        Q_FOREACH(CallEntry *entry, mCallEntries) {
+        Q_FOREACH(CallEntry *entry, calls) {
             if (entry->isActive() && !entry->isHeld()) {
                 call = entry;
                 break;
@@ -148,27 +152,19 @@ CallEntry *CallManager::foregroundCall() const
         }
     }
 
-    if (!call) {
-        return 0;
-    }
-
-    // incoming but not yet answered calls cant be considered foreground calls
-    if (call->ringing()) {
-        return 0;
-    }
-
     return call;
 }
 
 CallEntry *CallManager::backgroundCall() const
 {
+    QList<CallEntry*> calls = activeCalls();
     // if we have only one call, assume there is no call in background
     // even if the foreground call is held
-    if (mCallEntries.count() == 1) {
+    if (calls.count() == 1) {
         return 0;
     }
 
-    Q_FOREACH(CallEntry *entry, mCallEntries) {
+    Q_FOREACH(CallEntry *entry, calls) {
         if (entry->isHeld()) {
             return entry;
         }
@@ -180,6 +176,10 @@ CallEntry *CallManager::backgroundCall() const
 QList<CallEntry *> CallManager::activeCalls() const
 {
     QList<CallEntry*> calls;
+    if (mConferenceCall) {
+        calls << mConferenceCall;
+    }
+
     Q_FOREACH(CallEntry *entry, mCallEntries) {
         if (entry->isActive() || entry->dialing()) {
             calls << entry;
@@ -221,7 +221,26 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
         entry->setVoicemail(true);
     }
 
-    mCallEntries.append(entry);
+    if (entry->isConference()) {
+        // assume there can be only one conference call at any time for now
+        mConferenceCall = entry;
+
+        // check if any of the existing channels belong to the conference
+        // if they do, move them to the conference
+        QList<Tp::ChannelPtr> channels = channel->conferenceChannels();
+        Q_FOREACH(CallEntry *existingCall, mCallEntries) {
+            if (channels.contains(existingCall->channel())) {
+                mCallEntries.removeAll(existingCall);
+                mConferenceCall->addCall(existingCall);
+            }
+        }
+    } else if (mConferenceCall && mConferenceCall->channel()->conferenceChannels().contains(channel)){
+        // if the call channel belongs to the conference, don't add it here, move it to the conference itself
+        mConferenceCall->addCall(entry);
+    } else {
+        mCallEntries.append(entry);
+    }
+
     connect(entry,
             SIGNAL(callEnded()),
             SLOT(onCallEnded()));
@@ -247,6 +266,7 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 
 void CallManager::onCallEnded()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     // FIXME: handle multiple calls
     CallEntry *entry = qobject_cast<CallEntry*>(sender());
     if (!entry) {
@@ -254,7 +274,11 @@ void CallManager::onCallEnded()
     }
 
     // at this point the entry should be removed
-    mCallEntries.removeAll(entry);
+    if (entry == mConferenceCall) {
+        mConferenceCall = 0;
+    } else {
+        mCallEntries.removeAll(entry);
+    }
 
     Q_EMIT callEnded(entry);
     Q_EMIT hasCallsChanged();
