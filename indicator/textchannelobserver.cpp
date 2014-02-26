@@ -153,12 +153,12 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
         QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request]() {
             // only process the results after the finished state is reached
-            if (request->state() != QContactAbstractRequest::FinishedState &&
-                request->contacts().size() > 0) {
+            if (request->state() != QContactAbstractRequest::FinishedState ||
+                request->contacts().size() == 0) {
                 return;
             }
 
-            QContact contact = request->contacts().at(0);        
+            QContact contact = request->contacts().at(0);
             updateNotifications(contact);
 
             // Notify greeter via AccountsService about this contact so it
