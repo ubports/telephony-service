@@ -10,7 +10,6 @@ qt5_add_dbus_adaptor(approver_SRCS Approver.xml approver/approverdbus.h Approver
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${NOTIFY_INCLUDE_DIRS}
-    ${GSETTINGS_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
     )
@@ -23,7 +22,6 @@ qt5_use_modules(telephony-service-approver Contacts Core DBus Gui Multimedia Qml
 target_link_libraries(telephony-service-approver
     ${TP_QT5_LIBRARIES}
     ${NOTIFY_LIBRARIES}
-    ${GSETTINGS_LIBRARIES}
     telephonyservice
     )
 
