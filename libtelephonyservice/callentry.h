@@ -51,8 +51,8 @@ class CallEntry : public QObject
 
     // this property is only filled for conference calls
     Q_PROPERTY(QQmlListProperty<CallEntry> calls
-                       READ calls
-                       NOTIFY callsChanged)
+               READ calls
+               NOTIFY callsChanged)
     Q_PROPERTY(bool isConference
                READ isConference
                NOTIFY isConferenceChanged)
@@ -109,6 +109,7 @@ public:
 
     Q_INVOKABLE void sendDTMF(const QString &key);
     Q_INVOKABLE void endCall();
+    Q_INVOKABLE void splitCall();
 
     Tp::CallChannelPtr channel() const;
 

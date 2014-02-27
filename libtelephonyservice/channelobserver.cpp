@@ -56,8 +56,6 @@ void ChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &co
     Q_UNUSED(requestsSatisfied)
     Q_UNUSED(observerInfo)
 
-    qDebug() << "BLABLA ObserveChannels called with" << channels.count() << "channels";
-
     Q_FOREACH (Tp::ChannelPtr channel, channels) {
         mContexts[channel.data()] = context;
         mChannels.append(channel);
@@ -66,10 +64,8 @@ void ChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &co
                 SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
                 SLOT(onChannelInvalidated()));
 
-        qDebug() << "BLABLA Channel:" << channel->channelType() << "TargetHandleType:" << channel->targetHandleType()  << channel->metaObject()->className();
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
         if (callChannel) {
-            qDebug() << "BLABLA observing call channel";
             Tp::PendingReady *ready = callChannel->becomeReady(Tp::Features()
                                                                << Tp::CallChannel::FeatureCore
                                                                << Tp::CallChannel::FeatureCallMembers
@@ -124,8 +120,6 @@ void ChannelObserver::onCallChannelReady(Tp::PendingOperation *op)
     if (callChannel->callState() == Tp::CallStateActive) {
         callChannel->setProperty("activeTimestamp", QDateTime::currentDateTime());
     }
-
-    qDebug() << "BLABLA: got the channel";
 
     Q_EMIT callChannelAvailable(callChannel);
 

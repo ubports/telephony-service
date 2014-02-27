@@ -71,9 +71,9 @@ void CallEntry::onCallPropertiesChanged(const QString &objectPath, const QVarian
 
 void CallEntry::onConferenceChannelMerged(const Tp::ChannelPtr &channel)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     QList<CallEntry*> entries = CallManager::instance()->takeCalls(QList<Tp::ChannelPtr>() << channel);
     if (entries.isEmpty()) {
+        qWarning() << "Could not find the call that was just merged.";
         return;
     }
 
@@ -87,7 +87,6 @@ void CallEntry::onConferenceChannelMerged(const Tp::ChannelPtr &channel)
 
 void CallEntry::onConferenceChannelRemoved(const Tp::ChannelPtr &channel, const Tp::Channel::GroupMemberChangeDetails &details)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     Q_FOREACH(CallEntry *entry, mCalls) {
         Tp::ChannelPtr entryChannel = entry->channel();
         if (entryChannel == channel) {
@@ -102,7 +101,6 @@ void CallEntry::onConferenceChannelRemoved(const Tp::ChannelPtr &channel, const 
 
 void CallEntry::onInternalCallEnded()
 {
-    qDebug() << __PRETTY_FUNCTION__;
     CallEntry *entry = qobject_cast<CallEntry*>(sender());
     mCalls.removeAll(entry);
     Q_EMIT callsChanged();
@@ -126,7 +124,6 @@ void CallEntry::setupCallChannel()
             SLOT(onMutedChanged(uint)));
 
     if (mChannel->isConference()) {
-        qDebug() << "BLABLA: Yeah! got a conference!";
         connect(mChannel.data(),
                 SIGNAL(conferenceChannelMerged(Tp::ChannelPtr)),
                 SLOT(onConferenceChannelMerged(Tp::ChannelPtr)));
@@ -258,6 +255,12 @@ void CallEntry::endCall()
 {
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
     phoneAppHandler->call("HangUpCall", mChannel->objectPath());
+}
+
+void CallEntry::splitCall()
+{
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("SplitCall", mChannel->objectPath());
 }
 
 Tp::CallChannelPtr CallEntry::channel() const

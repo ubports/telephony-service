@@ -70,9 +70,10 @@ QList<CallEntry *> CallManager::takeCalls(const QList<Tp::ChannelPtr> callChanne
 
 void CallManager::addCalls(const QList<CallEntry *> entries)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     Q_FOREACH (CallEntry *entry, entries) {
-        mCallEntries << entry;
+        if (!mCallEntries.contains(entry)) {
+            mCallEntries << entry;
+        }
         setupCallEntry(entry);
     }
 
