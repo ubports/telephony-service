@@ -28,7 +28,6 @@
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 
-class GreeterContacts;
 class NotificationData;
 
 class TextChannelObserver : public QObject
@@ -57,7 +56,6 @@ protected Q_SLOTS:
 private:
     QList<Tp::TextChannelPtr> mChannels;
     QMap<NotifyNotification*, NotificationData*> mNotifications;
-    GreeterContacts *mGreeterContacts;
 };
 
 #endif // TEXTCHANNELOBSERVER_H

@@ -73,8 +73,7 @@ void notification_closed(NotifyNotification *notification, QMap<NotifyNotificati
 }
 
 TextChannelObserver::TextChannelObserver(QObject *parent) :
-    QObject(parent),
-    mGreeterContacts(NULL)
+    QObject(parent)
 {
     connect(MessagingMenu::instance(),
             SIGNAL(replyReceived(QString,QString)),
@@ -84,17 +83,13 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
             SLOT(onMessageRead(QString,QString)));
 
     if (qgetenv("XDG_SESSION_CLASS") == "greeter") {
-        mGreeterContacts = new GreeterContacts(this);
-        connect(mGreeterContacts, SIGNAL(contactUpdated(QtContacts::QContact)),
+        connect(GreeterContacts::instance(), SIGNAL(contactUpdated(QtContacts::QContact)),
                 this, SLOT(updateNotifications(QtContacts::QContact)));
     }
 }
 
 TextChannelObserver::~TextChannelObserver()
 {
-    if (mGreeterContacts)
-        delete mGreeterContacts;
-
     QMap<NotifyNotification*, NotificationData*>::const_iterator i = mNotifications.constBegin();
     while (i != mNotifications.constEnd()) {
         NotifyNotification *notification = i.key();
@@ -144,8 +139,8 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     g_signal_connect(notification, "closed", G_CALLBACK(notification_closed), &mNotifications);
 
-    if (mGreeterContacts) { // we're in the greeter's session
-        mGreeterContacts->setFilter(QContactPhoneNumber::match(contact->id()));
+    if (qgetenv("XDG_SESSION_CLASS") == "greeter") { // we're in the greeter's session
+        GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
     } else {
         // try to match the contact info
         QContactFetchRequest *request = new QContactFetchRequest(this);

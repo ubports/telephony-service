@@ -227,7 +227,7 @@ QContact GreeterContactsTest::makeTestContact(bool convertedPath)
 
 void GreeterContactsTest::setFilter()
 {
-    mGreeterContacts->setFilter(QContactPhoneNumber::match("555"));
+    mGreeterContacts->setContactFilter(QContactPhoneNumber::match("555"));
 }
 
 void GreeterContactsTest::setActiveEntry(const QString &entry)
@@ -263,7 +263,7 @@ void GreeterContactsTest::waitForInitialQuery()
 
 void GreeterContactsTest::makeGreeterContacts()
 {
-    mGreeterContacts = new GreeterContacts();
+    mGreeterContacts = GreeterContacts::instance();
     mSpy = new QSignalSpy(mGreeterContacts, SIGNAL(contactUpdated(QtContacts::QContact)));
 }
 

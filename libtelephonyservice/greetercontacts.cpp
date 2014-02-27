@@ -30,29 +30,30 @@
 #include <QDBusInterface>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
+#include <QDBusReply>
 #include <QDir>
 #include <QFile>
 #include <unistd.h>
 
 QTCONTACTS_USE_NAMESPACE
 
+GreeterContacts *GreeterContacts::mInstance = nullptr;
+
+GreeterContacts *GreeterContacts::instance()
+{
+    if (!mInstance)
+        mInstance = new GreeterContacts();
+    return mInstance;
+}
+
 GreeterContacts::GreeterContacts(QObject *parent)
 : QObject(parent),
-  mFilter(QContactInvalidFilter()),
   mActiveUser(),
+  mFilter(QContactInvalidFilter()),
   mContacts()
 {
     // Watch for changes
-
-    QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.connect("com.canonical.UnityGreeter",
-                       "/list",
-                       "org.freedesktop.DBus.Properties",
-                       "PropertiesChanged",
-                       this,
-                       SLOT(greeterPropertiesChanged(QString, QVariantMap, QStringList)));
-
-    connection = QDBusConnection::AS_BUSNAME();
+    QDBusConnection connection = QDBusConnection::AS_BUSNAME();
     connection.connect("org.freedesktop.Accounts",
                        nullptr,
                        "org.freedesktop.DBus.Properties",
@@ -60,28 +61,67 @@ GreeterContacts::GreeterContacts(QObject *parent)
                        this,
                        SLOT(accountsPropertiesChanged(QString, QVariantMap, QStringList, QDBusMessage)));
 
-    // Start initial queries
+    // Are we in greeter mode or not?
+    if (qgetenv("XDG_SESSION_CLASS") == "greeter") {
+        connection = QDBusConnection::sessionBus();
+        connection.connect("com.canonical.UnityGreeter",
+                           "/list",
+                           "org.freedesktop.DBus.Properties",
+                           "PropertiesChanged",
+                           this,
+                           SLOT(greeterPropertiesChanged(QString, QVariantMap, QStringList)));
 
-    queryEntry();
+        QDBusInterface iface("org.freedesktop.Accounts",
+                             "/org/freedesktop/Accounts",
+                             "org.freedesktop.Accounts",
+                             QDBusConnection::AS_BUSNAME());
+        QDBusPendingCall call = iface.asyncCall("ListCachedUsers");
+        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
+        connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher *)),
+                this, SLOT(accountsGetUsersReply(QDBusPendingCallWatcher *)));
 
-    QDBusInterface iface("org.freedesktop.Accounts",
-                         "/org/freedesktop/Accounts",
-                         "org.freedesktop.Accounts",
-                         QDBusConnection::AS_BUSNAME());
-    QDBusPendingCall call = iface.asyncCall("ListCachedUsers");
-    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, this);
-    connect(watcher, SIGNAL(finished(QDBusPendingCallWatcher *)),
-            this, SLOT(accountsGetUsersReply(QDBusPendingCallWatcher *)));
+        queryEntry();
+    } else {
+        QString uid = QString::number(getuid());
+        mActiveUser = "/org/freedesktop/Accounts/User" + uid;
+    }
 }
 
 GreeterContacts::~GreeterContacts()
 {
+    if (mInstance == this) {
+        mInstance = nullptr;
+    }
 }
 
-void GreeterContacts::setFilter(const QContactFilter &filter)
+void GreeterContacts::setContactFilter(const QContactFilter &filter)
 {
     mFilter = filter;
     signalIfNeeded();
+}
+
+bool GreeterContacts::silentMode()
+{
+    if (!mSilentMode.isValid()) {
+        mSilentMode = getUserValue("com.ubuntu.touch.AccountsService.Sound", "SilentMode");
+    }
+    return mSilentMode.toBool();
+}
+
+QString GreeterContacts::incomingCallSound()
+{
+    if (!mIncomingCallSound.isValid()) {
+        mIncomingCallSound = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallSound");
+    }
+    return mIncomingCallSound.toString();
+}
+
+QString GreeterContacts::incomingMessageSound()
+{
+    if (!mIncomingMessageSound.isValid()) {
+        mIncomingMessageSound = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageSound");
+    }
+    return mIncomingMessageSound.toString();
 }
 
 void GreeterContacts::greeterPropertiesChanged(const QString &interface,
@@ -97,6 +137,32 @@ void GreeterContacts::greeterPropertiesChanged(const QString &interface,
     }
 }
 
+QVariant GreeterContacts::getUserValue(const QString &interface, const QString &propName)
+{
+    QDBusInterface iface("org.freedesktop.Accounts",
+                         mActiveUser,
+                         "org.freedesktop.DBus.Properties",
+                         QDBusConnection::AS_BUSNAME());
+    QDBusReply<QVariant> reply = iface.call("Get", interface, propName);
+    if (reply.isValid()) {
+        return reply.value();
+    } else {
+        qWarning() << "Failed to get user property " << propName << " from AccountsService:" << reply.error().message();
+    }
+}
+
+void GreeterContacts::checkUpdatedValue(const QVariantMap &changed,
+                                        const QStringList &invalidated,
+                                        const QString &propName,
+                                        QVariant &propValue)
+{
+    if (changed.contains(propName)) {
+        propValue = changed.value(propName);
+    } else if (invalidated.contains(propName)) {
+        propValue = QVariant();
+    }
+}
+
 void GreeterContacts::accountsPropertiesChanged(const QString &interface,
                                                 const QVariantMap &changed,
                                                 const QStringList &invalidated,
@@ -109,6 +175,11 @@ void GreeterContacts::accountsPropertiesChanged(const QString &interface,
         } else if (invalidated.contains("CurrentContact")) {
             queryContact(message.path());
         }
+    } else if (interface == "com.ubuntu.touch.AccountsService.Sound" &&
+               message.path() == mActiveUser) {
+        checkUpdatedValue(changed, invalidated, "SilentMode", mSilentMode);
+        checkUpdatedValue(changed, invalidated, "IncomingCallSound", mIncomingCallSound);
+        checkUpdatedValue(changed, invalidated, "IncomingMessageSound", mIncomingMessageSound);
     }
 }
 
@@ -178,6 +249,9 @@ void GreeterContacts::updateActiveUser(const QString &username)
     struct passwd *pwinfo = getpwnam(username.toLatin1());
     if (pwinfo) {
         mActiveUser = "/org/freedesktop/Accounts/User" + QString::number(pwinfo->pw_uid);
+        mSilentMode = QVariant();
+        mIncomingCallSound = QVariant();
+        mIncomingMessageSound = QVariant();
         signalIfNeeded();
     }
 }
