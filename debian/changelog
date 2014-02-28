@@ -1,3 +1,10 @@
+telephony-service (0.1+14.04.20140228.1-0ubuntu1) trusty; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Fix building against Qt 5.2.1 (LP: #1280281)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 28 Feb 2014 23:26:09 +0000
+
 telephony-service (0.1+14.04.20140228-0ubuntu1) trusty; urgency=low
 
   [ Gustavo Pichorim Boiko ]
