@@ -27,6 +27,7 @@
 #include "telepathyhelper.h"
 #include <QContactAvatar>
 #include <QContactFetchRequest>
+#include <QContactFilter>
 #include <QContactPhoneNumber>
 #include <QDateTime>
 #include <QDebug>
