@@ -84,6 +84,7 @@ private:
 
     QList<CallEntry*> mCallEntries;
     QString mVoicemailNumber;
+    bool mNeedsUpdate;
 };
 
 #endif // CALLMANAGER_H
