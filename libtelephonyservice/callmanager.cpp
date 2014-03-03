@@ -38,7 +38,7 @@ CallManager *CallManager::instance()
 }
 
 CallManager::CallManager(QObject *parent)
-: QObject(parent)
+: QObject(parent), mNeedsUpdate(false)
 {
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
@@ -46,11 +46,9 @@ CallManager::CallManager(QObject *parent)
 
 void CallManager::onChannelObserverUnregistered()
 {
-    mCallEntries.clear();
-    Q_EMIT hasCallsChanged();
-    Q_EMIT hasBackgroundCallChanged();
-    Q_EMIT foregroundCallChanged();
-    Q_EMIT backgroundCallChanged();
+    // do not clear the manager right now, wait until the observer is re-registered
+    // to avoid flickering in the UI
+    mNeedsUpdate = true;
 }
 
 void CallManager::startCall(const QString &phoneNumber)
@@ -78,7 +76,7 @@ void CallManager::onConnectedChanged()
     }
 }
 
-QObject *CallManager::foregroundCall() const
+CallEntry *CallManager::foregroundCall() const
 {
     CallEntry *call = 0;
 
@@ -107,7 +105,7 @@ QObject *CallManager::foregroundCall() const
     return call;
 }
 
-QObject *CallManager::backgroundCall() const
+CallEntry *CallManager::backgroundCall() const
 {
     // if we have only one call, assume there is no call in background
     // even if the foreground call is held
@@ -126,16 +124,39 @@ QObject *CallManager::backgroundCall() const
 
 bool CallManager::hasCalls() const
 {
-    return !mCallEntries.isEmpty();
+    // check if the callmanager already has active calls
+    if (activeCallsCount() > 0) {
+        return true;
+    }
+
+    // if that's not the case, query the teleophony-service-handler for the availability of calls
+    // this is done only to get the live call view on clients as soon as possible, even before the
+    // telepathy observer is configured
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    QDBusReply<bool> reply = phoneAppHandler->call("HasCalls");
+    if (reply.isValid()) {
+        return reply.value();
+    }
+
+    return false;
 }
 
 bool CallManager::hasBackgroundCall() const
 {
-    return mCallEntries.count() > 1;
+    return activeCallsCount() > 1;
 }
 
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
+    // if this is the first call after re-registering the observer, clear the data
+    if (mNeedsUpdate) {
+        Q_FOREACH(CallEntry *entry, mCallEntries) {
+            entry->deleteLater();
+        }
+        mCallEntries.clear();
+        mNeedsUpdate = false;
+    }
+
     CallEntry *entry = new CallEntry(channel, this);
     if (entry->phoneNumber() == getVoicemailNumber()) {
         entry->setVoicemail(true);
@@ -154,6 +175,9 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
     connect(entry,
             SIGNAL(heldChanged()),
             SIGNAL(backgroundCallChanged()));
+    connect(entry,
+            SIGNAL(activeChanged()),
+            SIGNAL(hasBackgroundCallChanged()));
 
     // FIXME: check which of those signals we really need to emit here
     Q_EMIT hasCallsChanged();
@@ -216,4 +240,16 @@ void CallManager::notifyEndedCall(const Tp::CallChannelPtr &channel)
     // and finally add the entry
     // just mark it as new if it is missed
     Q_EMIT callEnded(phoneNumber, incoming, timestamp, duration, missed, missed);
+}
+
+int CallManager::activeCallsCount() const
+{
+    int count = 0;
+    Q_FOREACH(const CallEntry *entry, mCallEntries) {
+        if (entry->isActive() || entry->dialing()) {
+            count++;
+        }
+    }
+
+    return count;
 }

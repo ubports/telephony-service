@@ -32,16 +32,14 @@ class VoiceMailIndicator : public QObject
 public:
     explicit VoiceMailIndicator(QObject *parent = 0);
 
-    void showVoicemailOnApp();
-
 public Q_SLOTS:
-    void onVoicemailCountChanged(int count);
+    void onVoicemailCountChanged(uint count);
     void onVoicemailIndicatorChanged(bool active);
     void onAccountReady();
 
 private:
     bool voicemailIndicatorVisible();
-    int voicemailCount();
+    uint voicemailCount();
     bool checkConnected();
     QDBusConnection mConnection;
 };

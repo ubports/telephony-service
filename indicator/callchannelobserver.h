@@ -39,6 +39,7 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     void onCallStateChanged(Tp::CallState state);
+    void onHoldChanged();
 
 private:
     QList<Tp::CallChannelPtr> mChannels;

@@ -39,12 +39,15 @@ public:
     HandlerDBus(QObject* parent=0);
     ~HandlerDBus();
 
+    QVariantMap GetCallProperties(const QString &objectPath);
+    bool HasCalls();
+
 public Q_SLOTS:
     bool connectToBus();
 
     // messages related
-    Q_NOREPLY void SendMessage(const QString &number, const QString &message);
-    Q_NOREPLY void AcknowledgeMessages(const QString &number, const QStringList &messageIds);
+    Q_NOREPLY void SendMessage(const QStringList &number, const QString &message);
+    Q_NOREPLY void AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds);
 
     // call related
     Q_NOREPLY void StartCall(const QString &number);
@@ -56,6 +59,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);
+    void CallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
 };
 
 #endif // HANDLERDBUS_H

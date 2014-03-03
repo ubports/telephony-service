@@ -15,14 +15,14 @@
             <dox:d><![CDATA[
                Request to send a message to a phone number
             ]]></dox:d>
-            <arg name="number" type="s" direction="in"/>
+            <arg name="numbers" type="as" direction="in"/>
             <arg name="message" type="s" direction="in"/>
         </method>
         <method name="AcknowledgeMessages">
             <dox:d><![CDATA[
                 Request messages to be acknowledged (marked as read)
             ]]></dox:d>
-            <arg name="number" type="s" direction="in"/>
+            <arg name="numbers" type="as" direction="in"/>
             <arg name="messageIds" type="as" direction="in"/>
         </method>
 
@@ -67,5 +67,28 @@
             <arg name="objectPath" type="s" direction="in"/>
             <arg name="key" type="s" direction="in"/>
         </method>
+        <method name="HasCalls">
+            <dox:d><![CDATA[
+                Returns whether the handler is managing any call
+            ]]></dox:d>
+            <arg name="result" type="b" direction="out"/>
+        </method>
+        <method name="GetCallProperties">
+            <dox:d><![CDATA[
+                Get the properties of a given call channel
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="properties" type="a{sv}" direction="out"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+        </method>
+        <signal name="CallPropertiesChanged">
+            <dox:d><![CDATA[
+                The properties of a given call changed.
+            ]]></dox:d>
+            <arg name="objectPath" type="s"/>
+            <arg name="properties" type="a{sv}"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+        </signal>
     </interface>
 </node>

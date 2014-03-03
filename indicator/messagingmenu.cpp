@@ -24,6 +24,7 @@
 #include "contactutils.h"
 #include "phoneutils.h"
 #include "messagingmenu.h"
+#include "telepathyhelper.h"
 #include <QContactAvatar>
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
@@ -227,7 +228,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     request->start();
 }
 
-void MessagingMenu::showVoicemailEntry(int count)
+void MessagingMenu::showVoicemailEntry(uint count)
 {
     if (!mVoicemailId.isEmpty()) {
         // if the count didn't change, don't do anything
@@ -252,6 +253,7 @@ void MessagingMenu::showVoicemailEntry(int count)
                                                                QDateTime::currentDateTime().toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
     mVoicemailId = "voicemail";
+    messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
 
     g_object_unref(icon);
     g_object_unref(message);
@@ -283,7 +285,7 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
     QString action(actionId);
     QString messageId(messaging_menu_message_get_id(message));
 
-    if (action == "callBack") {
+    if (action == "callBack" || action.isEmpty()) {
         QMetaObject::invokeMethod(instance, "callBack", Q_ARG(QString, messageId));
     } else if (action == "replyWithMessage") {
         QString text(g_variant_get_string(param, NULL));
@@ -324,7 +326,14 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
     qDebug() << "TelephonyService/MessagingMenu: Calling voicemail for messageId" << messageId;
-    ApplicationUtils::openUrl(QUrl("tel:///voicemail"));
+    Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
+    QString busName = conn->busName();
+    QString objectPath = conn->objectPath();
+    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
+    QDBusReply<QString> replyNumber = connIface.call("VoicemailNumber");
+    if (replyNumber.isValid()) {
+        ApplicationUtils::openUrl(QUrl(QString("tel:///%1").arg(replyNumber.value())));
+    }
 }
 
 Call MessagingMenu::callFromMessageId(const QString &messageId)

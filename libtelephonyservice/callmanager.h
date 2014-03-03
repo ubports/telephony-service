@@ -56,8 +56,8 @@ public:
     Q_INVOKABLE void startCall(const QString &phoneNumber);
     Q_INVOKABLE QString getVoicemailNumber();
 
-    QObject *foregroundCall() const;
-    QObject *backgroundCall() const;
+    CallEntry *foregroundCall() const;
+    CallEntry *backgroundCall() const;
     bool hasCalls() const;
     bool hasBackgroundCall() const;
 
@@ -80,9 +80,11 @@ private:
     explicit CallManager(QObject *parent = 0);
     void refreshProperties();
     void notifyEndedCall(const Tp::CallChannelPtr &channel);
+    int activeCallsCount() const;
 
     QList<CallEntry*> mCallEntries;
     QString mVoicemailNumber;
+    bool mNeedsUpdate;
 };
 
 #endif // CALLMANAGER_H
