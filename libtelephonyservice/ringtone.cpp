@@ -21,17 +21,115 @@
 
 #include "ringtone.h"
 
+#define AS_SERVICE "org.freedesktop.Accounts"
+#define AS_PATH "/org/freedesktop/Accounts"
+#define AS_IFACE "org.freedesktop.Accounts"
+#define AS_EXTENSION_IFACE "com.ubuntu.touch.AccountsService.Sound"
+
 RingtoneWorker::RingtoneWorker(QObject *parent) :
     QObject(parent), mCallAudioPlayer(this), mCallAudioPlaylist(this),
-    mMessageAudioPlayer(this), mSoundSettings("com.ubuntu.touch.sound")
+    mMessageAudioPlayer(this),
+    mSystemBusConnection(QDBusConnection::systemBus()),
+    mServiceWatcher(AS_SERVICE,
+                     mSystemBusConnection,
+                     QDBusServiceWatcher::WatchForOwnerChange),
+    mAccountsserviceIface(AS_SERVICE,
+                           AS_PATH,
+                           AS_IFACE,
+                           mSystemBusConnection)
 {
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
     mCallAudioPlaylist.setCurrentIndex(0);
+
+    connect (&mServiceWatcher,
+             SIGNAL (serviceOwnerChanged (QString, QString, QString)),
+             this,
+             SLOT (onNameOwnerChanged (QString, QString, QString)));
+
+    if (mAccountsserviceIface.isValid()) {
+        setUpInterface();
+    }
+}
+
+void RingtoneWorker::onNameOwnerChanged(QString name,
+                                        QString oldOwner,
+                                        QString newOwner)
+{
+    Q_UNUSED (oldOwner);
+    Q_UNUSED (newOwner);
+    if (name != "org.freedesktop.Accounts")
+        return;
+
+    setUpInterface();
+}
+
+void RingtoneWorker::onChanged(QString interface,
+                               QVariantMap changedProperties,
+                               QStringList invalidatedProperties)
+{
+    Q_UNUSED (interface);
+    Q_UNUSED (changedProperties);
+
+    if (invalidatedProperties.contains("SilentMode"))
+        mSilentMode = getUserProperty("SilentMode").toBool();
+
+    if (invalidatedProperties.contains("IncomingCallSound"))
+        mIncomingCallSound = getUserProperty("IncomingCallSound").toString();
+
+    if (invalidatedProperties.contains("IncomingMessageSound"))
+        mIncomingMessageSound = getUserProperty("IncomingMessageSound").toString();
+}
+
+void RingtoneWorker::setUpInterface()
+{
+    /* Here we should figure out which is the active user and get that user's
+     * AS object path. */
+    QDBusReply<QDBusObjectPath> qObjectPath = mAccountsserviceIface.call(
+                "FindUserById", qlonglong(getuid()));
+
+    if (qObjectPath.isValid()) {
+        mObjectPath = qObjectPath.value().path();
+        mAccountsserviceIface.connection().connect(
+            mAccountsserviceIface.service(),
+            mObjectPath,
+            "org.freedesktop.DBus.Properties",
+            "PropertiesChanged",
+            this,
+            SLOT(onChanged(QString, QVariantMap, QStringList)));
+
+        mSilentMode = getUserProperty("SilentMode").toBool();
+        mIncomingCallSound = getUserProperty("IncomingCallSound").toString();
+        mIncomingMessageSound = getUserProperty("IncomingMessageSound").toString();
+    }
+}
+
+QVariant RingtoneWorker::getUserProperty(const QString property)
+{
+    if (!mAccountsserviceIface.isValid())
+        return QVariant();
+
+    QDBusInterface iface (
+                "org.freedesktop.Accounts",
+                mObjectPath,
+                "org.freedesktop.DBus.Properties",
+                mSystemBusConnection,
+                this);
+
+    if (iface.isValid()) {
+        QDBusReply<QDBusVariant> answer = iface.call(
+                    "Get",
+                    AS_EXTENSION_IFACE,
+                    property);
+        if (answer.isValid()) {
+            return answer.value().variant();
+        }
+    }
+    return QVariant();
 }
 
 void RingtoneWorker::playIncomingCallSound()
 {
-    if (mSoundSettings.get("silentMode") == true) {
+    if (mSilentMode) {
         return;
     }
 
@@ -40,7 +138,7 @@ void RingtoneWorker::playIncomingCallSound()
     }
 
     mCallAudioPlaylist.clear();
-    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(mSoundSettings.get("incomingCallSound").toString()));
+    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(mIncomingCallSound));
     mCallAudioPlayer.setPlaylist(&mCallAudioPlaylist);
     mCallAudioPlayer.play();
 }
@@ -52,7 +150,7 @@ void RingtoneWorker::stopIncomingCallSound()
 
 void RingtoneWorker::playIncomingMessageSound()
 {
-    if (mSoundSettings.get("silentMode") == true) {
+    if (mSilentMode) {
         return;
     }
 
@@ -60,7 +158,7 @@ void RingtoneWorker::playIncomingMessageSound()
         return;
     }
 
-    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(mSoundSettings.get("incomingMessageSound").toString()));
+    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(mIncomingMessageSound));
     mMessageAudioPlayer.play();
 }
 
