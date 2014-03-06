@@ -38,12 +38,10 @@ public Q_SLOTS:
 protected:
     void showNotificationForMessage(const Tp::ReceivedMessage &message);
     void showFlashNotificationForMessage(const Tp::ReceivedMessage &message);
-    Tp::TextChannelPtr channelFromPath(const QString &path);
 
 protected Q_SLOTS:
     void onTextChannelInvalidated();
     void onMessageReceived(const Tp::ReceivedMessage &message);
-    void onFlashMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
     void onReplyReceived(const QString &phoneNumber, const QString &reply);
     void onMessageRead(const QString &phoneNumber, const QString &encodedMessageId);
@@ -51,6 +49,7 @@ protected Q_SLOTS:
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
+    QList<Tp::TextChannelPtr> mFlashChannels;
 };
 
 #endif // TEXTCHANNELOBSERVER_H
