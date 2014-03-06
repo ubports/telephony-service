@@ -43,7 +43,7 @@ TextHandler::TextHandler(QObject *parent)
 
 void TextHandler::onConnectedChanged()
 {
-    if (!TelepathyHelper::instance()->account() || !TelepathyHelper::instance()->account()->connection()) {
+    if (!TelepathyHelper::instance()->connected()) {
         return;
     }
 
@@ -62,16 +62,15 @@ TextHandler *TextHandler::instance()
 void TextHandler::startChat(const QStringList &phoneNumbers)
 {
     // Request the contact to start chatting to
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
+    // FIXME: make it possible to select which account to use, for now, pick the first one
+    Tp::AccountPtr account = TelepathyHelper::instance()->accounts()[0];
     connect(account->connection()->contactManager()->contactsForIdentifiers(phoneNumbers),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
 
-void TextHandler::startChat(const Tp::Contacts &contacts)
+void TextHandler::startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts)
 {
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-
     if (contacts.size() == 1) {
         account->ensureTextChat(contacts.values()[0], QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
     } else {
@@ -187,7 +186,8 @@ void TextHandler::onContactsAvailable(Tp::PendingOperation *op)
         qCritical() << "The pending object is not a Tp::PendingContacts";
         return;
     }
-    startChat(pc->contacts().toSet());
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
+    startChat(account, pc->contacts().toSet());
 }
 
 

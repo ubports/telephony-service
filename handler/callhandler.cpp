@@ -69,7 +69,8 @@ bool CallHandler::hasCalls() const
     bool hasActiveCalls = false;
 
     Q_FOREACH(const Tp::CallChannelPtr channel, mCallChannels) {
-        bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+        Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        bool incoming = channel->initiatorContact() != account->connection()->selfContact();
         bool dialing = !incoming && (channel->callState() == Tp::CallStateInitialised);
         bool active = channel->callState() == Tp::CallStateActive;
 
@@ -95,7 +96,8 @@ void CallHandler::startCall(const QString &phoneNumber)
     }
 
     // Request the contact to start audio call
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
+    // FIXME: select which account to use, using the first one for now
+    Tp::AccountPtr account = TelepathyHelper::instance()->accounts()[0];
     if (account->connection() == NULL) {
         return;
     }
@@ -216,7 +218,7 @@ void CallHandler::onContactsAvailable(Tp::PendingOperation *op)
         return;
     }
 
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
 
     // start call to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {

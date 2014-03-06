@@ -33,7 +33,7 @@ class TextHandler : public QObject
 public:
     static TextHandler *instance();
     void startChat(const QStringList &phoneNumber);
-    void startChat(const Tp::Contacts &contacts);
+    void startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts);
 
 public Q_SLOTS:
     void sendMessage(const QStringList &phoneNumber, const QString &message);

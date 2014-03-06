@@ -57,7 +57,12 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
         return;
     }
 
-    bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    if (!account) {
+        return;
+    }
+
+    bool incoming = channel->initiatorContact() != account->connection()->selfContact();
     bool missed = incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer;
     QDateTime activeTimestamp = channel->property("activeTimestamp").toDateTime();
 
