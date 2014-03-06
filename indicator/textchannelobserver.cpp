@@ -80,6 +80,33 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
             SLOT(onMessageRead(QString,QString)));
 }
 
+void TextChannelObserver::showFlashNotificationForMessage(const Tp::ReceivedMessage &message)
+{
+    Tp::ContactPtr contact = message.sender();
+
+    // show the notification
+    NotifyNotification *notification = notify_notification_new("",
+                                                               message.text().toStdString().c_str(),
+                                                               "");
+
+    // add the callback action
+    notify_notification_set_timeout(notification,  NOTIFY_EXPIRES_NEVER);
+    notify_notification_add_action (notification,
+                                    "notification_action",
+                                    C::gettext("Dismiss"),
+                                    notification_action,
+                                    NULL,
+                                    delete_notification_data);
+
+    GError *error = NULL;
+    if (!notify_notification_show(notification, &error)) {
+        qWarning() << "Failed to show message notification:" << error->message;
+        g_error_free (error);
+    }
+
+    Ringtone::instance()->playIncomingMessageSound();
+}
+
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
 {
     Tp::ContactPtr contact = message.sender();
@@ -175,6 +202,14 @@ void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
 
     mChannels.append(textChannel);
 
+    if (textChannel->immutableProperties()[TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash")].toBool()) {
+        // class 0 sms
+        Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
+            onFlashMessageReceived(message);
+        }
+        return;
+    }
+
     // notify all the messages from the channel
     Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
         onMessageReceived(message);
@@ -185,6 +220,14 @@ void TextChannelObserver::onTextChannelInvalidated()
 {
     Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
     mChannels.removeAll(textChannel);
+}
+
+void TextChannelObserver::onFlashMessageReceived(const Tp::ReceivedMessage &message)
+{
+    // do not place notification items for scrollback messages
+    if (!message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
+        showFlashNotificationForMessage(message);
+    }
 }
 
 void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
