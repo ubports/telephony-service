@@ -246,6 +246,10 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
     channel->setProperty("hasSpeakerProperty", map.contains(PROPERTY_SPEAKERMODE));
     channel->setProperty("timestamp", QDateTime::currentDateTimeUtc());
 
+    if (channel->callState() == Tp::CallStateActive) {
+        channel->setProperty("activeTimestamp", QDateTime::currentDateTimeUtc());
+    }
+
     connect(channel.data(),
             SIGNAL(invalidated(Tp::DBusProxy*,QString,QString)),
             SLOT(onCallChannelInvalidated()));
@@ -254,6 +258,7 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
             SLOT(onCallStateChanged(Tp::CallState)));
 
     mCallChannels.append(channel);
+    Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
 }
 
 void CallHandler::onContactsAvailable(Tp::PendingOperation *op)
