@@ -38,7 +38,7 @@ CallManager *CallManager::instance()
 }
 
 CallManager::CallManager(QObject *parent)
-: QObject(parent), mConferenceCall(0)
+: QObject(parent), mNeedsUpdate(false), mConferenceCall(0)
 {
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
@@ -102,12 +102,9 @@ void CallManager::setupCallEntry(CallEntry *entry)
 
 void CallManager::onChannelObserverUnregistered()
 {
-    mConferenceCall = 0;
-    mCallEntries.clear();
-    Q_EMIT hasCallsChanged();
-    Q_EMIT hasBackgroundCallChanged();
-    Q_EMIT foregroundCallChanged();
-    Q_EMIT backgroundCallChanged();
+    // do not clear the manager right now, wait until the observer is re-registered
+    // to avoid flickering in the UI
+    mNeedsUpdate = true;
 }
 
 void CallManager::startCall(const QString &phoneNumber)
@@ -197,7 +194,21 @@ QQmlListProperty<CallEntry> CallManager::calls()
 
 bool CallManager::hasCalls() const
 {
-    return activeCalls().count() > 0;
+    // check if the callmanager already has active calls
+    if (activeCalls().count() > 0) {
+        return true;
+    }
+
+    // if that's not the case, query the teleophony-service-handler for the availability of calls
+    // this is done only to get the live call view on clients as soon as possible, even before the
+    // telepathy observer is configured
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    QDBusReply<bool> reply = phoneAppHandler->call("HasCalls");
+    if (reply.isValid()) {
+        return reply.value();
+    }
+
+    return false;
 }
 
 bool CallManager::hasBackgroundCall() const
@@ -217,6 +228,19 @@ CallEntry *CallManager::callAt(QQmlListProperty<CallEntry> *p, int index)
 
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
+    // if this is the first call after re-registering the observer, clear the data
+    if (mNeedsUpdate) {
+        Q_FOREACH(CallEntry *entry, mCallEntries) {
+            entry->deleteLater();
+        }
+        mCallEntries.clear();
+        if (mConferenceCall) {
+            mConferenceCall->deleteLater();
+            mConferenceCall = 0;
+        }
+        mNeedsUpdate = false;
+    }
+
     CallEntry *entry = new CallEntry(channel, this);
     if (entry->phoneNumber() == getVoicemailNumber()) {
         entry->setVoicemail(true);

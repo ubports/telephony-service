@@ -64,6 +64,24 @@ QVariantMap CallHandler::getCallProperties(const QString &objectPath)
     return properties;
 }
 
+bool CallHandler::hasCalls() const
+{
+    bool hasActiveCalls = false;
+
+    Q_FOREACH(const Tp::CallChannelPtr channel, mCallChannels) {
+        bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+        bool dialing = !incoming && (channel->callState() == Tp::CallStateInitialised);
+        bool active = channel->callState() == Tp::CallStateActive;
+
+        if (dialing || active) {
+            hasActiveCalls = true;
+            break;
+        }
+    }
+
+    return hasActiveCalls;
+}
+
 CallHandler::CallHandler(QObject *parent)
 : QObject(parent)
 {

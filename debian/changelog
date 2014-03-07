@@ -1,3 +1,29 @@
+telephony-service (0.1+14.04.20140303-0ubuntu1) trusty; urgency=low
+
+  [ Iain Lane ]
+  * Read the user's ringtone, message tone and silent mode settings from
+    AccountsService instead of GSettings (LP: #1265528)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 03 Mar 2014 17:13:40 +0000
+
+telephony-service (0.1+14.04.20140228.1-0ubuntu1) trusty; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Fix building against Qt 5.2.1 (LP: #1280281)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 28 Feb 2014 23:26:09 +0000
+
+telephony-service (0.1+14.04.20140228-0ubuntu1) trusty; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Avoid flickering the UI on client apps by addressing the following
+    points: Get the "hasCalls" property value from the handler even
+    before the telepathy observer is properly registered. Delay the
+    cleaning up of manager data when unregistering the observer. (LP:
+    #1277762)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 28 Feb 2014 14:59:08 +0000
+
 telephony-service (0.1+14.04.20140217.1-0ubuntu1) trusty; urgency=low
 
   [ Tiago Salem Herrmann ]

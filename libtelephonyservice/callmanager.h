@@ -99,6 +99,7 @@ private:
 
     mutable QList<CallEntry*> mCallEntries;
     QString mVoicemailNumber;
+    bool mNeedsUpdate;
     CallEntry *mConferenceCall;
 };
 
