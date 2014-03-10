@@ -50,6 +50,7 @@ public:
     virtual ~MessagingMenu();
 
     void addMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text);
+    void addFlashMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text);
     void removeMessage(const QString &messageId);
 
     void addCall(const QString &phoneNumber, const QDateTime &timestamp);

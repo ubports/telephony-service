@@ -94,20 +94,14 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
 void TextChannelObserver::showFlashNotificationForMessage(const Tp::ReceivedMessage &message)
 {
     Tp::ContactPtr contact = message.sender();
+    QByteArray token(message.messageToken().toUtf8());
+    MessagingMenu::instance()->addFlashMessage(contact->id(), token.toHex(), message.received(), message.text());
+
 
     // show the notification
     NotifyNotification *notification = notify_notification_new("",
                                                                message.text().toStdString().c_str(),
                                                                "");
-
-    // add the callback action
-    notify_notification_set_timeout(notification, 300000/*NOTIFY_EXPIRES_NEVER*/);
-    notify_notification_add_action (notification,
-                                    "notification_action",
-                                    C::gettext("Dismiss"),
-                                    notification_action_close,
-                                    NULL,
-                                    delete_notification_data);
 
     GError *error = NULL;
     if (!notify_notification_show(notification, &error)) {

@@ -56,6 +56,27 @@ MessagingMenu::MessagingMenu(QObject *parent) :
     g_object_unref(icon);
 }
 
+void MessagingMenu::addFlashMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text) {
+    QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
+    QString contactAlias = phoneNumber;
+    GFile *file = g_file_new_for_uri(iconPath.toString().toUtf8().data());
+    GIcon *icon = g_file_icon_new(file);
+ 
+    MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
+                                                               icon,
+                                                               "",
+                                                               NULL,
+                                                               text.toUtf8().data(),
+                                                               timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
+ 
+    messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
+
+    g_object_unref(file);
+    g_object_unref(icon);
+    g_object_unref(message);
+ 
+}
+
 void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text)
 {
     // try to get a contact for that phone number
