@@ -28,6 +28,7 @@
 #include "config.h"
 #include "contactutils.h"
 #include "ringtone.h"
+#include "phoneutils.h"
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
