@@ -48,6 +48,11 @@ QVariantMap HandlerDBus::GetCallProperties(const QString &objectPath)
     return CallHandler::instance()->getCallProperties(objectPath);
 }
 
+bool HandlerDBus::HasCalls()
+{
+    return CallHandler::instance()->hasCalls();
+}
+
 bool HandlerDBus::connectToBus()
 {
     bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);

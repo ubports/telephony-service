@@ -67,6 +67,12 @@
             <arg name="objectPath" type="s" direction="in"/>
             <arg name="key" type="s" direction="in"/>
         </method>
+        <method name="HasCalls">
+            <dox:d><![CDATA[
+                Returns whether the handler is managing any call
+            ]]></dox:d>
+            <arg name="result" type="b" direction="out"/>
+        </method>
         <method name="GetCallProperties">
             <dox:d><![CDATA[
                 Get the properties of a given call channel

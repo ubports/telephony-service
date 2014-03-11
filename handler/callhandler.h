@@ -36,6 +36,7 @@ class CallHandler : public QObject
 public:
     static CallHandler *instance();
     QVariantMap getCallProperties(const QString &objectPath);
+    bool hasCalls() const;
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
