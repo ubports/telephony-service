@@ -186,7 +186,7 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
     while (i != mNotifications.constEnd()) {
         NotifyNotification *notification = i.key();
         NotificationData *data = i.value();
-        if (data->phoneNumber == contact.detail<QContactPhoneNumber>().number()) {
+        if (PhoneUtils::comparePhoneNumbers(data->phoneNumber, contact.detail<QContactPhoneNumber>().number())) {
             QString displayLabel = ContactUtils::formatContactName(contact);
             QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
             QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
