@@ -261,6 +261,23 @@ Tp::AccountPtr TelepathyHelper::accountForConnection(const Tp::ConnectionPtr &co
     return Tp::AccountPtr();
 }
 
+Tp::AccountPtr TelepathyHelper::accountForId(const QString &accountId) const
+{
+    Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
+        if (account->uniqueIdentifier() == accountId) {
+            return account;
+        }
+    }
+
+    return Tp::AccountPtr();
+}
+
+bool TelepathyHelper::isAccountConnected(const Tp::AccountPtr &account) const
+{
+    return !account.isNull() && !account->connection().isNull() &&
+           account->connection()->selfContact()->presence().type() == Tp::ConnectionPresenceTypeAvailable;
+}
+
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 {
     Q_UNUSED(op)
@@ -293,9 +310,7 @@ void TelepathyHelper::updateConnectedStatus()
 
     // check if any of the accounts is currently connected
     Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
-        if (!account.isNull() && !account->connection().isNull() &&
-            account->connection()->selfContact()->presence().type() == Tp::ConnectionPresenceTypeAvailable)
-        {
+        if (isAccountConnected(account)) {
             mConnected = true;
             break;
         }

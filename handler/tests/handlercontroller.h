@@ -32,15 +32,15 @@ public:
     QVariantMap getCallProperties(const QString &objectPath);
 
 public Q_SLOTS:
-    void startCall(const QString &number);
+    void startCall(const QString &number, const QString &accountId);
     void hangUpCall(const QString &objectPath);
     void setHold(const QString &objectPath, bool hold);
     void setMuted(const QString &objectPath, bool muted);
     void setSpeakerMode(const QString &objectPath, bool enabled);
     void sendDTMF(const QString &objectPath, const QString &key);
 
-    void sendMessage(const QString &number, const QString &message);
-    void acknowledgeMessages(const QString &number, const QStringList &messageIds);
+    void sendMessage(const QString &number, const QString &message, const QString &accountId);
+    void acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId);
 
 Q_SIGNALS:
     void callPropertiesChanged(const QString &objectPath, const QVariantMap &properties);

@@ -54,6 +54,9 @@ public:
     void registerClient(Tp::AbstractClient *client, QString name);
 
     Tp::AccountPtr accountForConnection(const Tp::ConnectionPtr &connection) const;
+    Tp::AccountPtr accountForId(const QString &accountId) const;
+
+    bool isAccountConnected(const Tp::AccountPtr &account) const;
 
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);

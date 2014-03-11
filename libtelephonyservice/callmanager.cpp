@@ -51,10 +51,17 @@ void CallManager::onChannelObserverUnregistered()
     mNeedsUpdate = true;
 }
 
-void CallManager::startCall(const QString &phoneNumber)
+void CallManager::startCall(const QString &phoneNumber, const QString &accountId)
 {
+    Tp::AccountPtr account;
+    if (accountId.isNull()) {
+        account = TelepathyHelper::instance()->accounts()[0];
+    } else {
+        account = TelepathyHelper::instance()->accountForId(accountId);
+    }
+
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("StartCall", phoneNumber);
+    phoneAppHandler->call("StartCall", phoneNumber, account->uniqueIdentifier());
 }
 
 void CallManager::onConnectedChanged()

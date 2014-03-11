@@ -88,17 +88,11 @@ CallHandler::CallHandler(QObject *parent)
 {
 }
 
-void CallHandler::startCall(const QString &phoneNumber)
+void CallHandler::startCall(const QString &phoneNumber, const QString &accountId)
 {
-    // check if we are already talking to that phone number
-    if (!existingCall(phoneNumber).isNull()) {
-        return;
-    }
-
     // Request the contact to start audio call
-    // FIXME: select which account to use, using the first one for now
-    Tp::AccountPtr account = TelepathyHelper::instance()->accounts()[0];
-    if (account->connection() == NULL) {
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account || account->connection() == NULL) {
         return;
     }
 
