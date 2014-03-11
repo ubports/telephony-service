@@ -28,6 +28,7 @@
 #include "config.h"
 #include "contactutils.h"
 #include "ringtone.h"
+#include "telepathyhelper.h"
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
@@ -35,6 +36,8 @@
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
 #include <QImage>
+#include <History/TextEvent>
+#include <History/Manager>
 
 namespace C {
 #include <libintl.h>
@@ -47,13 +50,38 @@ QTCONTACTS_USE_NAMESPACE
 class NotificationData {
 public:
     QString phoneNumber;
+    QDateTime timestamp;
+    QString text;
+    QString eventId;
 };
 
-void notification_action_close(NotifyNotification* notification, char *action, gpointer data)
+void flash_notification_action(NotifyNotification* notification, char *action, gpointer data)
 {
-    Q_UNUSED(action);
-
     GError *error = NULL;
+    if (action == QLatin1String("notification_save_action")) {
+        NotificationData *notificationData = (NotificationData*) data;
+        if (notificationData != NULL) {
+            // FIXME: handle multiple accounts
+            History::Thread thread = History::Manager::instance()->threadForParticipants(TelepathyHelper::instance()->accountId(),
+                                                                                         History::EventTypeText,
+                                                                                         QStringList() << notificationData->phoneNumber,
+                                                                                         History::MatchPhoneNumber,
+                                                                                         true);
+            History::TextEvent textEvent(TelepathyHelper::instance()->accountId(), 
+                                         thread.threadId(), 
+                                         notificationData->eventId, 
+                                         notificationData->phoneNumber,
+                                         notificationData->timestamp,
+                                         false,
+                                         notificationData->text,
+                                         History::MessageTypeText);
+            History::Events events;
+            events.append(textEvent);
+                                         
+            History::Manager::instance()->writeEvents(events);
+        }
+
+    }
     notify_notification_close(notification, &error);
 
     g_object_unref(notification);
@@ -102,6 +130,32 @@ void TextChannelObserver::showFlashNotificationForMessage(const Tp::ReceivedMess
     NotifyNotification *notification = notify_notification_new("",
                                                                message.text().toStdString().c_str(),
                                                                "");
+    NotificationData *data = new NotificationData();
+    data->phoneNumber = contact->id();
+    data->timestamp = message.received();
+    data->text = message.text();
+    data->eventId = message.messageToken().toUtf8();
+ 
+    notify_notification_add_action (notification,
+                                    "notification_ok_action",
+                                    C::gettext("Ok"),
+                                    flash_notification_action,
+                                    NULL,
+                                    NULL);
+    notify_notification_add_action (notification,
+                                    "notification_save_action",
+                                    C::gettext("Save"),
+                                    flash_notification_action,
+                                    data,
+                                    delete_notification_data);
+
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-snap-decisions",
+                                        "true");
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-private-button-tint",
+                                        "true");
+
 
     GError *error = NULL;
     if (!notify_notification_show(notification, &error)) {

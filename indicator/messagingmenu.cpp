@@ -32,6 +32,8 @@
 #include <QDebug>
 #include <gio/gio.h>
 #include <messaging-menu-message.h>
+#include <History/Manager>
+#include <History/TextEvent>
 
 namespace C {
 #include <libintl.h>
@@ -68,7 +70,28 @@ void MessagingMenu::addFlashMessage(const QString &phoneNumber, const QString &m
                                                                NULL,
                                                                text.toUtf8().data(),
                                                                timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
+    /* FIXME: uncomment when messaging-menu support two regular buttons
+    messaging_menu_message_add_action(message,
+                                      "saveFlashMessage",
+                                      C::gettext("Save"),
+                                      NULL,
+                                      NULL
+                                      );
+    messaging_menu_message_add_action(message,
+                                      "dismiss",
+                                      C::gettext("Dismiss"),
+                                      NULL,
+                                      NULL
+                                      );
+    */
  
+    g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::flashMessageActivateCallback), this);
+    QVariantMap details;
+    details["phoneNumber"] = phoneNumber;
+    details["messageId"] = messageId;
+    details["timestamp"] = timestamp;
+    details["text"] = text;
+    mMessages[messageId] = details;
     messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
 
     g_object_unref(file);
@@ -129,7 +152,10 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
         g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::messageActivateCallback), this);
 
         // save the phone number to use in the actions
-        mMessages[messageId] = phoneNumber;
+        QVariantMap details;
+        details["phoneNumber"] = phoneNumber;
+ 
+        mMessages[messageId] = details;
         messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
 
         g_object_unref(file);
@@ -301,6 +327,15 @@ void MessagingMenu::messageActivateCallback(MessagingMenuMessage *message, const
     }
 }
 
+void MessagingMenu::flashMessageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance)
+{
+    QString action(actionId);
+    QString messageId(messaging_menu_message_get_id(message));
+
+    if (action == "saveFlashMessage") {
+        QMetaObject::invokeMethod(instance, "saveFlashMessage", Q_ARG(QString, messageId));
+    }
+}
 void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance)
 {
     QString action(actionId);
@@ -318,15 +353,37 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
 
 void MessagingMenu::sendMessageReply(const QString &messageId, const QString &reply)
 {
-    QString phoneNumber = mMessages[messageId];
+    QString phoneNumber = mMessages[messageId]["phoneNumber"].toString();
     Q_EMIT replyReceived(phoneNumber, reply);
 
     Q_EMIT messageRead(phoneNumber, messageId);
 }
 
+void MessagingMenu::saveFlashMessage(const QString &messageId)
+{
+    QVariantMap details = mMessages[messageId];
+    History::Thread thread = History::Manager::instance()->threadForParticipants(TelepathyHelper::instance()->accountId(),
+                                                                                 History::EventTypeText,
+                                                                                 QStringList() << details["phoneNumber"].toString(),
+                                                                                 History::MatchPhoneNumber,
+                                                                                 true);
+    History::TextEvent textEvent(TelepathyHelper::instance()->accountId(), 
+                                 thread.threadId(), 
+                                 details["messageId"].toString(), 
+                                 details["phoneNumber"].toString(),
+                                 details["timestamp"].toDateTime(),
+                                 false,
+                                 details["text"].toString(),
+                                 History::MessageTypeText);
+    History::Events events;
+    events.append(textEvent);
+                                 
+    History::Manager::instance()->writeEvents(events);
+}
+
 void MessagingMenu::showMessage(const QString &messageId)
 {
-    QString phoneNumber = mMessages[messageId];
+    QString phoneNumber = mMessages[messageId]["phoneNumber"].toString();
     ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(phoneNumber))));
 }
 

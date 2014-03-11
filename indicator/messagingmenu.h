@@ -55,6 +55,7 @@ public:
 
     void addCall(const QString &phoneNumber, const QDateTime &timestamp);
 
+    static void flashMessageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
     static void messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
     static void callsActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
 
@@ -71,6 +72,7 @@ private Q_SLOTS:
     void callBack(const QString &messageId);
     void replyWithMessage(const QString &messageId, const QString &reply);
     void callVoicemail(const QString &messageId);
+    void saveFlashMessage(const QString &messageId);
 
     Call callFromMessageId(const QString &messageId);
 
@@ -79,7 +81,7 @@ private:
 
     MessagingMenuApp *mCallsApp;
     MessagingMenuApp *mMessagesApp;
-    QMap<QString, QString> mMessages;
+    QMap<QString, QVariantMap> mMessages;
     QList<Call> mCalls;
     QString mVoicemailId;
     int mVoicemailCount;
