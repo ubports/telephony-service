@@ -33,6 +33,7 @@
 #include <TelepathyQt/ReceivedMessage>
 #include <QContactAvatar>
 #include <QContactFetchRequest>
+#include <QContactFilter>
 #include <QContactPhoneNumber>
 #include <QImage>
 

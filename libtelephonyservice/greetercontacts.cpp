@@ -31,6 +31,7 @@
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
 #include <QDBusReply>
+#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <unistd.h>
