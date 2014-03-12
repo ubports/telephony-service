@@ -84,7 +84,7 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
             SIGNAL(messageRead(QString,QString)),
             SLOT(onMessageRead(QString,QString)));
 
-    if (qgetenv("XDG_SESSION_CLASS") == "greeter") {
+    if (GreeterContacts::isGreeterMode()) {
         connect(GreeterContacts::instance(), SIGNAL(contactUpdated(QtContacts::QContact)),
                 this, SLOT(updateNotifications(QtContacts::QContact)));
     }
@@ -141,7 +141,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     g_signal_connect(notification, "closed", G_CALLBACK(notification_closed), &mNotifications);
 
-    if (qgetenv("XDG_SESSION_CLASS") == "greeter") { // we're in the greeter's session
+    if (GreeterContacts::isGreeterMode()) { // we're in the greeter's session
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
     } else {
         // try to match the contact info

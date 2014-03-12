@@ -63,7 +63,7 @@ GreeterContacts::GreeterContacts(QObject *parent)
                        SLOT(accountsPropertiesChanged(QString, QVariantMap, QStringList, QDBusMessage)));
 
     // Are we in greeter mode or not?
-    if (qgetenv("XDG_SESSION_CLASS") == "greeter") {
+    if (isGreeterMode()) {
         connection = QDBusConnection::sessionBus();
         connection.connect("com.canonical.UnityGreeter",
                            "/list",
@@ -93,6 +93,11 @@ GreeterContacts::~GreeterContacts()
     if (mInstance == this) {
         mInstance = nullptr;
     }
+}
+
+bool GreeterContacts::isGreeterMode()
+{
+    return qgetenv("XDG_SESSION_CLASS") == "greeter";
 }
 
 void GreeterContacts::setContactFilter(const QContactFilter &filter)

@@ -47,6 +47,8 @@ public:
     QString incomingCallSound();
     QString incomingMessageSound();
 
+    static bool isGreeterMode();
+
     // Records contact info for currently-logged-in user
     static void emitContact(const QtContacts::QContact &contact);
 

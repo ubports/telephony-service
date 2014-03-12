@@ -66,7 +66,7 @@ Approver::Approver()
             SLOT(onRejectCallRequested()));
     dbus->connectToBus();
 
-    if (qgetenv("XDG_SESSION_CLASS") == "greeter") {
+    if (GreeterContacts::isGreeterMode()) {
         connect(GreeterContacts::instance(), SIGNAL(contactUpdated(QtContacts::QContact)),
                 this, SLOT(updateNotification(QtContacts::QContact)));
     }
@@ -310,7 +310,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 
     mPendingSnapDecision = notification;
 
-    if (qgetenv("XDG_SESSION_CLASS") == "greeter") {
+    if (GreeterContacts::isGreeterMode()) {
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
     } else {
         // try to match the contact info
