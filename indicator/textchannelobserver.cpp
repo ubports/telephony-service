@@ -187,24 +187,26 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
     while (i != mNotifications.constEnd()) {
         NotifyNotification *notification = i.key();
         NotificationData *data = i.value();
-        if (PhoneUtils::comparePhoneNumbers(data->phoneNumber, contact.detail<QContactPhoneNumber>().number())) {
-            QString displayLabel = ContactUtils::formatContactName(contact);
-            QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
-            QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+        Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
+            if (PhoneUtils::comparePhoneNumbers(data->phoneNumber, phoneNumber.number())) {
+                QString displayLabel = ContactUtils::formatContactName(contact);
+                QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
+                QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
 
-            if (avatar.isEmpty()) {
-                avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
-            }
+                if (avatar.isEmpty()) {
+                    avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
+                }
 
-            notify_notification_update(notification,
-                                       title.toStdString().c_str(),
-                                       data->message.toStdString().c_str(),
-                                       avatar.toStdString().c_str());
+                notify_notification_update(notification,
+                                           title.toStdString().c_str(),
+                                           data->message.toStdString().c_str(),
+                                           avatar.toStdString().c_str());
 
-            GError *error = NULL;
-            if (!notify_notification_show(notification, &error)) {
-                qWarning() << "Failed to show message notification:" << error->message;
-                g_error_free (error);
+                GError *error = NULL;
+                if (!notify_notification_show(notification, &error)) {
+                    qWarning() << "Failed to show message notification:" << error->message;
+                    g_error_free (error);
+                }
             }
         }
         ++i;
