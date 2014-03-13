@@ -17,6 +17,7 @@
             ]]></dox:d>
             <arg name="numbers" type="as" direction="in"/>
             <arg name="message" type="s" direction="in"/>
+            <arg name="accountId" type="s" direction="in"/>
         </method>
         <method name="AcknowledgeMessages">
             <dox:d><![CDATA[
@@ -24,6 +25,7 @@
             ]]></dox:d>
             <arg name="numbers" type="as" direction="in"/>
             <arg name="messageIds" type="as" direction="in"/>
+            <arg name="accountId" type="s" direction="in"/>
         </method>
 
         <!-- Call Related -->
@@ -32,6 +34,7 @@
                 Start a call to the given phone number
             ]]></dox:d>
             <arg name="number" type="s" direction="in"/>
+            <arg name="accountId" type="s" direction="in"/>
         </method>
         <method name="HangUpCall">
             <dox:d><![CDATA[

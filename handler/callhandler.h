@@ -40,7 +40,7 @@ public:
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
-    void startCall(const QString &phoneNumber);
+    void startCall(const QString &phoneNumber, const QString &accountId);
     void hangUpCall(const QString &objectPath);
     void setHold(const QString &objectPath, bool hold);
     void setMuted(const QString &objectPath, bool muted);

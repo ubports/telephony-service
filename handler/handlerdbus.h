@@ -46,11 +46,11 @@ public Q_SLOTS:
     bool connectToBus();
 
     // messages related
-    Q_NOREPLY void SendMessage(const QStringList &number, const QString &message);
-    Q_NOREPLY void AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds);
+    Q_NOREPLY void SendMessage(const QStringList &number, const QString &message, const QString &accountId);
+    Q_NOREPLY void AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId);
 
     // call related
-    Q_NOREPLY void StartCall(const QString &number);
+    Q_NOREPLY void StartCall(const QString &number, const QString &accountId);
     Q_NOREPLY void HangUpCall(const QString &objectPath);
     Q_NOREPLY void SetHold(const QString &objectPath, bool hold);
     Q_NOREPLY void SetMuted(const QString &objectPath, bool muted);

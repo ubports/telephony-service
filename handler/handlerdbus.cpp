@@ -65,19 +65,19 @@ bool HandlerDBus::connectToBus()
     return true;
 }
 
-void HandlerDBus::SendMessage(const QStringList &numbers, const QString &message)
+void HandlerDBus::SendMessage(const QStringList &numbers, const QString &message, const QString &accountId)
 {
-    TextHandler::instance()->sendMessage(numbers, message);
+    TextHandler::instance()->sendMessage(numbers, message, accountId);
 }
 
-void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds)
+void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId)
 {
-    TextHandler::instance()->acknowledgeMessages(numbers, messageIds);
+    TextHandler::instance()->acknowledgeMessages(numbers, messageIds, accountId);
 }
 
-void HandlerDBus::StartCall(const QString &number)
+void HandlerDBus::StartCall(const QString &number, const QString &accountId)
 {
-    CallHandler::instance()->startCall(number);
+    CallHandler::instance()->startCall(number, accountId);
 }
 
 void HandlerDBus::HangUpCall(const QString &objectPath)
