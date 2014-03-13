@@ -154,6 +154,11 @@ QString MockCallChannel::objectPath() const
     return mBaseChannel->objectPath();
 }
 
+Tp::CallState MockCallChannel::callState() const
+{
+    return (Tp::CallState) mCallChannel->callState();
+}
+
 MockCallChannel::~MockCallChannel()
 {
     qDebug() << "call channel closed";

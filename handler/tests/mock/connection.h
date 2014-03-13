@@ -62,6 +62,7 @@ public:
     Tp::BaseConnectionSimplePresenceInterfacePtr simplePresenceIface;
     Tp::BaseConnectionContactsInterfacePtr contactsIface;
     uint newHandle(const QString &identifier);
+    QMap<QString, MockCallChannel*> callChannels();
 
     uint ensureHandle(const QString &id);
     Tp::BaseChannelPtr createTextChannel(uint targetHandleType,
@@ -77,6 +78,9 @@ Q_SIGNALS:
     void callReceived(const QString &callerId);
     void callEnded(const QString &callerId);
     void callStateChanged(const QString &callerId, const QString &objectPath, const QString &state);
+    void channelMerged(const QDBusObjectPath &objPath);
+    void channelSplitted(const QDBusObjectPath &objPath);
+    void channelHangup(const QDBusObjectPath &objPath);
 
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &info);
@@ -84,8 +88,15 @@ public Q_SLOTS:
     void setCallState(const QString &phoneNumber, const QString &state);
     void onTextChannelClosed();
     void onCallChannelClosed();
+    void onCallChannelDestroyed();
     void onCallStateChanged(MockCallChannel *channel, const QString &state);
     void onMessageRead(const QString &id);
+
+    void onConferenceCallChannelClosed();
+    void onCallChannelMerged();
+    void onCallChannelSplitted();
+    void onMultipartyCallHeld();
+    void onMultipartyCallActive();
 
 private:
     void addMMSToService(const QString &path, const QVariantMap &properties, const QString &servicePath);

@@ -192,6 +192,11 @@ uint MockConnection::newHandle(const QString &identifier)
     return mHandleCount;
 }
 
+QMap<QString, MockCallChannel *> MockConnection::callChannels()
+{
+    return mCallChannels;
+}
+
 QStringList MockConnection::inspectHandles(uint handleType, const Tp::UIntList& handles, Tp::DBusError *error)
 {
     QStringList identifiers;
@@ -262,6 +267,31 @@ Tp::BaseChannelPtr MockConnection::createTextChannel(uint targetHandleType,
 }
 
 void MockConnection::onMessageRead(const QString &id)
+{
+    // FIXME: implement
+}
+
+void MockConnection::onConferenceCallChannelClosed()
+{
+    // FIXME: implement
+}
+
+void MockConnection::onCallChannelMerged()
+{
+    // FIXME: implement
+}
+
+void MockConnection::onCallChannelSplitted()
+{
+    // FIXME: implement
+}
+
+void MockConnection::onMultipartyCallHeld()
+{
+    // FIXME: implement
+}
+
+void MockConnection::onMultipartyCallActive()
 {
     // FIXME: implement
 }
@@ -364,6 +394,11 @@ void MockConnection::onCallChannelClosed()
         mIncomingCalls.removeAll(key);
         Q_EMIT callEnded(key);
     }
+}
+
+void MockConnection::onCallChannelDestroyed()
+{
+    // FIXME: implement
 }
 
 void MockConnection::onCallStateChanged(MockCallChannel *channel, const QString &state)
