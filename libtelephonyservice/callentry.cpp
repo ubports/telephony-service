@@ -44,6 +44,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mHasSpeakerProperty(false),
     mSpeakerMode(false)
 {
+    mAccount = TelepathyHelper::instance()->accountForConnection(mChannel->connection());
     setupCallChannel();
 
     // connect to the DBus signal
@@ -166,7 +167,11 @@ bool CallEntry::dialing() const
 
 bool CallEntry::incoming() const
 {
-    return mChannel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+    if (!mAccount) {
+        return false;
+    }
+
+    return mChannel->initiatorContact() != mAccount->connection()->selfContact();
 }
 
 bool CallEntry::ringing() const

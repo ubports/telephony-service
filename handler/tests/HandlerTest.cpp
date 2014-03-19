@@ -60,7 +60,8 @@ void HandlerTest::testMakingCalls()
 {
     QString callerId("1234567");
     QSignalSpy callReceivedSpy(MockController::instance(), SIGNAL(callReceived(QString)));
-    HandlerController::instance()->startCall(callerId);
+    // FIXME: add support for multiple accounts
+    HandlerController::instance()->startCall(callerId, TelepathyHelper::instance()->accountId());
     QTRY_COMPARE(callReceivedSpy.count(), 1);
     QCOMPARE(callReceivedSpy.first().first().toString(), callerId);
 
@@ -185,7 +186,8 @@ void HandlerTest::testSendMessage()
     QString recipient("22222222");
     QString message("Hello, world!");
     QSignalSpy messageSentSpy(MockController::instance(), SIGNAL(messageSent(QString,QVariantMap)));
-    HandlerController::instance()->sendMessage(recipient, message);
+    // FIXME: add support for multiple accounts
+    HandlerController::instance()->sendMessage(recipient, message, TelepathyHelper::instance()->accountId());
     QTRY_COMPARE(messageSentSpy.count(), 1);
     QString sentMessage = messageSentSpy.first().first().toString();
     QVariantMap messageProperties = messageSentSpy.first().last().value<QVariantMap>();

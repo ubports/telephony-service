@@ -42,30 +42,17 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
-void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &message)
+void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
 {
+    Tp::AccountPtr account;
+    if (accountId.isNull()) {
+        account = TelepathyHelper::instance()->accounts()[0];
+    } else {
+        account = TelepathyHelper::instance()->accountForId(accountId);
+    }
+
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMessage", phoneNumbers, message);
-}
-
-int ChatManager::unreadMessagesCount() const
-{
-    int count = 0;
-    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
-        count += channel->messageQueue().count();
-    }
-
-    return count;
-}
-
-int ChatManager::unreadMessages(const QStringList &phoneNumbers)
-{
-    Tp::TextChannelPtr channel = existingChat(phoneNumbers);
-    if (channel.isNull()) {
-        return 0;
-    }
-
-    return channel->messageQueue().count();
+    phoneAppHandler->call("SendMessage", phoneNumbers, message, account->uniqueIdentifier());
 }
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
@@ -121,14 +108,15 @@ void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::Messag
     Q_EMIT messageSent(channel->targetContact()->id(), sentMessage.text());
 }
 
-Tp::TextChannelPtr ChatManager::existingChat(const QStringList &phoneNumbers)
+Tp::TextChannelPtr ChatManager::existingChat(const QStringList &phoneNumbers, const QString &accountId)
 {
     Tp::TextChannelPtr channel;
 
-    QList<Tp::TextChannelPtr>::iterator it = mChannels.begin();
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
+        Tp::AccountPtr channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
         int count = 0;
-        if (channel->groupContacts(false).size() != phoneNumbers.size()) {
+        if (!channelAccount || channelAccount->uniqueIdentifier() != accountId
+                || channel->groupContacts(false).size() != phoneNumbers.size()) {
             continue;
         }
         Q_FOREACH(const QString &phoneNumberNew, phoneNumbers) {
@@ -147,10 +135,17 @@ Tp::TextChannelPtr ChatManager::existingChat(const QStringList &phoneNumbers)
     return channel;
 }
 
-void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &messageId)
+void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &messageId, const QString &accountId)
 {
+    Tp::AccountPtr account;
+    if (accountId.isNull()) {
+        account = TelepathyHelper::instance()->accounts()[0];
+    } else {
+        account = TelepathyHelper::instance()->accountForId(accountId);
+    }
+
     mMessagesAckTimer.start();
-    mMessagesToAck[phoneNumber].append(messageId);
+    mMessagesToAck[account->uniqueIdentifier()][phoneNumber].append(messageId);
 }
 
 void ChatManager::onAckTimerTriggered()
@@ -158,9 +153,14 @@ void ChatManager::onAckTimerTriggered()
     // ack all pending messages
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
 
-    QMap<QString, QStringList>::const_iterator it = mMessagesToAck.constBegin();
+    QMap<QString, QMap<QString,QStringList> >::const_iterator it = mMessagesToAck.constBegin();
     while (it != mMessagesToAck.constEnd()) {
-        phoneAppHandler->call("AcknowledgeMessages", it.key(), it.value());
+        QString accountId = it.key();
+        QMap<QString, QStringList>::const_iterator it2 = it.value().constBegin();
+        while (it2 != it.value().constEnd()) {
+            phoneAppHandler->call("AcknowledgeMessages", it2.key(), it2.value(), accountId);
+            ++it2;
+        }
         ++it;
     }
 

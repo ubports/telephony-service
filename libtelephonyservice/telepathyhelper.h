@@ -38,20 +38,25 @@ class TelepathyHelper : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
-    Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
+    Q_PROPERTY(QStringList accountIds READ accountIds NOTIFY accountIdsChanged)
 
 public:
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
-    Tp::AccountPtr account() const;
+    QList<Tp::AccountPtr> accounts() const;
     ChannelObserver *channelObserver() const;
     QDBusInterface *handlerInterface();
 
     bool connected() const;
-    QString accountId() const;
+    QStringList accountIds() const;
 
     void registerClient(Tp::AbstractClient *client, QString name);
+
+    Tp::AccountPtr accountForConnection(const Tp::ConnectionPtr &connection) const;
+    Tp::AccountPtr accountForId(const QString &accountId) const;
+
+    bool isAccountConnected(const Tp::AccountPtr &account) const;
 
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
@@ -59,7 +64,7 @@ Q_SIGNALS:
     void accountReady();
     void connectionChanged();
     void connectedChanged();
-    void accountIdChanged();
+    void accountIdsChanged();
 
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);
@@ -67,17 +72,14 @@ public Q_SLOTS:
 
 protected:
     QStringList supportedProtocols() const;
-    void initializeAccount();
-    void ensureAccountEnabled();
-    void ensureAccountConnected();
-    void watchSelfContactPresence();
+    void initializeAccount(const Tp::AccountPtr &account);
+    void ensureAccountEnabled(const Tp::AccountPtr &account);
+    void ensureAccountConnected(const Tp::AccountPtr &account);
+    void watchSelfContactPresence(const Tp::AccountPtr &account);
 
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);
-    void onAccountEnabled(Tp::PendingOperation *op);
-    void onAccountStateChanged(bool enabled);
-    void onAccountConnectionChanged(const Tp::ConnectionPtr &connection);
-    void onPresenceChanged(const Tp::Presence &presence);
+    void updateConnectedStatus();
 
 private:
     explicit TelepathyHelper(QObject *parent = 0);
@@ -87,7 +89,7 @@ private:
     Tp::Features mContactFeatures;
     Tp::Features mConnectionFeatures;
     Tp::ClientRegistrarPtr mClientRegistrar;
-    Tp::AccountPtr mAccount;
+    QList<Tp::AccountPtr> mAccounts;
     ChannelObserver *mChannelObserver;
     bool mFirstTime;
     bool mConnected;
