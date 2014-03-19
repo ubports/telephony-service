@@ -22,15 +22,21 @@
 #ifndef TEXTCHANNELOBSERVER_H
 #define TEXTCHANNELOBSERVER_H
 
+#include <libnotify/notify.h>
+#include <QContact>
 #include <QObject>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
+
+class GreeterContacts;
+class NotificationData;
 
 class TextChannelObserver : public QObject
 {
     Q_OBJECT
 public:
     explicit TextChannelObserver(QObject *parent = 0);
+    ~TextChannelObserver();
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr textChannel);
@@ -46,9 +52,12 @@ protected Q_SLOTS:
     void onReplyReceived(const QString &phoneNumber, const QString &reply);
     void onMessageRead(const QString &phoneNumber, const QString &encodedMessageId);
     void onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString);
+    void updateNotifications(const QtContacts::QContact &contact);
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
+    QMap<NotifyNotification*, NotificationData*> mNotifications;
+    GreeterContacts *mGreeterContacts;
 };
 
 #endif // TEXTCHANNELOBSERVER_H

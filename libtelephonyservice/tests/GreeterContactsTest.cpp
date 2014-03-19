@@ -206,7 +206,7 @@ QContact GreeterContactsTest::makeTestContact(bool convertedPath)
     QContactAvatar avatarDetail;
     QString imagePath;
     if (convertedPath) {
-        imagePath = QDir::home().filePath(".telephony-service-contact-image");
+        imagePath = qgetenv("XDG_GREETER_DATA_DIR") + "/telephony-service/contact-image";
     } else {
         imagePath = CMAKE_SOURCE_DIR "/icons/hicolor/48x48/apps/telephony-service-call.png";
     }

@@ -6,6 +6,7 @@ set(library_SRCS
     channelobserver.cpp
     chatmanager.cpp
     contactutils.cpp
+    greetercontacts.cpp
     phoneutils.cpp
     ringtone.cpp
     telepathyhelper.cpp
@@ -21,6 +22,7 @@ if (USE_UBUNTU_PLATFORM_API)
 endif (USE_UBUNTU_PLATFORM_API)
 
 add_library(telephonyservice STATIC ${library_SRCS} ${library_HDRS})
+set_target_properties(telephonyservice PROPERTIES COMPILE_DEFINITIONS AS_BUSNAME=systemBus)
 target_link_libraries(telephonyservice
                       ${TP_QT5_LIBRARIES}
                       ${UBUNTU_APP_LIB}
