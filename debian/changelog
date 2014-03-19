@@ -1,3 +1,18 @@
+telephony-service (0.1+14.04.20140319-0ubuntu1) trusty; urgency=low
+
+  [ Michael Terry ]
+  * Add support for sharing contact info of incoming texts with the
+    greeter.
+  * Consolidate ringtone code and greeter code so that the service can
+    listen to which user is selected in the greeter, and use their
+    ringtone.
+
+  [ Gustavo Pichorim Boiko ]
+  * Make it possible to handle multiple telepathy accounts.
+  * Cleanup the build deps.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 19 Mar 2014 02:49:40 +0000
+
 telephony-service (0.1+14.04.20140306-0ubuntu1) trusty; urgency=low
 
   * New rebuild forced
