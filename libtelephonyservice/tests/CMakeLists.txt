@@ -16,6 +16,7 @@ qt5_use_modules(GreeterContactsTestExe Contacts Core DBus Test)
 add_test(NAME GreeterContactsTest
     COMMAND env
         LD_PRELOAD=${CMAKE_CURRENT_BINARY_DIR}/libsystem.so
+        XDG_SESSION_CLASS=greeter
         XDG_GREETER_DATA_DIR=${CMAKE_BINARY_DIR}/Testing/Temporary
         dbus-test-runner
         --task ${CMAKE_CURRENT_BINARY_DIR}/GreeterContactsTestServerExe

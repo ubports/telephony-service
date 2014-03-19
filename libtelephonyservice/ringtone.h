@@ -46,28 +46,11 @@ public Q_SLOTS:
     void playIncomingMessageSound();
     void stopIncomingMessageSound();
 
-
-private Q_SLOTS:
-    void onChanged(QString, QVariantMap, QStringList);
-    void onNameOwnerChanged(QString, QString, QString);
-
 private:
     QMediaPlayer mCallAudioPlayer;
     QMediaPlaylist mCallAudioPlaylist;
 
     QMediaPlayer mMessageAudioPlayer;
-
-    QDBusConnection mSystemBusConnection;
-    QDBusServiceWatcher mServiceWatcher;
-    QDBusInterface mAccountsserviceIface;
-    QString mObjectPath;
-
-    bool mSilentMode;
-    QString mIncomingCallSound;
-    QString mIncomingMessageSound;
-
-    void setUpInterface();
-    QVariant getUserProperty(const QString property);
 };
 
 class Ringtone : public QObject
