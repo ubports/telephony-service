@@ -38,6 +38,7 @@
 class MockTextChannel;
 class MockCallChannel;
 class MockConnectionDBus;
+class MockConferenceCallChannel;
 
 class MockConnection : public Tp::BaseConnection
 {
@@ -68,7 +69,9 @@ public:
     Tp::BaseChannelPtr createTextChannel(uint targetHandleType,
                                          uint targetHandle, Tp::DBusError *error);
     Tp::BaseChannelPtr createCallChannel(uint targetHandleType,
-                                         uint targetHandle, Tp::DBusError *error);
+                                         uint targetHandle,
+                                         const QVariantMap &hints,
+                                         Tp::DBusError *error);
 
     ~MockConnection();
 
@@ -78,9 +81,11 @@ Q_SIGNALS:
     void callReceived(const QString &callerId);
     void callEnded(const QString &callerId);
     void callStateChanged(const QString &callerId, const QString &objectPath, const QString &state);
-    void channelMerged(const QDBusObjectPath &objPath);
-    void channelSplitted(const QDBusObjectPath &objPath);
-    void channelHangup(const QDBusObjectPath &objPath);
+
+    void conferenceCreated(const QString &objectPath);
+    void channelMerged(const QString &objectPath);
+    void channelSplitted(const QString &objectPath);
+    void channelSplitted(const QDBusObjectPath &objectPath);
 
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &info);
@@ -93,10 +98,7 @@ public Q_SLOTS:
     void onMessageRead(const QString &id);
 
     void onConferenceCallChannelClosed();
-    void onCallChannelMerged();
     void onCallChannelSplitted();
-    void onMultipartyCallHeld();
-    void onMultipartyCallActive();
 
 private:
     void addMMSToService(const QString &path, const QVariantMap &properties, const QString &servicePath);
@@ -113,6 +115,7 @@ private:
 
     MockConnectionDBus *mDBus;
     QStringList mIncomingCalls;
+    MockConferenceCallChannel *mConferenceCall;
 };
 
 #endif

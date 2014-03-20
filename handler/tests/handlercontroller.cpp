@@ -81,6 +81,21 @@ void HandlerController::sendDTMF(const QString &objectPath, const QString &key)
     mHandlerInterface.call("SendDTMF", objectPath, key);
 }
 
+void HandlerController::createConferenceCall(const QStringList &objectPaths)
+{
+    mHandlerInterface.call("CreateConferenceCall", objectPaths);
+}
+
+void HandlerController::mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath)
+{
+    mHandlerInterface.call("MergeCall", conferenceObjectPath, callObjectPath);
+}
+
+void HandlerController::splitCall(const QString &objectPath)
+{
+    mHandlerInterface.call("SplitCall", objectPath);
+}
+
 void HandlerController::sendMessage(const QString &number, const QString &message, const QString &accountId)
 {
     mHandlerInterface.call("SendMessage", QStringList() << number, message, accountId);

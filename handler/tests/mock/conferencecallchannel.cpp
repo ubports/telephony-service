@@ -22,10 +22,11 @@
 #include "callchannel.h"
 
 
-MockConferenceCallChannel::MockConferenceCallChannel(MockConnection *conn, QObject *parent):
+MockConferenceCallChannel::MockConferenceCallChannel(MockConnection *conn, QList<QDBusObjectPath> callChannels, QObject *parent):
     mRequestedHangup(false),
     mConnection(conn),
-    mDtmfLock(false)
+    mDtmfLock(false),
+    mCallChannels(callChannels)
 {
 
     Q_FOREACH(MockCallChannel *channel, mConnection->callChannels().values()) {
@@ -77,6 +78,8 @@ MockConferenceCallChannel::MockConferenceCallChannel(MockConnection *conn, QObje
 
     mCallChannel->setCallState(Tp::CallStateActive, 0, reason, stateDetails);
 
+    QObject::connect(mConnection, SIGNAL(channelSplitted(QDBusObjectPath)), SLOT(onChannelSplitted(QDBusObjectPath)));
+
     // init must be called after initialization, otherwise we will have no object path registered.
     QTimer::singleShot(0, this, SLOT(init()));
 }
@@ -88,15 +91,10 @@ Tp::BaseChannelPtr MockConferenceCallChannel::baseChannel()
 
 void MockConferenceCallChannel::onMerge(const QDBusObjectPath &channel, Tp::DBusError *error)
 {
-    // on gsm we always merge all the existing calls
-    // FIXME: implement
-}
-
-void MockConferenceCallChannel::onChannelMerged(const QDBusObjectPath &path)
-{
-    if (!mCallChannels.contains(path)) {
-        mCallChannels << path;
-        mConferenceIface->mergeChannel(path, 0, QVariantMap());
+    if (!mCallChannels.contains(channel)) {
+        mCallChannels << channel;
+        mConferenceIface->mergeChannel(channel, 0, QVariantMap());
+        Q_EMIT channelMerged(channel.path());
     }
 }
 
@@ -130,11 +128,16 @@ void MockConferenceCallChannel::onTurnOnSpeaker(bool active, Tp::DBusError *erro
 
 void MockConferenceCallChannel::onHangup(uint reason, const QString &detailedReason, const QString &message, Tp::DBusError *error)
 {
-    // TODO: use the parameters sent by telepathy
-    //mRequestedHangup = true;
-    //mConnection->voiceCallManager()->hangupMultiparty();
-    //hangup();
-    // FIXME: reimplement
+    //FIXME: reimplement
+    Tp::CallStateReason theReason;
+    QVariantMap stateDetails;
+    theReason.actor =  0;
+    theReason.reason = reason;
+    theReason.message = message;
+    theReason.DBusReason = "";
+
+    mCallChannel->setCallState(Tp::CallStateEnded, 0, theReason, stateDetails);
+    mBaseChannel->close();
 }
 
 void MockConferenceCallChannel::init()
@@ -162,9 +165,10 @@ void MockConferenceCallChannel::init()
     //QObject::connect(mConnection->voiceCallManager(), SIGNAL(sendTonesComplete(bool)), SLOT(onDtmfComplete(bool)));
 
     //mSpeakerIface->setSpeakerMode(mConnection->speakerMode());
-    QObject::connect(mConnection, SIGNAL(channelMerged(const QDBusObjectPath&)), this, SLOT(onChannelMerged(const QDBusObjectPath&)));
     QObject::connect(mConnection, SIGNAL(channelSplitted(const QDBusObjectPath&)), this, SLOT(onChannelSplitted(const QDBusObjectPath&)));
     QObject::connect(mConnection, SIGNAL(channelHangup(const QDBusObjectPath&)), this, SLOT(onChannelSplitted(const QDBusObjectPath&)));
+
+    Q_EMIT initialized();
 }
 
 void MockConferenceCallChannel::onOfonoMuteChanged(bool mute)

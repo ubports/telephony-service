@@ -35,6 +35,9 @@ Q_SIGNALS:
     void callReceived(const QString &callerId);
     void callEnded(const QString &callerId);
     void callStateChanged(const QString &callerId, const QString &objectPath, const QString &state);
+    void conferenceCreated(const QString &objectPath);
+    void channelMerged(const QString &objectPath);
+    void channelSplitted(const QString &objectPath);
 
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &properties);

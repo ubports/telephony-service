@@ -42,8 +42,12 @@ MockCallChannel::MockCallChannel(MockConnection *conn, QString phoneNumber, QStr
     mMuteIface = Tp::BaseCallMuteInterface::create();
     mMuteIface->setSetMuteStateCallback(Tp::memFun(this,&MockCallChannel::onMuteStateChanged));
 
+    mSplittableIface = Tp::BaseChannelSplittableInterface::create();
+    mSplittableIface->setSplitCallback(Tp::memFun(this,&MockCallChannel::onSplit));
+
     baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mHoldIface));
     baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mMuteIface));
+    baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mSplittableIface));
 
     mBaseChannel = baseChannel;
     mCallChannel = Tp::BaseChannelCallTypePtr::dynamicCast(mBaseChannel->interface(TP_QT_IFACE_CHANNEL_TYPE_CALL));
@@ -147,6 +151,11 @@ void MockCallChannel::onDTMFStartTone(uchar event, Tp::DBusError *error)
 
 void MockCallChannel::onDTMFStopTone(Tp::DBusError *error)
 {
+}
+
+void MockCallChannel::onSplit(Tp::DBusError *error)
+{
+    Q_EMIT splitted();
 }
 
 QString MockCallChannel::objectPath() const

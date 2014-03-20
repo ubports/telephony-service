@@ -33,6 +33,9 @@ MockController::MockController(QObject *parent) :
     QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "CallReceived", this, SIGNAL(callReceived(QString)));
     QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "CallEnded", this, SIGNAL(callEnded(QString)));
     QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "CallStateChanged", this, SIGNAL(callStateChanged(QString,QString,QString)));
+    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "ConferenceCreated", this, SIGNAL(conferenceCreated(QString)));
+    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "ChannelMerged", this, SIGNAL(channelMerged(QString)));
+    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "ChannelSplitted", this, SIGNAL(channelSplitted(QString)));
 }
 
 MockController *MockController::instance()

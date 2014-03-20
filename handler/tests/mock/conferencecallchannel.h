@@ -37,7 +37,7 @@ class MockConferenceCallChannel : public QObject
 {
     Q_OBJECT
 public:
-    MockConferenceCallChannel(MockConnection *conn, QObject *parent = 0);
+    MockConferenceCallChannel(MockConnection *conn, QList<QDBusObjectPath> callChannels, QObject *parent = 0);
     ~MockConferenceCallChannel();
 
     void onHangup(uint reason, const QString &detailedReason, const QString &message, Tp::DBusError* error);
@@ -50,13 +50,16 @@ public:
     Tp::BaseChannelPtr baseChannel();
     void setConferenceActive(bool active);
 
+Q_SIGNALS:
+    void channelMerged(const QString &objectPath);
+    void initialized();
+
 private Q_SLOTS:
     void onDtmfComplete(bool success);
     void sendNextDtmf();
     void init();
 
     void onOfonoMuteChanged(bool mute);
-    void onChannelMerged(const QDBusObjectPath &path);
     void onChannelSplitted(const QDBusObjectPath &path);
 
 private:
