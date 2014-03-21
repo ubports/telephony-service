@@ -9,6 +9,7 @@ set(library_SRCS
     phoneutils.cpp
     ringtone.cpp
     telepathyhelper.cpp
+    ussdmanager.cpp
     )
 
 include_directories(

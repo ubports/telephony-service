@@ -41,7 +41,7 @@ USSDManager::USSDManager(QObject *parent)
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
 }
 
-USSDManager::initiate(const QString &command, const QString &accountId)
+void USSDManager::initiate(const QString &command, const QString &accountId)
 {
     Tp::AccountPtr account;
     if (accountId.isNull()) {
@@ -53,11 +53,11 @@ USSDManager::initiate(const QString &command, const QString &accountId)
     Tp::ConnectionPtr conn(account->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
-    connIface.asyncCall("Initiate");
+    QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
+    ussdIface.asyncCall("Initiate");
 }
 
-USSDManager::respond(const QString &reply, const QString &accountId)
+void USSDManager::respond(const QString &reply, const QString &accountId)
 {
     Tp::AccountPtr account;
     if (accountId.isNull()) {
@@ -69,11 +69,11 @@ USSDManager::respond(const QString &reply, const QString &accountId)
     Tp::ConnectionPtr conn(account->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
-    connIface.asyncCall("Respond", reply);
+    QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
+    ussdIface.asyncCall("Respond", reply);
 }
 
-USSDManager::cancel(const QString &accountId)
+void USSDManager::cancel(const QString &accountId)
 {
     Tp::AccountPtr account;
     if (accountId.isNull()) {
@@ -85,8 +85,8 @@ USSDManager::cancel(const QString &accountId)
     Tp::ConnectionPtr conn(account->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
-    connIface.asyncCall("Cancel");
+    QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
+    ussdIface.asyncCall("Cancel");
 }
 
 void USSDManager::onConnectedChanged()
@@ -98,29 +98,29 @@ void USSDManager::onConnectedChanged()
 
     if (!TelepathyHelper::instance()->connected()) {
         Q_EMIT stateChanged();
-        Q_EMIT ativeChanged();
+        Q_EMIT activeChanged();
         Q_EMIT activeAccountIdChanged();
         return;
     }
 
-    Q_FOREACH(const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
+    Q_FOREACH (const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
         // disconnect all and reconnect only the online accounts
         Tp::ConnectionPtr conn(account->connection());
         QString busName = conn->busName();
         QString objectPath = conn->objectPath();
 
-        QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "StateChanged", this, SLOT(onStateChanged(QString))
+        QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "StateChanged", this, SLOT(onStateChanged(QString)));
         if (TelepathyHelper::instance()->isAccountConnected(account)) {
-            QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "StateChanged", this, SLOT(onStateChanged(QString))
+            QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "StateChanged", this, SLOT(onStateChanged(QString)));
             QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
-            mState = ussdIface.property("State");
+            mState = ussdIface.property("State").toString();
             if (active()) {
                 mActiveAccountId = account->uniqueIdentifier();
             }
         }
     }
     Q_EMIT stateChanged();
-    Q_EMIT ativeChanged();
+    Q_EMIT activeChanged();
     Q_EMIT activeAccountIdChanged();
 }
 
@@ -134,3 +134,7 @@ QString USSDManager::activeAccountId() const
     return mActiveAccountId;
 }
 
+QString USSDManager::state() const
+{
+    return mState;
+}

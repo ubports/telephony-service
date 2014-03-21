@@ -34,9 +34,12 @@ class USSDManager : public QObject
     Q_PROPERTY(bool active 
                READ active
                NOTIFY activeChanged)
-    Q_PROPERTY(bool activeAccountId
+    Q_PROPERTY(QString activeAccountId
                READ activeAccountId
                NOTIFY activeAccountIdChanged)
+    Q_PROPERTY(QString state 
+               READ state
+               NOTIFY stateChanged)
 public:
     static USSDManager *instance();
     Q_INVOKABLE void initiate(const QString &command, const QString &accountId = QString::null);
@@ -45,6 +48,7 @@ public:
 
     bool active() const;
     QString activeAccountId() const;
+    QString state() const;
 
 public Q_SLOTS:
     void onConnectedChanged();
@@ -52,11 +56,13 @@ public Q_SLOTS:
 Q_SIGNALS:
     void activeChanged();
     void activeAccountIdChanged();
+    void stateChanged();
 
 private:
     explicit USSDManager(QObject *parent = 0);
     bool mActive;
     QString mActiveAccountId;
+    QString mState;
 };
 
 #endif // USSDMANAGER_H
