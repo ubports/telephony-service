@@ -25,6 +25,7 @@
 
 #include <QtCore/QMap>
 #include <QDBusInterface>
+#include <TelepathyQt/Connection>
 
 class TelepathyHelper;
 
@@ -52,14 +53,32 @@ public:
 
 public Q_SLOTS:
     void onConnectedChanged();
+    void onStateChanged(const QString &state);
 
 Q_SIGNALS:
     void activeChanged();
     void activeAccountIdChanged();
-    void stateChanged();
+    void stateChanged(const QString &state);
+
+    void notificationReceived(const QString &message);
+    void requestReceived(const QString &message);
+
+    void initiateUSSDComplete(const QString &ussdResp);
+    void barringComplete(const QString &ssOp, const QString &cbService, const QVariantMap &cbMap);
+    void forwardingComplete(const QString &ssOp, const QString &cfService, const QVariantMap &cfMap);
+    void waitingComplete(const QString &ssOp, const QVariantMap &cwMap);
+    void callingLinePresentationComplete(const QString &ssOp, const QString &status);
+    void connectedLinePresentationComplete(const QString &ssOp, const QString &status);
+    void callingLineRestrictionComplete(const QString &ssOp, const QString &status);
+    void connectedLineRestrictionComplete(const QString &ssOp, const QString &status);
+    void initiateFailed();
 
 private:
     explicit USSDManager(QObject *parent = 0);
+   
+    void disconnectAllSignals(const Tp::ConnectionPtr& conn);
+    void connectAllSignals(const Tp::ConnectionPtr& conn);
+
     bool mActive;
     QString mActiveAccountId;
     QString mState;

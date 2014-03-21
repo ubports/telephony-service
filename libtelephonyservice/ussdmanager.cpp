@@ -89,6 +89,40 @@ void USSDManager::cancel(const QString &accountId)
     ussdIface.asyncCall("Cancel");
 }
 
+void USSDManager::disconnectAllSignals(const Tp::ConnectionPtr& conn)
+{
+    QString busName = conn->busName();
+    QString objectPath = conn->objectPath();
+
+    QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "StateChanged", this, SLOT(onStateChanged(QString)));
+    QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "RequestReceived", this, SIGNAL(requestReceived(QString)));
+    QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "NotificationReceived", this, SIGNAL(notificationReceived(QString)));
+    QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "InitiateUSSDComplete", this, SIGNAL(initiateUSSDComplete(QString)));
+    QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "BarringComplete", this, SIGNAL(barringComplete(QString, QString, QVariantMap)));
+    QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "ForwardingComplete", this, SIGNAL(forwardingComplete(QString, QString, QVariantMap)));
+    QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "WaitingComplete", this, SIGNAL(waitingComplete(QString, QVariantMap)));
+    QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "CallingLinePresentationComplete", this, SIGNAL(callingLinePresentationComplete(QString, QString)));
+    QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "ConnectedLineRestrictionComplete", this, SIGNAL(connectedLineRestrictionComplete(QString, QString)));
+    QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "InitiateFailed", this, SIGNAL(InitiateFailed()));
+}
+void USSDManager::connectAllSignals(const Tp::ConnectionPtr& conn)
+{
+    QString busName = conn->busName();
+    QString objectPath = conn->objectPath();
+
+    QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "StateChanged", this, SLOT(onStateChanged(QString)));
+    QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "RequestReceived", this, SIGNAL(requestReceived(QString)));
+    QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "NotificationReceived", this, SIGNAL(notificationReceived(QString)));
+    QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "InitiateUSSDComplete", this, SIGNAL(initiateUSSDComplete(QString)));
+    QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "BarringComplete", this, SIGNAL(barringComplete(QString, QString, QVariantMap)));
+    QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "ForwardingComplete", this, SIGNAL(forwardingComplete(QString, QString, QVariantMap)));
+    QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "WaitingComplete", this, SIGNAL(waitingComplete(QString, QVariantMap)));
+    QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "CallingLinePresentationComplete", this, SIGNAL(callingLinePresentationComplete(QString, QString)));
+    QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "ConnectedLineRestrictionComplete", this, SIGNAL(connectedLineRestrictionComplete(QString, QString)));
+    QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "InitiateFailed", this, SIGNAL(InitiateFailed()));
+}
+
+
 void USSDManager::onConnectedChanged()
 {
     // everytime the connection changes we need to check if there is any ongoing ussd session
@@ -97,7 +131,7 @@ void USSDManager::onConnectedChanged()
     mState = QString("idle");
 
     if (!TelepathyHelper::instance()->connected()) {
-        Q_EMIT stateChanged();
+        Q_EMIT stateChanged(mState);
         Q_EMIT activeChanged();
         Q_EMIT activeAccountIdChanged();
         return;
@@ -106,12 +140,14 @@ void USSDManager::onConnectedChanged()
     Q_FOREACH (const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
         // disconnect all and reconnect only the online accounts
         Tp::ConnectionPtr conn(account->connection());
-        QString busName = conn->busName();
-        QString objectPath = conn->objectPath();
+        disconnectAllSignals(conn);
 
-        QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "StateChanged", this, SLOT(onStateChanged(QString)));
         if (TelepathyHelper::instance()->isAccountConnected(account)) {
-            QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "StateChanged", this, SLOT(onStateChanged(QString)));
+            QString busName = conn->busName();
+            QString objectPath = conn->objectPath();
+
+            connectAllSignals(conn);
+
             QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
             mState = ussdIface.property("State").toString();
             if (active()) {
@@ -119,9 +155,15 @@ void USSDManager::onConnectedChanged()
             }
         }
     }
-    Q_EMIT stateChanged();
+    Q_EMIT stateChanged(mState);
     Q_EMIT activeChanged();
     Q_EMIT activeAccountIdChanged();
+}
+
+void USSDManager::onStateChanged(const QString &state)
+{
+    mState = state;
+    Q_EMIT stateChanged(state);
 }
 
 bool USSDManager::active() const
