@@ -247,7 +247,7 @@ void MessagingMenu::showVoicemailEntry(uint count)
     }
 
     GIcon *icon = g_themed_icon_new("indicator-call");
-    MessagingMenuMessage *message = messaging_menu_message_new(mVoicemailId.toLatin1().data(),
+    MessagingMenuMessage *message = messaging_menu_message_new(mVoicemailId.toUtf8().data(),
                                                                icon,
                                                                "Voicemail",
                                                                NULL,
@@ -262,10 +262,7 @@ void MessagingMenu::showVoicemailEntry(uint count)
 
 void MessagingMenu::hideVoicemailEntry()
 {
-    if (!mVoicemailId.isEmpty()) {
-        messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
-        mVoicemailId = "";
-    }
+    messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
 }
 
 void MessagingMenu::messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance)
