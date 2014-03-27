@@ -129,6 +129,7 @@ Q_SIGNALS:
 private:
     void refreshProperties();
 
+    Tp::AccountPtr mAccount;
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
     QDBusInterface mSpeakerInterface;

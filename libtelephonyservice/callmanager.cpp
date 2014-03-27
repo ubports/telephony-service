@@ -38,7 +38,7 @@ CallManager *CallManager::instance()
 }
 
 CallManager::CallManager(QObject *parent)
-: QObject(parent)
+: QObject(parent), mNeedsUpdate(false)
 {
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
@@ -47,17 +47,22 @@ CallManager::CallManager(QObject *parent)
 
 void CallManager::onChannelObserverUnregistered()
 {
-    mCallEntries.clear();
-    Q_EMIT hasCallsChanged();
-    Q_EMIT hasBackgroundCallChanged();
-    Q_EMIT foregroundCallChanged();
-    Q_EMIT backgroundCallChanged();
+    // do not clear the manager right now, wait until the observer is re-registered
+    // to avoid flickering in the UI
+    mNeedsUpdate = true;
 }
 
-void CallManager::startCall(const QString &phoneNumber)
+void CallManager::startCall(const QString &phoneNumber, const QString &accountId)
 {
+    Tp::AccountPtr account;
+    if (accountId.isNull()) {
+        account = TelepathyHelper::instance()->accounts()[0];
+    } else {
+        account = TelepathyHelper::instance()->accountForId(accountId);
+    }
+
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("StartCall", phoneNumber);
+    phoneAppHandler->call("StartCall", phoneNumber, account->uniqueIdentifier());
 }
 
 void CallManager::onConnectedChanged()
@@ -68,7 +73,8 @@ void CallManager::onConnectedChanged()
         return;
     }
 
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
+    // FIXME: needs to handle voicemail numbers from multiple accounts
+    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
@@ -144,7 +150,21 @@ QQmlListProperty<CallEntry> CallManager::calls()
 
 bool CallManager::hasCalls() const
 {
-    return activeCalls().count() > 0;
+    // check if the callmanager already has active calls
+    if (activeCalls().count() > 0) {
+        return true;
+    }
+
+    // if that's not the case, query the teleophony-service-handler for the availability of calls
+    // this is done only to get the live call view on clients as soon as possible, even before the
+    // telepathy observer is configured
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    QDBusReply<bool> reply = phoneAppHandler->call("HasCalls");
+    if (reply.isValid()) {
+        return reply.value();
+    }
+
+    return false;
 }
 
 bool CallManager::hasBackgroundCall() const
@@ -164,6 +184,15 @@ CallEntry *CallManager::callAt(QQmlListProperty<CallEntry> *p, int index)
 
 void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
+    // if this is the first call after re-registering the observer, clear the data
+    if (mNeedsUpdate) {
+        Q_FOREACH(CallEntry *entry, mCallEntries) {
+            entry->deleteLater();
+        }
+        mCallEntries.clear();
+        mNeedsUpdate = false;
+    }
+
     CallEntry *entry = new CallEntry(channel, this);
     if (entry->phoneNumber() == getVoicemailNumber()) {
         entry->setVoicemail(true);
@@ -221,7 +250,8 @@ QString CallManager::getVoicemailNumber()
 void CallManager::notifyEndedCall(const Tp::CallChannelPtr &channel)
 {
     Tp::Contacts contacts = channel->remoteMembers();
-    if (contacts.isEmpty()) {
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    if (contacts.isEmpty() || !account) {
         qWarning() << "Call channel had no remote contacts:" << channel;
         return;
     }
@@ -235,7 +265,7 @@ void CallManager::notifyEndedCall(const Tp::CallChannelPtr &channel)
 
     // fill the call info
     QDateTime timestamp = channel->property("timestamp").toDateTime();
-    bool incoming = channel->initiatorContact() != TelepathyHelper::instance()->account()->connection()->selfContact();
+    bool incoming = channel->initiatorContact() != account->connection()->selfContact();
     QTime duration(0, 0, 0);
     bool missed = incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer;
 

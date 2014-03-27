@@ -64,21 +64,35 @@ QVariantMap CallHandler::getCallProperties(const QString &objectPath)
     return properties;
 }
 
+bool CallHandler::hasCalls() const
+{
+    bool hasActiveCalls = false;
+
+    Q_FOREACH(const Tp::CallChannelPtr channel, mCallChannels) {
+        Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        bool incoming = channel->initiatorContact() != account->connection()->selfContact();
+        bool dialing = !incoming && (channel->callState() == Tp::CallStateInitialised);
+        bool active = channel->callState() == Tp::CallStateActive;
+
+        if (dialing || active) {
+            hasActiveCalls = true;
+            break;
+        }
+    }
+
+    return hasActiveCalls;
+}
+
 CallHandler::CallHandler(QObject *parent)
 : QObject(parent)
 {
 }
 
-void CallHandler::startCall(const QString &phoneNumber)
+void CallHandler::startCall(const QString &phoneNumber, const QString &accountId)
 {
-    // check if we are already talking to that phone number
-    if (!existingCall(phoneNumber).isNull()) {
-        return;
-    }
-
     // Request the contact to start audio call
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-    if (account->connection() == NULL) {
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account || account->connection() == NULL) {
         return;
     }
 
@@ -198,7 +212,7 @@ void CallHandler::onContactsAvailable(Tp::PendingOperation *op)
         return;
     }
 
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
 
     // start call to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {

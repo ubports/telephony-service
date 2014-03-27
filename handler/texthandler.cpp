@@ -27,6 +27,11 @@
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 
+template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStringList &key2) 
+{ 
+    return key1.size() > key2.size();  // sort by operator> !
+}
+
 TextHandler::TextHandler(QObject *parent)
 : QObject(parent)
 {
@@ -38,14 +43,23 @@ TextHandler::TextHandler(QObject *parent)
 
 void TextHandler::onConnectedChanged()
 {
-    if (!TelepathyHelper::instance()->account() || !TelepathyHelper::instance()->account()->connection()) {
+    if (!TelepathyHelper::instance()->connected()) {
         return;
     }
 
-    // create text channels to send the pending messages
-    Q_FOREACH(const QString &number, mPendingMessages.keys()) {
-        startChat(number);
+    // now check which accounts are connected
+    Q_FOREACH(const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
+        QString accountId = account->uniqueIdentifier();
+        if (!TelepathyHelper::instance()->isAccountConnected(account) || !mPendingMessages.contains(accountId)) {
+            continue;
+        }
+
+        // create text channels to send the pending messages
+        Q_FOREACH(const QStringList& phoneNumbers, mPendingMessages[accountId].keys()) {
+            startChat(phoneNumbers, accountId);
+        }
     }
+
 }
 
 TextHandler *TextHandler::instance()
@@ -54,26 +68,47 @@ TextHandler *TextHandler::instance()
     return handler;
 }
 
-void TextHandler::startChat(const QString &phoneNumber)
+void TextHandler::startChat(const QStringList &phoneNumbers, const QString &accountId)
 {
     // Request the contact to start chatting to
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-    connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
+    // FIXME: make it possible to select which account to use, for now, pick the first one
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!TelepathyHelper::instance()->isAccountConnected(account)) {
+        qCritical() << "The selected account does not have a connection. AccountId:" << accountId;
+        return;
+    }
+
+    connect(account->connection()->contactManager()->contactsForIdentifiers(phoneNumbers),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
 
-void TextHandler::sendMessage(const QString &phoneNumber, const QString &message)
+void TextHandler::startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts)
 {
-    if (!TelepathyHelper::instance()->connected()) {
-        mPendingMessages[phoneNumber].append(message);
+    if (contacts.size() == 1) {
+        account->ensureTextChat(contacts.values()[0], QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    } else {
+        account->createConferenceTextChat(QList<Tp::ChannelPtr>(), contacts.toList(), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    }
+    // start chatting to the contacts
+    Q_FOREACH(Tp::ContactPtr contact, contacts) {
+        // hold the ContactPtr to make sure its refcounting stays bigger than 0
+        mContacts[contact->id()] = contact;
+    }
+}
+
+void TextHandler::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
+{
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!TelepathyHelper::instance()->isAccountConnected(account)) {
+        mPendingMessages[accountId][phoneNumbers].append(message);
         return;
     }
 
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
+    Tp::TextChannelPtr channel = existingChat(phoneNumbers, accountId);
     if (channel.isNull()) {
-        mPendingMessages[phoneNumber].append(message);
-        startChat(phoneNumber);
+        mPendingMessages[accountId][phoneNumbers].append(message);
+        startChat(phoneNumbers, accountId);
         return;
     }
 
@@ -82,9 +117,9 @@ void TextHandler::sendMessage(const QString &phoneNumber, const QString &message
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
-void TextHandler::acknowledgeMessages(const QString &phoneNumber, const QStringList &messageIds)
+void TextHandler::acknowledgeMessages(const QStringList &phoneNumbers, const QStringList &messageIds, const QString &accountId)
 {
-    Tp::TextChannelPtr channel = existingChat(phoneNumber);
+    Tp::TextChannelPtr channel = existingChat(phoneNumbers, accountId);
     if (channel.isNull()) {
         return;
     }
@@ -101,19 +136,25 @@ void TextHandler::acknowledgeMessages(const QString &phoneNumber, const QStringL
 
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
-    QString id = channel->targetContact()->id();
-    mChannels[id] = channel;
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    QString accountId = account->uniqueIdentifier();
+    mChannels.append(channel);
 
     // check for pending messages for this channel
-    QMap<QString, QStringList>::iterator it = mPendingMessages.begin();
-    while (it != mPendingMessages.end()) {
-        if (PhoneUtils::comparePhoneNumbers(it.key(), id)) {
+    if (!mPendingMessages.contains(accountId)) {
+        return;
+    }
+
+    QMap<QStringList, QStringList> &pendingMessages = mPendingMessages[accountId];
+    QMap<QStringList, QStringList>::iterator it = pendingMessages.begin();
+    while (it != pendingMessages.end()) {
+        if (existingChat(it.key(), accountId) == channel) {
             Q_FOREACH(const QString &message, it.value()) {
                 connect(channel->send(message),
                         SIGNAL(finished(Tp::PendingOperation*)),
                         SLOT(onMessageSent(Tp::PendingOperation*)));
             }
-            it = mPendingMessages.erase(it);
+            it = pendingMessages.erase(it);
         } else {
             ++it;
         }
@@ -134,18 +175,28 @@ void TextHandler::onMessageSent(Tp::PendingOperation *op)
     }
 }
 
-Tp::TextChannelPtr TextHandler::existingChat(const QString &phoneNumber)
+Tp::TextChannelPtr TextHandler::existingChat(const QStringList &phoneNumbers, const QString &accountId)
 {
     Tp::TextChannelPtr channel;
-    QMap<QString, Tp::TextChannelPtr>::iterator it = mChannels.begin();
-    while (it != mChannels.end()) {
-        if (PhoneUtils::comparePhoneNumbers(it.key(), phoneNumber)) {
-            channel = it.value();
-            break;
-        }
-        ++it;
-    }
 
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
+        int count = 0;
+        Tp::AccountPtr channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        if (channel->groupContacts(false).size() != phoneNumbers.size()
+            || channelAccount->uniqueIdentifier() != accountId) {
+            continue;
+        }
+        Q_FOREACH(const QString &phoneNumberNew, phoneNumbers) {
+            Q_FOREACH(const Tp::ContactPtr &phoneNumberOld, channel->groupContacts(false)) {
+                if (PhoneUtils::comparePhoneNumbers(phoneNumberOld->id(), phoneNumberNew)) {
+                    count++;
+                }
+            }
+        }
+        if (count == phoneNumbers.size()) {
+            return channel;
+        }
+    }
     return channel;
 }
 
@@ -157,14 +208,8 @@ void TextHandler::onContactsAvailable(Tp::PendingOperation *op)
         qCritical() << "The pending object is not a Tp::PendingContacts";
         return;
     }
-
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-
-    // start chatting to the contacts
-    Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        account->ensureTextChat(contact, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
-
-        // hold the ContactPtr to make sure its refcounting stays bigger than 0
-        mContacts[contact->id()] = contact;
-    }
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
+    startChat(account, pc->contacts().toSet());
 }
+
+

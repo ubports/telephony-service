@@ -48,6 +48,11 @@ QVariantMap HandlerDBus::GetCallProperties(const QString &objectPath)
     return CallHandler::instance()->getCallProperties(objectPath);
 }
 
+bool HandlerDBus::HasCalls()
+{
+    return CallHandler::instance()->hasCalls();
+}
+
 bool HandlerDBus::connectToBus()
 {
     bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
@@ -60,19 +65,19 @@ bool HandlerDBus::connectToBus()
     return true;
 }
 
-void HandlerDBus::SendMessage(const QString &number, const QString &message)
+void HandlerDBus::SendMessage(const QStringList &numbers, const QString &message, const QString &accountId)
 {
-    TextHandler::instance()->sendMessage(number, message);
+    TextHandler::instance()->sendMessage(numbers, message, accountId);
 }
 
-void HandlerDBus::AcknowledgeMessages(const QString &number, const QStringList &messageIds)
+void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId)
 {
-    TextHandler::instance()->acknowledgeMessages(number, messageIds);
+    TextHandler::instance()->acknowledgeMessages(numbers, messageIds, accountId);
 }
 
-void HandlerDBus::StartCall(const QString &number)
+void HandlerDBus::StartCall(const QString &number, const QString &accountId)
 {
-    CallHandler::instance()->startCall(number);
+    CallHandler::instance()->startCall(number, accountId);
 }
 
 void HandlerDBus::HangUpCall(const QString &objectPath)

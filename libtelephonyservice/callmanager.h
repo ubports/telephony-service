@@ -57,7 +57,7 @@ class CallManager : public QObject
 public:
     
     static CallManager *instance();
-    Q_INVOKABLE void startCall(const QString &phoneNumber);
+    Q_INVOKABLE void startCall(const QString &phoneNumber, const QString &accountId = QString::null);
     Q_INVOKABLE QString getVoicemailNumber();
 
     CallEntry *foregroundCall() const;
@@ -94,6 +94,7 @@ private:
 
     mutable QList<CallEntry*> mCallEntries;
     QString mVoicemailNumber;
+    bool mNeedsUpdate;
 };
 
 #endif // CALLMANAGER_H

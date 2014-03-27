@@ -19,11 +19,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "greetercontacts.h"
 #include "ringtone.h"
 
 RingtoneWorker::RingtoneWorker(QObject *parent) :
     QObject(parent), mCallAudioPlayer(this), mCallAudioPlaylist(this),
-    mMessageAudioPlayer(this), mSoundSettings("com.ubuntu.touch.sound")
+    mMessageAudioPlayer(this)
 {
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
     mCallAudioPlaylist.setCurrentIndex(0);
@@ -31,7 +32,7 @@ RingtoneWorker::RingtoneWorker(QObject *parent) :
 
 void RingtoneWorker::playIncomingCallSound()
 {
-    if (mSoundSettings.get("silentMode") == true) {
+    if (GreeterContacts::instance()->silentMode()) {
         return;
     }
 
@@ -40,7 +41,7 @@ void RingtoneWorker::playIncomingCallSound()
     }
 
     mCallAudioPlaylist.clear();
-    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(mSoundSettings.get("incomingCallSound").toString()));
+    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
     mCallAudioPlayer.setPlaylist(&mCallAudioPlaylist);
     mCallAudioPlayer.play();
 }
@@ -52,7 +53,7 @@ void RingtoneWorker::stopIncomingCallSound()
 
 void RingtoneWorker::playIncomingMessageSound()
 {
-    if (mSoundSettings.get("silentMode") == true) {
+    if (GreeterContacts::instance()->silentMode()) {
         return;
     }
 
@@ -60,7 +61,7 @@ void RingtoneWorker::playIncomingMessageSound()
         return;
     }
 
-    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(mSoundSettings.get("incomingMessageSound").toString()));
+    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingMessageSound()));
     mMessageAudioPlayer.play();
 }
 

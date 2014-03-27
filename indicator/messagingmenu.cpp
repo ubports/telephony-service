@@ -20,6 +20,7 @@
  */
 
 #include "applicationutils.h"
+#include "callmanager.h"
 #include "config.h"
 #include "contactutils.h"
 #include "phoneutils.h"
@@ -27,6 +28,7 @@
 #include "telepathyhelper.h"
 #include <QContactAvatar>
 #include <QContactFetchRequest>
+#include <QContactFilter>
 #include <QContactPhoneNumber>
 #include <QDateTime>
 #include <QDebug>
@@ -326,13 +328,9 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
     qDebug() << "TelephonyService/MessagingMenu: Calling voicemail for messageId" << messageId;
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
-    QString busName = conn->busName();
-    QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
-    QDBusReply<QString> replyNumber = connIface.call("VoicemailNumber");
-    if (replyNumber.isValid()) {
-        ApplicationUtils::openUrl(QUrl(QString("tel:///%1").arg(replyNumber.value())));
+    QString voicemailNumber = CallManager::instance()->getVoicemailNumber();
+    if (!voicemailNumber.isEmpty()) {
+        ApplicationUtils::openUrl(QUrl(QString("tel:///%1").arg(voicemailNumber)));
     }
 }
 
