@@ -20,7 +20,6 @@ MOCK_PID=$!
 sleep 1
 
 mc-tool add mock/mock account0
-mc-tool enable mock/mock/account0
 
 @CMAKE_CURRENT_BINARY_DIR@/../telephony-service-handler &
 
