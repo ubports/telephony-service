@@ -74,6 +74,7 @@ enable_testing()
 
 add_definitions(-std=c++11)
 
+set(DATA_DIR "${CMAKE_SOURCE_DIR}/data")
 # install assets
 set(ASSETS_DIR assets)
 install(DIRECTORY ${ASSETS_DIR} DESTINATION ${TELEPHONY_SERVICE_DIR})

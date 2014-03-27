@@ -28,6 +28,7 @@
 #include "telepathyhelper.h"
 #include "textchannelobserver.h"
 #include "voicemailindicator.h"
+#include "ussdindicator.h"
 #include <QCoreApplication>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/AbstractClient>
@@ -69,6 +70,9 @@ int main(int argc, char **argv)
     // we don't need to call anything on the indicator, it will work by itself
     VoiceMailIndicator voiceMailIndicator;
     Q_UNUSED(voiceMailIndicator);
+
+    USSDIndicator ussdIndicator;
+    Q_UNUSED(ussdIndicator);
 
     // instanciate the metrics helper
     Metrics::instance();
