@@ -43,7 +43,7 @@ private:
 void HandlerTest::initTestCase()
 {
     QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(accountReady()));
-    QTRY_COMPARE(spy.count(), 1);
+    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, 10000);
     QTRY_VERIFY(TelepathyHelper::instance()->connected());
 
     // register the approver
