@@ -31,4 +31,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.Telep
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/com.canonical.TelephonyServiceHandler.service DESTINATION share/dbus-1/services)
 install(FILES TelephonyServiceHandler.client DESTINATION share/telepathy/clients)
 
-add_subdirectory(tests)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc*")
+    message(STATUS "Tests disabled on ppc")
+else()
+    add_subdirectory(tests)
+endif()
