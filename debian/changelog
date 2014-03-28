@@ -1,3 +1,19 @@
+telephony-service (0.1+14.04.20140328.1-0ubuntu1) trusty; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure to check the connection object before accessing it.
+  * Expose to QML not only background and foreground calls, but a list
+    of available calls so that the UI can decide how to display that to
+    the user.
+
+  [ Tiago Salem Herrmann ]
+  * Fix telephony-service tests.
+  * Add upstart job to launch telephony-service indicator at startup.
+    (LP: #1296787)
+  * Call voicemail when message Id matches the voicemail action.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 28 Mar 2014 18:06:02 +0000
+
 telephony-service (0.1+14.04.20140319-0ubuntu1) trusty; urgency=low
 
   [ Michael Terry ]
