@@ -278,9 +278,8 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
         mConferenceCall->addCall(entry);
     } else {
         mCallEntries.append(entry);
+        setupCallEntry(entry);
     }
-
-    setupCallEntry(entry);
 
     // FIXME: check which of those signals we really need to emit here
     Q_EMIT hasCallsChanged();
