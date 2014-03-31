@@ -56,7 +56,7 @@ void USSDIndicator::onRequestReceived(const QString &message)
 
 void USSDIndicator::onInitiateUSSDComplete(const QString &ussdResp)
 {
-    showUSSDNotification(ussdResp, false);
+    mPendingMessage = ussdResp;
 }
 
 void USSDIndicator::onStateChanged(const QString &state)
@@ -67,6 +67,12 @@ void USSDIndicator::onStateChanged(const QString &state)
 
     if (state == "idle") {
         m_notifications.CloseNotification(m_notificationId);
+        mPendingMessage.clear();
+    }
+
+    if (!mPendingMessage.isEmpty()) {
+        showUSSDNotification(mPendingMessage, (state == "user-response"));
+        mPendingMessage.clear();
     }
 }
 

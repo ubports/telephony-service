@@ -46,6 +46,7 @@ private:
     unsigned int m_notificationId;
     USSDMenu m_menuRequest;
     USSDMenu m_menuNotification;
+    QString mPendingMessage;
     org::freedesktop::Notifications m_notifications;
 };
 
