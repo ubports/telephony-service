@@ -98,8 +98,6 @@ void CallManager::setupCallEntry(CallEntry *entry)
     connect(entry,
             SIGNAL(heldChanged()),
             SIGNAL(backgroundCallChanged()));
-=======
->>>>>>> MERGE-SOURCE
 }
 
 void CallManager::onChannelObserverUnregistered()
