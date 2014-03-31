@@ -98,6 +98,10 @@ void CallManager::setupCallEntry(CallEntry *entry)
     connect(entry,
             SIGNAL(heldChanged()),
             SIGNAL(backgroundCallChanged()));
+    connect(entry,
+            SIGNAL(activeChanged()),
+            SIGNAL(hasBackgroundCallChanged()));
+
 }
 
 void CallManager::onChannelObserverUnregistered()
@@ -265,12 +269,9 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
 
         // check if any of the existing channels belong to the conference
         // if they do, move them to the conference
-        QList<Tp::ChannelPtr> channels = channel->conferenceChannels();
-        Q_FOREACH(CallEntry *existingCall, mCallEntries) {
-            if (channels.contains(existingCall->channel())) {
-                mCallEntries.removeAll(existingCall);
-                mConferenceCall->addCall(existingCall);
-            }
+        QList<CallEntry*> entries = takeCalls(channel->conferenceChannels());
+        Q_FOREACH(CallEntry *entry, entries) {
+            mConferenceCall->addCall(entry);
         }
     } else if (mConferenceCall && mConferenceCall->channel()->conferenceChannels().contains(channel)){
         // if the call channel belongs to the conference, don't add it here, move it to the conference itself
@@ -279,21 +280,7 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
         mCallEntries.append(entry);
     }
 
-    connect(entry,
-            SIGNAL(callEnded()),
-            SLOT(onCallEnded()));
-    connect(entry,
-            SIGNAL(heldChanged()),
-            SIGNAL(foregroundCallChanged()));
-    connect(entry,
-            SIGNAL(activeChanged()),
-            SIGNAL(foregroundCallChanged()));
-    connect(entry,
-            SIGNAL(heldChanged()),
-            SIGNAL(backgroundCallChanged()));
-    connect(entry,
-            SIGNAL(activeChanged()),
-            SIGNAL(hasBackgroundCallChanged()));
+    setupCallEntry(entry);
 
     // FIXME: check which of those signals we really need to emit here
     Q_EMIT hasCallsChanged();
