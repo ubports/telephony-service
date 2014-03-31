@@ -39,6 +39,7 @@ public Q_SLOTS:
     void onNotificationReceived(const QString &message);
     void onRequestReceived(const QString &message);
     void onInitiateUSSDComplete(const QString &ussdResp);
+    void onRespondComplete(bool success, const QString &ussdResp);
     void onStateChanged(const QString &state);
     void actionInvoked(uint id, const QString &actionKey);
     void notificationClosed(uint id, uint reason);

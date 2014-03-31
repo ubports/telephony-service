@@ -64,6 +64,7 @@ Q_SIGNALS:
     void requestReceived(const QString &message);
 
     void initiateUSSDComplete(const QString &ussdResp);
+    void respondComplete(bool success, const QString &ussdResp);
     void barringComplete(const QString &ssOp, const QString &cbService, const QVariantMap &cbMap);
     void forwardingComplete(const QString &ssOp, const QString &cfService, const QVariantMap &cfMap);
     void waitingComplete(const QString &ssOp, const QVariantMap &cwMap);

@@ -137,3 +137,7 @@ const QString & USSDMenu::actionPath() const {
 const QString & USSDMenu::menuPath() const {
 	return p->m_menuPath;
 }
+
+void USSDMenu::clearResponse() {
+	p->m_response.clear();
+}

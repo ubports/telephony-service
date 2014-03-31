@@ -33,6 +33,7 @@ public:
 	const QString & response() const;
 	const QString & actionPath() const;
 	const QString & menuPath() const;
+	void clearResponse();
 protected:
 	QScopedPointer<USSDMenuPriv> p;
 };

@@ -38,6 +38,7 @@ USSDIndicator::USSDIndicator(QObject *parent)
     connect(USSDManager::instance(), SIGNAL(notificationReceived(const QString &)), SLOT(onNotificationReceived(const QString &)));
     connect(USSDManager::instance(), SIGNAL(requestReceived(const QString &)), SLOT(onRequestReceived(const QString &)));
     connect(USSDManager::instance(), SIGNAL(initiateUSSDComplete(const QString &)), SLOT(onInitiateUSSDComplete(const QString &)));
+    connect(USSDManager::instance(), SIGNAL(respondComplete(bool, const QString &)), SLOT(onRespondComplete(bool, const QString &)));
     connect(USSDManager::instance(), SIGNAL(stateChanged(const QString &)), SLOT(onStateChanged(const QString &)));
 
     connect(&m_notifications, SIGNAL(ActionInvoked(uint, const QString &)), this, SLOT(actionInvoked(uint, const QString &)));
@@ -56,24 +57,19 @@ void USSDIndicator::onRequestReceived(const QString &message)
 
 void USSDIndicator::onInitiateUSSDComplete(const QString &ussdResp)
 {
-    mPendingMessage = ussdResp;
+    showUSSDNotification(ussdResp, (USSDManager::instance()->state() == "user-response"));
+}
+
+void USSDIndicator::onRespondComplete(bool success, const QString &ussdResp)
+{
+    if (success) {
+        showUSSDNotification(ussdResp, (USSDManager::instance()->state() == "user-response"));
+    }
 }
 
 void USSDIndicator::onStateChanged(const QString &state)
 {
-    if (m_notificationId == 0) {
-        return;
-    }
-
-    if (state == "idle") {
-        m_notifications.CloseNotification(m_notificationId);
-        mPendingMessage.clear();
-    }
-
-    if (!mPendingMessage.isEmpty()) {
-        showUSSDNotification(mPendingMessage, (state == "user-response"));
-        mPendingMessage.clear();
-    }
+    // TODO: check if we should close notifications when the state is idle
 }
 
 void USSDIndicator::showUSSDNotification(const QString &message, bool replyRequired)
@@ -121,9 +117,10 @@ void USSDIndicator::actionInvoked(uint id, const QString &actionKey)
 
     if (actionKey == "reply_id") {
         USSDManager::instance()->respond(m_menuRequest.response(), USSDManager::instance()->activeAccountId());
-    } else {
+    } else if (actionKey == "cancel_id") {
         USSDManager::instance()->cancel(USSDManager::instance()->activeAccountId());
     }
+    m_menuRequest.clearResponse();
 }
 
 void USSDIndicator::notificationClosed(uint id, uint reason) {
