@@ -2,7 +2,6 @@
 set(qt_SRCS
     approver.cpp
     approverdbus.cpp
-    greetercontacts.cpp
     )
 
 set(approver_SRCS main.cpp ${qt_SRCS})
@@ -18,7 +17,6 @@ include_directories(
 link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
 
 add_executable(telephony-service-approver ${approver_SRCS} ${approver_HDRS})
-set_target_properties(telephony-service-approver PROPERTIES COMPILE_DEFINITIONS AS_BUSNAME=systemBus)
 qt5_use_modules(telephony-service-approver Contacts Core DBus Gui Multimedia Qml)
 
 target_link_libraries(telephony-service-approver
@@ -40,5 +38,3 @@ install(CODE "
 execute_process(COMMAND mkdir -p \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/accountsservice/interfaces\")
 execute_process(COMMAND ln -sf ../../dbus-1/interfaces/com.canonical.TelephonyServiceApprover.xml \"\$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/accountsservice/interfaces\")
     ")
-
-add_subdirectory(tests)

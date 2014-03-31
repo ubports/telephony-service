@@ -98,6 +98,8 @@ void CallManager::setupCallEntry(CallEntry *entry)
     connect(entry,
             SIGNAL(heldChanged()),
             SIGNAL(backgroundCallChanged()));
+=======
+>>>>>>> MERGE-SOURCE
 }
 
 void CallManager::onChannelObserverUnregistered()
@@ -130,6 +132,11 @@ void CallManager::onConnectedChanged()
 
     // FIXME: needs to handle voicemail numbers from multiple accounts
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
+    if (conn.isNull()) {
+        mVoicemailNumber = QString();
+        return;
+    }
+
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);

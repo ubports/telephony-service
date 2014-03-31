@@ -32,8 +32,6 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/ChannelDispatchOperation>
 
-class GreeterContacts;
-
 class Approver : public QObject, public Tp::AbstractClientApprover
 {
     Q_OBJECT
@@ -70,7 +68,6 @@ private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
     QMap<Tp::PendingOperation*,Tp::ChannelPtr> mChannels;
     NotifyNotification* mPendingSnapDecision;
-    GreeterContacts *mGreeterContacts;
     QString mDefaultTitle;
     QString mDefaultIcon;
     QString mCachedBody;
