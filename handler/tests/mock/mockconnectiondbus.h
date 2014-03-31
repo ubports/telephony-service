@@ -43,6 +43,9 @@ Q_SIGNALS:
     void CallReceived(const QString &callerId);
     void CallEnded(const QString &callerId);
     void CallStateChanged(const QString &callerId, const QString &objectPath, const QString &state);
+    void ConferenceCreated(const QString &objectPath);
+    void ChannelMerged(const QString &objectPath);
+    void ChannelSplitted(const QString &objectPath);
 
 private:
     MockConnectionAdaptor *mAdaptor;

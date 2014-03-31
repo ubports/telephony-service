@@ -50,6 +50,10 @@ void VoiceMailIndicator::onAccountReady()
 
     // FIXME: handle multiple accounts
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
+    if (conn.isNull()) {
+        return;
+    }
+
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     mConnection.connect(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE, QLatin1String("VoicemailCountChanged"),
@@ -78,6 +82,10 @@ bool VoiceMailIndicator::voicemailIndicatorVisible()
 
     // FIXME: handle multiple accounts
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
+    if (conn.isNull()) {
+        return false;
+    }
+
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
@@ -96,6 +104,10 @@ uint VoiceMailIndicator::voicemailCount()
 
     // FIXME: handle multiple accounts
     Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
+    if (conn.isNull()) {
+        return false;
+    }
+
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);

@@ -27,6 +27,7 @@
 #include "connection.h"
 #include "phoneutils.h"
 #include "protocol.h"
+#include "conferencecallchannel.h"
 
 #include "mockconnectiondbus.h"
 
@@ -35,7 +36,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
                             const QString &protocolName,
                             const QVariantMap &parameters) :
     Tp::BaseConnection(dbusConnection, cmName, protocolName, parameters),
-    mHandleCount(0)
+    mHandleCount(0), mConferenceCall(0)
 {
     setSelfHandle(newHandle("<SelfHandle>"));
 
@@ -67,6 +68,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     call.allowedProperties.append(TP_QT_IFACE_CHANNEL_TYPE_CALL+".InitialVideoName");
     call.allowedProperties.append(TP_QT_IFACE_CHANNEL_TYPE_CALL+".InitialTransport");
     call.allowedProperties.append(TP_QT_IFACE_CHANNEL_TYPE_CALL+".HardwareStreaming");
+    call.allowedProperties.append(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialChannels"));
 
     requestsIface->requestableChannelClasses << text << call;
 
@@ -273,36 +275,51 @@ void MockConnection::onMessageRead(const QString &id)
 
 void MockConnection::onConferenceCallChannelClosed()
 {
-    // FIXME: implement
-}
-
-void MockConnection::onCallChannelMerged()
-{
-    // FIXME: implement
+    if (mConferenceCall) {
+        mConferenceCall = NULL;
+    }
 }
 
 void MockConnection::onCallChannelSplitted()
 {
-    // FIXME: implement
+    MockCallChannel *channel = qobject_cast<MockCallChannel*>(sender());
+    Q_EMIT channelSplitted(channel->baseChannel()->objectPath());
+    Q_EMIT channelSplitted(QDBusObjectPath(channel->baseChannel()->objectPath()));
 }
 
-void MockConnection::onMultipartyCallHeld()
-{
-    // FIXME: implement
-}
-
-void MockConnection::onMultipartyCallActive()
-{
-    // FIXME: implement
-}
-
-Tp::BaseChannelPtr MockConnection::createCallChannel(uint targetHandleType,
-                                               uint targetHandle, Tp::DBusError *error)
+Tp::BaseChannelPtr MockConnection::createCallChannel(uint targetHandleType, uint targetHandle,
+                                                     const QVariantMap &hints, Tp::DBusError *error)
 {
     Q_UNUSED(targetHandleType);
 
-    bool success = true;
     QString requestedId = mHandles.value(targetHandle);
+
+    if (hints.contains(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialChannels")) &&
+        targetHandleType == Tp::HandleTypeNone && targetHandle == 0) {
+        // conference call request
+        if (mConferenceCall) {
+            error->set(TP_QT_ERROR_NOT_AVAILABLE, "Conference call already exists");
+            return Tp::BaseChannelPtr();
+        }
+
+        QDBusArgument arg = hints[TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialChannels")].value<QDBusArgument>();
+        QList<QDBusObjectPath> channels;
+        arg >> channels;
+        if (!channels.isEmpty()) {
+            mConferenceCall = new MockConferenceCallChannel(this, channels);
+            QObject::connect(mConferenceCall, SIGNAL(destroyed()), SLOT(onConferenceCallChannelClosed()));
+            QObject::connect(mConferenceCall, SIGNAL(channelMerged(QString)), SIGNAL(channelMerged(QString)));
+
+            // the object path is only availabe after we return to the event loop, so emit the conferenceCreated signal
+            // only after that.
+            QObject::connect(mConferenceCall, &MockConferenceCallChannel::initialized, [this]() {
+                Q_EMIT conferenceCreated(mConferenceCall->baseChannel()->objectPath());
+            });
+            return mConferenceCall->baseChannel();
+        }
+        error->set(TP_QT_ERROR_NOT_AVAILABLE, "Impossible to merge calls");
+        return Tp::BaseChannelPtr();
+    }
 
     Q_FOREACH(const QString &id, mCallChannels.keys()) {
         if (id == requestedId) {
@@ -318,6 +335,8 @@ Tp::BaseChannelPtr MockConnection::createCallChannel(uint targetHandleType,
     mCallChannels[requestedId] = new MockCallChannel(this, requestedId, state, targetHandle);
     QObject::connect(mCallChannels[requestedId], SIGNAL(destroyed()), SLOT(onCallChannelClosed()));
     QObject::connect(mCallChannels[requestedId], SIGNAL(callStateChanged(MockCallChannel*,QString)), SLOT(onCallStateChanged(MockCallChannel*,QString)));
+    QObject::connect(mCallChannels[requestedId], SIGNAL(splitted()), SLOT(onCallChannelSplitted()));
+
     qDebug() << mCallChannels[requestedId];
 
     if (!mIncomingCalls.contains(requestedId)) {
@@ -330,11 +349,6 @@ Tp::BaseChannelPtr MockConnection::createChannel(const QString& channelType, uin
                                                uint targetHandle, const QVariantMap &hints, Tp::DBusError *error)
 {
     qDebug() << "MockConnection::createChannel" << targetHandle;
-    if( (targetHandleType != Tp::HandleTypeContact) || targetHandle == 0 || !mHandles.keys().contains(targetHandle)) {
-        error->set(TP_QT_ERROR_INVALID_HANDLE, "Handle not found");
-        return Tp::BaseChannelPtr();
-    }
-
     if (mSelfPresence.type != Tp::ConnectionPresenceTypeAvailable) {
         error->set(TP_QT_ERROR_NETWORK_ERROR, "No network available");
         return Tp::BaseChannelPtr();
@@ -343,7 +357,7 @@ Tp::BaseChannelPtr MockConnection::createChannel(const QString& channelType, uin
     if (channelType == TP_QT_IFACE_CHANNEL_TYPE_TEXT) {
         return createTextChannel(targetHandleType, targetHandle, error);
     } else if (channelType == TP_QT_IFACE_CHANNEL_TYPE_CALL) {
-        return createCallChannel(targetHandleType, targetHandle, error);
+        return createCallChannel(targetHandleType, targetHandle, hints, error);
     } else {
         error->set(TP_QT_ERROR_NOT_IMPLEMENTED, "Channel type not available");
     }

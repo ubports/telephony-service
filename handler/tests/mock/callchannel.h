@@ -45,6 +45,7 @@ public:
     void onHoldStateChanged(const Tp::LocalHoldState &state, const Tp::LocalHoldStateReason &reason, Tp::DBusError *error);
     void onDTMFStartTone(uchar event, Tp::DBusError *error);
     void onDTMFStopTone(Tp::DBusError *error);
+    void onSplit(Tp::DBusError *error);
 
     QString objectPath() const;
 
@@ -59,6 +60,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void callStateChanged(MockCallChannel *channel, const QString &state);
+    void splitted();
 
 private:
     QString mObjPath;
@@ -71,6 +73,7 @@ private:
     uint mTargetHandle;
     Tp::BaseChannelHoldInterfacePtr mHoldIface;
     Tp::BaseCallMuteInterfacePtr mMuteIface;
+    Tp::BaseChannelSplittableInterfacePtr mSplittableIface;
     Tp::BaseChannelCallTypePtr mCallChannel;
     Tp::BaseCallContentDTMFInterfacePtr mDTMFIface;
     Tp::BaseCallContentPtr mCallContent;

@@ -103,7 +103,6 @@ void CallHandler::startCall(const QString &phoneNumber, const QString &accountId
 
 void CallHandler::hangUpCall(const QString &objectPath)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
     if (channel.isNull()) {
         return;
@@ -216,7 +215,6 @@ void CallHandler::createConferenceCall(const QStringList &objectPaths)
 
 void CallHandler::mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     Tp::CallChannelPtr conferenceChannel = callFromObjectPath(conferenceObjectPath);
     Tp::CallChannelPtr callChannel = callFromObjectPath(callObjectPath);
     if (!conferenceChannel || !callChannel || !conferenceChannel->isConference()) {
@@ -230,7 +228,6 @@ void CallHandler::mergeCall(const QString &conferenceObjectPath, const QString &
 
 void CallHandler::splitCall(const QString &objectPath)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
     if (!channel) {
         return;
@@ -242,7 +239,6 @@ void CallHandler::splitCall(const QString &objectPath)
 
 void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     channel->accept();
 
     // check if the channel has the speakermode property

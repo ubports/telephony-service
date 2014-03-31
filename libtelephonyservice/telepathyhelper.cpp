@@ -174,11 +174,12 @@ void TelepathyHelper::initializeAccount(const Tp::AccountPtr &account)
     });
 
     connect(account.data(), &Tp::Account::connectionChanged, [this, account](const Tp::ConnectionPtr &connection) {
-       if (connection.isNull()) {
+        if (connection.isNull()) {
             ensureAccountConnected(account);
         } else {
             watchSelfContactPresence(account);
         }
+        updateConnectedStatus();
         Q_EMIT connectionChanged();
     });
 
