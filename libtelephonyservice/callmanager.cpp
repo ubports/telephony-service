@@ -101,7 +101,9 @@ void CallManager::setupCallEntry(CallEntry *entry)
     connect(entry,
             SIGNAL(activeChanged()),
             SIGNAL(hasBackgroundCallChanged()));
-
+    connect(entry,
+            SIGNAL(activeChanged()),
+            SIGNAL(hasCallsChanged()));
 }
 
 void CallManager::onChannelObserverUnregistered()
