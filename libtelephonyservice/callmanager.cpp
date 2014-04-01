@@ -275,6 +275,7 @@ void CallManager::onCallChannelAvailable(Tp::CallChannelPtr channel)
         Q_FOREACH(CallEntry *entry, entries) {
             mConferenceCall->addCall(entry);
         }
+        setupCallEntry(mConferenceCall);
     } else if (mConferenceCall && mConferenceCall->channel()->conferenceChannels().contains(channel)){
         // if the call channel belongs to the conference, don't add it here, move it to the conference itself
         mConferenceCall->addCall(entry);
