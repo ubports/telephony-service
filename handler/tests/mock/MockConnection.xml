@@ -66,5 +66,23 @@
             <arg name="objectPath" type="s"/>
             <arg name="state" type="s"/>
         </signal>
+        <signal name="ConferenceCreated">
+            <dox:d><![CDATA[
+                A new conference call was created
+            ]]></dox:d>
+            <arg name="objectPath" type="s"/>
+        </signal>
+        <signal name="ChannelMerged">
+            <dox:d><![CDATA[
+                A channel was merged in the existing conference
+            ]]></dox:d>
+            <arg name="objectPath" type="s"/>
+        </signal>
+        <signal name="ChannelSplitted">
+            <dox:d><![CDATA[
+                A channel was splitted from the conference
+            ]]></dox:d>
+            <arg name="objectPath" type="s"/>
+        </signal>
     </interface>
 </node>

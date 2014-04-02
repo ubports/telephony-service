@@ -20,6 +20,7 @@
  */
 
 #include "channelobserver.h"
+#include "telepathyhelper.h"
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/ChannelClassSpecList>
 #include <TelepathyQt/MethodInvocationContext>
@@ -33,6 +34,8 @@ ChannelObserver::ChannelObserver(QObject *parent) :
 Tp::ChannelClassSpecList ChannelObserver::channelFilters() const
 {
     Tp::ChannelClassSpecList specList;
+
+    specList << TelepathyHelper::audioConferenceSpec();
     specList << Tp::ChannelClassSpec::audioCall();
     specList << Tp::ChannelClassSpec::textChat();
 

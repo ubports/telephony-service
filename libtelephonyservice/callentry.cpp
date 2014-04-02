@@ -21,6 +21,7 @@
  */
 
 #include "callentry.h"
+#include "callmanager.h"
 #include "telepathyhelper.h"
 
 #include <QDBusReply>
@@ -69,6 +70,44 @@ void CallEntry::onCallPropertiesChanged(const QString &objectPath, const QVarian
     updateChannelProperties(properties);
 }
 
+void CallEntry::onConferenceChannelMerged(const Tp::ChannelPtr &channel)
+{
+    QList<CallEntry*> entries = CallManager::instance()->takeCalls(QList<Tp::ChannelPtr>() << channel);
+    if (entries.isEmpty()) {
+        qWarning() << "Could not find the call that was just merged.";
+        return;
+    }
+
+    CallEntry *entry = entries.first();
+    connect(entry,
+            SIGNAL(callEnded()),
+            SLOT(onInternalCallEnded()));
+    mCalls.append(entry);
+    Q_EMIT callsChanged();
+}
+
+void CallEntry::onConferenceChannelRemoved(const Tp::ChannelPtr &channel, const Tp::Channel::GroupMemberChangeDetails &details)
+{
+    Q_FOREACH(CallEntry *entry, mCalls) {
+        Tp::ChannelPtr entryChannel = entry->channel();
+        if (entryChannel == channel) {
+            CallManager::instance()->addCalls(QList<CallEntry*>() << entry);
+            mCalls.removeAll(entry);
+            entry->disconnect(this);
+            Q_EMIT callsChanged();
+            break;
+        }
+    }
+}
+
+void CallEntry::onInternalCallEnded()
+{
+    CallEntry *entry = qobject_cast<CallEntry*>(sender());
+    mCalls.removeAll(entry);
+    Q_EMIT callsChanged();
+    entry->deleteLater();
+}
+
 void CallEntry::setupCallChannel()
 {
     connect(mChannel.data(),
@@ -84,6 +123,15 @@ void CallEntry::setupCallChannel()
     connect(&mMuteInterface,
             SIGNAL(MuteStateChanged(uint)),
             SLOT(onMutedChanged(uint)));
+
+    if (mChannel->isConference()) {
+        connect(mChannel.data(),
+                SIGNAL(conferenceChannelMerged(Tp::ChannelPtr)),
+                SLOT(onConferenceChannelMerged(Tp::ChannelPtr)));
+        connect(mChannel.data(),
+                SIGNAL(conferenceChannelRemoved(Tp::ChannelPtr, Tp::Channel::GroupMemberChangeDetails)),
+                SLOT(onConferenceChannelRemoved(Tp::ChannelPtr,Tp::Channel::GroupMemberChangeDetails)));
+    }
 
     refreshProperties();
 
@@ -181,10 +229,20 @@ bool CallEntry::ringing() const
 
 QString CallEntry::phoneNumber() const
 {
-    if (!mChannel->actualFeatures().contains(Tp::CallChannel::FeatureCore)) {
+    if (mChannel->isConference() || !mChannel->actualFeatures().contains(Tp::CallChannel::FeatureCore)) {
         return "";
     }
     return mChannel->targetContact()->id();
+}
+
+QQmlListProperty<CallEntry> CallEntry::calls()
+{
+    return QQmlListProperty<CallEntry>(this, 0, callsCount, callAt);
+}
+
+bool CallEntry::isConference() const
+{
+    return mChannel->isConference();
 }
 
 QString CallEntry::dtmfString() const
@@ -204,9 +262,43 @@ void CallEntry::endCall()
     phoneAppHandler->call("HangUpCall", mChannel->objectPath());
 }
 
+void CallEntry::splitCall()
+{
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("SplitCall", mChannel->objectPath());
+}
+
 Tp::CallChannelPtr CallEntry::channel() const
 {
     return mChannel;
+}
+
+int CallEntry::callsCount(QQmlListProperty<CallEntry> *p)
+{
+    CallEntry *entry = qobject_cast<CallEntry*>(p->object);
+    if (!entry) {
+        return 0;
+    }
+    return entry->mCalls.count();
+}
+
+CallEntry *CallEntry::callAt(QQmlListProperty<CallEntry> *p, int index)
+{
+    CallEntry *entry = qobject_cast<CallEntry*>(p->object);
+    if (!entry) {
+        return 0;
+    }
+    return entry->mCalls[index];
+}
+
+void CallEntry::addCall(CallEntry *call)
+{
+    mCalls << call;
+    connect(call,
+            SIGNAL(callEnded()),
+            SLOT(onInternalCallEnded()));
+
+    Q_EMIT callsChanged();
 }
 
 bool CallEntry::isHeld() const

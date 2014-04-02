@@ -32,6 +32,7 @@ public:
     QVariantMap getCallProperties(const QString &objectPath);
 
 public Q_SLOTS:
+    // call methods
     void startCall(const QString &number, const QString &accountId);
     void hangUpCall(const QString &objectPath);
     void setHold(const QString &objectPath, bool hold);
@@ -39,6 +40,12 @@ public Q_SLOTS:
     void setSpeakerMode(const QString &objectPath, bool enabled);
     void sendDTMF(const QString &objectPath, const QString &key);
 
+    // conference call methods
+    void createConferenceCall(const QStringList &objectPaths);
+    void mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath);
+    void splitCall(const QString &objectPath);
+
+    // messaging methods
     void sendMessage(const QString &number, const QString &message, const QString &accountId);
     void acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId);
 

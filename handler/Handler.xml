@@ -70,6 +70,25 @@
             <arg name="objectPath" type="s" direction="in"/>
             <arg name="key" type="s" direction="in"/>
         </method>
+        <method name="CreateConferenceCall">
+            <dox:d><![CDATA[
+                Creates a conference call with the given call object paths
+            ]]></dox:d>
+            <arg name="objectPaths" type="as" direction="in"/>
+        </method>
+        <method name="MergeCall">
+            <dox:d><![CDATA[
+                Merges a call into an existing conference
+            ]]></dox:d>
+            <arg name="conferenceObjectPath" type="s" direction="in"/>
+            <arg name="callObjectPath" type="s" direciton="in"/>
+        </method>
+        <method name="SplitCall">
+            <dox:d><![CDATA[
+                Splits a call from an existing conference
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+        </method>
         <method name="HasCalls">
             <dox:d><![CDATA[
                 Returns whether the handler is managing any call

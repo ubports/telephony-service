@@ -47,6 +47,11 @@ public Q_SLOTS:
     void setSpeakerMode(const QString &objectPath, bool enabled);
     void sendDTMF(const QString &objectPath, const QString &key);
 
+    // conference call related
+    void createConferenceCall(const QStringList &objectPaths);
+    void mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath);
+    void splitCall(const QString &objectPath);
+
 Q_SIGNALS:
     void callPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
 

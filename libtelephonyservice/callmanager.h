@@ -55,10 +55,11 @@ class CallManager : public QObject
                    NOTIFY callsChanged)
 
 public:
-    
     static CallManager *instance();
     Q_INVOKABLE void startCall(const QString &phoneNumber, const QString &accountId = QString::null);
     Q_INVOKABLE QString getVoicemailNumber();
+    Q_INVOKABLE void mergeCalls(CallEntry *firstCall, CallEntry *secondCall);
+    Q_INVOKABLE void splitCall(CallEntry *callEntry);
 
     CallEntry *foregroundCall() const;
     CallEntry *backgroundCall() const;
@@ -67,12 +68,16 @@ public:
     bool hasCalls() const;
     bool hasBackgroundCall() const;
 
+    // conference related members
+    QList<CallEntry*> takeCalls(const QList<Tp::ChannelPtr> callChannels);
+    void addCalls(const QList<CallEntry*> entries);
+
     // QQmlListProperty helpers
     static int callsCount(QQmlListProperty<CallEntry> *p);
     static CallEntry* callAt(QQmlListProperty<CallEntry> *p, int index);
 
 Q_SIGNALS:
-    void callEnded(const QString &phoneNumber, bool incoming, const QDateTime &timestamp, const QTime &duratiom, bool missed, bool newEvent);
+    void callEnded(CallEntry *entry);
     void foregroundCallChanged();
     void backgroundCallChanged();
     void callsChanged();
@@ -90,11 +95,12 @@ public Q_SLOTS:
 private:
     explicit CallManager(QObject *parent = 0);
     void refreshProperties();
-    void notifyEndedCall(const Tp::CallChannelPtr &channel);
+    void setupCallEntry(CallEntry *entry);
 
     mutable QList<CallEntry*> mCallEntries;
     QString mVoicemailNumber;
     bool mNeedsUpdate;
+    CallEntry *mConferenceCall;
 };
 
 #endif // CALLMANAGER_H

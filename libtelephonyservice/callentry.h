@@ -23,6 +23,7 @@
 #ifndef CALLENTRY_H
 #define CALLENTRY_H
 
+#include <QQmlListProperty>
 #include <QObject>
 #include <QTime>
 #include <TelepathyQt/CallChannel>
@@ -42,10 +43,19 @@ class CallEntry : public QObject
                READ isVoicemail
                WRITE setVoicemail
                NOTIFY voicemailChanged)
-    // FIXME: handle conference
+
+    // this property is only filled for 1-1 calls
     Q_PROPERTY(QString phoneNumber
                READ phoneNumber
                NOTIFY phoneNumberChanged)
+
+    // this property is only filled for conference calls
+    Q_PROPERTY(QQmlListProperty<CallEntry> calls
+               READ calls
+               NOTIFY callsChanged)
+    Q_PROPERTY(bool isConference
+               READ isConference
+               NOTIFY isConferenceChanged)
 
     Q_PROPERTY(int elapsedTime
                READ elapsedTime
@@ -93,12 +103,21 @@ public:
     bool incoming() const;
     bool ringing() const;
     QString phoneNumber() const;
+    QQmlListProperty<CallEntry> calls();
+    bool isConference() const;
     QString dtmfString() const;
 
     Q_INVOKABLE void sendDTMF(const QString &key);
     Q_INVOKABLE void endCall();
+    Q_INVOKABLE void splitCall();
 
     Tp::CallChannelPtr channel() const;
+
+    // QQmlListProperty helpers
+    static int callsCount(QQmlListProperty<CallEntry> *p);
+    static CallEntry* callAt(QQmlListProperty<CallEntry> *p, int index);
+
+    void addCall(CallEntry *call);
 
 protected Q_SLOTS:
     void onCallStateChanged(Tp::CallState state);
@@ -106,6 +125,11 @@ protected Q_SLOTS:
     void onMutedChanged(uint state);
     void onSpeakerChanged(bool active);
     void onCallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
+
+    // conference related stuff
+    void onConferenceChannelMerged(const Tp::ChannelPtr &channel);
+    void onConferenceChannelRemoved(const Tp::ChannelPtr &channel, const Tp::Channel::GroupMemberChangeDetails &details);
+    void onInternalCallEnded();
 
 protected:
     void setupCallChannel();
@@ -119,6 +143,8 @@ Q_SIGNALS:
     void mutedChanged();
     void voicemailChanged();
     void phoneNumberChanged();
+    void callsChanged();
+    void isConferenceChanged();
     void dtmfStringChanged();
     void dialingChanged();
     void incomingChanged();
@@ -139,6 +165,7 @@ private:
     QDateTime mActiveTimestamp;
     bool mHasSpeakerProperty;
     bool mSpeakerMode;
+    QList<CallEntry*> mCalls;
 };
 
 #endif // CALLENTRY_H

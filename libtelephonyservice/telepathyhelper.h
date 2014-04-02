@@ -50,13 +50,15 @@ public:
 
     bool connected() const;
     QStringList accountIds() const;
-
-    void registerClient(Tp::AbstractClient *client, QString name);
-
     Tp::AccountPtr accountForConnection(const Tp::ConnectionPtr &connection) const;
     Tp::AccountPtr accountForId(const QString &accountId) const;
 
     bool isAccountConnected(const Tp::AccountPtr &account) const;
+
+    void registerClient(Tp::AbstractClient *client, QString name);
+
+    // pre-populated channel class specs for conferences
+    static Tp::ChannelClassSpec audioConferenceSpec();
 
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);

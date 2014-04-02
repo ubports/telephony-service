@@ -181,6 +181,62 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
     Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
 }
 
+void CallHandler::createConferenceCall(const QStringList &objectPaths)
+{
+    QList<Tp::ChannelPtr> calls;
+    Tp::AccountPtr account;
+    Q_FOREACH(const QString &objectPath, objectPaths) {
+        Tp::CallChannelPtr call = callFromObjectPath(objectPath);
+        if (!call) {
+            qWarning() << "Could not find a call channel for objectPath:" << objectPath;
+            return;
+        }
+
+        if (account.isNull()) {
+            account = TelepathyHelper::instance()->accountForConnection(call->connection());
+        }
+
+        // make sure all call channels belong to the same connection
+        if (call->connection() != account->connection()) {
+            qWarning() << "It is not possible to merge channels from different accounts.";
+            return;
+        }
+        calls.append(call);
+    }
+
+    if (calls.isEmpty() || account.isNull()) {
+        qWarning() << "The list of calls was empty. Failed to create a conference.";
+        return;
+    }
+
+    // there is no need to check the pending request. The new channel will arrive at some point.
+    account->createConferenceCall(calls, QStringList(), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+}
+
+void CallHandler::mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath)
+{
+    Tp::CallChannelPtr conferenceChannel = callFromObjectPath(conferenceObjectPath);
+    Tp::CallChannelPtr callChannel = callFromObjectPath(callObjectPath);
+    if (!conferenceChannel || !callChannel || !conferenceChannel->isConference()) {
+        qWarning() << "No valid channels found.";
+        return;
+    }
+
+    // there is no need to check for the result here.
+    conferenceChannel->conferenceMergeChannel(callChannel);
+}
+
+void CallHandler::splitCall(const QString &objectPath)
+{
+    Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
+    if (!channel) {
+        return;
+    }
+
+    // we don't need to check the result of the operation here
+    channel->conferenceSplitChannel();
+}
+
 void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
     channel->accept();
@@ -193,6 +249,10 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
     channel->setProperty("hasSpeakerProperty", map.contains(PROPERTY_SPEAKERMODE));
     channel->setProperty("timestamp", QDateTime::currentDateTimeUtc());
 
+    if (channel->callState() == Tp::CallStateActive) {
+        channel->setProperty("activeTimestamp", QDateTime::currentDateTimeUtc());
+    }
+
     connect(channel.data(),
             SIGNAL(invalidated(Tp::DBusProxy*,QString,QString)),
             SLOT(onCallChannelInvalidated()));
@@ -201,6 +261,7 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
             SLOT(onCallStateChanged(Tp::CallState)));
 
     mCallChannels.append(channel);
+    Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
 }
 
 void CallHandler::onContactsAvailable(Tp::PendingOperation *op)
@@ -267,6 +328,10 @@ Tp::CallChannelPtr CallHandler::existingCall(const QString &phoneNumber)
 {
     Tp::CallChannelPtr channel;
     Q_FOREACH(const Tp::CallChannelPtr &ch, mCallChannels) {
+        if (ch->isConference()) {
+            continue;
+        }
+
         if (PhoneUtils::comparePhoneNumbers(ch->targetContact()->id(), phoneNumber)) {
             channel = ch;
             break;

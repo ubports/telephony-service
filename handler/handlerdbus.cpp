@@ -104,3 +104,18 @@ void HandlerDBus::SendDTMF(const QString &objectPath, const QString &key)
 {
     CallHandler::instance()->sendDTMF(objectPath, key);
 }
+
+void HandlerDBus::CreateConferenceCall(const QStringList &objectPaths)
+{
+    CallHandler::instance()->createConferenceCall(objectPaths);
+}
+
+void HandlerDBus::MergeCall(const QString &conferenceObjectPath, const QString &callObjectPath)
+{
+    CallHandler::instance()->mergeCall(conferenceObjectPath, callObjectPath);
+}
+
+void HandlerDBus::SplitCall(const QString &objectPath)
+{
+    CallHandler::instance()->splitCall(objectPath);
+}

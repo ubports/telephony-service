@@ -2,23 +2,24 @@
  * Copyright (C) 2013 Canonical, Ltd.
  *
  * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License version 3, as published by
+ * the terms of the GNU Lesser General Public License version 3, as published by
  * the Free Software Foundation.
  *
  * This program is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranties of MERCHANTABILITY,
  * SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * General Public License for more details.
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * Authors: Tiago Salem Herrmann <tiago.herrmann@canonical.com>
-            Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ * Authors:
+ *     Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *     Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  */
 
-#ifndef MOCKCALLCHANNEL_H
-#define MOCKCALLCHANNEL_H
+#ifndef MOCKCONFERENCECALLCHANNEL_H
+#define MOCKCONFERENCECALLCHANNEL_H
 
 #include <QObject>
 
@@ -28,56 +29,56 @@
 #include <TelepathyQt/Types>
 
 #include "connection.h"
+#include "speakeriface.h"
 
 class MockConnection;
 
-class MockCallChannel : public QObject
+class MockConferenceCallChannel : public QObject
 {
     Q_OBJECT
 public:
-    MockCallChannel(MockConnection *conn, QString phoneNumber, QString state, uint targetHandle, QObject *parent = 0);
-    ~MockCallChannel();
-    Tp::BaseChannelPtr baseChannel();
+    MockConferenceCallChannel(MockConnection *conn, QList<QDBusObjectPath> callChannels, QObject *parent = 0);
+    ~MockConferenceCallChannel();
 
     void onHangup(uint reason, const QString &detailedReason, const QString &message, Tp::DBusError* error);
-    void onAccept(Tp::DBusError*);
     void onMuteStateChanged(const Tp::LocalMuteState &state, Tp::DBusError *error);
     void onHoldStateChanged(const Tp::LocalHoldState &state, const Tp::LocalHoldStateReason &reason, Tp::DBusError *error);
     void onDTMFStartTone(uchar event, Tp::DBusError *error);
     void onDTMFStopTone(Tp::DBusError *error);
-    void onSplit(Tp::DBusError *error);
-
-    QString objectPath() const;
-
-    Tp::CallState callState() const;
-
-public Q_SLOTS:
-    void setCallState(const QString &state);
-    void init();
-
-
-    void onOfonoMuteChanged(bool mute);
+    void onTurnOnSpeaker(bool active, Tp::DBusError *error);
+    void onMerge(const QDBusObjectPath &channel, Tp::DBusError *error);
+    Tp::BaseChannelPtr baseChannel();
+    void setConferenceActive(bool active);
 
 Q_SIGNALS:
-    void callStateChanged(MockCallChannel *channel, const QString &state);
-    void splitted();
+    void channelMerged(const QString &objectPath);
+    void initialized();
+
+private Q_SLOTS:
+    void onDtmfComplete(bool success);
+    void sendNextDtmf();
+    void init();
+
+    void onOfonoMuteChanged(bool mute);
+    void onChannelSplitted(const QDBusObjectPath &path);
 
 private:
     QString mObjPath;
-    QString mState;
+    QString mPreviousState;
     bool mIncoming;
     bool mRequestedHangup;
-    Tp::BaseChannelPtr mBaseChannel;
-    QString mPhoneNumber;
     MockConnection *mConnection;
-    uint mTargetHandle;
+    QList<QDBusObjectPath> mCallChannels;
+    Tp::BaseChannelPtr mBaseChannel;
     Tp::BaseChannelHoldInterfacePtr mHoldIface;
+    Tp::BaseChannelConferenceInterfacePtr mConferenceIface;
+    Tp::BaseChannelMergeableConferenceInterfacePtr mMergeableIface;
     Tp::BaseCallMuteInterfacePtr mMuteIface;
-    Tp::BaseChannelSplittableInterfacePtr mSplittableIface;
+    BaseChannelSpeakerInterfacePtr mSpeakerIface;
     Tp::BaseChannelCallTypePtr mCallChannel;
     Tp::BaseCallContentDTMFInterfacePtr mDTMFIface;
-    Tp::BaseCallContentPtr mCallContent;
-
+    bool mDtmfLock;
+    QStringList mDtmfPendingStrings;
 };
 
-#endif // MOCKCALLCHANNEL_H
+#endif // MOCKCONFERENCECALLCHANNEL_H
