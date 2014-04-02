@@ -156,6 +156,7 @@ void USSDManager::onConnectedChanged()
 
             QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
             mState = ussdIface.property("State").toString();
+            mSerials[account->uniqueIdentifier()] = ussdIface.property("Serial").toString();
             if (active()) {
                 mActiveAccountId = account->uniqueIdentifier();
             }
@@ -185,4 +186,9 @@ QString USSDManager::activeAccountId() const
 QString USSDManager::state() const
 {
     return mState;
+}
+
+QString USSDManager::serial(const QString &accountId) const
+{
+    return mSerials[accountId];
 }
