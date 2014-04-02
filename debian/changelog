@@ -1,3 +1,13 @@
+telephony-service (0.1+14.04.20140402.1-0ubuntu1) trusty; urgency=low
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+  [ Gustavo Pichorim Boiko ]
+  * Add support for handling conference calls.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 02 Apr 2014 12:41:39 +0000
+
 telephony-service (0.1+14.04.20140328.1-0ubuntu1) trusty; urgency=low
 
   [ Gustavo Pichorim Boiko ]
