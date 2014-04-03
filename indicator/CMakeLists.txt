@@ -4,8 +4,22 @@ set(qt_SRCS
     messagingmenu.cpp
     metrics.cpp
     textchannelobserver.cpp
+    ussdindicator.cpp
+    ussdmenu.cpp
     voicemailindicator.cpp
     )
+
+set_source_files_properties(
+        "${DATA_DIR}/org.freedesktop.Notifications.xml"
+        PROPERTIES
+        INCLUDE "${CMAKE_SOURCE_DIR}/indicator/DBusTypes.h"
+)
+
+qt5_add_dbus_interface(
+        qt_SRCS
+        "${DATA_DIR}/org.freedesktop.Notifications.xml"
+        NotificationsInterface
+)
 
 set(indicator_SRCS main.cpp ${qt_SRCS})
 
