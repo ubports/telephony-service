@@ -66,12 +66,12 @@ void flash_notification_action(NotifyNotification* notification, char *action, g
         NotificationData *notificationData = (NotificationData*) data;
         if (notificationData != NULL) {
             // FIXME: handle multiple accounts
-            History::Thread thread = History::Manager::instance()->threadForParticipants(TelepathyHelper::instance()->accountId(),
+            History::Thread thread = History::Manager::instance()->threadForParticipants(TelepathyHelper::instance()->accountIds()[0],
                                                                                          History::EventTypeText,
                                                                                          QStringList() << notificationData->phoneNumber,
                                                                                          History::MatchPhoneNumber,
                                                                                          true);
-            History::TextEvent textEvent(TelepathyHelper::instance()->accountId(), 
+            History::TextEvent textEvent(TelepathyHelper::instance()->accountIds()[0], 
                                          thread.threadId(), 
                                          notificationData->eventId, 
                                          notificationData->phoneNumber,
@@ -158,6 +158,7 @@ void TextChannelObserver::showFlashNotificationForMessage(const Tp::ReceivedMess
     data->timestamp = message.received();
     data->text = message.text();
     data->eventId = message.messageToken().toUtf8();
+    mNotifications.insert(notification, data);
  
     notify_notification_add_action (notification,
                                     "notification_ok_action",
@@ -170,7 +171,8 @@ void TextChannelObserver::showFlashNotificationForMessage(const Tp::ReceivedMess
                                     C::gettext("Save"),
                                     flash_notification_action,
                                     data,
-                                    delete_notification_data);
+                                    NULL);
+    g_signal_connect(notification, "closed", G_CALLBACK(notification_closed), &mNotifications);
 
     notify_notification_set_hint_string(notification,
                                         "x-canonical-snap-decisions",

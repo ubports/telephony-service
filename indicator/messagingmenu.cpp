@@ -362,12 +362,13 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
 void MessagingMenu::saveFlashMessage(const QString &messageId)
 {
     QVariantMap details = mMessages[messageId];
-    History::Thread thread = History::Manager::instance()->threadForParticipants(TelepathyHelper::instance()->accountId(),
+    // TODO: handle dual sim
+    History::Thread thread = History::Manager::instance()->threadForParticipants(TelepathyHelper::instance()->accountIds()[0],
                                                                                  History::EventTypeText,
                                                                                  QStringList() << details["phoneNumber"].toString(),
                                                                                  History::MatchPhoneNumber,
                                                                                  true);
-    History::TextEvent textEvent(TelepathyHelper::instance()->accountId(), 
+    History::TextEvent textEvent(TelepathyHelper::instance()->accountIds()[0], 
                                  thread.threadId(), 
                                  details["messageId"].toString(), 
                                  details["phoneNumber"].toString(),
