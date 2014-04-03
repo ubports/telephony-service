@@ -64,16 +64,35 @@ QVariantMap CallHandler::getCallProperties(const QString &objectPath)
     return properties;
 }
 
+bool CallHandler::hasCalls() const
+{
+    bool hasActiveCalls = false;
+
+    Q_FOREACH(const Tp::CallChannelPtr channel, mCallChannels) {
+        Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        bool incoming = channel->initiatorContact() != account->connection()->selfContact();
+        bool dialing = !incoming && (channel->callState() == Tp::CallStateInitialised);
+        bool active = channel->callState() == Tp::CallStateActive;
+
+        if (dialing || active) {
+            hasActiveCalls = true;
+            break;
+        }
+    }
+
+    return hasActiveCalls;
+}
+
 CallHandler::CallHandler(QObject *parent)
 : QObject(parent)
 {
 }
 
-void CallHandler::startCall(const QString &phoneNumber)
+void CallHandler::startCall(const QString &phoneNumber, const QString &accountId)
 {
     // Request the contact to start audio call
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-    if (account->connection() == NULL) {
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account || account->connection() == NULL) {
         return;
     }
 
@@ -84,7 +103,6 @@ void CallHandler::startCall(const QString &phoneNumber)
 
 void CallHandler::hangUpCall(const QString &objectPath)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
     if (channel.isNull()) {
         return;
@@ -165,24 +183,30 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
 
 void CallHandler::createConferenceCall(const QStringList &objectPaths)
 {
-    qDebug() << __PRETTY_FUNCTION__;
-    // FIXME: check if we need to verify some stuff before requesting the
-    // conference call
-    // Request the contact to start audio call
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
-    if (account->connection() == NULL) {
-        qWarning() << "Account has no connection, conferences can't be created.";
-        return;
-    }
-
     QList<Tp::ChannelPtr> calls;
+    Tp::AccountPtr account;
     Q_FOREACH(const QString &objectPath, objectPaths) {
         Tp::CallChannelPtr call = callFromObjectPath(objectPath);
         if (!call) {
             qWarning() << "Could not find a call channel for objectPath:" << objectPath;
             return;
         }
+
+        if (account.isNull()) {
+            account = TelepathyHelper::instance()->accountForConnection(call->connection());
+        }
+
+        // make sure all call channels belong to the same connection
+        if (call->connection() != account->connection()) {
+            qWarning() << "It is not possible to merge channels from different accounts.";
+            return;
+        }
         calls.append(call);
+    }
+
+    if (calls.isEmpty() || account.isNull()) {
+        qWarning() << "The list of calls was empty. Failed to create a conference.";
+        return;
     }
 
     // there is no need to check the pending request. The new channel will arrive at some point.
@@ -191,7 +215,6 @@ void CallHandler::createConferenceCall(const QStringList &objectPaths)
 
 void CallHandler::mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     Tp::CallChannelPtr conferenceChannel = callFromObjectPath(conferenceObjectPath);
     Tp::CallChannelPtr callChannel = callFromObjectPath(callObjectPath);
     if (!conferenceChannel || !callChannel || !conferenceChannel->isConference()) {
@@ -205,7 +228,6 @@ void CallHandler::mergeCall(const QString &conferenceObjectPath, const QString &
 
 void CallHandler::splitCall(const QString &objectPath)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
     if (!channel) {
         return;
@@ -217,7 +239,6 @@ void CallHandler::splitCall(const QString &objectPath)
 
 void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
-    qDebug() << __PRETTY_FUNCTION__;
     channel->accept();
 
     // check if the channel has the speakermode property
@@ -228,6 +249,10 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
     channel->setProperty("hasSpeakerProperty", map.contains(PROPERTY_SPEAKERMODE));
     channel->setProperty("timestamp", QDateTime::currentDateTimeUtc());
 
+    if (channel->callState() == Tp::CallStateActive) {
+        channel->setProperty("activeTimestamp", QDateTime::currentDateTimeUtc());
+    }
+
     connect(channel.data(),
             SIGNAL(invalidated(Tp::DBusProxy*,QString,QString)),
             SLOT(onCallChannelInvalidated()));
@@ -236,6 +261,7 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
             SLOT(onCallStateChanged(Tp::CallState)));
 
     mCallChannels.append(channel);
+    Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
 }
 
 void CallHandler::onContactsAvailable(Tp::PendingOperation *op)
@@ -247,7 +273,7 @@ void CallHandler::onContactsAvailable(Tp::PendingOperation *op)
         return;
     }
 
-    Tp::AccountPtr account = TelepathyHelper::instance()->account();
+    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
 
     // start call to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {

@@ -24,10 +24,15 @@
 
 #include <QObject>
 #include <QThread>
-#include <QGSettings>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include <QFile>
+#include <QDBusReply>
+#include <QDBusServiceWatcher>
+#include <QtDBus/QDBusInterface>
+#include <unistd.h>
+#include <sys/types.h>
+
 
 class RingtoneWorker : public QObject
 {
@@ -40,12 +45,12 @@ public Q_SLOTS:
     void stopIncomingCallSound();
     void playIncomingMessageSound();
     void stopIncomingMessageSound();
+
 private:
     QMediaPlayer mCallAudioPlayer;
     QMediaPlaylist mCallAudioPlaylist;
 
     QMediaPlayer mMessageAudioPlayer;
-    QGSettings mSoundSettings;
 };
 
 class Ringtone : public QObject

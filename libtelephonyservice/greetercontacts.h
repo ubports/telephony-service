@@ -38,10 +38,16 @@ class GreeterContacts : public QObject
     Q_OBJECT
 
 public:
-    GreeterContacts(QObject *parent = 0);
+    static GreeterContacts *instance();
     ~GreeterContacts();
 
-    void setFilter(const QtContacts::QContactFilter &filter);
+    void setContactFilter(const QtContacts::QContactFilter &filter);
+
+    bool silentMode();
+    QString incomingCallSound();
+    QString incomingMessageSound();
+
+    static bool isGreeterMode();
 
     // Records contact info for currently-logged-in user
     static void emitContact(const QtContacts::QContact &contact);
@@ -62,15 +68,26 @@ private Q_SLOTS:
     void accountsGetContactReply(QDBusPendingCallWatcher *watcher);
 
 private:
+    GreeterContacts(QObject *parent = 0);
+
     void queryEntry();
     void queryContact(const QString &user);
     void updateActiveUser(const QString &username);
     QtContacts::QContact lookupContact();
     void signalIfNeeded();
 
-    QtContacts::QContactFilter mFilter;
+    void checkUpdatedValue(const QVariantMap &changed, const QStringList &invalidated, const QString &propName, QVariant &propValue);
+    QVariant getUserValue(const QString &interface, const QString &propName);
+
     QString mActiveUser;
+    QVariant mSilentMode;
+    QVariant mIncomingCallSound;
+    QVariant mIncomingMessageSound;
+
+    QtContacts::QContactFilter mFilter;
     QMap<QString, QVariantMap> mContacts;
+
+    static GreeterContacts *mInstance;
 };
 
 #endif // GREETERCONTACTS_H

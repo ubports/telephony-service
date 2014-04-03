@@ -51,9 +51,9 @@ QVariantMap HandlerController::getCallProperties(const QString &objectPath)
     return properties;
 }
 
-void HandlerController::startCall(const QString &number)
+void HandlerController::startCall(const QString &number, const QString &accountId)
 {
-    mHandlerInterface.call("StartCall", number);
+    mHandlerInterface.call("StartCall", number, accountId);
 }
 
 void HandlerController::hangUpCall(const QString &objectPath)
@@ -81,12 +81,27 @@ void HandlerController::sendDTMF(const QString &objectPath, const QString &key)
     mHandlerInterface.call("SendDTMF", objectPath, key);
 }
 
-void HandlerController::sendMessage(const QString &number, const QString &message)
+void HandlerController::createConferenceCall(const QStringList &objectPaths)
 {
-    mHandlerInterface.call("SendMessage", QStringList() << number, message);
+    mHandlerInterface.call("CreateConferenceCall", objectPaths);
 }
 
-void HandlerController::acknowledgeMessages(const QString &number, const QStringList &messageIds)
+void HandlerController::mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath)
 {
-    mHandlerInterface.call("AcknowledgeMessages", number, messageIds);
+    mHandlerInterface.call("MergeCall", conferenceObjectPath, callObjectPath);
+}
+
+void HandlerController::splitCall(const QString &objectPath)
+{
+    mHandlerInterface.call("SplitCall", objectPath);
+}
+
+void HandlerController::sendMessage(const QString &number, const QString &message, const QString &accountId)
+{
+    mHandlerInterface.call("SendMessage", QStringList() << number, message, accountId);
+}
+
+void HandlerController::acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId)
+{
+    mHandlerInterface.call("AcknowledgeMessages", number, messageIds, accountId);
 }

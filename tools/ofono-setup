@@ -4,15 +4,25 @@
 dconf write /org/gnome/empathy/use-conn false 2>&1 > /dev/null
 
 # check if there is a tp-ofono account already
+# for now assume that if there is at least one account, the system is properly configured.
 mc-tool show ofono/ofono/account0 2>&1 > /dev/null
 
 # if there is not, create one and enable it
 if [ $? -eq 1 ]; then
-        echo 'creating ofono/ofono/account0'
-        mc-tool add ofono/ofono account0
-        echo 'enabling ofono/ofono/account0'
-        mc-tool enable ofono/ofono/account0
-        mc-tool auto-connect ofono/ofono/account0
+        # get the modems from ofono
+        MODEMS=`/usr/share/ofono/scripts/list-modems | grep --binary-files=text "^\[" | sed 's,^\[ \(.*\) \],\1,g'`
+        INDEX=0
+
+        # and for each modem found create a telepathy account
+        for modem in $MODEMS; do
+            ACCOUNT="account$INDEX"
+            echo "creating ofono/ofono/$ACCOUNT"
+            mc-tool add ofono/ofono $ACCOUNT string:modem-objpath=$modem
+            echo "enabling ofono/ofono/$ACCOUNT"
+            mc-tool enable ofono/ofono/$ACCOUNT
+            mc-tool auto-connect ofono/ofono/$ACCOUNT
+            INDEX=$((INDEX+1))
+        done
 fi
 
-echo 'ofono/ofono/account0 initialized'
+echo 'ofono accounts initialized'

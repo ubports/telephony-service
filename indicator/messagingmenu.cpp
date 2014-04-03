@@ -20,6 +20,7 @@
  */
 
 #include "applicationutils.h"
+#include "callmanager.h"
 #include "config.h"
 #include "contactutils.h"
 #include "phoneutils.h"
@@ -27,6 +28,7 @@
 #include "telepathyhelper.h"
 #include <QContactAvatar>
 #include <QContactFetchRequest>
+#include <QContactFilter>
 #include <QContactPhoneNumber>
 #include <QDateTime>
 #include <QDebug>
@@ -44,7 +46,7 @@ namespace C {
 QTCONTACTS_USE_NAMESPACE
 
 MessagingMenu::MessagingMenu(QObject *parent) :
-    QObject(parent), mVoicemailCount(-1)
+    QObject(parent), mVoicemailCount(-1), mVoicemailId("voicemail")
 {
     GIcon *icon = g_icon_new_for_string("telephony-service-indicator", NULL);
     mMessagesApp = messaging_menu_app_new("telephony-service-sms.desktop");
@@ -292,14 +294,13 @@ void MessagingMenu::showVoicemailEntry(uint count)
     }
 
     GIcon *icon = g_themed_icon_new("indicator-call");
-    MessagingMenuMessage *message = messaging_menu_message_new("voicemail",
+    MessagingMenuMessage *message = messaging_menu_message_new(mVoicemailId.toUtf8().data(),
                                                                icon,
                                                                "Voicemail",
                                                                NULL,
                                                                messageBody.toUtf8().data(),
                                                                QDateTime::currentDateTime().toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
-    mVoicemailId = "voicemail";
     messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
 
     g_object_unref(icon);
@@ -308,10 +309,7 @@ void MessagingMenu::showVoicemailEntry(uint count)
 
 void MessagingMenu::hideVoicemailEntry()
 {
-    if (!mVoicemailId.isEmpty()) {
-        messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
-        mVoicemailId = "";
-    }
+    messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
 }
 
 void MessagingMenu::messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance)
@@ -341,13 +339,15 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
     QString action(actionId);
     QString messageId(messaging_menu_message_get_id(message));
 
+    if (messageId == instance->mVoicemailId) {
+        QMetaObject::invokeMethod(instance, "callVoicemail", Q_ARG(QString, messageId));
+        return;
+    }
     if (action == "callBack" || action.isEmpty()) {
         QMetaObject::invokeMethod(instance, "callBack", Q_ARG(QString, messageId));
     } else if (action == "replyWithMessage") {
         QString text(g_variant_get_string(param, NULL));
         QMetaObject::invokeMethod(instance, "replyWithMessage", Q_ARG(QString, messageId), Q_ARG(QString, text));
-    } else if (messageId == instance->mVoicemailId) {
-        QMetaObject::invokeMethod(instance, "callVoicemail", Q_ARG(QString, messageId));
     }
 }
 
@@ -404,13 +404,9 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
     qDebug() << "TelephonyService/MessagingMenu: Calling voicemail for messageId" << messageId;
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->account()->connection());
-    QString busName = conn->busName();
-    QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
-    QDBusReply<QString> replyNumber = connIface.call("VoicemailNumber");
-    if (replyNumber.isValid()) {
-        ApplicationUtils::openUrl(QUrl(QString("tel:///%1").arg(replyNumber.value())));
+    QString voicemailNumber = CallManager::instance()->getVoicemailNumber();
+    if (!voicemailNumber.isEmpty()) {
+        ApplicationUtils::openUrl(QUrl(QString("tel:///%1").arg(voicemailNumber)));
     }
 }
 
