@@ -42,7 +42,7 @@ public Q_SLOTS:
 
 protected:
     void showNotificationForMessage(const Tp::ReceivedMessage &message);
-    void showFlashNotificationForMessage(const Tp::ReceivedMessage &message);
+    void showNotificationForFlashMessage(const Tp::ReceivedMessage &message);
 
 protected Q_SLOTS:
     void onTextChannelInvalidated();

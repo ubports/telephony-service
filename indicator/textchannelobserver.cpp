@@ -142,7 +142,7 @@ TextChannelObserver::~TextChannelObserver()
     mNotifications.clear();
 }
 
-void TextChannelObserver::showFlashNotificationForMessage(const Tp::ReceivedMessage &message)
+void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMessage &message)
 {
     Tp::ContactPtr contact = message.sender();
     QByteArray token(message.messageToken().toUtf8());
@@ -316,7 +316,7 @@ void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
         // class 0 sms
         mFlashChannels.append(textChannel);
         Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
-            showFlashNotificationForMessage(message);
+            showNotificationForFlashMessage(message);
         }
         return;
     } else {
@@ -340,7 +340,7 @@ void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
     Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
     // do not place notification items for scrollback messages
     if (mFlashChannels.contains(textChannel) && !message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
-        showFlashNotificationForMessage(message);
+        showNotificationForFlashMessage(message);
         return;
     }
 
