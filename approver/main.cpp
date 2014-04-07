@@ -38,6 +38,7 @@ namespace C {
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
+    QCoreApplication::setApplicationName("telephony-service-approver");
 
     C::bindtextdomain( "telephony-service", "/usr/share/locale" );
     C::textdomain("telephony-service");

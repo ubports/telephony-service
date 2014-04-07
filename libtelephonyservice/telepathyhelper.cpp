@@ -77,12 +77,19 @@ TelepathyHelper *TelepathyHelper::instance()
     return helper;
 }
 
-QStringList TelepathyHelper::accountIds() const
+QStringList TelepathyHelper::accountIds()
 {
     QStringList ids;
 
-    Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
-        ids << account->uniqueIdentifier();
+    if (QCoreApplication::applicationName() == "telephony-service-handler" || mAccounts.size() != 0) {
+        Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
+            ids << account->uniqueIdentifier();
+        }
+    } else {
+        QDBusReply<QStringList> reply = handlerInterface()->call("AccountIds");
+        if (reply.isValid()) {
+            ids = reply.value();
+        }
     }
 
     return ids;

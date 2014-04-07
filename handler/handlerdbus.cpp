@@ -25,6 +25,7 @@
 #include "handlerdbus.h"
 #include "handleradaptor.h"
 #include "texthandler.h"
+#include "telepathyhelper.h"
 
 // Qt
 #include <QtDBus/QDBusConnection>
@@ -51,6 +52,11 @@ QVariantMap HandlerDBus::GetCallProperties(const QString &objectPath)
 bool HandlerDBus::HasCalls()
 {
     return CallHandler::instance()->hasCalls();
+}
+
+QStringList HandlerDBus::AccountIds()
+{
+    return TelepathyHelper::instance()->accountIds();
 }
 
 bool HandlerDBus::connectToBus()

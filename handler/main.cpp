@@ -34,6 +34,7 @@
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
+    QCoreApplication::setApplicationName("telephony-service-handler");
 
     Tp::registerTypes();
 
