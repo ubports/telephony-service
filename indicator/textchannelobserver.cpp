@@ -312,7 +312,9 @@ void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
             SLOT(onMessageSent(Tp::Message,Tp::MessageSendingFlags,QString)));
 
 
-    if (textChannel->immutableProperties()[TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash")].toBool()) {
+    if (textChannel->immutableProperties().contains(TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash")) && 
+           textChannel->immutableProperties()[TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash")].toBool()) {
+
         // class 0 sms
         mFlashChannels.append(textChannel);
         Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
