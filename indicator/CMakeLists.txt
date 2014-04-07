@@ -30,7 +30,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
     ${UserMetrics_INCLUDE_DIRS}
-    /usr/include/history-service
+    ${HISTORY_INCLUDE_DIRS}
     )
 
 link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
@@ -43,7 +43,7 @@ target_link_libraries(telephony-service-indicator
     ${NOTIFY_LIBRARIES}
     ${MESSAGING_MENU_LIBRARIES}
     ${UserMetrics_LIBRARIES}
-    historyservice
+    ${HISTORY_LIBRARIES}
     telephonyservice
     )
 

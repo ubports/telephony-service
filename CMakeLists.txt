@@ -62,6 +62,7 @@ pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
 pkg_check_modules(MESSAGING_MENU REQUIRED messaging-menu)
 pkg_check_modules(UserMetrics REQUIRED libusermetricsinput-1)
+pkg_check_modules(HISTORY REQUIRED history-service)
 
 add_definitions(-DQT_NO_KEYWORDS)
 
