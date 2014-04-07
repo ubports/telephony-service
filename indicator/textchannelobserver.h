@@ -42,7 +42,7 @@ public Q_SLOTS:
 
 protected:
     void showNotificationForMessage(const Tp::ReceivedMessage &message);
-    Tp::TextChannelPtr channelFromPath(const QString &path);
+    void showNotificationForFlashMessage(const Tp::ReceivedMessage &message);
 
 protected Q_SLOTS:
     void onTextChannelInvalidated();
@@ -55,6 +55,7 @@ protected Q_SLOTS:
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
+    QList<Tp::TextChannelPtr> mFlashChannels;
     QMap<NotifyNotification*, NotificationData*> mNotifications;
 };
 

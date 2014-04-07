@@ -4,8 +4,22 @@ set(qt_SRCS
     messagingmenu.cpp
     metrics.cpp
     textchannelobserver.cpp
+    ussdindicator.cpp
+    ussdmenu.cpp
     voicemailindicator.cpp
     )
+
+set_source_files_properties(
+        "${DATA_DIR}/org.freedesktop.Notifications.xml"
+        PROPERTIES
+        INCLUDE "${CMAKE_SOURCE_DIR}/indicator/DBusTypes.h"
+)
+
+qt5_add_dbus_interface(
+        qt_SRCS
+        "${DATA_DIR}/org.freedesktop.Notifications.xml"
+        NotificationsInterface
+)
 
 set(indicator_SRCS main.cpp ${qt_SRCS})
 
@@ -16,6 +30,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
     ${UserMetrics_INCLUDE_DIRS}
+    ${HISTORY_INCLUDE_DIRS}
     )
 
 link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
@@ -28,6 +43,7 @@ target_link_libraries(telephony-service-indicator
     ${NOTIFY_LIBRARIES}
     ${MESSAGING_MENU_LIBRARIES}
     ${UserMetrics_LIBRARIES}
+    ${HISTORY_LIBRARIES}
     telephonyservice
     )
 
