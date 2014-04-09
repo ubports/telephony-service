@@ -62,6 +62,7 @@ pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
 pkg_check_modules(MESSAGING_MENU REQUIRED messaging-menu)
 pkg_check_modules(UserMetrics REQUIRED libusermetricsinput-1)
+pkg_check_modules(HISTORY REQUIRED history-service)
 
 add_definitions(-DQT_NO_KEYWORDS)
 
@@ -74,6 +75,7 @@ enable_testing()
 
 add_definitions(-std=c++11)
 
+set(DATA_DIR "${CMAKE_SOURCE_DIR}/data")
 # install assets
 set(ASSETS_DIR assets)
 install(DIRECTORY ${ASSETS_DIR} DESTINATION ${TELEPHONY_SERVICE_DIR})
