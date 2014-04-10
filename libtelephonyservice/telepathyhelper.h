@@ -50,7 +50,7 @@ public:
     QDBusInterface *handlerInterface();
 
     bool connected() const;
-    QStringList accountIds() const;
+    QStringList accountIds();
     Tp::AccountPtr accountForConnection(const Tp::ConnectionPtr &connection) const;
     Tp::AccountPtr accountForId(const QString &accountId) const;
 

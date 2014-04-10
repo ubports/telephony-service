@@ -41,6 +41,7 @@ public:
 
     QVariantMap GetCallProperties(const QString &objectPath);
     bool HasCalls();
+    QStringList AccountIds();
 
 public Q_SLOTS:
     bool connectToBus();
