@@ -162,7 +162,7 @@ CallEntry *CallManager::foregroundCall() const
         call = calls.first();
     } else {
         Q_FOREACH(CallEntry *entry, calls) {
-            if (entry->isActive() && !entry->isHeld()) {
+            if (!entry->isHeld()) {
                 call = entry;
                 break;
             }
