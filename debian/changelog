@@ -1,3 +1,11 @@
+telephony-service (0.1+14.04.20140411-0ubuntu1) trusty; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure the calls still dialing are returned as foregroundCalls
+    even when they are not the only ones available.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 11 Apr 2014 12:52:39 +0000
+
 telephony-service (0.1+14.04.20140410.1-0ubuntu1) trusty; urgency=low
 
   [ Tiago Salem Herrmann ]
