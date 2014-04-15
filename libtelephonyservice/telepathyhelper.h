@@ -65,7 +65,6 @@ Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
     void channelObserverUnregistered();
     void accountReady();
-    void connectionChanged();
     void connectedChanged();
     void accountIdsChanged();
 
