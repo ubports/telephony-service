@@ -115,15 +115,13 @@ void CallManager::onChannelObserverUnregistered()
 
 void CallManager::startCall(const QString &phoneNumber, const QString &accountId)
 {
-    Tp::AccountPtr account;
-    if (accountId.isNull()) {
-        account = TelepathyHelper::instance()->accounts()[0];
-    } else {
-        account = TelepathyHelper::instance()->accountForId(accountId);
+    QString account = accountId;
+    if (account.isNull()) {
+        account = TelepathyHelper::instance()->accountIds()[0];
     }
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("StartCall", phoneNumber, account->uniqueIdentifier());
+    phoneAppHandler->call("StartCall", phoneNumber, account);
 }
 
 void CallManager::onConnectedChanged()
