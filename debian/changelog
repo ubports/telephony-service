@@ -1,3 +1,12 @@
+telephony-service (0.1+14.04.20140415-0ubuntu1) trusty; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Do not use the TelepathyHelper::accounts(), and use the
+    ::accountIds() instead as this might be called before the telepathy
+    stuff is prepared. (LP: #1286358)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 15 Apr 2014 19:57:05 +0000
+
 telephony-service (0.1+14.04.20140411-0ubuntu1) trusty; urgency=low
 
   [ Gustavo Pichorim Boiko ]
