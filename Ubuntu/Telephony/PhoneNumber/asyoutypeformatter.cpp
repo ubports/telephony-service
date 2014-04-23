@@ -29,12 +29,12 @@
 
 AsYouTypeFormatter::AsYouTypeFormatter(QObject *parent)
     : QObject(parent),
-      m_regionCode(i18n::phonenumbers::RegionCode::GetUnknown()),
+      m_defaultRegionCode(i18n::phonenumbers::RegionCode::GetUnknown()),
       m_enabled(true)
 {
     connect(this, SIGNAL(enabledChanged()), SLOT(updateFormattedText()), Qt::QueuedConnection);
     connect(this, SIGNAL(textChanged()), SLOT(updateFormattedText()), Qt::QueuedConnection);
-    connect(this, SIGNAL(regionCodeChanged()), SLOT(updateFormattedText()), Qt::QueuedConnection);
+    connect(this, SIGNAL(defaultRegionCodeChanged()), SLOT(updateFormattedText()), Qt::QueuedConnection);
 }
 
 AsYouTypeFormatter::~AsYouTypeFormatter()
@@ -58,18 +58,18 @@ void AsYouTypeFormatter::setEnabled(bool enabled)
     }
 }
 
-QString AsYouTypeFormatter::regionCode() const
+QString AsYouTypeFormatter::defaultRegionCode() const
 {
-    return m_regionCode;
+    return m_defaultRegionCode;
 }
 
-void AsYouTypeFormatter::setRegionCode(const QString &regionCode)
+void AsYouTypeFormatter::setDefaultRegionCode(const QString &regionCode)
 {
-    if (m_regionCode != regionCode) {
-        m_regionCode = regionCode;
+    if (m_defaultRegionCode != regionCode) {
+        m_defaultRegionCode = regionCode;
         delete m_formatter;
         m_formatter = 0;
-        Q_EMIT regionCodeChanged();
+        Q_EMIT defaultRegionCodeChanged();
     }
 }
 
@@ -128,6 +128,18 @@ void AsYouTypeFormatter::updateFormattedText()
         onlyNumbers += word;
     }
 
+    // if the number starts with "+" will will use unkown region otherwiser we will use the default region
+    QString numberRegion = m_defaultRegionCode;
+    if (m_rawText.startsWith("+")) {
+        numberRegion = i18n::phonenumbers::RegionCode::GetUnknown();
+    }
+
+    // destroy current formatter if it was created with a different region
+    if (m_formatter && (m_formatterRegionCode != numberRegion)) {
+        delete m_formatter;
+        m_formatter = 0;
+    }
+
     std::string result;
     QByteArray number(onlyNumbers.toUtf8());
 
@@ -135,7 +147,8 @@ void AsYouTypeFormatter::updateFormattedText()
         m_formatter->Clear();
     } else {
         i18n::phonenumbers::PhoneNumberUtil *phonenumberUtil = i18n::phonenumbers::PhoneNumberUtil::GetInstance();
-        m_formatter = phonenumberUtil->GetAsYouTypeFormatter(m_regionCode.toStdString());
+        m_formatter = phonenumberUtil->GetAsYouTypeFormatter(numberRegion.toStdString());
+        m_formatterRegionCode = numberRegion;
     }
 
     for(int i = 0, iMax = number.size(); i < iMax; i++) {

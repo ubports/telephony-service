@@ -27,6 +27,7 @@ TextField {
     id: phoneNumberInput
 
     property alias autoFormat: formatter.enabled
+    property alias defaultRegion: formatter.defaultRegionCode
 
     AsYouTypeFormatter {
         id: formatter

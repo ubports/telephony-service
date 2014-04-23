@@ -30,7 +30,7 @@ class AsYouTypeFormatter : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
-    Q_PROPERTY(QString regionCode READ regionCode WRITE setRegionCode NOTIFY regionCodeChanged)
+    Q_PROPERTY(QString defaultRegionCode READ defaultRegionCode WRITE setDefaultRegionCode NOTIFY defaultRegionCodeChanged)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(QString formattedText READ formattedText NOTIFY formattedTextChanged)
 
@@ -41,8 +41,8 @@ public:
     bool enabled() const;
     void setEnabled(bool enabled);
 
-    QString regionCode() const;
-    void setRegionCode(const QString &regionCode);
+    QString defaultRegionCode() const;
+    void setDefaultRegionCode(const QString &regionCode);
 
     QString text() const;
     void setText(const QString &text);
@@ -59,7 +59,7 @@ private Q_SLOTS:
 Q_SIGNALS:
     void textChanged();
     void formattedTextChanged();
-    void regionCodeChanged();
+    void defaultRegionCodeChanged();
     void enabledChanged();
 
 private:
@@ -67,7 +67,8 @@ private:
     bool m_enabled;
     QString m_rawText;
     QString m_formattedText;
-    QString m_regionCode;
+    QString m_defaultRegionCode;
+    QString m_formatterRegionCode;
 };
 
 #endif //TELEPHONY_PHONENUMBER_ASYOUTYPEFORMATTER_H

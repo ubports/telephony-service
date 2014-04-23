@@ -33,9 +33,6 @@ class PhoneNumber : public QQmlExtensionPlugin
 public:
     void initializeEngine(QQmlEngine *engine, const char *uri);
     void registerTypes(const char *uri);
-
-private:
-    QQmlContext *mRootContext;
 };
 
 #endif //TELEPHONY_PHONENUMBER_H
