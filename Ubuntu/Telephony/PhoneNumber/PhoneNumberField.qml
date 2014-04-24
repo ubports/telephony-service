@@ -59,6 +59,9 @@ TextField {
     */
     property alias defaultRegion: formatter.defaultRegionCode
 
+    // private
+    property bool _enableFormating: false
+
     AsYouTypeFormatter {
         id: formatter
 
@@ -67,8 +70,11 @@ TextField {
 
     Binding {
         target: phoneNumberField
-        when: phoneNumberField.autoFormat
+        when: phoneNumberField.autoFormat && phoneNumberField._enableFormating
         property: "text"
         value: formatter.formattedText
     }
+
+    // only enabled formating after the first keypress to avoid problems with text property initialization
+    Keys.onPressed: _enableFormating = true
 }
