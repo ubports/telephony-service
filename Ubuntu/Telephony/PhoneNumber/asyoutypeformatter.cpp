@@ -27,6 +27,35 @@
 #include <phonenumbers/phonenumberutil.h>
 #include <phonenumbers/region_code.h>
 
+
+/*!
+    \qmltype AsYouTypeFormatter
+    \inqmlmodule Ubuntu.Telephony.PhoneNumber 0.1
+    \brief The AsYouTypeFormatter is a helper class to format phone numbers
+
+    \b{This component is under heavy development.}
+
+    Example:
+    \qml
+    Item {
+        TextField {
+            id: field
+            AsYouTypeFormatter {
+                id: formatter
+                text: field.text
+            }
+
+            Binding {
+                target: field
+                property: "text"
+                value: formatter.formattedText
+            }
+        }
+    }
+    \endqml
+*/
+
+
 AsYouTypeFormatter::AsYouTypeFormatter(QObject *parent)
     : QObject(parent),
       m_defaultRegionCode(i18n::phonenumbers::RegionCode::GetUnknown()),
@@ -45,6 +74,12 @@ AsYouTypeFormatter::~AsYouTypeFormatter()
     }
 }
 
+
+/*!
+  Specifies whether the phone number format is enabled or not.
+
+  \qmlproperty bool enabled
+*/
 bool AsYouTypeFormatter::enabled() const
 {
     return m_enabled;
@@ -58,6 +93,13 @@ void AsYouTypeFormatter::setEnabled(bool enabled)
     }
 }
 
+/*!
+  Two letters region code to be used if the number does not provide a country code (+<country-code>).
+  These must be provided using ISO 3166-1 two-letter country-code format. The list of the
+  codes can be found here: http://www.iso.org/iso/english_country_names_and_code_elements
+
+  \qmlproperty string defaultRegion
+*/
 QString AsYouTypeFormatter::defaultRegionCode() const
 {
     return m_defaultRegionCode;
@@ -73,6 +115,11 @@ void AsYouTypeFormatter::setDefaultRegionCode(const QString &regionCode)
     }
 }
 
+/*!
+  Input text to be formatted
+
+  \qmlproperty string text
+*/
 QString AsYouTypeFormatter::text() const
 {
     return m_rawText;
@@ -86,17 +133,19 @@ void AsYouTypeFormatter::setText(const QString &text)
     }
 }
 
+/*!
+  Otuput text in a phone number format if the input text is valid.
+
+  \qmlproperty string formattedText
+*/
 QString AsYouTypeFormatter::formattedText() const
 {
     return m_formattedText;
 }
 
-QString AsYouTypeFormatter::format(const QString &text)
-{
-    setText(text);
-    return m_formattedText;
-}
-
+/*!
+  Clear the input and formatted text
+*/
 void AsYouTypeFormatter::clear()
 {
     m_rawText.clear();

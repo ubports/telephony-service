@@ -27,7 +27,7 @@ import Ubuntu.Telephony.PhoneNumber 0.1
 /*!
     \qmltype PhoneNumberField
     \inqmlmodule Ubuntu.Telephony.PhoneNumber 0.1
-    \brief The PhoneNumberInput element allows to format a phone-number as you type
+    \brief The PhoneNumberField element allows to format a phone-number as you type
 
     \b{This component is under heavy development.}
 

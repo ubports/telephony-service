@@ -50,7 +50,6 @@ public:
     QString formattedText() const;
 
 public Q_SLOTS:
-    QString format(const QString &text);
     void clear();
 
 private Q_SLOTS:
