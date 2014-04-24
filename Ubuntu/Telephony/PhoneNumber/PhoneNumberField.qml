@@ -23,21 +23,51 @@ import QtQuick 2.0
 import Ubuntu.Components 0.1
 import Ubuntu.Telephony.PhoneNumber 0.1
 
-TextField {
-    id: phoneNumberInput
 
+/*!
+    \qmltype PhoneNumberField
+    \inqmlmodule Ubuntu.Telephony.PhoneNumber 0.1
+    \brief The PhoneNumberInput element allows to format a phone-number as you type
+
+    \b{This component is under heavy development.}
+
+    Example:
+    \qml
+    Item {
+        PhoneNumberField {
+            autoFormat: true
+            defaultRegion: "US"
+        }
+    \endqml
+*/
+TextField {
+    id: phoneNumberField
+
+    /*!
+      Specifies whether the phone number format is enabled or not.
+
+      \qmlproperty bool autoFormat
+    */
     property alias autoFormat: formatter.enabled
+
+    /*!
+      Two letters region code to be used if the number does not provide a country code (+<country-code>).
+      These must be provided using ISO 3166-1 two-letter country-code format. The list of the
+      codes can be found here: http://www.iso.org/iso/english_country_names_and_code_elements
+
+      \qmlproperty string defaultRegion
+    */
     property alias defaultRegion: formatter.defaultRegionCode
 
     AsYouTypeFormatter {
         id: formatter
 
-        text: phoneNumberInput.text
+        text: phoneNumberField.text
     }
 
     Binding {
-        target: phoneNumberInput
-        when: phoneNumberInput.autoFormat
+        target: phoneNumberField
+        when: phoneNumberField.autoFormat
         property: "text"
         value: formatter.formattedText
     }

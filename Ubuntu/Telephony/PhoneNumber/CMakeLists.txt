@@ -6,7 +6,7 @@ set(PHONENUMBER_SRCS
     )
 
 set(PHONENUMBER_QMLS
-    PhoneNumberInput.qml
+    PhoneNumberField.qml
     qmldir
 )
 

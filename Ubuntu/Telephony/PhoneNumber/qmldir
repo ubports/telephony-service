@@ -1,4 +1,4 @@
 module Ubuntu.Telephony.PhoneNumber
 plugin telephonyservice-phonenumber-qml
 
-PhoneNumberInput 0.1 PhoneNumberInput.qml
+PhoneNumberField 0.1 PhoneNumberField.qml
