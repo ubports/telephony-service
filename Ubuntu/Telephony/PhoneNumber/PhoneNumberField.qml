@@ -75,6 +75,10 @@ TextField {
         value: formatter.formattedText
     }
 
-    // only enabled formating after the first keypress to avoid problems with text property initialization
-    Keys.onPressed: _enableFormating = true
+    // only enabled formatting after receive focus to avoid problems with text property initialization
+    onActiveFocusChanged: {
+        if (activeFocus) {
+            _enableFormating = true
+        }
+    }
 }
