@@ -59,9 +59,6 @@ TextField {
     */
     property alias defaultRegion: formatter.defaultRegionCode
 
-    // private
-    property bool _enableFormating: false
-
     AsYouTypeFormatter {
         id: formatter
 
@@ -70,15 +67,8 @@ TextField {
 
     Binding {
         target: phoneNumberField
-        when: phoneNumberField.autoFormat && phoneNumberField._enableFormating
+        when: phoneNumberField.autoFormat && phoneNumberField.activeFocus
         property: "text"
         value: formatter.formattedText
-    }
-
-    // only enabled formatting after receive focus to avoid problems with text property initialization
-    onActiveFocusChanged: {
-        if (activeFocus) {
-            _enableFormating = true
-        }
     }
 }
