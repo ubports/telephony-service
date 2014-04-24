@@ -1,1 +1,3 @@
-usr/lib/*/qt5/qml/Ubuntu/Telephony/PhoneNumber/*
+usr/lib/*/qt5/qml/Ubuntu/Telephony/PhoneNumber/libtelephonyservice-phonenumber-qml.so
+usr/lib/*/qt5/qml/Ubuntu/Telephony/PhoneNumber/PhoneNumberField.qml
+usr/lib/*/qt5/qml/Ubuntu/Telephony/PhoneNumber/qmldir
