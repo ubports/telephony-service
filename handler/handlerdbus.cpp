@@ -59,6 +59,11 @@ QStringList HandlerDBus::AccountIds()
     return TelepathyHelper::instance()->accountIds();
 }
 
+bool HandlerDBus::IsConnected()
+{
+    return TelepathyHelper::instance()->connected();
+}
+
 bool HandlerDBus::connectToBus()
 {
     bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);

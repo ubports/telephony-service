@@ -120,6 +120,14 @@ QDBusInterface *TelepathyHelper::handlerInterface()
 
 bool TelepathyHelper::connected() const
 {
+    if (QCoreApplication::applicationName() != "telephony-service-handler" && mAccounts.isEmpty()) {
+        // get the status from the handler
+        QDBusReply<bool> reply = mHandlerInterface->call("IsConnected");
+        if (reply.isValid()) {
+            return reply.value();
+        }
+    }
+
     return mConnected;
 }
 
