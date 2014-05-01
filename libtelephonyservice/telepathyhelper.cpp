@@ -35,8 +35,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mChannelObserver(0),
       mFirstTime(true),
-      mConnected(false),
-      mHandlerInterface(0)
+      mConnected(false)
 {
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
@@ -65,6 +64,11 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
             SLOT(onAccountManagerReady(Tp::PendingOperation*)));
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
+    mHandlerInterface = new QDBusInterface("com.canonical.TelephonyServiceHandler",
+                                           "/com/canonical/TelephonyServiceHandler",
+                                           "com.canonical.TelephonyServiceHandler",
+                                           QDBusConnection::sessionBus(),
+                                           this);
 }
 
 TelepathyHelper::~TelepathyHelper()
@@ -105,16 +109,8 @@ ChannelObserver *TelepathyHelper::channelObserver() const
     return mChannelObserver;
 }
 
-QDBusInterface *TelepathyHelper::handlerInterface()
+QDBusInterface *TelepathyHelper::handlerInterface() const
 {
-    if (!mHandlerInterface) {
-        mHandlerInterface = new QDBusInterface("com.canonical.TelephonyServiceHandler",
-                                               "/com/canonical/TelephonyServiceHandler",
-                                               "com.canonical.TelephonyServiceHandler",
-                                               QDBusConnection::sessionBus(),
-                                               this);
-    }
-
     return mHandlerInterface;
 }
 
