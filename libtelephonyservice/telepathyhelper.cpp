@@ -195,7 +195,6 @@ void TelepathyHelper::initializeAccount(const Tp::AccountPtr &account)
             watchSelfContactPresence(account);
         }
         updateConnectedStatus();
-        Q_EMIT connectionChanged();
     });
 
     // and make sure it is enabled and connected

@@ -31,7 +31,7 @@ VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
 {
     if(!checkConnected()) {
         connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onAccountReady()));
-        connect(TelepathyHelper::instance(), SIGNAL(connectionChanged()), SLOT(onAccountReady()));
+        connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onAccountReady()));
     } else {
         onAccountReady();
     }
