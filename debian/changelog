@@ -1,3 +1,10 @@
+telephony-service (0.1+14.10.20140507-0ubuntu1) utopic; urgency=low
+
+  [ Michael Terry ]
+  * Tie telephony-service-indicator lifecycle to indicator-messages.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 07 May 2014 19:24:07 +0000
+
 telephony-service (0.1+14.10.20140429-0ubuntu1) utopic; urgency=low
 
   [ Tiago Salem Herrmann ]
