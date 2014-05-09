@@ -32,6 +32,10 @@ RingtoneWorker::RingtoneWorker(QObject *parent) :
 
 void RingtoneWorker::playIncomingCallSound()
 {
+    if (!qgetenv("PA_DISABLED").isEmpty()) {
+        return;
+    }
+
     if (GreeterContacts::instance()->silentMode()) {
         return;
     }
@@ -53,6 +57,10 @@ void RingtoneWorker::stopIncomingCallSound()
 
 void RingtoneWorker::playIncomingMessageSound()
 {
+    if (!qgetenv("PA_DISABLED").isEmpty()) {
+        return;
+    }
+
     if (GreeterContacts::instance()->silentMode()) {
         return;
     }
