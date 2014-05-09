@@ -1,3 +1,18 @@
+telephony-service (0.1+14.10.20140507-0ubuntu1) utopic; urgency=low
+
+  [ Michael Terry ]
+  * Tie telephony-service-indicator lifecycle to indicator-messages.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 07 May 2014 19:24:07 +0000
+
+telephony-service (0.1+14.10.20140429-0ubuntu1) utopic; urgency=low
+
+  [ Tiago Salem Herrmann ]
+  * use connectedChanged() instead of connectionChanged(). remove
+    connectionChanged() as it is not used anywhere (LP: #1234989)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 29 Apr 2014 21:38:36 +0000
+
 telephony-service (0.1+14.04.20140415-0ubuntu4) trusty; urgency=medium
 
   * Test package.
