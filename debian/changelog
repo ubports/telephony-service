@@ -1,3 +1,21 @@
+telephony-service (0.1+14.10.20140512.1-0ubuntu1) utopic; urgency=low
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+  [ Tiago Salem Herrmann ]
+  * update po and pot files
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 12 May 2014 23:00:44 +0000
+
+telephony-service (0.1+14.10.20140512-0ubuntu1) utopic; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Expose the telepathy accounts' connectivity status via DBus. (LP:
+    #1309143)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 12 May 2014 19:25:30 +0000
+
 telephony-service (0.1+14.10.20140507-0ubuntu1) utopic; urgency=low
 
   [ Michael Terry ]
