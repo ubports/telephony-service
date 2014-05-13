@@ -177,7 +177,7 @@ void AsYouTypeFormatter::updateFormattedText()
         onlyNumbers += word;
     }
 
-    // if the number starts with "+" will will use unkown region otherwiser we will use the default region
+    // if the number starts with "+" we will use unknown region otherwise we will use the default region
     QString numberRegion = m_defaultRegionCode;
     if (m_rawText.startsWith("+")) {
         numberRegion = i18n::phonenumbers::RegionCode::GetUnknown();
