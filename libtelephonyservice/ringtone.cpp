@@ -52,7 +52,6 @@ void RingtoneWorker::playIncomingCallSound()
 
 void RingtoneWorker::stopIncomingCallSound()
 {
-    mCallAudioPlaylist.clear();
     mCallAudioPlayer.stop();
 }
 
