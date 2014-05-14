@@ -48,6 +48,8 @@ void RingtoneWorker::playIncomingCallSound()
 
 void RingtoneWorker::stopIncomingCallSound()
 {
+    // WORKAROUND: calling stop when the player is already stopped is triggering play again
+    mCallAudioPlaylist.clear();
     mCallAudioPlayer.stop();
 }
 
@@ -55,6 +57,11 @@ void RingtoneWorker::playIncomingMessageSound()
 {
     if (GreeterContacts::instance()->silentMode()) {
         return;
+    }
+
+    // WORKAROUND: there is a bug in qmediaplayer/(media-hub?) that never goes into Stopped mode.
+    if (mMessageAudioPlayer.duration() == mMessageAudioPlayer.position()) {
+        mMessageAudioPlayer.stop();
     }
 
     if (mMessageAudioPlayer.state() == QMediaPlayer::PlayingState) {
