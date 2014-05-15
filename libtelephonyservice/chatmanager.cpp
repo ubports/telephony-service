@@ -158,7 +158,7 @@ void ChatManager::onAckTimerTriggered()
         QString accountId = it.key();
         QMap<QString, QStringList>::const_iterator it2 = it.value().constBegin();
         while (it2 != it.value().constEnd()) {
-            phoneAppHandler->call("AcknowledgeMessages", it2.key(), it2.value(), accountId);
+            phoneAppHandler->call("AcknowledgeMessages", QStringList() << it2.key(), it2.value(), accountId);
             ++it2;
         }
         ++it;

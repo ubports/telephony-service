@@ -13,3 +13,6 @@ org.freedesktop.Telepathy.Channel.TargetHandleType u=1
 [org.freedesktop.Telepathy.Client.Observer.Capabilities]
 org.freedesktop.Telepathy.Channel.Type.Call1/audio=true
 org.freedesktop.Telepathy.Channel.Type.Call1/audio/speex=true
+
+[org.freedesktop.Telepathy.Client.Observer]
+Recover=true
