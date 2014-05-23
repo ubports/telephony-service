@@ -26,6 +26,10 @@
 #include <QtCore/QMap>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
+#include "dbustypes.h"
+
+//QDBusArgument &operator<<(QDBusArgument &argument, const AttachmentStruct &attachment);
+//const QDBusArgument &operator>>(const QDBusArgument &argument, AttachmentStruct &attachment);
 
 class ChatManager : public QObject
 {
@@ -34,6 +38,7 @@ public:
     static ChatManager *instance();
 
     Q_INVOKABLE void sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId = QString::null);
+    Q_INVOKABLE void sendMMS(const QStringList &phoneNumbers, const QString &message, const QVariant &attachments, const QString &accountId = QString:: null);
 
 Q_SIGNALS:
     void messageReceived(const QString &phoneNumber, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);

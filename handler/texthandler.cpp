@@ -23,9 +23,30 @@
 #include "phoneutils.h"
 #include "telepathyhelper.h"
 #include "config.h"
+#include "dbustypes.h"
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
+
+#define SMIL_TEXT_REGION "<region id=\"%1\" width=\"100%\" height=\"100%\" fit=\"scroll\" />"
+#define SMIL_IMAGE_REGION "<region id=\"%1\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
+#define SMIL_TEXT_PART "<par dur=\"3s\">\
+       <text src=\"%1\" region=\"%2\" />\
+     </par>"
+#define SMIL_IMAGE_PART "<par dur=\"5000ms\">\
+       <img src=\"%1\" region=\"%2\" />\
+     </par>"
+
+#define SMIL_FILE "<smil>\
+   <head>\
+     <layout>\
+         %1\
+     </layout>\
+   </head>\
+   <body>\
+       %2\
+   </body>\
+ </smil>"
 
 template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStringList &key2) 
 { 
@@ -35,6 +56,9 @@ template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStr
 TextHandler::TextHandler(QObject *parent)
 : QObject(parent)
 {
+    qDBusRegisterMetaType<AttachmentStruct>();
+    qDBusRegisterMetaType<AttachmentList>();
+
     // track when the account becomes available
     connect(TelepathyHelper::instance(),
             SIGNAL(connectedChanged()),
@@ -59,7 +83,6 @@ void TextHandler::onConnectedChanged()
             startChat(phoneNumbers, accountId);
         }
     }
-
 }
 
 TextHandler *TextHandler::instance()
@@ -95,6 +118,72 @@ void TextHandler::startChat(const Tp::AccountPtr &account, const Tp::Contacts &c
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;
     }
+}
+
+Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
+{
+    Tp::MessagePartList message;
+    Tp::MessagePart header;
+    QString attachmentFilename;
+    QString smil, regions, parts;
+
+    header["message-type"] = QDBusVariant(0);
+    message << header;
+    Q_FOREACH(const AttachmentStruct &attachment, attachments) {
+        QString newFilePath = QString(attachment.filePath).replace("file://", "");
+        QFile attachmentFile(newFilePath);
+        if (!attachmentFile.open(QIODevice::ReadOnly)) {
+            qWarning() << "fail to load attachment" << attachmentFile.errorString() << attachment.filePath;
+            continue;
+        }
+        if (attachment.contentType.startsWith("image/")) {
+            regions += QString(SMIL_IMAGE_REGION).arg(attachment.id);
+            parts += QString(SMIL_IMAGE_PART).arg(QFileInfo(attachmentFile.fileName()).fileName()).arg(attachment.id);
+        } else if (attachment.contentType.startsWith("text/")) {
+            regions += QString(SMIL_IMAGE_REGION).arg(attachment.id);
+            parts += QString(SMIL_IMAGE_PART).arg(QFileInfo(attachmentFile.fileName()).fileName()).arg(attachment.id);
+        } else {
+            continue;
+        }
+
+        QByteArray fileData = attachmentFile.readAll();
+        Tp::MessagePart part;
+        part["content-type"] =  QDBusVariant(attachment.contentType);
+        part["identifier"] = QDBusVariant(attachment.id);
+        part["content"] = QDBusVariant(fileData);
+        part["size"] = QDBusVariant(fileData.size());
+        message << part;
+    }
+
+    Tp::MessagePart smilPart;
+    smil = QString(SMIL_FILE).arg(regions).arg(parts);
+    smilPart["content-type"] =  QDBusVariant(QString("application/smil"));
+    smilPart["identifier"] = QDBusVariant(QString("smil"));
+    smilPart["content"] = QDBusVariant(smil);
+    smilPart["size"] = QDBusVariant(smil.size());
+    message << smilPart;
+    return message;
+}
+
+void TextHandler::sendMMS(const QStringList &phoneNumbers, const AttachmentList &attachments, const QString &accountId) {
+   Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!TelepathyHelper::instance()->isAccountConnected(account)) {
+        mPendingMMSs[accountId][phoneNumbers].append(attachments);
+        return;
+    }
+
+    Tp::TextChannelPtr channel = existingChat(phoneNumbers, accountId);
+    if (channel.isNull()) {
+        mPendingMMSs[accountId][phoneNumbers].append(attachments);
+        startChat(phoneNumbers, accountId);
+        return;
+    }
+
+    Tp::MessagePartList message = buildMMS(attachments);
+
+    connect(channel->send(message),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
 void TextHandler::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
@@ -141,7 +230,7 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
     mChannels.append(channel);
 
     // check for pending messages for this channel
-    if (!mPendingMessages.contains(accountId)) {
+    if (!mPendingMessages.contains(accountId) && !mPendingMMSs.contains(accountId)) {
         return;
     }
 
@@ -157,6 +246,20 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
             it = pendingMessages.erase(it);
         } else {
             ++it;
+        }
+    }
+    QMap<QStringList, QList<AttachmentList>> &pendingMMSs = mPendingMMSs[accountId];
+    QMap<QStringList, QList<AttachmentList>>::iterator it2 = pendingMMSs.begin();
+    while (it2 != pendingMMSs.end()) {
+        if (existingChat(it2.key(), accountId) == channel) {
+            Q_FOREACH(const AttachmentList &attachments, it2.value()) {
+                connect(channel->send(buildMMS(attachments)),
+                        SIGNAL(finished(Tp::PendingOperation*)),
+                        SLOT(onMessageSent(Tp::PendingOperation*)));
+            }
+            it2 = pendingMMSs.erase(it2);
+        } else {
+            ++it2;
         }
     }
 }
