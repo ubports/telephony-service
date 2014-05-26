@@ -1,3 +1,18 @@
+telephony-service (0.1+14.10.20140526-0ubuntu1) utopic; urgency=low
+
+  [ Michael Terry ]
+  * Support PA_DISABLED in telephony-service to support running without
+    sound.
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+  [ Tiago Salem Herrmann ]
+  * start indicator only after ofono-setup has finished its execution.
+    stop only when the desktop session ends. (LP: #1317692)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 26 May 2014 15:43:45 +0000
+
 telephony-service (0.1+14.10.20140515-0ubuntu1) utopic; urgency=low
 
   [ Tiago Salem Herrmann ]
