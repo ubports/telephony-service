@@ -47,7 +47,7 @@ public Q_SLOTS:
     void stopIncomingMessageSound();
 
 private:
-    QMediaPlayer mCallAudioPlayer;
+    QMediaPlayer *mCallAudioPlayer;
     QMediaPlaylist mCallAudioPlaylist;
 
     QMediaPlayer mMessageAudioPlayer;

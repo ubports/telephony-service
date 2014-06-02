@@ -23,10 +23,11 @@
 #include "ringtone.h"
 
 RingtoneWorker::RingtoneWorker(QObject *parent) :
-    QObject(parent), mCallAudioPlayer(this), mCallAudioPlaylist(this),
+    QObject(parent), mCallAudioPlayer(NULL), mCallAudioPlaylist(this),
     mMessageAudioPlayer(this)
 {
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
+    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
     mCallAudioPlaylist.setCurrentIndex(0);
 }
 
@@ -40,21 +41,21 @@ void RingtoneWorker::playIncomingCallSound()
         return;
     }
 
-    if (mCallAudioPlayer.state() == QMediaPlayer::PlayingState) {
+    if (mCallAudioPlayer) {
         return;
     }
 
-    mCallAudioPlaylist.clear();
-    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
-    mCallAudioPlayer.setPlaylist(&mCallAudioPlaylist);
-    mCallAudioPlayer.play();
+    mCallAudioPlayer = new QMediaPlayer(this);
+    mCallAudioPlayer->setPlaylist(&mCallAudioPlaylist);
+    mCallAudioPlayer->play();
 }
 
 void RingtoneWorker::stopIncomingCallSound()
 {
-    // WORKAROUND: calling stop when the player is already stopped is triggering play again
-    mCallAudioPlaylist.clear();
-    mCallAudioPlayer.stop();
+    if (mCallAudioPlayer) {
+        mCallAudioPlayer->deleteLater();
+        mCallAudioPlayer = NULL;
+    }
 }
 
 void RingtoneWorker::playIncomingMessageSound()
