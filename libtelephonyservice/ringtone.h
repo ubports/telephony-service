@@ -50,7 +50,7 @@ private:
     QMediaPlayer *mCallAudioPlayer;
     QMediaPlaylist mCallAudioPlaylist;
 
-    QMediaPlayer mMessageAudioPlayer;
+    QMediaPlayer *mMessageAudioPlayer;
 };
 
 class Ringtone : public QObject

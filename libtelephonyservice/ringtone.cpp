@@ -24,7 +24,7 @@
 
 RingtoneWorker::RingtoneWorker(QObject *parent) :
     QObject(parent), mCallAudioPlayer(NULL), mCallAudioPlaylist(this),
-    mMessageAudioPlayer(this)
+    mMessageAudioPlayer(NULL)
 {
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
     mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
@@ -70,22 +70,30 @@ void RingtoneWorker::playIncomingMessageSound()
         return;
     }
 
-    // WORKAROUND: there is a bug in qmediaplayer/(media-hub?) that never goes into Stopped mode.
-    if (mMessageAudioPlayer.duration() == mMessageAudioPlayer.position()) {
-        mMessageAudioPlayer.stop();
+    if (!mMessageAudioPlayer) {
+        mMessageAudioPlayer = new QMediaPlayer(this);
     }
 
-    if (mMessageAudioPlayer.state() == QMediaPlayer::PlayingState) {
+    // WORKAROUND: there is a bug in qmediaplayer/(media-hub?) that never goes into Stopped mode.
+    if (mMessageAudioPlayer->duration() == mMessageAudioPlayer->position()) {
+        mMessageAudioPlayer->stop();
+    }
+
+    if (mMessageAudioPlayer->state() == QMediaPlayer::PlayingState) {
         return;
     }
 
-    mMessageAudioPlayer.setMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingMessageSound()));
-    mMessageAudioPlayer.play();
+    mMessageAudioPlayer->setMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingMessageSound()));
+    mMessageAudioPlayer->play();
 }
 
 void RingtoneWorker::stopIncomingMessageSound()
 {
-    mMessageAudioPlayer.stop();
+    if (mMessageAudioPlayer) {
+        mMessageAudioPlayer->pause();
+        mMessageAudioPlayer->deleteLater();
+        mMessageAudioPlayer = NULL;
+    }
 }
 
 Ringtone::Ringtone(QObject *parent) :
