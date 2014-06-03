@@ -53,6 +53,8 @@ void RingtoneWorker::playIncomingCallSound()
 void RingtoneWorker::stopIncomingCallSound()
 {
     if (mCallAudioPlayer) {
+        // WORKAROUND: if we call stop and the stream is already over, qmediaplayer plays again.
+        mCallAudioPlayer->pause();
         mCallAudioPlayer->deleteLater();
         mCallAudioPlayer = NULL;
     }
