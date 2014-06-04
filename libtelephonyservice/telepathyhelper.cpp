@@ -65,11 +65,6 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
             SLOT(onAccountManagerReady(Tp::PendingOperation*)));
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
-    mHandlerInterface = new QDBusInterface("com.canonical.TelephonyServiceHandler",
-                                           "/com/canonical/TelephonyServiceHandler",
-                                           "com.canonical.TelephonyServiceHandler",
-                                           QDBusConnection::sessionBus(),
-                                           this);
 }
 
 TelepathyHelper::~TelepathyHelper()
@@ -113,6 +108,15 @@ ChannelObserver *TelepathyHelper::channelObserver() const
 
 QDBusInterface *TelepathyHelper::handlerInterface() const
 {
+    // delay the loading of the handler interface, as it seems this is triggering
+    // the dbus activation of the handler process
+    if (!mHandlerInterface) {
+        mHandlerInterface = new QDBusInterface("com.canonical.TelephonyServiceHandler",
+                                               "/com/canonical/TelephonyServiceHandler",
+                                               "com.canonical.TelephonyServiceHandler",
+                                               QDBusConnection::sessionBus(),
+                                               const_cast<TelepathyHelper*>(this));
+    }
     return mHandlerInterface;
 }
 
@@ -122,7 +126,7 @@ bool TelepathyHelper::connected() const
         mAccounts.isEmpty() &&
         !GreeterContacts::instance()->isGreeterMode()) {
         // get the status from the handler
-        QDBusReply<bool> reply = mHandlerInterface->call("IsConnected");
+        QDBusReply<bool> reply = handlerInterface()->call("IsConnected");
         if (reply.isValid()) {
             return reply.value();
         }
