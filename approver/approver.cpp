@@ -336,6 +336,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 
     GError *error = NULL;
     if (!notify_notification_show(notification, &error)) {
+        closeSnapDecision();
         qWarning() << "Failed to show snap decision:" << error->message;
         g_error_free (error);
     }
