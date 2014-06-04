@@ -379,6 +379,8 @@ void Approver::onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
 
 void Approver::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
 {
+    closeSnapDecision();
+
     Tp::PendingOperation *claimop = dispatchOp->claim();
     // assume there is just one channel in the dispatchOp for calls
     mChannels[claimop] = dispatchOp->channels().first();
