@@ -210,6 +210,7 @@ void Approver::updateNotification(const QContact &contact)
 
     GError *error = NULL;
     if (!notify_notification_show(mPendingSnapDecision, &error)) {
+        closeSnapDecision();
         qWarning() << "Failed to show snap decision:" << error->message;
         g_error_free (error);
     }
@@ -310,6 +311,19 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 
     mPendingSnapDecision = notification;
 
+    GError *error = NULL;
+    if (!notify_notification_show(notification, &error)) {
+        closeSnapDecision();
+        qWarning() << "Failed to show snap decision:" << error->message;
+        g_error_free (error);
+    }
+
+    // play a ringtone
+    Ringtone::instance()->playIncomingCallSound();
+
+    mChannels.remove(pr);
+
+    // and now set up the contact matching for either greeter mode or regular mode
     if (GreeterContacts::isGreeterMode()) {
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
     } else {
@@ -334,17 +348,6 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         request->start();
     }
 
-    GError *error = NULL;
-    if (!notify_notification_show(notification, &error)) {
-        closeSnapDecision();
-        qWarning() << "Failed to show snap decision:" << error->message;
-        g_error_free (error);
-    }
-
-    // play a ringtone
-    Ringtone::instance()->playIncomingCallSound();
-
-    mChannels.remove(pr);
 }
 
 void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)

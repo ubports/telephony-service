@@ -155,6 +155,7 @@ QVariant GreeterContacts::getUserValue(const QString &interface, const QString &
     } else {
         qWarning() << "Failed to get user property " << propName << " from AccountsService:" << reply.error().message();
     }
+    return QVariant();
 }
 
 void GreeterContacts::checkUpdatedValue(const QVariantMap &changed,
