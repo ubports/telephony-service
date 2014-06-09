@@ -1,3 +1,16 @@
+telephony-service (0.1+14.10.20140609-0ubuntu1) utopic; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Try to postpone the handler initialization as much as we can. It is
+    still launched when the approver is started, but that is probably
+    because of the telepathy introspection. (LP: #1325702)
+
+  [ Tiago Salem Herrmann ]
+  * Clear pending snap decision when rejecting an incoming call. (LP:
+    #1325702)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 09 Jun 2014 20:52:51 +0000
+
 telephony-service (0.1+14.10.20140604-0ubuntu1) utopic; urgency=low
 
   [ Tiago Salem Herrmann ]
