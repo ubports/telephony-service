@@ -36,7 +36,8 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mChannelObserver(0),
       mFirstTime(true),
-      mConnected(false)
+      mConnected(false),
+      mHandlerInterface(0)
 {
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
