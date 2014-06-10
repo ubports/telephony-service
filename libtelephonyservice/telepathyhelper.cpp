@@ -24,6 +24,7 @@
 #include "chatmanager.h"
 #include "callmanager.h"
 #include "config.h"
+#include "greetercontacts.h"
 
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ChannelClassSpec>
@@ -35,7 +36,8 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mChannelObserver(0),
       mFirstTime(true),
-      mConnected(false)
+      mConnected(false),
+      mHandlerInterface(0)
 {
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
@@ -64,11 +66,6 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
             SLOT(onAccountManagerReady(Tp::PendingOperation*)));
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
-    mHandlerInterface = new QDBusInterface("com.canonical.TelephonyServiceHandler",
-                                           "/com/canonical/TelephonyServiceHandler",
-                                           "com.canonical.TelephonyServiceHandler",
-                                           QDBusConnection::sessionBus(),
-                                           this);
 }
 
 TelepathyHelper::~TelepathyHelper()
@@ -89,7 +86,8 @@ QStringList TelepathyHelper::accountIds()
         Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
             ids << account->uniqueIdentifier();
         }
-    } else {
+    } else if (!GreeterContacts::instance()->isGreeterMode()) {
+        // if we are in greeter mode, we should not initialize the handler to get the account IDs
         QDBusReply<QStringList> reply = handlerInterface()->call("AccountIds");
         if (reply.isValid()) {
             ids = reply.value();
@@ -111,14 +109,25 @@ ChannelObserver *TelepathyHelper::channelObserver() const
 
 QDBusInterface *TelepathyHelper::handlerInterface() const
 {
+    // delay the loading of the handler interface, as it seems this is triggering
+    // the dbus activation of the handler process
+    if (!mHandlerInterface) {
+        mHandlerInterface = new QDBusInterface("com.canonical.TelephonyServiceHandler",
+                                               "/com/canonical/TelephonyServiceHandler",
+                                               "com.canonical.TelephonyServiceHandler",
+                                               QDBusConnection::sessionBus(),
+                                               const_cast<TelepathyHelper*>(this));
+    }
     return mHandlerInterface;
 }
 
 bool TelepathyHelper::connected() const
 {
-    if (QCoreApplication::applicationName() != "telephony-service-handler" && mAccounts.isEmpty()) {
+    if (QCoreApplication::applicationName() != "telephony-service-handler" &&
+        mAccounts.isEmpty() &&
+        !GreeterContacts::instance()->isGreeterMode()) {
         // get the status from the handler
-        QDBusReply<bool> reply = mHandlerInterface->call("IsConnected");
+        QDBusReply<bool> reply = handlerInterface()->call("IsConnected");
         if (reply.isValid()) {
             return reply.value();
         }
