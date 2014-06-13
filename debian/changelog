@@ -1,3 +1,13 @@
+telephony-service (0.1+14.10.20140613.1-0ubuntu1) utopic; urgency=low
+
+  [ Tiago Salem Herrmann ]
+  * Delete notifications from mNotifications when actions are performed.
+
+  [ Renato Araujo Oliveira Filho ]
+  * [PhoneNumber] Initialize m_formatter with 0. (LP: #1327970)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 13 Jun 2014 18:31:33 +0000
+
 telephony-service (0.1+14.10.20140612.1-0ubuntu1) utopic; urgency=low
 
   [ Ricardo Mendoza ]
