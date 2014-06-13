@@ -43,6 +43,42 @@ CallManager::CallManager(QObject *parent)
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
     connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
+
+    refreshProperties();
+
+    // connect the dbus signal
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.connect("com.canonical.TelephonyServiceHandler",
+                       "/com/canonical/TelephonyServiceHandler",
+                       "com.canonical.TelephonyServiceHandler",
+                       "CallIndicatorVisibleChanged",
+                       this, SLOT(onCallIndicatorVisibleChanged(bool)));
+}
+
+void CallManager::refreshProperties()
+{
+    QDBusInterface handlerPropertiesInterface("com.canonical.TelephonyServiceHandler",
+                                              "/com/canonical/TelephonyServiceHandler",
+                                              "org.freedesktop.DBus.Properties");
+    QDBusReply<QVariantMap> reply = handlerPropertiesInterface.call("GetAll");
+    if (!reply.isValid()) {
+        qWarning() << "Failed to refresh the properties from the handler";
+        return;
+    }
+
+    QVariantMap map = reply.value();
+    mCallIndicatorVisible = map["CallIndicatorVisible"].toBool();
+    Q_EMIT callIndicatorVisibleChanged(mCallIndicatorVisible);
+}
+
+void CallManager::setDBusProperty(const QString &name, const QVariant &value)
+{
+    QDBusInterface handlerPropertiesInterface("com.canonical.TelephonyServiceHandler",
+                                              "/com/canonical/TelephonyServiceHandler",
+                                              "org.freedesktop.DBus.Properties");
+    handlerPropertiesInterface.call("Set",
+                                    "com.canonical.TelephonyServiceHandler",
+                                    name, value);
 }
 
 QList<CallEntry *> CallManager::takeCalls(const QList<Tp::ChannelPtr> callChannels)
@@ -82,6 +118,16 @@ void CallManager::addCalls(const QList<CallEntry *> entries)
     Q_EMIT hasBackgroundCallChanged();
     Q_EMIT foregroundCallChanged();
     Q_EMIT backgroundCallChanged();
+}
+
+bool CallManager::callIndicatorVisible() const
+{
+    return mCallIndicatorVisible;
+}
+
+void CallManager::setCallIndicatorVisible(bool visible)
+{
+    setDBusProperty("CallIndicatorVisible", visible);
 }
 
 void CallManager::setupCallEntry(CallEntry *entry)
@@ -147,6 +193,12 @@ void CallManager::onConnectedChanged()
         mVoicemailNumber = replyNumber.value();
         Q_EMIT voicemailNumberChanged();
     }
+}
+
+void CallManager::onCallIndicatorVisibleChanged(bool visible)
+{
+    mCallIndicatorVisible = visible;
+    Q_EMIT callIndicatorVisibleChanged(visible);
 }
 
 CallEntry *CallManager::foregroundCall() const
