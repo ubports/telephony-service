@@ -60,7 +60,8 @@ void CallManager::refreshProperties()
     QDBusInterface handlerPropertiesInterface("com.canonical.TelephonyServiceHandler",
                                               "/com/canonical/TelephonyServiceHandler",
                                               "org.freedesktop.DBus.Properties");
-    QDBusReply<QVariantMap> reply = handlerPropertiesInterface.call("GetAll");
+    QDBusReply<QVariantMap> reply = handlerPropertiesInterface.call("GetAll",
+                                                                    "com.canonical.TelephonyServiceHandler");
     if (!reply.isValid()) {
         qWarning() << "Failed to refresh the properties from the handler";
         return;
@@ -78,7 +79,7 @@ void CallManager::setDBusProperty(const QString &name, const QVariant &value)
                                               "org.freedesktop.DBus.Properties");
     handlerPropertiesInterface.call("Set",
                                     "com.canonical.TelephonyServiceHandler",
-                                    name, value);
+                                    name, QVariant::fromValue(QDBusVariant(value)));
 }
 
 QList<CallEntry *> CallManager::takeCalls(const QList<Tp::ChannelPtr> callChannels)
