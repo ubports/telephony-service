@@ -30,6 +30,7 @@ public:
     static HandlerController *instance();
 
     QVariantMap getCallProperties(const QString &objectPath);
+    bool callIndicatorVisible();
 
 public Q_SLOTS:
     // call methods
@@ -49,8 +50,12 @@ public Q_SLOTS:
     void sendMessage(const QString &number, const QString &message, const QString &accountId);
     void acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId);
 
+    // active call indicator
+    void setCallIndicatorVisible(bool visible);
+
 Q_SIGNALS:
     void callPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
+    void callIndicatorVisibleChanged(bool visible);
 
 private:
     explicit HandlerController(QObject *parent = 0);

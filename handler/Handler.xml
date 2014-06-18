@@ -124,5 +124,13 @@
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
         </signal>
+        <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+        <property name="CallIndicatorVisible" type="b" access="readwrite"/>
+        <signal name="CallIndicatorVisibleChanged">
+            <dox:d><![CDATA[
+                The call indicator visibility has changed
+            ]]></dox:d>
+            <arg name="visible" type="b"/>
+        </signal>
     </interface>
 </node>

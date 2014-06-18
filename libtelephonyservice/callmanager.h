@@ -53,6 +53,10 @@ class CallManager : public QObject
     Q_PROPERTY(QQmlListProperty<CallEntry> calls
                    READ calls
                    NOTIFY callsChanged)
+    Q_PROPERTY(bool callIndicatorVisible
+               READ callIndicatorVisible
+               WRITE setCallIndicatorVisible
+               NOTIFY callIndicatorVisibleChanged)
 
 public:
     static CallManager *instance();
@@ -72,6 +76,10 @@ public:
     QList<CallEntry*> takeCalls(const QList<Tp::ChannelPtr> callChannels);
     void addCalls(const QList<CallEntry*> entries);
 
+    // call indicator related
+    bool callIndicatorVisible() const;
+    void setCallIndicatorVisible(bool visible);
+
     // QQmlListProperty helpers
     static int callsCount(QQmlListProperty<CallEntry> *p);
     static CallEntry* callAt(QQmlListProperty<CallEntry> *p, int index);
@@ -85,22 +93,26 @@ Q_SIGNALS:
     void hasBackgroundCallChanged();
     void speakerChanged();
     void voicemailNumberChanged();
+    void callIndicatorVisibleChanged(bool visible);
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
     void onChannelObserverUnregistered();
     void onCallEnded();
     void onConnectedChanged();
+    void onCallIndicatorVisibleChanged(bool visible);
 
 private:
     explicit CallManager(QObject *parent = 0);
     void refreshProperties();
+    void setDBusProperty(const QString &name, const QVariant &value);
     void setupCallEntry(CallEntry *entry);
 
     mutable QList<CallEntry*> mCallEntries;
     QString mVoicemailNumber;
     bool mNeedsUpdate;
     CallEntry *mConferenceCall;
+    bool mCallIndicatorVisible;
 };
 
 #endif // CALLMANAGER_H
