@@ -95,7 +95,7 @@ private:
     ChannelObserver *mChannelObserver;
     bool mFirstTime;
     bool mConnected;
-    QDBusInterface *mHandlerInterface;
+    mutable QDBusInterface *mHandlerInterface;
 };
 
 #endif // TELEPATHYHELPER_H

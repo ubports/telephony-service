@@ -23,6 +23,7 @@
 #include "callmanager.h"
 #include "callentry.h"
 #include "telepathyhelper.h"
+#include "greetercontacts.h"
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
@@ -272,13 +273,16 @@ bool CallManager::hasCalls() const
         return true;
     }
 
-    // if that's not the case, query the teleophony-service-handler for the availability of calls
+    // if that's not the case, and if not in greeter mode, query the telephony-service-handler
+    // for the availability of calls.
     // this is done only to get the live call view on clients as soon as possible, even before the
     // telepathy observer is configured
-    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    QDBusReply<bool> reply = phoneAppHandler->call("HasCalls");
-    if (reply.isValid()) {
-        return reply.value();
+    if (!GreeterContacts::instance()->isGreeterMode()) {
+        QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+        QDBusReply<bool> reply = phoneAppHandler->call("HasCalls");
+        if (reply.isValid()) {
+            return reply.value();
+        }
     }
 
     return false;

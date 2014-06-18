@@ -57,7 +57,10 @@ public:
     QString eventId;
     QString alias;
     QString message;
+    QMap<NotifyNotification*, NotificationData*> *notificationList;
 };
+
+void notification_closed(NotifyNotification *notification, QMap<NotifyNotification*, NotificationData*> *map);
 
 void flash_notification_action(NotifyNotification* notification, char *action, gpointer data)
 {
@@ -101,6 +104,7 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
     if (notificationData != NULL) {
         // launch the messaging-app to show the message
         ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(notificationData->phoneNumber))));
+        notification_closed(notification, notificationData->notificationList);
     }
     g_object_unref(notification);
 }
@@ -213,6 +217,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     data->phoneNumber = contact->id();
     data->alias = contact->alias();
     data->message = message.text();
+    data->notificationList = &mNotifications;
     mNotifications.insert(notification, data);
 
     // add the callback action

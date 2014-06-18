@@ -58,6 +58,7 @@
 
 AsYouTypeFormatter::AsYouTypeFormatter(QObject *parent)
     : QObject(parent),
+      m_formatter(0),
       m_defaultRegionCode(i18n::phonenumbers::RegionCode::GetUnknown()),
       m_enabled(true)
 {
