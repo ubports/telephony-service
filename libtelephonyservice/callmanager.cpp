@@ -43,6 +43,9 @@ CallManager::CallManager(QObject *parent)
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
     connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
+    connect(this, &CallManager::hasCallsChanged, [this] {
+        Q_EMIT this->callIndicatorVisibleChanged(this->callIndicatorVisible());
+    });
 
     refreshProperties();
 
@@ -123,7 +126,7 @@ void CallManager::addCalls(const QList<CallEntry *> entries)
 
 bool CallManager::callIndicatorVisible() const
 {
-    return mCallIndicatorVisible;
+    return hasCalls() && mCallIndicatorVisible;
 }
 
 void CallManager::setCallIndicatorVisible(bool visible)
