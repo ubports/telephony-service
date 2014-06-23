@@ -35,6 +35,7 @@ private Q_SLOTS:
     void testCallProperties();
     void testConferenceCall();
     void testSendMessage();
+    void testActiveCallIndicator();
 
 private:
     void waitForCallActive(const QString &callerId);
@@ -256,6 +257,26 @@ void HandlerTest::testSendMessage()
     QCOMPARE(sentMessage, message);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
+}
+
+void HandlerTest::testActiveCallIndicator()
+{
+    // start by making sure the property is false by default
+    QVERIFY(!HandlerController::instance()->callIndicatorVisible());
+    QSignalSpy spy(HandlerController::instance(), SIGNAL(callIndicatorVisibleChanged(bool)));
+
+    // set the property to true
+    HandlerController::instance()->setCallIndicatorVisible(true);
+    QTRY_COMPARE(spy.count(), 1);
+    QVERIFY(spy.first().first().toBool());
+    QVERIFY(HandlerController::instance()->callIndicatorVisible());
+
+    // and back to false
+    spy.clear();
+    HandlerController::instance()->setCallIndicatorVisible(false);
+    QTRY_COMPARE(spy.count(), 1);
+    QVERIFY(!spy.first().first().toBool());
+    QVERIFY(!HandlerController::instance()->callIndicatorVisible());
 }
 
 void HandlerTest::waitForCallActive(const QString &callerId)

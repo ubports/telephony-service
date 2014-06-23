@@ -35,6 +35,10 @@
 class HandlerDBus : public QObject, protected QDBusContext
 {
     Q_OBJECT
+    Q_PROPERTY(bool CallIndicatorVisible
+               READ callIndicatorVisible
+               WRITE setCallIndicatorVisible
+               NOTIFY CallIndicatorVisibleChanged)
 
 public:
     HandlerDBus(QObject* parent=0);
@@ -44,6 +48,8 @@ public:
     bool HasCalls();
     QStringList AccountIds();
     bool IsConnected();
+    bool callIndicatorVisible() const;
+    void setCallIndicatorVisible(bool visible);
 
 public Q_SLOTS:
     bool connectToBus();
@@ -69,6 +75,10 @@ public Q_SLOTS:
 Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);
     void CallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
+    void CallIndicatorVisibleChanged(bool visible);
+
+private:
+    bool mCallIndicatorVisible;
 };
 
 #endif // HANDLERDBUS_H
