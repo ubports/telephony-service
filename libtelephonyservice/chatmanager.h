@@ -28,9 +28,6 @@
 #include <TelepathyQt/ReceivedMessage>
 #include "dbustypes.h"
 
-//QDBusArgument &operator<<(QDBusArgument &argument, const AttachmentStruct &attachment);
-//const QDBusArgument &operator>>(const QDBusArgument &argument, AttachmentStruct &attachment);
-
 class ChatManager : public QObject
 {
     Q_OBJECT
