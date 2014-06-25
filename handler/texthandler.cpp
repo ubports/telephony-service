@@ -140,8 +140,8 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
             regions += QString(SMIL_IMAGE_REGION).arg(attachment.id);
             parts += QString(SMIL_IMAGE_PART).arg(QFileInfo(attachmentFile.fileName()).fileName()).arg(attachment.id);
         } else if (attachment.contentType.startsWith("text/")) {
-            regions += QString(SMIL_IMAGE_REGION).arg(attachment.id);
-            parts += QString(SMIL_IMAGE_PART).arg(QFileInfo(attachmentFile.fileName()).fileName()).arg(attachment.id);
+            regions += QString(SMIL_TEXT_REGION).arg(attachment.id);
+            parts += QString(SMIL_TEXT_PART).arg(QFileInfo(attachmentFile.fileName()).fileName()).arg(attachment.id);
         } else {
             continue;
         }
