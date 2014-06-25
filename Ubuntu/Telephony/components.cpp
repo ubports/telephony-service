@@ -28,6 +28,7 @@
 #include "channelobserver.h"
 #include "chatmanager.h"
 #include "contactwatcher.h"
+#include "greetercontacts.h"
 
 #include <QQmlEngine>
 #include <qqml.h>
@@ -55,6 +56,7 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("chatManager", ChatManager::instance());
     mRootContext->setContextProperty("callManager", CallManager::instance());
     mRootContext->setContextProperty("ussdManager", USSDManager::instance());
+    mRootContext->setContextProperty("greeter", GreeterContacts::instance());
 
 }
 

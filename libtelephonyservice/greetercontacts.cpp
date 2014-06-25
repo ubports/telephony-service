@@ -70,7 +70,7 @@ GreeterContacts::GreeterContacts(QObject *parent)
                            "org.freedesktop.DBus.Properties",
                            "PropertiesChanged",
                            this,
-                           SLOT(greeterPropertiesChanged(QString, QVariantMap, QStringList)));
+                           SLOT(greeterListPropertiesChanged(QString, QVariantMap, QStringList)));
 
         QDBusInterface iface("org.freedesktop.Accounts",
                              "/org/freedesktop/Accounts",
@@ -86,6 +86,20 @@ GreeterContacts::GreeterContacts(QObject *parent)
         QString uid = QString::number(getuid());
         mActiveUser = "/org/freedesktop/Accounts/User" + uid;
     }
+
+    // get the current value of greeter's isActive property
+    connection = QDBusConnection::sessionBus();
+    QDBusInterface greeterPropsIface("com.canonical.UnityGreeter",
+                                     "/",
+                                     "org.freedesktop.DBus.Properties");
+    QDBusReply<QVariant> reply = greeterPropsIface.call("Get", "com.canonical.UnityGreeter", "IsActive");
+    mGreeterActive = reply.isValid() && reply.value().toBool();
+    connection.connect("com.canonical.UnityGreeter",
+                       "/",
+                       "org.freedesktop.DBus.Properties",
+                       "PropertiesChanged",
+                       this,
+                       SLOT(greeterPropertiesChanged(QString, QVariantMap, QStringList)));
 }
 
 GreeterContacts::~GreeterContacts()
@@ -93,6 +107,11 @@ GreeterContacts::~GreeterContacts()
     if (mInstance == this) {
         mInstance = nullptr;
     }
+}
+
+bool GreeterContacts::greeterActive() const
+{
+    return mGreeterActive;
 }
 
 bool GreeterContacts::isGreeterMode()
@@ -130,7 +149,7 @@ QString GreeterContacts::incomingMessageSound()
     return mIncomingMessageSound.toString();
 }
 
-void GreeterContacts::greeterPropertiesChanged(const QString &interface,
+void GreeterContacts::greeterListPropertiesChanged(const QString &interface,
                                                const QVariantMap &changed,
                                                const QStringList &invalidated)
 {
@@ -139,6 +158,16 @@ void GreeterContacts::greeterPropertiesChanged(const QString &interface,
             updateActiveUser(changed.value("ActiveEntry").toString());
         } else if (invalidated.contains("ActiveEntry")) {
             queryEntry();
+        }
+    }
+}
+
+void GreeterContacts::greeterPropertiesChanged(const QString &interface, const QVariantMap &changed, const QStringList &invalidated)
+{
+    if (interface == "com.canonical.UnityGreeter") {
+        if (changed.contains("IsActive")) {
+            mGreeterActive = changed.value("IsActive").toBool();
+            Q_EMIT greeterActiveChanged();
         }
     }
 }

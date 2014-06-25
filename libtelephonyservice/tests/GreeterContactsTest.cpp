@@ -55,6 +55,7 @@ private Q_SLOTS:
     void testSignalOnContacts();
     void testSignalOnContactsInvalidated();
     void testEmitContact();
+    void testGreeterIsActive();
 
 private:
     void waitForUpdatedSignal(bool convertedPath = false);
@@ -65,6 +66,7 @@ private:
     void setActiveEntry(const QString &entry);
     void setCurrentContact(const QVariantMap &map);
     void setUseInvalidated(const QString &path, const QString &interface, bool useInvalidated);
+    void setGreeterActive(bool active);
 
     GreeterContacts *mGreeterContacts;
     QSignalSpy *mSpy;
@@ -188,6 +190,18 @@ void GreeterContactsTest::testEmitContact()
     waitForUpdatedSignal(true);
 }
 
+void GreeterContactsTest::testGreeterIsActive()
+{
+    // check that by default it is false
+    QCOMPARE(mGreeterContacts->greeterActive(), false);
+
+    QSignalSpy spy(mGreeterContacts, SIGNAL(greeterActiveChanged()));
+    // now set it to true
+    setGreeterActive(true);
+    QTRY_COMPARE(spy.count(), 1);
+    QCOMPARE(mGreeterContacts->greeterActive(), true);
+}
+
 QVariantMap GreeterContactsTest::makeTestMap()
 {
     QVariantMap map;
@@ -284,6 +298,16 @@ void GreeterContactsTest::setUseInvalidated(const QString &path, const QString &
                          interface,
                          QDBusConnection::sessionBus());
     QDBusReply<void> reply = iface.call("SetUseInvalidated", useInvalidated);
+    QVERIFY(reply.isValid());
+}
+
+void GreeterContactsTest::setGreeterActive(bool active)
+{
+    QDBusInterface iface("com.canonical.UnityGreeter",
+                         "/",
+                         "org.freedesktop.DBus.Properties",
+                         QDBusConnection::sessionBus());
+    QDBusReply<void> reply = iface.call("Set", "com.canonical.UnityGreeter", "IsActive", QVariant::fromValue(QDBusVariant(QVariant(active))));
     QVERIFY(reply.isValid());
 }
 
