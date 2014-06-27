@@ -43,6 +43,8 @@ CallManager::CallManager(QObject *parent)
 {
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
+    connect(TelepathyHelper::instance(), SIGNAL(accountConnectionChanged()), SLOT(onEmergencyNumbersChanged()));
+    connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onEmergencyNumbersChanged()));
     connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
     connect(this, &CallManager::hasCallsChanged, [this] {
         Q_EMIT this->callIndicatorVisibleChanged(this->callIndicatorVisible());
@@ -203,7 +205,6 @@ void CallManager::onConnectedChanged()
     QDBusConnection connection = QDBusConnection::sessionBus();
     connection.connect(busName, objectPath, CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE, "EmergencyNumbersChanged",
                        this, SLOT(onEmergencyNumbersChanged()));
-    onEmergencyNumbersChanged();
 }
 
 void CallManager::onCallIndicatorVisibleChanged(bool visible)
@@ -215,7 +216,18 @@ void CallManager::onCallIndicatorVisibleChanged(bool visible)
 void CallManager::onEmergencyNumbersChanged()
 {
     // FIXME: we need to handle emergency numbers for multiple accounts
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
+    Tp::ConnectionPtr conn;
+    Q_FOREACH(const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
+        if (!account->connection().isNull()) {
+            conn = account->connection();
+            break;
+        }
+    }
+
+    if (conn.isNull()) {
+        return;
+    }
+
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE);

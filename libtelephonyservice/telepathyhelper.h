@@ -63,6 +63,7 @@ public:
     static Tp::ChannelClassSpec audioConferenceSpec();
 
 Q_SIGNALS:
+    void accountConnectionChanged();
     void channelObserverCreated(ChannelObserver *observer);
     void channelObserverUnregistered();
     void accountReady();
