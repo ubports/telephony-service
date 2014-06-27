@@ -31,6 +31,7 @@
 
 #define CANONICAL_TELEPHONY_VOICEMAIL_IFACE "com.canonical.Telephony.Voicemail"
 #define CANONICAL_TELEPHONY_SPEAKER_IFACE "com.canonical.Telephony.Speaker"
+#define CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE "com.canonical.Telephony.EmergencyMode"
 
 class TelepathyHelper : public QObject
 {

@@ -57,6 +57,7 @@ CallManager::CallManager(QObject *parent)
                        "com.canonical.TelephonyServiceHandler",
                        "CallIndicatorVisibleChanged",
                        this, SLOT(onCallIndicatorVisibleChanged(bool)));
+
 }
 
 void CallManager::refreshProperties()
@@ -198,12 +199,32 @@ void CallManager::onConnectedChanged()
         mVoicemailNumber = replyNumber.value();
         Q_EMIT voicemailNumberChanged();
     }
+
+    // connect the emergency numbers changed signal
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.connect(busName, objectPath, CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE, "EmergencyNumbersChanged",
+                       this, SLOT(onEmergencyNumbersChanged()));
+    onEmergencyNumbersChanged();
 }
 
 void CallManager::onCallIndicatorVisibleChanged(bool visible)
 {
     mCallIndicatorVisible = visible;
     Q_EMIT callIndicatorVisibleChanged(visible);
+}
+
+void CallManager::onEmergencyNumbersChanged()
+{
+    // FIXME: we need to handle emergency numbers for multiple accounts
+    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
+    QString busName = conn->busName();
+    QString objectPath = conn->objectPath();
+    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE);
+    QDBusReply<QStringList> replyNumbers = connIface.call("EmergencyNumbers");
+    if (replyNumbers.isValid()) {
+        mEmergencyNumbers = replyNumbers.value();
+        Q_EMIT emergencyNumbersChanged();
+    }
 }
 
 CallEntry *CallManager::foregroundCall() const
@@ -376,6 +397,11 @@ void CallManager::onCallEnded()
 QString CallManager::getVoicemailNumber()
 {
     return mVoicemailNumber;
+}
+
+QStringList CallManager::getEmergencyNumbers()
+{
+    return mEmergencyNumbers;
 }
 
 void CallManager::mergeCalls(CallEntry *firstCall, CallEntry *secondCall)
