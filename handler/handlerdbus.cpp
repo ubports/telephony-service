@@ -33,7 +33,7 @@
 static const char* DBUS_SERVICE = "com.canonical.TelephonyServiceHandler";
 static const char* DBUS_OBJECT_PATH = "/com/canonical/TelephonyServiceHandler";
 
-HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent)
+HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent), mCallIndicatorVisible(false)
 {
     connect(CallHandler::instance(),
             SIGNAL(callPropertiesChanged(QString,QVariantMap)),
@@ -57,6 +57,22 @@ bool HandlerDBus::HasCalls()
 QStringList HandlerDBus::AccountIds()
 {
     return TelepathyHelper::instance()->accountIds();
+}
+
+bool HandlerDBus::IsConnected()
+{
+    return TelepathyHelper::instance()->connected();
+}
+
+bool HandlerDBus::callIndicatorVisible() const
+{
+    return mCallIndicatorVisible;
+}
+
+void HandlerDBus::setCallIndicatorVisible(bool visible)
+{
+    mCallIndicatorVisible = visible;
+    Q_EMIT CallIndicatorVisibleChanged(visible);
 }
 
 bool HandlerDBus::connectToBus()

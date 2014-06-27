@@ -12,8 +12,10 @@ Build-Depends: cmake,
                libicu-dev,
                libmessaging-menu-dev,
                libnotify-dev,
+               libphonenumber-dev,
                libtelepathy-qt5-dev,
-               libubuntu-platform-api1-dev [armhf],
+               libubuntu-application-api-dev [armhf],
+               libprotobuf-dev,
                pkg-config,
                python,
                qt5-default,
@@ -67,4 +69,16 @@ Description: Telephony service components for Ubuntu - QML plugin
  .
  This package contains the QML plugin providing the features from the telephony
  service to applications.
+
+Package: qtdeclarative5-ubuntu-telephony-phonenumber0.1
+Architecture: any
+Multi-Arch: same
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+Description: Telephony service components for Ubuntu - QML plugin
+ Telephony PhoneNumber components for Ubuntu.
+ .
+ This package contains the QML plugin providing the features from the telephony
+ PhoneNumber to applications.
 

@@ -29,12 +29,8 @@ VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
 : QObject(parent),
   mConnection(QDBusConnection::sessionBus())
 {
-    if(!checkConnected()) {
-        connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onAccountReady()));
-        connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onAccountReady()));
-    } else {
-        onAccountReady();
-    }
+    connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onAccountReady()));
+    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onAccountReady()));
 }
 
 bool VoiceMailIndicator::checkConnected()

@@ -57,6 +57,11 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    // we don't need to call anything on the indicator, it will work by itself
+    // make sure we create the voicemail indicator before the telepathy helper
+    VoiceMailIndicator voiceMailIndicator;
+    Q_UNUSED(voiceMailIndicator);
+
     // register the observer
     TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceIndicator");
 
@@ -67,10 +72,6 @@ int main(int argc, char **argv)
                      textObserver, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
     QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
                      callObserver, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
-
-    // we don't need to call anything on the indicator, it will work by itself
-    VoiceMailIndicator voiceMailIndicator;
-    Q_UNUSED(voiceMailIndicator);
 
     USSDIndicator ussdIndicator;
     Q_UNUSED(ussdIndicator);

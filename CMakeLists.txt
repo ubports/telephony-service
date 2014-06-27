@@ -30,7 +30,7 @@ ENDIF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
 set(CMAKE_AUTOMOC ON)
 
 # Check if should build using ubuntu platform api
-check_include_file_cxx("ubuntu/ui/ubuntu_ui_session_service.h" USE_UBUNTU_PLATFORM_API)
+check_include_file_cxx("ubuntu/application/init.h" USE_UBUNTU_PLATFORM_API)
 
 if (USE_UBUNTU_PLATFORM_API)
     add_definitions(-DUSE_UBUNTU_PLATFORM_API)
@@ -50,6 +50,7 @@ find_package(Qt5Multimedia)
 find_package(Qt5Qml)
 #find_package(Qt5Quick)
 find_package(Qt5Test)
+find_package(LibPhoneNumber REQUIRED)
 
 execute_process(
     COMMAND qmake -query QT_INSTALL_QML

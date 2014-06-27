@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-08-22 17:59-0300\n"
+"POT-Creation-Date: 2014-05-09 15:25-0300\n"
 "PO-Revision-Date: 2013-06-13 11:57+0000\n"
 "Last-Translator: Timo Jyrinki <timo.jyrinki@canonical.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
@@ -19,95 +19,130 @@ msgstr ""
 "X-Launchpad-Export-Date: 2013-07-11 06:26+0000\n"
 "X-Generator: Launchpad (build 16696)\n"
 
-#: indicator/messagingmenu.cpp:166
+#: indicator/messagingmenu.cpp:208
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 vastaamaton puhelu"
 msgstr[1] "%1 vastaamatonta puhelua"
 
-#: indicator/messagingmenu.cpp:253
+#: indicator/messagingmenu.cpp:293
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
 msgstr[0] "%1 vastaajaviesti"
 msgstr[1] "%1 vastaajaviestiä"
 
-#: approver/approver.cpp:241
+#: approver/approver.cpp:284
 msgid "Accept"
 msgstr "Hyväksy"
 
-#: approver/approver.cpp:226
+#: approver/approver.cpp:270
 msgid "Caller number is not available"
 msgstr "Soittajan numero ei ole saatavilla"
 
-#: approver/approver.cpp:223
+#: approver/approver.cpp:267
 #, qt-format
 msgid "Calling from %1"
 msgstr "Puhelu numerosta %1"
 
-#: approver/approver.cpp:219
+#: approver/approver.cpp:263
 msgid "Calling from private number"
 msgstr "Puhelu salaisesta numerosta"
 
-#: approver/approver.cpp:221
+#: approver/approver.cpp:265
 msgid "Calling from unknown number"
 msgstr "Puhelu tuntemattomasta numerosta"
 
-#: approver/approver.cpp:247
+#: indicator/ussdindicator.cpp:104
+msgid "Cancel"
+msgstr "Peru"
+
+#: approver/approver.cpp:306
 msgid "Decline"
 msgstr "Hylkää"
 
-#: indicator/messagingmenu.cpp:210
+#: approver/approver.cpp:283
+msgid "Hold + Answer"
+msgstr ""
+
+#: indicator/messagingmenu.cpp:252
 msgid "I missed your call - can you call me now?"
 msgstr "En huomannut puheluasi, voitko soittaa nyt?"
 
-#: indicator/messagingmenu.cpp:213
+#: indicator/messagingmenu.cpp:255
 msgid "I'll be 20 minutes late."
 msgstr "Olen 20 minuuttia myöhässä."
 
-#: indicator/messagingmenu.cpp:212
+#: indicator/messagingmenu.cpp:254
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Olen kiireinen. Soitan myöhemmin."
 
-#: indicator/messagingmenu.cpp:211
+#: indicator/messagingmenu.cpp:253
 msgid "I'm running late. I'm on my way."
 msgstr "Olen myöhässä, mutta silti tulossa."
+
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:165
+msgid "Ok"
+msgstr ""
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
 msgstr "Puhelut"
 
+#: Ubuntu/Telephony/contactwatcher.cpp:107
+#, fuzzy
+msgid "Private Number"
+msgstr "Salainen numero"
+
+#: indicator/ussdindicator.cpp:82
+msgid "Reply"
+msgstr ""
+
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
 msgstr "Tekstiviesti"
 
-#: indicator/textchannelobserver.cpp:83
+#: indicator/textchannelobserver.cpp:202 indicator/textchannelobserver.cpp:276
 #, qt-format
 msgid "SMS from %1"
 msgstr "Tekstiviesti numerosta %1"
 
-#: indicator/messagingmenu.cpp:214
+#: indicator/textchannelobserver.cpp:171
+msgid "Save"
+msgstr "Tallenna"
+
+#: indicator/messagingmenu.cpp:256
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Olen valitettavasti edelleen kiireinen. Soitan myöhemmin."
 
-#: indicator/messagingmenu.cpp:52 indicator/messagingmenu.cpp:56
+#: indicator/messagingmenu.cpp:54 indicator/messagingmenu.cpp:58
 msgid "Telephony Service"
 msgstr ""
 
-#: approver/main.cpp:45
+#: approver/main.cpp:46
 msgid "Telephony Service Approver"
 msgstr ""
 
-#: indicator/main.cpp:47
+#: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
 msgstr ""
 
-#: approver/approver.cpp:213
+#: Ubuntu/Telephony/contactwatcher.cpp:109
+#, fuzzy
+msgid "Unknown Number"
+msgstr "Tuntematon numero"
+
+#: approver/approver.cpp:57
 msgid "Unknown caller"
 msgstr "Tuntematon soittaja"
 
-#: indicator/messagingmenu.cpp:251
+#: indicator/textchannelobserver.cpp:221
+#, fuzzy
+msgid "View message"
+msgstr "Uusi viesti"
+
+#: indicator/messagingmenu.cpp:291
 msgid "Voicemail messages"
 msgstr "Vastaajaviestit"
 
@@ -201,9 +236,6 @@ msgstr "Vastaajaviestit"
 #~ msgid "Calls"
 #~ msgstr "Puhelut"
 
-#~ msgid "Cancel"
-#~ msgstr "Peru"
-
 #~ msgid "Communication"
 #~ msgstr "Yhteydenpito"
 
@@ -282,9 +314,6 @@ msgstr "Vastaajaviestit"
 #~ msgid "New Contact"
 #~ msgstr "Uusi yhteystieto"
 
-#~ msgid "New Message"
-#~ msgstr "Uusi viesti"
-
 #~ msgid "On Call"
 #~ msgstr "Puhelu käynnissä"
 
@@ -309,17 +338,11 @@ msgstr "Vastaajaviestit"
 #~ msgid "Prefix"
 #~ msgstr "Etuliite"
 
-#~ msgid "Private number"
-#~ msgstr "Salainen numero"
-
 #~ msgid "Region"
 #~ msgstr "Alue"
 
 #~ msgid "Reply via SMS"
 #~ msgstr "Vastaa tekstiviestillä"
-
-#~ msgid "Save"
-#~ msgstr "Tallenna"
 
 #~ msgid "Send"
 #~ msgstr "Lähetä"
@@ -344,9 +367,6 @@ msgstr "Vastaajaviestit"
 
 #~ msgid "Unknown Contact"
 #~ msgstr "Tuntematon yhteystieto"
-
-#~ msgid "Unknown number"
-#~ msgstr "Tuntematon numero"
 
 #~ msgid "Voicemail"
 #~ msgstr "Vastaaja"

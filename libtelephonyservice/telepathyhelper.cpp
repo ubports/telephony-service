@@ -24,6 +24,7 @@
 #include "chatmanager.h"
 #include "callmanager.h"
 #include "config.h"
+#include "greetercontacts.h"
 
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ChannelClassSpec>
@@ -85,7 +86,8 @@ QStringList TelepathyHelper::accountIds()
         Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
             ids << account->uniqueIdentifier();
         }
-    } else {
+    } else if (!GreeterContacts::instance()->isGreeterMode()) {
+        // if we are in greeter mode, we should not initialize the handler to get the account IDs
         QDBusReply<QStringList> reply = handlerInterface()->call("AccountIds");
         if (reply.isValid()) {
             ids = reply.value();
@@ -105,21 +107,32 @@ ChannelObserver *TelepathyHelper::channelObserver() const
     return mChannelObserver;
 }
 
-QDBusInterface *TelepathyHelper::handlerInterface()
+QDBusInterface *TelepathyHelper::handlerInterface() const
 {
+    // delay the loading of the handler interface, as it seems this is triggering
+    // the dbus activation of the handler process
     if (!mHandlerInterface) {
         mHandlerInterface = new QDBusInterface("com.canonical.TelephonyServiceHandler",
                                                "/com/canonical/TelephonyServiceHandler",
                                                "com.canonical.TelephonyServiceHandler",
                                                QDBusConnection::sessionBus(),
-                                               this);
+                                               const_cast<TelepathyHelper*>(this));
     }
-
     return mHandlerInterface;
 }
 
 bool TelepathyHelper::connected() const
 {
+    if (QCoreApplication::applicationName() != "telephony-service-handler" &&
+        mAccounts.isEmpty() &&
+        !GreeterContacts::instance()->isGreeterMode()) {
+        // get the status from the handler
+        QDBusReply<bool> reply = handlerInterface()->call("IsConnected");
+        if (reply.isValid()) {
+            return reply.value();
+        }
+    }
+
     return mConnected;
 }
 

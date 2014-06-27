@@ -47,7 +47,7 @@ public:
     static TelepathyHelper *instance();
     QList<Tp::AccountPtr> accounts() const;
     ChannelObserver *channelObserver() const;
-    QDBusInterface *handlerInterface();
+    QDBusInterface *handlerInterface() const;
 
     bool connected() const;
     QStringList accountIds();
@@ -95,7 +95,7 @@ private:
     ChannelObserver *mChannelObserver;
     bool mFirstTime;
     bool mConnected;
-    QDBusInterface *mHandlerInterface;
+    mutable QDBusInterface *mHandlerInterface;
 };
 
 #endif // TELEPATHYHELPER_H

@@ -23,6 +23,7 @@
 #include "callmanager.h"
 #include "callentry.h"
 #include "telepathyhelper.h"
+#include "greetercontacts.h"
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
@@ -43,6 +44,46 @@ CallManager::CallManager(QObject *parent)
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
     connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
+    connect(this, &CallManager::hasCallsChanged, [this] {
+        Q_EMIT this->callIndicatorVisibleChanged(this->callIndicatorVisible());
+    });
+
+    refreshProperties();
+
+    // connect the dbus signal
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.connect("com.canonical.TelephonyServiceHandler",
+                       "/com/canonical/TelephonyServiceHandler",
+                       "com.canonical.TelephonyServiceHandler",
+                       "CallIndicatorVisibleChanged",
+                       this, SLOT(onCallIndicatorVisibleChanged(bool)));
+}
+
+void CallManager::refreshProperties()
+{
+    QDBusInterface handlerPropertiesInterface("com.canonical.TelephonyServiceHandler",
+                                              "/com/canonical/TelephonyServiceHandler",
+                                              "org.freedesktop.DBus.Properties");
+    QDBusReply<QVariantMap> reply = handlerPropertiesInterface.call("GetAll",
+                                                                    "com.canonical.TelephonyServiceHandler");
+    if (!reply.isValid()) {
+        qWarning() << "Failed to refresh the properties from the handler";
+        return;
+    }
+
+    QVariantMap map = reply.value();
+    mCallIndicatorVisible = map["CallIndicatorVisible"].toBool();
+    Q_EMIT callIndicatorVisibleChanged(mCallIndicatorVisible);
+}
+
+void CallManager::setDBusProperty(const QString &name, const QVariant &value)
+{
+    QDBusInterface handlerPropertiesInterface("com.canonical.TelephonyServiceHandler",
+                                              "/com/canonical/TelephonyServiceHandler",
+                                              "org.freedesktop.DBus.Properties");
+    handlerPropertiesInterface.call("Set",
+                                    "com.canonical.TelephonyServiceHandler",
+                                    name, QVariant::fromValue(QDBusVariant(value)));
 }
 
 QList<CallEntry *> CallManager::takeCalls(const QList<Tp::ChannelPtr> callChannels)
@@ -82,6 +123,16 @@ void CallManager::addCalls(const QList<CallEntry *> entries)
     Q_EMIT hasBackgroundCallChanged();
     Q_EMIT foregroundCallChanged();
     Q_EMIT backgroundCallChanged();
+}
+
+bool CallManager::callIndicatorVisible() const
+{
+    return hasCalls() && mCallIndicatorVisible;
+}
+
+void CallManager::setCallIndicatorVisible(bool visible)
+{
+    setDBusProperty("CallIndicatorVisible", visible);
 }
 
 void CallManager::setupCallEntry(CallEntry *entry)
@@ -147,6 +198,12 @@ void CallManager::onConnectedChanged()
         mVoicemailNumber = replyNumber.value();
         Q_EMIT voicemailNumberChanged();
     }
+}
+
+void CallManager::onCallIndicatorVisibleChanged(bool visible)
+{
+    mCallIndicatorVisible = visible;
+    Q_EMIT callIndicatorVisibleChanged(visible);
 }
 
 CallEntry *CallManager::foregroundCall() const
@@ -216,13 +273,16 @@ bool CallManager::hasCalls() const
         return true;
     }
 
-    // if that's not the case, query the teleophony-service-handler for the availability of calls
+    // if that's not the case, and if not in greeter mode, query the telephony-service-handler
+    // for the availability of calls.
     // this is done only to get the live call view on clients as soon as possible, even before the
     // telepathy observer is configured
-    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    QDBusReply<bool> reply = phoneAppHandler->call("HasCalls");
-    if (reply.isValid()) {
-        return reply.value();
+    if (!GreeterContacts::instance()->isGreeterMode()) {
+        QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+        QDBusReply<bool> reply = phoneAppHandler->call("HasCalls");
+        if (reply.isValid()) {
+            return reply.value();
+        }
     }
 
     return false;

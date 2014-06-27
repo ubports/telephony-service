@@ -20,6 +20,7 @@
 #include <QStringList>
 #include "handlercontroller.h"
 #include <QDBusReply>
+#include <QDebug>
 
 #define HANDLER_SERVICE "com.canonical.TelephonyServiceHandler"
 #define HANDLER_OBJECT "/com/canonical/TelephonyServiceHandler"
@@ -38,6 +39,9 @@ HandlerController::HandlerController(QObject *parent) :
     connect(&mHandlerInterface,
             SIGNAL(CallPropertiesChanged(QString, QVariantMap)),
             SIGNAL(callPropertiesChanged(QString, QVariantMap)));
+    connect(&mHandlerInterface,
+            SIGNAL(CallIndicatorVisibleChanged(bool)),
+            SIGNAL(callIndicatorVisibleChanged(bool)));
 }
 
 QVariantMap HandlerController::getCallProperties(const QString &objectPath)
@@ -49,6 +53,20 @@ QVariantMap HandlerController::getCallProperties(const QString &objectPath)
     }
 
     return properties;
+}
+
+bool HandlerController::callIndicatorVisible()
+{
+    QDBusInterface handlerPropertiesInterface("com.canonical.TelephonyServiceHandler",
+                                              "/com/canonical/TelephonyServiceHandler",
+                                              "org.freedesktop.DBus.Properties");
+    QDBusReply<QVariantMap> reply = handlerPropertiesInterface.call("GetAll", "com.canonical.TelephonyServiceHandler");
+    if (!reply.isValid()) {
+        return false;
+    }
+
+    QVariantMap map = reply.value();
+    return map["CallIndicatorVisible"].toBool();
 }
 
 void HandlerController::startCall(const QString &number, const QString &accountId)
@@ -104,4 +122,14 @@ void HandlerController::sendMessage(const QString &number, const QString &messag
 void HandlerController::acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId)
 {
     mHandlerInterface.call("AcknowledgeMessages", number, messageIds, accountId);
+}
+
+void HandlerController::setCallIndicatorVisible(bool visible)
+{
+    QDBusInterface handlerPropertiesInterface("com.canonical.TelephonyServiceHandler",
+                                              "/com/canonical/TelephonyServiceHandler",
+                                              "org.freedesktop.DBus.Properties");
+    handlerPropertiesInterface.call("Set",
+                                    "com.canonical.TelephonyServiceHandler",
+                                    "CallIndicatorVisible", QVariant::fromValue(QDBusVariant(visible)));
 }
