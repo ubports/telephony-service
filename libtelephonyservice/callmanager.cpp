@@ -57,7 +57,6 @@ CallManager::CallManager(QObject *parent)
                        "com.canonical.TelephonyServiceHandler",
                        "CallIndicatorVisibleChanged",
                        this, SLOT(onCallIndicatorVisibleChanged(bool)));
-
 }
 
 void CallManager::refreshProperties()
