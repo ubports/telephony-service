@@ -120,7 +120,7 @@ void GreeterContactsTest::testMapToContact()
 
 void GreeterContactsTest::testInitialValues()
 {
-    setActiveEntry("testuser");
+    setActiveEntry(qgetenv("USER"));
     setCurrentContact(makeTestMap());
     makeGreeterContacts();
     setFilter();
@@ -129,7 +129,7 @@ void GreeterContactsTest::testInitialValues()
 
 void GreeterContactsTest::testSignalOnFilter()
 {
-    setActiveEntry("testuser");
+    setActiveEntry(qgetenv("USER"));
     setCurrentContact(makeTestMap());
     makeGreeterContacts();
     waitForInitialQuery();
@@ -144,7 +144,7 @@ void GreeterContactsTest::testSignalOnEntry()
     makeGreeterContacts();
     setFilter();
     waitForInitialQuery();
-    setActiveEntry("testuser");
+    setActiveEntry(qgetenv("USER"));
     waitForUpdatedSignal();
 }
 
@@ -155,13 +155,13 @@ void GreeterContactsTest::testSignalOnEntryInvalidated()
     setFilter();
     waitForInitialQuery();
     setUseInvalidated("/list", "com.canonical.UnityGreeter.List", true);
-    setActiveEntry("testuser");
+    setActiveEntry(qgetenv("USER"));
     waitForUpdatedSignal();
 }
 
 void GreeterContactsTest::testSignalOnContacts()
 {
-    setActiveEntry("testuser");
+    setActiveEntry(qgetenv("USER"));
     makeGreeterContacts();
     setFilter();
     waitForInitialQuery();
@@ -171,7 +171,7 @@ void GreeterContactsTest::testSignalOnContacts()
 
 void GreeterContactsTest::testSignalOnContactsInvalidated()
 {
-    setActiveEntry("testuser");
+    setActiveEntry(qgetenv("USER"));
     makeGreeterContacts();
     setFilter();
     waitForInitialQuery();
@@ -182,7 +182,7 @@ void GreeterContactsTest::testSignalOnContactsInvalidated()
 
 void GreeterContactsTest::testEmitContact()
 {
-    setActiveEntry("testuser");
+    setActiveEntry(qgetenv("USER"));
     makeGreeterContacts();
     setFilter();
     waitForInitialQuery();
