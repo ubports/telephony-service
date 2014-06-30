@@ -26,13 +26,8 @@ getpwnam (const char *name)
 
     static struct passwd user_passwd = {0};
     user_passwd.pw_name = "testuser";
-    user_passwd.pw_uid = 12345;
-    user_passwd.pw_gid = 12345;
+    user_passwd.pw_uid = getuid ();
+    user_passwd.pw_gid = getgid ();
 
     return &user_passwd;
-}
-
-uid_t getuid ()
-{
-    return 12345;
 }
