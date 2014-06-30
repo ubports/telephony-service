@@ -18,6 +18,7 @@
 
 #include "greetercontacts.h"
 
+#include <pwd.h>
 #include <QContact>
 #include <QContactAvatar>
 #include <QContactName>
@@ -63,7 +64,7 @@ private:
     void waitForInitialQuery();
     QContact makeTestContact(bool convertedPath = false);
     QVariantMap makeTestMap();
-    void setActiveEntry(const QString &entry);
+    void setActiveEntry(bool currentUser);
     void setCurrentContact(const QVariantMap &map);
     void setUseInvalidated(const QString &path, const QString &interface, bool useInvalidated);
 
@@ -98,7 +99,7 @@ void GreeterContactsTest::cleanup()
         mGreeterContacts = NULL;
     }
 
-    setActiveEntry("");
+    setActiveEntry(false);
     setCurrentContact(QVariantMap());
     setUseInvalidated("/list", "com.canonical.UnityGreeter.List", false);
     setUseInvalidated(mUserPath, "com.canonical.TelephonyServiceApprover", false);
@@ -120,7 +121,7 @@ void GreeterContactsTest::testMapToContact()
 
 void GreeterContactsTest::testInitialValues()
 {
-    setActiveEntry(qgetenv("USER"));
+    setActiveEntry(true);
     setCurrentContact(makeTestMap());
     makeGreeterContacts();
     setFilter();
@@ -129,7 +130,7 @@ void GreeterContactsTest::testInitialValues()
 
 void GreeterContactsTest::testSignalOnFilter()
 {
-    setActiveEntry(qgetenv("USER"));
+    setActiveEntry(true);
     setCurrentContact(makeTestMap());
     makeGreeterContacts();
     waitForInitialQuery();
@@ -144,7 +145,7 @@ void GreeterContactsTest::testSignalOnEntry()
     makeGreeterContacts();
     setFilter();
     waitForInitialQuery();
-    setActiveEntry(qgetenv("USER"));
+    setActiveEntry(true);
     waitForUpdatedSignal();
 }
 
@@ -155,13 +156,13 @@ void GreeterContactsTest::testSignalOnEntryInvalidated()
     setFilter();
     waitForInitialQuery();
     setUseInvalidated("/list", "com.canonical.UnityGreeter.List", true);
-    setActiveEntry(qgetenv("USER"));
+    setActiveEntry(true);
     waitForUpdatedSignal();
 }
 
 void GreeterContactsTest::testSignalOnContacts()
 {
-    setActiveEntry(qgetenv("USER"));
+    setActiveEntry(true);
     makeGreeterContacts();
     setFilter();
     waitForInitialQuery();
@@ -171,7 +172,7 @@ void GreeterContactsTest::testSignalOnContacts()
 
 void GreeterContactsTest::testSignalOnContactsInvalidated()
 {
-    setActiveEntry(qgetenv("USER"));
+    setActiveEntry(true);
     makeGreeterContacts();
     setFilter();
     waitForInitialQuery();
@@ -182,7 +183,7 @@ void GreeterContactsTest::testSignalOnContactsInvalidated()
 
 void GreeterContactsTest::testEmitContact()
 {
-    setActiveEntry(qgetenv("USER"));
+    setActiveEntry(true);
     makeGreeterContacts();
     setFilter();
     waitForInitialQuery();
@@ -233,8 +234,12 @@ void GreeterContactsTest::setFilter()
     mGreeterContacts->setContactFilter(QContactPhoneNumber::match("555"));
 }
 
-void GreeterContactsTest::setActiveEntry(const QString &entry)
+void GreeterContactsTest::setActiveEntry(bool currentUser)
 {
+    QString entry = "";
+    if (currentUser)
+        entry = getpwuid(getuid())->pw_name;
+
     QDBusInterface iface("com.canonical.UnityGreeter",
                          "/list",
                          "org.freedesktop.DBus.Properties",

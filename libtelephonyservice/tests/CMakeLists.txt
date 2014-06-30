@@ -13,6 +13,7 @@ qt5_use_modules(GreeterContactsTestExe Contacts Core DBus Test)
 add_test(NAME GreeterContactsTest
     COMMAND env
         -u LD_PRELOAD  # fakeroot's preload doesn't play well with dbus-test-runner
+        -u LD_LIBRARY_PATH  # fakeroot fills this too
         XDG_SESSION_CLASS=greeter
         XDG_GREETER_DATA_DIR=${CMAKE_BINARY_DIR}/Testing/Temporary
         dbus-test-runner
