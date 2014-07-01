@@ -196,6 +196,8 @@ void GreeterContactsTest::testEmitContact()
 
 void GreeterContactsTest::testGreeterIsActive()
 {
+    makeGreeterContacts();
+
     // check that by default it is false
     QCOMPARE(mGreeterContacts->greeterActive(), false);
 
