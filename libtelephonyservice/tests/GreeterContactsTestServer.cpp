@@ -22,11 +22,13 @@
 #include <QDBusObjectPath>
 #include <QObject>
 #include <QStringList>
+#include <unistd.h>
 
 
 #include <QDebug>
 bool listGetCalled = false;
 bool userGetCalled = false;
+QString userPath = "/org/freedesktop/Accounts/User" + QString::number(getuid());
 
 class AccountsInterface : public QObject
 {
@@ -113,7 +115,7 @@ AccountsInterface::AccountsInterface(QObject *parent)
 
 QList<QDBusObjectPath> AccountsInterface::ListCachedUsers() const
 {
-    return QList<QDBusObjectPath>() << QDBusObjectPath("/org/freedesktop/Accounts/User12345");
+    return QList<QDBusObjectPath>() << QDBusObjectPath(userPath);
 }
 
 TelepathyInterface::TelepathyInterface(QObject *parent)
@@ -137,7 +139,7 @@ void TelepathyInterface::SetCurrentContact(const QVariantMap &map)
 
     // Now send out a manual changed signal, since Qt won't do it for us.
     QDBusMessage message;
-    message = QDBusMessage::createSignal("/org/freedesktop/Accounts/User12345",
+    message = QDBusMessage::createSignal(userPath,
                                          "org.freedesktop.DBus.Properties",
                                          "PropertiesChanged");
     message << "com.canonical.TelephonyServiceApprover";
@@ -217,7 +219,7 @@ int main(int argc, char *argv[])
     connection.registerObject("/org/freedesktop/Accounts", &accounts, QDBusConnection::ExportScriptableContents);
 
     TelepathyInterface telepathy;
-    connection.registerObject("/org/freedesktop/Accounts/User12345", &telepathy, QDBusConnection::ExportScriptableContents);
+    connection.registerObject(userPath, &telepathy, QDBusConnection::ExportScriptableContents);
 
     ListInterface list(&telepathy);
     connection.registerObject("/list", &list, QDBusConnection::ExportScriptableContents);
