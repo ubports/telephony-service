@@ -10,7 +10,7 @@ mc-tool show ofono/ofono/account0 2>&1 > /dev/null
 # if there is not, create one and enable it
 if [ $? -eq 1 ]; then
         # get the modems from ofono
-        MODEMS=`/usr/share/ofono/scripts/list-modems | grep --binary-files=text "^\[" | sed 's,^\[ \(.*\) \],\1,g'`
+        MODEMS=`/usr/share/ofono/scripts/list-modems | grep --binary-files=text "^\[" | sed 's,^\[ \(.*\) \],\1,g' | sort`
         INDEX=0
 
         # and for each modem found create a telepathy account
