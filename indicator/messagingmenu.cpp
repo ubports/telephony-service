@@ -267,7 +267,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
         messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
         mCalls.append(newCall);
 
-        g_object_unref(messages);
+        g_variant_unref(messages);
         g_object_unref(file);
         g_object_unref(icon);
         g_object_unref(message);
