@@ -194,6 +194,7 @@ void TelepathyHelper::initializeAccount(const Tp::AccountPtr &account)
     });
 
     connect(account.data(), &Tp::Account::connectionChanged, [this, account](const Tp::ConnectionPtr &connection) {
+        Q_EMIT accountConnectionChanged();
         if (connection.isNull()) {
             ensureAccountConnected(account);
         } else {

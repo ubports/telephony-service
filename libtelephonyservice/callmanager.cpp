@@ -43,6 +43,8 @@ CallManager::CallManager(QObject *parent)
 {
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
+    connect(TelepathyHelper::instance(), SIGNAL(accountConnectionChanged()), SLOT(onEmergencyNumbersChanged()));
+    connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onEmergencyNumbersChanged()));
     connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
     connect(this, &CallManager::hasCallsChanged, [this] {
         Q_EMIT this->callIndicatorVisibleChanged(this->callIndicatorVisible());
@@ -198,12 +200,42 @@ void CallManager::onConnectedChanged()
         mVoicemailNumber = replyNumber.value();
         Q_EMIT voicemailNumberChanged();
     }
+
+    // connect the emergency numbers changed signal
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.connect(busName, objectPath, CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE, "EmergencyNumbersChanged",
+                       this, SLOT(onEmergencyNumbersChanged()));
 }
 
 void CallManager::onCallIndicatorVisibleChanged(bool visible)
 {
     mCallIndicatorVisible = visible;
     Q_EMIT callIndicatorVisibleChanged(visible);
+}
+
+void CallManager::onEmergencyNumbersChanged()
+{
+    // FIXME: we need to handle emergency numbers for multiple accounts
+    Tp::ConnectionPtr conn;
+    Q_FOREACH(const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
+        if (!account->connection().isNull()) {
+            conn = account->connection();
+            break;
+        }
+    }
+
+    if (conn.isNull()) {
+        return;
+    }
+
+    QString busName = conn->busName();
+    QString objectPath = conn->objectPath();
+    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE);
+    QDBusReply<QStringList> replyNumbers = connIface.call("EmergencyNumbers");
+    if (replyNumbers.isValid()) {
+        mEmergencyNumbers = replyNumbers.value();
+        Q_EMIT emergencyNumbersChanged();
+    }
 }
 
 CallEntry *CallManager::foregroundCall() const
@@ -376,6 +408,11 @@ void CallManager::onCallEnded()
 QString CallManager::getVoicemailNumber()
 {
     return mVoicemailNumber;
+}
+
+QStringList CallManager::getEmergencyNumbers()
+{
+    return mEmergencyNumbers;
 }
 
 void CallManager::mergeCalls(CallEntry *firstCall, CallEntry *secondCall)

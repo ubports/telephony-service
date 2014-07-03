@@ -50,6 +50,9 @@ class CallManager : public QObject
     Q_PROPERTY(QString voicemailNumber
                READ getVoicemailNumber
                NOTIFY voicemailNumberChanged)
+    Q_PROPERTY(QStringList emergencyNumbers
+               READ getEmergencyNumbers
+               NOTIFY emergencyNumbersChanged)
     Q_PROPERTY(QQmlListProperty<CallEntry> calls
                    READ calls
                    NOTIFY callsChanged)
@@ -62,6 +65,7 @@ public:
     static CallManager *instance();
     Q_INVOKABLE void startCall(const QString &phoneNumber, const QString &accountId = QString::null);
     Q_INVOKABLE QString getVoicemailNumber();
+    Q_INVOKABLE QStringList getEmergencyNumbers();
     Q_INVOKABLE void mergeCalls(CallEntry *firstCall, CallEntry *secondCall);
     Q_INVOKABLE void splitCall(CallEntry *callEntry);
 
@@ -93,6 +97,7 @@ Q_SIGNALS:
     void hasBackgroundCallChanged();
     void speakerChanged();
     void voicemailNumberChanged();
+    void emergencyNumbersChanged();
     void callIndicatorVisibleChanged(bool visible);
 
 public Q_SLOTS:
@@ -101,6 +106,7 @@ public Q_SLOTS:
     void onCallEnded();
     void onConnectedChanged();
     void onCallIndicatorVisibleChanged(bool visible);
+    void onEmergencyNumbersChanged();
 
 private:
     explicit CallManager(QObject *parent = 0);
@@ -110,6 +116,7 @@ private:
 
     mutable QList<CallEntry*> mCallEntries;
     QString mVoicemailNumber;
+    QStringList mEmergencyNumbers;
     bool mNeedsUpdate;
     CallEntry *mConferenceCall;
     bool mCallIndicatorVisible;
