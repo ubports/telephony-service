@@ -36,10 +36,13 @@ class QDBusPendingCallWatcher;
 class GreeterContacts : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool greeterActive READ greeterActive NOTIFY greeterActiveChanged)
 
 public:
     static GreeterContacts *instance();
     ~GreeterContacts();
+
+    bool greeterActive() const;
 
     void setContactFilter(const QtContacts::QContactFilter &filter);
 
@@ -58,8 +61,10 @@ public:
 
 Q_SIGNALS:
     void contactUpdated(const QtContacts::QContact &contact);
+    void greeterActiveChanged();
 
 private Q_SLOTS:
+    void greeterListPropertiesChanged(const QString &interface, const QVariantMap &changed, const QStringList &invalidated);
     void greeterPropertiesChanged(const QString &interface, const QVariantMap &changed, const QStringList &invalidated);
     void accountsPropertiesChanged(const QString &interface, const QVariantMap &changed, const QStringList &invalidated, const QDBusMessage &message);
 
@@ -83,6 +88,7 @@ private:
     QVariant mSilentMode;
     QVariant mIncomingCallSound;
     QVariant mIncomingMessageSound;
+    bool mGreeterActive;
 
     QtContacts::QContactFilter mFilter;
     QMap<QString, QVariantMap> mContacts;

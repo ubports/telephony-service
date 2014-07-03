@@ -23,6 +23,7 @@ add_test(NAME GreeterContactsTest
         --task ${CMAKE_CURRENT_BINARY_DIR}/GreeterContactsTestExe
         --task-name test
         --wait-for org.freedesktop.Accounts
+        -p -xunitxml -p -o -p ${CMAKE_BINARY_DIR}/test_GreeterContactsTest.xml
     DEPENDENCIES GreeterContactsTestServerExe GreeterContactsTestExe
     )
 

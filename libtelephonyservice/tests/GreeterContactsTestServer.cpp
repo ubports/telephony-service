@@ -89,6 +89,23 @@ private:
     bool mUseInvalidated;
 };
 
+class GreeterInterface : public QObject
+{
+    Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "com.canonical.UnityGreeter")
+
+    Q_PROPERTY(bool IsActive READ IsActive WRITE SetIsActive)
+
+public:
+    GreeterInterface(QObject *parent = 0);
+
+    bool IsActive() const;
+    void SetIsActive(bool active);
+
+private:
+    bool mIsActive;
+};
+
 
 
 AccountsInterface::AccountsInterface(QObject *parent)
@@ -207,6 +224,9 @@ int main(int argc, char *argv[])
     ListInterface list(&telepathy);
     connection.registerObject("/list", &list, QDBusConnection::ExportScriptableContents);
 
+    GreeterInterface greeter;
+    connection.registerObject("/", &greeter, QDBusConnection::ExportScriptableContents);
+
     connection.registerService("com.canonical.UnityGreeter");
     connection.registerService("org.freedesktop.Accounts");
 
@@ -214,3 +234,32 @@ int main(int argc, char *argv[])
 }
 
 #include "GreeterContactsTestServer.moc"
+
+
+GreeterInterface::GreeterInterface(QObject *parent)
+: QObject(parent), mIsActive(false)
+{
+
+}
+
+bool GreeterInterface::IsActive() const
+{
+    return mIsActive;
+}
+
+void GreeterInterface::SetIsActive(bool active)
+{
+    mIsActive = active;
+    QDBusMessage message;
+    message = QDBusMessage::createSignal("/",
+                                         "org.freedesktop.DBus.Properties",
+                                         "PropertiesChanged");
+    message << "com.canonical.UnityGreeter";
+
+    QVariantMap changedProps;
+    changedProps.insert("IsActive", QVariant(active));
+    message << changedProps;
+    message << QStringList();
+
+    QDBusConnection::sessionBus().send(message);
+}
