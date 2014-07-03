@@ -25,6 +25,7 @@
 #include "config.h"
 #include "dbustypes.h"
 
+#include <QImage>
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 
@@ -130,6 +131,7 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
     header["message-type"] = QDBusVariant(0);
     message << header;
     Q_FOREACH(const AttachmentStruct &attachment, attachments) {
+        QByteArray fileData;
         QString newFilePath = QString(attachment.filePath).replace("file://", "");
         QFile attachmentFile(newFilePath);
         if (!attachmentFile.open(QIODevice::ReadOnly)) {
@@ -139,14 +141,31 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
         if (attachment.contentType.startsWith("image/")) {
             regions += QString(SMIL_IMAGE_REGION).arg(attachment.id);
             parts += QString(SMIL_IMAGE_PART).arg(QFileInfo(attachmentFile.fileName()).fileName()).arg(attachment.id);
+            // check if we need to reduce de image size in case it's bigger than 300k
+            if (attachmentFile.size() > 1024*300) {
+                QImage scaledImage(newFilePath);
+                if (!scaledImage.isNull()) {
+                    QBuffer buffer(&fileData);
+                    buffer.open(QIODevice::WriteOnly);
+                    if (scaledImage.height() > scaledImage.width()) {
+                        scaledImage.scaledToHeight(640).save(&buffer, "jpg");
+                    } else {
+                        scaledImage.scaledToWidth(640).save(&buffer, "jpg");
+                    }
+                } else {
+                    fileData = attachmentFile.readAll();
+                }
+            } else {
+                fileData = attachmentFile.readAll();
+            }
         } else if (attachment.contentType.startsWith("text/")) {
             regions += QString(SMIL_TEXT_REGION).arg(attachment.id);
             parts += QString(SMIL_TEXT_PART).arg(QFileInfo(attachmentFile.fileName()).fileName()).arg(attachment.id);
+            fileData = attachmentFile.readAll();
         } else {
             continue;
         }
 
-        QByteArray fileData = attachmentFile.readAll();
         Tp::MessagePart part;
         part["content-type"] =  QDBusVariant(attachment.contentType);
         part["identifier"] = QDBusVariant(attachment.id);
