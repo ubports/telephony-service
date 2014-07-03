@@ -1,3 +1,21 @@
+telephony-service (0.1+14.10.20140703-0ubuntu1) utopic; urgency=low
+
+  [ Michael Terry ]
+  * Fix failing GreeterContactsTest by not overriding getuid(), which
+    confuses Qt 5.3 unless we also override geteuid(), which we don't
+    want to do because it confuses dbus. So instead, we'll just use the
+    test runner's UID.
+
+  [ Gustavo Pichorim Boiko ]
+  * Expose the greeter being active to the QML plugin.
+  * Expose the emergency numbers to the QML plugin
+
+  [ Tiago Salem Herrmann ]
+  * Use g_variant_unref() instead of g_object_unref() to avoid crash.
+  * Implement MMS sending support.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 03 Jul 2014 03:59:10 +0000
+
 telephony-service (0.1+14.10.20140618-0ubuntu1) utopic; urgency=low
 
   [ Gustavo Pichorim Boiko ]
