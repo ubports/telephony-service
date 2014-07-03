@@ -19,6 +19,15 @@
             <arg name="message" type="s" direction="in"/>
             <arg name="accountId" type="s" direction="in"/>
         </method>
+        <method name="SendMMS">
+            <dox:d><![CDATA[
+               Request to send a MMS to a phone number
+            ]]></dox:d>
+            <arg name="numbers" type="as" direction="in"/>
+            <arg name="attachments" type="a(sss)" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="AttachmentList"/>
+            <arg name="accountId" type="s" direction="in"/>
+        </method>
         <method name="AcknowledgeMessages">
             <dox:d><![CDATA[
                 Request messages to be acknowledged (marked as read)

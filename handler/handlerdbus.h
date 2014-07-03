@@ -27,6 +27,7 @@
 #include <QtCore/QObject>
 #include <QtDBus/QDBusContext>
 #include "chatmanager.h"
+#include "dbustypes.h"
 
 /**
  * DBus interface for the phone approver
@@ -55,6 +56,7 @@ public Q_SLOTS:
 
     // messages related
     Q_NOREPLY void SendMessage(const QStringList &number, const QString &message, const QString &accountId);
+    Q_NOREPLY void SendMMS(const QStringList &numbers, const AttachmentList &attachments, const QString &accountId);
     Q_NOREPLY void AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId);
 
     // call related

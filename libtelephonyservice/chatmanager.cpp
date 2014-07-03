@@ -23,13 +23,32 @@
 #include "telepathyhelper.h"
 #include "phoneutils.h"
 #include "config.h"
+#include "dbustypes.h"
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
+#include <QDBusArgument>
 
+QDBusArgument &operator<<(QDBusArgument &argument, const AttachmentStruct &attachment)
+{
+    argument.beginStructure();
+    argument << attachment.id << attachment.contentType << attachment.filePath;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, AttachmentStruct &attachment)
+{
+    argument.beginStructure();
+    argument >> attachment.id >> attachment.contentType >> attachment.filePath;
+    argument.endStructure();
+    return argument;
+}
 ChatManager::ChatManager(QObject *parent)
 : QObject(parent)
 {
+    qDBusRegisterMetaType<AttachmentList>();
+    qDBusRegisterMetaType<AttachmentStruct>();
     // wait one second for other acknowledge calls before acknowledging messages to avoid many round trips
     mMessagesAckTimer.setInterval(1000);
     mMessagesAckTimer.setSingleShot(true);
@@ -40,6 +59,45 @@ ChatManager *ChatManager::instance()
 {
     static ChatManager *manager = new ChatManager();
     return manager;
+}
+
+void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &message, const QVariant &attachments, const QString &accountId)
+{
+    AttachmentList newAttachments;
+    Tp::AccountPtr account;
+    if (accountId.isNull()) {
+        account = TelepathyHelper::instance()->accounts()[0];
+    } else {
+        account = TelepathyHelper::instance()->accountForId(accountId);
+    }
+
+    Q_FOREACH (const QVariant &attachment, attachments.toList()) {
+        AttachmentStruct newAttachment;
+        QVariantList list = attachment.toList();
+        newAttachment.id = list.at(0).toString();
+        newAttachment.contentType = list.at(1).toString();
+        newAttachment.filePath = list.at(2).toString();
+        newAttachments << newAttachment;
+    }
+
+    if (!message.isEmpty()) {
+        AttachmentStruct textAttachment;
+        QTemporaryFile textFile("/tmp/XXXXX");
+        textFile.setAutoRemove(false);
+        if (!textFile.open()) {
+            // FIXME: return error
+            return;
+        }
+        textFile.write(message.toUtf8().data());
+        textFile.close();
+        textAttachment.id = "text";
+        textAttachment.contentType = "text/plain;charset=UTF-8";
+        textAttachment.filePath = textFile.fileName();
+        newAttachments << textAttachment;
+    }
+
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("SendMMS", phoneNumbers, QVariant::fromValue(newAttachments), account->uniqueIdentifier());
 }
 
 void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)

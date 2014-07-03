@@ -198,25 +198,39 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
 {
     Tp::ContactPtr contact = message.sender();
+    QString messageText = message.text();
+
+    Tp::MessagePartList messageParts = message.parts();
+    // check if this is an mms
+    if (messageParts.size() > 2) {
+        // remove header
+        messageParts.pop_front();
+        Q_FOREACH(const Tp::MessagePart &part, messageParts) {
+            if (part["content-type"].variant().toString().startsWith("text/plain")) {
+                messageText = part["content"].variant().toString();
+                break;
+            }
+        }
+    }
 
     // add the message to the messaging menu (use hex format to avoid invalid characters)
     QByteArray token(message.messageToken().toUtf8());
-    MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), message.text());
+    MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), messageText);
 
-    QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(contact->alias());
+    QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(contact->alias());
     QString avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
 
     qDebug() << title << avatar;
     // show the notification
     NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
-                                                               message.text().toStdString().c_str(),
+                                                               messageText.toStdString().c_str(),
                                                                avatar.toStdString().c_str());
 
     // Bundle the data we need for later updating
     NotificationData *data = new NotificationData();
     data->phoneNumber = contact->id();
     data->alias = contact->alias();
-    data->message = message.text();
+    data->message = messageText;
     data->notificationList = &mNotifications;
     mNotifications.insert(notification, data);
 
@@ -278,7 +292,7 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
         Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
             if (PhoneUtils::comparePhoneNumbers(data->phoneNumber, phoneNumber.number())) {
                 QString displayLabel = ContactUtils::formatContactName(contact);
-                QString title = QString::fromUtf8(C::gettext("SMS from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
+                QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
                 QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
 
                 if (avatar.isEmpty()) {
