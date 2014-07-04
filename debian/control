@@ -24,6 +24,7 @@ Build-Depends: cmake,
                qtdeclarative5-dev (>= 5.0),
                qtdeclarative5-dev-tools (>= 5.0),
                qtdeclarative5-test-plugin (>= 5.0),
+               qtdeclarative5-ubuntu-ui-toolkit-plugin,
                qtmultimedia5-dev (>= 5.0),
                qtpim5-dev (>= 5),
                libusermetricsinput1-dev,
@@ -78,6 +79,7 @@ Multi-Arch: same
 Pre-Depends: dpkg (>= 1.15.6~)
 Depends: ${misc:Depends},
          ${shlibs:Depends},
+         qtdeclarative5-ubuntu-ui-toolkit-plugin,
 Description: Telephony service components for Ubuntu - QML plugin
  Telephony PhoneNumber components for Ubuntu.
  .
