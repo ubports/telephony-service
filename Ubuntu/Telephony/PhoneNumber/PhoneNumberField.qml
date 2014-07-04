@@ -59,16 +59,43 @@ TextField {
     */
     property alias defaultRegion: formatter.defaultRegionCode
 
+    /*!
+      Specifies if the autoformat should format the text even if the field does not have focus
+      Default value is true
+
+      \qmlproperty bool autoFormat
+    */
+    property bool updateOnlyWhenFocused: true
+
     AsYouTypeFormatter {
         id: formatter
 
-        text: phoneNumberField.text
+        property string _oldText: ""
     }
 
-    Binding {
-        target: phoneNumberField
-        when: phoneNumberField.autoFormat && phoneNumberField.activeFocus
-        property: "text"
-        value: formatter.formattedText
+    onTextChanged: {
+        if (text === "") {
+            formatter._oldText = ""
+            return;
+        }
+
+        if (formatter._oldText === "") {
+            formatter._oldText = text
+        }
+
+        if (phoneNumberField.autoFormat && (!phoneNumberField.updateOnlyWhenFocused || phoneNumberField.activeFocus)) {
+            var result = formatter.formatText(phoneNumberField.text, phoneNumberField.cursorPosition)
+
+            if (result.text !== phoneNumberField.text) {
+                var cursorAtEnd = (phoneNumberField.cursorPosition === formatter._oldText.length)
+                var cursorAtBeginning = (phoneNumberField.cursorPosition === 0)
+
+                phoneNumberField.text = result.text
+                if (!cursorAtEnd && !cursorAtBeginning) {
+                    phoneNumberField.cursorPosition = result.pos
+                }
+            }
+        }
+        formatter._oldText = text
     }
 }
