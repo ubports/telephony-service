@@ -42,6 +42,13 @@ set(TELEPHONY_SERVICE_DIR ${CMAKE_INSTALL_DATADIR}/telephony-service)
 
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
 
+# uninstall target
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+               "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+               IMMEDIATE @ONLY)
+add_custom_target(uninstall "${CMAKE_COMMAND}"
+                  -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+
 find_package(Qt5Core)
 find_package(Qt5Contacts)
 find_package(Qt5DBus)
