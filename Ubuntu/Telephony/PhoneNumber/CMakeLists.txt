@@ -28,3 +28,16 @@ install(FILES ${PHONENUMBER_QMLS} DESTINATION ${PHONENUMBER_PLUGIN_DIR})
 
 # make the files visible on qtcreator
 add_custom_target(phonenumber_QMlFiles ALL SOURCES ${PHONENUMBER_QMLS})
+
+
+#copy qml files to build dir to make it possible to run without install
+add_custom_target(copy_qml)
+foreach(QML_FILE ${PHONENUMBER_QMLS})
+  add_custom_command(TARGET copy_qml PRE_BUILD
+                     COMMAND ${CMAKE_COMMAND} -E
+                         copy ${CMAKE_CURRENT_SOURCE_DIR}/${QML_FILE} ${CMAKE_CURRENT_BINARY_DIR}/)
+endforeach()
+
+if (NOT ${CMAKE_CURRENT_BINARY_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
+    add_dependencies(telephonyservice-phonenumber-qml copy_qml)
+endif()
