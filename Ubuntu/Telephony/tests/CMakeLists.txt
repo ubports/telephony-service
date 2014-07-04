@@ -19,7 +19,7 @@ generate_tests(
     ContactWatcherTest
     )
 
-file(GLOB QML_TESTS *.qml)
+file(GLOB QML_TESTS *.qml *.js)
 
 # make the files visible on qtcreator
 add_custom_target(telephonyservice_QMLTESTS ALL SOURCES ${QML_TESTS})

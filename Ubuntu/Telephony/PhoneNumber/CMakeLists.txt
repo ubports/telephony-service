@@ -7,6 +7,8 @@ set(PHONENUMBER_SRCS
 
 set(PHONENUMBER_QMLS
     PhoneNumberField.qml
+    PhoneNumberInput.qml
+    PhoneNumber.js
     qmldir
 )
 

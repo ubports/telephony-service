@@ -22,18 +22,18 @@ import Ubuntu.Telephony.PhoneNumber 0.1
 import "tst_PhoneNumberData.js" as TestData
 
 TestCase {
-    id: phoneNumberFieldTest
-    name: "PhoneNumberFieldTest"
+    id: phoneNumberInputTest
+    name: "PhoneNumberInputTest"
 
     function init()
     {
-        TestData.reset_item(phoneField)
+        TestData.reset_item(phoneInput)
     }
 
     function test_updateOnlyWhenFocused()
     {
-        phoneField.updateOnlyWhenFocused = false
-        compare(phoneField.updateOnlyWhenFocused, false)
+        phoneInput.updateOnlyWhenFocused = false
+        compare(phoneInput.updateOnlyWhenFocused, false)
     }
 
     function test_formatPhone_data()
@@ -43,9 +43,9 @@ TestCase {
 
     function test_formatPhone(data)
     {
-        phoneField.insert(0, data.input)
-        tryCompare(phoneField, "text", data.expectedOutput)
-        tryCompare(phoneField, "cursorPosition", data.expectedCursorPosition)
+        phoneInput.insert(0, data.input)
+        tryCompare(phoneInput, "text", data.expectedOutput)
+        tryCompare(phoneInput, "cursorPosition", data.expectedCursorPosition)
     }
 
     function test_modifyPhone_data()
@@ -55,25 +55,25 @@ TestCase {
 
     function test_modifyPhone(data)
     {
-        phoneField.text = data.input
-        tryCompare(phoneField, "text", data.formatedInput)
+        phoneInput.text = data.input
+        tryCompare(phoneInput, "text", data.formatedInput)
 
-        phoneField.cursorPosition = data.moveCursor
-        tryCompare(phoneField, "cursorPosition", data.moveCursor)
+        phoneInput.cursorPosition = data.moveCursor
+        tryCompare(phoneInput, "cursorPosition", data.moveCursor)
 
         switch (data.action) {
         case "remove":
-            phoneField.remove(data.moveCursor, data.moveCursor-1)
+            phoneInput.remove(data.moveCursor, data.moveCursor-1)
             break;
         case "insert":
-            phoneField.insert(data.moveCursor, data.text)
+            phoneInput.insert(data.moveCursor, data.text)
         }
-        tryCompare(phoneField, "text", data.newFormatedInput)
-        tryCompare(phoneField, "cursorPosition", data.expectedCursorPosition)
+        tryCompare(phoneInput, "text", data.newFormatedInput)
+        tryCompare(phoneInput, "cursorPosition", data.expectedCursorPosition)
     }
 
-    PhoneNumberField {
-        id: phoneField
+    PhoneNumberInput {
+        id: phoneInput
 
         focus: true
         autoFormat: true
