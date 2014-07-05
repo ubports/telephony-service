@@ -39,6 +39,11 @@ function formatPhone_data()
 function modifyPhone_data()
 {
     var data = [];
+    // Input a number
+    data.push({input: "555",  formatedInput: "555", moveCursor: 3,
+               action: "insert", text: "5",
+               newFormatedInput: "555-5", expectedCursorPosition: 5})
+
     // change a number and keep the format
     data.push({input: "7327572923",  formatedInput: "(732) 757-2923", moveCursor: 4,
                action: "remove", text: "",

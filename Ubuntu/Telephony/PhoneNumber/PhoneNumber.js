@@ -19,17 +19,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-var _oldText = ""
-
 function onTextChange(phoneNumberItem, formatter)
 {
     if (phoneNumberItem.text === "") {
-        _oldText = ""
         return;
-    }
-
-    if (_oldText === "") {
-        _oldText = phoneNumberItem.text
     }
 
     if (phoneNumberItem.autoFormat &&
@@ -37,14 +30,8 @@ function onTextChange(phoneNumberItem, formatter)
         var result = formatter.formatText(phoneNumberItem.text, phoneNumberItem.cursorPosition)
 
         if (result.text !== phoneNumberItem.text) {
-            var cursorAtEnd = (phoneNumberItem.cursorPosition === _oldText.length)
-            var cursorAtBeginning = (phoneNumberItem.cursorPosition === 0)
-
             phoneNumberItem.text = result.text
-            if (!cursorAtEnd && !cursorAtBeginning) {
-                phoneNumberItem.cursorPosition = result.pos
-            }
+            phoneNumberItem.cursorPosition = result.pos
         }
     }
-    _oldText = phoneNumberItem.text
 }
