@@ -208,22 +208,19 @@ QString AsYouTypeFormatter::formatTextImpl(const QString &text, int *cursorPosit
     }
 
     std::string result;
-    bool positionSaved = false;
     for(int i = 0, iMax = text.size(); i < iMax; i++) {
         bool savePosition = (cursorPosition != 0) && (i < *cursorPosition);
         QChar iChar = text.at(i);
         if (iChar.isDigit() || (iChar.toLatin1() == '+')) {
             if (savePosition) {
-                positionSaved = true;
                 m_formatter->InputDigitAndRememberPosition(iChar.toLatin1(), &result);
             } else {
-                *cursorPosition = result.size();
                 m_formatter->InputDigit(iChar.toLatin1(), &result);
             }
         }
     }
 
-    if (positionSaved) {
+    if (cursorPosition) {
         *cursorPosition = m_formatter->GetRememberedPosition();
     }
 

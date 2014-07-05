@@ -58,5 +58,9 @@ function modifyPhone_data()
                action: "remove", text: "",
                newFormatedInput: "757-2923", expectedCursorPosition: 3})
 
+    data.push({input: "08199086488",  formatedInput: "08199086488", moveCursor: 3,
+               action: "remove", text: "",
+               newFormatedInput: "(089) 908-6488", expectedCursorPosition: 3})
+
     return data
 }
