@@ -17,7 +17,7 @@ include_directories(
 link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
 
 add_executable(telephony-service-approver ${approver_SRCS} ${approver_HDRS})
-qt5_use_modules(telephony-service-approver Contacts Core DBus Gui Multimedia Qml)
+qt5_use_modules(telephony-service-approver Contacts Core DBus Gui Multimedia Qml Feedback)
 
 target_link_libraries(telephony-service-approver
     ${TP_QT5_LIBRARIES}

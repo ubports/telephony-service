@@ -35,6 +35,7 @@
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
 #include <QDebug>
+#include <QFeedbackHapticsEffect>
 
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/ChannelClassSpec>
@@ -70,6 +71,9 @@ Approver::Approver()
         connect(GreeterContacts::instance(), SIGNAL(contactUpdated(QtContacts::QContact)),
                 this, SLOT(updateNotification(QtContacts::QContact)));
     }
+    // WORKAROUND: we need to use a timer as the qtubuntu sensors backend does not support setPeriod()
+    mVibrateTimer.setInterval(4000);
+    connect(&mVibrateTimer, SIGNAL(timeout()), &mVibrateEffect, SLOT(start()));
 }
 
 Approver::~Approver()
@@ -321,6 +325,12 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
     // play a ringtone
     Ringtone::instance()->playIncomingCallSound();
 
+    if (!CallManager::instance()->hasCalls()) {
+        mVibrateEffect.setDuration(2000);
+        mVibrateEffect.start();
+        mVibrateTimer.start();
+    }
+
     mChannels.remove(pr);
 
     // and now set up the contact matching for either greeter mode or regular mode
@@ -518,6 +528,11 @@ void Approver::closeSnapDecision()
     }
 
     Ringtone::instance()->stopIncomingCallSound();
+    mVibrateTimer.stop();
+    // WORKAROUND: the ubuntu qt sensors backend does not support setPeriod() and stop(),
+    // so we invoke a short vibration to simulate a stop() call
+    mVibrateEffect.setDuration(1);
+    mVibrateEffect.start();
 }
 
 void Approver::onHangupAndAcceptCallRequested()

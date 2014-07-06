@@ -31,6 +31,7 @@
 #include <TelepathyQt/AbstractClientApprover>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/ChannelDispatchOperation>
+#include <QFeedbackHapticsEffect>
 
 class Approver : public QObject, public Tp::AbstractClientApprover
 {
@@ -71,6 +72,8 @@ private:
     QString mDefaultTitle;
     QString mDefaultIcon;
     QString mCachedBody;
+    QFeedbackHapticsEffect mVibrateEffect;
+    QTimer mVibrateTimer;
 };
 
 #endif // APPROVER_H
