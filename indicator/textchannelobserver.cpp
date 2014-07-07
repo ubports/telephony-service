@@ -373,7 +373,8 @@ void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 
 void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
 {
-    MessagingMenu::instance()->removeMessage(message.messageToken());
+    QByteArray token(message.messageToken().toUtf8());
+    MessagingMenu::instance()->removeMessage(token.toHex());
 }
 
 void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QString &reply)
