@@ -27,6 +27,7 @@
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
 #include <QFile>
+#include <QFeedbackHapticsEffect>
 #include <QDBusReply>
 #include <QDBusServiceWatcher>
 #include <QtDBus/QDBusInterface>
@@ -51,6 +52,7 @@ private:
     QMediaPlaylist mCallAudioPlaylist;
 
     QMediaPlayer *mMessageAudioPlayer;
+    QFeedbackHapticsEffect mVibrateEffect;
 };
 
 class Ringtone : public QObject

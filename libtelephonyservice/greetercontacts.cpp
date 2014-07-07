@@ -149,6 +149,28 @@ QString GreeterContacts::incomingMessageSound()
     return mIncomingMessageSound.toString();
 }
 
+bool GreeterContacts::incomingCallVibrate()
+{
+    if (silentMode() && getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrateSilentMode").toBool()) {
+        return true;
+    }
+    if (!mIncomingCallVibrate.isValid()) {
+        mIncomingCallVibrate = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrate");
+    }
+    return mIncomingCallVibrate.toBool();
+}
+
+bool GreeterContacts::incomingMessageVibrate()
+{
+    if (silentMode() && getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrateSilentMode").toBool()) {
+        return true;
+    }
+    if (!mIncomingMessageVibrate.isValid()) {
+        mIncomingMessageVibrate = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrate");
+    }
+    return mIncomingMessageVibrate.toBool();
+}
+
 void GreeterContacts::greeterListPropertiesChanged(const QString &interface,
                                                const QVariantMap &changed,
                                                const QStringList &invalidated)
@@ -216,6 +238,8 @@ void GreeterContacts::accountsPropertiesChanged(const QString &interface,
         checkUpdatedValue(changed, invalidated, "SilentMode", mSilentMode);
         checkUpdatedValue(changed, invalidated, "IncomingCallSound", mIncomingCallSound);
         checkUpdatedValue(changed, invalidated, "IncomingMessageSound", mIncomingMessageSound);
+        checkUpdatedValue(changed, invalidated, "IncomingMessageVibrate", mIncomingMessageVibrate);
+        checkUpdatedValue(changed, invalidated, "IncomingCallVibrate", mIncomingCallVibrate);
     }
 }
 
@@ -288,6 +312,8 @@ void GreeterContacts::updateActiveUser(const QString &username)
         mSilentMode = QVariant();
         mIncomingCallSound = QVariant();
         mIncomingMessageSound = QVariant();
+        mIncomingCallVibrate = QVariant();
+        mIncomingMessageVibrate = QVariant();
         signalIfNeeded();
     }
 }

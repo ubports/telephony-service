@@ -325,7 +325,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
     // play a ringtone
     Ringtone::instance()->playIncomingCallSound();
 
-    if (!CallManager::instance()->hasCalls()) {
+    if (!CallManager::instance()->hasCalls() && GreeterContacts::instance()->incomingCallVibrate()) {
         mVibrateEffect.setDuration(2000);
         mVibrateEffect.start();
         mVibrateTimer.start();
