@@ -142,16 +142,12 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
             regions += QString(SMIL_IMAGE_REGION).arg(attachment.id);
             parts += QString(SMIL_IMAGE_PART).arg(QFileInfo(attachmentFile.fileName()).fileName()).arg(attachment.id);
             // check if we need to reduce de image size in case it's bigger than 300k
-            if (attachmentFile.size() > 1024*300) {
+            if (attachmentFile.size() > 307200) {
                 QImage scaledImage(newFilePath);
                 if (!scaledImage.isNull()) {
                     QBuffer buffer(&fileData);
                     buffer.open(QIODevice::WriteOnly);
-                    if (scaledImage.height() > scaledImage.width()) {
-                        scaledImage.scaledToHeight(640).save(&buffer, "jpg");
-                    } else {
-                        scaledImage.scaledToWidth(640).save(&buffer, "jpg");
-                    }
+                    scaledImage.scaled(640, 640, Qt::KeepAspectRatio).save(&buffer, "jpg");
                 } else {
                     fileData = attachmentFile.readAll();
                 }
