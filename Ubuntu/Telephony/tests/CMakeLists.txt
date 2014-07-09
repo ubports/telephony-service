@@ -19,11 +19,14 @@ generate_tests(
     ContactWatcherTest
     )
 
-file(GLOB QML_TESTS *.qml)
+file(GLOB QML_TESTS *.qml *.js)
 
 # make the files visible on qtcreator
 add_custom_target(telephonyservice_QMLTESTS ALL SOURCES ${QML_TESTS})
 
 # FIXME: those tests are disabled because qmltestrunner is crashing on armhf.
 # They should be re-enabled once the problem is found and fixed.
-#add_test(qmltests qmltestrunner -input ${CMAKE_CURRENT_SOURCE_DIR} -import ${CMAKE_BINARY_DIR} -xunitxml -o ${CMAKE_BINARY_DIR}/test_qmltests.xml)
+add_test(NAME qmltestrunner
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+         COMMAND xvfb-run -a -s "-screen 0 1024x768x24" qmltestrunner -import ${CMAKE_BINARY_DIR} -input ${CMAKE_CURRENT_SOURCE_DIR}
+)
