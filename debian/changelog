@@ -1,3 +1,20 @@
+telephony-service (0.1+14.10.20140709.2-0ubuntu1) utopic; urgency=low
+
+  [ Michael Terry ]
+  * Don't run tests during build if nocheck is in DEB_BUILD_OPTIONS.
+
+  [ Tiago Salem Herrmann ]
+  * Sort list-modems output so /ril_0 is set to account0 on first boot.
+  * Add support for vibration on incoming calls/messages. (LP: #1232350)
+  * Reduce image sizes before sending them to telepathy. MMS's have a
+    limit of 300k (LP: #1337585)
+
+  [ Renato Araujo Oliveira Filho ]
+  * Update PhoneNumber formatter text if the autoFormat property
+    changes.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 09 Jul 2014 17:41:55 +0000
+
 telephony-service (0.1+14.10.20140709-0ubuntu1) utopic; urgency=low
 
   [ Tiago Salem Herrmann ]
