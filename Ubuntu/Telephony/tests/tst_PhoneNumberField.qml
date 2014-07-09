@@ -72,6 +72,15 @@ TestCase {
         tryCompare(phoneField, "cursorPosition", data.expectedCursorPosition)
     }
 
+    function test_update_autoFormater()
+    {
+        phoneField.autoFormat = false
+        phoneField.text = "7572923"
+        compare(phoneField.text, "7572923")
+        phoneField.autoFormat = true
+        compare(phoneField.text, "757-2923")
+    }
+
     PhoneNumberField {
         id: phoneField
 

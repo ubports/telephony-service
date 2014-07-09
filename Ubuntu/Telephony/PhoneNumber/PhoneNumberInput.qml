@@ -73,4 +73,9 @@ TextInput {
     }
 
     onTextChanged: PhoneNumberJS.onTextChange(phoneNumberInput, formatter)
+    onAutoFormatChanged: {
+        if (autoFormat) {
+            PhoneNumberJS.onTextChange(phoneNumberInput, formatter)
+        }
+    }
 }

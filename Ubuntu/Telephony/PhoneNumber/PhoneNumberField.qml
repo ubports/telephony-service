@@ -73,4 +73,9 @@ TextField {
     }
 
     onTextChanged: PhoneNumberJS.onTextChange(phoneNumberField, formatter)
+    onAutoFormatChanged: {
+        if (autoFormat) {
+            PhoneNumberJS.onTextChange(phoneNumberField, formatter)
+        }
+    }
 }
