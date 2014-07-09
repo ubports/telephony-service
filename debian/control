@@ -18,16 +18,19 @@ Build-Depends: cmake,
                libprotobuf-dev,
                pkg-config,
                python,
+               qml-module-qttest,
                qt5-default,
                qtbase5-dev (>= 5.0),
                qtdeclarative5-dev (>= 5.0),
                qtdeclarative5-dev-tools (>= 5.0),
                qtdeclarative5-test-plugin (>= 5.0),
                qtfeedback5-dev,
+               qtdeclarative5-ubuntu-ui-toolkit-plugin,
                qtmultimedia5-dev (>= 5.0),
                qtpim5-dev (>= 5),
                libusermetricsinput1-dev,
                telepathy-mission-control-5,
+               xvfb,
 Standards-Version: 3.9.4
 Homepage: https://launchpad.net/telephony-service
 # If you aren't a member of ~phablet-team but need to upload packaging changes,
@@ -77,6 +80,7 @@ Multi-Arch: same
 Pre-Depends: dpkg (>= 1.15.6~)
 Depends: ${misc:Depends},
          ${shlibs:Depends},
+         qtdeclarative5-ubuntu-ui-toolkit-plugin,
 Description: Telephony service components for Ubuntu - QML plugin
  Telephony PhoneNumber components for Ubuntu.
  .

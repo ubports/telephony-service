@@ -23,6 +23,7 @@
 #define TELEPHONY_PHONENUMBER_ASYOUTYPEFORMATTER_H
 
 #include <QtCore/QObject>
+#include <QtCore/QVariantMap>
 
 #include <phonenumbers/asyoutypeformatter.h>
 
@@ -51,9 +52,11 @@ public:
 
 public Q_SLOTS:
     void clear();
+    QVariantMap formatText(const QString &text, int cursorPosition);
 
 private Q_SLOTS:
     void updateFormattedText();
+
 
 Q_SIGNALS:
     void textChanged();
@@ -68,6 +71,8 @@ private:
     QString m_formattedText;
     QString m_defaultRegionCode;
     QString m_formatterRegionCode;
+
+    QString formatTextImpl(const QString &text, int *cursorPosition);
 };
 
 #endif //TELEPHONY_PHONENUMBER_ASYOUTYPEFORMATTER_H

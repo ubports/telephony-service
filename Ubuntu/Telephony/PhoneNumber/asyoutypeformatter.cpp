@@ -154,9 +154,18 @@ void AsYouTypeFormatter::clear()
     Q_EMIT textChanged();
 }
 
+QVariantMap AsYouTypeFormatter::formatText(const QString &text, int cursorPosition)
+{
+    int newPosition = cursorPosition;
+    QString newText = formatTextImpl(text, &newPosition);
+    QVariantMap result;
+    result.insert("text", newText);
+    result.insert("pos", newPosition);
+    return result;
+}
+
 void AsYouTypeFormatter::updateFormattedText()
 {
-    static const QRegularExpression numbersReg = QRegularExpression("\\+*\\d+");
     if (!m_enabled) {
         if (!m_formattedText.isEmpty()) {
             m_formattedText.clear();
@@ -169,15 +178,15 @@ void AsYouTypeFormatter::updateFormattedText()
         return;
     }
 
-    // Remove all non digits chars
-    QRegularExpressionMatchIterator i = numbersReg.globalMatch(m_rawText);
-    QString onlyNumbers;
-    while (i.hasNext()) {
-        QRegularExpressionMatch match = i.next();
-        QString word = match.captured();
-        onlyNumbers += word;
+    QString newFormattedText = formatTextImpl(m_rawText, 0);
+    if (newFormattedText != m_formattedText) {
+        m_formattedText = newFormattedText;
+        Q_EMIT formattedTextChanged();
     }
+}
 
+QString AsYouTypeFormatter::formatTextImpl(const QString &text, int *cursorPosition)
+{
     // if the number starts with "+" we will use unknown region otherwise we will use the default region
     QString numberRegion = m_defaultRegionCode;
     if (m_rawText.startsWith("+")) {
@@ -190,9 +199,6 @@ void AsYouTypeFormatter::updateFormattedText()
         m_formatter = 0;
     }
 
-    std::string result;
-    QByteArray number(onlyNumbers.toUtf8());
-
     if (m_formatter) {
         m_formatter->Clear();
     } else {
@@ -201,13 +207,22 @@ void AsYouTypeFormatter::updateFormattedText()
         m_formatterRegionCode = numberRegion;
     }
 
-    for(int i = 0, iMax = number.size(); i < iMax; i++) {
-        m_formatter->InputDigit(number[i], &result);
+    std::string result;
+    for(int i = 0, iMax = text.size(); i < iMax; i++) {
+        bool savePosition = (cursorPosition != 0) && (i < *cursorPosition);
+        QChar iChar = text.at(i);
+        if (iChar.isDigit() || (iChar.toLatin1() == '+')) {
+            if (savePosition) {
+                m_formatter->InputDigitAndRememberPosition(iChar.toLatin1(), &result);
+            } else {
+                m_formatter->InputDigit(iChar.toLatin1(), &result);
+            }
+        }
     }
 
-    QString newFormattedText = QString::fromStdString(result);
-    if (newFormattedText != m_formattedText) {
-        m_formattedText = newFormattedText;
-        Q_EMIT formattedTextChanged();
+    if (cursorPosition) {
+        *cursorPosition = m_formatter->GetRememberedPosition();
     }
+
+    return QString::fromStdString(result);
 }
