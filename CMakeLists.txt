@@ -57,6 +57,7 @@ find_package(Qt5Multimedia)
 find_package(Qt5Qml)
 #find_package(Qt5Quick)
 find_package(Qt5Test)
+find_package(Qt5Feedback)
 find_package(LibPhoneNumber REQUIRED)
 
 execute_process(

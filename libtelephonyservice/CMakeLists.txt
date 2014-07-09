@@ -29,6 +29,6 @@ target_link_libraries(telephonyservice
                       ${UBUNTU_APP_LIB}
                       ${NOTIFY_LIBRARIES})
 
-qt5_use_modules(telephonyservice Contacts Core DBus Multimedia Qml Quick)
+qt5_use_modules(telephonyservice Contacts Core DBus Feedback Multimedia Qml Quick)
 
 add_subdirectory(tests)

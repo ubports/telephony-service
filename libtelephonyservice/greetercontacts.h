@@ -49,6 +49,8 @@ public:
     bool silentMode();
     QString incomingCallSound();
     QString incomingMessageSound();
+    bool incomingMessageVibrate();
+    bool incomingCallVibrate();
 
     static bool isGreeterMode();
 
@@ -88,6 +90,8 @@ private:
     QVariant mSilentMode;
     QVariant mIncomingCallSound;
     QVariant mIncomingMessageSound;
+    QVariant mIncomingCallVibrate;
+    QVariant mIncomingMessageVibrate;
     bool mGreeterActive;
 
     QtContacts::QContactFilter mFilter;

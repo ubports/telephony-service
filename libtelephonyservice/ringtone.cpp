@@ -29,6 +29,7 @@ RingtoneWorker::RingtoneWorker(QObject *parent) :
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
     mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
     mCallAudioPlaylist.setCurrentIndex(0);
+    mVibrateEffect.setDuration(1000);
 }
 
 void RingtoneWorker::playIncomingCallSound()
@@ -62,6 +63,10 @@ void RingtoneWorker::stopIncomingCallSound()
 
 void RingtoneWorker::playIncomingMessageSound()
 {
+    if (GreeterContacts::instance()->incomingMessageVibrate()) {
+        mVibrateEffect.start();
+    }
+
     if (!qgetenv("PA_DISABLED").isEmpty()) {
         return;
     }
