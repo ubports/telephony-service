@@ -36,6 +36,22 @@ PhoneUtils::~PhoneUtils()
 
 QString PhoneUtils::format(const QString &phoneNumber, const QString &defaultRegion,  PhoneUtils::PhoneNumberFormat format)
 {
+    std::string formattedNumber;
+    i18n::phonenumbers::PhoneNumberUtil::PhoneNumberFormat pNFormat;
+    if (format == PhoneUtils::Auto) {
+        // skip if it is a special number or a command
+        if (phoneNumber.startsWith("#") || phoneNumber.startsWith("*")) {
+            return phoneNumber;
+        } else if (phoneNumber.startsWith("+")) {
+            pNFormat = i18n::phonenumbers::PhoneNumberUtil::INTERNATIONAL;
+        } else {
+            pNFormat = i18n::phonenumbers::PhoneNumberUtil::NATIONAL;
+        }
+    } else {
+        pNFormat = static_cast<i18n::phonenumbers::PhoneNumberUtil::PhoneNumberFormat>(format);
+    }
+
+
     i18n::phonenumbers::PhoneNumberUtil *phonenumberUtil = i18n::phonenumbers::PhoneNumberUtil::GetInstance();
 
     i18n::phonenumbers::PhoneNumber number;
@@ -58,17 +74,6 @@ QString PhoneUtils::format(const QString &phoneNumber, const QString &defaultReg
         break;
     }
 
-    std::string formattedNumber;
-    i18n::phonenumbers::PhoneNumberUtil::PhoneNumberFormat pNFormat;
-    if (format == PhoneUtils::Auto) {
-        if (phoneNumber.startsWith("+")) {
-            pNFormat = i18n::phonenumbers::PhoneNumberUtil::INTERNATIONAL;
-        } else {
-            pNFormat = i18n::phonenumbers::PhoneNumberUtil::NATIONAL;
-        }
-    } else {
-        pNFormat = static_cast<i18n::phonenumbers::PhoneNumberUtil::PhoneNumberFormat>(format);
-    }
 
     phonenumberUtil->Format(number,
                             pNFormat,
