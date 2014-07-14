@@ -34,6 +34,12 @@ PhoneUtils::~PhoneUtils()
 {
 }
 
+QString PhoneUtils::defaultRegion() const
+{
+    QString locale = QLocale::system().name();
+    return locale.split("_").last();
+}
+
 QString PhoneUtils::format(const QString &phoneNumber, const QString &defaultRegion,  PhoneUtils::PhoneNumberFormat format)
 {
     std::string formattedNumber;
@@ -56,7 +62,8 @@ QString PhoneUtils::format(const QString &phoneNumber, const QString &defaultReg
 
     i18n::phonenumbers::PhoneNumber number;
     i18n::phonenumbers::PhoneNumberUtil::ErrorType error;
-    error = phonenumberUtil->Parse(phoneNumber.toStdString(), defaultRegion.toStdString(), &number);
+    QString region = defaultRegion.isEmpty() ? this->defaultRegion() : defaultRegion;
+    error = phonenumberUtil->Parse(phoneNumber.toStdString(), region.toStdString(), &number);
 
     switch(error) {
     case i18n::phonenumbers::PhoneNumberUtil::INVALID_COUNTRY_CODE_ERROR:
@@ -79,6 +86,14 @@ QString PhoneUtils::format(const QString &phoneNumber, const QString &defaultReg
                             pNFormat,
                             &formattedNumber);
     return QString::fromStdString(formattedNumber);
+}
+
+bool PhoneUtils::event(QEvent *event)
+{
+    if (event->type() == QEvent::LocaleChange) {
+        Q_EMIT defaultRegionChanged();
+    }
+    return QObject::event(event);
 }
 
 

@@ -23,10 +23,12 @@
 #define TELEPHONY_PHONEUTILS_H
 
 #include <QtCore/QObject>
+#include <QtCore/QEvent>
 
 class PhoneUtils : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QString defaultRegion READ defaultRegion NOTIFY defaultRegionChanged)
 public:
     enum PhoneNumberFormat {
         E164 = 0,
@@ -39,7 +41,14 @@ public:
     PhoneUtils(QObject *parent = 0);
     ~PhoneUtils();
 
-    Q_INVOKABLE QString format(const QString &phoneNumber, const QString &defaultRegion, PhoneNumberFormat format = Auto);
+    QString defaultRegion() const;
+
+    Q_INVOKABLE QString format(const QString &phoneNumber, const QString &defaultRegion = QString(), PhoneNumberFormat format = Auto);
+
+    virtual bool event(QEvent *event);
+
+Q_SIGNALS:
+    void defaultRegionChanged();
 };
 
 #endif

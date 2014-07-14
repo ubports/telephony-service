@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.0
+import QtQuick 2.2
 import QtTest 1.0
 import Ubuntu.Telephony.PhoneNumber 0.1 as PhoneNumber
 
@@ -40,5 +40,11 @@ TestCase {
     {
         var formatted = PhoneNumber.PhoneUtils.format(data.input, "US")
         compare(formatted, data.expectedOutput)
+    }
+
+    function test_locale()
+    {
+        var localeName = Qt.locale().name
+        compare(PhoneNumber.PhoneUtils.defaultRegion, localeName.substr(localeName.length - 2, 2))
     }
 }
