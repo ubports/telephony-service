@@ -54,8 +54,6 @@
     }
     \endqml
 */
-
-
 AsYouTypeFormatter::AsYouTypeFormatter(QObject *parent)
     : QObject(parent),
       m_formatter(0),
