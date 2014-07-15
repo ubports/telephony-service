@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 
     HandlerDBus dbus;
 
-    QObject::connect(TelepathyHelper::instance(), SIGNAL(accountReady()),
+    QObject::connect(TelepathyHelper::instance(), SIGNAL(setupReady()),
                      &dbus, SLOT(connectToBus()));
 
     return app.exec();

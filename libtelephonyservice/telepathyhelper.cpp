@@ -66,6 +66,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
             SLOT(onAccountManagerReady(Tp::PendingOperation*)));
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
+    connect(this, SIGNAL(accountReady()), SIGNAL(setupReady()));
 }
 
 TelepathyHelper::~TelepathyHelper()
@@ -328,6 +329,7 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     if (mAccounts.count() == 0) {
         qCritical() << "No compatible telepathy account found!";
+        Q_EMIT setupReady();
         return;
     }
 

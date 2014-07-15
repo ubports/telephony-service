@@ -69,6 +69,7 @@ Q_SIGNALS:
     void accountReady();
     void connectedChanged();
     void accountIdsChanged();
+    void setupReady();
 
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);
