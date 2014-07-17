@@ -44,6 +44,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
+    void onConnectedChanged();
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
     void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);

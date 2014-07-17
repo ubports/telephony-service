@@ -298,6 +298,11 @@ Tp::AccountPtr TelepathyHelper::accountForId(const QString &accountId) const
     return Tp::AccountPtr();
 }
 
+bool TelepathyHelper::isAccountConnected(const QString &accountId) const
+{
+    return isAccountConnected(accountForId(accountId));
+}
+
 bool TelepathyHelper::isAccountConnected(const Tp::AccountPtr &account) const
 {
     return !account.isNull() && !account->connection().isNull() &&
