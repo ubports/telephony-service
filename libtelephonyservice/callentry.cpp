@@ -23,6 +23,7 @@
 #include "callentry.h"
 #include "callmanager.h"
 #include "telepathyhelper.h"
+#include "accountentry.h"
 
 #include <QDBusReply>
 #include <QTime>
@@ -52,6 +53,8 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     connect(TelepathyHelper::instance()->handlerInterface(),
             SIGNAL(CallPropertiesChanged(QString, QVariantMap)),
             SLOT(onCallPropertiesChanged(QString,QVariantMap)));
+
+    setVoicemail(phoneNumber() == mAccount->voicemailNumber());
 
     Q_EMIT incomingChanged();
 }
@@ -219,7 +222,7 @@ bool CallEntry::incoming() const
         return false;
     }
 
-    return mChannel->initiatorContact() != mAccount->connection()->selfContact();
+    return mChannel->initiatorContact() != mAccount->account()->connection()->selfContact();
 }
 
 bool CallEntry::ringing() const
@@ -271,6 +274,11 @@ void CallEntry::splitCall()
 Tp::CallChannelPtr CallEntry::channel() const
 {
     return mChannel;
+}
+
+AccountEntry *CallEntry::account() const
+{
+    return mAccount;
 }
 
 int CallEntry::callsCount(QQmlListProperty<CallEntry> *p)

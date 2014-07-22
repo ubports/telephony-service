@@ -21,6 +21,7 @@
  */
 
 #include "telepathyhelper.h"
+#include "accountentry.h"
 #include "chatmanager.h"
 #include "callmanager.h"
 #include "config.h"
@@ -84,8 +85,8 @@ QStringList TelepathyHelper::accountIds()
     QStringList ids;
 
     if (QCoreApplication::applicationName() == "telephony-service-handler" || mAccounts.size() != 0) {
-        Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
-            ids << account->uniqueIdentifier();
+        Q_FOREACH(const AccountEntry *account, mAccounts) {
+            ids << account->accountId();
         }
     } else if (!GreeterContacts::instance()->isGreeterMode()) {
         // if we are in greeter mode, we should not initialize the handler to get the account IDs
@@ -98,7 +99,7 @@ QStringList TelepathyHelper::accountIds()
     return ids;
 }
 
-QList<Tp::AccountPtr> TelepathyHelper::accounts() const
+QList<AccountEntry*> TelepathyHelper::accounts() const
 {
     return mAccounts;
 }
@@ -185,67 +186,14 @@ QStringList TelepathyHelper::supportedProtocols() const
     return protocols;
 }
 
-void TelepathyHelper::initializeAccount(const Tp::AccountPtr &account)
+void TelepathyHelper::setupAccountEntry(AccountEntry *entry)
 {
-    // watch for account state and connection changes
-    connect(account.data(), &Tp::Account::stateChanged, [this, account](bool enabled) {
-        if (!enabled) {
-            ensureAccountEnabled(account);
-        }
-    });
-
-    connect(account.data(), &Tp::Account::connectionChanged, [this, account](const Tp::ConnectionPtr &connection) {
-        Q_EMIT accountConnectionChanged();
-        if (connection.isNull()) {
-            ensureAccountConnected(account);
-        } else {
-            watchSelfContactPresence(account);
-        }
-        updateConnectedStatus();
-    });
-
-    // and make sure it is enabled and connected
-    if (!account->isEnabled()) {
-        ensureAccountEnabled(account);
-    } else {
-        ensureAccountConnected(account);
-    }
-}
-
-void TelepathyHelper::ensureAccountEnabled(const Tp::AccountPtr &account)
-{
-    account->setConnectsAutomatically(true);
-    connect(account->setEnabled(true), &Tp::PendingOperation::finished, [this, account]() {
-        ensureAccountConnected(account);
-    });
-}
-
-void TelepathyHelper::ensureAccountConnected(const Tp::AccountPtr &account)
-{
-    // if the account is not connected, request it to connect
-    if (!account->connection() || account->connectionStatus() != Tp::ConnectionStatusConnected) {
-        Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", "online");
-        account->setRequestedPresence(presence);
-    } else {
-        watchSelfContactPresence(account);
-    }
-
-    if (mFirstTime) {
-        Q_EMIT accountReady();
-        mFirstTime = false;
-    }
-}
-
-void TelepathyHelper::watchSelfContactPresence(const Tp::AccountPtr &account)
-{
-    if (account.isNull() || account->connection().isNull()) {
-        return;
-    }
-
-    connect(account->connection()->selfContact().data(),
-            SIGNAL(presenceChanged(Tp::Presence)),
+    connect(entry,
+            SIGNAL(connectedChanged()),
             SLOT(updateConnectedStatus()));
-    updateConnectedStatus();
+    connect(entry,
+            SIGNAL(accountReady()),
+            SLOT(onAccountReady()));
 }
 
 void TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
@@ -272,41 +220,30 @@ void TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
     }
 }
 
-Tp::AccountPtr TelepathyHelper::accountForConnection(const Tp::ConnectionPtr &connection) const
+AccountEntry *TelepathyHelper::accountForConnection(const Tp::ConnectionPtr &connection) const
 {
     if (connection.isNull()) {
-        return Tp::AccountPtr();
+        return 0;
     }
 
-    Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
-        if (account->connection() == connection) {
+    Q_FOREACH(AccountEntry *accountEntry, mAccounts) {
+        if (accountEntry->account()->connection() == connection) {
+            return accountEntry;
+        }
+    }
+
+    return 0;
+}
+
+AccountEntry *TelepathyHelper::accountForId(const QString &accountId) const
+{
+    Q_FOREACH(AccountEntry *account, mAccounts) {
+        if (account->accountId() == accountId) {
             return account;
         }
     }
 
-    return Tp::AccountPtr();
-}
-
-Tp::AccountPtr TelepathyHelper::accountForId(const QString &accountId) const
-{
-    Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
-        if (account->uniqueIdentifier() == accountId) {
-            return account;
-        }
-    }
-
-    return Tp::AccountPtr();
-}
-
-bool TelepathyHelper::isAccountConnected(const QString &accountId) const
-{
-    return isAccountConnected(accountForId(accountId));
-}
-
-bool TelepathyHelper::isAccountConnected(const Tp::AccountPtr &account) const
-{
-    return !account.isNull() && !account->connection().isNull() &&
-           account->connection()->selfContact()->presence().type() == Tp::ConnectionPresenceTypeAvailable;
+    return 0;
 }
 
 Tp::ChannelClassSpec TelepathyHelper::audioConferenceSpec()
@@ -327,22 +264,30 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
     // try to find an account of the one of supported protocols
     Q_FOREACH(const QString &protocol, supportedProtocols()) {
         accountSet = mAccountManager->accountsByProtocol(protocol);
-        if (accountSet->accounts().count() > 0) {
-            mAccounts << accountSet->accounts();
+        Q_FOREACH(const Tp::AccountPtr &account, accountSet->accounts()) {
+            AccountEntry *accountEntry = new AccountEntry(account, this);
+            setupAccountEntry(accountEntry);
+            mAccounts << accountEntry;
         }
     }
 
     if (mAccounts.count() == 0) {
-        qCritical() << "No compatible telepathy account found!";
         Q_EMIT setupReady();
         return;
     }
 
-    Q_EMIT accountIdsChanged();
+    // FIXME: handle dynamic account adding and removing
 
-    Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
-        initializeAccount(account);
+    Q_EMIT accountIdsChanged();
+}
+
+void TelepathyHelper::onAccountReady()
+{
+    if (mFirstTime) {
+        Q_EMIT accountReady();
     }
+
+    mFirstTime = false;
 }
 
 void TelepathyHelper::updateConnectedStatus()
@@ -351,8 +296,8 @@ void TelepathyHelper::updateConnectedStatus()
     mConnected = false;
 
     // check if any of the accounts is currently connected
-    Q_FOREACH(const Tp::AccountPtr &account, mAccounts) {
-        if (isAccountConnected(account)) {
+    Q_FOREACH(AccountEntry *account, mAccounts) {
+        if (account->connected()) {
             mConnected = true;
             break;
         }

@@ -26,6 +26,7 @@
 #include "phoneutils.h"
 #include "messagingmenu.h"
 #include "telepathyhelper.h"
+#include "accountentry.h"
 #include <QContactAvatar>
 #include <QContactFetchRequest>
 #include <QContactFilter>
@@ -404,8 +405,16 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
+    // FIXME: handle multiple accounts properly
+    QString voicemailNumber;
+    Q_FOREACH(AccountEntry *accountEntry, TelepathyHelper::instance()->accounts()) {
+        if (!accountEntry->voicemailNumber().isEmpty()) {
+            voicemailNumber = accountEntry->voicemailNumber();
+            break;
+        }
+    }
+
     qDebug() << "TelephonyService/MessagingMenu: Calling voicemail for messageId" << messageId;
-    QString voicemailNumber = CallManager::instance()->getVoicemailNumber();
     if (!voicemailNumber.isEmpty()) {
         ApplicationUtils::openUrl(QUrl(QString("tel:///%1").arg(voicemailNumber)));
     }

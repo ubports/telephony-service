@@ -24,6 +24,7 @@
 #include "telepathyhelper.h"
 #include "config.h"
 #include "dbustypes.h"
+#include "accountentry.h"
 
 #include <QImage>
 #include <TelepathyQt/ContactManager>
@@ -73,9 +74,9 @@ void TextHandler::onConnectedChanged()
     }
 
     // now check which accounts are connected
-    Q_FOREACH(const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
-        QString accountId = account->uniqueIdentifier();
-        if (!TelepathyHelper::instance()->isAccountConnected(account) || !mPendingMessages.contains(accountId)) {
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        QString accountId = account->accountId();
+        if (!account->connected() || !mPendingMessages.contains(accountId)) {
             continue;
         }
 
@@ -96,13 +97,13 @@ void TextHandler::startChat(const QStringList &phoneNumbers, const QString &acco
 {
     // Request the contact to start chatting to
     // FIXME: make it possible to select which account to use, for now, pick the first one
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
-    if (!TelepathyHelper::instance()->isAccountConnected(account)) {
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account->connected()) {
         qCritical() << "The selected account does not have a connection. AccountId:" << accountId;
         return;
     }
 
-    connect(account->connection()->contactManager()->contactsForIdentifiers(phoneNumbers),
+    connect(account->account()->connection()->contactManager()->contactsForIdentifiers(phoneNumbers),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
@@ -181,8 +182,8 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
 }
 
 void TextHandler::sendMMS(const QStringList &phoneNumbers, const AttachmentList &attachments, const QString &accountId) {
-   Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
-    if (!TelepathyHelper::instance()->isAccountConnected(account)) {
+   AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account->connected()) {
         mPendingMMSs[accountId][phoneNumbers].append(attachments);
         return;
     }
@@ -203,8 +204,8 @@ void TextHandler::sendMMS(const QStringList &phoneNumbers, const AttachmentList 
 
 void TextHandler::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
 {
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
-    if (!TelepathyHelper::instance()->isAccountConnected(account)) {
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account->connected()) {
         mPendingMessages[accountId][phoneNumbers].append(message);
         return;
     }
@@ -240,8 +241,8 @@ void TextHandler::acknowledgeMessages(const QStringList &phoneNumbers, const QSt
 
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(channel->connection());
-    QString accountId = account->uniqueIdentifier();
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    QString accountId = account->accountId();
     mChannels.append(channel);
 
     // check for pending messages for this channel
@@ -299,9 +300,9 @@ Tp::TextChannelPtr TextHandler::existingChat(const QStringList &phoneNumbers, co
 
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
-        Tp::AccountPtr channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        AccountEntry *channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
         if (channel->groupContacts(false).size() != phoneNumbers.size()
-            || channelAccount->uniqueIdentifier() != accountId) {
+            || channelAccount->accountId() != accountId) {
             continue;
         }
         Q_FOREACH(const QString &phoneNumberNew, phoneNumbers) {
@@ -326,8 +327,8 @@ void TextHandler::onContactsAvailable(Tp::PendingOperation *op)
         qCritical() << "The pending object is not a Tp::PendingContacts";
         return;
     }
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
-    startChat(account, pc->contacts().toSet());
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
+    startChat(account->account(), pc->contacts().toSet());
 }
 
 

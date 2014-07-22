@@ -22,6 +22,7 @@
 #include "voicemailindicator.h"
 #include "telepathyhelper.h"
 #include "messagingmenu.h"
+#include "accountentry.h"
 #include <QDebug>
 #include <QDBusReply>
 
@@ -45,7 +46,7 @@ void VoiceMailIndicator::onAccountReady()
     }
 
     // FIXME: handle multiple accounts
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
+    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->account()->connection());
     if (conn.isNull()) {
         return;
     }
@@ -77,7 +78,7 @@ bool VoiceMailIndicator::voicemailIndicatorVisible()
     }
 
     // FIXME: handle multiple accounts
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
+    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->account()->connection());
     if (conn.isNull()) {
         return false;
     }
@@ -99,7 +100,7 @@ uint VoiceMailIndicator::voicemailCount()
     }
 
     // FIXME: handle multiple accounts
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
+    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->account()->connection());
     if (conn.isNull()) {
         return false;
     }
