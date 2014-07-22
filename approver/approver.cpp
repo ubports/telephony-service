@@ -284,6 +284,9 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
     notify_notification_set_hint_string(notification,
                                         "x-canonical-private-button-tint",
                                         "true");
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-secondary-icon",
+                                        "incoming-call");
 
     QString acceptTitle = CallManager::instance()->hasCalls() ? C::gettext("Hold + Answer") :
                                                                 C::gettext("Accept");
