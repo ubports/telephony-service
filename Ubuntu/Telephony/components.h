@@ -35,9 +35,6 @@ public:
     void initializeEngine(QQmlEngine *engine, const char *uri);
     void registerTypes(const char *uri);
 
-private Q_SLOTS:
-    void onAccountReady();
-
 private:
     QQmlContext *mRootContext;
 };
