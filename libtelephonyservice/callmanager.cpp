@@ -41,7 +41,6 @@ CallManager *CallManager::instance()
 CallManager::CallManager(QObject *parent)
 : QObject(parent), mNeedsUpdate(false), mConferenceCall(0)
 {
-    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
     connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
     connect(this, &CallManager::hasCallsChanged, [this] {

@@ -104,6 +104,11 @@ QList<AccountEntry*> TelepathyHelper::accounts() const
     return mAccounts;
 }
 
+QQmlListProperty<AccountEntry> TelepathyHelper::qmlAccounts()
+{
+    return QQmlListProperty<AccountEntry>(this, 0, accountsCount, accountAt);
+}
+
 ChannelObserver *TelepathyHelper::channelObserver() const
 {
     return mChannelObserver;
@@ -256,6 +261,18 @@ Tp::ChannelClassSpec TelepathyHelper::audioConferenceSpec()
     return spec;
 }
 
+int TelepathyHelper::accountsCount(QQmlListProperty<AccountEntry> *p)
+{
+    Q_UNUSED(p)
+    return TelepathyHelper::instance()->accounts().count();
+}
+
+AccountEntry *TelepathyHelper::accountAt(QQmlListProperty<AccountEntry> *p, int index)
+{
+    Q_UNUSED(p)
+    return TelepathyHelper::instance()->accounts()[index];
+}
+
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 {
     Q_UNUSED(op)
@@ -279,6 +296,7 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
     // FIXME: handle dynamic account adding and removing
 
     Q_EMIT accountIdsChanged();
+    Q_EMIT accountsChanged();
 }
 
 void TelepathyHelper::onAccountReady()

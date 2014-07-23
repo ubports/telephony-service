@@ -24,6 +24,7 @@
 #define TELEPATHYHELPER_H
 
 #include <QObject>
+#include <QQmlListProperty>
 #include <TelepathyQt/AccountManager>
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/Connection>
@@ -43,12 +44,14 @@ class TelepathyHelper : public QObject
     Q_OBJECT
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList accountIds READ accountIds NOTIFY accountIdsChanged)
+    Q_PROPERTY(QQmlListProperty<AccountEntry> accounts READ qmlAccounts NOTIFY accountsChanged)
 
 public:
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
     QList<AccountEntry*> accounts() const;
+    QQmlListProperty<AccountEntry> qmlAccounts();
     ChannelObserver *channelObserver() const;
     QDBusInterface *handlerInterface() const;
 
@@ -62,12 +65,17 @@ public:
     // pre-populated channel class specs for conferences
     static Tp::ChannelClassSpec audioConferenceSpec();
 
+    // QQmlListProperty helpers
+    static int accountsCount(QQmlListProperty<AccountEntry> *p);
+    static AccountEntry *accountAt(QQmlListProperty<AccountEntry> *p, int index);
+
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
     void channelObserverUnregistered();
     void accountReady();
     void connectedChanged();
     void accountIdsChanged();
+    void accountsChanged();
     void setupReady();
 
 public Q_SLOTS:
