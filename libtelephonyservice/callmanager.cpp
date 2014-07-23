@@ -45,6 +45,8 @@ CallManager::CallManager(QObject *parent)
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
     connect(TelepathyHelper::instance(), SIGNAL(accountConnectionChanged()), SLOT(onEmergencyNumbersChanged()));
     connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onEmergencyNumbersChanged()));
+    connect(TelepathyHelper::instance(), SIGNAL(accountConnectionChanged()), SLOT(onVoicemailNumberChanged()));
+    connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onVoicemailNumberChanged()));
     connect(this, SIGNAL(hasCallsChanged()), SIGNAL(callsChanged()));
     connect(this, &CallManager::hasCallsChanged, [this] {
         Q_EMIT this->callIndicatorVisibleChanged(this->callIndicatorVisible());
@@ -185,24 +187,29 @@ void CallManager::onConnectedChanged()
         return;
     }
 
-    // FIXME: needs to handle voicemail numbers from multiple accounts
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->connection());
+    onVoicemailNumberChanged();
+
+    Tp::ConnectionPtr conn;
+    Q_FOREACH(const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
+        if (!account->connection().isNull()) {
+            conn = account->connection();
+            break;
+        }
+    }
+
     if (conn.isNull()) {
-        mVoicemailNumber = QString();
         return;
     }
 
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
-    QDBusReply<QString> replyNumber = connIface.call("VoicemailNumber");
-    if (replyNumber.isValid()) {
-        mVoicemailNumber = replyNumber.value();
-        Q_EMIT voicemailNumberChanged();
-    }
 
     // connect the emergency numbers changed signal
     QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.connect(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailNumberChanged",
+                       this, SLOT(onVoicemailNumberChanged()));
+
+    // connect the emergency numbers changed signal
     connection.connect(busName, objectPath, CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE, "EmergencyNumbersChanged",
                        this, SLOT(onEmergencyNumbersChanged()));
 }
@@ -235,6 +242,33 @@ void CallManager::onEmergencyNumbersChanged()
     if (replyNumbers.isValid()) {
         mEmergencyNumbers = replyNumbers.value();
         Q_EMIT emergencyNumbersChanged();
+    }
+}
+
+void CallManager::onVoicemailNumberChanged()
+{
+    // FIXME: we need to handle emergency numbers for multiple accounts
+    Tp::ConnectionPtr conn;
+    Q_FOREACH(const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
+        if (!account->connection().isNull()) {
+            conn = account->connection();
+            break;
+        }
+    }
+
+    if (conn.isNull()) {
+        mVoicemailNumber = QString();
+        return;
+    }
+
+    QString busName = conn->busName();
+    QString objectPath = conn->objectPath();
+    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
+    QDBusReply<QString> replyNumber = connIface.call("VoicemailNumber");
+    if (replyNumber.isValid()) {
+        mVoicemailNumber = replyNumber.value();
+        qDebug() << mVoicemailNumber;
+        Q_EMIT voicemailNumberChanged();
     }
 }
 

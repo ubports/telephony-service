@@ -107,6 +107,7 @@ public Q_SLOTS:
     void onConnectedChanged();
     void onCallIndicatorVisibleChanged(bool visible);
     void onEmergencyNumbersChanged();
+    void onVoicemailNumberChanged();
 
 private:
     explicit CallManager(QObject *parent = 0);
