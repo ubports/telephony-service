@@ -98,7 +98,7 @@ void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &messag
         }
         textFile.write(message.toUtf8().data());
         textFile.close();
-        textAttachment.id = "text";
+        textAttachment.id = "text_0.txt";
         textAttachment.contentType = "text/plain;charset=UTF-8";
         textAttachment.filePath = textFile.fileName();
         newAttachments << textAttachment;
