@@ -127,7 +127,7 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
     Tp::MessagePart header;
     QString attachmentFilename;
     QString smil, regions, parts;
-    bool hasImage, hasText = false;
+    bool hasImage = false, hasText = false;
 
     header["message-type"] = QDBusVariant(0);
     message << header;
@@ -155,9 +155,12 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
             } else {
                 fileData = attachmentFile.readAll();
             }
-        } else if (attachment.contentType.startsWith("text/")) {
+        } else if (attachment.contentType.startsWith("text/plain")) {
             hasText = true;
             parts += QString(SMIL_TEXT_PART).arg(attachment.id);
+            fileData = attachmentFile.readAll();
+        } else if (attachment.contentType.startsWith("text/vcard") ||
+                   attachment.contentType.startsWith("text/x-vcard")) {
             fileData = attachmentFile.readAll();
         } else {
             continue;
