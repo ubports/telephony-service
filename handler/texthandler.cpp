@@ -159,6 +159,7 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
             hasText = true;
             parts += QString(SMIL_TEXT_PART).arg(attachment.id);
             fileData = attachmentFile.readAll();
+            attachmentFile.remove();
         } else if (attachment.contentType.startsWith("text/vcard") ||
                    attachment.contentType.startsWith("text/x-vcard")) {
             fileData = attachmentFile.readAll();
