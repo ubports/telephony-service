@@ -259,7 +259,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
         addCallToMessagingMenu(call, text);
         return;
     } else if (phoneNumber.startsWith("x-ofono-unknown")) {
-        call.contactAlias = C::gettext("Blocked number");
+        call.contactAlias = C::gettext("Unknown number");
         addCallToMessagingMenu(call, text);
         return;
     }
