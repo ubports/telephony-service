@@ -47,6 +47,14 @@ QString AccountEntry::displayName() const
     return mAccount->displayName();
 }
 
+void AccountEntry::setDisplayName(const QString &name)
+{
+    if (mAccount.isNull()) {
+        return;
+    }
+    mAccount->setDisplayName(name);
+}
+
 bool AccountEntry::connected() const
 {
     return !mAccount.isNull() && !mAccount->connection().isNull() &&

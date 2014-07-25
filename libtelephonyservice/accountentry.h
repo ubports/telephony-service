@@ -35,7 +35,7 @@ class AccountEntry : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
-    Q_PROPERTY(QString displayName READ displayName NOTIFY displayNameChanged)
+    Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList emergencyNumbers READ emergencyNumbers NOTIFY emergencyNumbersChanged)
     Q_PROPERTY(QString voicemailNumber READ voicemailNumber NOTIFY voicemailNumberChanged)
@@ -44,6 +44,7 @@ public:
     explicit AccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
     QString accountId() const;
     QString displayName() const;
+    void setDisplayName(const QString &name);
     bool connected() const;
     QStringList emergencyNumbers() const;
     QString voicemailNumber() const;
