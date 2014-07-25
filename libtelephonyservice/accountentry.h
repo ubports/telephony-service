@@ -34,7 +34,7 @@ typedef struct {
 class AccountEntry : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString accountId READ accountId)
+    Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
     Q_PROPERTY(QString displayName READ displayName NOTIFY displayNameChanged)
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList emergencyNumbers READ emergencyNumbers NOTIFY emergencyNumbersChanged)
@@ -51,6 +51,7 @@ public:
 
 Q_SIGNALS:
     void accountReady();
+    void accountIdChanged();
     void displayNameChanged();
     void connectedChanged();
     void emergencyNumbersChanged();

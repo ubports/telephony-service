@@ -96,6 +96,7 @@ void AccountEntry::initialize()
     } else {
         ensureConnected();
     }
+    Q_EMIT accountIdChanged();
 }
 
 void AccountEntry::ensureEnabled()
