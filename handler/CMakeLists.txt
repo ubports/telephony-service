@@ -1,6 +1,7 @@
 
 set(qt_SRCS
     callhandler.cpp
+    displaynamesettings.cpp
     handler.cpp
     handlerdbus.cpp
     texthandler.cpp
