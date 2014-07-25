@@ -22,9 +22,18 @@
 
 #include "phonenumber.h"
 #include "asyoutypeformatter.h"
+#include "phoneutils.h"
 
 #include <QQmlEngine>
 #include <qqml.h>
+
+
+static QObject *phoneUtilsProvider(QQmlEngine *engine, QJSEngine *scriptEngine)
+{
+    Q_UNUSED(engine)
+    Q_UNUSED(scriptEngine)
+    return new PhoneUtils;
+}
 
 void PhoneNumber::initializeEngine(QQmlEngine *engine, const char *uri)
 {
@@ -36,4 +45,5 @@ void PhoneNumber::registerTypes(const char *uri)
 {
     // @uri Telephony.PhoneNumber
     qmlRegisterType<AsYouTypeFormatter>(uri, 0, 1, "AsYouTypeFormatter");
+    qmlRegisterSingletonType<PhoneUtils>(uri, 0, 1, "PhoneUtils", phoneUtilsProvider);
 }

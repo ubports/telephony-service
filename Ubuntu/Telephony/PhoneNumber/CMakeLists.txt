@@ -1,6 +1,8 @@
 set(PHONENUMBER_SRCS
     phonenumber.h
     phonenumber.cpp
+    phoneutils.h
+    phoneutils.cpp
     asyoutypeformatter.h
     asyoutypeformatter.cpp
     )

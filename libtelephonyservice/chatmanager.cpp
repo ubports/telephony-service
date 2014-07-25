@@ -53,6 +53,14 @@ ChatManager::ChatManager(QObject *parent)
     mMessagesAckTimer.setInterval(1000);
     mMessagesAckTimer.setSingleShot(true);
     connect(&mMessagesAckTimer, SIGNAL(timeout()), SLOT(onAckTimerTriggered()));
+    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
+}
+
+void ChatManager::onConnectedChanged()
+{
+    if (TelepathyHelper::instance()->connected()) {
+        onAckTimerTriggered();
+    }
 }
 
 ChatManager *ChatManager::instance()
@@ -200,6 +208,11 @@ void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &
         account = TelepathyHelper::instance()->accounts()[0];
     } else {
         account = TelepathyHelper::instance()->accountForId(accountId);
+    }
+
+    if (account.isNull()) {
+        mMessagesToAck[accountId][phoneNumber].append(messageId);
+        return;
     }
 
     mMessagesAckTimer.start();

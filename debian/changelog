@@ -1,3 +1,27 @@
+telephony-service (0.1+14.10.20140717.1-0ubuntu1) utopic; urgency=low
+
+  [ Tiago Salem Herrmann ]
+  * Add isAccountConnected() so apps can track status of individual
+    accounts. Fix crash when sending acks during the app startup .
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 17 Jul 2014 18:24:00 +0000
+
+telephony-service (0.1+14.10.20140715.1-0ubuntu1) utopic; urgency=low
+
+  [ Renato Araujo Oliveira Filho ]
+  * Export PhoneNumber.PhoneUtils.defaultRegion with the region code
+    based on the application locale. (LP: #1331515)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 15 Jul 2014 22:12:05 +0000
+
+telephony-service (0.1+14.10.20140715-0ubuntu1) utopic; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure the handler gets registered to DBus even when there is no
+    compatible telepathy account configured. (LP: #1340086)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 15 Jul 2014 16:31:49 +0000
+
 telephony-service (0.1+14.10.20140709.2-0ubuntu1) utopic; urgency=low
 
   [ Michael Terry ]

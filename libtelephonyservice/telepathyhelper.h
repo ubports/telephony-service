@@ -52,6 +52,7 @@ public:
 
     bool connected() const;
     QStringList accountIds();
+    Q_INVOKABLE bool isAccountConnected(const QString &accountId) const;
     Tp::AccountPtr accountForConnection(const Tp::ConnectionPtr &connection) const;
     Tp::AccountPtr accountForId(const QString &accountId) const;
 
@@ -69,6 +70,7 @@ Q_SIGNALS:
     void accountReady();
     void connectedChanged();
     void accountIdsChanged();
+    void setupReady();
 
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);

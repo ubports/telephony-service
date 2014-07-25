@@ -14,19 +14,23 @@ macro(generate_tests)
     endforeach(test)
 endmacro(generate_tests)
 
+macro(DECLARE_QML_TEST TST_NAME TST_QML_FILE)
+    add_test(NAME ${TST_NAME}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMAND xvfb-run -a -s "-screen 0 1024x768x24" qmltestrunner -import ${CMAKE_BINARY_DIR} -input ${CMAKE_CURRENT_SOURCE_DIR}/${TST_QML_FILE}
+    )
+endmacro()
+
 
 generate_tests(
     ContactWatcherTest
     )
 
-file(GLOB QML_TESTS *.qml *.js)
+declare_qml_test("context_properties" tst_contextProperties.qml)
+declare_qml_test("phonenumber_field" tst_PhoneNumberField.qml)
+declare_qml_test("phonenumber_input" tst_PhoneNumberInput.qml)
+declare_qml_test("phonenumber_utils" tst_PhoneNumberPhoneUtils.qml)
 
 # make the files visible on qtcreator
+file(GLOB QML_TESTS *.qml *.js)
 add_custom_target(telephonyservice_QMLTESTS ALL SOURCES ${QML_TESTS})
-
-# FIXME: those tests are disabled because qmltestrunner is crashing on armhf.
-# They should be re-enabled once the problem is found and fixed.
-add_test(NAME qmltestrunner
-         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-         COMMAND xvfb-run -a -s "-screen 0 1024x768x24" qmltestrunner -import ${CMAKE_BINARY_DIR} -input ${CMAKE_CURRENT_SOURCE_DIR}
-)
