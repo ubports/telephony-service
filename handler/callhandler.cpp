@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2014 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -23,6 +23,7 @@
 #include "callhandler.h"
 #include "phoneutils.h"
 #include "telepathyhelper.h"
+#include "tonegenerator.h"
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 
@@ -174,7 +175,12 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
                      return;
                  }
             }
+            /*
+             * send DTMF to network (via telepathy and oFono), and play
+             * locally (via tone generator)
+             */
             content->startDTMFTone(event);
+            ToneGenerator::instance()->playDTMFTone((uint)event);
         }
     }
 

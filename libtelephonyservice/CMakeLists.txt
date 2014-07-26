@@ -10,6 +10,7 @@ set(library_SRCS
     phoneutils.cpp
     ringtone.cpp
     telepathyhelper.cpp
+    tonegenerator.cpp
     ussdmanager.cpp
     )
 
