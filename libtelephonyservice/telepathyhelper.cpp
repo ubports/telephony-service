@@ -295,6 +295,8 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     // FIXME: handle dynamic account adding and removing
 
+    updateConnectedStatus();
+
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
 }

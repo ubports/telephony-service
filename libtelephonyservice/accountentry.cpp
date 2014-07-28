@@ -20,6 +20,7 @@
  */
 
 #include <TelepathyQt/PendingOperation>
+#include <QTimer>
 #include "accountentry.h"
 #include "telepathyhelper.h"
 
@@ -100,9 +101,9 @@ void AccountEntry::initialize()
 
     // and make sure it is enabled and connected
     if (!mAccount->isEnabled()) {
-        ensureEnabled();
+        QTimer::singleShot(0, this, SLOT(ensureEnabled()));
     } else {
-        ensureConnected();
+        QTimer::singleShot(0, this, SLOT(ensureConnected()));
     }
     Q_EMIT accountIdChanged();
 }
