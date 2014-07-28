@@ -67,6 +67,7 @@ protected Q_SLOTS:
 private Q_SLOTS:
     void onConnectionChanged();
     void onEmergencyNumbersChanged(const QStringList &numbers);
+    void onVoicemailNumberChanged(const QString &number);
 
 private:
     Tp::AccountPtr mAccount;

@@ -170,6 +170,11 @@ void AccountEntry::onConnectionChanged()
             Q_EMIT emergencyNumbersChanged();
         }
 
+        // connect the voicemail number changed signal
+        dbusConnection.connect(mConnectionInfo.busName, mConnectionInfo.objectPath,
+                               CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailNumberChanged",
+                               this, SLOT(onVoicemailNumberChanged(QString)));
+
         QDBusInterface voicemailIface(mConnectionInfo.busName, mConnectionInfo.objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
         QDBusReply<QString> replyNumber = voicemailIface.call("VoicemailNumber");
         if (replyNumber.isValid()) {
@@ -187,4 +192,10 @@ void AccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)
 {
     mEmergencyNumbers = numbers;
     Q_EMIT emergencyNumbersChanged();
+}
+
+void AccountEntry::onVoicemailNumberChanged(const QString &number)
+{
+    mVoicemailNumber = number;
+    Q_EMIT voicemailNumberChanged();
 }

@@ -123,6 +123,7 @@ void CallEntry::setupCallChannel()
             SIGNAL(localHoldStateChanged(Tp::LocalHoldState,Tp::LocalHoldStateReason)),
             SIGNAL(heldChanged()));
 
+    mLocalMuteState = mMuteInterface.property("LocalMuteState") == 1;
     connect(&mMuteInterface,
             SIGNAL(MuteStateChanged(uint)),
             SLOT(onMutedChanged(uint)));
