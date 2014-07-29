@@ -190,7 +190,7 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
 void CallHandler::createConferenceCall(const QStringList &objectPaths)
 {
     QList<Tp::ChannelPtr> calls;
-    AccountEntry *accountEntry;
+    AccountEntry *accountEntry = 0;
     Q_FOREACH(const QString &objectPath, objectPaths) {
         Tp::CallChannelPtr call = callFromObjectPath(objectPath);
         if (!call) {
