@@ -22,6 +22,7 @@
 
 #include "ussdmanager.h"
 #include "telepathyhelper.h"
+#include "accountentry.h"
 
 #include <TelepathyQt/ContactManager>
 #include <QDBusInterface>
@@ -41,16 +42,21 @@ USSDManager::USSDManager(QObject *parent)
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
 }
 
-void USSDManager::initiate(const QString &command, const QString &accountId)
+Tp::ConnectionPtr USSDManager::connectionForAccountId(const QString &accountId)
 {
-    Tp::AccountPtr account;
+    AccountEntry *accountEntry;
     if (accountId.isNull()) {
-        account = TelepathyHelper::instance()->accounts()[0];
+        accountEntry = TelepathyHelper::instance()->accounts()[0];
     } else {
-        account = TelepathyHelper::instance()->accountForId(accountId);
+        accountEntry = TelepathyHelper::instance()->accountForId(accountId);
     }
 
-    Tp::ConnectionPtr conn(account->connection());
+    return accountEntry->account()->connection();
+}
+
+void USSDManager::initiate(const QString &command, const QString &accountId)
+{
+    Tp::ConnectionPtr conn = connectionForAccountId(accountId);
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
@@ -59,14 +65,7 @@ void USSDManager::initiate(const QString &command, const QString &accountId)
 
 void USSDManager::respond(const QString &reply, const QString &accountId)
 {
-    Tp::AccountPtr account;
-    if (accountId.isNull()) {
-        account = TelepathyHelper::instance()->accounts()[0];
-    } else {
-        account = TelepathyHelper::instance()->accountForId(accountId);
-    }
-
-    Tp::ConnectionPtr conn(account->connection());
+    Tp::ConnectionPtr conn = connectionForAccountId(accountId);
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
@@ -75,14 +74,7 @@ void USSDManager::respond(const QString &reply, const QString &accountId)
 
 void USSDManager::cancel(const QString &accountId)
 {
-    Tp::AccountPtr account;
-    if (accountId.isNull()) {
-        account = TelepathyHelper::instance()->accounts()[0];
-    } else {
-        account = TelepathyHelper::instance()->accountForId(accountId);
-    }
-
-    Tp::ConnectionPtr conn(account->connection());
+    Tp::ConnectionPtr conn = connectionForAccountId(accountId);
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
     QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
@@ -143,12 +135,12 @@ void USSDManager::onConnectedChanged()
         return;
     }
 
-    Q_FOREACH (const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
+    Q_FOREACH (AccountEntry *accountEntry, TelepathyHelper::instance()->accounts()) {
         // disconnect all and reconnect only the online accounts
-        Tp::ConnectionPtr conn(account->connection());
+        Tp::ConnectionPtr conn(accountEntry->account()->connection());
         disconnectAllSignals(conn);
 
-        if (TelepathyHelper::instance()->isAccountConnected(account)) {
+        if (accountEntry->connected()) {
             QString busName = conn->busName();
             QString objectPath = conn->objectPath();
 
@@ -156,9 +148,9 @@ void USSDManager::onConnectedChanged()
 
             QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
             mState = ussdIface.property("State").toString();
-            mSerials[account->uniqueIdentifier()] = ussdIface.property("Serial").toString();
+            mSerials[accountEntry->accountId()] = ussdIface.property("Serial").toString();
             if (active()) {
-                mActiveAccountId = account->uniqueIdentifier();
+                mActiveAccountId = accountEntry->accountId();
             }
         }
     }

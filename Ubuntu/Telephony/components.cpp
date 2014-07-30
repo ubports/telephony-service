@@ -30,6 +30,7 @@
 #include "contactwatcher.h"
 #include "greetercontacts.h"
 #include "phoneutils.h"
+#include "accountentry.h"
 
 #include <QQmlEngine>
 #include <qqml.h>
@@ -49,10 +50,6 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext = engine->rootContext();
     Q_ASSERT(mRootContext);
 
-    connect(TelepathyHelper::instance(),
-            SIGNAL(accountReady()),
-            SLOT(onAccountReady()));
-
     mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", ChatManager::instance());
     mRootContext->setContextProperty("callManager", CallManager::instance());
@@ -66,13 +63,7 @@ void Components::registerTypes(const char *uri)
     // @uri Telephony
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
     qmlRegisterUncreatableType<CallEntry>(uri, 0, 1, "CallEntry", "Objects of this type are created in CallManager and made available to QML for usage");
+    qmlRegisterUncreatableType<AccountEntry>(uri, 0, 1, "AccountEntry", "Objects of this type are created in TelepathyHelper and made available to QML");
     qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");
     qmlRegisterType<PhoneUtils>(uri, 0, 1, "PhoneUtils");
-}
-
-void Components::onAccountReady()
-{
-    // QTimer::singleShot() is used here to make sure the slots are executed in the correct thread. If we call the slots directly
-    // the items created for those models will be on the wrong thread.
-    //QTimer::singleShot(0, TelepathyLogReader::instance(), SLOT(fetchLog()));
 }

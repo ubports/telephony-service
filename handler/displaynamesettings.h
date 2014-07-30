@@ -1,8 +1,7 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2013 Canonical, Ltd.
  *
  * Authors:
- *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
@@ -20,23 +19,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef COMPONENTS_H
-#define COMPONENTS_H
+#ifndef DISPLAYNAMESETTINGS_H
+#define DISPLAYNAMESETTINGS_H
 
-#include <QQmlContext>
-#include <QQmlExtensionPlugin>
+#include <QObject>
+#include <QMap>
 
-class Components : public QQmlExtensionPlugin
+class DisplayNameSettings : public QObject
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")
-
 public:
-    void initializeEngine(QQmlEngine *engine, const char *uri);
-    void registerTypes(const char *uri);
+    static DisplayNameSettings *instance();
+
+private Q_SLOTS:
+    void onAccountsChanged();
 
 private:
-    QQmlContext *mRootContext;
+    explicit DisplayNameSettings(QObject *parent = 0);
+    QMap<QString,QString> mAccountNames;
+
 };
 
-#endif // COMPONENTS_H
+#endif // DISPLAYNAMESETTINGS_H

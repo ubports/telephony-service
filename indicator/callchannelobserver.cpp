@@ -24,6 +24,7 @@
 #include "messagingmenu.h"
 #include "metrics.h"
 #include "telepathyhelper.h"
+#include "accountentry.h"
 #include <TelepathyQt/Contact>
 
 CallChannelObserver::CallChannelObserver(QObject *parent) :
@@ -57,12 +58,12 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
         return;
     }
 
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(channel->connection());
-    if (!account) {
+    AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    if (!accountEntry) {
         return;
     }
 
-    bool incoming = channel->initiatorContact() != account->connection()->selfContact();
+    bool incoming = channel->initiatorContact() != accountEntry->account()->connection()->selfContact();
     bool missed = incoming && channel->callStateReason().reason == Tp::CallStateChangeReasonNoAnswer;
     QDateTime activeTimestamp = channel->property("activeTimestamp").toDateTime();
 
