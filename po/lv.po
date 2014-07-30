@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2013-06-25 09:49+0000\n"
+"PO-Revision-Date: 2014-07-29 19:28+0000\n"
 "Last-Translator: Klavs Anson <anson.klavs@gmail.com>\n"
 "Language-Team: Latvian <lv@li.org>\n"
-"Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:26+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-07-30 07:07+0000\n"
+"X-Generator: Launchpad (build 17131)\n"
+"Language: lv\n"
 
 #: indicator/messagingmenu.cpp:208
 #, qt-format
@@ -93,9 +93,8 @@ msgid "Phone Calls"
 msgstr "Tālruņa zvani"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:107
-#, fuzzy
 msgid "Private Number"
-msgstr "Privātais numurs"
+msgstr ""
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
@@ -131,268 +130,17 @@ msgid "Telephony Service Indicator"
 msgstr ""
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
-#, fuzzy
 msgid "Unknown Number"
-msgstr "Nezināms numurs"
+msgstr ""
 
 #: approver/approver.cpp:57
 msgid "Unknown caller"
 msgstr "Nezināms zvanītājs"
 
 #: indicator/textchannelobserver.cpp:221
-#, fuzzy
 msgid "View message"
-msgstr "Jauna Ziņa"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:291
 msgid "Voicemail messages"
 msgstr "Balss pasta ziņas"
-
-#~ msgid "Handles incoming messages, calls and indicators"
-#~ msgstr "Pārvalda ienākošās ziņas, zvanus un indikātorus"
-
-#~ msgid "Phone App Approver"
-#~ msgstr "Telefona Aplikācijas Apstiprinātājs"
-
-#~ msgid "#"
-#~ msgstr "#"
-
-#~ msgid "%1 hour call"
-#~ msgid_plural "%1 hours call"
-#~ msgstr[0] "%1 stunda zvans"
-#~ msgstr[1] "%1 stundu zvans"
-#~ msgstr[2] "%1 stundu zvans"
-
-#~ msgid "%1 minute call"
-#~ msgid_plural "%1 minutes call"
-#~ msgstr[0] "%1 minutes zvans"
-#~ msgstr[1] "%1 minušu zvans"
-#~ msgstr[2] "%1 minušu zvans"
-
-#~ msgid "%1 second call"
-#~ msgid_plural "%1 seconds call"
-#~ msgstr[0] "%1 sekundes zvans"
-#~ msgstr[1] "%1 sekunžu zvans"
-#~ msgstr[2] "%1 sekunžu zvans"
-
-#~ msgid "*"
-#~ msgstr "*"
-
-#~ msgid "+"
-#~ msgstr "+"
-
-#~ msgid "0"
-#~ msgstr "0"
-
-#~ msgid "1"
-#~ msgstr "1"
-
-#~ msgid "2"
-#~ msgstr "2"
-
-#~ msgid "3"
-#~ msgstr "3"
-
-#~ msgid "4"
-#~ msgstr "4"
-
-#~ msgid "5"
-#~ msgstr "5"
-
-#~ msgid "6"
-#~ msgstr "6"
-
-#~ msgid "7"
-#~ msgstr "7"
-
-#~ msgid "8"
-#~ msgstr "8"
-
-#~ msgid "9"
-#~ msgstr "9"
-
-#~ msgid "ABC"
-#~ msgstr "ABC"
-
-#~ msgid "Add"
-#~ msgstr "Pievienot"
-
-#~ msgid "Add a phone number"
-#~ msgstr "Pievienot telefona numuru"
-
-#~ msgid "Add a postal address"
-#~ msgstr "Pievienot pasta indekssu"
-
-#~ msgid "Add an email address"
-#~ msgstr "Pievienot epasta adresi"
-
-#~ msgid "Add an online account"
-#~ msgstr "Pievienot tiešsaistes kontu"
-
-#~ msgid "Address"
-#~ msgstr "Adrese"
-
-#~ msgid "Are you sure you want to delete this contact?"
-#~ msgstr "Vai tiešām vēlaties dzēst šo kontaktu?"
-
-#~ msgid "Call"
-#~ msgstr "Zvanīt"
-
-#~ msgid "Calls"
-#~ msgstr "Zvani"
-
-#~ msgid "Communication"
-#~ msgstr "Saziņa"
-
-#~ msgid "Compose"
-#~ msgstr "Kompozēt"
-
-#~ msgid "Contact Details"
-#~ msgstr "Kontakta informācija"
-
-#~ msgid "Contacts"
-#~ msgstr "Kontakti"
-
-#~ msgid "Conversations"
-#~ msgstr "Sarunas"
-
-#~ msgid "Country"
-#~ msgstr "Valsts"
-
-#~ msgid "DEF"
-#~ msgstr "DEF"
-
-#~ msgid "Delete"
-#~ msgstr "Dzēst"
-
-#~ msgid "Delete Contact"
-#~ msgstr "Dzēst Kontaktu"
-
-#~ msgid "Dialing"
-#~ msgstr "Zvanīsana"
-
-#~ msgid "Duration %1"
-#~ msgstr "Ilgums %1"
-
-#~ msgid "Edit"
-#~ msgstr "Rediģēt"
-
-#~ msgid "Email"
-#~ msgstr "E-pasts"
-
-#~ msgid "Enter a number"
-#~ msgstr "Ievadīt numuru"
-
-#~ msgid "First"
-#~ msgstr "Pirmais"
-
-#~ msgid "GHI"
-#~ msgstr "GHI"
-
-#~ msgid "Google Talk"
-#~ msgstr "Google Talk"
-
-#~ msgid "Home"
-#~ msgstr "Mājas"
-
-#~ msgid "IM"
-#~ msgstr "IM"
-
-#~ msgid "JKL"
-#~ msgstr "JKL"
-
-#~ msgid "Last"
-#~ msgstr "Pēdējais"
-
-#~ msgid "Locality"
-#~ msgstr "Apgabals"
-
-#~ msgid "MNO"
-#~ msgstr "MNO"
-
-#~ msgid "Messages"
-#~ msgstr "Ziņojumi"
-
-#~ msgid "Middle"
-#~ msgstr "Vidū"
-
-#~ msgid "Mobile"
-#~ msgstr "Mobilais"
-
-#~ msgid "New Contact"
-#~ msgstr "Jauns Kontakts"
-
-#~ msgid "On Call"
-#~ msgstr "Zvanā"
-
-#~ msgid "Other"
-#~ msgstr "Citi"
-
-#~ msgid "PQRS"
-#~ msgstr "PQRS"
-
-#~ msgid "Phone"
-#~ msgstr "Tālrunis"
-
-#~ msgid "Phone App"
-#~ msgstr "Telefona Aplikācija"
-
-#~ msgid "Phone application"
-#~ msgstr "Telefona Aplikācija"
-
-#~ msgid "Postal Code"
-#~ msgstr "Pasta indekss"
-
-#~ msgid "Prefix"
-#~ msgstr "Priedēklis"
-
-#~ msgid "Region"
-#~ msgstr "Reģions"
-
-#~ msgid "Reply via SMS"
-#~ msgstr "Atbildēt ar SMS"
-
-#~ msgid "Send"
-#~ msgstr "Sūtīt"
-
-#~ msgid "Skype"
-#~ msgstr "Skype"
-
-#~ msgid "Street"
-#~ msgstr "Iela"
-
-#~ msgid "Suffix"
-#~ msgstr "Priedēklis"
-
-#~ msgid "Swap Calls"
-#~ msgstr "Apmainīt Zvanus"
-
-#~ msgid "TUV"
-#~ msgstr "TUV"
-
-#~ msgid "To:"
-#~ msgstr "Uz:"
-
-#~ msgid "Today"
-#~ msgstr "Šodien"
-
-#~ msgid "Unknown Contact"
-#~ msgstr "Nezināms Kontakts"
-
-#~ msgid "Voicemail"
-#~ msgstr "Balss pasts"
-
-#~ msgid "WXYZ"
-#~ msgstr "WXYZ"
-
-#~ msgid "Work"
-#~ msgstr "Darbs"
-
-#~ msgid "Yahoo"
-#~ msgstr "Yahoo"
-
-#~ msgid "Yesterday"
-#~ msgstr "Vakar"
-
-#~ msgid "missed call"
-#~ msgstr "nokavētie zvani"

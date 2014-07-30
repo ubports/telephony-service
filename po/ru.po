@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2013-07-01 14:05+0000\n"
+"PO-Revision-Date: 2014-07-29 19:27+0000\n"
 "Last-Translator: Denis Kustov <06deku@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
-"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:27+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2014-07-30 07:07+0000\n"
+"X-Generator: Launchpad (build 17131)\n"
+"Language: ru\n"
 
 #: indicator/messagingmenu.cpp:208
 #, qt-format
@@ -93,9 +93,8 @@ msgid "Phone Calls"
 msgstr ""
 
 #: Ubuntu/Telephony/contactwatcher.cpp:107
-#, fuzzy
 msgid "Private Number"
-msgstr "Приватный номер"
+msgstr ""
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
@@ -131,229 +130,17 @@ msgid "Telephony Service Indicator"
 msgstr ""
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
-#, fuzzy
 msgid "Unknown Number"
-msgstr "Неизвестный номер"
+msgstr ""
 
 #: approver/approver.cpp:57
 msgid "Unknown caller"
 msgstr "Неизвестный вызов"
 
 #: indicator/textchannelobserver.cpp:221
-#, fuzzy
 msgid "View message"
-msgstr "Новое сообщение"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:291
 msgid "Voicemail messages"
 msgstr "Голосовые сообщения"
-
-#~ msgid "#"
-#~ msgstr "#"
-
-#~ msgid "*"
-#~ msgstr "*"
-
-#~ msgid "+"
-#~ msgstr "+"
-
-#~ msgid "0"
-#~ msgstr "0"
-
-#~ msgid "1"
-#~ msgstr "1"
-
-#~ msgid "2"
-#~ msgstr "2"
-
-#~ msgid "3"
-#~ msgstr "3"
-
-#~ msgid "4"
-#~ msgstr "4"
-
-#~ msgid "5"
-#~ msgstr "5"
-
-#~ msgid "6"
-#~ msgstr "6"
-
-#~ msgid "7"
-#~ msgstr "7"
-
-#~ msgid "8"
-#~ msgstr "8"
-
-#~ msgid "9"
-#~ msgstr "9"
-
-#~ msgid "ABC"
-#~ msgstr "ABC"
-
-#~ msgid "Add"
-#~ msgstr "Добавить"
-
-#~ msgid "Add a phone number"
-#~ msgstr "Добавить номер телефона"
-
-#~ msgid "Add a postal address"
-#~ msgstr "Добавить почтовый адрес"
-
-#~ msgid "Add an email address"
-#~ msgstr "Добавить адрес электронной почты"
-
-#~ msgid "Add an online account"
-#~ msgstr "Добавить сетевую учётную запись"
-
-#~ msgid "Address"
-#~ msgstr "Адрес"
-
-#~ msgid "Are you sure you want to delete this contact?"
-#~ msgstr "Вы действительно хотите удалить этот контакт?"
-
-#~ msgid "Call"
-#~ msgstr "Вызвать"
-
-#~ msgid "Calls"
-#~ msgstr "Вызовы"
-
-#~ msgid "Communication"
-#~ msgstr "Связь"
-
-#~ msgid "Compose"
-#~ msgstr "Создать"
-
-#~ msgid "Contact Details"
-#~ msgstr "Контактная информация"
-
-#~ msgid "Contacts"
-#~ msgstr "Контакты"
-
-#~ msgid "Conversations"
-#~ msgstr "Диалоги"
-
-#~ msgid "Country"
-#~ msgstr "Страна"
-
-#~ msgid "DEF"
-#~ msgstr "DEF"
-
-#~ msgid "Delete"
-#~ msgstr "Удалить"
-
-#~ msgid "Delete Contact"
-#~ msgstr "Удалить контакт"
-
-#~ msgid "Dialing"
-#~ msgstr "Набор номера"
-
-#~ msgid "Duration %1"
-#~ msgstr "Длительность %1"
-
-#~ msgid "Edit"
-#~ msgstr "Изменить"
-
-#~ msgid "Email"
-#~ msgstr "Электронная почта"
-
-#~ msgid "Enter a number"
-#~ msgstr "Введите номер"
-
-#~ msgid "First"
-#~ msgstr "Первый"
-
-#~ msgid "GHI"
-#~ msgstr "GHI"
-
-#~ msgid "Google Talk"
-#~ msgstr "Google Talk"
-
-#~ msgid "Home"
-#~ msgstr "Главная"
-
-#~ msgid "IM"
-#~ msgstr "IM"
-
-#~ msgid "JKL"
-#~ msgstr "JKL"
-
-#~ msgid "Last"
-#~ msgstr "Последний"
-
-#~ msgid "Locality"
-#~ msgstr "Местоположение"
-
-#~ msgid "MNO"
-#~ msgstr "MNO"
-
-#~ msgid "Messages"
-#~ msgstr "Сообщения"
-
-#~ msgid "Mobile"
-#~ msgstr "Мобильный"
-
-#~ msgid "New Contact"
-#~ msgstr "Новый контакт"
-
-#~ msgid "Other"
-#~ msgstr "Прочее"
-
-#~ msgid "PQRS"
-#~ msgstr "PQRS"
-
-#~ msgid "Phone"
-#~ msgstr "Телефон"
-
-#~ msgid "Phone App"
-#~ msgstr "Телефон"
-
-#~ msgid "Postal Code"
-#~ msgstr "Почтовый индекс"
-
-#~ msgid "Prefix"
-#~ msgstr "Префикс"
-
-#~ msgid "Region"
-#~ msgstr "Регион"
-
-#~ msgid "Reply via SMS"
-#~ msgstr "Ответить по SMS"
-
-#~ msgid "Send"
-#~ msgstr "Отправить"
-
-#~ msgid "Skype"
-#~ msgstr "Skype"
-
-#~ msgid "Street"
-#~ msgstr "Улица"
-
-#~ msgid "TUV"
-#~ msgstr "TUV"
-
-#~ msgid "To:"
-#~ msgstr "Кому:"
-
-#~ msgid "Today"
-#~ msgstr "Сегодня"
-
-#~ msgid "Unknown Contact"
-#~ msgstr "Неизвестный контакт"
-
-#~ msgid "Voicemail"
-#~ msgstr "Голосовая почта"
-
-#~ msgid "WXYZ"
-#~ msgstr "WXYZ"
-
-#~ msgid "Work"
-#~ msgstr "Рабочий"
-
-#~ msgid "Yahoo"
-#~ msgstr "Yahoo"
-
-#~ msgid "Yesterday"
-#~ msgstr "Вчера"
-
-#~ msgid "missed call"
-#~ msgstr "пропущенный вызов"
