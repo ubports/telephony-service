@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2014-07-29 19:28+0000\n"
+"PO-Revision-Date: 2014-07-30 20:11+0000\n"
 "Last-Translator: pros90 <pablorosillo92@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-07-30 07:07+0000\n"
+"X-Launchpad-Export-Date: 2014-07-31 07:15+0000\n"
 "X-Generator: Launchpad (build 17131)\n"
 "Language: es\n"
 
@@ -92,11 +92,11 @@ msgstr "Llamadas telefónicas"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:107
 msgid "Private Number"
-msgstr ""
+msgstr "Número privado"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
-msgstr ""
+msgstr "Responder"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
@@ -129,7 +129,7 @@ msgstr ""
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
 msgid "Unknown Number"
-msgstr ""
+msgstr "Número desconocido"
 
 #: approver/approver.cpp:57
 msgid "Unknown caller"
@@ -137,7 +137,7 @@ msgstr "Llamante desconocido"
 
 #: indicator/textchannelobserver.cpp:221
 msgid "View message"
-msgstr ""
+msgstr "Ver mensaje"
 
 #: indicator/messagingmenu.cpp:291
 msgid "Voicemail messages"
