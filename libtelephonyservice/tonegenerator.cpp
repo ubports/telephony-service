@@ -39,6 +39,9 @@ ToneGenerator::ToneGenerator(QObject *parent) :
 
 ToneGenerator::~ToneGenerator()
 {
+    if (mPlaybackTimer && mPlaybackTimer->isActive()) {
+        this->stopDTMFTone();
+    }
 }
 
 ToneGenerator *ToneGenerator::instance()
@@ -49,7 +52,12 @@ ToneGenerator *ToneGenerator::instance()
 
 void ToneGenerator::playDTMFTone(uint key)
 {
-    if (mPlaybackTimer) {
+    if (!mPlaybackTimer) {
+        mPlaybackTimer = new QTimer(this);
+        mPlaybackTimer->setSingleShot(true);
+        connect(mPlaybackTimer, SIGNAL(timeout()), this, SLOT(stopDTMFTone()));
+    }
+    if (mPlaybackTimer->isActive()) {
         qDebug() << "Already playing a tone, ignore.";
         return;
     }
@@ -68,9 +76,6 @@ void ToneGenerator::playDTMFTone(uint key)
     toneArgs << QVariant((uint)0); // duration is ignored
     startMsg.setArguments(toneArgs);
     if (QDBusConnection::sessionBus().send(startMsg)) {
-        mPlaybackTimer = new QTimer(this);
-        mPlaybackTimer->setSingleShot(true);
-        connect(mPlaybackTimer, SIGNAL(timeout()), this, SLOT(stopDTMFTone()));
         mPlaybackTimer->start(DTMF_LOCAL_PLAYBACK_DURATION);
     }
 }
@@ -83,6 +88,7 @@ void ToneGenerator::stopDTMFTone()
             TONEGEN_DBUS_OBJ_PATH,
             TONEGEN_DBUS_IFACE_NAME,
             "StopTone" ));
-    mPlaybackTimer->deleteLater();
-    mPlaybackTimer = nullptr;
+    if (mPlaybackTimer) {
+        mPlaybackTimer->stop();
+    }
 }

@@ -151,6 +151,23 @@ void CallHandler::setSpeakerMode(const QString &objectPath, bool enabled)
 
 void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
 {
+    bool ok;
+    Tp::DTMFEvent event = (Tp::DTMFEvent)key.toInt(&ok);
+    if (!ok) {
+         if (!key.compare("*")) {
+             event = Tp::DTMFEventAsterisk;
+         } else if (!key.compare("#")) {
+             event = Tp::DTMFEventHash;
+         } else {
+             qWarning() << "Tone not recognized. DTMF failed";
+             return;
+         }
+    }
+    /*
+     * play locally (via tone generator)
+     */
+    ToneGenerator::instance()->playDTMFTone((uint)event);
+
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
     if (channel.isNull()) {
         return;
@@ -163,24 +180,8 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
 
     Q_FOREACH(const Tp::CallContentPtr &content, channel->contents()) {
         if (content->supportsDTMF()) {
-            bool ok;
-            Tp::DTMFEvent event = (Tp::DTMFEvent)key.toInt(&ok);
-            if (!ok) {
-                 if (!key.compare("*")) {
-                     event = Tp::DTMFEventAsterisk;
-                 } else if (!key.compare("#")) {
-                     event = Tp::DTMFEventHash;
-                 } else {
-                     qWarning() << "Tone not recognized. DTMF failed";
-                     return;
-                 }
-            }
-            /*
-             * send DTMF to network (via telepathy and oFono), and play
-             * locally (via tone generator)
-             */
+            /* send DTMF to network (via telepathy and oFono) */
             content->startDTMFTone(event);
-            ToneGenerator::instance()->playDTMFTone((uint)event);
         }
     }
 
