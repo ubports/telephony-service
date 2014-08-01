@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2014-07-29 19:29+0000\n"
+"PO-Revision-Date: 2014-07-31 13:43+0000\n"
 "Last-Translator: GTriderXC <gtriderxc@yahoo.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-07-31 07:15+0000\n"
-"X-Generator: Launchpad (build 17131)\n"
+"X-Launchpad-Export-Date: 2014-08-01 07:13+0000\n"
+"X-Generator: Launchpad (build 17141)\n"
 "Language: pl\n"
 
 #: indicator/messagingmenu.cpp:208
@@ -67,7 +67,7 @@ msgstr "Odrzuć"
 
 #: approver/approver.cpp:283
 msgid "Hold + Answer"
-msgstr ""
+msgstr "Wstrzymaj i odbierz"
 
 #: indicator/messagingmenu.cpp:252
 msgid "I missed your call - can you call me now?"
@@ -87,7 +87,7 @@ msgstr "Spóźnię się. Jestem w drodze."
 
 #: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:165
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -95,11 +95,11 @@ msgstr "Rozmowy telefoniczne"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:107
 msgid "Private Number"
-msgstr ""
+msgstr "Numer zastrzeżony"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
-msgstr ""
+msgstr "Odpowiedz"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
@@ -120,19 +120,19 @@ msgstr "Przykro mi, nadal nie mogę rozmawiać. Oddzwonię później."
 
 #: indicator/messagingmenu.cpp:54 indicator/messagingmenu.cpp:58
 msgid "Telephony Service"
-msgstr ""
+msgstr "Obsługa telefonu"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr ""
+msgstr "Zatwierdzanie obsługi telefonu"
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr ""
+msgstr "Wskaźnik obsługi telefonu"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
 msgid "Unknown Number"
-msgstr ""
+msgstr "Numer nieznany"
 
 #: approver/approver.cpp:57
 msgid "Unknown caller"
@@ -140,7 +140,7 @@ msgstr "Nieznany"
 
 #: indicator/textchannelobserver.cpp:221
 msgid "View message"
-msgstr ""
+msgstr "Pokaż wiadomość"
 
 #: indicator/messagingmenu.cpp:291
 msgid "Voicemail messages"
