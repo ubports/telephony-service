@@ -1,4 +1,5 @@
 set(library_SRCS
+    accountentry.cpp
     applicationutils.cpp
     callentry.cpp
     callmanager.cpp

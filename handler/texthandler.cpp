@@ -24,18 +24,19 @@
 #include "telepathyhelper.h"
 #include "config.h"
 #include "dbustypes.h"
+#include "accountentry.h"
 
 #include <QImage>
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 
-#define SMIL_TEXT_REGION "<region id=\"%1\" width=\"100%\" height=\"100%\" fit=\"scroll\" />"
-#define SMIL_IMAGE_REGION "<region id=\"%1\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
+#define SMIL_TEXT_REGION "<region id=\"Text\" width=\"100%\" height=\"100%\" fit=\"scroll\" />"
+#define SMIL_IMAGE_REGION "<region id=\"Image\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
 #define SMIL_TEXT_PART "<par dur=\"3s\">\
-       <text src=\"%1\" region=\"%2\" />\
+       <text src=\"cid:%1\" region=\"Text\" />\
      </par>"
 #define SMIL_IMAGE_PART "<par dur=\"5000ms\">\
-       <img src=\"%1\" region=\"%2\" />\
+       <img src=\"cid:%1\" region=\"Image\" />\
      </par>"
 
 #define SMIL_FILE "<smil>\
@@ -73,9 +74,9 @@ void TextHandler::onConnectedChanged()
     }
 
     // now check which accounts are connected
-    Q_FOREACH(const Tp::AccountPtr &account, TelepathyHelper::instance()->accounts()) {
-        QString accountId = account->uniqueIdentifier();
-        if (!TelepathyHelper::instance()->isAccountConnected(account) || !mPendingMessages.contains(accountId)) {
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        QString accountId = account->accountId();
+        if (!account->connected() || !mPendingMessages.contains(accountId)) {
             continue;
         }
 
@@ -96,13 +97,13 @@ void TextHandler::startChat(const QStringList &phoneNumbers, const QString &acco
 {
     // Request the contact to start chatting to
     // FIXME: make it possible to select which account to use, for now, pick the first one
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
-    if (!TelepathyHelper::instance()->isAccountConnected(account)) {
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account->connected()) {
         qCritical() << "The selected account does not have a connection. AccountId:" << accountId;
         return;
     }
 
-    connect(account->connection()->contactManager()->contactsForIdentifiers(phoneNumbers),
+    connect(account->account()->connection()->contactManager()->contactsForIdentifiers(phoneNumbers),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
@@ -127,6 +128,7 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
     Tp::MessagePart header;
     QString attachmentFilename;
     QString smil, regions, parts;
+    bool hasImage = false, hasText = false;
 
     header["message-type"] = QDBusVariant(0);
     message << header;
@@ -139,8 +141,8 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
             continue;
         }
         if (attachment.contentType.startsWith("image/")) {
-            regions += QString(SMIL_IMAGE_REGION).arg(attachment.id);
-            parts += QString(SMIL_IMAGE_PART).arg(QFileInfo(attachmentFile.fileName()).fileName()).arg(attachment.id);
+            hasImage = true;
+            parts += QString(SMIL_IMAGE_PART).arg(attachment.id);
             // check if we need to reduce de image size in case it's bigger than 300k
             if (attachmentFile.size() > 307200) {
                 QImage scaledImage(newFilePath);
@@ -154,12 +156,23 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
             } else {
                 fileData = attachmentFile.readAll();
             }
-        } else if (attachment.contentType.startsWith("text/")) {
-            regions += QString(SMIL_TEXT_REGION).arg(attachment.id);
-            parts += QString(SMIL_TEXT_PART).arg(QFileInfo(attachmentFile.fileName()).fileName()).arg(attachment.id);
+        } else if (attachment.contentType.startsWith("text/plain")) {
+            hasText = true;
+            parts += QString(SMIL_TEXT_PART).arg(attachment.id);
+            fileData = attachmentFile.readAll();
+            attachmentFile.remove();
+        } else if (attachment.contentType.startsWith("text/vcard") ||
+                   attachment.contentType.startsWith("text/x-vcard")) {
             fileData = attachmentFile.readAll();
         } else {
             continue;
+        }
+
+        if (hasText) {
+            regions += QString(SMIL_TEXT_REGION);
+        }
+        if (hasImage) {
+            regions += QString(SMIL_IMAGE_REGION);
         }
 
         Tp::MessagePart part;
@@ -173,7 +186,7 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
     Tp::MessagePart smilPart;
     smil = QString(SMIL_FILE).arg(regions).arg(parts);
     smilPart["content-type"] =  QDBusVariant(QString("application/smil"));
-    smilPart["identifier"] = QDBusVariant(QString("smil"));
+    smilPart["identifier"] = QDBusVariant(QString("smil.xml"));
     smilPart["content"] = QDBusVariant(smil);
     smilPart["size"] = QDBusVariant(smil.size());
     message << smilPart;
@@ -181,8 +194,8 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
 }
 
 void TextHandler::sendMMS(const QStringList &phoneNumbers, const AttachmentList &attachments, const QString &accountId) {
-   Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
-    if (!TelepathyHelper::instance()->isAccountConnected(account)) {
+   AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account->connected()) {
         mPendingMMSs[accountId][phoneNumbers].append(attachments);
         return;
     }
@@ -203,8 +216,8 @@ void TextHandler::sendMMS(const QStringList &phoneNumbers, const AttachmentList 
 
 void TextHandler::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
 {
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
-    if (!TelepathyHelper::instance()->isAccountConnected(account)) {
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account->connected()) {
         mPendingMessages[accountId][phoneNumbers].append(message);
         return;
     }
@@ -240,8 +253,8 @@ void TextHandler::acknowledgeMessages(const QStringList &phoneNumbers, const QSt
 
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(channel->connection());
-    QString accountId = account->uniqueIdentifier();
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    QString accountId = account->accountId();
     mChannels.append(channel);
 
     // check for pending messages for this channel
@@ -299,9 +312,9 @@ Tp::TextChannelPtr TextHandler::existingChat(const QStringList &phoneNumbers, co
 
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
-        Tp::AccountPtr channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        AccountEntry *channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
         if (channel->groupContacts(false).size() != phoneNumbers.size()
-            || channelAccount->uniqueIdentifier() != accountId) {
+            || channelAccount->accountId() != accountId) {
             continue;
         }
         Q_FOREACH(const QString &phoneNumberNew, phoneNumbers) {
@@ -326,8 +339,8 @@ void TextHandler::onContactsAvailable(Tp::PendingOperation *op)
         qCritical() << "The pending object is not a Tp::PendingContacts";
         return;
     }
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
-    startChat(account, pc->contacts().toSet());
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
+    startChat(account->account(), pc->contacts().toSet());
 }
 
 

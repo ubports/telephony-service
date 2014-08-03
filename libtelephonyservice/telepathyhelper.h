@@ -24,6 +24,7 @@
 #define TELEPATHYHELPER_H
 
 #include <QObject>
+#include <QQmlListProperty>
 #include <TelepathyQt/AccountManager>
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/Connection>
@@ -36,40 +37,45 @@
 #define CANONICAL_TELEPHONY_USSD_IFACE "com.canonical.Telephony.USSD"
 #define CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE "com.canonical.Telephony.EmergencyMode"
 
+class AccountEntry;
+
 class TelepathyHelper : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList accountIds READ accountIds NOTIFY accountIdsChanged)
+    Q_PROPERTY(QQmlListProperty<AccountEntry> accounts READ qmlAccounts NOTIFY accountsChanged)
 
 public:
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
-    QList<Tp::AccountPtr> accounts() const;
+    QList<AccountEntry*> accounts() const;
+    QQmlListProperty<AccountEntry> qmlAccounts();
     ChannelObserver *channelObserver() const;
     QDBusInterface *handlerInterface() const;
 
     bool connected() const;
     QStringList accountIds();
-    Q_INVOKABLE bool isAccountConnected(const QString &accountId) const;
-    Tp::AccountPtr accountForConnection(const Tp::ConnectionPtr &connection) const;
-    Tp::AccountPtr accountForId(const QString &accountId) const;
-
-    bool isAccountConnected(const Tp::AccountPtr &account) const;
+    AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
+    Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
 
     void registerClient(Tp::AbstractClient *client, QString name);
 
     // pre-populated channel class specs for conferences
     static Tp::ChannelClassSpec audioConferenceSpec();
 
+    // QQmlListProperty helpers
+    static int accountsCount(QQmlListProperty<AccountEntry> *p);
+    static AccountEntry *accountAt(QQmlListProperty<AccountEntry> *p, int index);
+
 Q_SIGNALS:
-    void accountConnectionChanged();
     void channelObserverCreated(ChannelObserver *observer);
     void channelObserverUnregistered();
     void accountReady();
     void connectedChanged();
     void accountIdsChanged();
+    void accountsChanged();
     void setupReady();
 
 public Q_SLOTS:
@@ -78,13 +84,11 @@ public Q_SLOTS:
 
 protected:
     QStringList supportedProtocols() const;
-    void initializeAccount(const Tp::AccountPtr &account);
-    void ensureAccountEnabled(const Tp::AccountPtr &account);
-    void ensureAccountConnected(const Tp::AccountPtr &account);
-    void watchSelfContactPresence(const Tp::AccountPtr &account);
+    void setupAccountEntry(AccountEntry *entry);
 
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);
+    void onAccountReady();
     void updateConnectedStatus();
 
 private:
@@ -95,7 +99,7 @@ private:
     Tp::Features mContactFeatures;
     Tp::Features mConnectionFeatures;
     Tp::ClientRegistrarPtr mClientRegistrar;
-    QList<Tp::AccountPtr> mAccounts;
+    QList<AccountEntry*> mAccounts;
     ChannelObserver *mChannelObserver;
     bool mFirstTime;
     bool mConnected;

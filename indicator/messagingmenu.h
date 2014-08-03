@@ -36,6 +36,7 @@ public:
     QString contactAlias;
     QUrl contactIcon;
     QString messageId;
+    QDateTime timestamp;
 
     bool operator==(const Call &other) {
         return other.number == number;
@@ -54,6 +55,7 @@ public:
     void removeMessage(const QString &messageId);
 
     void addCall(const QString &phoneNumber, const QDateTime &timestamp);
+    void addCallToMessagingMenu(Call call, const QString &text);
 
     static void flashMessageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
     static void messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);

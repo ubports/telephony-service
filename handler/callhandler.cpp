@@ -23,6 +23,7 @@
 #include "callhandler.h"
 #include "phoneutils.h"
 #include "telepathyhelper.h"
+#include "accountentry.h"
 #include "tonegenerator.h"
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
@@ -70,8 +71,8 @@ bool CallHandler::hasCalls() const
     bool hasActiveCalls = false;
 
     Q_FOREACH(const Tp::CallChannelPtr channel, mCallChannels) {
-        Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(channel->connection());
-        bool incoming = channel->initiatorContact() != account->connection()->selfContact();
+        AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        bool incoming = channel->initiatorContact() != accountEntry->account()->connection()->selfContact();
         bool dialing = !incoming && (channel->callState() == Tp::CallStateInitialised);
         bool active = channel->callState() == Tp::CallStateActive;
 
@@ -92,12 +93,17 @@ CallHandler::CallHandler(QObject *parent)
 void CallHandler::startCall(const QString &phoneNumber, const QString &accountId)
 {
     // Request the contact to start audio call
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForId(accountId);
-    if (!account || account->connection() == NULL) {
+    AccountEntry *accountEntry = TelepathyHelper::instance()->accountForId(accountId);
+    if (!accountEntry) {
         return;
     }
 
-    connect(account->connection()->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
+    Tp::ConnectionPtr connection = accountEntry->account()->connection();
+    if (!connection) {
+        return;
+    }
+
+    connect(connection->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
@@ -191,7 +197,7 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
 void CallHandler::createConferenceCall(const QStringList &objectPaths)
 {
     QList<Tp::ChannelPtr> calls;
-    Tp::AccountPtr account;
+    AccountEntry *accountEntry = 0;
     Q_FOREACH(const QString &objectPath, objectPaths) {
         Tp::CallChannelPtr call = callFromObjectPath(objectPath);
         if (!call) {
@@ -199,25 +205,25 @@ void CallHandler::createConferenceCall(const QStringList &objectPaths)
             return;
         }
 
-        if (account.isNull()) {
-            account = TelepathyHelper::instance()->accountForConnection(call->connection());
+        if (!accountEntry) {
+            accountEntry = TelepathyHelper::instance()->accountForConnection(call->connection());
         }
 
         // make sure all call channels belong to the same connection
-        if (call->connection() != account->connection()) {
+        if (call->connection() != accountEntry->account()->connection()) {
             qWarning() << "It is not possible to merge channels from different accounts.";
             return;
         }
         calls.append(call);
     }
 
-    if (calls.isEmpty() || account.isNull()) {
+    if (calls.isEmpty() || !accountEntry) {
         qWarning() << "The list of calls was empty. Failed to create a conference.";
         return;
     }
 
     // there is no need to check the pending request. The new channel will arrive at some point.
-    account->createConferenceCall(calls, QStringList(), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    accountEntry->account()->createConferenceCall(calls, QStringList(), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
 }
 
 void CallHandler::mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath)
@@ -280,11 +286,11 @@ void CallHandler::onContactsAvailable(Tp::PendingOperation *op)
         return;
     }
 
-    Tp::AccountPtr account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
+    AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
 
     // start call to the contacts
     Q_FOREACH(Tp::ContactPtr contact, pc->contacts()) {
-        account->ensureAudioCall(contact, QLatin1String("audio"), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+        accountEntry->account()->ensureAudioCall(contact, QLatin1String("audio"), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
 
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
         mContacts[contact->id()] = contact;

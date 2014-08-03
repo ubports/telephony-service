@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2013-07-02 13:46+0000\n"
-"Last-Translator: Joachim Johansson <Unknown>\n"
+"PO-Revision-Date: 2014-07-29 19:27+0000\n"
+"Last-Translator: PS Jenkins bot <ps-jenkins@lists.canonical.com>\n"
 "Language-Team: Swedish <sv@li.org>\n"
-"Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:27+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"X-Launchpad-Export-Date: 2014-08-01 07:13+0000\n"
+"X-Generator: Launchpad (build 17141)\n"
+"Language: sv\n"
 
 #: indicator/messagingmenu.cpp:208
 #, qt-format
@@ -142,69 +142,3 @@ msgstr ""
 #: indicator/messagingmenu.cpp:291
 msgid "Voicemail messages"
 msgstr ""
-
-#~ msgid "*"
-#~ msgstr "*"
-
-#~ msgid "+"
-#~ msgstr "+"
-
-#~ msgid "0"
-#~ msgstr "0"
-
-#~ msgid "1"
-#~ msgstr "1"
-
-#~ msgid "2"
-#~ msgstr "2"
-
-#~ msgid "3"
-#~ msgstr "3"
-
-#~ msgid "4"
-#~ msgstr "4"
-
-#~ msgid "5"
-#~ msgstr "5"
-
-#~ msgid "6"
-#~ msgstr "6"
-
-#~ msgid "7"
-#~ msgstr "7"
-
-#~ msgid "8"
-#~ msgstr "8"
-
-#~ msgid "9"
-#~ msgstr "9"
-
-#~ msgid "ABC"
-#~ msgstr "ABC"
-
-#~ msgid "Address"
-#~ msgstr "Adress"
-
-#~ msgid "JKL"
-#~ msgstr "JKL"
-
-#~ msgid "MNO"
-#~ msgstr "MNO"
-
-#~ msgid "New Contact"
-#~ msgstr "Ny kontakt"
-
-#~ msgid "PQRS"
-#~ msgstr "PQRS"
-
-#~ msgid "Skype"
-#~ msgstr "Skype"
-
-#~ msgid "TUV"
-#~ msgstr "TUV"
-
-#~ msgid "WXYZ"
-#~ msgstr "WXYZ"
-
-#~ msgid "Yahoo"
-#~ msgstr "Yahoo"
