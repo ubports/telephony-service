@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2014-07-29 19:28+0000\n"
-"Last-Translator: electroluth <jerome.barbaza@gmail.com>\n"
+"PO-Revision-Date: 2014-08-02 21:06+0000\n"
+"Last-Translator: Anne <anneonyme017@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-08-01 07:13+0000\n"
-"X-Generator: Launchpad (build 17141)\n"
+"X-Launchpad-Export-Date: 2014-08-03 06:13+0000\n"
+"X-Generator: Launchpad (build 17147)\n"
 "Language: fr\n"
 
 #: indicator/messagingmenu.cpp:208
@@ -84,7 +84,7 @@ msgstr "Je suis en retard. Je suis en chemin."
 
 #: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:165
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
