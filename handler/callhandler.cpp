@@ -29,7 +29,6 @@
 
 #define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
 #define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
-#define PROPERTY_SPEAKERMODE "SpeakerMode"
 
 typedef QMap<QString, QVariant> dbusQMap;
 Q_DECLARE_METATYPE(dbusQMap)
@@ -143,15 +142,12 @@ void CallHandler::setMuted(const QString &objectPath, bool muted)
     muteInterface.call("RequestMuted", muted);
 }
 
-void CallHandler::setSpeakerMode(const QString &objectPath, bool enabled)
+void CallHandler::setActiveAudioOutput(const QString &objectPath, const QString &id)
 {
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
-    if (channel.isNull() || !channel->property("hasSpeakerProperty").toBool()) {
-        return;
-    }
 
-    QDBusInterface speakerInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_SPEAKER_IFACE);
-    speakerInterface.call("turnOnSpeaker", enabled);
+    QDBusInterface audioOutputsInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE);
+    audioOutputsInterface.call("SetActiveAudioOutput", id);
 }
 
 void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
@@ -247,12 +243,10 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
     channel->accept();
 
-    // check if the channel has the speakermode property
     QDBusInterface callChannelIface(channel->busName(), channel->objectPath(), DBUS_PROPERTIES_IFACE);
-    QDBusMessage reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_SPEAKER_IFACE);
+    QDBusMessage reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE);
     QVariantList args = reply.arguments();
     QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
-    channel->setProperty("hasSpeakerProperty", map.contains(PROPERTY_SPEAKERMODE));
     channel->setProperty("timestamp", QDateTime::currentDateTimeUtc());
 
     if (channel->callState() == Tp::CallStateActive) {

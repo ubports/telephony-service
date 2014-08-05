@@ -34,7 +34,24 @@
 #define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
 #define TELEPATHY_CALL_IFACE "org.freedesktop.Telepathy.Channel.Type.Call1"
 #define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
-#define PROPERTY_SPEAKERMODE "SpeakerMode"
+#define PROPERTY_AUDIO_OUTPUTS "AudioOutputs"
+#define PROPERTY_ACTIVE_AUDIO_OUTPUT "ActiveAudioOutput"
+
+QDBusArgument &operator<<(QDBusArgument &argument, const AudioOutput &output)
+{
+    argument.beginStructure();
+    argument << output.id << output.type << output.name;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, AudioOutput &output)
+{
+    argument.beginStructure();
+    argument >> output.id >> output.type >> output.name;
+    argument.endStructure();
+    return argument;
+}
 
 CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     QObject(parent),
@@ -42,10 +59,11 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mVoicemail(false),
     mLocalMuteState(false),
     mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE),
-    mSpeakerInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_SPEAKER_IFACE),
-    mHasSpeakerProperty(false),
-    mSpeakerMode(false)
+    mAudioOutputsInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE)
 {
+    qDBusRegisterMetaType<AudioOutput>();
+    qDBusRegisterMetaType<AudioOutputList>();
+
     mAccount = TelepathyHelper::instance()->accountForConnection(mChannel->connection());
     setupCallChannel();
 
@@ -59,10 +77,31 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     Q_EMIT incomingChanged();
 }
 
-void CallEntry::onSpeakerChanged(bool active)
+void CallEntry::onAudioOutputsChanged(const AudioOutputList &outputs)
 {
-    mSpeakerMode = active;
-    Q_EMIT speakerChanged();
+    mAudioOutputs = outputs;
+    Q_EMIT audioOutputsChanged();
+}
+
+AudioOutputList CallEntry::audioOutputs() const
+{
+    return mAudioOutputs;
+}
+
+QString CallEntry::activeAudioOutput() const
+{
+    return mActiveAudioOutput;
+}
+
+void CallEntry::setActiveAudioOutput(const QString &id)
+{
+    mAudioOutputsInterface.call("SetActiveAudioOutput", mChannel->objectPath(), id);
+}
+
+void CallEntry::onActiveAudioOutputChanged(const QString &id)
+{
+    mActiveAudioOutput = id;
+    Q_EMIT activeAudioOutputChanged();
 }
 
 void CallEntry::onCallPropertiesChanged(const QString &objectPath, const QVariantMap &properties)
@@ -139,10 +178,8 @@ void CallEntry::setupCallChannel()
 
     refreshProperties();
 
-    mHasSpeakerProperty = mProperties.contains(PROPERTY_SPEAKERMODE);
-    if (mHasSpeakerProperty) {
-        connect(&mSpeakerInterface, SIGNAL(SpeakerChanged(bool)), SLOT(onSpeakerChanged(bool)));
-    }
+    connect(&mAudioOutputsInterface, SIGNAL(AudioOutputsChanged(AudioOutputList)), SLOT(onAudioOutputsChanged(AudioOutputList)));
+    connect(&mAudioOutputsInterface, SIGNAL(ActiveAudioOutputChanged(QString)), SLOT(onActiveAudioOutputChanged(QString)));
 
     onCallStateChanged(mChannel->callState());
 
@@ -193,7 +230,7 @@ void CallEntry::refreshProperties()
      QVariantList args = reply.arguments();
      QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
 
-     reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_SPEAKER_IFACE);
+     reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE);
      args = reply.arguments();
      QMap<QString, QVariant> map2 = qdbus_cast<QMap<QString, QVariant> >(args[0]);
 
@@ -209,7 +246,8 @@ void CallEntry::refreshProperties()
          mProperties[i2.key()] = i2.value();
      }
 
-     onSpeakerChanged(mProperties[PROPERTY_SPEAKERMODE].toBool());
+     onAudioOutputsChanged(mProperties[PROPERTY_AUDIO_OUTPUTS].value<AudioOutputList>());
+     onActiveAudioOutputChanged(mProperties[PROPERTY_ACTIVE_AUDIO_OUTPUT].toString());
 }
 
 bool CallEntry::dialing() const
@@ -393,24 +431,5 @@ int CallEntry::elapsedTime() const
 bool CallEntry::isActive() const
 {
     return (mChannel->callState() == Tp::CallStateActive);
-}
-
-bool CallEntry::isSpeakerOn()
-{
-    if (mHasSpeakerProperty) {
-        return mSpeakerMode;
-    }
-
-    return false;
-}
-
-void CallEntry::setSpeaker(bool speaker)
-{
-    if (!mHasSpeakerProperty) {
-        return;
-    }
-
-    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SetSpeakerMode", mChannel->objectPath(), speaker);
 }
 

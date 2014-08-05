@@ -87,7 +87,6 @@ Q_SIGNALS:
     void callsChanged();
     void hasCallsChanged();
     void hasBackgroundCallChanged();
-    void speakerChanged();
     void voicemailNumberChanged();
     void emergencyNumbersChanged();
     void callIndicatorVisibleChanged(bool visible);

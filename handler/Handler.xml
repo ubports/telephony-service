@@ -65,12 +65,12 @@
             <arg name="objectPath" type="s" direction="in"/>
             <arg name="muted" type="b" direction="in"/>
         </method>
-        <method name="SetSpeakerMode">
+        <method name="SetActiveAudioOutput">
             <dox:d><![CDATA[
-                Change the audio output to use speakers
+                Change the current active audio output
             ]]></dox:d>
             <arg name="objectPath" type="s" direction="in"/>
-            <arg name="enabled" type="b" direction="in"/>
+            <arg name="id" type="s" direction="in"/>
         </method>
         <method name="SendDTMF">
             <dox:d><![CDATA[

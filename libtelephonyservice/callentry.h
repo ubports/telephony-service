@@ -28,6 +28,16 @@
 #include <QTime>
 #include <TelepathyQt/CallChannel>
 
+struct AudioOutput {
+    QString id;
+    QString type;
+    QString name;
+};
+Q_DECLARE_METATYPE(AudioOutput)
+
+typedef QList<AudioOutput> AudioOutputList;
+Q_DECLARE_METATYPE(AudioOutputList)
+
 class AccountEntry;
 
 class CallEntry : public QObject
@@ -75,14 +85,17 @@ class CallEntry : public QObject
     Q_PROPERTY(bool ringing
                READ ringing
                NOTIFY ringingChanged)
-    Q_PROPERTY(bool speaker
-               READ isSpeakerOn
-               WRITE setSpeaker
-               NOTIFY speakerChanged)
     Q_PROPERTY(QString dtmfString
                READ dtmfString
                NOTIFY dtmfStringChanged)
-
+    Q_PROPERTY(QString activeAudioOutput
+               READ activeAudioOutput
+               WRITE setActiveAudioOutput
+               NOTIFY activeAudioOutputChanged)
+     Q_PROPERTY(AudioOutputList audioOutputs
+               READ audioOutputs
+               NOTIFY audioOutputsChanged)
+ 
 public:
     explicit CallEntry(const Tp::CallChannelPtr &channel, QObject *parent = 0);
     void timerEvent(QTimerEvent *event);
@@ -99,8 +112,10 @@ public:
     int elapsedTime() const;
     bool isActive() const;
 
-    bool isSpeakerOn();
-    Q_INVOKABLE void setSpeaker(bool speaker);
+    void setActiveAudioOutput(const QString &id);
+    QString activeAudioOutput() const;
+
+    AudioOutputList audioOutputs() const;
 
     bool dialing() const;
     bool incoming() const;
@@ -127,8 +142,9 @@ protected Q_SLOTS:
     void onCallStateChanged(Tp::CallState state);
     void onCallFlagsChanged(Tp::CallFlags flags);
     void onMutedChanged(uint state);
-    void onSpeakerChanged(bool active);
     void onCallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
+    void onAudioOutputsChanged(const AudioOutputList &outputs);
+    void onActiveAudioOutputChanged(const QString &id);
 
     // conference related stuff
     void onConferenceChannelMerged(const Tp::ChannelPtr &channel);
@@ -154,7 +170,8 @@ Q_SIGNALS:
     void incomingChanged();
     void ringingChanged();
     void elapsedTimeChanged();
-    void speakerChanged();
+    void activeAudioOutputChanged();
+    void audioOutputsChanged();
     
 private:
     void refreshProperties();
@@ -162,14 +179,14 @@ private:
     AccountEntry *mAccount;
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
-    QDBusInterface mSpeakerInterface;
+    QDBusInterface mAudioOutputsInterface;
     QMap<QString, QVariant> mProperties;
     bool mVoicemail;
     bool mLocalMuteState;
     QDateTime mActiveTimestamp;
-    bool mHasSpeakerProperty;
-    bool mSpeakerMode;
     QList<CallEntry*> mCalls;
+    AudioOutputList mAudioOutputs;
+    QString mActiveAudioOutput;
 };
 
 #endif // CALLENTRY_H
