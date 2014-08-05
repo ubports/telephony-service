@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2014-08-02 19:22+0000\n"
+"PO-Revision-Date: 2014-08-04 17:26+0000\n"
 "Last-Translator: Josef Andersson <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-03 06:13+0000\n"
+"X-Launchpad-Export-Date: 2014-08-05 06:45+0000\n"
 "X-Generator: Launchpad (build 17147)\n"
 "Language: sv\n"
 
@@ -60,11 +60,11 @@ msgstr "Avbryt"
 
 #: approver/approver.cpp:306
 msgid "Decline"
-msgstr ""
+msgstr "Avvisa"
 
 #: approver/approver.cpp:283
 msgid "Hold + Answer"
-msgstr ""
+msgstr "Vänta + Svara"
 
 #: indicator/messagingmenu.cpp:252
 msgid "I missed your call - can you call me now?"
@@ -100,12 +100,12 @@ msgstr "Svara"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #: indicator/textchannelobserver.cpp:202 indicator/textchannelobserver.cpp:276
 #, qt-format
 msgid "SMS from %1"
-msgstr ""
+msgstr "SMS från %1"
 
 #: indicator/textchannelobserver.cpp:171
 msgid "Save"
@@ -117,7 +117,7 @@ msgstr "Jag är fortfarande upptagen. Ringer dig senare."
 
 #: indicator/messagingmenu.cpp:54 indicator/messagingmenu.cpp:58
 msgid "Telephony Service"
-msgstr ""
+msgstr "Telefonitjänst"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
@@ -125,19 +125,19 @@ msgstr ""
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr ""
+msgstr "Telefonitjänstindikator"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
 msgid "Unknown Number"
-msgstr ""
+msgstr "Okänt nummer"
 
 #: approver/approver.cpp:57
 msgid "Unknown caller"
-msgstr ""
+msgstr "Okänd uppringare"
 
 #: indicator/textchannelobserver.cpp:221
 msgid "View message"
-msgstr ""
+msgstr "Visa meddelande"
 
 #: indicator/messagingmenu.cpp:291
 msgid "Voicemail messages"
