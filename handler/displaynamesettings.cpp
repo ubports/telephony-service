@@ -27,18 +27,31 @@ namespace C {
 #include <libintl.h>
 }
 
-DisplayNameSettings::DisplayNameSettings(QObject *parent) :
-    QObject(parent)
-{
-    // FIXME: this should go away once the system settings for account names lands.
-    mAccountNames["ofono/ofono/account0"] = C::gettext("SIM 1");
-    mAccountNames["ofono/ofono/account1"] = C::gettext("SIM 2");
+#define DUAL_SIM_NAMES_KEY "simNames"
 
+DisplayNameSettings::DisplayNameSettings(QObject *parent) :
+    QObject(parent),
+    mSimNameSettings("com.ubuntu.phone")
+{
     connect(TelepathyHelper::instance(),
             SIGNAL(accountsChanged()),
             SLOT(onAccountsChanged()));
 
-    onAccountsChanged();
+    connect(&mSimNameSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
+
+    // force update during startup
+    onSettingsChanged(DUAL_SIM_NAMES_KEY);
+}
+
+void DisplayNameSettings::onSettingsChanged(const QString &key)
+{
+    if (key == DUAL_SIM_NAMES_KEY) {
+        QVariantMap values = mSimNameSettings.get(DUAL_SIM_NAMES_KEY).value<QVariantMap>();
+        for(QVariantMap::const_iterator iter = values.begin(); iter != values.end(); ++iter) {
+            mAccountNames[iter.key()] = iter.value().toString();
+        }
+        onAccountsChanged();
+    }
 }
 
 DisplayNameSettings *DisplayNameSettings::instance()
@@ -49,10 +62,10 @@ DisplayNameSettings *DisplayNameSettings::instance()
 
 void DisplayNameSettings::onAccountsChanged()
 {
-    // FIXME: retrieve the names from system settings
     Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
-        if (mAccountNames.contains(account->accountId()) && account->displayName() != mAccountNames[account->accountId()]) {
-            account->setDisplayName(mAccountNames[account->accountId()]);
+        QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
+        if (mAccountNames.contains(modemObjName) && account->displayName() != mAccountNames[modemObjName]) {
+            account->setDisplayName(mAccountNames[modemObjName]);
         }
     }
 }
