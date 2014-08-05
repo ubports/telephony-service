@@ -77,7 +77,9 @@ Q_SIGNALS:
 
 private:
     explicit USSDManager(QObject *parent = 0);
-   
+
+    Tp::ConnectionPtr connectionForAccountId(const QString &accountId = QString::null);
+
     void disconnectAllSignals(const Tp::ConnectionPtr& conn);
     void connectAllSignals(const Tp::ConnectionPtr& conn);
 

@@ -28,6 +28,8 @@
 #include <QTime>
 #include <TelepathyQt/CallChannel>
 
+class AccountEntry;
+
 class CallEntry : public QObject
 {
     Q_OBJECT
@@ -43,6 +45,7 @@ class CallEntry : public QObject
                READ isVoicemail
                WRITE setVoicemail
                NOTIFY voicemailChanged)
+    Q_PROPERTY(AccountEntry *account READ account)
 
     // this property is only filled for 1-1 calls
     Q_PROPERTY(QString phoneNumber
@@ -112,6 +115,7 @@ public:
     Q_INVOKABLE void splitCall();
 
     Tp::CallChannelPtr channel() const;
+    AccountEntry *account() const;
 
     // QQmlListProperty helpers
     static int callsCount(QQmlListProperty<CallEntry> *p);
@@ -155,7 +159,7 @@ Q_SIGNALS:
 private:
     void refreshProperties();
 
-    Tp::AccountPtr mAccount;
+    AccountEntry *mAccount;
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
     QDBusInterface mSpeakerInterface;

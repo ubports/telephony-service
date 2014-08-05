@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2013-06-13 10:08+0000\n"
+"PO-Revision-Date: 2014-07-31 10:07+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
-"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2013-07-11 06:27+0000\n"
-"X-Generator: Launchpad (build 16696)\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2014-08-01 07:13+0000\n"
+"X-Generator: Launchpad (build 17141)\n"
+"Language: uk\n"
 
 #: indicator/messagingmenu.cpp:208
 #, qt-format
@@ -67,7 +67,7 @@ msgstr "Відхилити"
 
 #: approver/approver.cpp:283
 msgid "Hold + Answer"
-msgstr ""
+msgstr "Утримання + Відповідь"
 
 #: indicator/messagingmenu.cpp:252
 msgid "I missed your call - can you call me now?"
@@ -87,20 +87,19 @@ msgstr "Запізнююся. У дорозі."
 
 #: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:165
 msgid "Ok"
-msgstr ""
+msgstr "Гаразд"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
 msgstr "Телефонні дзвінки"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:107
-#, fuzzy
 msgid "Private Number"
-msgstr "Приватний номер"
+msgstr "Особистий номер"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
-msgstr ""
+msgstr "Відповісти"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
@@ -121,18 +120,17 @@ msgstr "Вибачте, не можу звільнитися. Передзвон
 
 #: indicator/messagingmenu.cpp:54 indicator/messagingmenu.cpp:58
 msgid "Telephony Service"
-msgstr ""
+msgstr "Служба телефонії"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr ""
+msgstr "Підтверджувач служби телефонії"
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr ""
+msgstr "Індикатор служби телефонії"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
-#, fuzzy
 msgid "Unknown Number"
 msgstr "Невідомий номер"
 
@@ -141,259 +139,9 @@ msgid "Unknown caller"
 msgstr "Невідома особа"
 
 #: indicator/textchannelobserver.cpp:221
-#, fuzzy
 msgid "View message"
-msgstr "Нове повідомлення"
+msgstr "Переглянути повідомлення"
 
 #: indicator/messagingmenu.cpp:291
 msgid "Voicemail messages"
 msgstr "Повідомлення голосової пошти"
-
-#~ msgid "Handles incoming messages, calls and indicators"
-#~ msgstr "Обробляє вхідні повідомлення, дзвінки та працює з індикаторами"
-
-#~ msgid "Phone App Approver"
-#~ msgstr "Підтверджувач дзвінків"
-
-#~ msgid "#"
-#~ msgstr "#"
-
-#~ msgid "%1 hour call"
-#~ msgid_plural "%1 hours call"
-#~ msgstr[0] "%1-годинний дзвінок"
-#~ msgstr[1] "%1-годинний дзвінок"
-#~ msgstr[2] "%1-годинний дзвінок"
-
-#~ msgid "%1 minute call"
-#~ msgid_plural "%1 minutes call"
-#~ msgstr[0] "%1-хвилинний дзвінок"
-#~ msgstr[1] "%1-хвилинний дзвінок"
-#~ msgstr[2] "%1-хвилинний дзвінок"
-
-#~ msgid "%1 second call"
-#~ msgid_plural "%1 seconds call"
-#~ msgstr[0] "%1-секундний дзвінок"
-#~ msgstr[1] "%1-секундний дзвінок"
-#~ msgstr[2] "%1-секундний дзвінок"
-
-#~ msgid "*"
-#~ msgstr "*"
-
-#~ msgid "+"
-#~ msgstr "+"
-
-#~ msgid "0"
-#~ msgstr "0"
-
-#~ msgid "1"
-#~ msgstr "1"
-
-#~ msgid "2"
-#~ msgstr "2"
-
-#~ msgid "3"
-#~ msgstr "3"
-
-#~ msgid "4"
-#~ msgstr "4"
-
-#~ msgid "5"
-#~ msgstr "5"
-
-#~ msgid "6"
-#~ msgstr "6"
-
-#~ msgid "7"
-#~ msgstr "7"
-
-#~ msgid "8"
-#~ msgstr "8"
-
-#~ msgid "9"
-#~ msgstr "9"
-
-#~ msgid "ABC"
-#~ msgstr "АБВГ"
-
-#~ msgid "Add"
-#~ msgstr "Додати"
-
-#~ msgid "Add a phone number"
-#~ msgstr "Додати телефонний номер"
-
-#~ msgid "Add a postal address"
-#~ msgstr "Додати поштову адресу"
-
-#~ msgid "Add an email address"
-#~ msgstr "Додати адресу електронної пошти"
-
-#~ msgid "Add an online account"
-#~ msgstr "Додати обліковий запису у мережі"
-
-#~ msgid "Address"
-#~ msgstr "Адреса"
-
-#~ msgid "Are you sure you want to delete this contact?"
-#~ msgstr "Вилучити ці записи контактів?"
-
-#~ msgid "Call"
-#~ msgstr "Дзвінок"
-
-#~ msgid "Calls"
-#~ msgstr "Дзвінки"
-
-#~ msgid "Communication"
-#~ msgstr "Зв’язок"
-
-#~ msgid "Compose"
-#~ msgstr "Написати"
-
-#~ msgid "Contact Details"
-#~ msgstr "Подробиці щодо запису контакту"
-
-#~ msgid "Contacts"
-#~ msgstr "Контакти"
-
-#~ msgid "Conversations"
-#~ msgstr "Спілкування"
-
-#~ msgid "Country"
-#~ msgstr "Країна"
-
-#~ msgid "DEF"
-#~ msgstr "ДЕЄЖЗ"
-
-#~ msgid "Delete"
-#~ msgstr "Вилучити"
-
-#~ msgid "Delete Contact"
-#~ msgstr "Вилучити контакт"
-
-#~ msgid "Dialing"
-#~ msgstr "Набирання"
-
-#~ msgid "Duration %1"
-#~ msgstr "Тривалість: %1"
-
-#~ msgid "Edit"
-#~ msgstr "Змінити"
-
-#~ msgid "Email"
-#~ msgstr "Ел. пошта"
-
-#~ msgid "Enter a number"
-#~ msgstr "Введіть номер"
-
-#~ msgid "First"
-#~ msgstr "Перший"
-
-#~ msgid "GHI"
-#~ msgstr "ІЇИЙКЛ"
-
-#~ msgid "Google Talk"
-#~ msgstr "Google Talk"
-
-#~ msgid "Home"
-#~ msgstr "Домівка"
-
-#~ msgid "IM"
-#~ msgstr "МП"
-
-#~ msgid "JKL"
-#~ msgstr "МНОП"
-
-#~ msgid "Last"
-#~ msgstr "Останній"
-
-#~ msgid "Locality"
-#~ msgstr "Район"
-
-#~ msgid "MNO"
-#~ msgstr "РСТУ"
-
-#~ msgid "Messages"
-#~ msgstr "Повідомлення"
-
-#~ msgid "Middle"
-#~ msgstr "Середина"
-
-#~ msgid "Mobile"
-#~ msgstr "Мобільний"
-
-#~ msgid "New Contact"
-#~ msgstr "Новий контакт"
-
-#~ msgid "On Call"
-#~ msgstr "Дзвінок"
-
-#~ msgid "Other"
-#~ msgstr "Інше"
-
-#~ msgid "PQRS"
-#~ msgstr "ФХЦЧ"
-
-#~ msgid "Phone"
-#~ msgstr "Телефон"
-
-#~ msgid "Phone App"
-#~ msgstr "Програма-телефон"
-
-#~ msgid "Phone application"
-#~ msgstr "Програма-телефон"
-
-#~ msgid "Postal Code"
-#~ msgstr "Поштовий індекс"
-
-#~ msgid "Prefix"
-#~ msgstr "Префікс"
-
-#~ msgid "Region"
-#~ msgstr "Область/Регіон"
-
-#~ msgid "Reply via SMS"
-#~ msgstr "Відповісти СМС"
-
-#~ msgid "Send"
-#~ msgstr "Надіслати"
-
-#~ msgid "Skype"
-#~ msgstr "Скайп"
-
-#~ msgid "Street"
-#~ msgstr "Вулиця"
-
-#~ msgid "Suffix"
-#~ msgstr "Суфікс"
-
-#~ msgid "Swap Calls"
-#~ msgstr "Перемкнути дзвінки"
-
-#~ msgid "TUV"
-#~ msgstr "ШЩ"
-
-#~ msgid "To:"
-#~ msgstr "Кому:"
-
-#~ msgid "Today"
-#~ msgstr "Сьогодні"
-
-#~ msgid "Unknown Contact"
-#~ msgstr "Невідомий контакт"
-
-#~ msgid "Voicemail"
-#~ msgstr "Голосова пошта"
-
-#~ msgid "WXYZ"
-#~ msgstr "ЬЮЯ"
-
-#~ msgid "Work"
-#~ msgstr "Робочий"
-
-#~ msgid "Yahoo"
-#~ msgstr "Yahoo"
-
-#~ msgid "Yesterday"
-#~ msgstr "Вчора"
-
-#~ msgid "missed call"
-#~ msgstr "пропущений дзвінок"
