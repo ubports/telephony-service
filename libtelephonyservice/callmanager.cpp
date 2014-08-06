@@ -363,3 +363,9 @@ void CallManager::splitCall(CallEntry *callEntry)
     QDBusInterface *handlerInterface = TelepathyHelper::instance()->handlerInterface();
     handlerInterface->call("SplitCall", callEntry->channel()->objectPath());
 }
+
+void CallManager::sendDTMF(const QString &key)
+{
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->call("SendDTMF", "" /* no account */, key);
+}
