@@ -364,8 +364,9 @@ void CallManager::splitCall(CallEntry *callEntry)
     handlerInterface->call("SplitCall", callEntry->channel()->objectPath());
 }
 
-void CallManager::sendDTMF(const QString &key)
+void CallManager::playTone(const QString &key)
 {
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendDTMF", "" /* no account */, key);
+    /* calling without channel, DTMF tone is played only locally */
+    phoneAppHandler->call("SendDTMF", "" , key);
 }
