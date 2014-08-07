@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2014-07-30 19:01+0000\n"
+"PO-Revision-Date: 2014-08-05 11:30+0000\n"
 "Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-01 07:13+0000\n"
-"X-Generator: Launchpad (build 17141)\n"
+"X-Launchpad-Export-Date: 2014-08-06 06:55+0000\n"
+"X-Generator: Launchpad (build 17147)\n"
 "Language: hu\n"
 
 #: indicator/messagingmenu.cpp:208
@@ -39,7 +39,7 @@ msgstr "Elfogadás"
 
 #: approver/approver.cpp:270
 msgid "Caller number is not available"
-msgstr "Ismeretlen szám"
+msgstr "A hívó száma nem érhető el"
 
 #: approver/approver.cpp:267
 #, qt-format
@@ -84,7 +84,7 @@ msgstr "Úton vagyok, de késni fogok."
 
 #: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:165
 msgid "Ok"
-msgstr "Oké"
+msgstr "Ok"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -105,7 +105,7 @@ msgstr "SMS"
 #: indicator/textchannelobserver.cpp:202 indicator/textchannelobserver.cpp:276
 #, qt-format
 msgid "SMS from %1"
-msgstr "SMS tőle: %1"
+msgstr "SMS innen: %1"
 
 #: indicator/textchannelobserver.cpp:171
 msgid "Save"
