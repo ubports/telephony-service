@@ -307,6 +307,8 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
+    onSettingsChanged("defaultSimForMessages");
+    onSettingsChanged("defaultSimForCalls");
 }
 
 void TelepathyHelper::onAccountReady()
