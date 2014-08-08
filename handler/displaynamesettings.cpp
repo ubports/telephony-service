@@ -29,6 +29,10 @@ namespace C {
 
 #define DUAL_SIM_NAMES_KEY "simNames"
 
+// do not remove the following line.
+// it is used by the the ofono-setup script when creating new accounts
+#define SIM_DEFAULT_NAME C::gettext("SIM %1")
+
 DisplayNameSettings::DisplayNameSettings(QObject *parent) :
     QObject(parent),
     mSimNameSettings("com.ubuntu.phone")
