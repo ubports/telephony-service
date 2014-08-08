@@ -38,6 +38,7 @@
 #define CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE "com.canonical.Telephony.EmergencyMode"
 
 class AccountEntry;
+class QGSettings;
 
 class TelepathyHelper : public QObject
 {
@@ -45,8 +46,15 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList accountIds READ accountIds NOTIFY accountIdsChanged)
     Q_PROPERTY(QQmlListProperty<AccountEntry> accounts READ qmlAccounts NOTIFY accountsChanged)
-
+    Q_PROPERTY(AccountEntry *defaultMessagingAccount READ defaultMessagingAccount NOTIFY defaultMessagingAccountChanged)
+    Q_PROPERTY(AccountEntry *defaultCallAccount READ defaultCallAccount NOTIFY defaultCallAccountChanged)
+    Q_ENUMS(AccountType)
 public:
+    enum AccountType {
+        Call,
+        Messaging
+    };
+
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
@@ -54,11 +62,14 @@ public:
     QQmlListProperty<AccountEntry> qmlAccounts();
     ChannelObserver *channelObserver() const;
     QDBusInterface *handlerInterface() const;
+    AccountEntry *defaultMessagingAccount() const;
+    AccountEntry *defaultCallAccount() const;
 
     bool connected() const;
     QStringList accountIds();
     AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
     Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
+    Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
 
     void registerClient(Tp::AbstractClient *client, QString name);
 
@@ -77,6 +88,8 @@ Q_SIGNALS:
     void accountIdsChanged();
     void accountsChanged();
     void setupReady();
+    void defaultMessagingAccountChanged();
+    void defaultCallAccountChanged();
 
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);
@@ -90,6 +103,7 @@ private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);
     void onAccountReady();
     void updateConnectedStatus();
+    void onSettingsChanged(const QString&);
 
 private:
     explicit TelepathyHelper(QObject *parent = 0);
@@ -100,10 +114,13 @@ private:
     Tp::Features mConnectionFeatures;
     Tp::ClientRegistrarPtr mClientRegistrar;
     QList<AccountEntry*> mAccounts;
+    AccountEntry *mDefaultCallAccount;
+    AccountEntry *mDefaultMessagingAccount;
     ChannelObserver *mChannelObserver;
     bool mFirstTime;
     bool mConnected;
     mutable QDBusInterface *mHandlerInterface;
+    QGSettings *mDefaultSimSettings;
 };
 
 #endif // TELEPATHYHELPER_H
