@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2014-08-08 09:43+0000\n"
-"Last-Translator: Martin Pitt <martin.pitt@ubuntu.com>\n"
+"PO-Revision-Date: 2014-08-10 13:35+0000\n"
+"Last-Translator: Tobias Bannert <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-09 05:48+0000\n"
+"X-Launchpad-Export-Date: 2014-08-11 06:34+0000\n"
 "X-Generator: Launchpad (build 17156)\n"
 "Language: de\n"
 
@@ -122,11 +122,11 @@ msgstr "Telefondienst"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr ""
+msgstr "Telefoniedienstgenehmigung"
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr "Telefondienst-Benachrichtigung"
+msgstr "Telefondienstbenachrichtigung"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
 msgid "Unknown Number"
