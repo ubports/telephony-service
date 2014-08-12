@@ -29,7 +29,7 @@ RingtoneWorker::RingtoneWorker(QObject *parent) :
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
     mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
     mCallAudioPlaylist.setCurrentIndex(0);
-    mVibrateEffect.setDuration(1000);
+    mVibrateEffect.setDuration(500);
 }
 
 void RingtoneWorker::playIncomingCallSound()
