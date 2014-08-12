@@ -106,7 +106,6 @@ void USSDManager::connectAllSignals(const Tp::ConnectionPtr& conn)
 {
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
-    qDebug() << "USSD "<<  objectPath;
 
     QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "StateChanged", this, SLOT(onStateChanged(QString)));
     QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "RequestReceived", this, SIGNAL(requestReceived(QString)));
