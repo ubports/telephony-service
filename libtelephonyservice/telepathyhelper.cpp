@@ -27,6 +27,8 @@
 #include "config.h"
 #include "greetercontacts.h"
 
+#include "qgsettings.h"
+
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ChannelClassSpec>
 #include <TelepathyQt/ClientRegistrar>
@@ -35,10 +37,13 @@
 
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
+      mDefaultCallAccount(NULL),
+      mDefaultMessagingAccount(NULL),
       mChannelObserver(0),
       mFirstTime(true),
       mConnected(false),
-      mHandlerInterface(0)
+      mHandlerInterface(0),
+      mDefaultSimSettings(new QGSettings("com.ubuntu.phone"))
 {
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
@@ -68,10 +73,13 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
     connect(this, SIGNAL(accountReady()), SIGNAL(setupReady()));
+    connect(mDefaultSimSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
+
 }
 
 TelepathyHelper::~TelepathyHelper()
 {
+    mDefaultSimSettings->deleteLater();
 }
 
 TelepathyHelper *TelepathyHelper::instance()
@@ -299,6 +307,8 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
+    onSettingsChanged("defaultSimForMessages");
+    onSettingsChanged("defaultSimForCalls");
 }
 
 void TelepathyHelper::onAccountReady()
@@ -328,3 +338,71 @@ void TelepathyHelper::updateConnectedStatus()
         Q_EMIT connectedChanged();
     }
 }
+
+AccountEntry *TelepathyHelper::defaultMessagingAccount() const
+{
+    return mDefaultMessagingAccount;
+}
+
+AccountEntry *TelepathyHelper::defaultCallAccount() const
+{
+    return mDefaultCallAccount;
+}
+
+void TelepathyHelper::setDefaultAccount(AccountType type, AccountEntry* account)
+{
+    if (!account) {
+        return;
+    }
+
+    QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
+    if (!modemObjName.isEmpty()) {
+        if (type == Call) {
+            mDefaultSimSettings->set("defaultSimForCalls", modemObjName);
+        } else if (type == Messaging) {
+            mDefaultSimSettings->set("defaultSimForMessages", modemObjName);
+        }
+    }
+}
+
+void TelepathyHelper::onSettingsChanged(const QString &key)
+{
+    if (key == "defaultSimForMessages") {
+        QString defaultSim = mDefaultSimSettings->get("defaultSimForMessages").value<QString>(); 
+        if (defaultSim == "ask") {
+            mDefaultMessagingAccount = NULL;
+            Q_EMIT defaultMessagingAccountChanged();
+            return;
+        }
+        
+        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+            QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
+            if (modemObjName == defaultSim) {
+                mDefaultMessagingAccount = account;
+                Q_EMIT defaultMessagingAccountChanged();
+                return;
+            }
+        }
+        mDefaultMessagingAccount = NULL;
+        Q_EMIT defaultMessagingAccountChanged();
+    } else if (key == "defaultSimForCalls") {
+        QString defaultSim = mDefaultSimSettings->get("defaultSimForCalls").value<QString>(); 
+        if (defaultSim == "ask") {
+            mDefaultCallAccount = NULL;
+            Q_EMIT defaultCallAccountChanged();
+            return;
+        }
+        
+        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+            QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
+            if (modemObjName == defaultSim) {
+                mDefaultCallAccount = account;
+                Q_EMIT defaultCallAccountChanged();
+                return;
+            }
+        }
+        mDefaultCallAccount = NULL;
+        Q_EMIT defaultCallAccountChanged();
+    }
+}
+

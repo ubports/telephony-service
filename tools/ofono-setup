@@ -7,11 +7,14 @@ dconf write /org/gnome/empathy/use-conn false 2>&1 > /dev/null
 # for now assume that if there is at least one account, the system is properly configured.
 mc-tool show ofono/ofono/account0 2>&1 > /dev/null
 
-# if there is not, create one and enable it
+# if there is not, create accounts and enable them
 if [ $? -eq 1 ]; then
-        # get the modems from ofono
+        # get the modems from ofono and sort them alphabetically
         MODEMS=`/usr/share/ofono/scripts/list-modems | grep --binary-files=text "^\[" | sed 's,^\[ \(.*\) \],\1,g' | sort`
         INDEX=0
+        # get the translated default sim card name from the telephony-service po files.
+        SIM_NAME=$(gettext -d telephony-service "SIM %1")
+        GSETTINGS_ARRAY="{"
 
         # and for each modem found create a telepathy account
         for modem in $MODEMS; do
@@ -22,7 +25,15 @@ if [ $? -eq 1 ]; then
             mc-tool enable ofono/ofono/$ACCOUNT
             mc-tool auto-connect ofono/ofono/$ACCOUNT
             INDEX=$((INDEX+1))
+            # replace the %1 with the actual index
+            NAME=$(echo $SIM_NAME | sed "s/%1$/$INDEX/")
+            # append this entry to the gsettings array
+            GSETTINGS_ARRAY="$GSETTINGS_ARRAY '$modem': '$NAME',"
         done
+        # remove the last "," if present
+        GSETTINGS_ARRAY="$(echo $GSETTINGS_ARRAY | sed 's/,$//g')}"
+        # set names in gsettings
+        gsettings set com.ubuntu.phone sim-names "$GSETTINGS_ARRAY"
 fi
 
 echo 'ofono accounts initialized'
