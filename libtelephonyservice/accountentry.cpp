@@ -59,6 +59,7 @@ void AccountEntry::setDisplayName(const QString &name)
 bool AccountEntry::connected() const
 {
     return !mAccount.isNull() && !mAccount->connection().isNull() &&
+           !mAccount->connection()->selfContact().isNull() &&
             mAccount->connection()->selfContact()->presence().type() == Tp::ConnectionPresenceTypeAvailable;
 }
 
