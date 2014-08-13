@@ -1,3 +1,24 @@
+telephony-service (0.1+14.10.20140813.1-0ubuntu1) utopic; urgency=low
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+  [ Gustavo Pichorim Boiko ]
+  * Check if the self contact actually exists before getting its
+    presence. (LP: #1355388)
+  * Do not update the .po files during `make`, update only the .pot
+    file.
+
+  [ Martti Piirainen ]
+  * Adding support for tone generator (LP: #1187453). (LP: #1187453)
+
+  [ Tiago Salem Herrmann ]
+  * Use system settings to retrieve sim card display names.
+  * Reduce vibration duration for text messages. Fix vibration in silent
+    mode options for calls/messages (LP: #1347908)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 13 Aug 2014 22:31:48 +0000
+
 telephony-service (0.1+14.10.20140807-0ubuntu1) utopic; urgency=low
 
   [ CI bot ]
