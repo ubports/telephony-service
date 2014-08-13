@@ -60,6 +60,7 @@ public:
     Q_INVOKABLE void startCall(const QString &phoneNumber, const QString &accountId = QString::null);
     Q_INVOKABLE void mergeCalls(CallEntry *firstCall, CallEntry *secondCall);
     Q_INVOKABLE void splitCall(CallEntry *callEntry);
+    Q_INVOKABLE void playTone(const QString &key);
 
     CallEntry *foregroundCall() const;
     CallEntry *backgroundCall() const;
