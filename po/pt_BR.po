@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2014-08-07 12:34+0000\n"
-"Last-Translator: Salomão Carneiro de Brito <salomaocar@gmail.com>\n"
+"PO-Revision-Date: 2014-08-13 04:23+0000\n"
+"Last-Translator: Tiago Hillebrandt <tiagohillebrandt@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-08-08 07:07+0000\n"
+"X-Launchpad-Export-Date: 2014-08-13 06:55+0000\n"
 "X-Generator: Launchpad (build 17156)\n"
 "Language: pt_BR\n"
 
@@ -113,19 +113,19 @@ msgstr "Salvar"
 
 #: indicator/messagingmenu.cpp:256
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr "Descupas, eu continuo ocupado. Eu te ligo depois."
+msgstr "Desculpe, ainda estou ocupado. Te ligo mais tarde."
 
 #: indicator/messagingmenu.cpp:54 indicator/messagingmenu.cpp:58
 msgid "Telephony Service"
-msgstr "Serviço telefônico"
+msgstr "Serviço de telefonia"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr "Aprovador de serviço de telefonia"
+msgstr "Aprovador do serviço de telefonia"
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr "Indicador de serviço de telefonia"
+msgstr "Indicador do serviço de telefonia"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
 msgid "Unknown Number"
@@ -137,8 +137,8 @@ msgstr "Contato desconhecido"
 
 #: indicator/textchannelobserver.cpp:221
 msgid "View message"
-msgstr "Visualizar mensagem"
+msgstr "Ver mensagem"
 
 #: indicator/messagingmenu.cpp:291
 msgid "Voicemail messages"
-msgstr "Caixa de mensagens"
+msgstr "Mensagens do correio de voz"
