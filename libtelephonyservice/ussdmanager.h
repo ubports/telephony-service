@@ -53,8 +53,9 @@ public:
     QString state() const;
 
 public Q_SLOTS:
-    void onConnectedChanged();
+    void onAccountsChanged();
     void onStateChanged(const QString &state);
+    void accountConnectedChanged();
 
 Q_SIGNALS:
     void activeChanged();
@@ -83,9 +84,7 @@ private:
     void disconnectAllSignals(const Tp::ConnectionPtr& conn);
     void connectAllSignals(const Tp::ConnectionPtr& conn);
 
-    bool mActive;
-    QString mActiveAccountId;
-    QString mState;
+    QMap<QString, QString> mStates;
     QMap<QString, QString> mSerials;
 };
 

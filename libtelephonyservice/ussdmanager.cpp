@@ -37,9 +37,10 @@ USSDManager *USSDManager::instance()
 }
 
 USSDManager::USSDManager(QObject *parent)
-: QObject(parent), mActive(false)
+: QObject(parent)
 {
-    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
+    connect(TelepathyHelper::instance(), SIGNAL(accountsChanged()), SLOT(onAccountsChanged()));
+    onAccountsChanged();
 }
 
 Tp::ConnectionPtr USSDManager::connectionForAccountId(const QString &accountId)
@@ -100,6 +101,7 @@ void USSDManager::disconnectAllSignals(const Tp::ConnectionPtr& conn)
     QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "ConnectedLinePresentationComplete", this, SIGNAL(connectedLinePresentationComplete(QString, QString)));
     QDBusConnection::sessionBus().disconnect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "InitiateFailed", this, SIGNAL(initiateFailed()));
 }
+
 void USSDManager::connectAllSignals(const Tp::ConnectionPtr& conn)
 {
     QString busName = conn->busName();
@@ -120,25 +122,38 @@ void USSDManager::connectAllSignals(const Tp::ConnectionPtr& conn)
     QDBusConnection::sessionBus().connect(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE, "InitiateFailed", this, SIGNAL(initiateFailed()));
 }
 
-
-void USSDManager::onConnectedChanged()
+void USSDManager::accountConnectedChanged()
 {
-    // everytime the connection changes we need to check if there is any ongoing ussd session
-    mActive = false;
-    mActiveAccountId = QString::null;
-    mState = QString("idle");
-
-    if (!TelepathyHelper::instance()->connected()) {
-        Q_EMIT stateChanged(mState);
-        Q_EMIT activeChanged();
-        Q_EMIT activeAccountIdChanged();
+    AccountEntry *accountEntry = qobject_cast<AccountEntry*>(sender());
+    if (!accountEntry) {
         return;
     }
+    Tp::ConnectionPtr conn(accountEntry->account()->connection());
+    disconnectAllSignals(conn);
 
+    if (accountEntry->connected()) {
+        QString busName = conn->busName();
+        QString objectPath = conn->objectPath();
+
+        connectAllSignals(conn);
+
+        QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
+        mStates[accountEntry->accountId()] = ussdIface.property("State").toString();
+        mSerials[accountEntry->accountId()] = ussdIface.property("Serial").toString();
+    }
+}
+
+void USSDManager::onAccountsChanged()
+{
     Q_FOREACH (AccountEntry *accountEntry, TelepathyHelper::instance()->accounts()) {
+        QObject::disconnect(accountEntry, SIGNAL(connectedChanged()), this, SLOT(accountConnectedChanged()));
+        QObject::connect(accountEntry, SIGNAL(connectedChanged()), this, SLOT(accountConnectedChanged()));
+
         // disconnect all and reconnect only the online accounts
         Tp::ConnectionPtr conn(accountEntry->account()->connection());
         disconnectAllSignals(conn);
+        mStates.remove(accountEntry->accountId());
+        mSerials.remove(accountEntry->accountId());
 
         if (accountEntry->connected()) {
             QString busName = conn->busName();
@@ -147,37 +162,63 @@ void USSDManager::onConnectedChanged()
             connectAllSignals(conn);
 
             QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
-            mState = ussdIface.property("State").toString();
+            mStates[accountEntry->accountId()] = ussdIface.property("State").toString();
             mSerials[accountEntry->accountId()] = ussdIface.property("Serial").toString();
-            if (active()) {
-                mActiveAccountId = accountEntry->accountId();
-            }
         }
     }
-    Q_EMIT stateChanged(mState);
+    Q_EMIT stateChanged(state());
     Q_EMIT activeChanged();
     Q_EMIT activeAccountIdChanged();
 }
 
-void USSDManager::onStateChanged(const QString &state)
+void USSDManager::onStateChanged(const QString &)
 {
-    mState = state;
-    Q_EMIT stateChanged(state);
+    Q_FOREACH (AccountEntry *accountEntry, TelepathyHelper::instance()->accounts()) {
+        Tp::ConnectionPtr conn(accountEntry->account()->connection());
+        if (accountEntry->connected()) {
+            QString busName = conn->busName();
+            QString objectPath = conn->objectPath();
+            QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
+            mStates[accountEntry->accountId()] = ussdIface.property("State").toString();
+        }
+    }
+    Q_EMIT stateChanged(state());
 }
 
 bool USSDManager::active() const
 {
-    return mState != "idle" && !mState.isEmpty();
+    QMap<QString, QString>::const_iterator i = mStates.constBegin();
+    while (i != mStates.constEnd()) {
+        if (i.value() != "idle") {
+            return true;
+        }
+        ++i;
+    }
+    return false;
 }
 
 QString USSDManager::activeAccountId() const
 {
-    return mActiveAccountId;
+    QMap<QString, QString>::const_iterator i = mStates.constBegin();
+    while (i != mStates.constEnd()) {
+        if (i.value() != "idle") {
+            return i.key();
+        }
+        ++i;
+    }
+    return QString::null;
 }
 
 QString USSDManager::state() const
 {
-    return mState;
+    QMap<QString, QString>::const_iterator i = mStates.constBegin();
+    while (i != mStates.constEnd()) {
+        if (i.value() != "idle") {
+            return i.value();
+        }
+        ++i;
+    }
+    return "idle";
 }
 
 QString USSDManager::serial(const QString &accountId) const
