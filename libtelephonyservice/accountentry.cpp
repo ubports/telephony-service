@@ -24,10 +24,6 @@
 #include "accountentry.h"
 #include "telepathyhelper.h"
 
-namespace C {
-#include <libintl.h>
-}
-
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
     QObject(parent), mAccount(account)
 {
