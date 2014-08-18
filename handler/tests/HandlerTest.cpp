@@ -23,6 +23,8 @@
 #include "approver.h"
 #include "telepathyhelper.h"
 
+#define DEFAULT_TIMEOUT 15000
+
 class HandlerTest : public QObject
 {
     Q_OBJECT
@@ -45,8 +47,8 @@ private:
 void HandlerTest::initTestCase()
 {
     QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(accountReady()));
-    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, 10000);
-    QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), 10000);
+    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
+    QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), DEFAULT_TIMEOUT);
 
     // register the approver
     mApprover = new Approver(this);
