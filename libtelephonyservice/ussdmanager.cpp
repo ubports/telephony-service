@@ -84,6 +84,10 @@ void USSDManager::cancel(const QString &accountId)
 
 void USSDManager::disconnectAllSignals(const Tp::ConnectionPtr& conn)
 {
+    if (conn.isNull()) {
+        return;
+    }
+
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
 
@@ -104,6 +108,10 @@ void USSDManager::disconnectAllSignals(const Tp::ConnectionPtr& conn)
 
 void USSDManager::connectAllSignals(const Tp::ConnectionPtr& conn)
 {
+    if (conn.isNull()) {
+        return;
+    }
+
     QString busName = conn->busName();
     QString objectPath = conn->objectPath();
 
