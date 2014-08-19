@@ -1,3 +1,13 @@
+telephony-service (0.1+14.10.20140818.1-0ubuntu1) utopic; urgency=low
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Do not connect/disconnect signals if the connection is not ready.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 18 Aug 2014 17:45:07 +0000
+
 telephony-service (0.1+14.10.20140814-0ubuntu1) utopic; urgency=low
 
   [ CI bot ]
