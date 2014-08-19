@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-05-09 15:25-0300\n"
-"PO-Revision-Date: 2014-08-17 13:11+0000\n"
+"PO-Revision-Date: 2014-08-18 16:08+0000\n"
 "Last-Translator: Mitsuya Shibata <mty.shibata@gmail.com>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-08-18 07:20+0000\n"
+"X-Launchpad-Export-Date: 2014-08-19 06:58+0000\n"
 "X-Generator: Launchpad (build 17156)\n"
 
 #: indicator/messagingmenu.cpp:208
@@ -45,7 +45,7 @@ msgstr "%1から着信中"
 
 #: approver/approver.cpp:263
 msgid "Calling from private number"
-msgstr ""
+msgstr "内線番号から着信中"
 
 #: approver/approver.cpp:265
 msgid "Calling from unknown number"
@@ -61,11 +61,11 @@ msgstr "終了"
 
 #: approver/approver.cpp:283
 msgid "Hold + Answer"
-msgstr ""
+msgstr "保留して応答"
 
 #: indicator/messagingmenu.cpp:252
 msgid "I missed your call - can you call me now?"
-msgstr ""
+msgstr "電話をとれませんでした。今からかけてもらっていいですか？"
 
 #: indicator/messagingmenu.cpp:255
 msgid "I'll be 20 minutes late."
@@ -89,7 +89,7 @@ msgstr "電話"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:107
 msgid "Private Number"
-msgstr ""
+msgstr "内線番号"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
