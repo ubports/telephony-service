@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-18 09:41+0200\n"
+"POT-Creation-Date: 2014-08-20 11:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,6 +31,26 @@ msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
 msgstr[0] ""
 msgstr[1] ""
+
+#: indicator/metrics.cpp:48
+#, qt-format
+msgid "<b>%1</b> calls made today"
+msgstr ""
+
+#: indicator/metrics.cpp:46
+#, qt-format
+msgid "<b>%1</b> calls received today"
+msgstr ""
+
+#: indicator/metrics.cpp:44
+#, qt-format
+msgid "<b>%1</b> text messages received today"
+msgstr ""
+
+#: indicator/metrics.cpp:42
+#, qt-format
+msgid "<b>%1</b> text messages sent today"
+msgstr ""
 
 #: approver/approver.cpp:292
 msgid "Accept"
@@ -86,6 +106,22 @@ msgstr ""
 msgid "Message from %1"
 msgstr ""
 
+#: indicator/metrics.cpp:49 indicator/metrics.cpp:51
+msgid "No calls made today"
+msgstr ""
+
+#: indicator/metrics.cpp:47
+msgid "No calls received today"
+msgstr ""
+
+#: indicator/metrics.cpp:45
+msgid "No text messages received today"
+msgstr ""
+
+#: indicator/metrics.cpp:43
+msgid "No text messages sent today"
+msgstr ""
+
 #: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr ""
@@ -121,6 +157,11 @@ msgstr ""
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
+msgstr ""
+
+#: indicator/metrics.cpp:50
+#, qt-format
+msgid "Spent <b>%1</b> minutes in calls today"
 msgstr ""
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
