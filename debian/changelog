@@ -1,3 +1,13 @@
+telephony-service (0.1+14.10.20140821-0ubuntu1) utopic; urgency=low
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Report network name and sim presence to apps.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 21 Aug 2014 21:21:55 +0000
+
 telephony-service (0.1+14.10.20140820-0ubuntu1) utopic; urgency=low
 
   [ Albert Astals ]
