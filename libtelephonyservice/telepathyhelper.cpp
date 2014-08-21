@@ -43,7 +43,11 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
       mFirstTime(true),
       mConnected(false),
       mHandlerInterface(0),
-      mDefaultSimSettings(new QGSettings("com.ubuntu.phone"))
+      mDefaultSimSettings(new QGSettings("com.ubuntu.phone")),
+      mFlightModeInterface("org.freedesktop.URfkill",
+                           "/org/freedesktop/URfkill",
+                           "org.freedesktop.URfkill",
+                           QDBusConnection::systemBus())
 {
     mAccountFeatures << Tp::Account::FeatureCore;
     mContactFeatures << Tp::Contact::FeatureAlias
@@ -74,7 +78,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
     connect(this, SIGNAL(accountReady()), SIGNAL(setupReady()));
     connect(mDefaultSimSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
-
+    connect(&mFlightModeInterface, SIGNAL(FlightModeChanged(bool)), this, SIGNAL(flightModeChanged()));
 }
 
 TelepathyHelper::~TelepathyHelper()
@@ -107,14 +111,41 @@ QStringList TelepathyHelper::accountIds()
     return ids;
 }
 
+bool TelepathyHelper::flightMode()
+{
+    QDBusReply<bool> reply = mFlightModeInterface.call("IsFlightMode");
+    if (reply.isValid()) {
+        return reply;
+    }
+    return false;
+}
+
 QList<AccountEntry*> TelepathyHelper::accounts() const
 {
     return mAccounts;
 }
 
+QList<AccountEntry*> TelepathyHelper::activeAccounts() const
+{
+    QList<AccountEntry*> activeAccountList;
+    Q_FOREACH(AccountEntry *account, mAccounts) {
+        if (!account->account()->connection().isNull() &&
+            !account->account()->connection()->selfContact().isNull() &&
+             account->account()->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline) {
+            activeAccountList << account;
+        }
+    }
+    return activeAccountList;
+}
+
 QQmlListProperty<AccountEntry> TelepathyHelper::qmlAccounts()
 {
     return QQmlListProperty<AccountEntry>(this, 0, accountsCount, accountAt);
+}
+
+QQmlListProperty<AccountEntry> TelepathyHelper::qmlActiveAccounts()
+{
+    return QQmlListProperty<AccountEntry>(this, 0, activeAccountsCount, activeAccountAt);
 }
 
 ChannelObserver *TelepathyHelper::channelObserver() const
@@ -281,20 +312,36 @@ AccountEntry *TelepathyHelper::accountAt(QQmlListProperty<AccountEntry> *p, int 
     return TelepathyHelper::instance()->accounts()[index];
 }
 
+int TelepathyHelper::activeAccountsCount(QQmlListProperty<AccountEntry> *p)
+{
+    return TelepathyHelper::instance()->activeAccounts().count();
+}
+
+AccountEntry *TelepathyHelper::activeAccountAt(QQmlListProperty<AccountEntry> *p, int index)
+{
+    return TelepathyHelper::instance()->activeAccounts()[index];
+}
+
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 {
     Q_UNUSED(op)
 
     Tp::AccountSetPtr accountSet;
+    QMap<QString, AccountEntry *> orderedAccounts;
     // try to find an account of the one of supported protocols
     Q_FOREACH(const QString &protocol, supportedProtocols()) {
         accountSet = mAccountManager->accountsByProtocol(protocol);
         Q_FOREACH(const Tp::AccountPtr &account, accountSet->accounts()) {
+            QString modemObjName = account->parameters().value("modem-objpath").toString();
             AccountEntry *accountEntry = new AccountEntry(account, this);
+            connect(accountEntry,
+                    SIGNAL(connectedChanged()),
+                    SIGNAL(activeAccountsChanged()));
             setupAccountEntry(accountEntry);
-            mAccounts << accountEntry;
+            orderedAccounts[modemObjName] = accountEntry;
         }
     }
+    mAccounts = orderedAccounts.values();
 
     if (mAccounts.count() == 0) {
         Q_EMIT setupReady();
@@ -307,6 +354,7 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
+    Q_EMIT activeAccountsChanged();
     onSettingsChanged("defaultSimForMessages");
     onSettingsChanged("defaultSimForCalls");
 }

@@ -39,11 +39,13 @@ class AccountEntry : public QObject
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList emergencyNumbers READ emergencyNumbers NOTIFY emergencyNumbersChanged)
     Q_PROPERTY(QString voicemailNumber READ voicemailNumber NOTIFY voicemailNumberChanged)
+    Q_PROPERTY(QString networkName READ networkName NOTIFY networkNameChanged)
 
 public:
     explicit AccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
     QString accountId() const;
     QString displayName() const;
+    QString networkName() const;
     void setDisplayName(const QString &name);
     bool connected() const;
     QStringList emergencyNumbers() const;
@@ -54,6 +56,7 @@ Q_SIGNALS:
     void accountReady();
     void accountIdChanged();
     void displayNameChanged();
+    void networkNameChanged();
     void connectedChanged();
     void emergencyNumbersChanged();
     void voicemailNumberChanged();

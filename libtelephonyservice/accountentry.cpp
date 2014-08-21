@@ -48,6 +48,18 @@ QString AccountEntry::displayName() const
     return mAccount->displayName();
 }
 
+QString AccountEntry::networkName() const
+{
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
+        return QString::null;
+    }
+    Tp::Presence presence = mAccount->connection()->selfContact()->presence();
+    if (presence.type() == Tp::ConnectionPresenceTypeAvailable) {
+        return mAccount->connection()->selfContact()->presence().statusMessage();
+    }
+    return QString::null;
+}
+
 void AccountEntry::setDisplayName(const QString &name)
 {
     if (mAccount.isNull()) {
@@ -139,6 +151,10 @@ void AccountEntry::watchSelfContactPresence()
     connect(mAccount->connection()->selfContact().data(),
             SIGNAL(presenceChanged(Tp::Presence)),
             SIGNAL(connectedChanged()));
+
+    connect(mAccount->connection()->selfContact().data(),
+            SIGNAL(presenceChanged(Tp::Presence)),
+            SIGNAL(networkNameChanged()));
 }
 
 void AccountEntry::onConnectionChanged()
@@ -186,6 +202,7 @@ void AccountEntry::onConnectionChanged()
         watchSelfContactPresence();
     }
 
+    Q_EMIT networkNameChanged();
     Q_EMIT connectedChanged();
 }
 
