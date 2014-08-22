@@ -151,8 +151,8 @@ QString GreeterContacts::incomingMessageSound()
 
 bool GreeterContacts::incomingCallVibrate()
 {
-    if (silentMode() && getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrateSilentMode").toBool()) {
-        return true;
+    if (silentMode()) {
+        return getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrateSilentMode").toBool();
     }
     if (!mIncomingCallVibrate.isValid()) {
         mIncomingCallVibrate = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrate");
@@ -162,8 +162,8 @@ bool GreeterContacts::incomingCallVibrate()
 
 bool GreeterContacts::incomingMessageVibrate()
 {
-    if (silentMode() && getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrateSilentMode").toBool()) {
-        return true;
+    if (silentMode()) {
+        return getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrateSilentMode").toBool();
     }
     if (!mIncomingMessageVibrate.isValid()) {
         mIncomingMessageVibrate = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrate");

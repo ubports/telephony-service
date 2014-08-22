@@ -1,3 +1,77 @@
+telephony-service (0.1+14.10.20140821-0ubuntu1) utopic; urgency=low
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Report network name and sim presence to apps.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 21 Aug 2014 21:21:55 +0000
+
+telephony-service (0.1+14.10.20140820-0ubuntu1) utopic; urgency=low
+
+  [ Albert Astals ]
+  * Update .pot
+  * Mark User Metrics strings for translation and extract them so they
+    can get translated (LP: #1353755)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 20 Aug 2014 14:07:22 +0000
+
+telephony-service (0.1+14.10.20140818.1-0ubuntu1) utopic; urgency=low
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Do not connect/disconnect signals if the connection is not ready.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 18 Aug 2014 17:45:07 +0000
+
+telephony-service (0.1+14.10.20140814-0ubuntu1) utopic; urgency=low
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Fix USSDManager for multiple accounts
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 14 Aug 2014 20:21:37 +0000
+
+telephony-service (0.1+14.10.20140813.1-0ubuntu1) utopic; urgency=low
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+  [ Gustavo Pichorim Boiko ]
+  * Check if the self contact actually exists before getting its
+    presence. (LP: #1355388)
+  * Do not update the .po files during `make`, update only the .pot
+    file.
+
+  [ Martti Piirainen ]
+  * Adding support for tone generator (LP: #1187453). (LP: #1187453)
+
+  [ Tiago Salem Herrmann ]
+  * Use system settings to retrieve sim card display names.
+  * Reduce vibration duration for text messages. Fix vibration in silent
+    mode options for calls/messages (LP: #1347908)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 13 Aug 2014 22:31:48 +0000
+
+telephony-service (0.1+14.10.20140807-0ubuntu1) utopic; urgency=low
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Check if there is an account instance before actually accessing it.
+
+  [ Mirco Müller ]
+  * Added the use of the symbolic icon for the incoming-call as the
+    secondary icon as requested by Design. (LP: #1346838)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 07 Aug 2014 18:46:01 +0000
+
 telephony-service (0.1+14.10.20140730-0ubuntu1) utopic; urgency=low
 
   [ Gustavo Pichorim Boiko ]

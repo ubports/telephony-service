@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2014 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Martti Piirainen <martti.piirainen@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -19,29 +20,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef DISPLAYNAMESETTINGS_H
-#define DISPLAYNAMESETTINGS_H
+#ifndef TONEGENERATOR_H
+#define TONEGENERATOR_H
 
 #include <QObject>
-#include <QMap>
 
-#include "qgsettings.h"
+class QTimer;
 
-class DisplayNameSettings : public QObject
+static const int DTMF_LOCAL_PLAYBACK_DURATION = 200; /* in milliseconds */
+
+class ToneGenerator : public QObject
 {
     Q_OBJECT
 public:
-    static DisplayNameSettings *instance();
+    ~ToneGenerator();
+    static ToneGenerator *instance();
+
+public Q_SLOTS:
+    /**
+     * Valid tones: 0..9 (number keys), 10 (*), 11 (#)
+     */
+    void playDTMFTone(uint key);
 
 private Q_SLOTS:
-    void onAccountsChanged();
-    void onSettingsChanged(const QString &key);
+    void stopDTMFTone();
 
 private:
-    QGSettings mSimNameSettings;
-    explicit DisplayNameSettings(QObject *parent = 0);
-    QMap<QString,QString> mAccountNames;
-
+    explicit ToneGenerator(QObject *parent = 0);
+    QTimer* mPlaybackTimer;
 };
 
-#endif // DISPLAYNAMESETTINGS_H
+#endif // TONEGENERATOR_H

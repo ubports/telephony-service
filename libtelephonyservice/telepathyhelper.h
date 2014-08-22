@@ -38,6 +38,7 @@
 #define CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE "com.canonical.Telephony.EmergencyMode"
 
 class AccountEntry;
+class QGSettings;
 
 class TelepathyHelper : public QObject
 {
@@ -45,20 +46,35 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList accountIds READ accountIds NOTIFY accountIdsChanged)
     Q_PROPERTY(QQmlListProperty<AccountEntry> accounts READ qmlAccounts NOTIFY accountsChanged)
-
+    Q_PROPERTY(QQmlListProperty<AccountEntry> activeAccounts READ qmlActiveAccounts NOTIFY activeAccountsChanged)
+    Q_PROPERTY(AccountEntry *defaultMessagingAccount READ defaultMessagingAccount NOTIFY defaultMessagingAccountChanged)
+    Q_PROPERTY(AccountEntry *defaultCallAccount READ defaultCallAccount NOTIFY defaultCallAccountChanged)
+    Q_PROPERTY(bool flightMode READ flightMode NOTIFY flightModeChanged)
+    Q_ENUMS(AccountType)
 public:
+    enum AccountType {
+        Call,
+        Messaging
+    };
+
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
     QList<AccountEntry*> accounts() const;
+    QList<AccountEntry*> activeAccounts() const;
     QQmlListProperty<AccountEntry> qmlAccounts();
+    QQmlListProperty<AccountEntry> qmlActiveAccounts();
     ChannelObserver *channelObserver() const;
     QDBusInterface *handlerInterface() const;
+    AccountEntry *defaultMessagingAccount() const;
+    AccountEntry *defaultCallAccount() const;
 
+    bool flightMode();
     bool connected() const;
     QStringList accountIds();
     AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
     Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
+    Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
 
     void registerClient(Tp::AbstractClient *client, QString name);
 
@@ -68,6 +84,8 @@ public:
     // QQmlListProperty helpers
     static int accountsCount(QQmlListProperty<AccountEntry> *p);
     static AccountEntry *accountAt(QQmlListProperty<AccountEntry> *p, int index);
+    static int activeAccountsCount(QQmlListProperty<AccountEntry> *p);
+    static AccountEntry *activeAccountAt(QQmlListProperty<AccountEntry> *p, int index);
 
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
@@ -76,7 +94,11 @@ Q_SIGNALS:
     void connectedChanged();
     void accountIdsChanged();
     void accountsChanged();
+    void activeAccountsChanged();
     void setupReady();
+    void defaultMessagingAccountChanged();
+    void defaultCallAccountChanged();
+    void flightModeChanged();
 
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);
@@ -90,6 +112,7 @@ private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);
     void onAccountReady();
     void updateConnectedStatus();
+    void onSettingsChanged(const QString&);
 
 private:
     explicit TelepathyHelper(QObject *parent = 0);
@@ -100,10 +123,14 @@ private:
     Tp::Features mConnectionFeatures;
     Tp::ClientRegistrarPtr mClientRegistrar;
     QList<AccountEntry*> mAccounts;
+    AccountEntry *mDefaultCallAccount;
+    AccountEntry *mDefaultMessagingAccount;
     ChannelObserver *mChannelObserver;
     bool mFirstTime;
     bool mConnected;
     mutable QDBusInterface *mHandlerInterface;
+    QGSettings *mDefaultSimSettings;
+    QDBusInterface mFlightModeInterface;
 };
 
 #endif // TELEPATHYHELPER_H
