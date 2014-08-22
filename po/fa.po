@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-05-09 15:25-0300\n"
+"POT-Creation-Date: 2014-08-20 11:37+0200\n"
 "PO-Revision-Date: 2014-08-03 10:37+0000\n"
 "Last-Translator: Danial Behzadi <dani.behzi@gmail.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
@@ -15,39 +15,59 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-08-04 06:32+0000\n"
-"X-Generator: Launchpad (build 17147)\n"
+"X-Launchpad-Export-Date: 2014-08-22 07:39+0000\n"
+"X-Generator: Launchpad (build 17163)\n"
 
-#: indicator/messagingmenu.cpp:208
+#: indicator/messagingmenu.cpp:256
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 تماس بی‌پاسخ"
 
-#: indicator/messagingmenu.cpp:293
+#: indicator/messagingmenu.cpp:313
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
 msgstr[0] "%1 پیام پست صوتی"
 
-#: approver/approver.cpp:284
+#: indicator/metrics.cpp:48
+#, qt-format
+msgid "<b>%1</b> calls made today"
+msgstr ""
+
+#: indicator/metrics.cpp:46
+#, qt-format
+msgid "<b>%1</b> calls received today"
+msgstr ""
+
+#: indicator/metrics.cpp:44
+#, qt-format
+msgid "<b>%1</b> text messages received today"
+msgstr ""
+
+#: indicator/metrics.cpp:42
+#, qt-format
+msgid "<b>%1</b> text messages sent today"
+msgstr ""
+
+#: approver/approver.cpp:292
 msgid "Accept"
 msgstr "پذیرش"
 
-#: approver/approver.cpp:270
+#: approver/approver.cpp:275
 msgid "Caller number is not available"
 msgstr "شماره‌ی تماس‌گیرنده موجود نیست"
 
-#: approver/approver.cpp:267
+#: approver/approver.cpp:272
 #, qt-format
 msgid "Calling from %1"
 msgstr "در حال تماس از %1"
 
-#: approver/approver.cpp:263
+#: approver/approver.cpp:268
 msgid "Calling from private number"
 msgstr "در حال تماس از شماره‌ی خصوصی"
 
-#: approver/approver.cpp:265
+#: approver/approver.cpp:270
 msgid "Calling from unknown number"
 msgstr "درحال تماس از شماره‌ی نامشخص"
 
@@ -55,31 +75,52 @@ msgstr "درحال تماس از شماره‌ی نامشخص"
 msgid "Cancel"
 msgstr "لغو"
 
-#: approver/approver.cpp:306
+#: approver/approver.cpp:314
 msgid "Decline"
 msgstr "رد"
 
-#: approver/approver.cpp:283
+#: approver/approver.cpp:291
 msgid "Hold + Answer"
 msgstr "نگه داشتن + پاسخ"
 
-#: indicator/messagingmenu.cpp:252
+#: indicator/messagingmenu.cpp:204
 msgid "I missed your call - can you call me now?"
 msgstr "تماستون رو از دست دادم. می‌شه الآن با من تماس بگیرید؟"
 
-#: indicator/messagingmenu.cpp:255
+#: indicator/messagingmenu.cpp:207
 msgid "I'll be 20 minutes late."
 msgstr "۲۰ دقیقه تأخیر خواهم داشت."
 
-#: indicator/messagingmenu.cpp:254
+#: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "الآن سرم شلوعه. بعداً باهاتون تماس می‌گیرم."
 
-#: indicator/messagingmenu.cpp:253
+#: indicator/messagingmenu.cpp:205
 msgid "I'm running late. I'm on my way."
 msgstr "دیر می‌رسم. تو راهم."
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:165
+#: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
+#, qt-format
+msgid "Message from %1"
+msgstr ""
+
+#: indicator/metrics.cpp:49 indicator/metrics.cpp:51
+msgid "No calls made today"
+msgstr ""
+
+#: indicator/metrics.cpp:47
+msgid "No calls received today"
+msgstr ""
+
+#: indicator/metrics.cpp:45
+msgid "No text messages received today"
+msgstr ""
+
+#: indicator/metrics.cpp:43
+msgid "No text messages sent today"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "باشه"
 
@@ -91,28 +132,37 @@ msgstr "تماس‌های تلفنی"
 msgid "Private Number"
 msgstr "شماره‌ی خصوصی"
 
+#: indicator/messagingmenu.cpp:259
+msgid "Private number"
+msgstr ""
+
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
 msgstr "پاسخ"
+
+#: handler/displaynamesettings.cpp:34
+#, qt-format
+msgid "SIM %1"
+msgstr ""
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
 msgstr "پیامک"
 
-#: indicator/textchannelobserver.cpp:202 indicator/textchannelobserver.cpp:276
-#, qt-format
-msgid "SMS from %1"
-msgstr "پیامک از %1"
-
-#: indicator/textchannelobserver.cpp:171
+#: indicator/textchannelobserver.cpp:175
 msgid "Save"
 msgstr "ذخیره"
 
-#: indicator/messagingmenu.cpp:256
+#: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "ببخشید، هنوز دگیرم. بعداً باهاتون تماس می‌گیرم."
 
-#: indicator/messagingmenu.cpp:54 indicator/messagingmenu.cpp:58
+#: indicator/metrics.cpp:50
+#, qt-format
+msgid "Spent <b>%1</b> minutes in calls today"
+msgstr ""
+
+#: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
 msgstr "خدمات تلفن"
 
@@ -128,14 +178,18 @@ msgstr "نشانگر خدمات تلفن"
 msgid "Unknown Number"
 msgstr "شماره‌ی ناشناس"
 
-#: approver/approver.cpp:57
+#: approver/approver.cpp:58
 msgid "Unknown caller"
 msgstr "تماس‌گیرنده‌ی ناشناس"
 
-#: indicator/textchannelobserver.cpp:221
+#: indicator/messagingmenu.cpp:263
+msgid "Unknown number"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:240
 msgid "View message"
 msgstr "دیدن پیام"
 
-#: indicator/messagingmenu.cpp:291
+#: indicator/messagingmenu.cpp:311
 msgid "Voicemail messages"
 msgstr "پیام‌های پست صوتی"
