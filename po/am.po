@@ -8,49 +8,49 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-01 00:21+0000\n"
+"PO-Revision-Date: 2014-08-23 17:19+0000\n"
 "Last-Translator: samson <Unknown>\n"
 "Language-Team: Amharic <am@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-08-23 07:16+0000\n"
+"X-Launchpad-Export-Date: 2014-08-24 06:46+0000\n"
 "X-Generator: Launchpad (build 17163)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 ያልተመለሰ ጥሪ"
+msgstr[1] "%1 ያልተመለሱ ጥሪዎች"
 
 #: indicator/messagingmenu.cpp:313
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 የ ድምፅ መልእክት ሳጥን"
+msgstr[1] "%1 የ ድምፅ መልእክቶች ሳጥን"
 
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "<b>%1</b> ዛሬ የደወሉት"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "<b>%1</b> ዛሬ የተቀበሉዋቸው ጥሪዎች"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "<b>%1</b> ዛሬ የተቀበሉዋቸው የ ጽሁፍ መልእክቶች"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "<b>%1</b> ዛሬ የላኩዋቸው የ ጽሁፍ መልእክቶች"
 
 #: approver/approver.cpp:292
 msgid "Accept"
@@ -83,11 +83,11 @@ msgstr "አልቀበልም"
 
 #: approver/approver.cpp:291
 msgid "Hold + Answer"
-msgstr ""
+msgstr "ይጠብቁ + መመለሻ"
 
 #: indicator/messagingmenu.cpp:204
 msgid "I missed your call - can you call me now?"
-msgstr ""
+msgstr "ጥሪው አምልጧኛል - አሁን ሊደውሉልኝ ይችላሉ?"
 
 #: indicator/messagingmenu.cpp:207
 msgid "I'll be 20 minutes late."
@@ -104,23 +104,23 @@ msgstr "እየመጣሁ ነው: ነገር ግን እዘገያለሁ"
 #: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "መልእክት ከ %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr ""
+msgstr "ዛሬ ምንም አልደወሉም"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr ""
+msgstr "ዛሬ ምንም ጥሪ አልተቀበሉም"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr ""
+msgstr "ዛሬ ምንም የ ጽሁፍ መልእክቶች አልተቀበሉም"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr ""
+msgstr "ዛሬ ምንም የ ጽሁፍ መልእክቶች አልላኩም"
 
 #: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
@@ -136,11 +136,11 @@ msgstr "የግል ቁጥር"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr ""
+msgstr "የ ግል ቁጥር"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
-msgstr ""
+msgstr "መመለሻ"
 
 #: handler/displaynamesettings.cpp:34
 #, qt-format
@@ -186,7 +186,7 @@ msgstr "ያልታወቀ ደዋይ"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr ""
+msgstr "ያልታወቀ ቁጥር"
 
 #: indicator/textchannelobserver.cpp:240
 msgid "View message"
@@ -194,4 +194,4 @@ msgstr "መልእክት መመልከቻ"
 
 #: indicator/messagingmenu.cpp:311
 msgid "Voicemail messages"
-msgstr ""
+msgstr "የ ድምፅ መልእክቶች ሳጥን"
