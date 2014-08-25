@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-16 01:46+0000\n"
+"PO-Revision-Date: 2014-08-22 18:06+0000\n"
 "Last-Translator: Marcos Lans <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-22 07:39+0000\n"
+"X-Launchpad-Export-Date: 2014-08-23 07:16+0000\n"
 "X-Generator: Launchpad (build 17163)\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -35,22 +35,22 @@ msgstr[1] "%1 correos de voz"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "Hoxe fixo <b>%1</b> chamadas"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "Hoxe recibiu <b>%1</b> chamadas"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "Hoxe recibiu <b>%1</b> mensaxes"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "Hoxe enviou <b>%1</b> mensaxes"
 
 #: approver/approver.cpp:292
 msgid "Accept"
@@ -104,23 +104,23 @@ msgstr "Chego tarde. Estou en camiño."
 #: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "Mensaxe de %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr ""
+msgstr "Hoxe non fixo chamadas"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr ""
+msgstr "Hoxe non recibiu chamadas"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr ""
+msgstr "Hoxe non recibiu mensaxes"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr ""
+msgstr "Hoxe non enviou mensaxes"
 
 #: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
@@ -136,7 +136,7 @@ msgstr "Número privado"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr ""
+msgstr "Número privado"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
@@ -145,7 +145,7 @@ msgstr "Responder"
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr ""
+msgstr "SIM %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
@@ -162,7 +162,7 @@ msgstr "Síntoo, estou ocupado. Chamarei máis tarde."
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr ""
+msgstr "Hoxe ten <b>%1</b> minutos de chamadas"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
@@ -186,7 +186,7 @@ msgstr "Comunicante descoñecido"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr ""
+msgstr "Número descoñecido"
 
 #: indicator/textchannelobserver.cpp:240
 msgid "View message"
