@@ -1,35 +1,34 @@
-# Chinese (Traditional) translation for telephony-service
-# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# Khmer translation for telephony-service
+# Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the telephony-service package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
-"Report-Msgid-Bugs-To: \n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-14 16:28+0000\n"
-"Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
-"Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
+"PO-Revision-Date: 2014-08-20 02:09+0000\n"
+"Last-Translator: Sok Sophea <sksophea@gmail.com>\n"
+"Language-Team: Khmer <km@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2014-08-23 07:16+0000\n"
 "X-Generator: Launchpad (build 17163)\n"
-"Language: \n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
-msgstr[0] "%1 通未接來電"
+msgstr[0] "ខកខាន​ទទួល %1"
 
 #: indicator/messagingmenu.cpp:313
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
-msgstr[0] "%1 通語音留言"
+msgstr[0] "សារ​ជា​សំឡេង %1"
 
 #: indicator/metrics.cpp:48
 #, qt-format
@@ -53,52 +52,53 @@ msgstr ""
 
 #: approver/approver.cpp:292
 msgid "Accept"
-msgstr "接聽"
+msgstr "ព្រម​ទទួល"
 
 #: approver/approver.cpp:275
 msgid "Caller number is not available"
-msgstr "無法查看來電號碼"
+msgstr "មិន​មាន​លេខ​អ្នក​ហៅ"
 
 #: approver/approver.cpp:272
 #, qt-format
 msgid "Calling from %1"
-msgstr "%1 來電"
+msgstr "កំពុង​ហៅ​ពី %1"
 
 #: approver/approver.cpp:268
 msgid "Calling from private number"
-msgstr "私人號碼來電"
+msgstr "កំពុង​ហៅ​ពី​លេខ​ឯកជន"
 
 #: approver/approver.cpp:270
 msgid "Calling from unknown number"
-msgstr "來電號碼不明"
+msgstr "កំពុង​ហៅ​ពី​លេខ​មិន​ស្គាល់"
 
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
-msgstr "取消"
+msgstr "បោះបង់"
 
 #: approver/approver.cpp:314
 msgid "Decline"
-msgstr "拒接"
+msgstr "បដិសេធ"
 
 #: approver/approver.cpp:291
 msgid "Hold + Answer"
-msgstr "Hold + 接聽"
+msgstr "ចុច​ជាប់ + ឆ្លើយ"
 
 #: indicator/messagingmenu.cpp:204
 msgid "I missed your call - can you call me now?"
-msgstr "剛才沒聽到電話，可以現在打給我嗎？"
+msgstr ""
+"ខ្ញុំមិន​បាន​ទទួលការ​ហៅ​របស់​អ្នក- តើ​អ្នក​អាច​ហៅ​មក​ខ្ញុំ​ឥឡូវ​បាន​ទេ?"
 
 #: indicator/messagingmenu.cpp:207
 msgid "I'll be 20 minutes late."
-msgstr "二十分鐘後到。"
+msgstr "ខ្ញុំ​នឹង​យឺត ២០នាទី។"
 
 #: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
-msgstr "現在正忙，晚點打給你。"
+msgstr "ខ្ញុំ​រវល់​ណាស់​ពេល​នេះ។ ខ្ញុំ​នឹង​ហៅ​អ្នក​ពេល​ក្រោយ។"
 
 #: indicator/messagingmenu.cpp:205
 msgid "I'm running late. I'm on my way."
-msgstr "正在來了，遲些才到。"
+msgstr "ខ្ញុំ​យឺត​ហើយ។ ខ្ញុំ​នៅ​តាម​ផ្លូវ។"
 
 #: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
 #, qt-format
@@ -123,15 +123,15 @@ msgstr ""
 
 #: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
-msgstr "確定"
+msgstr "យល់ព្រម"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
-msgstr "來電"
+msgstr "ការ​ហៅ​ទូរស័ព្ទ"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:107
 msgid "Private Number"
-msgstr "私人號碼"
+msgstr "លេខ​ឯកជន"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
@@ -139,7 +139,7 @@ msgstr ""
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
-msgstr "回覆"
+msgstr "ឆ្លើយតប"
 
 #: handler/displaynamesettings.cpp:34
 #, qt-format
@@ -148,15 +148,15 @@ msgstr ""
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
-msgstr "SMS"
+msgstr "សារ SMS"
 
 #: indicator/textchannelobserver.cpp:175
 msgid "Save"
-msgstr "儲存"
+msgstr "រក្សា​ទុក"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr "抱歉，我還在忙。待會打給你。"
+msgstr "សូម​ទោស ខ្ញុំ​កំពុង​រវល់។ ខ្ញុំ​នឹង​ហៅ​ទៅ​អ្នក​ពេល​ក្រោយ។"
 
 #: indicator/metrics.cpp:50
 #, qt-format
@@ -165,23 +165,23 @@ msgstr ""
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
-msgstr ""
+msgstr "សេវាកម្ម​ទូរស័ព្ទ"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr ""
+msgstr "ក្រុមហ៊ុន​អនុម័ត​សេវាកម្ម​ទូរស័ព្ទ"
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr ""
+msgstr "សូចនាករ​សេវាកម្ម​ទូរស័ព្ទ"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
 msgid "Unknown Number"
-msgstr "號碼不明"
+msgstr "មិន​ស្គាល់​លេខ"
 
 #: approver/approver.cpp:58
 msgid "Unknown caller"
-msgstr "來電者不明"
+msgstr "មិន​ស្គាល់​អ្នក​ហៅ"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
@@ -189,8 +189,8 @@ msgstr ""
 
 #: indicator/textchannelobserver.cpp:240
 msgid "View message"
-msgstr "檢視訊息"
+msgstr "មើល​សារ"
 
 #: indicator/messagingmenu.cpp:311
 msgid "Voicemail messages"
-msgstr "語音留言訊息"
+msgstr "សារ​ជា​សំឡេង"
