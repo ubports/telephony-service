@@ -37,7 +37,7 @@
 #define PROPERTY_AUDIO_OUTPUTS "AudioOutputs"
 #define PROPERTY_ACTIVE_AUDIO_OUTPUT "ActiveAudioOutput"
 
-QDBusArgument &operator<<(QDBusArgument &argument, const AudioOutput &output)
+QDBusArgument &operator<<(QDBusArgument &argument, const AudioOutputDBus &output)
 {
     argument.beginStructure();
     argument << output.id << output.type << output.name;
@@ -45,7 +45,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const AudioOutput &output)
     return argument;
 }
 
-const QDBusArgument &operator>>(const QDBusArgument &argument, AudioOutput &output)
+const QDBusArgument &operator>>(const QDBusArgument &argument, AudioOutputDBus &output)
 {
     argument.beginStructure();
     argument >> output.id >> output.type >> output.name;
@@ -61,8 +61,8 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE),
     mAudioOutputsInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE)
 {
-    qDBusRegisterMetaType<AudioOutput>();
-    qDBusRegisterMetaType<AudioOutputList>();
+    qDBusRegisterMetaType<AudioOutputDBus>();
+    qDBusRegisterMetaType<AudioOutputDBusList>();
 
     mAccount = TelepathyHelper::instance()->accountForConnection(mChannel->connection());
     setupCallChannel();
@@ -79,15 +79,16 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     Q_EMIT incomingChanged();
 }
 
-void CallEntry::onAudioOutputsChanged(const AudioOutputList &outputs)
+void CallEntry::onAudioOutputsChanged(const AudioOutputDBusList &outputs)
 {
-    mAudioOutputs = outputs;
+    mAudioOutputs.clear();
+    while (!mAudioOutputs.isEmpty()) {
+        mAudioOutputs.takeFirst()->deleteLater();
+    }
+    Q_FOREACH(const AudioOutputDBus &output, outputs) {
+        mAudioOutputs.append(new AudioOutput(output.id, output.name, output.type, this));
+    }
     Q_EMIT audioOutputsChanged();
-}
-
-AudioOutputList CallEntry::audioOutputs() const
-{
-    return mAudioOutputs;
 }
 
 QString CallEntry::activeAudioOutput() const
@@ -97,7 +98,7 @@ QString CallEntry::activeAudioOutput() const
 
 void CallEntry::setActiveAudioOutput(const QString &id)
 {
-    mAudioOutputsInterface.call("SetActiveAudioOutput", mChannel->objectPath(), id);
+    mAudioOutputsInterface.call("SetActiveAudioOutput", id);
 }
 
 void CallEntry::onActiveAudioOutputChanged(const QString &id)
@@ -180,7 +181,7 @@ void CallEntry::setupCallChannel()
 
     refreshProperties();
 
-    connect(&mAudioOutputsInterface, SIGNAL(AudioOutputsChanged(AudioOutputList)), SLOT(onAudioOutputsChanged(AudioOutputList)));
+    QDBusConnection::sessionBus().connect(mChannel->busName(), mChannel->objectPath(), CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE, "AudioOutputsChanged", this, SLOT(onAudioOutputsChanged(AudioOutputDBusList)));
     connect(&mAudioOutputsInterface, SIGNAL(ActiveAudioOutputChanged(QString)), SLOT(onActiveAudioOutputChanged(QString)));
 
     onCallStateChanged(mChannel->callState());
@@ -248,7 +249,7 @@ void CallEntry::refreshProperties()
          mProperties[i2.key()] = i2.value();
      }
 
-     onAudioOutputsChanged(mProperties[PROPERTY_AUDIO_OUTPUTS].value<AudioOutputList>());
+     onAudioOutputsChanged(qdbus_cast<AudioOutputDBusList>(mProperties[PROPERTY_AUDIO_OUTPUTS]));
      onActiveAudioOutputChanged(mProperties[PROPERTY_ACTIVE_AUDIO_OUTPUT].toString());
 }
 
@@ -282,6 +283,11 @@ QString CallEntry::phoneNumber() const
 QQmlListProperty<CallEntry> CallEntry::calls()
 {
     return QQmlListProperty<CallEntry>(this, 0, callsCount, callAt);
+}
+
+QQmlListProperty<AudioOutput> CallEntry::audioOutputs()
+{
+    return QQmlListProperty<AudioOutput>(this, 0, audioOutputsCount, audioOutputsAt);
 }
 
 bool CallEntry::isConference() const
@@ -338,6 +344,24 @@ CallEntry *CallEntry::callAt(QQmlListProperty<CallEntry> *p, int index)
         return 0;
     }
     return entry->mCalls[index];
+}
+
+int CallEntry::audioOutputsCount(QQmlListProperty<AudioOutput> *p)
+{
+    CallEntry *entry = qobject_cast<CallEntry*>(p->object);
+    if (!entry) {
+        return 0;
+    }
+    return entry->mAudioOutputs.count();
+}
+
+AudioOutput *CallEntry::audioOutputsAt(QQmlListProperty<AudioOutput> *p, int index)
+{
+    CallEntry *entry = qobject_cast<CallEntry*>(p->object);
+    if (!entry) {
+        return 0;
+    }
+    return entry->mAudioOutputs[index];
 }
 
 void CallEntry::addCall(CallEntry *call)

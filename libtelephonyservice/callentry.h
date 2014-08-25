@@ -27,16 +27,7 @@
 #include <QObject>
 #include <QTime>
 #include <TelepathyQt/CallChannel>
-
-struct AudioOutput {
-    QString id;
-    QString type;
-    QString name;
-};
-Q_DECLARE_METATYPE(AudioOutput)
-
-typedef QList<AudioOutput> AudioOutputList;
-Q_DECLARE_METATYPE(AudioOutputList)
+#include "audiooutput.h"
 
 class AccountEntry;
 
@@ -92,7 +83,7 @@ class CallEntry : public QObject
                READ activeAudioOutput
                WRITE setActiveAudioOutput
                NOTIFY activeAudioOutputChanged)
-     Q_PROPERTY(AudioOutputList audioOutputs
+     Q_PROPERTY(QQmlListProperty<AudioOutput> audioOutputs
                READ audioOutputs
                NOTIFY audioOutputsChanged)
  
@@ -115,7 +106,7 @@ public:
     void setActiveAudioOutput(const QString &id);
     QString activeAudioOutput() const;
 
-    AudioOutputList audioOutputs() const;
+    QQmlListProperty<AudioOutput> audioOutputs();
 
     bool dialing() const;
     bool incoming() const;
@@ -138,12 +129,15 @@ public:
 
     void addCall(CallEntry *call);
 
+    static int audioOutputsCount(QQmlListProperty<AudioOutput> *p);
+    static AudioOutput* audioOutputsAt(QQmlListProperty<AudioOutput> *p, int index);
+
 protected Q_SLOTS:
     void onCallStateChanged(Tp::CallState state);
     void onCallFlagsChanged(Tp::CallFlags flags);
     void onMutedChanged(uint state);
     void onCallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
-    void onAudioOutputsChanged(const AudioOutputList &outputs);
+    void onAudioOutputsChanged(const AudioOutputDBusList &outputs);
     void onActiveAudioOutputChanged(const QString &id);
 
     // conference related stuff
@@ -185,7 +179,7 @@ private:
     bool mLocalMuteState;
     QDateTime mActiveTimestamp;
     QList<CallEntry*> mCalls;
-    AudioOutputList mAudioOutputs;
+    QList<AudioOutput*> mAudioOutputs;
     QString mActiveAudioOutput;
 };
 
