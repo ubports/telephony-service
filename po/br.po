@@ -1,4 +1,4 @@
-# Persian translation for telephony-service
+# Breton translation for telephony-service
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the telephony-service package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-24 12:46+0000\n"
-"Last-Translator: Danial Behzadi <dani.behzi@gmail.com>\n"
-"Language-Team: Persian <fa@li.org>\n"
+"PO-Revision-Date: 2014-08-26 07:12+0000\n"
+"Last-Translator: Fohanno Thierry <thierry.fohanno@ofis-bzh.org>\n"
+"Language-Team: Breton <br@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Launchpad-Export-Date: 2014-08-26 07:47+0000\n"
 "X-Generator: Launchpad (build 17163)\n"
 
@@ -22,174 +22,179 @@ msgstr ""
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
-msgstr[0] "%1 تماس بی‌پاسخ"
+msgstr[0] "%1 bellgomzadenn c'hwitet"
+msgstr[1] "%1 a bellgomzadennoù c'hwitet"
 
 #: indicator/messagingmenu.cpp:313
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
-msgstr[0] "%1 پیام پست صوتی"
+msgstr[0] "%1 gemennadenn er voest-komz"
+msgstr[1] "%1 a gemennadennoù er voest-komz"
 
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr "امروز <b>%1</b> تماس گرفته شد"
+msgstr "<b>%1</b> a bellgomzadennoù graet hiziv"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr "امروز <b>%1</b> تماس دریافت شد"
+msgstr "<b>%1</b> a bellgomzadennoù resevet hiziv"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr "امروز <b>%1</b> پیام متنی دریافت شد"
+msgstr "<b>%1</b> a gemennadennoù testenn resevet hiziv"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr "امروز <b>%1</b> پیام متنی فرستاده شد"
+msgstr "<b>%1</b> a gemennadennoù testenn kaset hiziv"
 
 #: approver/approver.cpp:292
 msgid "Accept"
-msgstr "پذیرش"
+msgstr "Asantiñ"
 
 #: approver/approver.cpp:275
 msgid "Caller number is not available"
-msgstr "شماره‌ی تماس‌گیرنده موجود نیست"
+msgstr "Ne c'haller ket gervel an niverenn"
 
 #: approver/approver.cpp:272
 #, qt-format
 msgid "Calling from %1"
-msgstr "در حال تماس از %1"
+msgstr "O pellgomz eus %1"
 
 #: approver/approver.cpp:268
 msgid "Calling from private number"
-msgstr "در حال تماس از شماره‌ی خصوصی"
+msgstr "O pellgomz eus un niverenn brevez"
 
 #: approver/approver.cpp:270
 msgid "Calling from unknown number"
-msgstr "درحال تماس از شماره‌ی نامشخص"
+msgstr "O pellgomz eus un niverenn dianav"
 
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
-msgstr "لغو"
+msgstr "Nullañ"
 
 #: approver/approver.cpp:314
 msgid "Decline"
-msgstr "رد"
+msgstr "Nac'h"
 
 #: approver/approver.cpp:291
 msgid "Hold + Answer"
-msgstr "نگه داشتن + پاسخ"
+msgstr "Lakaat da c'hortoz + Respont"
 
 #: indicator/messagingmenu.cpp:204
 msgid "I missed your call - can you call me now?"
-msgstr "تماستون رو از دست دادم. می‌شه الآن با من تماس بگیرید؟"
+msgstr ""
+"C'hwitet em eus ho pellgomzadenn - ha gallout a rit gervel ac'hanon bremañ ?"
 
 #: indicator/messagingmenu.cpp:207
 msgid "I'll be 20 minutes late."
-msgstr "۲۰ دقیقه تأخیر خواهم داشت."
+msgstr "20 munut dale a vo ganin."
 
 #: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
-msgstr "الآن سرم شلوعه. بعداً باهاتون تماس می‌گیرم."
+msgstr "Prez zo warnon bremañ. Pellgomz a rin deoc'h diwezhatoc'h."
 
 #: indicator/messagingmenu.cpp:205
 msgid "I'm running late. I'm on my way."
-msgstr "دیر می‌رسم. تو راهم."
+msgstr "Dale zo ganin. War an hent emaon."
 
 #: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
 #, qt-format
 msgid "Message from %1"
-msgstr "پیام از %1"
+msgstr "Kemennadenn digant %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr "امروز تماسی گرفته نشد"
+msgstr "N'eus bet graet pellgomzadenn ebet hiziv"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr "امروز تماسی دریافت نشد"
+msgstr "N'eus bet resevet pellgomzadenn ebet hiziv"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr "امروز پیام متنی‌ای دریافت نشد"
+msgstr "N'eus bet resevet kemennadenn destenn ebet hiziv"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr "امروز پیام متنی‌ای فرستاده نشد"
+msgstr "N'eus bet kaset kemennadenn destenn ebet hiziv"
 
 #: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
-msgstr "باشه"
+msgstr "Mat eo"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
-msgstr "تماس‌های تلفنی"
+msgstr "Pellgomzadennoù"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:107
 msgid "Private Number"
-msgstr "شماره‌ی خصوصی"
+msgstr "Niverenn brevez"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr "شماره‌ی خصوصی"
+msgstr "Niverenn brevez"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
-msgstr "پاسخ"
+msgstr "Respont"
 
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr "سیم‌کارت %1"
+msgstr "SIM %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
-msgstr "پیامک"
+msgstr "SMS"
 
 #: indicator/textchannelobserver.cpp:175
 msgid "Save"
-msgstr "ذخیره"
+msgstr "Enrollañ"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr "ببخشید، هنوز دگیرم. بعداً باهاتون تماس می‌گیرم."
+msgstr ""
+"Digarezit ac'hanon, prez zo warnon bepred. Gervel a rin ac'hanoc'h "
+"diwezhatoc'h."
 
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr "امروز <b>%1</b> دقیقه صرف تماس شد"
+msgstr "Tremenet <b>%1</b> munut ouzh ar pellgomz hiziv"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
-msgstr "خدمات تلفن"
+msgstr "Servij pellgomzerezh"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr "تأییدکننده‌ی خدمات تلفن"
+msgstr "Aprouer servij pellgomzerezh"
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr "نشانگر خدمات تلفن"
+msgstr "Merker servij pellgomzerezh"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
 msgid "Unknown Number"
-msgstr "شماره‌ی ناشناس"
+msgstr "Niverenn dianav"
 
 #: approver/approver.cpp:58
 msgid "Unknown caller"
-msgstr "تماس‌گیرنده‌ی ناشناس"
+msgstr "Galver dianav"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr "شماره‌ی ناشناس"
+msgstr "Niverenn dianav"
 
 #: indicator/textchannelobserver.cpp:240
 msgid "View message"
-msgstr "دیدن پیام"
+msgstr "Gwelet ar gemennadenn"
 
 #: indicator/messagingmenu.cpp:311
 msgid "Voicemail messages"
-msgstr "پیام‌های پست صوتی"
+msgstr "Kemennadennoù ar voest-komz"
