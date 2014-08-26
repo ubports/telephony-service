@@ -181,7 +181,11 @@ void CallEntry::setupCallChannel()
 
     refreshProperties();
 
-    QDBusConnection::sessionBus().connect(mChannel->busName(), mChannel->objectPath(), CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE, "AudioOutputsChanged", this, SLOT(onAudioOutputsChanged(AudioOutputDBusList)));
+    QDBusConnection::sessionBus().connect(mChannel->busName(), mChannel->objectPath(),
+                                          CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE,
+                                          "AudioOutputsChanged",
+                                          this,
+                                          SLOT(onAudioOutputsChanged(AudioOutputDBusList)));
     connect(&mAudioOutputsInterface, SIGNAL(ActiveAudioOutputChanged(QString)), SLOT(onActiveAudioOutputChanged(QString)));
 
     onCallStateChanged(mChannel->callState());
