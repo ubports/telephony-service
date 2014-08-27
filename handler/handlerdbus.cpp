@@ -123,9 +123,9 @@ void HandlerDBus::SetMuted(const QString &objectPath, bool muted)
     CallHandler::instance()->setMuted(objectPath, muted);
 }
 
-void HandlerDBus::SetSpeakerMode(const QString &objectPath, bool enabled)
+void HandlerDBus::SetActiveAudioOutput(const QString &objectPath, const QString &id)
 {
-    CallHandler::instance()->setSpeakerMode(objectPath, enabled);
+    CallHandler::instance()->setActiveAudioOutput(objectPath, id);
 }
 
 void HandlerDBus::SendDTMF(const QString &objectPath, const QString &key)

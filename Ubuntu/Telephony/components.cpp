@@ -31,6 +31,7 @@
 #include "greetercontacts.h"
 #include "phoneutils.h"
 #include "accountentry.h"
+#include "audiooutput.h"
 
 #include <QQmlEngine>
 #include <qqml.h>
@@ -63,6 +64,7 @@ void Components::registerTypes(const char *uri)
     // @uri Telephony
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
     qmlRegisterUncreatableType<CallEntry>(uri, 0, 1, "CallEntry", "Objects of this type are created in CallManager and made available to QML for usage");
+    qmlRegisterUncreatableType<AudioOutput>(uri, 0, 1, "AudioOutput", "Objects of this type are created in CallEntry and made available to QML for usage");
     qmlRegisterUncreatableType<AccountEntry>(uri, 0, 1, "AccountEntry", "Objects of this type are created in TelepathyHelper and made available to QML");
     qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");
     qmlRegisterType<PhoneUtils>(uri, 0, 1, "PhoneUtils");

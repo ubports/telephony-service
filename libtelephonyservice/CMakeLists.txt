@@ -1,5 +1,6 @@
 set(library_SRCS
     accountentry.cpp
+    audiooutput.cpp
     applicationutils.cpp
     callentry.cpp
     callmanager.cpp

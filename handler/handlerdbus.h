@@ -64,7 +64,7 @@ public Q_SLOTS:
     Q_NOREPLY void HangUpCall(const QString &objectPath);
     Q_NOREPLY void SetHold(const QString &objectPath, bool hold);
     Q_NOREPLY void SetMuted(const QString &objectPath, bool muted);
-    Q_NOREPLY void SetSpeakerMode(const QString &objectPath, bool enabled);
+    Q_NOREPLY void SetActiveAudioOutput(const QString &objectPath, const QString &id);
     Q_NOREPLY void SendDTMF(const QString &objectPath, const QString &key);
 
     // conference call related
