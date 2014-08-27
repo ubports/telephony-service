@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-09 06:19+0000\n"
-"Last-Translator: Marian Vasile <marianvasile1972@gmail.com>\n"
+"PO-Revision-Date: 2014-08-26 19:01+0000\n"
+"Last-Translator: Meriuță Cornel <meriutacornel@neacornel.eu>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2014-08-23 07:16+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-08-27 07:46+0000\n"
+"X-Generator: Launchpad (build 17174)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -38,22 +38,22 @@ msgstr[2] "%1 de mesaje vocale"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "<b>%1</b> apeluri efectuate astăzi"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "<b>%1</b> apeluri primite astăzi"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "<b>%1</b> mesaje text primite astăzi"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "<b>%1</b> mesaje text trimise astăzi"
 
 #: approver/approver.cpp:292
 msgid "Accept"
@@ -107,25 +107,25 @@ msgstr "Sunt în întârziere. Sunt deja pe drum."
 #: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "Mesaj de la %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr ""
+msgstr "Niciun apel efectuat astăzi"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr ""
+msgstr "Niciun apel primit astăzi"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr ""
+msgstr "Niciun mesaj text primit astăzi"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr ""
+msgstr "Niciun mesaj text trimis astăzi"
 
-#: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:169
 msgid "Ok"
 msgstr "În regulă"
 
@@ -139,7 +139,7 @@ msgstr "Număr privat"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr ""
+msgstr "Număr privat"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
@@ -148,7 +148,7 @@ msgstr "Răspuns"
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr ""
+msgstr "SIM %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
@@ -189,7 +189,7 @@ msgstr "Apelant necunoscut"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr ""
+msgstr "Număr necunoscut"
 
 #: indicator/textchannelobserver.cpp:240
 msgid "View message"

@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-08-26 07:47+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-08-27 07:46+0000\n"
+"X-Generator: Launchpad (build 17174)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -123,7 +123,7 @@ msgstr "N'eus bet resevet kemennadenn destenn ebet hiziv"
 msgid "No text messages sent today"
 msgstr "N'eus bet kaset kemennadenn destenn ebet hiziv"
 
-#: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:169
 msgid "Ok"
 msgstr "Mat eo"
 
