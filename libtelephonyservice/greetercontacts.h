@@ -61,6 +61,8 @@ public:
     static QVariantMap contactToMap(const QtContacts::QContact &contact);
     static QtContacts::QContact mapToContact(const QVariantMap &map);
 
+    Q_INVOKABLE void showGreeter();
+
 Q_SIGNALS:
     void contactUpdated(const QtContacts::QContact &contact);
     void greeterActiveChanged();

@@ -414,3 +414,12 @@ QContact GreeterContacts::mapToContact(const QVariantMap &map)
 
     return contact;
 }
+
+void GreeterContacts::showGreeter()
+{
+    QDBusInterface iface("com.canonical.UnityGreeter",
+                         "/",
+                         "com.canonical.UnityGreeter",
+                         QDBusConnection::sessionBus());
+    iface.call("ShowGreeter");
+}
