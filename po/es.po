@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-02 04:52+0000\n"
-"Last-Translator: Paco Molinero <paco@byasl.com>\n"
+"PO-Revision-Date: 2014-08-27 11:51+0000\n"
+"Last-Translator: Adolfo Jayme <fitoschido@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-23 07:16+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-08-28 06:29+0000\n"
+"X-Generator: Launchpad (build 17174)\n"
 "Language: es\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -36,22 +36,22 @@ msgstr[1] "%1 mensaje de voz"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "<b>%1</b> llamadas realizadas hoy"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "<b>%1</b> llamadas recibidas hoy"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "<b>%1</b> mensajes de texto recibidos hoy"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "<b>%1</b> mensajes de texto realizados hoy"
 
 #: approver/approver.cpp:292
 msgid "Accept"
@@ -105,25 +105,25 @@ msgstr "Se me hizo tarde, voy en camino."
 #: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "Mensaje de %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr ""
+msgstr "No se realizaron llamadas hoy"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr ""
+msgstr "No se recibieron llamadas hoy"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr ""
+msgstr "No se recibieron mensajes de texto hoy"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr ""
+msgstr "No se enviaron mensajes de texto hoy"
 
-#: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:169
 msgid "Ok"
 msgstr "Aceptar"
 
@@ -137,7 +137,7 @@ msgstr "Número privado"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr ""
+msgstr "Número privado"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
@@ -146,7 +146,7 @@ msgstr "Responder"
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr ""
+msgstr "SIM %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
@@ -163,11 +163,11 @@ msgstr "Lo siento, sigo ocupado/a. Te llamaré luego."
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr ""
+msgstr "Ha utilizado <b>%1</b> minutos en llamadas hoy"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
-msgstr "Servicio de Telefonía"
+msgstr "Servicio de telefonía"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
@@ -187,7 +187,7 @@ msgstr "Llamante desconocido"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr ""
+msgstr "Número desconocido"
 
 #: indicator/textchannelobserver.cpp:240
 msgid "View message"
