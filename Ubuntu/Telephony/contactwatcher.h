@@ -57,8 +57,11 @@ public:
     bool isUnknown() const;
     bool interactive() const;
 
+
     void classBegin();
     void componentComplete();
+    // Test function
+    void markAsComplete();
 
 Q_SIGNALS:
     void contactIdChanged();

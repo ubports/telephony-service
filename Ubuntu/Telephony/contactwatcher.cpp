@@ -34,7 +34,7 @@ namespace C {
 }
 
 ContactWatcher::ContactWatcher(QObject *parent) :
-    QObject(parent), mRequest(0), mInteractive(true), mCompleted(false)
+    QObject(parent), mRequest(0), mInteractive(false), mCompleted(false)
 {
     connect(ContactUtils::sharedManager(),
             SIGNAL(contactsAdded(QList<QContactId>)),
@@ -87,7 +87,12 @@ void ContactWatcher::searchByPhoneNumberIdle(const QString &phoneNumber)
 
 QString ContactWatcher::contactId() const
 {
-    return mContactId.toString();
+    QString id = mContactId.toString();
+    if (id == QStringLiteral("qtcontacts:::")) {
+        return QString();
+    } else {
+        return id;
+    }
 }
 
 QString ContactWatcher::avatar() const
@@ -117,22 +122,23 @@ QList<int> ContactWatcher::phoneNumberContexts() const
 
 void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
 {
-    if (mPhoneNumber == phoneNumber)
+    if (mPhoneNumber == phoneNumber) {
         return;
+    }
 
     const bool isPrivate = phoneNumber.startsWith("x-ofono-private");
     const bool isUnknown = phoneNumber.startsWith("x-ofono-unknown");
+    const bool isInteractive = !phoneNumber.isEmpty() && !isPrivate && !isUnknown;
 
     mPhoneNumber = phoneNumber;
-    mInteractive = true;
     Q_EMIT phoneNumberChanged();
+
     if (mPhoneNumber.isEmpty() || isPrivate || isUnknown) {
         mAlias.clear();
         mContactId = QContactId();
         mAvatar.clear();
         mPhoneNumberSubTypes.clear();
         mPhoneNumberContexts.clear();
-        mInteractive = false;
 
         if (isPrivate) {
             mAlias = C::gettext("Private Number");
@@ -146,12 +152,14 @@ void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
         Q_EMIT phoneNumberSubTypesChanged();
         Q_EMIT phoneNumberContextsChanged();
         Q_EMIT isUnknownChanged();
-        Q_EMIT interactiveChanged();
-        return;
+    } else {
+        searchByPhoneNumber(mPhoneNumber);
     }
 
-    Q_EMIT interactiveChanged();
-    searchByPhoneNumber(mPhoneNumber);
+    if (isInteractive != mInteractive) {
+        mInteractive = isInteractive;
+        Q_EMIT interactiveChanged();
+    }
 }
 
 bool ContactWatcher::isUnknown() const
@@ -177,6 +185,11 @@ void ContactWatcher::componentComplete()
     }
 }
 
+void ContactWatcher::markAsComplete()
+{
+    componentComplete();
+}
+
 void ContactWatcher::onContactsAdded(QList<QContactId> ids)
 {
     // ignore this signal if we have a contact already
@@ -185,9 +198,7 @@ void ContactWatcher::onContactsAdded(QList<QContactId> ids)
         return;
     }
 
-    // idle call
-    QMetaObject::invokeMethod(this, "searchByPhoneNumber",
-                              Qt::QueuedConnection);
+    searchByPhoneNumber(mPhoneNumber);
 }
 
 void ContactWatcher::onContactsChanged(QList<QContactId> ids)
