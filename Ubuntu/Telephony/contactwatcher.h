@@ -23,16 +23,18 @@
 #define CONTACTWATCHER_H
 
 #include <QObject>
-#include <QScopedPointer>
 #include <QContactManager>
 #include <QContactAbstractRequest>
 #include <QContactFetchRequest>
+#include <QQmlParserStatus>
 
 QTCONTACTS_USE_NAMESPACE
 
-class ContactWatcher : public QObject
+class ContactWatcher : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
+    Q_INTERFACES(QQmlParserStatus)
+
     Q_PROPERTY(QString contactId READ contactId NOTIFY contactIdChanged)
     Q_PROPERTY(QString avatar READ avatar NOTIFY avatarChanged)
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged)
@@ -43,6 +45,7 @@ class ContactWatcher : public QObject
     Q_PROPERTY(bool interactive READ interactive NOTIFY interactiveChanged)
 public:
     explicit ContactWatcher(QObject *parent = 0);
+    ~ContactWatcher();
 
     QString contactId() const;
     QString avatar() const;
@@ -53,6 +56,9 @@ public:
     QList<int> phoneNumberContexts() const;
     bool isUnknown() const;
     bool interactive() const;
+
+    void classBegin();
+    void componentComplete();
 
 Q_SIGNALS:
     void contactIdChanged();
@@ -83,6 +89,7 @@ private:
     QList<int> mPhoneNumberSubTypes;
     QList<int> mPhoneNumberContexts;
     bool mInteractive;
+    bool mCompleted;
 
 };
 

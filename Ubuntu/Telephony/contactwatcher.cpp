@@ -34,7 +34,7 @@ namespace C {
 }
 
 ContactWatcher::ContactWatcher(QObject *parent) :
-    QObject(parent), mRequest(0), mInteractive(true)
+    QObject(parent), mRequest(0), mInteractive(true), mCompleted(false)
 {
     connect(ContactUtils::sharedManager(),
             SIGNAL(contactsAdded(QList<QContactId>)),
@@ -47,6 +47,14 @@ ContactWatcher::ContactWatcher(QObject *parent) :
             SLOT(onContactsRemoved(QList<QContactId>)));
 }
 
+ContactWatcher::~ContactWatcher()
+{
+    if (mRequest) {
+        mRequest->cancel();
+        delete mRequest;
+    }
+}
+
 void ContactWatcher::searchByPhoneNumber(const QString &phoneNumber)
 {
     // idle call
@@ -57,9 +65,15 @@ void ContactWatcher::searchByPhoneNumber(const QString &phoneNumber)
 
 void ContactWatcher::searchByPhoneNumberIdle(const QString &phoneNumber)
 {
-    if (!mRequest) {
-        // request running already
+    if (!mCompleted) {
+        // componenty is not ready yet
         return;
+    }
+
+    // cancel current request if necessary
+    if (mRequest) {
+        mRequest->cancel();
+        mRequest->deleteLater();
     }
 
     mRequest = new QContactFetchRequest(this);
@@ -148,6 +162,19 @@ bool ContactWatcher::isUnknown() const
 bool ContactWatcher::interactive() const
 {
     return mInteractive;
+}
+
+void ContactWatcher::classBegin()
+{
+}
+
+void ContactWatcher::componentComplete()
+{
+    mCompleted = true;
+    // query for phone if the phone number was initialized
+    if (!mPhoneNumber.isEmpty()) {
+        searchByPhoneNumber(mPhoneNumber);
+    }
 }
 
 void ContactWatcher::onContactsAdded(QList<QContactId> ids)
