@@ -23,8 +23,10 @@
 #define CONTACTWATCHER_H
 
 #include <QObject>
+#include <QScopedPointer>
 #include <QContactManager>
 #include <QContactAbstractRequest>
+#include <QContactFetchRequest>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -51,7 +53,7 @@ public:
     QList<int> phoneNumberContexts() const;
     bool isUnknown() const;
     bool interactive() const;
-    
+
 Q_SIGNALS:
     void contactIdChanged();
     void avatarChanged();
@@ -66,18 +68,22 @@ protected Q_SLOTS:
     void onContactsAdded(QList<QContactId> ids);
     void onContactsChanged(QList<QContactId> ids);
     void onContactsRemoved(QList<QContactId> ids);
-    void onRequestStateChanged(QContactAbstractRequest::State state);
     void resultsAvailable();
+    void onRequestStateChanged(QContactAbstractRequest::State state);
+    void searchByPhoneNumberIdle(const QString &phoneNumber);
 
 private:
     void searchByPhoneNumber(const QString &phoneNumber);
-    QString mContactId;
+
+    QContactFetchRequest *mRequest;
+    QContactId mContactId;
     QString mAvatar;
     QString mAlias;
     QString mPhoneNumber;
     QList<int> mPhoneNumberSubTypes;
     QList<int> mPhoneNumberContexts;
     bool mInteractive;
+
 };
 
 #endif // CONTACTWATCHER_H
