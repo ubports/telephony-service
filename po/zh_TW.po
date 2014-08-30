@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-14 16:28+0000\n"
+"PO-Revision-Date: 2014-08-29 11:24+0000\n"
 "Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-08-23 07:16+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-08-30 07:45+0000\n"
+"X-Generator: Launchpad (build 17176)\n"
 "Language: \n"
 
 #: indicator/messagingmenu.cpp:256
@@ -34,22 +34,22 @@ msgstr[0] "%1 通語音留言"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "今日打出 <b>%1</b> 個電話"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "今日收到 <b>%1</b> 個電話"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "今日收到 <b>%1</b> 個訊息"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "今日發出 <b>%1</b> 個訊息"
 
 #: approver/approver.cpp:292
 msgid "Accept"
@@ -103,23 +103,23 @@ msgstr "正在來了，遲些才到。"
 #: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "來自 %1 的訊息"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr ""
+msgstr "今日沒有打出電話"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr ""
+msgstr "今日沒有收到電話"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr ""
+msgstr "今日沒有收到訊息"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr ""
+msgstr "今日沒有發出訊息"
 
 #: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
@@ -135,7 +135,7 @@ msgstr "私人號碼"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr ""
+msgstr "私人號碼"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
@@ -144,7 +144,7 @@ msgstr "回覆"
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr ""
+msgstr "SIM %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
@@ -161,11 +161,11 @@ msgstr "抱歉，我還在忙。待會打給你。"
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr ""
+msgstr "今日打出的電話共用了 <b>%1</b> 分鐘"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
-msgstr ""
+msgstr "電話服務"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
@@ -185,7 +185,7 @@ msgstr "來電者不明"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr ""
+msgstr "號碼不明"
 
 #: indicator/textchannelobserver.cpp:240
 msgid "View message"
