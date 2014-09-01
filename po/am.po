@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-30 22:16+0000\n"
+"PO-Revision-Date: 2014-08-31 17:06+0000\n"
 "Last-Translator: samson <Unknown>\n"
 "Language-Team: Amharic <am@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-08-31 07:30+0000\n"
+"X-Launchpad-Export-Date: 2014-09-01 07:33+0000\n"
 "X-Generator: Launchpad (build 17176)\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -145,11 +145,11 @@ msgstr "መመለሻ"
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr ""
+msgstr "ሲም %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
-msgstr ""
+msgstr "ኤስ ኤም ኤስ"
 
 #: indicator/textchannelobserver.cpp:175
 msgid "Save"

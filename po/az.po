@@ -1,4 +1,4 @@
-# Romanian translation for telephony-service
+# Azerbaijani translation for telephony-service
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the telephony-service package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
@@ -8,14 +8,13 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-31 09:19+0000\n"
-"Last-Translator: Marian Vasile <marianvasile1972@gmail.com>\n"
-"Language-Team: Romanian <ro@li.org>\n"
+"PO-Revision-Date: 2014-08-31 07:59+0000\n"
+"Last-Translator: Nicat Məmmədov <n1c4t97@gmail.com>\n"
+"Language-Team: Azerbaijani <az@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
-"== 0) && (n != 0))) ? 2: 1));\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Launchpad-Export-Date: 2014-09-01 07:33+0000\n"
 "X-Generator: Launchpad (build 17176)\n"
 
@@ -23,127 +22,125 @@ msgstr ""
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
-msgstr[0] "%1 apel pierdut"
-msgstr[1] "%1 apeluri pierdute"
-msgstr[2] "%1 de apeluri pierdute"
+msgstr[0] "%1 cavabsız zәng"
+msgstr[1] "%1 cavabsız zәng"
 
 #: indicator/messagingmenu.cpp:313
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
-msgstr[0] "%1 mesaj vocal"
-msgstr[1] "%1 mesaje vocale"
-msgstr[2] "%1 de mesaje vocale"
+msgstr[0] "%1 sәsli mesaj"
+msgstr[1] "%1 sәsli mesaj"
 
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr "<b>%1</b> apeluri efectuate astăzi"
+msgstr ""
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr "<b>%1</b> apeluri primite astăzi"
+msgstr "Bu gün <b>%1</b> zәng qәbul edildi"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr "<b>%1</b> mesaje text primite astăzi"
+msgstr "Bu gün <b>%1</b> mәtn mesajı qәbul edildi"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr "<b>%1</b> mesaje text trimise astăzi"
+msgstr "Bu gün <b>%1</b> mәtn mesajı göndәrildi"
 
 #: approver/approver.cpp:292
 msgid "Accept"
-msgstr "Accept"
+msgstr "Qәbul"
 
 #: approver/approver.cpp:275
 msgid "Caller number is not available"
-msgstr "Numărul apelantului nu este disponibil"
+msgstr ""
 
 #: approver/approver.cpp:272
 #, qt-format
 msgid "Calling from %1"
-msgstr "Apel de la %1"
+msgstr ""
 
 #: approver/approver.cpp:268
 msgid "Calling from private number"
-msgstr "Apel de la un număr privat"
+msgstr ""
 
 #: approver/approver.cpp:270
 msgid "Calling from unknown number"
-msgstr "Apel de la un număr necunoscut"
+msgstr "Bilinmәyәn nömrәdәn zәng olunur"
 
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
-msgstr "Anulează"
+msgstr "İmtina"
 
 #: approver/approver.cpp:314
 msgid "Decline"
-msgstr "Refuz"
+msgstr "Rədd"
 
 #: approver/approver.cpp:291
 msgid "Hold + Answer"
-msgstr "Reține + Răspunde"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:204
 msgid "I missed your call - can you call me now?"
-msgstr "Am pierdut apelul dumneavoastră - Vă pot suna acum?"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:207
 msgid "I'll be 20 minutes late."
-msgstr "Voi întârzia 20 de minute."
+msgstr "20 dәqiqә gecikәcәm."
 
 #: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
-msgstr "Acum sunt ocupat. Voi suna mai târziu."
+msgstr "İndi mәşğulam. Sәnә sonra zәng edәcәm."
 
 #: indicator/messagingmenu.cpp:205
 msgid "I'm running late. I'm on my way."
-msgstr "Sunt în întârziere. Sunt deja pe drum."
+msgstr ""
 
 #: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
 #, qt-format
 msgid "Message from %1"
-msgstr "Mesaj de la %1"
+msgstr ""
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr "Niciun apel efectuat astăzi"
+msgstr "Bu gün heç bir zәng edilmәyib"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr "Niciun apel primit astăzi"
+msgstr "Bu gün heç bir zәng qәbul edilmәdi"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr "Niciun mesaj text primit astăzi"
+msgstr "Bu gün heç bir mәtn mesajı qәbul edilmәdi"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr "Niciun mesaj text trimis astăzi"
+msgstr "Bu gün heç bir mәtn mesajı göndәrilmәyib"
 
 #: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
-msgstr "În regulă"
+msgstr "Oldu"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
-msgstr "Apeluri telefonice"
+msgstr ""
 
 #: Ubuntu/Telephony/contactwatcher.cpp:107
 msgid "Private Number"
-msgstr "Număr privat"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr "Număr privat"
+msgstr ""
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
-msgstr "Răspuns"
+msgstr "Cavabla"
 
 #: handler/displaynamesettings.cpp:34
 #, qt-format
@@ -156,45 +153,45 @@ msgstr "SMS"
 
 #: indicator/textchannelobserver.cpp:175
 msgid "Save"
-msgstr "Salvează"
+msgstr "Saxla"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr "Îmi pare rău, sunt în continuare ocupat. Voi suna mai târziu."
+msgstr "Bağışla, hәlә dә mәşğulam. Sәnә sonra zәng edәcәm."
 
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr "Astăzi ați consumat în apeluri <b>%1</b> minute"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
-msgstr "Serviciu de telefonie"
+msgstr ""
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr "Aprobator serviciu de telefonie"
+msgstr ""
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr "Indicator serviciu de telefonie"
+msgstr ""
 
 #: Ubuntu/Telephony/contactwatcher.cpp:109
 msgid "Unknown Number"
-msgstr "Număr necunoscut"
+msgstr "Bilinmәyәn Nömrә"
 
 #: approver/approver.cpp:58
 msgid "Unknown caller"
-msgstr "Apelant necunoscut"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr "Număr necunoscut"
+msgstr "Bilinmәyәn nömrә"
 
 #: indicator/textchannelobserver.cpp:240
 msgid "View message"
-msgstr "Vizualizare mesaj"
+msgstr "Mesaja bax"
 
 #: indicator/messagingmenu.cpp:311
 msgid "Voicemail messages"
-msgstr "Mesaje vocale"
+msgstr "Sәsli mesajlar"
