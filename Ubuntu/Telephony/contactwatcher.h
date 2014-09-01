@@ -79,7 +79,6 @@ protected Q_SLOTS:
     void onContactsRemoved(QList<QContactId> ids);
     void resultsAvailable();
     void onRequestStateChanged(QContactAbstractRequest::State state);
-    void searchByPhoneNumberIdle(const QString &phoneNumber);
 
 private:
     void searchByPhoneNumber(const QString &phoneNumber);

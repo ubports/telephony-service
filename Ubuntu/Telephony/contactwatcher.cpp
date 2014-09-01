@@ -57,14 +57,6 @@ ContactWatcher::~ContactWatcher()
 
 void ContactWatcher::searchByPhoneNumber(const QString &phoneNumber)
 {
-    // idle call
-    QMetaObject::invokeMethod(this, "searchByPhoneNumberIdle",
-                              Qt::QueuedConnection,
-                              Q_ARG(const QString&, phoneNumber));
-}
-
-void ContactWatcher::searchByPhoneNumberIdle(const QString &phoneNumber)
-{
     if (!mCompleted) {
         // componenty is not ready yet
         return;
