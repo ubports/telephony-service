@@ -47,6 +47,7 @@ Pre-Depends: dpkg (>= 1.15.6~)
 Conflicts: phone-app
 Replaces: phone-app
 Depends: accountsservice-ubuntu-touch-schemas,
+         gsettings-ubuntu-schemas,
          history-service,
          libnotify4,
          telepathy-mission-control-5,
@@ -67,7 +68,8 @@ Package: qtdeclarative5-ubuntu-telephony0.1
 Architecture: any
 Multi-Arch: same
 Pre-Depends: dpkg (>= 1.15.6~)
-Depends: qtcontact5-galera,
+Depends: gsettings-ubuntu-schemas,
+         qtcontact5-galera,
          telepathy-ofono,
          telephony-service (>= ${binary:Version}),
          ${misc:Depends},
