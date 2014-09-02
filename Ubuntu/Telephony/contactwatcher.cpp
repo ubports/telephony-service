@@ -177,11 +177,6 @@ void ContactWatcher::componentComplete()
     }
 }
 
-void ContactWatcher::markAsComplete()
-{
-    componentComplete();
-}
-
 void ContactWatcher::onContactsAdded(QList<QContactId> ids)
 {
     // ignore this signal if we have a contact already

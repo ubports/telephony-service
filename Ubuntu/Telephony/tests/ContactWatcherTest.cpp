@@ -82,7 +82,7 @@ void ContactWatcherTest::testMatchExistingContact()
                                      QList<int>() << 0 << 1 << 2,
                                      QList<int>() << 3 << 4 << 5);
     ContactWatcher watcher;
-    watcher.markAsComplete();
+    watcher.componentComplete();
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
     QSignalSpy aliasSpy(&watcher, SIGNAL(aliasChanged()));
     QSignalSpy avatarSpy(&watcher, SIGNAL(avatarChanged()));
@@ -118,7 +118,7 @@ void ContactWatcherTest::testMatchNewContact()
 {
     QString phoneNumber("1234567");
     ContactWatcher watcher;
-    watcher.markAsComplete();
+    watcher.componentComplete();
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
     QSignalSpy aliasSpy(&watcher, SIGNAL(aliasChanged()));
     QSignalSpy avatarSpy(&watcher, SIGNAL(avatarChanged()));
@@ -167,7 +167,7 @@ void ContactWatcherTest::testMatchContactChanged()
                                      QList<int>() << 0 << 1 << 2,
                                      QList<int>() << 3 << 4 << 5);
     ContactWatcher watcher;
-    watcher.markAsComplete();
+    watcher.componentComplete();
     watcher.setPhoneNumber(phoneNumber);
 
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
@@ -215,7 +215,7 @@ void ContactWatcherTest::testClearAfterContactChanged()
                                      QList<int>() << 0 << 1 << 2,
                                      QList<int>() << 3 << 4 << 5);
     ContactWatcher watcher;
-    watcher.markAsComplete();
+    watcher.componentComplete();
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
 
     // set the phone number and wait for the match to happen
@@ -269,7 +269,7 @@ void ContactWatcherTest::testContactRemoval()
                                      QList<int>() << 0 << 1 << 2,
                                      QList<int>() << 3 << 4 << 5);
     ContactWatcher watcher;
-    watcher.markAsComplete();
+    watcher.componentComplete();
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
 
     // set the phone number and wait for the match to happen
@@ -321,7 +321,7 @@ void ContactWatcherTest::testClearPhoneNumber()
                                      QList<int>() << 0 << 1 << 2,
                                      QList<int>() << 3 << 4 << 5);
     ContactWatcher watcher;
-    watcher.markAsComplete();
+    watcher.componentComplete();
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
 
     // set the phone number and wait for the match to happen
@@ -379,7 +379,7 @@ void ContactWatcherTest::testInteractiveProperty()
     QFETCH(bool, interactive);
 
     ContactWatcher watcher;
-    watcher.markAsComplete();
+    watcher.componentComplete();
     QSignalSpy spy(&watcher, SIGNAL(interactiveChanged()));
 
     watcher.setPhoneNumber(phoneNumber);
@@ -418,7 +418,7 @@ void ContactWatcherTest::testLateSearch()
     QCOMPARE(unknownSpy.count(), 0);
 
     // mark as complete
-    watcher.markAsComplete();
+    watcher.componentComplete();
 
     // signal will be fired now
     QTRY_COMPARE(contactIdSpy.count(), 1);
