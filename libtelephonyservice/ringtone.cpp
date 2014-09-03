@@ -47,6 +47,7 @@ void RingtoneWorker::playIncomingCallSound()
     }
 
     mCallAudioPlayer = new QMediaPlayer(this);
+    mCallAudioPlayer->setAudioRole(QMediaPlayer::AlertRole);
     mCallAudioPlayer->setPlaylist(&mCallAudioPlaylist);
     mCallAudioPlayer->play();
 }
@@ -77,6 +78,7 @@ void RingtoneWorker::playIncomingMessageSound()
 
     if (!mMessageAudioPlayer) {
         mMessageAudioPlayer = new QMediaPlayer(this);
+        mMessageAudioPlayer->setAudioRole(QMediaPlayer::AlertRole);
     }
 
     // WORKAROUND: there is a bug in qmediaplayer/(media-hub?) that never goes into Stopped mode.
