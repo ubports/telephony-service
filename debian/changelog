@@ -1,3 +1,25 @@
+telephony-service (0.1+14.10.20140905-0ubuntu1) utopic; urgency=low
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Michał Sawicz ]
+  * Add :any to python build dependency and rely on debhelper instead of
+    direct make calls.
+
+  [ Gustavo Pichorim Boiko ]
+  * Add a runtime dependency on gsettings-ubuntu-schemas needed by the
+    SIM label settings.
+
+  [ Renato Araujo Oliveira Filho ]
+  * Improve contact watcher.
+
+  [ Dimitri John Ledkov ]
+  * Add :any to python build dependency and rely on debhelper instead of
+    direct make calls.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 05 Sep 2014 13:47:32 +0000
+
 telephony-service (0.1+14.10.20140903-0ubuntu1) utopic; urgency=low
 
   [ CI bot ]
