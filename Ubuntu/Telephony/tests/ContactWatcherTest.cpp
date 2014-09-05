@@ -42,6 +42,7 @@ private Q_SLOTS:
     void testClearPhoneNumber();
     void testInteractiveProperty_data();
     void testInteractiveProperty();
+    void testLateSearch();
 
 private:
     QContact createContact(const QString &firstName,
@@ -81,6 +82,7 @@ void ContactWatcherTest::testMatchExistingContact()
                                      QList<int>() << 0 << 1 << 2,
                                      QList<int>() << 3 << 4 << 5);
     ContactWatcher watcher;
+    watcher.componentComplete();
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
     QSignalSpy aliasSpy(&watcher, SIGNAL(aliasChanged()));
     QSignalSpy avatarSpy(&watcher, SIGNAL(avatarChanged()));
@@ -90,6 +92,7 @@ void ContactWatcherTest::testMatchExistingContact()
 
     // set the phone number and wait for the match to happen
     watcher.setPhoneNumber(phoneNumber);
+
 
     // contact fetching is asynchronous so use QTRY_COMPARE for the first signal spy
     // for the subsequent ones it is fine to use just QCOMPARE
@@ -115,6 +118,7 @@ void ContactWatcherTest::testMatchNewContact()
 {
     QString phoneNumber("1234567");
     ContactWatcher watcher;
+    watcher.componentComplete();
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
     QSignalSpy aliasSpy(&watcher, SIGNAL(aliasChanged()));
     QSignalSpy avatarSpy(&watcher, SIGNAL(avatarChanged()));
@@ -163,6 +167,7 @@ void ContactWatcherTest::testMatchContactChanged()
                                      QList<int>() << 0 << 1 << 2,
                                      QList<int>() << 3 << 4 << 5);
     ContactWatcher watcher;
+    watcher.componentComplete();
     watcher.setPhoneNumber(phoneNumber);
 
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
@@ -210,6 +215,7 @@ void ContactWatcherTest::testClearAfterContactChanged()
                                      QList<int>() << 0 << 1 << 2,
                                      QList<int>() << 3 << 4 << 5);
     ContactWatcher watcher;
+    watcher.componentComplete();
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
 
     // set the phone number and wait for the match to happen
@@ -263,6 +269,7 @@ void ContactWatcherTest::testContactRemoval()
                                      QList<int>() << 0 << 1 << 2,
                                      QList<int>() << 3 << 4 << 5);
     ContactWatcher watcher;
+    watcher.componentComplete();
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
 
     // set the phone number and wait for the match to happen
@@ -314,6 +321,7 @@ void ContactWatcherTest::testClearPhoneNumber()
                                      QList<int>() << 0 << 1 << 2,
                                      QList<int>() << 3 << 4 << 5);
     ContactWatcher watcher;
+    watcher.componentComplete();
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
 
     // set the phone number and wait for the match to happen
@@ -355,25 +363,80 @@ void ContactWatcherTest::testClearPhoneNumber()
 void ContactWatcherTest::testInteractiveProperty_data()
 {
     QTest::addColumn<QString>("phoneNumber");
+    QTest::addColumn<int>("signalCount");
     QTest::addColumn<bool>("interactive");
 
-    QTest::newRow("valid phone number") << "98765432" << true;
-    QTest::newRow("ofono private phone number") << "x-ofono-private" << false;
-    QTest::newRow("ofono unknown number") << "x-ofono-unknown" << false;
-    QTest::newRow("empty phone number") << "" << false;
+    QTest::newRow("valid phone number") << "98765432" << 1 << true;
+    QTest::newRow("ofono private phone number") << "x-ofono-private" << 0 << false;
+    QTest::newRow("ofono unknown number") << "x-ofono-unknown" << 0 << false;
+    QTest::newRow("empty phone number") << "" << 0 << false;
 }
 
 void ContactWatcherTest::testInteractiveProperty()
 {
     QFETCH(QString, phoneNumber);
+    QFETCH(int, signalCount);
     QFETCH(bool, interactive);
 
     ContactWatcher watcher;
+    watcher.componentComplete();
     QSignalSpy spy(&watcher, SIGNAL(interactiveChanged()));
 
     watcher.setPhoneNumber(phoneNumber);
-    QCOMPARE(spy.count(), 1);
+    // the initial interactive value is false it will not change in case of invalid phones
+    QTRY_COMPARE(spy.count(), signalCount);
     QCOMPARE(watcher.interactive(), interactive);
+}
+
+
+void ContactWatcherTest::testLateSearch()
+{
+    QString phoneNumber("12345");
+    QContact contact = createContact("FirstName",
+                                     "LastName",
+                                     "file://some_file",
+                                     QStringList() << phoneNumber,
+                                     QList<int>() << 0 << 1 << 2,
+                                     QList<int>() << 3 << 4 << 5);
+    ContactWatcher watcher;
+    QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
+    QSignalSpy aliasSpy(&watcher, SIGNAL(aliasChanged()));
+    QSignalSpy avatarSpy(&watcher, SIGNAL(avatarChanged()));
+    QSignalSpy contextsSpy(&watcher, SIGNAL(phoneNumberContextsChanged()));
+    QSignalSpy subTypesSpy(&watcher, SIGNAL(phoneNumberSubTypesChanged()));
+    QSignalSpy unknownSpy(&watcher, SIGNAL(isUnknownChanged()));
+
+    // set the phone number and wait for the match to happen
+    watcher.setPhoneNumber(phoneNumber);
+
+    // component not complete yet
+    QTRY_COMPARE(contactIdSpy.count(), 0);
+    QCOMPARE(aliasSpy.count(), 0);
+    QCOMPARE(avatarSpy.count(), 0);
+    QCOMPARE(contextsSpy.count(), 0);
+    QCOMPARE(subTypesSpy.count(), 0);
+    QCOMPARE(unknownSpy.count(), 0);
+
+    // mark as complete
+    watcher.componentComplete();
+
+    // signal will be fired now
+    QTRY_COMPARE(contactIdSpy.count(), 1);
+    QCOMPARE(aliasSpy.count(), 1);
+    QCOMPARE(avatarSpy.count(), 1);
+    QCOMPARE(contextsSpy.count(), 1);
+    QCOMPARE(subTypesSpy.count(), 1);
+    QCOMPARE(unknownSpy.count(), 1);
+
+    // and verify that the values are properly set
+    QCOMPARE(watcher.contactId(), contact.id().toString());
+    QCOMPARE(watcher.alias(), ContactUtils::formatContactName(contact));
+    QCOMPARE(watcher.avatar(), contact.detail<QContactAvatar>().imageUrl().toString());
+    QCOMPARE(watcher.phoneNumberContexts(), contact.detail<QContactPhoneNumber>().contexts());
+    QCOMPARE(watcher.phoneNumberSubTypes(), contact.detail<QContactPhoneNumber>().subTypes());
+    QCOMPARE(watcher.isUnknown(), false);
+
+    clearManager();
 }
 
 QContact ContactWatcherTest::createContact(const QString &firstName,
