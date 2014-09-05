@@ -25,6 +25,7 @@
 #include "telepathyhelper.h"
 #include "accountentry.h"
 #include "tonegenerator.h"
+#include "greetercontacts.h"
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 
@@ -166,9 +167,13 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
          }
     }
     /*
-     * play locally (via tone generator)
+     * play locally (via tone generator) only if we are on a call, or if this is 
+     * dialpad sounds
      */
-    ToneGenerator::instance()->playDTMFTone((uint)event);
+    if (GreeterContacts::instance()->dialpadSoundsEnabled() && objectPath.isEmpty()
+        || !objectPath.isEmpty()) {
+        ToneGenerator::instance()->playDTMFTone((uint)event);
+    }
 
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
     if (channel.isNull()) {
