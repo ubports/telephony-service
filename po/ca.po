@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-26 16:44+0000\n"
+"PO-Revision-Date: 2014-09-07 04:34+0000\n"
 "Last-Translator: David Planella <david.planella@ubuntu.com>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-27 07:46+0000\n"
-"X-Generator: Launchpad (build 17174)\n"
+"X-Launchpad-Export-Date: 2014-09-07 06:57+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 "Language: ca\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -84,7 +84,7 @@ msgstr "Rebutja"
 
 #: approver/approver.cpp:291
 msgid "Hold + Answer"
-msgstr ""
+msgstr "Retenció i resposta"
 
 #: indicator/messagingmenu.cpp:204
 msgid "I missed your call - can you call me now?"
@@ -123,7 +123,7 @@ msgstr "Avui no heu rebut cap missatge de text"
 msgid "No text messages sent today"
 msgstr "Avui no heu enviat cap missatge de text"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:169
+#: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "D'acord"
 
@@ -131,7 +131,7 @@ msgstr "D'acord"
 msgid "Phone Calls"
 msgstr "Trucades de telèfon"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:107
+#: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Númeor privat"
 
@@ -177,7 +177,7 @@ msgstr "Aprovador del servei de telefonia"
 msgid "Telephony Service Indicator"
 msgstr "Indicador del servei de telefonia"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:109
+#: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Número desconegut"
 
