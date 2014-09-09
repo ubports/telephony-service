@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-04 17:26+0000\n"
+"PO-Revision-Date: 2014-09-08 18:43+0000\n"
 "Last-Translator: Josef Andersson <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-08-23 07:16+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-09-09 07:54+0000\n"
+"X-Generator: Launchpad (build 17196)\n"
 "Language: sv\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -36,22 +36,22 @@ msgstr[1] "%1 röstmeddelanden"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "<b>%1</b> samtal gjorda idag"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "<b>%1</b> samtal mottagna idag"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "<b>%1</b> textmeddelanden mottagna idag"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "<b>%1</b> textmeddelanden skickade idag"
 
 #: approver/approver.cpp:292
 msgid "Accept"
@@ -105,23 +105,23 @@ msgstr "Jag är försenad, men jag är på väg."
 #: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "Meddelande från %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr ""
+msgstr "Inga samtal gjorda idag"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr ""
+msgstr "Inga samtal mottagna idag"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr ""
+msgstr "Inga textmeddelanden mottagna idag"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr ""
+msgstr "Inga textmeddelanden skickade idag"
 
 #: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
@@ -131,13 +131,13 @@ msgstr "OK"
 msgid "Phone Calls"
 msgstr "Telefonsamtal"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:107
+#: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Dolt nummer"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr ""
+msgstr "Dolt nummer"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
@@ -146,7 +146,7 @@ msgstr "Svara"
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr ""
+msgstr "SIM %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
@@ -163,7 +163,7 @@ msgstr "Jag är fortfarande upptagen. Ringer dig senare."
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr ""
+msgstr "Spenderat <b>%1</b> minuter i samtal idag"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
@@ -177,7 +177,7 @@ msgstr ""
 msgid "Telephony Service Indicator"
 msgstr "Telefonitjänstindikator"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:109
+#: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Okänt nummer"
 
@@ -187,7 +187,7 @@ msgstr "Okänd uppringare"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr ""
+msgstr "Okänt nummer"
 
 #: indicator/textchannelobserver.cpp:240
 msgid "View message"
