@@ -76,14 +76,29 @@ void TextHandler::onConnectedChanged()
     // now check which accounts are connected
     Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
         QString accountId = account->accountId();
-        if (!account->connected() || !mPendingMessages.contains(accountId)) {
+        if (!account->connected()) {
             continue;
         }
-
-        // create text channels to send the pending messages
-        Q_FOREACH(const QStringList& phoneNumbers, mPendingMessages[accountId].keys()) {
-            startChat(phoneNumbers, accountId);
+        
+        if (mPendingMessages.contains(accountId)) {
+            // create text channels to send the pending messages
+            Q_FOREACH(const QStringList& phoneNumbers, mPendingMessages[accountId].keys()) {
+                startChat(phoneNumbers, accountId);
+            }
         }
+        if (mPendingMMSs.contains(accountId)) {
+            // create text channels to send the pending MMSs
+            Q_FOREACH(const QStringList& phoneNumbers, mPendingMMSs[accountId].keys()) {
+                startChat(phoneNumbers, accountId);
+            }
+        }
+        if (mPendingSilentMessages.contains(accountId)) {
+            // create text channels to send the pending silent messages
+            Q_FOREACH(const QStringList& phoneNumbers, mPendingSilentMessages[accountId].keys()) {
+                startChat(phoneNumbers, accountId);
+            }
+        }
+
     }
 }
 
@@ -194,7 +209,11 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
 }
 
 void TextHandler::sendMMS(const QStringList &phoneNumbers, const AttachmentList &attachments, const QString &accountId) {
-   AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account) {
+        // account does not exist
+        return;
+    }
     if (!account->connected()) {
         mPendingMMSs[accountId][phoneNumbers].append(attachments);
         return;
@@ -214,9 +233,46 @@ void TextHandler::sendMMS(const QStringList &phoneNumbers, const AttachmentList 
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
+void TextHandler::sendSilentMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
+{
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account) {
+        // account does not exist
+        return;
+    }
+    if (!account->connected()) {
+        mPendingSilentMessages[accountId][phoneNumbers].append(message);
+        return;
+    }
+    Tp::TextChannelPtr channel = existingChat(phoneNumbers, accountId);
+    if (channel.isNull()) {
+        mPendingSilentMessages[accountId][phoneNumbers].append(message);
+        startChat(phoneNumbers, accountId);
+        return;
+    }
+
+    qDebug() << "TextHandler::sendSilentMessage" << message;
+    Tp::MessagePart header;
+    Tp::MessagePart body;
+    Tp::MessagePartList fullMessage;
+    header["message-type"] = QDBusVariant(0);
+    header["skip-storage"] = QDBusVariant(true);
+    body["content"] = QDBusVariant(message);
+    body["content-type"] = QDBusVariant("text/plain");
+    fullMessage << header << body;
+
+    connect(channel->send(fullMessage),
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onMessageSent(Tp::PendingOperation*)));
+}
+
 void TextHandler::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account) {
+        // account does not exist
+        return;
+    }
     if (!account->connected()) {
         mPendingMessages[accountId][phoneNumbers].append(message);
         return;
@@ -255,11 +311,18 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
     QString accountId = account->accountId();
+    QStringList recipients;
     mChannels.append(channel);
 
     // check for pending messages for this channel
-    if (!mPendingMessages.contains(accountId) && !mPendingMMSs.contains(accountId)) {
+    if (!mPendingMessages.contains(accountId) && 
+        !mPendingMMSs.contains(accountId) &&
+        !mPendingSilentMessages.contains(accountId)) {
         return;
+    }
+
+    Q_FOREACH(const Tp::ContactPtr &phoneNumberOld, channel->groupContacts(false)) {
+        recipients << phoneNumberOld->id();
     }
 
     QMap<QStringList, QStringList> &pendingMessages = mPendingMessages[accountId];
@@ -267,9 +330,7 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
     while (it != pendingMessages.end()) {
         if (existingChat(it.key(), accountId) == channel) {
             Q_FOREACH(const QString &message, it.value()) {
-                connect(channel->send(message),
-                        SIGNAL(finished(Tp::PendingOperation*)),
-                        SLOT(onMessageSent(Tp::PendingOperation*)));
+                sendMessage(recipients, message, accountId);
             }
             it = pendingMessages.erase(it);
         } else {
@@ -281,13 +342,23 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
     while (it2 != pendingMMSs.end()) {
         if (existingChat(it2.key(), accountId) == channel) {
             Q_FOREACH(const AttachmentList &attachments, it2.value()) {
-                connect(channel->send(buildMMS(attachments)),
-                        SIGNAL(finished(Tp::PendingOperation*)),
-                        SLOT(onMessageSent(Tp::PendingOperation*)));
+                sendMMS(recipients, attachments, accountId);
             }
             it2 = pendingMMSs.erase(it2);
         } else {
             ++it2;
+        }
+    }
+    QMap<QStringList, QStringList> &pendingSilentMessages = mPendingSilentMessages[accountId];
+    QMap<QStringList, QStringList>::iterator it3 = pendingSilentMessages.begin();
+    while (it3 != pendingSilentMessages.end()) {
+        if (existingChat(it.key(), accountId) == channel) {
+            Q_FOREACH(const QString &message, it3.value()) {
+                sendSilentMessage(recipients, message, accountId);
+            }
+            it3 = pendingSilentMessages.erase(it3);
+        } else {
+            ++it3;
         }
     }
 }

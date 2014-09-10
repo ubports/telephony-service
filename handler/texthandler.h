@@ -38,6 +38,7 @@ public:
 
 public Q_SLOTS:
     void sendMessage(const QStringList &phoneNumber, const QString &message, const QString &accountId);
+    void sendSilentMessage(const QStringList &phoneNumber, const QString &message, const QString &accountId);
     void sendMMS(const QStringList &phoneNumbers, const AttachmentList &attachments, const QString &accountId);
     void acknowledgeMessages(const QStringList &phoneNumber, const QStringList &messageIds, const QString &accountId);
 
@@ -58,6 +59,7 @@ private:
     QMap<QString, Tp::ContactPtr> mContacts;
     // keys: accountId, participants values: pending messages
     QMap<QString, QMap<QStringList, QStringList> > mPendingMessages;
+    QMap<QString, QMap<QStringList, QStringList> > mPendingSilentMessages;
     QMap<QString, QMap<QStringList, QList<AttachmentList>> > mPendingMMSs;
 };
 
