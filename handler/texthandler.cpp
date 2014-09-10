@@ -352,7 +352,7 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
     QMap<QStringList, QStringList> &pendingSilentMessages = mPendingSilentMessages[accountId];
     QMap<QStringList, QStringList>::iterator it3 = pendingSilentMessages.begin();
     while (it3 != pendingSilentMessages.end()) {
-        if (existingChat(it.key(), accountId) == channel) {
+        if (existingChat(it3.key(), accountId) == channel) {
             Q_FOREACH(const QString &message, it3.value()) {
                 sendSilentMessage(recipients, message, accountId);
             }
