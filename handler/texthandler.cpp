@@ -310,6 +310,9 @@ void TextHandler::acknowledgeMessages(const QStringList &phoneNumbers, const QSt
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    if (!account) {
+        return;
+    }
     QString accountId = account->accountId();
     QStringList recipients;
     mChannels.append(channel);

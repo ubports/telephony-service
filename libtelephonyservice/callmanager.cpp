@@ -24,6 +24,7 @@
 #include "callentry.h"
 #include "telepathyhelper.h"
 #include "greetercontacts.h"
+#include "accountentry.h"
 
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
@@ -165,13 +166,22 @@ void CallManager::onChannelObserverUnregistered()
 
 void CallManager::startCall(const QString &phoneNumber, const QString &accountId)
 {
-    QString account = accountId;
-    if (account.isNull()) {
-        account = TelepathyHelper::instance()->accountIds()[0];
+    AccountEntry *account;
+    if (accountId.isNull()) {
+        account = TelepathyHelper::instance()->defaultCallAccount();
+        if (!account) {
+            account = TelepathyHelper::instance()->accounts()[0];
+        }
+    } else {
+        account = TelepathyHelper::instance()->accountForId(accountId);
+    }
+
+    if (!account) {
+        return;
     }
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("StartCall", phoneNumber, account);
+    phoneAppHandler->call("StartCall", phoneNumber, account->accountId());
 }
 
 void CallManager::onCallIndicatorVisibleChanged(bool visible)
