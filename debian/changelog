@@ -1,3 +1,17 @@
+telephony-service (0.1+14.10.20140911-0ubuntu1) utopic; urgency=low
+
+  [ Tiago Salem Herrmann ]
+  * Enable dialpad sounds only when enabled in the system-settings. (LP:
+    #1365583)
+  * Add support for sending silent sms's (skip history service) (LP:
+    #1340255)
+  * Fix crash on the desktop. Use default account for messaging as a
+    fallback. Display a dialog asking the user to choose a sim card when
+    sending a message from messaging-menu and no default sim card is
+    defined. (LP: #1367270)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 11 Sep 2014 21:29:06 +0000
+
 telephony-service (0.1+14.10.20140905-0ubuntu1) utopic; urgency=low
 
   [ CI bot ]
