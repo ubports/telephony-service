@@ -402,10 +402,10 @@ void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QStr
         data->text = reply;
         mNotifications.insert(notification, data);
 
-        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) { 
+        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
             notify_notification_add_action (notification,
                                             account->accountId().toStdString().c_str(),
-                                            C::gettext("Ok"),
+                                            account->displayName().toStdString().c_str(),
                                             sim_selection_action,
                                             NULL,
                                             NULL);
