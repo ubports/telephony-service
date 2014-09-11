@@ -92,6 +92,11 @@ void HandlerDBus::SendMessage(const QStringList &numbers, const QString &message
     TextHandler::instance()->sendMessage(numbers, message, accountId);
 }
 
+void HandlerDBus::SendSilentMessage(const QStringList &numbers, const QString &message, const QString &accountId)
+{
+    TextHandler::instance()->sendSilentMessage(numbers, message, accountId);
+}
+
 void HandlerDBus::SendMMS(const QStringList &numbers, const AttachmentList &attachments, const QString &accountId)
 {
 
