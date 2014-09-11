@@ -51,6 +51,7 @@ public:
     QString incomingMessageSound();
     bool incomingMessageVibrate();
     bool incomingCallVibrate();
+    bool dialpadSoundsEnabled();
 
     static bool isGreeterMode();
 
@@ -94,6 +95,7 @@ private:
     QVariant mIncomingMessageSound;
     QVariant mIncomingCallVibrate;
     QVariant mIncomingMessageVibrate;
+    QVariant mDialpadSoundsEnabled;
     bool mGreeterActive;
 
     QtContacts::QContactFilter mFilter;

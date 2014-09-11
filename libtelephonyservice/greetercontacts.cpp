@@ -171,6 +171,14 @@ bool GreeterContacts::incomingMessageVibrate()
     return mIncomingMessageVibrate.toBool();
 }
 
+bool GreeterContacts::dialpadSoundsEnabled()
+{
+    if (!mDialpadSoundsEnabled.isValid()) {
+        mDialpadSoundsEnabled = getUserValue("com.ubuntu.touch.AccountsService.Sound", "DialpadSoundsEnabled");
+    }
+    return mDialpadSoundsEnabled.toBool();
+}
+
 void GreeterContacts::greeterListPropertiesChanged(const QString &interface,
                                                const QVariantMap &changed,
                                                const QStringList &invalidated)
@@ -240,6 +248,7 @@ void GreeterContacts::accountsPropertiesChanged(const QString &interface,
         checkUpdatedValue(changed, invalidated, "IncomingMessageSound", mIncomingMessageSound);
         checkUpdatedValue(changed, invalidated, "IncomingMessageVibrate", mIncomingMessageVibrate);
         checkUpdatedValue(changed, invalidated, "IncomingCallVibrate", mIncomingCallVibrate);
+        checkUpdatedValue(changed, invalidated, "DialpadSoundsEnabled", mDialpadSoundsEnabled);
     }
 }
 
@@ -314,6 +323,7 @@ void GreeterContacts::updateActiveUser(const QString &username)
         mIncomingMessageSound = QVariant();
         mIncomingCallVibrate = QVariant();
         mIncomingMessageVibrate = QVariant();
+        mDialpadSoundsEnabled = QVariant();
         signalIfNeeded();
     }
 }
