@@ -75,7 +75,10 @@ void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &messag
     AttachmentList newAttachments;
     AccountEntry *account;
     if (accountId.isNull()) {
-        account = TelepathyHelper::instance()->accounts()[0];
+        account = TelepathyHelper::instance()->defaultMessagingAccount();
+        if (!account) {
+            account = TelepathyHelper::instance()->accounts()[0];
+        }
     } else {
         account = TelepathyHelper::instance()->accountForId(accountId);
     }
@@ -113,7 +116,10 @@ void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &me
 {
     AccountEntry *account;
     if (accountId.isNull()) {
-        account = TelepathyHelper::instance()->accounts()[0];
+        account = TelepathyHelper::instance()->defaultMessagingAccount();
+        if (!account) {
+            account = TelepathyHelper::instance()->accounts()[0];
+        }
     } else {
         account = TelepathyHelper::instance()->accountForId(accountId);
     }
