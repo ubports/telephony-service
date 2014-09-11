@@ -30,6 +30,7 @@
 #include "ringtone.h"
 #include "telepathyhelper.h"
 #include "phoneutils.h"
+#include "accountentry.h"
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
@@ -61,6 +62,19 @@ public:
 };
 
 void notification_closed(NotifyNotification *notification, QMap<NotifyNotification*, NotificationData*> *map);
+
+void sim_selection_action(NotifyNotification* notification, char *action, gpointer data)
+{
+    GError *error = NULL;
+    QString accountId = action;
+    NotificationData *notificationData = (NotificationData*) data;
+    if (notificationData != NULL) {
+        ChatManager::instance()->sendMessage(QStringList() << notificationData->phoneNumber, notificationData->text, accountId);
+    }
+
+    notify_notification_close(notification, &error);
+    g_object_unref(notification);
+}
 
 void flash_notification_action(NotifyNotification* notification, char *action, gpointer data)
 {
@@ -379,6 +393,41 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
 
 void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QString &reply)
 {
+    if (!TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->accounts().size() > 1) {
+        NotifyNotification *notification = notify_notification_new("",
+                                                                   C::gettext("Please, select a SIM card to send this message"),
+                                                                   reply.toStdString().c_str());
+        NotificationData *data = new NotificationData();
+        data->phoneNumber = phoneNumber;
+        data->text = reply;
+        mNotifications.insert(notification, data);
+
+        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) { 
+            notify_notification_add_action (notification,
+                                            account->accountId().toStdString().c_str(),
+                                            C::gettext("Ok"),
+                                            sim_selection_action,
+                                            NULL,
+                                            NULL);
+        }
+        g_signal_connect(notification, "closed", G_CALLBACK(notification_closed), &mNotifications);
+
+        notify_notification_set_hint_string(notification,
+                                            "x-canonical-snap-decisions",
+                                            "true");
+        notify_notification_set_hint_string(notification,
+                                            "x-canonical-private-button-tint",
+                                            "true");
+
+
+        GError *error = NULL;
+        if (!notify_notification_show(notification, &error)) {
+            qWarning() << "Failed to show message notification:" << error->message;
+            g_error_free (error);
+        }
+        return;
+    }
+
     ChatManager::instance()->sendMessage(QStringList() << phoneNumber, reply);
 }
 
