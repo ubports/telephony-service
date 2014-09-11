@@ -394,6 +394,7 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
 
 void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QString &reply)
 {
+    // FIXME - we need to find a better way to deal with dual sim in the messaging-menu
     if (!TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->accounts().size() > 1) {
         NotifyNotification *notification = notify_notification_new(C::gettext("Please, select a SIM card:"),
                                                                    reply.toStdString().c_str(),
