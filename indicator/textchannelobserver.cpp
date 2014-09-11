@@ -67,6 +67,7 @@ void sim_selection_action(NotifyNotification* notification, char *action, gpoint
 {
     GError *error = NULL;
     QString accountId = action;
+    qDebug() << accountId << data;
     NotificationData *notificationData = (NotificationData*) data;
     if (notificationData != NULL) {
         ChatManager::instance()->sendMessage(QStringList() << notificationData->phoneNumber, notificationData->text, accountId);
@@ -394,9 +395,9 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
 void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QString &reply)
 {
     if (!TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->accounts().size() > 1) {
-        NotifyNotification *notification = notify_notification_new("",
-                                                                   C::gettext("Please, select a SIM card to send this message"),
-                                                                   reply.toStdString().c_str());
+        NotifyNotification *notification = notify_notification_new(C::gettext("Please, select a SIM card:"),
+                                                                   reply.toStdString().c_str(),
+                                                                   "");
         NotificationData *data = new NotificationData();
         data->phoneNumber = phoneNumber;
         data->text = reply;
@@ -407,7 +408,7 @@ void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QStr
                                             account->accountId().toStdString().c_str(),
                                             account->displayName().toStdString().c_str(),
                                             sim_selection_action,
-                                            NULL,
+                                            data,
                                             NULL);
         }
         g_signal_connect(notification, "closed", G_CALLBACK(notification_closed), &mNotifications);
@@ -415,10 +416,6 @@ void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QStr
         notify_notification_set_hint_string(notification,
                                             "x-canonical-snap-decisions",
                                             "true");
-        notify_notification_set_hint_string(notification,
-                                            "x-canonical-private-button-tint",
-                                            "true");
-
 
         GError *error = NULL;
         if (!notify_notification_show(notification, &error)) {
