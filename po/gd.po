@@ -2,22 +2,23 @@
 # Copyright (c) 2014 Rosetta Contributors and Canonical Ltd 2014
 # This file is distributed under the same license as the telephony-service package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2014.
-#
+# GunChleoc <fios@foramnagaidhlig.net>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-09-10 16:40+0000\n"
+"PO-Revision-Date: 2014-09-12 16:34+0000\n"
 "Last-Translator: GunChleoc <Unknown>\n"
-"Language-Team: Gaelic; Scottish <gd@li.org>\n"
+"Language-Team: Fòram na Gàidhlig\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2014-09-11 07:27+0000\n"
+"X-Launchpad-Export-Date: 2014-09-13 08:40+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
+"Language: gd\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -109,23 +110,23 @@ msgstr "Tha mi fadalach ach air an t-slighe."
 #: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "Teachdaireachd o %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr ""
+msgstr "Cha do chuireadh gairm an-diugh"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr ""
+msgstr "Cha d' fhuaireadh gairm an-diugh"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr ""
+msgstr "Cha d' fhuaireadh teachdaireachd an-diugh"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr ""
+msgstr "Cha do chuireadh teachdaireachd an-diugh"
 
 #: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
 msgid "Ok"
@@ -141,7 +142,7 @@ msgstr "Àireamh phrìobhaideach"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr ""
+msgstr "Àireamh phrìobhaideach"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
@@ -193,7 +194,7 @@ msgstr "Chan eil fhios cò tha fònadh"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr ""
+msgstr "Àireamh nach aithne dhuinn"
 
 #: indicator/textchannelobserver.cpp:240
 msgid "View message"
