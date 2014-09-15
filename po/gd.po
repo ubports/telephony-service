@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2014-09-13 08:40+0000\n"
+"X-Launchpad-Export-Date: 2014-09-15 07:14+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 "Language: gd\n"
 
@@ -107,7 +107,7 @@ msgstr "Tha mi trang an-dràsta fhèin. Cuiridh mi fòn air ais thugad."
 msgid "I'm running late. I'm on my way."
 msgstr "Tha mi fadalach ach air an t-slighe."
 
-#: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
+#: indicator/textchannelobserver.cpp:235 indicator/textchannelobserver.cpp:310
 #, qt-format
 msgid "Message from %1"
 msgstr "Teachdaireachd o %1"
@@ -128,7 +128,7 @@ msgstr "Cha d' fhuaireadh teachdaireachd an-diugh"
 msgid "No text messages sent today"
 msgstr "Cha do chuireadh teachdaireachd an-diugh"
 
-#: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:184
 msgid "Ok"
 msgstr "Ceart ma-thà"
 
@@ -157,7 +157,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:175
+#: indicator/textchannelobserver.cpp:190
 msgid "Save"
 msgstr "Sàbhail"
 
@@ -196,7 +196,7 @@ msgstr "Chan eil fhios cò tha fònadh"
 msgid "Unknown number"
 msgstr "Àireamh nach aithne dhuinn"
 
-#: indicator/textchannelobserver.cpp:240
+#: indicator/textchannelobserver.cpp:255
 msgid "View message"
 msgstr "Seall an teachdaireachd"
 
