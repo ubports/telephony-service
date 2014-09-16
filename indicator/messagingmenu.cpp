@@ -310,9 +310,9 @@ void MessagingMenu::showVoicemailEntry(AccountEntry *account)
 
     GIcon *icon = g_themed_icon_new("indicator-call");
 
-    QString accountLabel = C::gettext("Voicemail");
+    QString accountLabel(C::gettext("Voicemail"));
     if (TelepathyHelper::instance()->accounts().size() > 1) {
-        accountLabel =+ " - " + account->displayName();
+        accountLabel += " - " + account->displayName();
     }
 
     MessagingMenuMessage *message = messaging_menu_message_new(account->accountId().toUtf8().data(),
@@ -323,6 +323,7 @@ void MessagingMenu::showVoicemailEntry(AccountEntry *account)
                                                                QDateTime::currentDateTime().toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
     messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
+    mVoicemailIds.append(account->accountId());
 
     g_object_unref(icon);
     g_object_unref(message);
