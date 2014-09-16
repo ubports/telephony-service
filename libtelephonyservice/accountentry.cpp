@@ -85,6 +85,16 @@ QString AccountEntry::voicemailNumber() const
     return mVoicemailNumber;
 }
 
+bool AccountEntry::voicemailIndicator() const
+{
+    return mVoicemailIndicator;
+}
+
+uint AccountEntry::voicemailCount() const
+{
+    return mVoicemailCount;
+}
+
 Tp::AccountPtr AccountEntry::account() const
 {
     return mAccount;
@@ -199,6 +209,28 @@ void AccountEntry::onConnectionChanged()
             Q_EMIT voicemailNumberChanged();
         }
 
+        // connect the voicemail count changed signal
+        dbusConnection.connect(mConnectionInfo.busName, mConnectionInfo.objectPath,
+                               CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailCountChanged",
+                               this, SLOT(onVoicemailCountChanged()));
+
+        QDBusReply<uint> replyCount = voicemailIface.call("VoicemailCount");
+        if (replyCount.isValid()) {
+            mVoicemailCount = replyCount.value();
+            Q_EMIT voicemailCountChanged();
+        }
+
+        // connect the voicemail indicator changed signal
+        dbusConnection.connect(mConnectionInfo.busName, mConnectionInfo.objectPath,
+                               CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailIndicatorChanged",
+                               this, SLOT(onVoicemailIndicatorChanged()));
+
+        QDBusReply<bool> replyIndicator = voicemailIface.call("VoicemailIndicator");
+        if (replyIndicator.isValid()) {
+            mVoicemailIndicator = replyIndicator.value();
+            Q_EMIT voicemailIndicatorChanged();
+        }
+
         watchSelfContactPresence();
     }
 
@@ -216,4 +248,16 @@ void AccountEntry::onVoicemailNumberChanged(const QString &number)
 {
     mVoicemailNumber = number;
     Q_EMIT voicemailNumberChanged();
+}
+
+void AccountEntry::onVoicemailCountChanged(uint count)
+{
+    mVoicemailCount = count;
+    Q_EMIT voicemailCountChanged();
+}
+
+void AccountEntry::onVoicemailIndicatorChanged(bool visible)
+{
+    mVoicemailIndicator = visible;
+    Q_EMIT voicemailIndicatorChanged();
 }

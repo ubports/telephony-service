@@ -47,7 +47,7 @@ namespace C {
 QTCONTACTS_USE_NAMESPACE
 
 MessagingMenu::MessagingMenu(QObject *parent) :
-    QObject(parent), mVoicemailCount(-1), mVoicemailId("voicemail")
+    QObject(parent)
 {
     GIcon *icon = g_icon_new_for_string("telephony-service-indicator", NULL);
     mMessagesApp = messaging_menu_app_new("telephony-service-sms.desktop");
@@ -297,24 +297,19 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     request->start();
 }
 
-void MessagingMenu::showVoicemailEntry(uint count)
+void MessagingMenu::showVoicemailEntry(AccountEntry *account)
 {
-    if (!mVoicemailId.isEmpty()) {
-        // if the count didn't change, don't do anything
-        if (count == mVoicemailCount) {
-            return;
-        }
-
-        messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
-    }
+    messaging_menu_app_remove_message_by_id(mCallsApp, account->accountId().toUtf8().data());
+    mVoicemailIds.removeAll(account->accountId());
 
     QString messageBody = C::gettext("Voicemail messages");
+    uint count = account->voicemailCount();
     if (count != 0) {
         messageBody = QString::fromUtf8(C::ngettext("%1 voicemail message", "%1 voicemail messages", count)).arg(count);
     }
 
     GIcon *icon = g_themed_icon_new("indicator-call");
-    MessagingMenuMessage *message = messaging_menu_message_new(mVoicemailId.toUtf8().data(),
+    MessagingMenuMessage *message = messaging_menu_message_new(account->accountId().toUtf8().data(),
                                                                icon,
                                                                "Voicemail",
                                                                NULL,
@@ -327,9 +322,10 @@ void MessagingMenu::showVoicemailEntry(uint count)
     g_object_unref(message);
 }
 
-void MessagingMenu::hideVoicemailEntry()
+void MessagingMenu::hideVoicemailEntry(AccountEntry *account)
 {
-    messaging_menu_app_remove_message_by_id(mCallsApp, mVoicemailId.toUtf8().data());
+    mVoicemailIds.removeAll(account->accountId());
+    messaging_menu_app_remove_message_by_id(mCallsApp, account->accountId().toUtf8().data());
 }
 
 void MessagingMenu::messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance)
@@ -359,7 +355,7 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
     QString action(actionId);
     QString messageId(messaging_menu_message_get_id(message));
 
-    if (messageId == instance->mVoicemailId) {
+    if (instance->mVoicemailIds.contains(messageId)) {
         QMetaObject::invokeMethod(instance, "callVoicemail", Q_ARG(QString, messageId));
         return;
     }
@@ -424,10 +420,9 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
-    // FIXME: handle multiple accounts properly
     QString voicemailNumber;
     Q_FOREACH(AccountEntry *accountEntry, TelepathyHelper::instance()->accounts()) {
-        if (!accountEntry->voicemailNumber().isEmpty()) {
+        if (!accountEntry->voicemailNumber().isEmpty() && messageId == accountEntry->accountId()) {
             voicemailNumber = accountEntry->voicemailNumber();
             break;
         }

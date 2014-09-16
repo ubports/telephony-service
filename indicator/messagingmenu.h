@@ -26,6 +26,7 @@
 #include <QMap>
 #include <QDBusInterface>
 #include <messaging-menu.h>
+#include "accountentry.h"
 
 class Call
 {
@@ -61,8 +62,8 @@ public:
     static void messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
     static void callsActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
 
-    void showVoicemailEntry(uint count);
-    void hideVoicemailEntry();
+    void showVoicemailEntry(AccountEntry *account);
+    void hideVoicemailEntry(AccountEntry *account);
 
 Q_SIGNALS:
     void replyReceived(const QString &phoneNumber, const QString &reply);
@@ -85,7 +86,7 @@ private:
     MessagingMenuApp *mMessagesApp;
     QMap<QString, QVariantMap> mMessages;
     QList<Call> mCalls;
-    QString mVoicemailId;
+    QStringList mVoicemailIds;
     int mVoicemailCount;
 };
 
