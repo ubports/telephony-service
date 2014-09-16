@@ -212,7 +212,7 @@ void AccountEntry::onConnectionChanged()
         // connect the voicemail count changed signal
         dbusConnection.connect(mConnectionInfo.busName, mConnectionInfo.objectPath,
                                CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailCountChanged",
-                               this, SLOT(onVoicemailCountChanged()));
+                               this, SLOT(onVoicemailCountChanged(uint)));
 
         QDBusReply<uint> replyCount = voicemailIface.call("VoicemailCount");
         if (replyCount.isValid()) {
@@ -223,7 +223,7 @@ void AccountEntry::onConnectionChanged()
         // connect the voicemail indicator changed signal
         dbusConnection.connect(mConnectionInfo.busName, mConnectionInfo.objectPath,
                                CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailIndicatorChanged",
-                               this, SLOT(onVoicemailIndicatorChanged()));
+                               this, SLOT(onVoicemailIndicatorChanged(bool)));
 
         QDBusReply<bool> replyIndicator = voicemailIface.call("VoicemailIndicator");
         if (replyIndicator.isValid()) {

@@ -37,6 +37,10 @@ VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
 void VoiceMailIndicator::onAccountReady()
 {
     Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        // disconnect previous signals if any
+        disconnect(account, SIGNAL(voicemailIndicatorChanged()), this, SLOT(onVoicemailIndicatorChanged()));
+        disconnect(account, SIGNAL(voicemailCountChanged()), this, SLOT(onVoicemailIndicatorChanged()));
+ 
         connect(account, SIGNAL(voicemailIndicatorChanged()), this, SLOT(onVoicemailIndicatorChanged()));
         connect(account, SIGNAL(voicemailCountChanged()), this, SLOT(onVoicemailIndicatorChanged()));
         if (account->voicemailIndicator()) {
