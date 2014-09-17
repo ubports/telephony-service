@@ -232,7 +232,8 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     QByteArray token(message.messageToken().toUtf8());
 
     // if the message was already read, just play the ringtone and return
-    if (!mUnreadMessages.contains(token)) {
+    // ignore logic if we are in greeter mode
+    if (!mUnreadMessages.contains(token) && !GreeterContacts::isGreeterMode()) {
         Ringtone::instance()->playIncomingMessageSound();
         return;
     }
@@ -389,7 +390,7 @@ void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 
     if (!message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
         QTimer *timer = new QTimer(this);
-        timer->setInterval(1000);
+        timer->setInterval(1500);
         timer->setSingleShot(true);
         QByteArray token(message.messageToken().toUtf8());
         mUnreadMessages.append(token);
