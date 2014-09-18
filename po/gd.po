@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-09-12 16:34+0000\n"
+"PO-Revision-Date: 2014-09-17 10:08+0000\n"
 "Last-Translator: GunChleoc <Unknown>\n"
 "Language-Team: Fòram na Gàidhlig\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2014-09-15 07:14+0000\n"
+"X-Launchpad-Export-Date: 2014-09-18 07:16+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 "Language: gd\n"
 
@@ -41,22 +41,22 @@ msgstr[3] "%1 teachdaireachd gutha"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "Chaidh <b>%1</b> gairmean a chur an-diugh"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "Chaidh <b>%1</b> gairmean fhaighinn an-diugh"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "Chaidh <b>%1</b> teachdaireachdan fhaighinn an-diugh"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "Chaidh <b>%1</b> teachdaireachdan a chur an-diugh"
 
 #: approver/approver.cpp:292
 msgid "Accept"
@@ -128,7 +128,7 @@ msgstr "Cha d' fhuaireadh teachdaireachd an-diugh"
 msgid "No text messages sent today"
 msgstr "Cha do chuireadh teachdaireachd an-diugh"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:184
+#: indicator/textchannelobserver.cpp:184 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "Ceart ma-thà"
 
@@ -170,7 +170,7 @@ msgstr ""
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr ""
+msgstr "Chuireadh seachad <b>%1</b> mionaidean ann an gairmean an-diugh"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
