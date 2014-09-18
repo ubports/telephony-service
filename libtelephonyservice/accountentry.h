@@ -39,6 +39,8 @@ class AccountEntry : public QObject
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList emergencyNumbers READ emergencyNumbers NOTIFY emergencyNumbersChanged)
     Q_PROPERTY(QString voicemailNumber READ voicemailNumber NOTIFY voicemailNumberChanged)
+    Q_PROPERTY(uint voicemailCount READ voicemailCount NOTIFY voicemailCountChanged)
+    Q_PROPERTY(bool voicemailIndicator READ voicemailIndicator NOTIFY voicemailIndicatorChanged)
     Q_PROPERTY(QString networkName READ networkName NOTIFY networkNameChanged)
 
 public:
@@ -50,6 +52,8 @@ public:
     bool connected() const;
     QStringList emergencyNumbers() const;
     QString voicemailNumber() const;
+    uint voicemailCount() const;
+    bool voicemailIndicator() const;
     Tp::AccountPtr account() const;
 
 Q_SIGNALS:
@@ -60,6 +64,8 @@ Q_SIGNALS:
     void connectedChanged();
     void emergencyNumbersChanged();
     void voicemailNumberChanged();
+    void voicemailCountChanged();
+    void voicemailIndicatorChanged();
 
 protected Q_SLOTS:
     void initialize();
@@ -71,11 +77,15 @@ private Q_SLOTS:
     void onConnectionChanged();
     void onEmergencyNumbersChanged(const QStringList &numbers);
     void onVoicemailNumberChanged(const QString &number);
+    void onVoicemailCountChanged(uint count);
+    void onVoicemailIndicatorChanged(bool visible);
 
 private:
     Tp::AccountPtr mAccount;
     QStringList mEmergencyNumbers;
     QString mVoicemailNumber;
+    uint mVoicemailCount;
+    bool mVoicemailIndicator;
     ConnectionInfo mConnectionInfo;
 };
 

@@ -34,88 +34,33 @@ VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onAccountReady()));
 }
 
-bool VoiceMailIndicator::checkConnected()
-{
-    return TelepathyHelper::instance()->connected();
-}
-
 void VoiceMailIndicator::onAccountReady()
 {
-    if (!checkConnected()) {
-        return;
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        // disconnect previous signals if any
+        disconnect(account, SIGNAL(voicemailIndicatorChanged()), this, SLOT(onVoicemailIndicatorChanged()));
+        disconnect(account, SIGNAL(voicemailCountChanged()), this, SLOT(onVoicemailIndicatorChanged()));
+ 
+        connect(account, SIGNAL(voicemailIndicatorChanged()), this, SLOT(onVoicemailIndicatorChanged()));
+        connect(account, SIGNAL(voicemailCountChanged()), this, SLOT(onVoicemailIndicatorChanged()));
+        if (account->voicemailIndicator()) {
+            MessagingMenu::instance()->showVoicemailEntry(account);
+        } else {
+            MessagingMenu::instance()->hideVoicemailEntry(account);
+        }
     }
-
-    // FIXME: handle multiple accounts
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->account()->connection());
-    if (conn.isNull()) {
-        return;
-    }
-
-    QString busName = conn->busName();
-    QString objectPath = conn->objectPath();
-    mConnection.connect(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE, QLatin1String("VoicemailCountChanged"),
-                        this, SLOT(onVoicemailCountChanged(uint)));
-
-    mConnection.connect(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE, QLatin1String("VoicemailIndicatorChanged"),
-                        this, SLOT(onVoicemailIndicatorChanged(bool)));
-
-    onVoicemailCountChanged(voicemailCount());
 }
 
-void VoiceMailIndicator::onVoicemailIndicatorChanged(bool active)
+void VoiceMailIndicator::onVoicemailIndicatorChanged()
 {
-    if (active) {
-        MessagingMenu::instance()->showVoicemailEntry(voicemailCount());
+    AccountEntry *account = qobject_cast<AccountEntry*>(sender());
+    if (!account) {
+        return;
+    }
+
+    if (account->voicemailIndicator()) {
+        MessagingMenu::instance()->showVoicemailEntry(account);
     } else {
-        MessagingMenu::instance()->hideVoicemailEntry();
+        MessagingMenu::instance()->hideVoicemailEntry(account);
     }
-}
-
-bool VoiceMailIndicator::voicemailIndicatorVisible()
-{
-    if (!checkConnected()) {
-        return false;
-    }
-
-    // FIXME: handle multiple accounts
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->account()->connection());
-    if (conn.isNull()) {
-        return false;
-    }
-
-    QString busName = conn->busName();
-    QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
-    QDBusReply<bool> reply = connIface.call("VoicemailIndicator");
-    if (reply.isValid()) {
-        return reply.value();
-    }
-    return false;
-}
-
-uint VoiceMailIndicator::voicemailCount()
-{
-    if (!checkConnected()) {
-        return 0;
-    }
-
-    // FIXME: handle multiple accounts
-    Tp::ConnectionPtr conn(TelepathyHelper::instance()->accounts()[0]->account()->connection());
-    if (conn.isNull()) {
-        return false;
-    }
-
-    QString busName = conn->busName();
-    QString objectPath = conn->objectPath();
-    QDBusInterface connIface(busName, objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
-    QDBusReply<uint> reply = connIface.call("VoicemailCount");
-    if (reply.isValid()) {
-        return reply.value();
-    }
-    return 0;
-}
-
-void VoiceMailIndicator::onVoicemailCountChanged(uint count)
-{
-    onVoicemailIndicatorChanged(voicemailIndicatorVisible());
 }
