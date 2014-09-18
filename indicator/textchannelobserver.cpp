@@ -230,6 +230,14 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     // add the message to the messaging menu (use hex format to avoid invalid characters)
     QByteArray token(message.messageToken().toUtf8());
+
+    // if the message was already read, just play the ringtone and return
+    // ignore logic if we are in greeter mode
+    if (!mUnreadMessages.contains(token) && !GreeterContacts::isGreeterMode()) {
+        Ringtone::instance()->playIncomingMessageSound();
+        return;
+    }
+
     MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), messageText);
 
     QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(contact->alias());
@@ -381,14 +389,24 @@ void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
     }
 
     if (!message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
-        showNotificationForMessage(message);
-        Metrics::instance()->increment(Metrics::ReceivedMessages);
+        QTimer *timer = new QTimer(this);
+        timer->setInterval(1500);
+        timer->setSingleShot(true);
+        QByteArray token(message.messageToken().toUtf8());
+        mUnreadMessages.append(token);
+        QObject::connect(timer, &QTimer::timeout, [=]() {
+            showNotificationForMessage(message);
+            Metrics::instance()->increment(Metrics::ReceivedMessages);
+            timer->deleteLater();
+        });
+        timer->start();
     }
 }
 
 void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
 {
     QByteArray token(message.messageToken().toUtf8());
+    mUnreadMessages.removeAll(token);
     MessagingMenu::instance()->removeMessage(token.toHex());
 }
 

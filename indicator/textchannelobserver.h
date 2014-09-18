@@ -57,6 +57,7 @@ private:
     QList<Tp::TextChannelPtr> mChannels;
     QList<Tp::TextChannelPtr> mFlashChannels;
     QMap<NotifyNotification*, NotificationData*> mNotifications;
+    QList<QByteArray> mUnreadMessages;
 };
 
 #endif // TEXTCHANNELOBSERVER_H
