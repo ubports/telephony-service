@@ -55,9 +55,18 @@ QString AccountEntry::networkName() const
     }
     Tp::Presence presence = mAccount->connection()->selfContact()->presence();
     if (presence.type() == Tp::ConnectionPresenceTypeAvailable) {
-        return mAccount->connection()->selfContact()->presence().statusMessage();
+        return presence.statusMessage();
     }
     return QString::null;
+}
+
+bool AccountEntry::simLocked() const
+{
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
+        return false;
+    }
+    Tp::Presence presence = mAccount->connection()->selfContact()->presence();
+    return (presence.type() == Tp::ConnectionPresenceTypeAway && presence.statusMessage() == "simlocked");
 }
 
 void AccountEntry::setDisplayName(const QString &name)
@@ -165,6 +174,10 @@ void AccountEntry::watchSelfContactPresence()
     connect(mAccount->connection()->selfContact().data(),
             SIGNAL(presenceChanged(Tp::Presence)),
             SIGNAL(networkNameChanged()));
+
+    connect(mAccount->connection()->selfContact().data(),
+            SIGNAL(presenceChanged(Tp::Presence)),
+            SIGNAL(simLockedChanged()));
 }
 
 void AccountEntry::onConnectionChanged()
@@ -236,6 +249,7 @@ void AccountEntry::onConnectionChanged()
 
     Q_EMIT networkNameChanged();
     Q_EMIT connectedChanged();
+    Q_EMIT simLockedChanged();
 }
 
 void AccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)
