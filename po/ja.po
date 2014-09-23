@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-09-22 07:04+0000\n"
+"X-Launchpad-Export-Date: 2014-09-23 07:21+0000\n"
 "X-Generator: Launchpad (build 17196)\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -24,7 +24,7 @@ msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1件の不在着信"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:308
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -99,7 +99,7 @@ msgstr "今忙しいので、あとで電話します。"
 msgid "I'm running late. I'm on my way."
 msgstr "遅れています。今向かっているところです。"
 
-#: indicator/textchannelobserver.cpp:235 indicator/textchannelobserver.cpp:310
+#: indicator/textchannelobserver.cpp:243 indicator/textchannelobserver.cpp:318
 #, qt-format
 msgid "Message from %1"
 msgstr "%1からのメッセージ"
@@ -120,7 +120,7 @@ msgstr ""
 msgid "No text messages sent today"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:184 indicator/ussdindicator.cpp:79
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:184
 msgid "Ok"
 msgstr "OK"
 
@@ -186,10 +186,10 @@ msgstr "不明な発信者"
 msgid "Unknown number"
 msgstr "不明な番号"
 
-#: indicator/textchannelobserver.cpp:255
+#: indicator/textchannelobserver.cpp:263
 msgid "View message"
 msgstr "メッセージを表示する"
 
-#: indicator/messagingmenu.cpp:311
+#: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
 msgstr "ボイスメールメッセージ"
