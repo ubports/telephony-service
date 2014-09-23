@@ -49,7 +49,7 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(QQmlListProperty<AccountEntry> activeAccounts READ qmlActiveAccounts NOTIFY activeAccountsChanged)
     Q_PROPERTY(AccountEntry *defaultMessagingAccount READ defaultMessagingAccount NOTIFY defaultMessagingAccountChanged)
     Q_PROPERTY(AccountEntry *defaultCallAccount READ defaultCallAccount NOTIFY defaultCallAccountChanged)
-    Q_PROPERTY(bool flightMode READ flightMode NOTIFY flightModeChanged)
+    Q_PROPERTY(bool flightMode READ flightMode WRITE setFlightMode NOTIFY flightModeChanged)
     Q_ENUMS(AccountType)
 public:
     enum AccountType {
@@ -70,6 +70,7 @@ public:
     AccountEntry *defaultCallAccount() const;
 
     bool flightMode();
+    void setFlightMode(bool value);
     bool connected() const;
     QStringList accountIds();
     AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
