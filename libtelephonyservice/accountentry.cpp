@@ -66,7 +66,7 @@ bool AccountEntry::simLocked() const
         return false;
     }
     Tp::Presence presence = mAccount->connection()->selfContact()->presence();
-    return (presence.type() == Tp::ConnectionPresenceTypeAway && presence.statusMessage() == "simlocked");
+    return (presence.type() == Tp::ConnectionPresenceTypeAway && presence.status() == "simlocked");
 }
 
 void AccountEntry::setDisplayName(const QString &name)
