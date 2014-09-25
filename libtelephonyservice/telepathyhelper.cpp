@@ -345,6 +345,9 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
             connect(accountEntry,
                     SIGNAL(connectedChanged()),
                     SIGNAL(activeAccountsChanged()));
+            connect(accountEntry,
+                    SIGNAL(emergencyCallsAvailableChanged()),
+                    SIGNAL(emergencyCallsAvailableChanged()));
             setupAccountEntry(accountEntry);
             orderedAccounts[modemObjName] = accountEntry;
         }
@@ -419,6 +422,16 @@ void TelepathyHelper::setDefaultAccount(AccountType type, AccountEntry* account)
             mDefaultSimSettings->set("defaultSimForMessages", modemObjName);
         }
     }
+}
+
+bool TelepathyHelper::emergencyCallsAvailable() const
+{
+    Q_FOREACH(const AccountEntry *account, mAccounts) {
+        if (account->emergencyCallsAvailable()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void TelepathyHelper::onSettingsChanged(const QString &key)

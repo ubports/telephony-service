@@ -50,6 +50,7 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(AccountEntry *defaultMessagingAccount READ defaultMessagingAccount NOTIFY defaultMessagingAccountChanged)
     Q_PROPERTY(AccountEntry *defaultCallAccount READ defaultCallAccount NOTIFY defaultCallAccountChanged)
     Q_PROPERTY(bool flightMode READ flightMode WRITE setFlightMode NOTIFY flightModeChanged)
+    Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
     Q_ENUMS(AccountType)
 public:
     enum AccountType {
@@ -76,6 +77,7 @@ public:
     AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
     Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
     Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
+    bool emergencyCallsAvailable() const;
 
     void registerClient(Tp::AbstractClient *client, QString name);
 
@@ -100,6 +102,7 @@ Q_SIGNALS:
     void defaultMessagingAccountChanged();
     void defaultCallAccountChanged();
     void flightModeChanged();
+    void emergencyCallsAvailableChanged();
 
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);

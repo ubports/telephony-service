@@ -100,6 +100,16 @@ Tp::AccountPtr AccountEntry::account() const
     return mAccount;
 }
 
+bool AccountEntry::emergencyCallsAvailable() const
+{
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
+        return false;
+    }
+
+    // the only status that can't make emergency calls is the flight mode one
+    return mAccount->connection()->selfContact()->presence().status() != "flightmode";
+}
+
 void AccountEntry::initialize()
 {
     if (mAccount.isNull()) {
@@ -165,6 +175,9 @@ void AccountEntry::watchSelfContactPresence()
     connect(mAccount->connection()->selfContact().data(),
             SIGNAL(presenceChanged(Tp::Presence)),
             SIGNAL(networkNameChanged()));
+    connect(mAccount->connection()->selfContact().data(),
+            SIGNAL(presenceChanged(Tp::Presence)),
+            SIGNAL(emergencyCallsAvailableChanged()));
 }
 
 void AccountEntry::onConnectionChanged()
