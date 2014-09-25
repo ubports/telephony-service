@@ -42,7 +42,7 @@ class AccountEntry : public QObject
     Q_PROPERTY(uint voicemailCount READ voicemailCount NOTIFY voicemailCountChanged)
     Q_PROPERTY(bool voicemailIndicator READ voicemailIndicator NOTIFY voicemailIndicatorChanged)
     Q_PROPERTY(QString networkName READ networkName NOTIFY networkNameChanged)
-    Q_PROPERTY(QString simLocked READ simLocked NOTIFY simLockedChanged)
+    Q_PROPERTY(bool simLocked READ simLocked NOTIFY simLockedChanged)
 
 public:
     explicit AccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
