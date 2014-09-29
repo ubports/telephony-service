@@ -475,3 +475,11 @@ void TelepathyHelper::onSettingsChanged(const QString &key)
     }
 }
 
+void TelepathyHelper::unlockSimCards() const
+{
+    QDBusInterface connectivityIface("com.ubuntu.connectivity1",
+                                    "/com/ubuntu/connectivity1/Private",
+                                    "com.ubuntu.connectivity1.Private");
+    connectivityIface.asyncCall("UnlockAllModems");
+}
+

@@ -78,6 +78,7 @@ public:
     Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
     Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
     bool emergencyCallsAvailable() const;
+    Q_INVOKABLE void unlockSimCards() const;
 
     void registerClient(Tp::AbstractClient *client, QString name);
 

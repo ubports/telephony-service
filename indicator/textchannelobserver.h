@@ -39,6 +39,7 @@ public:
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr textChannel);
+    void sendMessage(const QStringList &phoneNumbers, const QString &text, const QString &accountId);
 
 protected:
     void showNotificationForMessage(const Tp::ReceivedMessage &message);
