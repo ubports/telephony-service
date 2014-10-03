@@ -115,8 +115,8 @@ bool AccountEntry::emergencyCallsAvailable() const
         return false;
     }
 
-    // the only status that can't make emergency calls is the flight mode one
-    return mAccount->connection()->selfContact()->presence().status() != "flightmode";
+    QString status = mAccount->connection()->selfContact()->presence().status();
+    return status != "flightmode" && status != "nomodem" && status != "";
 }
 
 void AccountEntry::initialize()
