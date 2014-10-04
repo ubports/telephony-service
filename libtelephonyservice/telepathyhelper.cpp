@@ -122,10 +122,7 @@ bool TelepathyHelper::flightMode()
 
 void TelepathyHelper::setFlightMode(bool value)
 {
-    QDBusReply<bool> reply = mFlightModeInterface.call("FlightMode", value);
-    if (!reply.isValid() || !reply.value()) {
-        qWarning() << "Failed to disable flight mode." << reply.error();
-    }
+    mFlightModeInterface.asyncCall("FlightMode", value);
 }
 
 QList<AccountEntry*> TelepathyHelper::accounts() const
