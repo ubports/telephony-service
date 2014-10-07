@@ -109,6 +109,16 @@ Tp::AccountPtr AccountEntry::account() const
     return mAccount;
 }
 
+bool AccountEntry::emergencyCallsAvailable() const
+{
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
+        return false;
+    }
+
+    QString status = mAccount->connection()->selfContact()->presence().status();
+    return status != "flightmode" && status != "nomodem" && status != "";
+}
+
 void AccountEntry::initialize()
 {
     if (mAccount.isNull()) {
@@ -170,11 +180,12 @@ void AccountEntry::watchSelfContactPresence()
     connect(mAccount->connection()->selfContact().data(),
             SIGNAL(presenceChanged(Tp::Presence)),
             SIGNAL(connectedChanged()));
-
     connect(mAccount->connection()->selfContact().data(),
             SIGNAL(presenceChanged(Tp::Presence)),
             SIGNAL(networkNameChanged()));
-
+    connect(mAccount->connection()->selfContact().data(),
+            SIGNAL(presenceChanged(Tp::Presence)),
+            SIGNAL(emergencyCallsAvailableChanged()));
     connect(mAccount->connection()->selfContact().data(),
             SIGNAL(presenceChanged(Tp::Presence)),
             SIGNAL(simLockedChanged()));
