@@ -74,6 +74,10 @@ Approver::Approver()
     // WORKAROUND: we need to use a timer as the qtubuntu sensors backend does not support setPeriod()
     mVibrateTimer.setInterval(4000);
     connect(&mVibrateTimer, SIGNAL(timeout()), &mVibrateEffect, SLOT(start()));
+
+    mRejectActions["rejectMessage1"] = C::gettext("I missed your call - can you call me now?");
+    mRejectActions["rejectMessage2"] = C::gettext("I'm running late. I'm on my way.");
+    mRejectActions["rejectMessage3"] = C::gettext("I'm busy at the moment. I'll call later.");
 }
 
 Approver::~Approver()
@@ -183,6 +187,18 @@ void action_reject(NotifyNotification *notification, char *action, gpointer data
     Approver* approver = (Approver*) eventData->self;
     if (NULL != approver) {
         approver->onRejected((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp);
+    }
+}
+
+void action_reject_message(NotifyNotification *notification, char *action, gpointer data)
+{
+    Q_UNUSED(notification);
+    Q_UNUSED(action);
+
+    EventData* eventData = (EventData*) data;
+    Approver* approver = (Approver*) eventData->self;
+    if (approver != NULL) {
+        approver->onRejectMessage((Tp::ChannelDispatchOperationPtr) eventData->dispatchOp, action);
     }
 }
 
@@ -297,8 +313,6 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                     data,
                                     delete_event_data);
 
-    // FIXME: uncomment this code once snap decisions support more than two actions and stacked buttons
-    /*
     if (CallManager::instance()->hasCalls()) {
         notify_notification_add_action (notification,
                                         "action_hangup_and_accept",
@@ -307,7 +321,6 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                         data,
                                         delete_event_data);
     }
-    */
 
     notify_notification_add_action (notification,
                                     "action_decline_1",
@@ -315,6 +328,15 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                     action_reject,
                                     data,
                                     delete_event_data);
+
+    Q_FOREACH(const QString &action, mRejectActions.keys()) {
+        notify_notification_add_action(notification,
+                                       action.toUtf8().data(),
+                                       mRejectActions[action].toUtf8().data(),
+                                       action_reject_message,
+                                       data,
+                                       delete_event_data);
+    }
 
     mPendingSnapDecision = notification;
 
@@ -405,6 +427,17 @@ void Approver::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
             this, SLOT(onClaimFinished(Tp::PendingOperation*)));
 
     Ringtone::instance()->stopIncomingCallSound();
+}
+
+void Approver::onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const char *action)
+{
+    if (mRejectActions.contains(action)) {
+        QString phoneNumber = dispatchOp->channels().first()->targetContact()->id();
+        ChatManager::instance()->sendMessage(QStringList() << phoneNumber, mRejectActions[action],
+                                             dispatchOp->account()->uniqueIdentifier());
+    }
+
+    onRejected(dispatchOp);
 }
 
 Tp::ChannelDispatchOperationPtr Approver::dispatchOperationForIncomingCall()
