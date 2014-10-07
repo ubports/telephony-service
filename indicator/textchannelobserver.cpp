@@ -211,9 +211,10 @@ void TextChannelObserver::sendMessage(const QStringList &phoneNumbers, const QSt
         }
 
         // notify user about the failure
+        GIcon *icon = g_themed_icon_new("cancel");
         NotifyNotification *notification = notify_notification_new(C::gettext("The message could not be sent"),
                                                                failureMessage.toStdString().c_str(),
-                                                               "");
+                                                               g_icon_to_string(icon));
         NotificationData *data = new NotificationData();
         data->phoneNumber = phoneNumbers[0];
         data->message = text;
