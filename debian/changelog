@@ -1,3 +1,19 @@
+telephony-service (0.1+14.10.20141007.1-0ubuntu1) 14.09; urgency=low
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Gustavo Pichorim Boiko ]
+  * Report the emergency calls availability to QML. (LP: #1369774)
+
+  [ Tiago Salem Herrmann ]
+  * Add simLocked() property to AccountEntry.
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 07 Oct 2014 17:04:51 +0000
+
 telephony-service (0.1+14.10.20140918.1-0ubuntu1) utopic; urgency=low
 
   [ CI bot ]
