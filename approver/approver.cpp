@@ -271,6 +271,8 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
             SLOT(onCallStateChanged(Tp::CallState)));
 
     NotifyNotification* notification;
+    bool hasCalls = CallManager::instance()->hasCalls();
+
 
     /* initial notification */
 
@@ -304,8 +306,8 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                         "x-canonical-secondary-icon",
                                         "incoming-call");
 
-    QString acceptTitle = CallManager::instance()->hasCalls() ? C::gettext("Hold + Answer") :
-                                                                C::gettext("Accept");
+    QString acceptTitle = hasCalls ? C::gettext("Hold + Answer") :
+                                     C::gettext("Accept");
     notify_notification_add_action (notification,
                                     "action_accept",
                                     acceptTitle.toLocal8Bit().data(),
@@ -313,7 +315,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                     data,
                                     delete_event_data);
 
-    if (CallManager::instance()->hasCalls()) {
+    if (hasCalls) {
         notify_notification_add_action (notification,
                                         "action_hangup_and_accept",
                                         C::gettext("End + Answer"),
@@ -350,7 +352,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
     // play a ringtone
     Ringtone::instance()->playIncomingCallSound();
 
-    if (!CallManager::instance()->hasCalls() && GreeterContacts::instance()->incomingCallVibrate()) {
+    if (!hasCalls && GreeterContacts::instance()->incomingCallVibrate()) {
         mVibrateEffect.setDuration(2000);
         mVibrateEffect.start();
         mVibrateTimer.start();
