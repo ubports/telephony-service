@@ -50,6 +50,7 @@ public:
     void onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp);
     void onRejected(Tp::ChannelDispatchOperationPtr dispatchOp);
     void onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const char *action);
+    bool showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation, const Tp::ChannelPtr channel);
 
 protected:
     Tp::ChannelDispatchOperationPtr dispatchOperationForIncomingCall();

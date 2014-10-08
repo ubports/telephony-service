@@ -41,6 +41,7 @@ public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr textChannel);
 
 protected:
+    void triggerNotificationForMessage(const Tp::ReceivedMessage &message);
     void showNotificationForMessage(const Tp::ReceivedMessage &message);
     void showNotificationForFlashMessage(const Tp::ReceivedMessage &message);
 

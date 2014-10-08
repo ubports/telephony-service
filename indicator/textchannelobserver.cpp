@@ -210,6 +210,43 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
     Ringtone::instance()->playIncomingMessageSound();
 }
 
+void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessage &message)
+{
+    Tp::ContactPtr contact = message.sender();
+    if (GreeterContacts::isGreeterMode()) { // we're in the greeter's session
+        GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
+        // in greeter mode we show the notification right away as the contact data might not be received
+        showNotificationForMessage(message);
+    } else {
+        // try to match the contact info
+        QContactFetchRequest *request = new QContactFetchRequest(this);
+        request->setFilter(QContactPhoneNumber::match(contact->id()));
+
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, message]() {
+            // only process the results after the finished state is reached
+            if (request->state() != QContactAbstractRequest::FinishedState) {
+                return;
+            }
+
+            // wait for the contact match request to finish before showing the notification
+            showNotificationForMessage(message);
+
+            if (request->contacts().size() > 0) {
+                QContact contact = request->contacts().at(0);
+                updateNotifications(contact);
+
+                // Notify greeter via AccountsService about this contact so it
+                // can show the details if our session is locked.
+                GreeterContacts::emitContact(contact);
+            }
+        });
+
+        request->setManager(ContactUtils::sharedManager());
+        request->start();
+    }
+
+}
+
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
 {
     Tp::ContactPtr contact = message.sender();
@@ -270,32 +307,6 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
                                         "true");
 
     g_signal_connect(notification, "closed", G_CALLBACK(notification_closed), &mNotifications);
-
-    if (GreeterContacts::isGreeterMode()) { // we're in the greeter's session
-        GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
-    } else {
-        // try to match the contact info
-        QContactFetchRequest *request = new QContactFetchRequest(this);
-        request->setFilter(QContactPhoneNumber::match(contact->id()));
-
-        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request]() {
-            // only process the results after the finished state is reached
-            if (request->state() != QContactAbstractRequest::FinishedState ||
-                request->contacts().size() == 0) {
-                return;
-            }
-
-            QContact contact = request->contacts().at(0);
-            updateNotifications(contact);
-
-            // Notify greeter via AccountsService about this contact so it
-            // can show the details if our session is locked.
-            GreeterContacts::emitContact(contact);
-        });
-
-        request->setManager(ContactUtils::sharedManager());
-        request->start();
-    }
 
     GError *error = NULL;
     if (!notify_notification_show(notification, &error)) {
@@ -395,7 +406,7 @@ void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
         QByteArray token(message.messageToken().toUtf8());
         mUnreadMessages.append(token);
         QObject::connect(timer, &QTimer::timeout, [=]() {
-            showNotificationForMessage(message);
+            triggerNotificationForMessage(message);
             Metrics::instance()->increment(Metrics::ReceivedMessages);
             timer->deleteLater();
         });
