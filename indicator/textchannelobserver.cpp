@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2014 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -35,6 +35,7 @@
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 #include <QContactAvatar>
+#include <QContactDisplayLabel>
 #include <QContactFetchRequest>
 #include <QContactFilter>
 #include <QContactPhoneNumber>
@@ -45,8 +46,6 @@
 namespace C {
 #include <libintl.h>
 }
-
-QTCONTACTS_USE_NAMESPACE
 
 // notification handling
 
@@ -228,17 +227,16 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
                 return;
             }
 
-            // wait for the contact match request to finish before showing the notification
-            showNotificationForMessage(message);
-
+            QContact contact;
             if (request->contacts().size() > 0) {
-                QContact contact = request->contacts().at(0);
-                updateNotifications(contact);
+                contact = request->contacts().at(0);
 
                 // Notify greeter via AccountsService about this contact so it
                 // can show the details if our session is locked.
                 GreeterContacts::emitContact(contact);
             }
+            // wait for the contact match request to finish before showing the notification
+            showNotificationForMessage(message, contact);
         });
 
         request->setManager(ContactUtils::sharedManager());
@@ -247,9 +245,9 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
 
 }
 
-void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
+void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message, const QContact &contact)
 {
-    Tp::ContactPtr contact = message.sender();
+    Tp::ContactPtr telepathyContact = message.sender();
     QString messageText = message.text();
 
     Tp::MessagePartList messageParts = message.parts();
@@ -275,12 +273,25 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         return;
     }
 
-    MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), messageText);
+    MessagingMenu::instance()->addMessage(telepathyContact->id(), token.toHex(), message.received(), messageText);
 
-    QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(contact->alias());
-    QString avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
+    QString alias;
+    QString avatar;
 
-    qDebug() << title << avatar;
+    if (!contact.isEmpty()) {
+        alias = contact.detail<QContactDisplayLabel>().label();
+        avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+    }
+
+    if (alias.isEmpty()) {
+        alias = telepathyContact->alias();
+    }
+    if (avatar.isEmpty()) {
+        avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
+    }
+
+    QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(alias);
+
     // show the notification
     NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
                                                                messageText.toStdString().c_str(),
@@ -288,8 +299,8 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     // Bundle the data we need for later updating
     NotificationData *data = new NotificationData();
-    data->phoneNumber = contact->id();
-    data->alias = contact->alias();
+    data->phoneNumber = telepathyContact->id();
+    data->alias = alias;
     data->message = messageText;
     data->notificationList = &mNotifications;
     mNotifications.insert(notification, data);
@@ -325,7 +336,7 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
         NotificationData *data = i.value();
         Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
             if (PhoneUtils::comparePhoneNumbers(data->phoneNumber, phoneNumber.number())) {
-                QString displayLabel = ContactUtils::formatContactName(contact);
+                QString displayLabel = contact.detail<QContactDisplayLabel>().label();
                 QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
                 QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
 

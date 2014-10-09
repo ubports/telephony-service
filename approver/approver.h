@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2014 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -33,6 +34,8 @@
 #include <TelepathyQt/ChannelDispatchOperation>
 #include <QFeedbackHapticsEffect>
 
+QTCONTACTS_USE_NAMESPACE
+
 class Approver : public QObject, public Tp::AbstractClientApprover
 {
     Q_OBJECT
@@ -50,7 +53,9 @@ public:
     void onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp);
     void onRejected(Tp::ChannelDispatchOperationPtr dispatchOp);
     void onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const char *action);
-    bool showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation, const Tp::ChannelPtr channel);
+    bool showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation,
+                          const Tp::ChannelPtr channel,
+                          const QContact &contact = QContact());
 
 protected:
     Tp::ChannelDispatchOperationPtr dispatchOperationForIncomingCall();

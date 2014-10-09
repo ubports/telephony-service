@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2014 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -32,6 +33,7 @@
 #include "callentry.h"
 
 #include <QContactAvatar>
+#include <QContactDisplayLabel>
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
 #include <QDebug>
@@ -48,8 +50,6 @@ namespace C {
 }
 
 #define TELEPHONY_SERVICE_HANDLER TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler"
-
-QTCONTACTS_USE_NAMESPACE
 
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
@@ -212,7 +212,7 @@ void Approver::updateNotification(const QContact &contact)
     if (!mPendingSnapDecision)
         return;
 
-    QString displayLabel = ContactUtils::formatContactName(contact);
+    QString displayLabel = contact.detail<QContactDisplayLabel>().label();
     QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
 
     if (displayLabel.isEmpty()) {
@@ -288,17 +288,18 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                 return;
             }
 
+            QContact contact;
+
             // create the snap decision only after the contact match finishes
-            showSnapDecision(dispatchOp, channel);
             if (request->contacts().size() > 0) {
                 // use the first match
-                QContact contact = request->contacts().at(0);
-
-                updateNotification(contact);
+                contact = request->contacts().at(0);
 
                 // Also notify greeter via AccountsService
                 GreeterContacts::emitContact(contact);
             }
+
+            showSnapDecision(dispatchOp, channel, contact);
         });
 
         request->setManager(ContactUtils::sharedManager());
@@ -361,9 +362,11 @@ void Approver::onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const
     onRejected(dispatchOp);
 }
 
-bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation, const Tp::ChannelPtr channel)
+bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation,
+                                const Tp::ChannelPtr channel,
+                                const QContact &contact)
 {
-    Tp::ContactPtr contact = channel->initiatorContact();
+    Tp::ContactPtr telepathyContact = channel->initiatorContact();
     NotifyNotification* notification;
     bool hasCalls = CallManager::instance()->hasCalls();
 
@@ -375,21 +378,35 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     data->dispatchOp = dispatchOperation;
     data->channel = channel;
 
-    if (!contact->id().isEmpty()) {
-        if (contact->id().startsWith("x-ofono-private")) {
+    if (!telepathyContact->id().isEmpty()) {
+        if (telepathyContact->id().startsWith("x-ofono-private")) {
             mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
-        } else if (contact->id().startsWith("x-ofono-unknown")) {
+        } else if (telepathyContact->id().startsWith("x-ofono-unknown")) {
             mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
         } else {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(contact->id());
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(telepathyContact->id());
         }
     } else {
         mCachedBody = C::gettext("Caller number is not available");
     }
 
-    notification = notify_notification_new (mDefaultTitle.toStdString().c_str(),
+    QString displayLabel;
+    QString icon;
+    if (!contact.isEmpty()) {
+        displayLabel = contact.detail<QContactDisplayLabel>().label();
+        icon = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+    }
+
+    if (displayLabel.isEmpty()) {
+        displayLabel = mDefaultTitle;
+    }
+    if (icon.isEmpty()) {
+        icon = mDefaultIcon;
+    }
+
+    notification = notify_notification_new (displayLabel.toStdString().c_str(),
                                             mCachedBody.toStdString().c_str(),
-                                            mDefaultIcon.toStdString().c_str());
+                                            icon.toStdString().c_str());
     notify_notification_set_hint_string(notification,
                                         "x-canonical-snap-decisions",
                                         "true");

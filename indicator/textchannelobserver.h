@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2014 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -28,6 +28,8 @@
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 
+QTCONTACTS_USE_NAMESPACE
+
 class NotificationData;
 
 class TextChannelObserver : public QObject
@@ -42,7 +44,7 @@ public Q_SLOTS:
 
 protected:
     void triggerNotificationForMessage(const Tp::ReceivedMessage &message);
-    void showNotificationForMessage(const Tp::ReceivedMessage &message);
+    void showNotificationForMessage(const Tp::ReceivedMessage &message, const QContact &contact = QContact());
     void showNotificationForFlashMessage(const Tp::ReceivedMessage &message);
 
 protected Q_SLOTS:
