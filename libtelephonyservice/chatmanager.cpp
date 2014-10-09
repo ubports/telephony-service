@@ -115,13 +115,17 @@ void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &messag
 void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
 {
     AccountEntry *account;
-    if (accountId.isNull()) {
+    if (accountId.isNull() || accountId.isEmpty()) {
         account = TelepathyHelper::instance()->defaultMessagingAccount();
         if (!account) {
             account = TelepathyHelper::instance()->accounts()[0];
         }
     } else {
         account = TelepathyHelper::instance()->accountForId(accountId);
+    }
+
+    if (!account) {
+        return;
     }
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
