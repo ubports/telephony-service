@@ -28,7 +28,7 @@
 class QTimer;
 
 static const int DTMF_LOCAL_PLAYBACK_DURATION = 200; /* in milliseconds */
-static const int WAITING_PLAYBACK_DURATION = 12000; /* in milliseconds */
+static const int WAITING_PLAYBACK_DURATION = 8000; /* in milliseconds */
 
 class ToneGenerator : public QObject
 {
