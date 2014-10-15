@@ -44,10 +44,12 @@ public Q_SLOTS:
     void playDTMFTone(uint key);
     void playWaitingTone();
     void stopWaitingTone();
+    void playCallEndedTone();
 
 private Q_SLOTS:
     void stopTone();
     void stopDTMFTone();
+    bool startEventTone(uint key);
 
 private:
     explicit ToneGenerator(QObject *parent = 0);

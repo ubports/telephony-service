@@ -319,6 +319,10 @@ void CallHandler::onCallChannelInvalidated()
     }
 
     mCallChannels.removeAll(channel);
+
+    if (mCallChannels.isEmpty()) {
+        ToneGenerator::instance()->playCallEndedTone();
+    }
 }
 
 void CallHandler::onCallStateChanged(Tp::CallState state)
