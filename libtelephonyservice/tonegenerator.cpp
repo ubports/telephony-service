@@ -125,6 +125,6 @@ void ToneGenerator::stopWaitingTone()
 
 void ToneGenerator::playCallEndedTone()
 {
-    startEventTone((uint)4);
-    QTimer::singleShot(300, this, SLOT(stopTone()));
+    startEventTone((uint)257);
+    QTimer::singleShot(2000, this, SLOT(stopTone()));
 }

@@ -308,11 +308,6 @@ void CallHandler::onCallHangupFinished(Tp::PendingOperation *op)
     // and logging will be broken.
     Tp::CallChannelPtr channel = mClosingChannels.take(op);
     mCallChannels.removeAll(channel);
-
-    if (mCallChannels.isEmpty()) {
-        ToneGenerator::instance()->playCallEndedTone();
-    }
-
 }
 
 void CallHandler::onCallChannelInvalidated()
