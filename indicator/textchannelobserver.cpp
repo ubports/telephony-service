@@ -312,6 +312,17 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
                 break;
             }
         }
+        // WORKAROUND: powerd can't decide when to wake up the screen on incoming mms's
+        // as the download of the attachments is made by another daemon, so we wake up
+        // the screen here.
+        QDBusInterface unityIface("com.canonical.Unity.Screen",
+                                  "/com/canonical/Unity/Screen",
+                                  "com.canonical.Unity.Screen",
+                                  QDBusConnection::systemBus());
+        QList<QVariant> args;
+        args.append("on");
+        args.append(0);
+        unityIface.callWithArgumentList(QDBus::NoBlock, "setScreenPowerMode", args);
     }
 
     // add the message to the messaging menu (use hex format to avoid invalid characters)
