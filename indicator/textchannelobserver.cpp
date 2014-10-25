@@ -25,6 +25,7 @@
 #include "messagingmenu.h"
 #include "metrics.h"
 #include "chatmanager.h"
+#include "callmanager.h"
 #include "config.h"
 #include "contactutils.h"
 #include "ringtone.h"
@@ -311,6 +312,19 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
                 messageText = part["content"].variant().toString();
                 break;
             }
+        }
+        // WORKAROUND: powerd can't decide when to wake up the screen on incoming mms's
+        // as the download of the attachments is made by another daemon, so we wake up
+        // the screen here.
+        if (!CallManager::instance()->hasCalls()) {
+            QDBusInterface unityIface("com.canonical.Unity.Screen",
+                                      "/com/canonical/Unity/Screen",
+                                      "com.canonical.Unity.Screen",
+                                      QDBusConnection::systemBus());
+            QList<QVariant> args;
+            args.append("on");
+            args.append(0);
+            unityIface.callWithArgumentList(QDBus::NoBlock, "setScreenPowerMode", args);
         }
     }
 
