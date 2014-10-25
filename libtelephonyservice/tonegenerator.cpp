@@ -33,15 +33,17 @@
 #define TONEGEN_DBUS_IFACE_NAME TONEGEN_DBUS_SERVICE_NAME
 
 ToneGenerator::ToneGenerator(QObject *parent) :
-    QObject(parent), mPlaybackTimer(nullptr)
+    QObject(parent), mDTMFPlaybackTimer(nullptr), mWaitingPlaybackTimer(new QTimer(this))
 {
+    // the waiting tone is played in loop
+    connect(mWaitingPlaybackTimer, SIGNAL(timeout()), this, SLOT(playWaitingTone()));
+    mWaitingPlaybackTimer->setSingleShot(true);
 }
 
 ToneGenerator::~ToneGenerator()
 {
-    if (mPlaybackTimer && mPlaybackTimer->isActive()) {
-        this->stopDTMFTone();
-    }
+    this->stopDTMFTone();
+    this->stopWaitingTone();
 }
 
 ToneGenerator *ToneGenerator::instance()
@@ -50,21 +52,8 @@ ToneGenerator *ToneGenerator::instance()
     return self;
 }
 
-void ToneGenerator::playDTMFTone(uint key)
+bool ToneGenerator::startEventTone(uint key)
 {
-    if (!mPlaybackTimer) {
-        mPlaybackTimer = new QTimer(this);
-        mPlaybackTimer->setSingleShot(true);
-        connect(mPlaybackTimer, SIGNAL(timeout()), this, SLOT(stopDTMFTone()));
-    }
-    if (mPlaybackTimer->isActive()) {
-        qDebug() << "Already playing a tone, ignore.";
-        return;
-    }
-    if (key > 11) {
-        qDebug() << "Invalid DTMF tone, ignore.";
-        return;
-    }
     QDBusMessage startMsg = QDBusMessage::createMethodCall(
             TONEGEN_DBUS_SERVICE_NAME,
             TONEGEN_DBUS_OBJ_PATH,
@@ -75,12 +64,30 @@ void ToneGenerator::playDTMFTone(uint key)
     toneArgs << QVariant((int)0);  // volume is ignored
     toneArgs << QVariant((uint)0); // duration is ignored
     startMsg.setArguments(toneArgs);
-    if (QDBusConnection::sessionBus().send(startMsg)) {
-        mPlaybackTimer->start(DTMF_LOCAL_PLAYBACK_DURATION);
+    return QDBusConnection::sessionBus().send(startMsg);
+}
+
+void ToneGenerator::playDTMFTone(uint key)
+{
+    if (!mDTMFPlaybackTimer) {
+        mDTMFPlaybackTimer = new QTimer(this);
+        mDTMFPlaybackTimer->setSingleShot(true);
+        connect(mDTMFPlaybackTimer, SIGNAL(timeout()), this, SLOT(stopDTMFTone()));
+    }
+    if (mDTMFPlaybackTimer->isActive()) {
+        qDebug() << "Already playing a tone, ignore.";
+        return;
+    }
+    if (key > 11) {
+        qDebug() << "Invalid DTMF tone, ignore.";
+        return;
+    }
+    if (startEventTone(key)) {
+        mDTMFPlaybackTimer->start(DTMF_LOCAL_PLAYBACK_DURATION);
     }
 }
 
-void ToneGenerator::stopDTMFTone()
+void ToneGenerator::stopTone()
 {
     QDBusConnection::sessionBus().send(
         QDBusMessage::createMethodCall(
@@ -88,7 +95,36 @@ void ToneGenerator::stopDTMFTone()
             TONEGEN_DBUS_OBJ_PATH,
             TONEGEN_DBUS_IFACE_NAME,
             "StopTone" ));
-    if (mPlaybackTimer) {
-        mPlaybackTimer->stop();
+}
+
+void ToneGenerator::stopDTMFTone()
+{
+    stopTone();
+    if (mDTMFPlaybackTimer) {
+        mDTMFPlaybackTimer->stop();
     }
+
+}
+
+void ToneGenerator::playWaitingTone()
+{
+    if (mWaitingPlaybackTimer->isActive()) {
+        stopTone();
+    }
+
+    if (startEventTone((uint)79)) {
+        mWaitingPlaybackTimer->start(WAITING_PLAYBACK_DURATION);
+    }
+}
+
+void ToneGenerator::stopWaitingTone()
+{
+    stopTone();
+    mWaitingPlaybackTimer->stop();
+}
+
+void ToneGenerator::playCallEndedTone()
+{
+    startEventTone((uint)257);
+    QTimer::singleShot(2000, this, SLOT(stopTone()));
 }
