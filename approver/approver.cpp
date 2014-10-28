@@ -72,9 +72,26 @@ Approver::Approver()
         connect(GreeterContacts::instance(), SIGNAL(contactUpdated(QtContacts::QContact)),
                 this, SLOT(updateNotification(QtContacts::QContact)));
     }
+
+    QDBusConnection::systemBus().connect("com.canonical.Unity.Screen",
+                                         "/com/canonical/Unity/Screen",
+                                         "com.canonical.Unity.Screen",
+                                         "DisplayPowerStateChange",
+                                         this, SLOT(onUnityStateChanged(int,int)));
+
     // WORKAROUND: we need to use a timer as the qtubuntu sensors backend does not support setPeriod()
     mVibrateTimer.setInterval(4000);
     connect(&mVibrateTimer, SIGNAL(timeout()), &mVibrateEffect, SLOT(start()));
+}
+
+void Approver::onUnityStateChanged(int state, int reason)
+{
+    if (state == 0) {
+        Ringtone::instance()->stopIncomingCallSound();
+        mVibrateTimer.stop();
+        mVibrateEffect.setDuration(1);
+        mVibrateEffect.start();
+    }
 }
 
 Approver::~Approver()

@@ -64,6 +64,7 @@ private Q_SLOTS:
     void onAcceptCallRequested();
     void onRejectCallRequested();
     void updateNotification(const QtContacts::QContact &contact);
+    void onUnityStateChanged(int state, int reason);
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
