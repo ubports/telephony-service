@@ -90,7 +90,9 @@ void Approver::onUnityStateChanged(int state, int reason)
         return;
     }
 
-    if (state == 0) {
+    // state == 0 is power off
+    // reason == 2 is power key
+    if (state == 0 && reason == 2) {
         Ringtone::instance()->stopIncomingCallSound();
         mVibrateTimer.stop();
         mVibrateEffect.setDuration(1);
