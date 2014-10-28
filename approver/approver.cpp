@@ -86,6 +86,10 @@ Approver::Approver()
 
 void Approver::onUnityStateChanged(int state, int reason)
 {
+    if (!mPendingSnapDecision) {
+        return;
+    }
+
     if (state == 0) {
         Ringtone::instance()->stopIncomingCallSound();
         mVibrateTimer.stop();
