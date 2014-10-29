@@ -283,6 +283,9 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                         "x-canonical-snap-decisions",
                                         "true");
     notify_notification_set_hint_string(notification,
+                                        "x-canonical-snap-decisions-swipe",
+                                        "true");
+    notify_notification_set_hint_string(notification,
                                         "x-canonical-private-button-tint",
                                         "true");
     notify_notification_set_hint_string(notification,
