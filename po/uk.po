@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-08-27 07:46+0000\n"
-"X-Generator: Launchpad (build 17174)\n"
+"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 "Language: uk\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -28,7 +28,7 @@ msgstr[0] "%1 пропущений дзвінок"
 msgstr[1] "%1 пропущені дзвінки"
 msgstr[2] "%1 пропущених дзвінків"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:308
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -56,24 +56,24 @@ msgstr "Сьогодні отримано <b>%1</b> текстових пові�
 msgid "<b>%1</b> text messages sent today"
 msgstr "Сьогодні надіслано <b>%1</b> текстових повідомлень"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:293
 msgid "Accept"
 msgstr "Прийняти"
 
-#: approver/approver.cpp:275
+#: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "Номер вхідного дзвінка недоступний"
 
-#: approver/approver.cpp:272
+#: approver/approver.cpp:273
 #, qt-format
 msgid "Calling from %1"
 msgstr "Дзвінок від %1"
 
-#: approver/approver.cpp:268
+#: approver/approver.cpp:269
 msgid "Calling from private number"
 msgstr "Дзвінок з приватного номера"
 
-#: approver/approver.cpp:270
+#: approver/approver.cpp:271
 msgid "Calling from unknown number"
 msgstr "Дзвінок з невідомого номера"
 
@@ -81,11 +81,11 @@ msgstr "Дзвінок з невідомого номера"
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: approver/approver.cpp:314
+#: approver/approver.cpp:315
 msgid "Decline"
 msgstr "Відхилити"
 
-#: approver/approver.cpp:291
+#: approver/approver.cpp:292
 msgid "Hold + Answer"
 msgstr "Утримання + Відповідь"
 
@@ -105,7 +105,7 @@ msgstr "Зараз не можу поговорити. Передзвоню пі
 msgid "I'm running late. I'm on my way."
 msgstr "Запізнююся. У дорозі."
 
-#: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
+#: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
 #, qt-format
 msgid "Message from %1"
 msgstr "Повідомлення від %1"
@@ -126,7 +126,7 @@ msgstr "Сьогодні текстових повідомлень не надх
 msgid "No text messages sent today"
 msgstr "Сьогодні текстових повідомлень не надсилалося"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:169
+#: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "Гаразд"
 
@@ -134,7 +134,7 @@ msgstr "Гаразд"
 msgid "Phone Calls"
 msgstr "Телефонні дзвінки"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:107
+#: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Особистий номер"
 
@@ -155,7 +155,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "СМС"
 
-#: indicator/textchannelobserver.cpp:175
+#: indicator/textchannelobserver.cpp:277
 msgid "Save"
 msgstr "Зберегти"
 
@@ -180,11 +180,11 @@ msgstr "Підтверджувач служби телефонії"
 msgid "Telephony Service Indicator"
 msgstr "Індикатор служби телефонії"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:109
+#: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Невідомий номер"
 
-#: approver/approver.cpp:58
+#: approver/approver.cpp:59
 msgid "Unknown caller"
 msgstr "Невідома особа"
 
@@ -192,10 +192,10 @@ msgstr "Невідома особа"
 msgid "Unknown number"
 msgstr "Невідомий номер"
 
-#: indicator/textchannelobserver.cpp:240
+#: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Переглянути повідомлення"
 
-#: indicator/messagingmenu.cpp:311
+#: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
 msgstr "Повідомлення голосової пошти"
