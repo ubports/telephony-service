@@ -31,6 +31,7 @@
 #include "ringtone.h"
 #include "callmanager.h"
 #include "callentry.h"
+#include "tonegenerator.h"
 
 #include <QContactAvatar>
 #include <QContactDisplayLabel>
@@ -461,8 +462,12 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
         return false;
     }
 
-    // play a ringtone
-    Ringtone::instance()->playIncomingCallSound();
+    if (CallManager::instance()->hasCalls()) {
+        ToneGenerator::instance()->playWaitingTone();
+    } else {
+        // play a ringtone
+        Ringtone::instance()->playIncomingCallSound();
+    }
 
     if (!hasCalls && GreeterContacts::instance()->incomingCallVibrate()) {
         mVibrateEffect.setDuration(2000);
@@ -597,6 +602,7 @@ void Approver::closeSnapDecision()
     }
 
     Ringtone::instance()->stopIncomingCallSound();
+    ToneGenerator::instance()->stopWaitingTone();
     mVibrateTimer.stop();
     // WORKAROUND: the ubuntu qt sensors backend does not support setPeriod() and stop(),
     // so we invoke a short vibration to simulate a stop() call

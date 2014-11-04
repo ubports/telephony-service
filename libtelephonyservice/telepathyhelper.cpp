@@ -120,6 +120,11 @@ bool TelepathyHelper::flightMode()
     return false;
 }
 
+void TelepathyHelper::setFlightMode(bool value)
+{
+    mFlightModeInterface.asyncCall("FlightMode", value);
+}
+
 QList<AccountEntry*> TelepathyHelper::accounts() const
 {
     return mAccounts;
@@ -337,6 +342,9 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
             connect(accountEntry,
                     SIGNAL(connectedChanged()),
                     SIGNAL(activeAccountsChanged()));
+            connect(accountEntry,
+                    SIGNAL(emergencyCallsAvailableChanged()),
+                    SIGNAL(emergencyCallsAvailableChanged()));
             setupAccountEntry(accountEntry);
             orderedAccounts[modemObjName] = accountEntry;
         }
@@ -413,6 +421,16 @@ void TelepathyHelper::setDefaultAccount(AccountType type, AccountEntry* account)
     }
 }
 
+bool TelepathyHelper::emergencyCallsAvailable() const
+{
+    Q_FOREACH(const AccountEntry *account, mAccounts) {
+        if (account->emergencyCallsAvailable()) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void TelepathyHelper::onSettingsChanged(const QString &key)
 {
     if (key == "defaultSimForMessages") {
@@ -452,5 +470,13 @@ void TelepathyHelper::onSettingsChanged(const QString &key)
         mDefaultCallAccount = NULL;
         Q_EMIT defaultCallAccountChanged();
     }
+}
+
+void TelepathyHelper::unlockSimCards() const
+{
+    QDBusInterface connectivityIface("com.ubuntu.connectivity1",
+                                    "/com/ubuntu/connectivity1/Private",
+                                    "com.ubuntu.connectivity1.Private");
+    connectivityIface.asyncCall("UnlockAllModems");
 }
 

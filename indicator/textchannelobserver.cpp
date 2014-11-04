@@ -25,6 +25,7 @@
 #include "messagingmenu.h"
 #include "metrics.h"
 #include "chatmanager.h"
+#include "callmanager.h"
 #include "config.h"
 #include "contactutils.h"
 #include "ringtone.h"
@@ -57,6 +58,7 @@ public:
     QString eventId;
     QString alias;
     QString message;
+    TextChannelObserver *observer;
     QMap<NotifyNotification*, NotificationData*> *notificationList;
 };
 
@@ -69,7 +71,7 @@ void sim_selection_action(NotifyNotification* notification, char *action, gpoint
     qDebug() << accountId << data;
     NotificationData *notificationData = (NotificationData*) data;
     if (notificationData != NULL) {
-        ChatManager::instance()->sendMessage(QStringList() << notificationData->phoneNumber, notificationData->text, accountId);
+        notificationData->observer->sendMessage(QStringList() << notificationData->phoneNumber, notificationData->text, accountId);
     }
 
     notify_notification_close(notification, &error);
@@ -158,6 +160,91 @@ TextChannelObserver::~TextChannelObserver()
         ++i;
     }
     mNotifications.clear();
+}
+
+void TextChannelObserver::sendMessage(const QStringList &phoneNumbers, const QString &text, const QString &accountId)
+{
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account || accountId.isEmpty()) {
+        // fallback to the default account
+        if (TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->accounts().size() > 1) {
+            account = TelepathyHelper::instance()->defaultMessagingAccount();
+        } else if (TelepathyHelper::instance()->accounts().size() > 0) {
+            account = TelepathyHelper::instance()->accounts()[0];
+        }
+    }
+
+    if (!account) {
+        // we could not find any account, but in theory this case can never happen
+        return;
+    }
+
+    // check if the account is available
+    if (!account->connected()) {
+        History::Thread thread = History::Manager::instance()->threadForParticipants(account->accountId(),
+                                                                                     History::EventTypeText,
+                                                                                     phoneNumbers,
+                                                                                     History::MatchPhoneNumber,
+                                                                                     true);
+        History::TextEvent textEvent(account->accountId(),
+                                     thread.threadId(),
+                                     QByteArray(QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss.zzz").toUtf8()).toHex(),
+                                     "self",
+                                     QDateTime::currentDateTime(),
+                                     false,
+                                     text,
+                                     History::MessageTypeText,
+                                     History::MessageStatusPermanentlyFailed);
+        History::Events events;
+        events.append(textEvent);
+                                 
+        History::Manager::instance()->writeEvents(events);
+
+        QString failureMessage;
+        if (account->simLocked()) {
+            failureMessage = C::gettext("Unlock your sim card and try again from the messaging application.");
+        } else if (TelepathyHelper::instance()->flightMode()) {
+            failureMessage = C::gettext("Deactivate flight mode and try again from the messaging application.");
+        } else {
+            // generic error
+            failureMessage = C::gettext("Try again from the messaging application.");
+        }
+
+        // notify user about the failure
+        GIcon *icon = g_themed_icon_new("cancel");
+        NotifyNotification *notification = notify_notification_new(C::gettext("The message could not be sent"),
+                                                               failureMessage.toStdString().c_str(),
+                                                               g_icon_to_string(icon));
+        NotificationData *data = new NotificationData();
+        data->phoneNumber = phoneNumbers[0];
+        data->message = text;
+        data->notificationList = &mNotifications;
+        mNotifications.insert(notification, data);
+
+        // add the callback action
+        notify_notification_add_action (notification,
+                                        "notification_action",
+                                        C::gettext("View message"),
+                                        notification_action,
+                                        data,
+                                        NULL /* will be deleted when closed */);
+
+        notify_notification_set_hint_string(notification,
+                                            "x-canonical-switch-to-application",
+                                            "true");
+
+        g_signal_connect(notification, "closed", G_CALLBACK(notification_closed), &mNotifications);
+
+        GError *error = NULL;
+        if (!notify_notification_show(notification, &error)) {
+            qWarning() << "Failed to show message notification:" << error->message;
+            g_error_free (error);
+        }
+
+        return;
+    }
+
+    ChatManager::instance()->sendMessage(phoneNumbers, text, accountId);
 }
 
 void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMessage &message)
@@ -260,6 +347,19 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
                 messageText = part["content"].variant().toString();
                 break;
             }
+        }
+        // WORKAROUND: powerd can't decide when to wake up the screen on incoming mms's
+        // as the download of the attachments is made by another daemon, so we wake up
+        // the screen here.
+        if (!CallManager::instance()->hasCalls()) {
+            QDBusInterface unityIface("com.canonical.Unity.Screen",
+                                      "/com/canonical/Unity/Screen",
+                                      "com.canonical.Unity.Screen",
+                                      QDBusConnection::systemBus());
+            QList<QVariant> args;
+            args.append("on");
+            args.append(0);
+            unityIface.callWithArgumentList(QDBus::NoBlock, "setScreenPowerMode", args);
         }
     }
 
@@ -442,6 +542,7 @@ void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QStr
         NotificationData *data = new NotificationData();
         data->phoneNumber = phoneNumber;
         data->text = reply;
+        data->observer = this;
         mNotifications.insert(notification, data);
 
         Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
@@ -466,7 +567,7 @@ void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QStr
         return;
     }
 
-    ChatManager::instance()->sendMessage(QStringList() << phoneNumber, reply);
+    sendMessage(QStringList() << phoneNumber, reply, "");
 }
 
 void TextChannelObserver::onMessageRead(const QString &phoneNumber, const QString &encodedMessageId)
