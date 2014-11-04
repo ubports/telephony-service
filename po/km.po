@@ -9,14 +9,14 @@ msgstr ""
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
 "PO-Revision-Date: 2014-09-01 10:08+0000\n"
-"Last-Translator: Sok Sophea <sksophea@gmail.com>\n"
+"Last-Translator: Sophea Sok <sksophea@gmail.com>\n"
 "Language-Team: Khmer <km@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-09-02 07:20+0000\n"
-"X-Generator: Launchpad (build 17192)\n"
+"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -24,7 +24,7 @@ msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "ខកខាន​ទទួល %1"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:308
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -50,24 +50,24 @@ msgstr "ថ្ងៃនេះ​បាន​ទទួល​សារ <b>%1</b>"
 msgid "<b>%1</b> text messages sent today"
 msgstr "ថ្ងៃនេះ​បាន​ផ្ញើ​សារ <b>%1</b>"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:293
 msgid "Accept"
 msgstr "ព្រម​ទទួល"
 
-#: approver/approver.cpp:275
+#: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "មិន​មាន​លេខ​អ្នក​ហៅ"
 
-#: approver/approver.cpp:272
+#: approver/approver.cpp:273
 #, qt-format
 msgid "Calling from %1"
 msgstr "កំពុង​ហៅ​ពី %1"
 
-#: approver/approver.cpp:268
+#: approver/approver.cpp:269
 msgid "Calling from private number"
 msgstr "កំពុង​ហៅ​ពី​លេខ​ឯកជន"
 
-#: approver/approver.cpp:270
+#: approver/approver.cpp:271
 msgid "Calling from unknown number"
 msgstr "កំពុង​ហៅ​ពី​លេខ​មិន​ស្គាល់"
 
@@ -75,11 +75,11 @@ msgstr "កំពុង​ហៅ​ពី​លេខ​មិន​ស្គា
 msgid "Cancel"
 msgstr "បោះបង់"
 
-#: approver/approver.cpp:314
+#: approver/approver.cpp:315
 msgid "Decline"
 msgstr "បដិសេធ"
 
-#: approver/approver.cpp:291
+#: approver/approver.cpp:292
 msgid "Hold + Answer"
 msgstr "ចុច​ជាប់ + ឆ្លើយ"
 
@@ -100,7 +100,7 @@ msgstr "ខ្ញុំ​រវល់​ណាស់​ពេល​នេះ។
 msgid "I'm running late. I'm on my way."
 msgstr "ខ្ញុំ​យឺត​ហើយ។ ខ្ញុំ​នៅ​តាម​ផ្លូវ។"
 
-#: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
+#: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
 #, qt-format
 msgid "Message from %1"
 msgstr "សារ​ពី %1"
@@ -121,7 +121,7 @@ msgstr "ថ្ងៃនេះ​មិន​បាន​ទទួល​សារ
 msgid "No text messages sent today"
 msgstr "ថ្ងៃនេះ​មិន​បាន​ផ្ញើ​សារ"
 
-#: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
+#: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "យល់ព្រម"
 
@@ -129,7 +129,7 @@ msgstr "យល់ព្រម"
 msgid "Phone Calls"
 msgstr "ការ​ហៅ​ទូរស័ព្ទ"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:107
+#: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "លេខ​ឯកជន"
 
@@ -150,7 +150,7 @@ msgstr "ស៊ីម %1"
 msgid "SMS"
 msgstr "សារ SMS"
 
-#: indicator/textchannelobserver.cpp:175
+#: indicator/textchannelobserver.cpp:277
 msgid "Save"
 msgstr "រក្សា​ទុក"
 
@@ -175,11 +175,11 @@ msgstr "ក្រុមហ៊ុន​អនុម័ត​សេវាកម្
 msgid "Telephony Service Indicator"
 msgstr "សូចនាករ​សេវាកម្ម​ទូរស័ព្ទ"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:109
+#: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "មិន​ស្គាល់​លេខ"
 
-#: approver/approver.cpp:58
+#: approver/approver.cpp:59
 msgid "Unknown caller"
 msgstr "មិន​ស្គាល់​អ្នក​ហៅ"
 
@@ -187,10 +187,10 @@ msgstr "មិន​ស្គាល់​អ្នក​ហៅ"
 msgid "Unknown number"
 msgstr "មិន​ស្គាល់​លេខ"
 
-#: indicator/textchannelobserver.cpp:240
+#: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "មើល​សារ"
 
-#: indicator/messagingmenu.cpp:311
+#: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
 msgstr "សារ​ជា​សំឡេង"

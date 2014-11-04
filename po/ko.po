@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-08-23 07:16+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 "Language: ko\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -25,7 +25,7 @@ msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1개의 부재중 전화"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:308
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -34,55 +34,55 @@ msgstr[0] "%1개의 음성 메세지"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "오늘 <b>%1</b>통의 전화를 걸었습니다."
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "오늘 <b>%1</b>통의 전화를 받았습니다."
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "오늘 <b>%1</b>개의 텍스트 메시지를 받았습니다."
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "오늘 <b>%1</b>개의 텍스트 메시지를 보냈습니다."
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:293
 msgid "Accept"
 msgstr "승인"
 
-#: approver/approver.cpp:275
+#: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "발신자 번호를 표시할 수 없습니다"
 
-#: approver/approver.cpp:272
+#: approver/approver.cpp:273
 #, qt-format
 msgid "Calling from %1"
 msgstr "%1에서 전화가 걸러오는 중"
 
-#: approver/approver.cpp:268
+#: approver/approver.cpp:269
 msgid "Calling from private number"
-msgstr "개인 번호에서 전화가 걸려오는 중"
+msgstr "개인 전용 번호로 전화가 걸려오는 중"
 
-#: approver/approver.cpp:270
+#: approver/approver.cpp:271
 msgid "Calling from unknown number"
-msgstr "미확인된 번호에서 전화가 걸려오는 중"
+msgstr "알 수 없는 번호로 전화가 왔습니다."
 
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
 msgstr "취소"
 
-#: approver/approver.cpp:314
+#: approver/approver.cpp:315
 msgid "Decline"
 msgstr "거부"
 
-#: approver/approver.cpp:291
+#: approver/approver.cpp:292
 msgid "Hold + Answer"
-msgstr "홀드 + 받기"
+msgstr "대기 + 받기"
 
 #: indicator/messagingmenu.cpp:204
 msgid "I missed your call - can you call me now?"
@@ -100,28 +100,28 @@ msgstr "지금 전화를 받을 수 없습니다. 곧 연락드리겠습니다."
 msgid "I'm running late. I'm on my way."
 msgstr "조금 늦어서 지금 가고 있습니다."
 
-#: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
+#: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "%1이(가) 보낸 메시지"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr ""
+msgstr "오늘 건 전화가 없습니다."
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr ""
+msgstr "오늘 받은 전화가 없습니다."
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr ""
+msgstr "오늘 받은 텍스트 메시지가 없습니다."
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr ""
+msgstr "오늘 보낸 텍스트 메시지가 없습니다."
 
-#: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
+#: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "확인"
 
@@ -129,13 +129,13 @@ msgstr "확인"
 msgid "Phone Calls"
 msgstr "전화 통화"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:107
+#: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
-msgstr "개인 번호"
+msgstr "개인 전용 번호"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr ""
+msgstr "개인 전용 번호"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
@@ -144,13 +144,13 @@ msgstr "답장"
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr ""
+msgstr "심 카드 %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
 msgstr "문자 메세지"
 
-#: indicator/textchannelobserver.cpp:175
+#: indicator/textchannelobserver.cpp:277
 msgid "Save"
 msgstr "저장"
 
@@ -161,7 +161,7 @@ msgstr "죄송합니다. 지금 전화를 받을 수 없습니다. 조금 뒤 �
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr ""
+msgstr "오늘 전체 통화 시간은 <b>%1</b>분 입니다."
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
@@ -175,22 +175,22 @@ msgstr "전화 서비스 관리자"
 msgid "Telephony Service Indicator"
 msgstr "전화 서비스 확인자"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:109
+#: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "알 수 없는 번호"
 
-#: approver/approver.cpp:58
+#: approver/approver.cpp:59
 msgid "Unknown caller"
 msgstr "알 수 없는 발신자"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr ""
+msgstr "알 수 없는 번호"
 
-#: indicator/textchannelobserver.cpp:240
+#: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "메세지 보기"
 
-#: indicator/messagingmenu.cpp:311
+#: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
 msgstr "음성 메세지"

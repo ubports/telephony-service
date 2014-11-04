@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-09-24 07:41+0000\n"
-"X-Generator: Launchpad (build 17196)\n"
+"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -50,24 +50,24 @@ msgstr "بۈگۈن <b>%1</b> دانە تېكىست ئۇچۇرى قوبۇل قى�
 msgid "<b>%1</b> text messages sent today"
 msgstr "بۈگۈن <b>%1</b> دانە تېكىست ئۇچۇرى ئەۋەتىلدى"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:293
 msgid "Accept"
 msgstr "قوشۇل"
 
-#: approver/approver.cpp:275
+#: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "تېلېفون نومۇرى يوق"
 
-#: approver/approver.cpp:272
+#: approver/approver.cpp:273
 #, qt-format
 msgid "Calling from %1"
 msgstr "تېلېفون %1 دىن كەلدى"
 
-#: approver/approver.cpp:268
+#: approver/approver.cpp:269
 msgid "Calling from private number"
 msgstr "شەخسىي نومۇردىن تېلېفون كەلدى"
 
-#: approver/approver.cpp:270
+#: approver/approver.cpp:271
 msgid "Calling from unknown number"
 msgstr "ناتونۇش تېلېفون كەلدى"
 
@@ -75,11 +75,11 @@ msgstr "ناتونۇش تېلېفون كەلدى"
 msgid "Cancel"
 msgstr "ئەمەلدىن قالدۇر"
 
-#: approver/approver.cpp:314
+#: approver/approver.cpp:315
 msgid "Decline"
 msgstr "قوشۇلما"
 
-#: approver/approver.cpp:291
+#: approver/approver.cpp:292
 msgid "Hold + Answer"
 msgstr "ساقلىتىپ قويۇپ جاۋاب بەر"
 
@@ -99,7 +99,7 @@ msgstr "ھازىر ئالدىراش. كېيىن تېلېفون قىلاي."
 msgid "I'm running late. I'm on my way."
 msgstr "كېچىكىپ قالدىم. ھازىر يولدا."
 
-#: indicator/textchannelobserver.cpp:243 indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
 #, qt-format
 msgid "Message from %1"
 msgstr "%1 دىن كەلگەن ئۇچۇر"
@@ -120,7 +120,7 @@ msgstr "بۈگۈن ھېچقانداق تېكىست ئۇچۇرى كەلمىدى"
 msgid "No text messages sent today"
 msgstr "بۈگۈن ھېچقانداق تېكىست ئۇچۇرى ئەۋەتىلمىدى"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:184
+#: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "تامام"
 
@@ -149,7 +149,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:190
+#: indicator/textchannelobserver.cpp:277
 msgid "Save"
 msgstr "ساقلا"
 
@@ -178,7 +178,7 @@ msgstr "Telephony Service Indicator"
 msgid "Unknown Number"
 msgstr "ناتونۇش نومۇر"
 
-#: approver/approver.cpp:58
+#: approver/approver.cpp:59
 msgid "Unknown caller"
 msgstr "ناتونۇش تېلېفون"
 
@@ -186,7 +186,7 @@ msgstr "ناتونۇش تېلېفون"
 msgid "Unknown number"
 msgstr "نامەلۇم نومۇر"
 
-#: indicator/textchannelobserver.cpp:263
+#: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "ئۇچۇر كۆرسەت"
 

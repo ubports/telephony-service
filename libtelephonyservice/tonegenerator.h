@@ -28,6 +28,7 @@
 class QTimer;
 
 static const int DTMF_LOCAL_PLAYBACK_DURATION = 200; /* in milliseconds */
+static const int WAITING_PLAYBACK_DURATION = 8000; /* in milliseconds */
 
 class ToneGenerator : public QObject
 {
@@ -41,13 +42,19 @@ public Q_SLOTS:
      * Valid tones: 0..9 (number keys), 10 (*), 11 (#)
      */
     void playDTMFTone(uint key);
+    void playWaitingTone();
+    void stopWaitingTone();
+    void playCallEndedTone();
 
 private Q_SLOTS:
+    void stopTone();
     void stopDTMFTone();
+    bool startEventTone(uint key);
 
 private:
     explicit ToneGenerator(QObject *parent = 0);
-    QTimer* mPlaybackTimer;
+    QTimer* mDTMFPlaybackTimer;
+    QTimer* mWaitingPlaybackTimer;
 };
 
 #endif // TONEGENERATOR_H

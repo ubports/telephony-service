@@ -1,3 +1,34 @@
+telephony-service (0.1+14.10.20141025~rtm-0ubuntu1) 14.09; urgency=low
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Emit a sound feedback when all calls are ended. Play a waiting tone
+    instead of regular ringtone for waiting calls. (LP: #1372973)
+  * Wake up the screen on incoming mms's. (LP: #1347856)
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Sat, 25 Oct 2014 18:24:27 +0000
+
+telephony-service (0.1+14.10.20141007.1-0ubuntu1) 14.09; urgency=low
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Gustavo Pichorim Boiko ]
+  * Report the emergency calls availability to QML. (LP: #1369774)
+
+  [ Tiago Salem Herrmann ]
+  * Add simLocked() property to AccountEntry.
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 07 Oct 2014 17:04:51 +0000
+
 telephony-service (0.1+14.10.20140918.1-0ubuntu1) utopic; urgency=low
 
   [ CI bot ]

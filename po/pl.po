@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-08-23 07:16+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 "Language: pl\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -28,7 +28,7 @@ msgstr[0] "%1 nieodebrane połączenie"
 msgstr[1] "%1 nieodebrane połączenia"
 msgstr[2] "%1 nieodebranych połączeń"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:308
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -56,24 +56,24 @@ msgstr ""
 msgid "<b>%1</b> text messages sent today"
 msgstr ""
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:293
 msgid "Accept"
 msgstr "Akceptuj"
 
-#: approver/approver.cpp:275
+#: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "Numer rozmówcy jest niedostępny"
 
-#: approver/approver.cpp:272
+#: approver/approver.cpp:273
 #, qt-format
 msgid "Calling from %1"
 msgstr "Połączenie z %1"
 
-#: approver/approver.cpp:268
+#: approver/approver.cpp:269
 msgid "Calling from private number"
 msgstr "Połączenie z numerem prywatnym"
 
-#: approver/approver.cpp:270
+#: approver/approver.cpp:271
 msgid "Calling from unknown number"
 msgstr "Połączenie z nieznanego numeru"
 
@@ -81,11 +81,11 @@ msgstr "Połączenie z nieznanego numeru"
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: approver/approver.cpp:314
+#: approver/approver.cpp:315
 msgid "Decline"
 msgstr "Odrzuć"
 
-#: approver/approver.cpp:291
+#: approver/approver.cpp:292
 msgid "Hold + Answer"
 msgstr "Wstrzymaj i odbierz"
 
@@ -105,7 +105,7 @@ msgstr "Niestety nie mogę teraz odebrać. Oddzwonię później."
 msgid "I'm running late. I'm on my way."
 msgstr "Spóźnię się. Jestem w drodze."
 
-#: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
+#: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
 #, qt-format
 msgid "Message from %1"
 msgstr ""
@@ -126,7 +126,7 @@ msgstr ""
 msgid "No text messages sent today"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
+#: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "Ok"
 
@@ -134,7 +134,7 @@ msgstr "Ok"
 msgid "Phone Calls"
 msgstr "Rozmowy telefoniczne"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:107
+#: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Numer zastrzeżony"
 
@@ -155,7 +155,7 @@ msgstr ""
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:175
+#: indicator/textchannelobserver.cpp:277
 msgid "Save"
 msgstr "Zapisz"
 
@@ -180,11 +180,11 @@ msgstr "Zatwierdzanie obsługi telefonu"
 msgid "Telephony Service Indicator"
 msgstr "Wskaźnik obsługi telefonu"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:109
+#: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Numer nieznany"
 
-#: approver/approver.cpp:58
+#: approver/approver.cpp:59
 msgid "Unknown caller"
 msgstr "Nieznany"
 
@@ -192,10 +192,10 @@ msgstr "Nieznany"
 msgid "Unknown number"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:240
+#: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Pokaż wiadomość"
 
-#: indicator/messagingmenu.cpp:311
+#: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
 msgstr "Wiadomości głosowe"
