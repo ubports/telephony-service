@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-04 18:01-0200\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -109,10 +109,6 @@ msgstr ""
 msgid "I'm running late. I'm on my way."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:151
-msgid "Message"
-msgstr ""
-
 #: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
 #, qt-format
 msgid "Message from %1"
@@ -169,6 +165,10 @@ msgstr ""
 
 #: indicator/textchannelobserver.cpp:277
 msgid "Save"
+msgstr ""
+
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
 msgstr ""
 
 #: indicator/messagingmenu.cpp:208
