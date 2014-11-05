@@ -329,7 +329,11 @@ AccountEntry *TelepathyHelper::activeAccountAt(QQmlListProperty<AccountEntry> *p
 
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 {
-    Q_UNUSED(op)
+    // if the account manager ready job returns an error, just fail silently
+    if (op->isError()) {
+        qCritical() << "Failed to prepare Tp::AccountManager" << op->errorName() << op->errorMessage();
+        return;
+    }
 
     Tp::AccountSetPtr accountSet;
     QMap<QString, AccountEntry *> orderedAccounts;
