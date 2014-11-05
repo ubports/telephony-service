@@ -201,17 +201,17 @@ void TelepathyHelper::registerChannelObserver(const QString &observerName)
     }
 
     mChannelObserver = new ChannelObserver(this);
-    registerClient(mChannelObserver, name);
+    if (registerClient(mChannelObserver, name)) {
+        // messages
+        connect(mChannelObserver, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
+                ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
 
-    // messages
-    connect(mChannelObserver, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
-            ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+        // calls
+        connect(mChannelObserver, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+                CallManager::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
 
-    // calls
-    connect(mChannelObserver, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
-            CallManager::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
-
-    Q_EMIT channelObserverCreated(mChannelObserver);
+        Q_EMIT channelObserverCreated(mChannelObserver);
+    }
 }
 
 void TelepathyHelper::unregisterChannelObserver()
@@ -245,7 +245,7 @@ void TelepathyHelper::setupAccountEntry(AccountEntry *entry)
             SLOT(onAccountReady()));
 }
 
-void TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
+bool TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
 {
     Tp::AbstractClientPtr clientPtr(client);
     bool succeeded = mClientRegistrar->registerClient(clientPtr, name);
@@ -267,6 +267,8 @@ void TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
             object->setProperty("clientName", TP_QT_IFACE_CLIENT + "." + name );
         }
     }
+
+    return succeeded;
 }
 
 AccountEntry *TelepathyHelper::accountForConnection(const Tp::ConnectionPtr &connection) const
