@@ -168,10 +168,10 @@ void TextChannelObserver::sendMessage(const QStringList &phoneNumbers, const QSt
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account || accountId.isEmpty()) {
         // fallback to the default account
-        if (TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->accounts().size() > 1) {
+        if (TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->activeAccounts().size() > 1) {
             account = TelepathyHelper::instance()->defaultMessagingAccount();
-        } else if (TelepathyHelper::instance()->accounts().size() > 0) {
-            account = TelepathyHelper::instance()->accounts()[0];
+        } else if (TelepathyHelper::instance()->activeAccounts().size() > 0) {
+            account = TelepathyHelper::instance()->activeAccounts()[0];
         }
     }
 
@@ -513,7 +513,7 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
 void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QString &reply)
 {
     // FIXME - we need to find a better way to deal with dual sim in the messaging-menu
-    if (!TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->accounts().size() > 1) {
+    if (!TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->activeAccounts().size() > 1) {
         NotifyNotification *notification = notify_notification_new(C::gettext("Please, select a SIM card:"),
                                                                    reply.toStdString().c_str(),
                                                                    "");
@@ -523,7 +523,7 @@ void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QStr
         data->observer = this;
         mNotifications.insert(notification, data);
 
-        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->activeAccounts()) {
             notify_notification_add_action (notification,
                                             account->accountId().toStdString().c_str(),
                                             account->displayName().toStdString().c_str(),
