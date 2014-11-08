@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-22 18:06+0000\n"
+"PO-Revision-Date: 2014-11-07 18:52+0000\n"
 "Last-Translator: Marcos Lans <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-08 06:15+0000\n"
+"X-Generator: Launchpad (build 17231)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -52,7 +52,7 @@ msgstr "Hoxe recibiu <b>%1</b> mensaxes"
 msgid "<b>%1</b> text messages sent today"
 msgstr "Hoxe enviou <b>%1</b> mensaxes"
 
-#: approver/approver.cpp:293
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "Aceptar"
 
@@ -77,11 +77,11 @@ msgstr "Chamada desde un número descoñecido"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: approver/approver.cpp:315
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "Rexeitar"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "Manter + Contestar"
 
@@ -116,11 +116,11 @@ msgstr "Hoxe non recibiu chamadas"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr "Hoxe non recibiu mensaxes"
+msgstr "Hoxe non recibiu mensaxes de texto"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr "Hoxe non enviou mensaxes"
+msgstr "Hoxe non enviou mensaxes de texto"
 
 #: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
 msgid "Ok"
