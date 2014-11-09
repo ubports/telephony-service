@@ -22,6 +22,8 @@
 #include "phoneutils.h"
 
 #include <QtCore/QDebug>
+#include <phonenumbers/phonenumbermatch.h>
+#include <phonenumbers/phonenumbermatcher.h>
 #include <phonenumbers/phonenumberutil.h>
 
 
@@ -96,4 +98,22 @@ bool PhoneUtils::event(QEvent *event)
     return QObject::event(event);
 }
 
+QStringList PhoneUtils::matchInText(const QString& text, const QString &defaultRegion)
+{
+    if (text.isEmpty()) {
+        return QStringList();
+    }
+
+    QString region = defaultRegion.isEmpty() ? this->defaultRegion() : defaultRegion;
+
+    QStringList matches;
+    i18n::phonenumbers::PhoneNumberMatcher matcher(text.toStdString(), region.toStdString());
+    if (matcher.HasNext()) {
+        i18n::phonenumbers::PhoneNumberMatch match;
+        matcher.Next(&match);
+        matches.append(QString::fromStdString(match.raw_string()));
+    }
+
+    return matches;
+}
 
