@@ -49,6 +49,7 @@ public:
     void onApproved(Tp::ChannelDispatchOperationPtr dispatchOp);
     void onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp);
     void onRejected(Tp::ChannelDispatchOperationPtr dispatchOp);
+    void onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const char *action);
 
 protected:
     Tp::ChannelDispatchOperationPtr dispatchOperationForIncomingCall();
@@ -74,6 +75,7 @@ private:
     QString mCachedBody;
     QFeedbackHapticsEffect mVibrateEffect;
     QTimer mVibrateTimer;
+    QMap<QString,QString> mRejectActions;
 };
 
 #endif // APPROVER_H
