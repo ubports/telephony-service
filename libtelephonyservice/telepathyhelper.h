@@ -80,7 +80,7 @@ public:
     bool emergencyCallsAvailable() const;
     Q_INVOKABLE void unlockSimCards() const;
 
-    void registerClient(Tp::AbstractClient *client, QString name);
+    bool registerClient(Tp::AbstractClient *client, QString name);
 
     // pre-populated channel class specs for conferences
     static Tp::ChannelClassSpec audioConferenceSpec();

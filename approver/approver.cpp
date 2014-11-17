@@ -76,9 +76,9 @@ Approver::Approver()
     mVibrateTimer.setInterval(4000);
     connect(&mVibrateTimer, SIGNAL(timeout()), &mVibrateEffect, SLOT(start()));
 
-    mRejectActions["rejectMessage1"] = C::gettext("I missed your call - can you call me now?");
-    mRejectActions["rejectMessage2"] = C::gettext("I'm running late. I'm on my way.");
-    mRejectActions["rejectMessage3"] = C::gettext("I'm busy at the moment. I'll call later.");
+    mRejectActions["rejectMessage1"] = C::gettext("I'm busy at the moment. I'll call later.");
+    mRejectActions["rejectMessage2"] = C::gettext("I'm running late, on my way now.");
+    mRejectActions["rejectMessage3"] = C::gettext("Please call me back later.");
 }
 
 Approver::~Approver()
@@ -412,6 +412,9 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
                                         "x-canonical-snap-decisions",
                                         "true");
     notify_notification_set_hint_string(notification,
+                                        "x-canonical-snap-decisions-swipe",
+                                        "true");
+    notify_notification_set_hint_string(notification,
                                         "x-canonical-private-button-tint",
                                         "true");
     notify_notification_set_hint_string(notification,
@@ -427,6 +430,8 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
                                     data,
                                     delete_event_data);
 
+#if 0
+    // FIXME: re-enable that once we move to fullscreen notifications
     if (hasCalls) {
         notify_notification_add_action (notification,
                                         "action_hangup_and_accept",
@@ -435,6 +440,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
                                         data,
                                         delete_event_data);
     }
+#endif
 
     notify_notification_add_action (notification,
                                     "action_decline_1",
@@ -443,10 +449,17 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
                                     data,
                                     delete_event_data);
 
+    notify_notification_add_action(notification,
+                                   "action_decline_expansion",
+                                   C::gettext("Message & decline"),
+                                   action_reject,
+                                   data,
+                                   delete_event_data);
+
     Q_FOREACH(const QString &action, mRejectActions.keys()) {
         notify_notification_add_action(notification,
                                        action.toUtf8().data(),
-                                       mRejectActions[action].toUtf8().data(),
+                                       QString("message:%1").arg(mRejectActions[action]).toUtf8().data(),
                                        action_reject_message,
                                        data,
                                        delete_event_data);
