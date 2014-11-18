@@ -146,6 +146,8 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
     bool hasImage = false, hasText = false;
 
     header["message-type"] = QDBusVariant(0);
+    // FIXME: make this conditional once we add support for other IM protocols
+    header["mms"] = QDBusVariant(true);
     message << header;
     Q_FOREACH(const AttachmentStruct &attachment, attachments) {
         QByteArray fileData;
