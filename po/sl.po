@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
 "n%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2014-08-28 06:29+0000\n"
-"X-Generator: Launchpad (build 17174)\n"
+"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -28,7 +28,7 @@ msgstr[1] "%1 zgrešen klic"
 msgstr[2] "%1 zgrešena klica"
 msgstr[3] "%1 zgrešeni klici"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:308
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -57,24 +57,24 @@ msgstr "<b>%1</b> današnjih prejetih besedilnih sporočil"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> današnjih poslanih besedilnih sporočil"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:293
 msgid "Accept"
 msgstr "Sprejmi"
 
-#: approver/approver.cpp:275
+#: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "Številka klicatelja ni na voljo"
 
-#: approver/approver.cpp:272
+#: approver/approver.cpp:273
 #, qt-format
 msgid "Calling from %1"
 msgstr "Klic od %1"
 
-#: approver/approver.cpp:268
+#: approver/approver.cpp:269
 msgid "Calling from private number"
 msgstr "Klic od zasebne številke"
 
-#: approver/approver.cpp:270
+#: approver/approver.cpp:271
 msgid "Calling from unknown number"
 msgstr "Klic od neznane številke"
 
@@ -82,11 +82,11 @@ msgstr "Klic od neznane številke"
 msgid "Cancel"
 msgstr "Prekliči"
 
-#: approver/approver.cpp:314
+#: approver/approver.cpp:315
 msgid "Decline"
 msgstr "Zavrni"
 
-#: approver/approver.cpp:291
+#: approver/approver.cpp:292
 msgid "Hold + Answer"
 msgstr "Zadrži + Odgovori"
 
@@ -106,7 +106,7 @@ msgstr "Trenutno sem zaseden. Poklical te bom kasneje."
 msgid "I'm running late. I'm on my way."
 msgstr "Zamujam. Sem že na poti."
 
-#: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
+#: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
 #, qt-format
 msgid "Message from %1"
 msgstr "Sporočilo od %1"
@@ -127,7 +127,7 @@ msgstr "Danes ni prejetih besedilnih sporočil"
 msgid "No text messages sent today"
 msgstr "Danes ni poslanih besedilnih sporočil"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:169
+#: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "V redu"
 
@@ -135,7 +135,7 @@ msgstr "V redu"
 msgid "Phone Calls"
 msgstr "Telefonski klici"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:107
+#: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Zasebna številka"
 
@@ -156,7 +156,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:175
+#: indicator/textchannelobserver.cpp:277
 msgid "Save"
 msgstr "Shrani"
 
@@ -181,11 +181,11 @@ msgstr "Odobritelj telefonske storitve"
 msgid "Telephony Service Indicator"
 msgstr "Kazalnik telefonske storitve"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:109
+#: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Neznana številka"
 
-#: approver/approver.cpp:58
+#: approver/approver.cpp:59
 msgid "Unknown caller"
 msgstr "Neznan klicatelj"
 
@@ -193,10 +193,10 @@ msgstr "Neznan klicatelj"
 msgid "Unknown number"
 msgstr "Neznana številka"
 
-#: indicator/textchannelobserver.cpp:240
+#: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Ogled sporočila"
 
-#: indicator/messagingmenu.cpp:311
+#: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
 msgstr "Sporočila glasovne pošte"

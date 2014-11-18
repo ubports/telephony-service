@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-08-23 07:16+0000\n"
-"X-Generator: Launchpad (build 17163)\n"
+"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
+"X-Generator: Launchpad (build 17211)\n"
 "Language: my\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -25,7 +25,7 @@ msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 လွတ်သွားသောခေါ်ဆိုမှု့"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:308
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -51,24 +51,24 @@ msgstr ""
 msgid "<b>%1</b> text messages sent today"
 msgstr ""
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:293
 msgid "Accept"
 msgstr "လက်ခံ"
 
-#: approver/approver.cpp:275
+#: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "ခေါ်ဆိုသည့်နံပါတ်မှာမရရှိနိုင်ပါ"
 
-#: approver/approver.cpp:272
+#: approver/approver.cpp:273
 #, qt-format
 msgid "Calling from %1"
 msgstr "%1 မှခေါ်နေသည်"
 
-#: approver/approver.cpp:268
+#: approver/approver.cpp:269
 msgid "Calling from private number"
 msgstr "လျှို့ဝှက်နံပါတ်မှခေါ်နေသည်"
 
-#: approver/approver.cpp:270
+#: approver/approver.cpp:271
 msgid "Calling from unknown number"
 msgstr "မသိရှိသောနံပါတ်မှခေါ်နေသည်"
 
@@ -76,11 +76,11 @@ msgstr "မသိရှိသောနံပါတ်မှခေါ်နေသ
 msgid "Cancel"
 msgstr "ပယ်ဖျက်မည်"
 
-#: approver/approver.cpp:314
+#: approver/approver.cpp:315
 msgid "Decline"
 msgstr "ငြင်းပယ်"
 
-#: approver/approver.cpp:291
+#: approver/approver.cpp:292
 msgid "Hold + Answer"
 msgstr ""
 
@@ -100,7 +100,7 @@ msgstr "ကျွန်ုပ်ယခုအလုပ်များနေသည
 msgid "I'm running late. I'm on my way."
 msgstr "ကျွန်ုပ်သွားတာနောက်ကျနေပြီ။လမ်းတွင်ရောက်နေပြီ။"
 
-#: indicator/textchannelobserver.cpp:220 indicator/textchannelobserver.cpp:295
+#: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
 #, qt-format
 msgid "Message from %1"
 msgstr ""
@@ -121,7 +121,7 @@ msgstr ""
 msgid "No text messages sent today"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:169 indicator/ussdindicator.cpp:79
+#: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr ""
 
@@ -129,7 +129,7 @@ msgstr ""
 msgid "Phone Calls"
 msgstr "ဖုန်းခေါ်ဆိုမည်"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:107
+#: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr ""
 
@@ -150,7 +150,7 @@ msgstr ""
 msgid "SMS"
 msgstr "စာတိုပို့စနစ်"
 
-#: indicator/textchannelobserver.cpp:175
+#: indicator/textchannelobserver.cpp:277
 msgid "Save"
 msgstr "သိမ်းမည်"
 
@@ -175,11 +175,11 @@ msgstr ""
 msgid "Telephony Service Indicator"
 msgstr ""
 
-#: Ubuntu/Telephony/contactwatcher.cpp:109
+#: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr ""
 
-#: approver/approver.cpp:58
+#: approver/approver.cpp:59
 msgid "Unknown caller"
 msgstr "မသိသောခေါ်ဆိုသူ"
 
@@ -187,10 +187,10 @@ msgstr "မသိသောခေါ်ဆိုသူ"
 msgid "Unknown number"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:240
+#: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:311
+#: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
 msgstr "အသံနှင့်စာများ"
