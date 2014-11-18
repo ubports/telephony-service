@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "callagent.h"
 #include "callhandler.h"
 #include "phoneutils.h"
 #include "telepathyhelper.h"
@@ -271,6 +272,10 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
     connect(channel.data(),
             SIGNAL(callStateChanged(Tp::CallState)),
             SLOT(onCallStateChanged(Tp::CallState)));
+
+    // FIXME: save this to a list
+    CallAgent *agent = new CallAgent(channel, this);
+    Q_UNUSED(agent);
 
     mCallChannels.append(channel);
     Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));

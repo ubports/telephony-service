@@ -135,9 +135,12 @@ QList<AccountEntry*> TelepathyHelper::activeAccounts() const
     QList<AccountEntry*> activeAccountList;
     Q_FOREACH(AccountEntry *account, mAccounts) {
         if (!account->account()->connection().isNull() &&
-            !account->account()->connection()->selfContact().isNull() &&
-             account->account()->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline) {
-            activeAccountList << account;
+            !account->account()->connection()->selfContact().isNull()) {
+            Tp::ContactPtr contact = account->account()->connection()->selfContact();
+            if (!contact->actualFeatures().contains(Tp::Contact::FeatureSimplePresence) ||
+                account->account()->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline) {
+                activeAccountList << account;
+            }
         }
     }
     return activeAccountList;
@@ -231,6 +234,7 @@ QStringList TelepathyHelper::supportedProtocols() const
     protocols << "ufa"
               << "tel"
               << "ofono"
+              << "sip"
               << "mock"; // used for tests
     return protocols;
 }

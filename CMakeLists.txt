@@ -68,11 +68,15 @@ execute_process(
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
+pkg_check_modules(TP_QT5_FS REQUIRED TelepathyQt5Farstream)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
 pkg_check_modules(MESSAGING_MENU REQUIRED messaging-menu)
 pkg_check_modules(UserMetrics REQUIRED libusermetricsinput-1)
 pkg_check_modules(HISTORY REQUIRED history-service)
 pkg_check_modules(GSETTINGS_QT REQUIRED gsettings-qt)
+pkg_check_modules(TPFS REQUIRED telepathy-farstream)
+pkg_check_modules(GST REQUIRED gstreamer-1.0)
+pkg_check_modules(FS REQUIRED farstream-0.2)
 
 add_definitions(-DQT_NO_KEYWORDS)
 

@@ -24,6 +24,10 @@
 #include "accountentry.h"
 #include "telepathyhelper.h"
 
+namespace C {
+#include <libintl.h>
+}
+
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
     QObject(parent), mAccount(account)
 {
@@ -53,9 +57,13 @@ QString AccountEntry::networkName() const
     if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
         return QString::null;
     }
-    Tp::Presence presence = mAccount->connection()->selfContact()->presence();
-    if (presence.type() == Tp::ConnectionPresenceTypeAvailable) {
-        return presence.statusMessage();
+    Tp::ContactPtr contact = mAccount->connection()->selfContact();
+    if (contact->actualFeatures().contains(Tp::Contact::FeatureSimplePresence)) {
+        if (contact->presence().type() == Tp::ConnectionPresenceTypeAvailable) {
+            return contact->presence().statusMessage();
+        }
+    } else {
+        return C::gettext("Connected");
     }
     return QString::null;
 }
@@ -79,9 +87,14 @@ void AccountEntry::setDisplayName(const QString &name)
 
 bool AccountEntry::connected() const
 {
-    return !mAccount.isNull() && !mAccount->connection().isNull() &&
-           !mAccount->connection()->selfContact().isNull() &&
-            mAccount->connection()->selfContact()->presence().type() == Tp::ConnectionPresenceTypeAvailable;
+    if (mAccount.isNull() || mAccount->connection().isNull() ||
+        mAccount->connection()->selfContact().isNull()) {
+        return false;
+    }
+
+    Tp::ContactPtr contact = mAccount->connection()->selfContact();
+    return (!contact->actualFeatures().contains(Tp::Contact::FeatureSimplePresence) ||
+           contact->presence().type() == Tp::ConnectionPresenceTypeAvailable);
 }
 
 QStringList AccountEntry::emergencyNumbers() const
