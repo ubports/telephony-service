@@ -304,7 +304,6 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     Tp::MessagePartList messageParts = message.parts();
     bool mms = messageParts[0]["mms"].variant().toBool();
-    // check if this is an mms
     if (mms) {
         // remove header
         messageParts.pop_front();
