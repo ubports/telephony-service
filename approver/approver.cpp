@@ -378,7 +378,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     data->self = this;
     data->dispatchOp = dispatchOperation;
     data->channel = channel;
-    bool unknownNumber = contact->id().startsWith("x-ofono-") || contact->id().isEmpty();
+    bool unknownNumber = telepathyContact->id().startsWith("x-ofono-") || telepathyContact->id().isEmpty();
 
     if (!telepathyContact->id().isEmpty()) {
         if (telepathyContact->id().startsWith("x-ofono-private")) {
