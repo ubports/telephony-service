@@ -37,6 +37,7 @@ public:
     QString contactAlias;
     QUrl contactIcon;
     QString messageId;
+    QString accountId;
     QDateTime timestamp;
 
     bool operator==(const Call &other) {
@@ -51,11 +52,11 @@ public:
     static MessagingMenu *instance();
     virtual ~MessagingMenu();
 
-    void addMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text);
-    void addFlashMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text);
+    void addMessage(const QString &senderId, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text);
+    void addFlashMessage(const QString &senderId, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text);
     void removeMessage(const QString &messageId);
 
-    void addCall(const QString &phoneNumber, const QDateTime &timestamp);
+    void addCall(const QString &phoneNumber, const QString &accountId, const QDateTime &timestamp);
     void addCallToMessagingMenu(Call call, const QString &text);
 
     static void flashMessageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
@@ -66,8 +67,8 @@ public:
     void hideVoicemailEntry(AccountEntry *account);
 
 Q_SIGNALS:
-    void replyReceived(const QString &phoneNumber, const QString &reply);
-    void messageRead(const QString &phoneNumber, const QString &messageId);
+    void replyReceived(const QStringList &recipients, const QString &accountId, const QString &reply);
+    void messageRead(const QStringList &phoneNumber, const QString &accountId, const QString &messageId);
 
 private Q_SLOTS:
     void sendMessageReply(const QString &messageId, const QString &reply);

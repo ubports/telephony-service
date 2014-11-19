@@ -42,15 +42,15 @@ public Q_SLOTS:
     void sendMessage(const QStringList &phoneNumbers, const QString &text, const QString &accountId);
 
 protected:
-    void showNotificationForMessage(const Tp::ReceivedMessage &message);
-    void showNotificationForFlashMessage(const Tp::ReceivedMessage &message);
+    void showNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds = QStringList());
+    void showNotificationForFlashMessage(const Tp::ReceivedMessage &message, const QString &accountId);
 
 protected Q_SLOTS:
     void onTextChannelInvalidated();
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
-    void onReplyReceived(const QString &phoneNumber, const QString &reply);
-    void onMessageRead(const QString &phoneNumber, const QString &encodedMessageId);
+    void onReplyReceived(const QStringList &recipients, const QString &accountId, const QString &reply);
+    void onMessageRead(const QStringList &recipients, const QString &accountId, const QString &encodedMessageId);
     void onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString);
     void updateNotifications(const QtContacts::QContact &contact);
 

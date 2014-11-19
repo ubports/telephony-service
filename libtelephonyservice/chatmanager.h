@@ -49,7 +49,7 @@ public Q_SLOTS:
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
     void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
 
-    void acknowledgeMessage(const QString &phoneNumber, const QString &messageId, const QString &accountId = QString::null);
+    void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId = QString::null);
 
 protected:
     Tp::TextChannelPtr existingChat(const QStringList &phoneNumbers, const QString &accountId);

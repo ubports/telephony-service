@@ -212,7 +212,7 @@ Tp::TextChannelPtr ChatManager::existingChat(const QStringList &phoneNumbers, co
     return channel;
 }
 
-void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &messageId, const QString &accountId)
+void ChatManager::acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId)
 {
     AccountEntry *account;
     if (accountId.isNull()) {
@@ -222,12 +222,14 @@ void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &
     }
 
     if (!account) {
-        mMessagesToAck[accountId][phoneNumber].append(messageId);
+        //FIXME: support group chats
+        mMessagesToAck[accountId][recipients[0]].append(messageId);
         return;
     }
 
     mMessagesAckTimer.start();
-    mMessagesToAck[account->accountId()][phoneNumber].append(messageId);
+    //FIXME: support group chats
+    mMessagesToAck[account->accountId()][recipients[0]].append(messageId);
 }
 
 void ChatManager::onAckTimerTriggered()

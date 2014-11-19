@@ -53,7 +53,9 @@ QTCONTACTS_USE_NAMESPACE
 
 class NotificationData {
 public:
-    QString phoneNumber;
+    QString senderId;
+    QStringList participantIds;
+    QString accountId;
     QDateTime timestamp;
     QString text;
     QString eventId;
@@ -72,7 +74,9 @@ void sim_selection_action(NotifyNotification* notification, char *action, gpoint
     qDebug() << accountId << data;
     NotificationData *notificationData = (NotificationData*) data;
     if (notificationData != NULL) {
-        notificationData->observer->sendMessage(QStringList() << notificationData->phoneNumber, notificationData->text, accountId);
+        QStringList recipients;
+        recipients << notificationData->senderId << notificationData->participantIds;
+        notificationData->observer->sendMessage(recipients, notificationData->text, accountId);
     }
 
     notify_notification_close(notification, &error);
@@ -85,26 +89,26 @@ void flash_notification_action(NotifyNotification* notification, char *action, g
     if (action == QLatin1String("notification_save_action")) {
         NotificationData *notificationData = (NotificationData*) data;
         if (notificationData != NULL) {
-            // FIXME: handle multiple accounts
-            History::Thread thread = History::Manager::instance()->threadForParticipants(TelepathyHelper::instance()->accountIds()[0],
+            QStringList recipients;
+            recipients << notificationData->senderId << notificationData->participantIds;
+            History::Thread thread = History::Manager::instance()->threadForParticipants(notificationData->accountId,
                                                                                          History::EventTypeText,
-                                                                                         QStringList() << notificationData->phoneNumber,
+                                                                                         recipients,
                                                                                          History::MatchPhoneNumber,
                                                                                          true);
-            History::TextEvent textEvent(TelepathyHelper::instance()->accountIds()[0], 
+            History::TextEvent textEvent(notificationData->accountId,
                                          thread.threadId(), 
                                          notificationData->eventId, 
-                                         notificationData->phoneNumber,
+                                         notificationData->senderId,
                                          notificationData->timestamp,
                                          false,
                                          notificationData->text,
                                          History::MessageTypeText);
             History::Events events;
             events.append(textEvent);
-                                         
+
             History::Manager::instance()->writeEvents(events);
         }
-
     }
     notify_notification_close(notification, &error);
 
@@ -120,7 +124,10 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
     NotificationData *notificationData = (NotificationData*) data;
     if (notificationData != NULL) {
         // launch the messaging-app to show the message
-        ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(notificationData->phoneNumber))));
+        // TODO: open mms thread when applicable
+        QStringList recipients;
+        recipients << notificationData->senderId << notificationData->participantIds;
+        ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients[0]))));
         notification_closed(notification, notificationData->notificationList);
     }
     g_object_unref(notification);
@@ -138,11 +145,11 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
     QObject(parent)
 {
     connect(MessagingMenu::instance(),
-            SIGNAL(replyReceived(QString,QString)),
-            SLOT(onReplyReceived(QString,QString)));
+            SIGNAL(replyReceived(QStringList,QString,QString)),
+            SLOT(onReplyReceived(QStringList,QString,QString)));
     connect(MessagingMenu::instance(),
-            SIGNAL(messageRead(QString,QString)),
-            SLOT(onMessageRead(QString,QString)));
+            SIGNAL(messageRead(QStringList,QString,QString)),
+            SLOT(onMessageRead(QStringList,QString,QString)));
 
     if (GreeterContacts::isGreeterMode()) {
         connect(GreeterContacts::instance(), SIGNAL(contactUpdated(QtContacts::QContact)),
@@ -163,7 +170,7 @@ TextChannelObserver::~TextChannelObserver()
     mNotifications.clear();
 }
 
-void TextChannelObserver::sendMessage(const QStringList &phoneNumbers, const QString &text, const QString &accountId)
+void TextChannelObserver::sendMessage(const QStringList &recipients, const QString &text, const QString &accountId)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account || accountId.isEmpty()) {
@@ -184,7 +191,7 @@ void TextChannelObserver::sendMessage(const QStringList &phoneNumbers, const QSt
     if (!account->connected()) {
         History::Thread thread = History::Manager::instance()->threadForParticipants(account->accountId(),
                                                                                      History::EventTypeText,
-                                                                                     phoneNumbers,
+                                                                                     recipients,
                                                                                      History::MatchPhoneNumber,
                                                                                      true);
         History::TextEvent textEvent(account->accountId(),
@@ -217,7 +224,8 @@ void TextChannelObserver::sendMessage(const QStringList &phoneNumbers, const QSt
                                                                failureMessage.toStdString().c_str(),
                                                                g_icon_to_string(icon));
         NotificationData *data = new NotificationData();
-        data->phoneNumber = phoneNumbers[0];
+        data->participantIds = recipients;
+        data->accountId = account->accountId();
         data->message = text;
         data->notificationList = &mNotifications;
         mNotifications.insert(notification, data);
@@ -245,14 +253,14 @@ void TextChannelObserver::sendMessage(const QStringList &phoneNumbers, const QSt
         return;
     }
 
-    ChatManager::instance()->sendMessage(phoneNumbers, text, accountId);
+    ChatManager::instance()->sendMessage(recipients, text, accountId);
 }
 
-void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMessage &message)
+void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMessage &message, const QString &accountId)
 {
     Tp::ContactPtr contact = message.sender();
     QByteArray token(message.messageToken().toUtf8());
-    MessagingMenu::instance()->addFlashMessage(contact->id(), token.toHex(), message.received(), message.text());
+    MessagingMenu::instance()->addFlashMessage(contact->id(), accountId, token.toHex(), message.received(), message.text());
 
 
     // show the notification
@@ -260,7 +268,8 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
                                                                message.text().toStdString().c_str(),
                                                                "");
     NotificationData *data = new NotificationData();
-    data->phoneNumber = contact->id();
+    data->senderId = contact->id();
+    data->accountId = accountId;
     data->timestamp = message.received();
     data->text = message.text();
     data->eventId = message.messageToken().toUtf8();
@@ -297,13 +306,13 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
     Ringtone::instance()->playIncomingMessageSound();
 }
 
-void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message)
+void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
 {
     Tp::ContactPtr contact = message.sender();
     QString messageText = message.text();
 
     Tp::MessagePartList messageParts = message.parts();
-    bool mms = messageParts[0]["mms"].variant().toBool();
+    bool mms = message.header()["mms"].variant().toBool();
     if (mms) {
         // remove header
         messageParts.pop_front();
@@ -338,7 +347,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         return;
     }
 
-    MessagingMenu::instance()->addMessage(contact->id(), token.toHex(), message.received(), messageText);
+    MessagingMenu::instance()->addMessage(contact->id(), participantIds, accountId, token.toHex(), message.received(), messageText);
 
     QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(contact->alias());
     QString avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
@@ -351,7 +360,9 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     // Bundle the data we need for later updating
     NotificationData *data = new NotificationData();
-    data->phoneNumber = contact->id();
+    data->accountId = accountId;
+    data->senderId = contact->id();
+    data->participantIds = participantIds;
     data->alias = contact->alias();
     data->message = messageText;
     data->notificationList = &mNotifications;
@@ -413,7 +424,7 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
         NotifyNotification *notification = i.key();
         NotificationData *data = i.value();
         Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
-            if (PhoneUtils::comparePhoneNumbers(data->phoneNumber, phoneNumber.number())) {
+            if (PhoneUtils::comparePhoneNumbers(data->senderId, phoneNumber.number())) {
                 QString displayLabel = ContactUtils::formatContactName(contact);
                 QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
                 QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
@@ -456,11 +467,14 @@ void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
 
     if (textChannel->immutableProperties().contains(TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash")) && 
            textChannel->immutableProperties()[TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash")].toBool()) {
-
+        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(textChannel->connection());
+        if (!account) {
+            return;
+        }
         // class 0 sms
         mFlashChannels.append(textChannel);
         Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
-            showNotificationForFlashMessage(message);
+            showNotificationForFlashMessage(message, account->accountId());
         }
         return;
     } else {
@@ -482,10 +496,20 @@ void TextChannelObserver::onTextChannelInvalidated()
 void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(textChannel->connection());
+    if (!account) {
+        return;
+    }
+    
     // do not place notification items for scrollback messages
     if (mFlashChannels.contains(textChannel) && !message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
-        showNotificationForFlashMessage(message);
+        showNotificationForFlashMessage(message, account->accountId());
         return;
+    }
+
+    QStringList participantIds;
+    Q_FOREACH(const Tp::ContactPtr &contact, textChannel->groupContacts(false)) {
+        participantIds << contact->id();
     }
 
     if (!message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
@@ -495,7 +519,7 @@ void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
         QByteArray token(message.messageToken().toUtf8());
         mUnreadMessages.append(token);
         QObject::connect(timer, &QTimer::timeout, [=]() {
-            showNotificationForMessage(message);
+            showNotificationForMessage(message, account->accountId(), participantIds);
             Metrics::instance()->increment(Metrics::ReceivedMessages);
             timer->deleteLater();
         });
@@ -510,7 +534,7 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
     MessagingMenu::instance()->removeMessage(token.toHex());
 }
 
-void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QString &reply)
+void TextChannelObserver::onReplyReceived(const QStringList &recipients, const QString &accountId, const QString &reply)
 {
     // FIXME - we need to find a better way to deal with dual sim in the messaging-menu
     if (!TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->accounts().size() > 1) {
@@ -518,7 +542,8 @@ void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QStr
                                                                    reply.toStdString().c_str(),
                                                                    "");
         NotificationData *data = new NotificationData();
-        data->phoneNumber = phoneNumber;
+        data->participantIds = recipients;
+        data->accountId = accountId;
         data->text = reply;
         data->observer = this;
         mNotifications.insert(notification, data);
@@ -545,13 +570,14 @@ void TextChannelObserver::onReplyReceived(const QString &phoneNumber, const QStr
         return;
     }
 
-    sendMessage(QStringList() << phoneNumber, reply, "");
+    // FIXME: for now we dont specify any accountId
+    sendMessage(recipients, reply, "");
 }
 
-void TextChannelObserver::onMessageRead(const QString &phoneNumber, const QString &encodedMessageId)
+void TextChannelObserver::onMessageRead(const QStringList &recipients, const QString &accountId, const QString &encodedMessageId)
 {
     QString messageId(QByteArray::fromHex(encodedMessageId.toUtf8()));
-    ChatManager::instance()->acknowledgeMessage(phoneNumber, messageId);
+    ChatManager::instance()->acknowledgeMessage(recipients, messageId, accountId);
 }
 
 void TextChannelObserver::onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString)
