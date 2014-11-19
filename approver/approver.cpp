@@ -378,6 +378,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     data->self = this;
     data->dispatchOp = dispatchOperation;
     data->channel = channel;
+    bool unknownNumber = contact->id().startsWith("x-ofono-") || contact->id().isEmpty();
 
     if (!telepathyContact->id().isEmpty()) {
         if (telepathyContact->id().startsWith("x-ofono-private")) {
@@ -456,13 +457,15 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
                                    data,
                                    delete_event_data);
 
-    Q_FOREACH(const QString &action, mRejectActions.keys()) {
-        notify_notification_add_action(notification,
-                                       action.toUtf8().data(),
-                                       QString("message:%1").arg(mRejectActions[action]).toUtf8().data(),
-                                       action_reject_message,
-                                       data,
-                                       delete_event_data);
+    if (!unknownNumber) {
+        Q_FOREACH(const QString &action, mRejectActions.keys()) {
+            notify_notification_add_action(notification,
+                                           action.toUtf8().data(),
+                                           QString("message:%1").arg(mRejectActions[action]).toUtf8().data(),
+                                           action_reject_message,
+                                           data,
+                                           delete_event_data);
+        }
     }
 
     mPendingSnapDecision = notification;
