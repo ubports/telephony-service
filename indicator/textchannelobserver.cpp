@@ -303,8 +303,9 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     QString messageText = message.text();
 
     Tp::MessagePartList messageParts = message.parts();
+    bool mms = messageParts[0]["mms"].variant().toBool();
     // check if this is an mms
-    if (messageParts.size() > 2) {
+    if (mms) {
         // remove header
         messageParts.pop_front();
         Q_FOREACH(const Tp::MessagePart &part, messageParts) {
