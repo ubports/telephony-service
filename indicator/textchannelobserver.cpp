@@ -76,7 +76,7 @@ void sim_selection_action(NotifyNotification* notification, char *action, gpoint
     if (notificationData != NULL) {
         QStringList recipients;
         recipients << notificationData->senderId << notificationData->participantIds;
-        notificationData->observer->sendMessage(recipients, notificationData->text, accountId);
+        notificationData->observer->sendMessage(recipients.toSet().toList(), notificationData->text, accountId);
     }
 
     notify_notification_close(notification, &error);
