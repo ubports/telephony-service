@@ -282,6 +282,8 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
     data->dispatchOp = dispatchOp;
     data->channel = channel;
 
+    bool unknownNumber = contact->id().startsWith("x-ofono-") || contact->id().isEmpty();
+
     if (!contact->id().isEmpty()) {
         if (contact->id().startsWith("x-ofono-private")) {
             mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
@@ -345,13 +347,15 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                                    data,
                                    delete_event_data);
 
-    Q_FOREACH(const QString &action, mRejectActions.keys()) {
-        notify_notification_add_action(notification,
-                                       action.toUtf8().data(),
-                                       QString("message:%1").arg(mRejectActions[action]).toUtf8().data(),
-                                       action_reject_message,
-                                       data,
-                                       delete_event_data);
+    if (!unknownNumber) {
+        Q_FOREACH(const QString &action, mRejectActions.keys()) {
+            notify_notification_add_action(notification,
+                                           action.toUtf8().data(),
+                                           QString("message:%1").arg(mRejectActions[action]).toUtf8().data(),
+                                           action_reject_message,
+                                           data,
+                                           delete_event_data);
+        }
     }
 
     mPendingSnapDecision = notification;
