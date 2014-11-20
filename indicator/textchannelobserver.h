@@ -55,6 +55,7 @@ protected Q_SLOTS:
     void updateNotifications(const QtContacts::QContact &contact);
 
 private:
+    void processMessageReceived(const Tp::ReceivedMessage &message, const Tp::TextChannelPtr &textChannel);
     QList<Tp::TextChannelPtr> mChannels;
     QList<Tp::TextChannelPtr> mFlashChannels;
     QMap<NotifyNotification*, NotificationData*> mNotifications;

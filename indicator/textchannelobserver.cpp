@@ -76,7 +76,8 @@ void sim_selection_action(NotifyNotification* notification, char *action, gpoint
     if (notificationData != NULL) {
         QStringList recipients;
         recipients << notificationData->senderId << notificationData->participantIds;
-        notificationData->observer->sendMessage(recipients.toSet().toList(), notificationData->text, accountId);
+        recipients.removeDuplicates();
+        notificationData->observer->sendMessage(recipients, notificationData->text, accountId);
     }
 
     notify_notification_close(notification, &error);
@@ -451,6 +452,7 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
 
 void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
 {
+    qDebug() << "TextChannelObserver::onTextChannelAvailable" << "1";
     connect(textChannel.data(),
             SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
             SLOT(onTextChannelInvalidated()));
@@ -482,7 +484,7 @@ void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
     }
     // notify all the messages from the channel
     Q_FOREACH(Tp::ReceivedMessage message, textChannel->messageQueue()) {
-        onMessageReceived(message);
+        processMessageReceived(message, textChannel);
     }
 }
 
@@ -493,10 +495,9 @@ void TextChannelObserver::onTextChannelInvalidated()
     mFlashChannels.removeAll(textChannel);
 }
 
-void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
+void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &message, const Tp::TextChannelPtr &textChannel)
 {
-    Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
-    if (!textChannel.data()) {
+    if (textChannel.isNull()) {
         qDebug() << "TextChannelObserver::onMessageReceived: no text channel";
         return;
     }
@@ -530,6 +531,13 @@ void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
         });
         timer->start();
     }
+   
+}
+
+void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
+{
+    Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
+    processMessageReceived(message, textChannel);
 }
 
 void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &message)

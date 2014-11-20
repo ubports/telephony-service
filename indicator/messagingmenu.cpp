@@ -383,13 +383,12 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
     QString senderId = mMessages[messageId]["senderId"].toString();
     QString accountId = mMessages[messageId]["accountId"].toString();
     QStringList participantIds = mMessages[messageId]["participantIds"].toStringList();
-    // we use QSet to avoid duplicate recipients
-    QSet<QString> recipients;
-    recipients << senderId;
-    recipients += participantIds.toSet();
-    Q_EMIT replyReceived(recipients.toList(), accountId, reply);
+    QStringList recipients;
+    recipients << senderId << participantIds;
+    recipients.removeDuplicates();
+    Q_EMIT replyReceived(recipients, accountId, reply);
 
-    Q_EMIT messageRead(recipients.toList(), accountId, messageId);
+    Q_EMIT messageRead(recipients, accountId, messageId);
 }
 
 void MessagingMenu::saveFlashMessage(const QString &messageId)
