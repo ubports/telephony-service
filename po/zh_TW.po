@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-08-29 11:24+0000\n"
-"Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
+"PO-Revision-Date: 2014-11-19 14:32+0000\n"
+"Last-Translator: Xilwen Wang <Unknown>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-20 06:27+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 "Language: \n"
 
 #: indicator/messagingmenu.cpp:256
@@ -51,7 +51,7 @@ msgstr "今日收到 <b>%1</b> 個訊息"
 msgid "<b>%1</b> text messages sent today"
 msgstr "今日發出 <b>%1</b> 個訊息"
 
-#: approver/approver.cpp:293
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "接聽"
 
@@ -76,11 +76,11 @@ msgstr "來電號碼不明"
 msgid "Cancel"
 msgstr "取消"
 
-#: approver/approver.cpp:315
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "拒接"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "Hold + 接聽"
 
@@ -173,7 +173,7 @@ msgstr ""
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr ""
+msgstr "電話服務指示器"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
