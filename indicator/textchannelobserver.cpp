@@ -496,6 +496,11 @@ void TextChannelObserver::onTextChannelInvalidated()
 void TextChannelObserver::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
+    if (!textChannel.data()) {
+        qDebug() << "TextChannelObserver::onMessageReceived: no text channel";
+        return;
+    }
+
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(textChannel->connection());
     if (!account) {
         return;
