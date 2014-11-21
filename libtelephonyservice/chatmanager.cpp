@@ -182,7 +182,9 @@ void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::Messag
         return;
     }
 
-    Q_EMIT messageSent(channel->targetContact()->id(), sentMessage.text());
+    if (!channel->targetContact().isNull()) {
+        Q_EMIT messageSent(channel->targetContact()->id(), sentMessage.text());
+    }
 }
 
 Tp::TextChannelPtr ChatManager::existingChat(const QStringList &phoneNumbers, const QString &accountId)
