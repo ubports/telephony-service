@@ -384,7 +384,10 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
     QString accountId = mMessages[messageId]["accountId"].toString();
     QStringList participantIds = mMessages[messageId]["participantIds"].toStringList();
     QStringList recipients;
-    recipients << senderId << participantIds;
+    if (!senderId.isEmpty()) {
+        recipients << senderId;
+    }
+    recipients << participantIds;
     recipients.removeDuplicates();
     Q_EMIT replyReceived(recipients, accountId, reply);
 

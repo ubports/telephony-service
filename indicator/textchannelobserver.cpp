@@ -75,7 +75,7 @@ void sim_selection_action(NotifyNotification* notification, char *action, gpoint
     NotificationData *notificationData = (NotificationData*) data;
     if (notificationData != NULL) {
         QStringList recipients;
-        recipients << notificationData->senderId << notificationData->participantIds;
+        recipients << notificationData->participantIds;
         recipients.removeDuplicates();
         notificationData->observer->sendMessage(recipients, notificationData->text, accountId);
     }
@@ -127,7 +127,11 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
         // launch the messaging-app to show the message
         // TODO: open mms thread when applicable
         QStringList recipients;
-        recipients << notificationData->senderId << notificationData->participantIds;
+        if (!notificationData->senderId.isEmpty()) {
+            recipients << notificationData->senderId;
+        }
+        recipients << notificationData->participantIds;
+        recipients.removeDuplicates();
         ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients[0]))));
         notification_closed(notification, notificationData->notificationList);
     }
