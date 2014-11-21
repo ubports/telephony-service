@@ -89,8 +89,6 @@ void CallAgent::onFarstreamChannelCreated(Tp::PendingOperation *op)
             SLOT(onFarstreamChannelStateChanged()));
 
     mFarstreamChannel->init();
-    //mFarstreamChannel->setMute(false);
-    //mFarstreamChannel->setVolume(100);
 }
 
 void CallAgent::onFarstreamChannelStateChanged()

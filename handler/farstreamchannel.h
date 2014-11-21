@@ -99,6 +99,7 @@ private:
     static bool onStartSending(TfContent *tfc, FarstreamChannel *self);
     static void onStopSending(TfContent *tfc, FarstreamChannel *self);
     static void onSrcPadAddedContent(TfContent *content, uint handle, FsStream *stream, GstPad *src, FsCodec *codec, FarstreamChannel *self);
+    static void onAudioOutputVolumeChanged(TfContent *content, GParamSpec *spec, FarstreamChannel *self);
 
     GstElement *addElementToBin(GstElement *bin, GstElement *src, const char *factoryName, bool checkLink = true);
     GstElement *addAndLink(GstBin *bin, GstElement *src, GstElement * target, bool checkLink = true);

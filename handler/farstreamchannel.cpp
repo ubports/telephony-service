@@ -24,7 +24,7 @@
 #define AUDIO_SINK_ELEMENT "pulsesink"
 
 // when defined, incoming audio is teed there
-#define AUDIO_OUTPUT_FILE "/tmp/im-output.wav"
+//#define AUDIO_OUTPUT_FILE "/tmp/im-output.wav"
 
 #define SINK_GHOST_PAD_NAME "sink"
 #define SRC_GHOST_PAD_NAME "src"
@@ -260,7 +260,7 @@ void FarstreamChannel::initAudioInput()
 {
     LIFETIME_TRACER();
 
-    gint input_volume = 255.0;
+    gint input_volume = -1;
 
     if (mGstAudioInput) {
       qDebug() << "Audio input already initialized, doing nothing";
@@ -275,7 +275,7 @@ void FarstreamChannel::initAudioInput()
     if (input_volume >= 0)
     {
         mGstAudioInputVolume = gst_bin_get_by_name (GST_BIN (mGstAudioInput), "input_volume");
-        g_debug ("Requested volume is: %i", input_volume);
+        qDebug() << "Requested volume is:" << input_volume;
         g_object_set (mGstAudioInputVolume, "volume", (double)input_volume / 255.0, NULL);
         gst_object_unref (mGstAudioInputVolume);
     }
@@ -711,8 +711,6 @@ void FarstreamChannel::addBin(GstElement *bin)
         setError("GStreamer could not add bin to the pipeline");
         return;
     }
-
-    gst_element_set_locked_state (bin, TRUE);
 }
 
 void FarstreamChannel::onContentAdded(TfChannel *tfc, TfContent * content, FarstreamChannel *self)
@@ -857,6 +855,9 @@ bool FarstreamChannel::onStartSending(TfContent *content, FarstreamChannel *self
             self->initAudioInput();
         }
         sourceElement = self->mGstAudioInput;
+
+        gint input_volume = 0;
+        g_object_get (content, "requested-input-volume", &input_volume, NULL);
     } else {
         Q_ASSERT(false);
         return false;
@@ -881,7 +882,11 @@ bool FarstreamChannel::onStartSending(TfContent *content, FarstreamChannel *self
         return false;
     }
 
-    gst_element_set_state(sourceElement, GST_STATE_PLAYING);
+    GstStateChangeReturn ret = gst_element_set_state(sourceElement, GST_STATE_PLAYING);
+    if (ret == GST_STATE_CHANGE_FAILURE) {
+        self->setError("GStreamer audio input element playing failed");
+        return false;
+    }
     return true;
 }
 
@@ -958,7 +963,7 @@ void FarstreamChannel::onSrcPadAddedContent(TfContent *content, uint handle, FsS
       GstElement *element;
       GstStateChangeReturn ret;
 
-      g_debug ("New src pad: %s", cstr);
+      qDebug() << "New src pad:" << cstr;
       g_object_get (content, "media-type", &mtype, NULL);
 
       qDebug() << "FarstreamChannel::onSrcPadAddedContent: stream=" << stream << " type=" << mtype << " (" << get_media_type_string(mtype) << ")" << "pad = " << pad;
@@ -980,6 +985,9 @@ void FarstreamChannel::onSrcPadAddedContent(TfContent *content, uint handle, FsS
               g_free (tmp_str);
               self->mGstAudioOutputVolume = volume;
               g_object_ref(self->mGstAudioOutputVolume);
+              g_signal_connect(content, "notify::output-volume",
+                               G_CALLBACK (FarstreamChannel::onAudioOutputVolumeChanged),
+                               self);
               break;
             }
       }
@@ -991,15 +999,29 @@ void FarstreamChannel::onSrcPadAddedContent(TfContent *content, uint handle, FsS
       ret = gst_element_set_state (element, GST_STATE_PLAYING);
       if (ret == GST_STATE_CHANGE_FAILURE)
         {
-          g_warning ("Failed to start sink pipeline !?");
+          qWarning() << "Failed to start sink pipeline !?";
           return;
         }
 
       if (GST_PAD_LINK_FAILED (gst_pad_link (pad, sinkpad)))
         {
-          g_warning ("Couldn't link sink pipeline !?");
+          qWarning() << "Couldn't link sink pipeline !?";
           return;
         }
 
       g_object_unref (sinkpad);
+}
+
+void FarstreamChannel::onAudioOutputVolumeChanged(TfContent *content, GParamSpec *spec, FarstreamChannel *self)
+{
+    LIFETIME_TRACER();
+
+    guint output_volume = 0;
+
+    g_object_get (content, "requested-output-volume", &output_volume, NULL);
+
+    if (output_volume == 0)
+        return;
+
+    self->setVolume(output_volume / 255.0);
 }
