@@ -450,14 +450,15 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
                                     data,
                                     delete_event_data);
 
-    notify_notification_add_action(notification,
-                                   "action_decline_expansion",
-                                   C::gettext("Message & decline"),
-                                   action_reject,
-                                   data,
-                                   delete_event_data);
-
     if (!unknownNumber) {
+        notify_notification_add_action(notification,
+                                       "action_decline_expansion",
+                                       C::gettext("Message & decline"),
+                                       action_reject,
+                                       data,
+                                       delete_event_data);
+
+
         Q_FOREACH(const QString &action, mRejectActions.keys()) {
             notify_notification_add_action(notification,
                                            action.toUtf8().data(),
