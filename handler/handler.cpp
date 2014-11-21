@@ -30,7 +30,7 @@
 #include <TelepathyQt/PendingReady>
 
 Handler::Handler(QObject *parent)
-    : QObject(parent), Tp::AbstractClientHandler(channelFilters())
+    : QObject(parent), Tp::AbstractClientHandler(channelFilters(), capabilities())
 {
 }
 
@@ -93,7 +93,20 @@ Tp::ChannelClassSpecList Handler::channelFilters()
     specList << Tp::ChannelClassSpec::audioCall();
     specList << Tp::ChannelClassSpec::textChat();
 
+    QVariantMap props;
+    props[TP_QT_IFACE_CHANNEL_TYPE_CALL + ".InitialAudio"] = true;
+    specList << Tp::ChannelClassSpec::audioCall(props);
+
     return specList;
+}
+
+Tp::AbstractClientHandler::Capabilities Handler::capabilities()
+{
+    QStringList caps;
+    caps << TP_QT_IFACE_CHANNEL_TYPE_CALL + "/shm"
+         << TP_QT_IFACE_CHANNEL_TYPE_CALL + "/ice"
+         << TP_QT_IFACE_CHANNEL_TYPE_CALL + "/gtalk-p2p";
+    return Tp::AbstractClientHandler::Capabilities(caps);
 }
 
 void Handler::onTextChannelReady(Tp::PendingOperation *op)
