@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2014 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -33,6 +34,7 @@
 #include "tonegenerator.h"
 
 #include <QContactAvatar>
+#include <QContactDisplayLabel>
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
 #include <QDebug>
@@ -49,8 +51,6 @@ namespace C {
 }
 
 #define TELEPHONY_SERVICE_HANDLER TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler"
-
-QTCONTACTS_USE_NAMESPACE
 
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
@@ -213,7 +213,7 @@ void Approver::updateNotification(const QContact &contact)
     if (!mPendingSnapDecision)
         return;
 
-    QString displayLabel = ContactUtils::formatContactName(contact);
+    QString displayLabel = contact.detail<QContactDisplayLabel>().label();
     QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
 
     if (displayLabel.isEmpty()) {
@@ -271,6 +271,103 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
             SIGNAL(callStateChanged(Tp::CallState)),
             SLOT(onCallStateChanged(Tp::CallState)));
 
+    mChannels.remove(pr);
+
+    // and now set up the contact matching for either greeter mode or regular mode
+    if (GreeterContacts::isGreeterMode()) {
+        // show the snap decision right away because contact info might never arrive
+        showSnapDecision(dispatchOp, channel);
+        GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
+    } else {
+        // try to match the contact info
+        QContactFetchRequest *request = new QContactFetchRequest(this);
+        request->setFilter(QContactPhoneNumber::match(contact->id()));
+
+        // lambda function to update the notification
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, dispatchOp, channel]() {
+            if (!request || request->state() != QContactAbstractRequest::FinishedState) {
+                return;
+            }
+
+            QContact contact;
+
+            // create the snap decision only after the contact match finishes
+            if (request->contacts().size() > 0) {
+                // use the first match
+                contact = request->contacts().at(0);
+
+                // Also notify greeter via AccountsService
+                GreeterContacts::emitContact(contact);
+            }
+
+            showSnapDecision(dispatchOp, channel, contact);
+        });
+
+        request->setManager(ContactUtils::sharedManager());
+        request->start();
+    }
+}
+
+void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
+{
+    closeSnapDecision();
+
+    // forward the channel to the handler
+    dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
+
+    // and then launch the dialer-app
+    ApplicationUtils::openUrl(QUrl("application:///dialer-app.desktop"));
+
+    mDispatchOps.removeAll(dispatchOp);
+}
+
+void Approver::onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
+{
+    closeSnapDecision();
+
+    // hangup existing calls
+    if (CallManager::instance()->foregroundCall()) {
+        CallManager::instance()->foregroundCall()->endCall();
+    }
+
+    // forward the channel to the handler
+    dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
+
+    // and then launch the dialer-app
+    ApplicationUtils::openUrl(QUrl("application:///dialer-app.desktop"));
+
+    mDispatchOps.removeAll(dispatchOp);
+}
+
+void Approver::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
+{
+    closeSnapDecision();
+
+    Tp::PendingOperation *claimop = dispatchOp->claim();
+    // assume there is just one channel in the dispatchOp for calls
+    mChannels[claimop] = dispatchOp->channels().first();
+    connect(claimop, SIGNAL(finished(Tp::PendingOperation*)),
+            this, SLOT(onClaimFinished(Tp::PendingOperation*)));
+
+    Ringtone::instance()->stopIncomingCallSound();
+}
+
+void Approver::onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const char *action)
+{
+    if (mRejectActions.contains(action)) {
+        QString phoneNumber = dispatchOp->channels().first()->targetContact()->id();
+        ChatManager::instance()->sendMessage(QStringList() << phoneNumber, mRejectActions[action],
+                                             dispatchOp->account()->uniqueIdentifier());
+    }
+
+    onRejected(dispatchOp);
+}
+
+bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation,
+                                const Tp::ChannelPtr channel,
+                                const QContact &contact)
+{
+    Tp::ContactPtr telepathyContact = channel->initiatorContact();
     NotifyNotification* notification;
     bool hasCalls = CallManager::instance()->hasCalls();
 
@@ -279,24 +376,38 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 
     EventData* data = new EventData();
     data->self = this;
-    data->dispatchOp = dispatchOp;
+    data->dispatchOp = dispatchOperation;
     data->channel = channel;
 
-    if (!contact->id().isEmpty()) {
-        if (contact->id().startsWith("x-ofono-private")) {
+    if (!telepathyContact->id().isEmpty()) {
+        if (telepathyContact->id().startsWith("x-ofono-private")) {
             mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
-        } else if (contact->id().startsWith("x-ofono-unknown")) {
+        } else if (telepathyContact->id().startsWith("x-ofono-unknown")) {
             mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
         } else {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(contact->id());
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(telepathyContact->id());
         }
     } else {
         mCachedBody = C::gettext("Caller number is not available");
     }
 
-    notification = notify_notification_new (mDefaultTitle.toStdString().c_str(),
+    QString displayLabel;
+    QString icon;
+    if (!contact.isEmpty()) {
+        displayLabel = contact.detail<QContactDisplayLabel>().label();
+        icon = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+    }
+
+    if (displayLabel.isEmpty()) {
+        displayLabel = mDefaultTitle;
+    }
+    if (icon.isEmpty()) {
+        icon = mDefaultIcon;
+    }
+
+    notification = notify_notification_new (displayLabel.toStdString().c_str(),
                                             mCachedBody.toStdString().c_str(),
-                                            mDefaultIcon.toStdString().c_str());
+                                            icon.toStdString().c_str());
     notify_notification_set_hint_string(notification,
                                         "x-canonical-snap-decisions",
                                         "true");
@@ -361,6 +472,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         closeSnapDecision();
         qWarning() << "Failed to show snap decision:" << error->message;
         g_error_free (error);
+        return false;
     }
 
     if (CallManager::instance()->hasCalls()) {
@@ -376,88 +488,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         mVibrateTimer.start();
     }
 
-    mChannels.remove(pr);
-
-    // and now set up the contact matching for either greeter mode or regular mode
-    if (GreeterContacts::isGreeterMode()) {
-        GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
-    } else {
-        // try to match the contact info
-        QContactFetchRequest *request = new QContactFetchRequest(this);
-        request->setFilter(QContactPhoneNumber::match(contact->id()));
-
-        // lambda function to update the notification
-        QObject::connect(request, &QContactAbstractRequest::resultsAvailable, [this, request]() {
-            if (request && request->contacts().size() > 0) {
-                // use the first match
-                QContact contact = request->contacts().at(0);
-
-                updateNotification(contact);
-
-                // Also notify greeter via AccountsService
-                GreeterContacts::emitContact(contact);
-            }
-        });
-
-        request->setManager(ContactUtils::sharedManager());
-        request->start();
-    }
-
-}
-
-void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
-{
-    closeSnapDecision();
-
-    // forward the channel to the handler
-    dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
-
-    // and then launch the dialer-app
-    ApplicationUtils::openUrl(QUrl("application:///dialer-app.desktop"));
-
-    mDispatchOps.removeAll(dispatchOp);
-}
-
-void Approver::onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
-{
-    closeSnapDecision();
-
-    // hangup existing calls
-    if (CallManager::instance()->foregroundCall()) {
-        CallManager::instance()->foregroundCall()->endCall();
-    }
-
-    // forward the channel to the handler
-    dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
-
-    // and then launch the dialer-app
-    ApplicationUtils::openUrl(QUrl("application:///dialer-app.desktop"));
-
-    mDispatchOps.removeAll(dispatchOp);
-}
-
-void Approver::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
-{
-    closeSnapDecision();
-
-    Tp::PendingOperation *claimop = dispatchOp->claim();
-    // assume there is just one channel in the dispatchOp for calls
-    mChannels[claimop] = dispatchOp->channels().first();
-    connect(claimop, SIGNAL(finished(Tp::PendingOperation*)),
-            this, SLOT(onClaimFinished(Tp::PendingOperation*)));
-
-    Ringtone::instance()->stopIncomingCallSound();
-}
-
-void Approver::onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const char *action)
-{
-    if (mRejectActions.contains(action)) {
-        QString phoneNumber = dispatchOp->channels().first()->targetContact()->id();
-        ChatManager::instance()->sendMessage(QStringList() << phoneNumber, mRejectActions[action],
-                                             dispatchOp->account()->uniqueIdentifier());
-    }
-
-    onRejected(dispatchOp);
+    return true;
 }
 
 Tp::ChannelDispatchOperationPtr Approver::dispatchOperationForIncomingCall()
