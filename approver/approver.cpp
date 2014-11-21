@@ -378,6 +378,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     data->self = this;
     data->dispatchOp = dispatchOperation;
     data->channel = channel;
+    bool unknownNumber = telepathyContact->id().startsWith("x-ofono-") || telepathyContact->id().isEmpty();
 
     if (!telepathyContact->id().isEmpty()) {
         if (telepathyContact->id().startsWith("x-ofono-private")) {
@@ -449,20 +450,23 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
                                     data,
                                     delete_event_data);
 
-    notify_notification_add_action(notification,
-                                   "action_decline_expansion",
-                                   C::gettext("Message & decline"),
-                                   action_reject,
-                                   data,
-                                   delete_event_data);
-
-    Q_FOREACH(const QString &action, mRejectActions.keys()) {
+    if (!unknownNumber) {
         notify_notification_add_action(notification,
-                                       action.toUtf8().data(),
-                                       QString("message:%1").arg(mRejectActions[action]).toUtf8().data(),
-                                       action_reject_message,
+                                       "action_decline_expansion",
+                                       C::gettext("Message & decline"),
+                                       action_reject,
                                        data,
                                        delete_event_data);
+
+
+        Q_FOREACH(const QString &action, mRejectActions.keys()) {
+            notify_notification_add_action(notification,
+                                           action.toUtf8().data(),
+                                           QString("message:%1").arg(mRejectActions[action]).toUtf8().data(),
+                                           action_reject_message,
+                                           data,
+                                           delete_event_data);
+        }
     }
 
     mPendingSnapDecision = notification;
