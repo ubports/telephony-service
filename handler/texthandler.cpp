@@ -50,11 +50,6 @@
    </body>\
  </smil>"
 
-template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStringList &key2) 
-{ 
-    return key1.size() > key2.size();  // sort by operator> !
-}
-
 TextHandler::TextHandler(QObject *parent)
 : QObject(parent)
 {

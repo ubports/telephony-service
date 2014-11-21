@@ -134,7 +134,6 @@ void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &me
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
-    QString id = channel->targetContact()->id();
     mChannels.append(channel);
 
     connect(channel.data(),
@@ -147,8 +146,9 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
             SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
             SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
 
-    Q_EMIT unreadMessagesChanged(id);
-
+    if (!channel->targetContact().isNull()){
+        Q_EMIT unreadMessagesChanged(channel->targetContact()->id());
+    }
     Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
         onMessageReceived(message);
     }
@@ -223,13 +223,13 @@ void ChatManager::acknowledgeMessage(const QStringList &recipients, const QStrin
 
     if (!account) {
         //FIXME: support group chats
-        mMessagesToAck[accountId][recipients[0]].append(messageId);
+        mMessagesToAck[accountId][recipients].append(messageId);
         return;
     }
 
     mMessagesAckTimer.start();
     //FIXME: support group chats
-    mMessagesToAck[account->accountId()][recipients[0]].append(messageId);
+    mMessagesToAck[account->accountId()][recipients].append(messageId);
 }
 
 void ChatManager::onAckTimerTriggered()
@@ -237,12 +237,12 @@ void ChatManager::onAckTimerTriggered()
     // ack all pending messages
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
 
-    QMap<QString, QMap<QString,QStringList> >::const_iterator it = mMessagesToAck.constBegin();
+    QMap<QString, QMap<QStringList,QStringList> >::const_iterator it = mMessagesToAck.constBegin();
     while (it != mMessagesToAck.constEnd()) {
         QString accountId = it.key();
-        QMap<QString, QStringList>::const_iterator it2 = it.value().constBegin();
+        QMap<QStringList, QStringList>::const_iterator it2 = it.value().constBegin();
         while (it2 != it.value().constEnd()) {
-            phoneAppHandler->call("AcknowledgeMessages", QStringList() << it2.key(), it2.value(), accountId);
+            phoneAppHandler->call("AcknowledgeMessages", it2.key(), it2.value(), accountId);
             ++it2;
         }
         ++it;

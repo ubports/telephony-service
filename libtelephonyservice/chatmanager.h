@@ -61,7 +61,7 @@ private:
     explicit ChatManager(QObject *parent = 0);
 
     QList<Tp::TextChannelPtr> mChannels;
-    QMap<QString, QMap<QString,QStringList> > mMessagesToAck;
+    QMap<QString, QMap<QStringList,QStringList> > mMessagesToAck;
     QTimer mMessagesAckTimer;
 };
 
