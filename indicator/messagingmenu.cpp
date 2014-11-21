@@ -148,7 +148,7 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
                                                                    timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
         messaging_menu_message_add_action(message,
                                           "quickReply",
-                                          NULL, // label
+                                          C::gettext("Send"), // label
                                           G_VARIANT_TYPE("s"),
                                           NULL // predefined values
                                           );
@@ -196,7 +196,7 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
     if (call.number != "x-ofono-private" && call.number != "x-ofono-unknown") {
         messaging_menu_message_add_action(message,
                                           "callBack",
-                                          NULL, // label
+                                          C::gettext("Call back"), // label
                                           NULL, // argument type
                                           NULL // predefined values
                                           );
@@ -211,7 +211,7 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
         messages = g_variant_new_strv(predefinedMessages, -1);
         messaging_menu_message_add_action(message,
                                           "replyWithMessage",
-                                          NULL, // label
+                                          C::gettext("Send"), // label
                                           G_VARIANT_TYPE("s"),
                                           messages // predefined values
                                           );
