@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-20 11:37+0200\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
 "PO-Revision-Date: 2014-11-19 14:32+0000\n"
 "Last-Translator: Xilwen Wang <Unknown>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-11-20 06:27+0000\n"
+"X-Launchpad-Export-Date: 2014-11-22 06:01+0000\n"
 "X-Generator: Launchpad (build 17252)\n"
 "Language: \n"
 
@@ -51,9 +51,13 @@ msgstr "今日收到 <b>%1</b> 個訊息"
 msgid "<b>%1</b> text messages sent today"
 msgstr "今日發出 <b>%1</b> 個訊息"
 
-#: approver/approver.cpp:296
+#: approver/approver.cpp:293
 msgid "Accept"
 msgstr "接聽"
+
+#: indicator/messagingmenu.cpp:199
+msgid "Call back"
+msgstr ""
 
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
@@ -76,11 +80,15 @@ msgstr "來電號碼不明"
 msgid "Cancel"
 msgstr "取消"
 
-#: approver/approver.cpp:318
+#: indicator/textchannelobserver.cpp:208
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr ""
+
+#: approver/approver.cpp:315
 msgid "Decline"
 msgstr "拒接"
 
-#: approver/approver.cpp:295
+#: approver/approver.cpp:292
 msgid "Hold + Answer"
 msgstr "Hold + 接聽"
 
@@ -129,6 +137,10 @@ msgstr "確定"
 msgid "Phone Calls"
 msgstr "來電"
 
+#: indicator/textchannelobserver.cpp:517
+msgid "Please, select a SIM card:"
+msgstr "請選擇一張 SIM 卡："
+
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "私人號碼"
@@ -154,6 +166,10 @@ msgstr "SMS"
 msgid "Save"
 msgstr "儲存"
 
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
+msgstr ""
+
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "抱歉，我還在忙。待會打給你。"
@@ -175,6 +191,14 @@ msgstr ""
 msgid "Telephony Service Indicator"
 msgstr "電話服務指示器"
 
+#: indicator/textchannelobserver.cpp:216
+msgid "The message could not be sent"
+msgstr "訊息無法被傳送"
+
+#: indicator/textchannelobserver.cpp:211
+msgid "Try again from the messaging application."
+msgstr "請在訊息應用程式中再試一次。"
+
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "號碼不明"
@@ -187,9 +211,17 @@ msgstr "來電者不明"
 msgid "Unknown number"
 msgstr "號碼不明"
 
+#: indicator/textchannelobserver.cpp:206
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr ""
+
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "檢視訊息"
+
+#: indicator/messagingmenu.cpp:313
+msgid "Voicemail"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"

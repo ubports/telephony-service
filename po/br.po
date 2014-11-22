@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-20 11:37+0200\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
 "PO-Revision-Date: 2014-08-26 07:12+0000\n"
 "Last-Translator: Fohanno Thierry <thierry.fohanno@ofis-bzh.org>\n"
 "Language-Team: Breton <br@li.org>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-22 06:00+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -56,6 +56,10 @@ msgstr "<b>%1</b> a gemennadennoù testenn kaset hiziv"
 msgid "Accept"
 msgstr "Asantiñ"
 
+#: indicator/messagingmenu.cpp:199
+msgid "Call back"
+msgstr ""
+
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "Ne c'haller ket gervel an niverenn"
@@ -76,6 +80,10 @@ msgstr "O pellgomz eus un niverenn dianav"
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
 msgstr "Nullañ"
+
+#: indicator/textchannelobserver.cpp:208
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr ""
 
 #: approver/approver.cpp:315
 msgid "Decline"
@@ -131,6 +139,10 @@ msgstr "Mat eo"
 msgid "Phone Calls"
 msgstr "Pellgomzadennoù"
 
+#: indicator/textchannelobserver.cpp:517
+msgid "Please, select a SIM card:"
+msgstr ""
+
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Niverenn brevez"
@@ -156,6 +168,10 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Enrollañ"
 
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
+msgstr ""
+
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr ""
@@ -179,6 +195,14 @@ msgstr "Aprouer servij pellgomzerezh"
 msgid "Telephony Service Indicator"
 msgstr "Merker servij pellgomzerezh"
 
+#: indicator/textchannelobserver.cpp:216
+msgid "The message could not be sent"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:211
+msgid "Try again from the messaging application."
+msgstr ""
+
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Niverenn dianav"
@@ -191,9 +215,17 @@ msgstr "Galver dianav"
 msgid "Unknown number"
 msgstr "Niverenn dianav"
 
+#: indicator/textchannelobserver.cpp:206
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr ""
+
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Gwelet ar gemennadenn"
+
+#: indicator/messagingmenu.cpp:313
+msgid "Voicemail"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-20 11:37+0200\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
 "PO-Revision-Date: 2014-08-27 19:53+0000\n"
 "Last-Translator: Anne <anneonyme017@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-22 06:01+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 "Language: fr\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -57,6 +57,10 @@ msgstr "<b>%1</b> SMS envoyés aujourd'hui"
 msgid "Accept"
 msgstr "Accepter"
 
+#: indicator/messagingmenu.cpp:199
+msgid "Call back"
+msgstr ""
+
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "Le numéro d'appel n'est pas disponible"
@@ -77,6 +81,11 @@ msgstr "Appel depuis un numéro inconnu"
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
 msgstr "Annuler"
+
+#: indicator/textchannelobserver.cpp:208
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr ""
+"Désactivez le mode avion, relancez l'application et réessayez à nouveau."
 
 #: approver/approver.cpp:315
 msgid "Decline"
@@ -131,6 +140,10 @@ msgstr "Ok"
 msgid "Phone Calls"
 msgstr "Appels téléphoniques"
 
+#: indicator/textchannelobserver.cpp:517
+msgid "Please, select a SIM card:"
+msgstr "Veuillez choisir une carte SIM :"
+
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Numéro privé"
@@ -156,6 +169,10 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Enregistrer"
 
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
+msgstr ""
+
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Désolé, je suis encore occupé. Je vous rappelle plus tard."
@@ -177,6 +194,14 @@ msgstr "Approbateur de service téléphonique"
 msgid "Telephony Service Indicator"
 msgstr "Indicateur de service téléphonique"
 
+#: indicator/textchannelobserver.cpp:216
+msgid "The message could not be sent"
+msgstr "Le message ne peut être envoyé."
+
+#: indicator/textchannelobserver.cpp:211
+msgid "Try again from the messaging application."
+msgstr "Essayez à nouveau depuis l'application."
+
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Numéro inconnu"
@@ -189,9 +214,19 @@ msgstr "Numéro inconnu"
 msgid "Unknown number"
 msgstr "Numéro inconnu"
 
+#: indicator/textchannelobserver.cpp:206
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr ""
+"Déverrouillez votre carte SIM et essayez à nouveau depuis l'application de "
+"messagerie."
+
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Voir le message"
+
+#: indicator/messagingmenu.cpp:313
+msgid "Voicemail"
+msgstr "Messagerie vocale"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"

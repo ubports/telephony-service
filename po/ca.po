@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-20 11:37+0200\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
 "PO-Revision-Date: 2014-10-07 09:10+0000\n"
 "Last-Translator: Albert Astals Cid <albert.astals@canonical.com>\n"
 "Language-Team: Catalan <ca@li.org>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-22 06:01+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 "Language: ca\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -57,6 +57,10 @@ msgstr "<b>%1</b> missatges de text enviats avui"
 msgid "Accept"
 msgstr "Accepta"
 
+#: indicator/messagingmenu.cpp:199
+msgid "Call back"
+msgstr ""
+
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "El número de la trucada entrant no està disponible"
@@ -77,6 +81,12 @@ msgstr "S'està trucant des d'un número desconegut"
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
 msgstr "Cancel·la"
+
+#: indicator/textchannelobserver.cpp:208
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr ""
+"Desactiveu el mode d'avió i torneu-ho a intentar des de l'aplicació de "
+"missatgeria."
 
 #: approver/approver.cpp:315
 msgid "Decline"
@@ -131,6 +141,10 @@ msgstr "D'acord"
 msgid "Phone Calls"
 msgstr "Trucades de telèfon"
 
+#: indicator/textchannelobserver.cpp:517
+msgid "Please, select a SIM card:"
+msgstr "Seleccioneu una targeta SIM:"
+
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Númeor privat"
@@ -156,6 +170,10 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Desa"
 
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
+msgstr ""
+
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Tinc feina, et trucaré més tard"
@@ -177,6 +195,14 @@ msgstr "Aprovador del servei de telefonia"
 msgid "Telephony Service Indicator"
 msgstr "Indicador del servei de telefonia"
 
+#: indicator/textchannelobserver.cpp:216
+msgid "The message could not be sent"
+msgstr "No s'ha pogut enviar el missatge"
+
+#: indicator/textchannelobserver.cpp:211
+msgid "Try again from the messaging application."
+msgstr "Torneu-ho a intentar per a l'aplicació de missatgeria."
+
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Número desconegut"
@@ -189,9 +215,19 @@ msgstr "Número entrant desconegut"
 msgid "Unknown number"
 msgstr "Número desconegut"
 
+#: indicator/textchannelobserver.cpp:206
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr ""
+"Desbloqueu la targeta SIM i torneu-ho a provar des de l'aplicació de "
+"missatgeria."
+
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Mostra el missatge"
+
+#: indicator/messagingmenu.cpp:313
+msgid "Voicemail"
+msgstr "Bústia de veu"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"

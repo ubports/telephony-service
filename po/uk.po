@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-20 11:37+0200\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
 "PO-Revision-Date: 2014-08-26 19:03+0000\n"
 "Last-Translator: Yuri Chornoivan <yurchor@gmail.com>\n"
 "Language-Team: Ukrainian <uk@li.org>\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-22 06:01+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 "Language: uk\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -60,6 +60,10 @@ msgstr "Сьогодні надіслано <b>%1</b> текстових пов�
 msgid "Accept"
 msgstr "Прийняти"
 
+#: indicator/messagingmenu.cpp:199
+msgid "Call back"
+msgstr ""
+
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "Номер вхідного дзвінка недоступний"
@@ -80,6 +84,12 @@ msgstr "Дзвінок з невідомого номера"
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
 msgstr "Скасувати"
+
+#: indicator/textchannelobserver.cpp:208
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr ""
+"Вимкніть режим польоту і повторіть спробу за допомогою програми для роботи з "
+"повідомленнями."
 
 #: approver/approver.cpp:315
 msgid "Decline"
@@ -134,6 +144,10 @@ msgstr "Гаразд"
 msgid "Phone Calls"
 msgstr "Телефонні дзвінки"
 
+#: indicator/textchannelobserver.cpp:517
+msgid "Please, select a SIM card:"
+msgstr "Будь ласка, виберіть SIM-картку:"
+
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Особистий номер"
@@ -159,6 +173,10 @@ msgstr "СМС"
 msgid "Save"
 msgstr "Зберегти"
 
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
+msgstr ""
+
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Вибачте, не можу звільнитися. Передзвоню пізніше."
@@ -180,6 +198,14 @@ msgstr "Підтверджувач служби телефонії"
 msgid "Telephony Service Indicator"
 msgstr "Індикатор служби телефонії"
 
+#: indicator/textchannelobserver.cpp:216
+msgid "The message could not be sent"
+msgstr "Не вдалося надіслати повідомлення"
+
+#: indicator/textchannelobserver.cpp:211
+msgid "Try again from the messaging application."
+msgstr "Повторіть спробу за допомогою програми для роботи з повідомленнями."
+
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Невідомий номер"
@@ -192,9 +218,19 @@ msgstr "Невідома особа"
 msgid "Unknown number"
 msgstr "Невідомий номер"
 
+#: indicator/textchannelobserver.cpp:206
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr ""
+"Розблокуйте SIM-картку і повторіть спробу за допомогою програми для роботи з "
+"повідомленнями."
+
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Переглянути повідомлення"
+
+#: indicator/messagingmenu.cpp:313
+msgid "Voicemail"
+msgstr "Голосова пошта"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
