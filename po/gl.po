@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-11-04 18:46-0200\n"
-"PO-Revision-Date: 2014-11-07 18:52+0000\n"
+"PO-Revision-Date: 2014-11-22 12:05+0000\n"
 "Last-Translator: Marcos Lans <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-11-22 06:01+0000\n"
+"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
 "X-Generator: Launchpad (build 17252)\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -58,7 +58,7 @@ msgstr "Aceptar"
 
 #: indicator/messagingmenu.cpp:199
 msgid "Call back"
-msgstr ""
+msgstr "Chamar de volta"
 
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
@@ -83,7 +83,7 @@ msgstr "Cancelar"
 
 #: indicator/textchannelobserver.cpp:208
 msgid "Deactivate flight mode and try again from the messaging application."
-msgstr ""
+msgstr "Desactive o modo avión e probe desde o aplicativo de mensaxería."
 
 #: approver/approver.cpp:315
 msgid "Decline"
@@ -140,7 +140,7 @@ msgstr "Chamadas telefónicas"
 
 #: indicator/textchannelobserver.cpp:517
 msgid "Please, select a SIM card:"
-msgstr ""
+msgstr "Escolla unha tarxeta SIM:"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
@@ -169,7 +169,7 @@ msgstr "Gardar"
 
 #: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
 msgid "Send"
-msgstr ""
+msgstr "Enviar"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
@@ -194,11 +194,11 @@ msgstr "Indicador do servizo de telefonía"
 
 #: indicator/textchannelobserver.cpp:216
 msgid "The message could not be sent"
-msgstr ""
+msgstr "Non foi posíbel enviar a mensaxe"
 
 #: indicator/textchannelobserver.cpp:211
 msgid "Try again from the messaging application."
-msgstr ""
+msgstr "Volva probar desde o aplicativo de mensaxería."
 
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
@@ -214,7 +214,7 @@ msgstr "Número descoñecido"
 
 #: indicator/textchannelobserver.cpp:206
 msgid "Unlock your sim card and try again from the messaging application."
-msgstr ""
+msgstr "Desbloquee a SIM e volva probar dede o aplicativo de mensaxería."
 
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
@@ -222,7 +222,7 @@ msgstr "Ver mensaxe"
 
 #: indicator/messagingmenu.cpp:313
 msgid "Voicemail"
-msgstr ""
+msgstr "Correo de voz"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
