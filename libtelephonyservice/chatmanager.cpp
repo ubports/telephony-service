@@ -114,11 +114,11 @@ void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &messag
 
 void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
 {
-    AccountEntry *account;
+    AccountEntry *account = NULL;
     if (accountId.isNull() || accountId.isEmpty()) {
         account = TelepathyHelper::instance()->defaultMessagingAccount();
-        if (!account) {
-            account = TelepathyHelper::instance()->accounts()[0];
+        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
+            account = TelepathyHelper::instance()->activeAccounts()[0];
         }
     } else {
         account = TelepathyHelper::instance()->accountForId(accountId);
