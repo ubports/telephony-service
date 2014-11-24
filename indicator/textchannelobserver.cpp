@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2014 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -36,6 +36,7 @@
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 #include <QContactAvatar>
+#include <QContactDisplayLabel>
 #include <QContactFetchRequest>
 #include <QContactFilter>
 #include <QContactPhoneNumber>
@@ -46,8 +47,6 @@
 namespace C {
 #include <libintl.h>
 }
-
-QTCONTACTS_USE_NAMESPACE
 
 // notification handling
 
@@ -180,10 +179,10 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account || accountId.isEmpty()) {
         // fallback to the default account
-        if (TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->accounts().size() > 1) {
+        if (TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->activeAccounts().size() > 1) {
             account = TelepathyHelper::instance()->defaultMessagingAccount();
-        } else if (TelepathyHelper::instance()->accounts().size() > 0) {
-            account = TelepathyHelper::instance()->accounts()[0];
+        } else if (TelepathyHelper::instance()->activeAccounts().size() > 0) {
+            account = TelepathyHelper::instance()->activeAccounts()[0];
         }
     }
 
@@ -311,9 +310,45 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
     Ringtone::instance()->playIncomingMessageSound();
 }
 
-void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
+void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
 {
     Tp::ContactPtr contact = message.sender();
+    if (GreeterContacts::isGreeterMode()) { // we're in the greeter's session
+        GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
+        // in greeter mode we show the notification right away as the contact data might not be received
+        showNotificationForMessage(message, accountId, participantIds);
+    } else {
+        // try to match the contact info
+        QContactFetchRequest *request = new QContactFetchRequest(this);
+        request->setFilter(QContactPhoneNumber::match(contact->id()));
+
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, accountId, participantIds, message]() {
+            // only process the results after the finished state is reached
+            if (request->state() != QContactAbstractRequest::FinishedState) {
+                return;
+            }
+
+            QContact contact;
+            if (request->contacts().size() > 0) {
+                contact = request->contacts().at(0);
+
+                // Notify greeter via AccountsService about this contact so it
+                // can show the details if our session is locked.
+                GreeterContacts::emitContact(contact);
+            }
+            // wait for the contact match request to finish before showing the notification
+            showNotificationForMessage(message, accountId, participantIds, contact);
+        });
+
+        request->setManager(ContactUtils::sharedManager());
+        request->start();
+    }
+
+}
+
+void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds, const QContact &contact)
+{
+    Tp::ContactPtr telepathyContact = message.sender();
     QString messageText = message.text();
 
     Tp::MessagePartList messageParts = message.parts();
@@ -352,12 +387,25 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         return;
     }
 
-    MessagingMenu::instance()->addMessage(contact->id(), participantIds, accountId, token.toHex(), message.received(), messageText);
+    MessagingMenu::instance()->addMessage(telepathyContact->id(), participantIds, accountId, token.toHex(), message.received(), messageText);
 
-    QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(contact->alias());
-    QString avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
+    QString alias;
+    QString avatar;
 
-    qDebug() << title << avatar;
+    if (!contact.isEmpty()) {
+        alias = contact.detail<QContactDisplayLabel>().label();
+        avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+    }
+
+    if (alias.isEmpty()) {
+        alias = telepathyContact->alias();
+    }
+    if (avatar.isEmpty()) {
+        avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
+    }
+
+    QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(alias);
+
     // show the notification
     NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
                                                                messageText.toStdString().c_str(),
@@ -366,9 +414,9 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     // Bundle the data we need for later updating
     NotificationData *data = new NotificationData();
     data->accountId = accountId;
-    data->senderId = contact->id();
+    data->senderId = telepathyContact->id();
     data->participantIds = participantIds;
-    data->alias = contact->alias();
+    data->alias = alias;
     data->message = messageText;
     data->notificationList = &mNotifications;
     mNotifications.insert(notification, data);
@@ -387,32 +435,6 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     g_signal_connect(notification, "closed", G_CALLBACK(notification_closed), &mNotifications);
 
-    if (GreeterContacts::isGreeterMode()) { // we're in the greeter's session
-        GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
-    } else {
-        // try to match the contact info
-        QContactFetchRequest *request = new QContactFetchRequest(this);
-        request->setFilter(QContactPhoneNumber::match(contact->id()));
-
-        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request]() {
-            // only process the results after the finished state is reached
-            if (request->state() != QContactAbstractRequest::FinishedState ||
-                request->contacts().size() == 0) {
-                return;
-            }
-
-            QContact contact = request->contacts().at(0);
-            updateNotifications(contact);
-
-            // Notify greeter via AccountsService about this contact so it
-            // can show the details if our session is locked.
-            GreeterContacts::emitContact(contact);
-        });
-
-        request->setManager(ContactUtils::sharedManager());
-        request->start();
-    }
-
     GError *error = NULL;
     if (!notify_notification_show(notification, &error)) {
         qWarning() << "Failed to show message notification:" << error->message;
@@ -430,7 +452,7 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
         NotificationData *data = i.value();
         Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
             if (PhoneUtils::comparePhoneNumbers(data->senderId, phoneNumber.number())) {
-                QString displayLabel = ContactUtils::formatContactName(contact);
+                QString displayLabel = contact.detail<QContactDisplayLabel>().label();
                 QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
                 QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
 
@@ -529,7 +551,7 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
         QByteArray token(message.messageToken().toUtf8());
         mUnreadMessages.append(token);
         QObject::connect(timer, &QTimer::timeout, [=]() {
-            showNotificationForMessage(message, account->accountId(), participantIds);
+            triggerNotificationForMessage(message, account->accountId(), participantIds);
             Metrics::instance()->increment(Metrics::ReceivedMessages);
             timer->deleteLater();
         });
@@ -554,7 +576,7 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
 void TextChannelObserver::onReplyReceived(const QStringList &recipients, const QString &accountId, const QString &reply)
 {
     // FIXME - we need to find a better way to deal with dual sim in the messaging-menu
-    if (!TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->accounts().size() > 1) {
+    if (!TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->activeAccounts().size() > 1) {
         NotifyNotification *notification = notify_notification_new(C::gettext("Please, select a SIM card:"),
                                                                    reply.toStdString().c_str(),
                                                                    "");
@@ -565,7 +587,7 @@ void TextChannelObserver::onReplyReceived(const QStringList &recipients, const Q
         data->observer = this;
         mNotifications.insert(notification, data);
 
-        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->activeAccounts()) {
             notify_notification_add_action (notification,
                                             account->accountId().toStdString().c_str(),
                                             account->displayName().toStdString().c_str(),

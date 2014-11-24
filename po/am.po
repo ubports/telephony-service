@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-20 11:37+0200\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
 "PO-Revision-Date: 2014-08-31 17:06+0000\n"
 "Last-Translator: samson <Unknown>\n"
 "Language-Team: Amharic <am@li.org>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -56,6 +56,10 @@ msgstr "<b>%1</b> ዛሬ የላኩዋቸው የ ጽሁፍ መልእክቶች"
 msgid "Accept"
 msgstr "ተቀብያለሁ"
 
+#: indicator/messagingmenu.cpp:199
+msgid "Call back"
+msgstr ""
+
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "የደዋዩ ቁጥር አልተገኘም"
@@ -76,6 +80,10 @@ msgstr "ደዋይ ካልታወቀ ቁጥር"
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
 msgstr "መሰረዣ"
+
+#: indicator/textchannelobserver.cpp:208
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr ""
 
 #: approver/approver.cpp:315
 msgid "Decline"
@@ -130,6 +138,10 @@ msgstr "እሺ"
 msgid "Phone Calls"
 msgstr "የስልክ ጥሪዎች"
 
+#: indicator/textchannelobserver.cpp:517
+msgid "Please, select a SIM card:"
+msgstr ""
+
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "የግል ቁጥር"
@@ -155,6 +167,10 @@ msgstr "ኤስ ኤም ኤስ"
 msgid "Save"
 msgstr "ማስቀመጫ"
 
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
+msgstr ""
+
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "አዝናለሁ: አሁንም በስራ ላይ ነኝ: በኋላ እደውላለሁ"
@@ -176,6 +192,14 @@ msgstr "የ ቴሌፎን ግልጋሎት አቅራቢ"
 msgid "Telephony Service Indicator"
 msgstr "የ ቴሌፎን ግልጋሎት ጠቋሚ"
 
+#: indicator/textchannelobserver.cpp:216
+msgid "The message could not be sent"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:211
+msgid "Try again from the messaging application."
+msgstr ""
+
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "ያልታወቀ ቁጥር"
@@ -188,9 +212,17 @@ msgstr "ያልታወቀ ደዋይ"
 msgid "Unknown number"
 msgstr "ያልታወቀ ቁጥር"
 
+#: indicator/textchannelobserver.cpp:206
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr ""
+
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "መልእክት መመልከቻ"
+
+#: indicator/messagingmenu.cpp:313
+msgid "Voicemail"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"

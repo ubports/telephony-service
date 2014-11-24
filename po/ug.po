@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-20 11:37+0200\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
 "PO-Revision-Date: 2014-09-23 02:42+0000\n"
 "Last-Translator: Gheyret T.Kenji <Unknown>\n"
 "Language-Team: Uyghur <ug@li.org>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -54,6 +54,10 @@ msgstr "بۈگۈن <b>%1</b> دانە تېكىست ئۇچۇرى ئەۋەتىلد
 msgid "Accept"
 msgstr "قوشۇل"
 
+#: indicator/messagingmenu.cpp:199
+msgid "Call back"
+msgstr ""
+
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "تېلېفون نومۇرى يوق"
@@ -74,6 +78,11 @@ msgstr "ناتونۇش تېلېفون كەلدى"
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
 msgstr "ئەمەلدىن قالدۇر"
+
+#: indicator/textchannelobserver.cpp:208
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr ""
+"ئايروپىلان ھالىتىنى ئاكتىپسىزلاڭ ۋە ئۇچۇر پروگراممىسىدا قايتا سىناپ كۆرۈڭ."
 
 #: approver/approver.cpp:315
 msgid "Decline"
@@ -128,6 +137,10 @@ msgstr "تامام"
 msgid "Phone Calls"
 msgstr "تېلېفونلار"
 
+#: indicator/textchannelobserver.cpp:517
+msgid "Please, select a SIM card:"
+msgstr "بىر سىم كارتىسى تاللاڭ:"
+
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "شەخسىي نومۇر"
@@ -153,6 +166,10 @@ msgstr "SMS"
 msgid "Save"
 msgstr "ساقلا"
 
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
+msgstr ""
+
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "كەچۈرۈڭ، ئالدىراشچىلىقىم تۈگىمىدى. كېيىن تېلېفون قىلاي."
@@ -174,6 +191,14 @@ msgstr "Telephony Service Approver"
 msgid "Telephony Service Indicator"
 msgstr "Telephony Service Indicator"
 
+#: indicator/textchannelobserver.cpp:216
+msgid "The message could not be sent"
+msgstr "ئۇچۇرنى ئەۋەتكىلى بولمىدى"
+
+#: indicator/textchannelobserver.cpp:211
+msgid "Try again from the messaging application."
+msgstr "ئۇچۇر پروگراممىسىدا قايتا سىناپ كۆرۈڭ."
+
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "ناتونۇش نومۇر"
@@ -186,9 +211,17 @@ msgstr "ناتونۇش تېلېفون"
 msgid "Unknown number"
 msgstr "نامەلۇم نومۇر"
 
+#: indicator/textchannelobserver.cpp:206
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr "سىم كارتىڭىزنى قۇلۇپسىزلاڭ ۋە ئۇچۇر پروگراممىسىدا قايتا سىناپ كۆرۈڭ."
+
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "ئۇچۇر كۆرسەت"
+
+#: indicator/messagingmenu.cpp:313
+msgid "Voicemail"
+msgstr "ئۈنخەت"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
