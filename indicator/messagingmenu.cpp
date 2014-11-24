@@ -424,8 +424,15 @@ void MessagingMenu::saveFlashMessage(const QString &messageId)
 void MessagingMenu::showMessage(const QString &messageId)
 {
     QString senderId = mMessages[messageId]["senderId"].toString();
-    // FIXME: add support for mms group chat
-    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(senderId))));
+    QStringList participantIds = mMessages[messageId]["participantIds"].toStringList();
+    QStringList recipients;
+    if (!senderId.isEmpty()) {
+        recipients << senderId;
+    }
+    recipients << participantIds;
+    recipients.removeDuplicates();
+ 
+    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
 }
 
 void MessagingMenu::callBack(const QString &messageId)

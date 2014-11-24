@@ -123,7 +123,6 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
     NotificationData *notificationData = (NotificationData*) data;
     if (notificationData != NULL) {
         // launch the messaging-app to show the message
-        // TODO: open mms thread when applicable
         QStringList recipients;
         if (!notificationData->senderId.isEmpty()) {
             recipients << notificationData->senderId;
