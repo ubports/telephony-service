@@ -135,6 +135,11 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
             displayLabel = contactAlias;
         }
 
+        QString subTitle;
+        if (!participantIds.isEmpty()) {
+            subTitle = QString::fromUtf8(C::gettext("Group chat"));
+        }
+
         if (avatar.isEmpty()) {
             avatar = iconPath;
         }
@@ -144,7 +149,7 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
         MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
                                                                    icon,
                                                                    displayLabel.toUtf8().data(),
-                                                                   NULL,
+                                                                   subTitle.toUtf8().data(),
                                                                    text.toUtf8().data(),
                                                                    timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
         messaging_menu_message_add_action(message,

@@ -130,7 +130,7 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
         }
         recipients << notificationData->participantIds;
         recipients.removeDuplicates();
-        ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients[0]))));
+        ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
         notification_closed(notification, notificationData->notificationList);
     }
     g_object_unref(notification);
@@ -403,8 +403,12 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
     }
 
-    QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(alias);
-
+    QString title;
+    if (participantIds.isEmpty()) {
+        title = QString::fromUtf8(C::gettext("Message from %1")).arg(alias);
+    } else {
+        title = QString::fromUtf8(C::gettext("Message to group from %1")).arg(alias);
+    }
     // show the notification
     NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
                                                                messageText.toStdString().c_str(),

@@ -73,11 +73,11 @@ ChatManager *ChatManager::instance()
 void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &message, const QVariant &attachments, const QString &accountId)
 {
     AttachmentList newAttachments;
-    AccountEntry *account;
-    if (accountId.isNull()) {
+    AccountEntry *account = NULL;
+    if (accountId.isNull() || accountId.isEmpty()) {
         account = TelepathyHelper::instance()->defaultMessagingAccount();
-        if (!account) {
-            account = TelepathyHelper::instance()->accounts()[0];
+        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
+            account = TelepathyHelper::instance()->activeAccounts()[0];
         }
     } else {
         account = TelepathyHelper::instance()->accountForId(accountId);
@@ -216,9 +216,12 @@ Tp::TextChannelPtr ChatManager::existingChat(const QStringList &phoneNumbers, co
 
 void ChatManager::acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId)
 {
-    AccountEntry *account;
-    if (accountId.isNull()) {
-        account = TelepathyHelper::instance()->accounts()[0];
+    AccountEntry *account = NULL;
+    if (accountId.isNull() || accountId.isEmpty()) {
+        account = TelepathyHelper::instance()->defaultMessagingAccount();
+        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
+            account = TelepathyHelper::instance()->activeAccounts()[0];
+        }
     } else {
         account = TelepathyHelper::instance()->accountForId(accountId);
     }
