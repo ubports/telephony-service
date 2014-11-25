@@ -52,6 +52,7 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(AccountEntry *defaultMessagingAccount READ defaultMessagingAccount NOTIFY defaultMessagingAccountChanged)
     Q_PROPERTY(AccountEntry *defaultCallAccount READ defaultCallAccount NOTIFY defaultCallAccountChanged)
     Q_PROPERTY(bool flightMode READ flightMode WRITE setFlightMode NOTIFY flightModeChanged)
+    Q_PROPERTY(bool mmsGroupChat READ mmsGroupChat WRITE setMmsGroupChat NOTIFY mmsGroupChatChanged)
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
     Q_ENUMS(AccountType)
 public:
@@ -72,6 +73,8 @@ public:
     AccountEntry *defaultMessagingAccount() const;
     AccountEntry *defaultCallAccount() const;
 
+    bool mmsGroupChat();
+    void setMmsGroupChat(bool value);
     bool flightMode();
     void setFlightMode(bool value);
     bool connected() const;
@@ -106,6 +109,7 @@ Q_SIGNALS:
     void defaultCallAccountChanged();
     void flightModeChanged();
     void emergencyCallsAvailableChanged();
+    void mmsGroupChatChanged();
 
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);
@@ -135,8 +139,9 @@ private:
     ChannelObserver *mChannelObserver;
     bool mFirstTime;
     bool mConnected;
+    bool mMmsGroupChat;
     mutable QDBusInterface *mHandlerInterface;
-    QGSettings *mDefaultSimSettings;
+    QGSettings *mPhoneSettings;
     QDBusInterface mFlightModeInterface;
 };
 

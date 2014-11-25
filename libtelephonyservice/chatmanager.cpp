@@ -114,6 +114,10 @@ void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &messag
 
 void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
 {
+    if (phoneNumbers.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()) {
+        sendMMS(phoneNumbers, message, QVariant(), accountId);
+        return;
+    }
     AccountEntry *account = NULL;
     if (accountId.isNull() || accountId.isEmpty()) {
         account = TelepathyHelper::instance()->defaultMessagingAccount();
@@ -227,13 +231,11 @@ void ChatManager::acknowledgeMessage(const QStringList &recipients, const QStrin
     }
 
     if (!account) {
-        //FIXME: support group chats
         mMessagesToAck[accountId][recipients].append(messageId);
         return;
     }
 
     mMessagesAckTimer.start();
-    //FIXME: support group chats
     mMessagesToAck[account->accountId()][recipients].append(messageId);
 }
 
