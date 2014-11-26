@@ -108,6 +108,7 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
 {
     // try to get a contact for that phone number
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
+    QUrl groupIconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/contact-group.svg");
     QString contactAlias = senderId;
 
     // try to match the contact info
@@ -116,13 +117,14 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
 
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged,
-                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this]() {
+                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, groupIconPath, contactAlias, this]() {
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
             return;
         }
 
         QString displayLabel;
+        QString subTitle;
         QUrl avatar;
 
         if (request->contacts().size() > 0) {
@@ -135,9 +137,8 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
             displayLabel = contactAlias;
         }
 
-        QString subTitle;
-        if (!participantIds.isEmpty()) {
-            subTitle = QString::fromUtf8(C::gettext("Group chat"));
+        if (participantIds.size() > 1) {
+            avatar = groupIconPath;
         }
 
         if (avatar.isEmpty()) {

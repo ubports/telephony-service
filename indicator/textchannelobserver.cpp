@@ -222,9 +222,12 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
 
         // notify user about the failure
         GIcon *icon = g_themed_icon_new("cancel");
+        gchar *iconPath = g_icon_to_string(icon);
         NotifyNotification *notification = notify_notification_new(C::gettext("The message could not be sent"),
                                                                failureMessage.toStdString().c_str(),
-                                                               g_icon_to_string(icon));
+                                                               iconPath);
+        g_object_unref(icon);
+        g_free(iconPath);
         NotificationData *data = new NotificationData();
         data->participantIds = recipients;
         data->accountId = account->accountId();
@@ -403,10 +406,13 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     }
 
     QString title;
-    if (participantIds.isEmpty()) {
-        title = QString::fromUtf8(C::gettext("Message from %1")).arg(alias);
-    } else {
+    if (participantIds.size() > 1) {
         title = QString::fromUtf8(C::gettext("Message to group from %1")).arg(alias);
+        GIcon *icon = g_themed_icon_new("contact-group");
+        avatar = g_icon_to_string(icon);
+        g_object_unref(icon);
+    } else {
+        title = QString::fromUtf8(C::gettext("Message from %1")).arg(alias);
     }
     // show the notification
     NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
