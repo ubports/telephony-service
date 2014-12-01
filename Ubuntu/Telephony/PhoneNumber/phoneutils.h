@@ -43,6 +43,8 @@ public:
 
     QString defaultRegion() const;
 
+    Q_INVOKABLE QStringList matchInText(const QString& text, const QString &defaultRegion = QString());
+
     Q_INVOKABLE QString format(const QString &phoneNumber, const QString &defaultRegion = QString(), PhoneNumberFormat format = Auto);
 
     virtual bool event(QEvent *event);

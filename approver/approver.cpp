@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2014 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -33,6 +34,7 @@
 #include "tonegenerator.h"
 
 #include <QContactAvatar>
+#include <QContactDisplayLabel>
 #include <QContactFetchRequest>
 #include <QContactPhoneNumber>
 #include <QDebug>
@@ -49,8 +51,6 @@ namespace C {
 }
 
 #define TELEPHONY_SERVICE_HANDLER TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler"
-
-QTCONTACTS_USE_NAMESPACE
 
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
@@ -213,7 +213,7 @@ void Approver::updateNotification(const QContact &contact)
     if (!mPendingSnapDecision)
         return;
 
-    QString displayLabel = ContactUtils::formatContactName(contact);
+    QString displayLabel = contact.detail<QContactDisplayLabel>().label();
     QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();
 
     if (displayLabel.isEmpty()) {
@@ -271,115 +271,12 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
             SIGNAL(callStateChanged(Tp::CallState)),
             SLOT(onCallStateChanged(Tp::CallState)));
 
-    NotifyNotification* notification;
-    bool hasCalls = CallManager::instance()->hasCalls();
-
-
-    /* initial notification */
-
-    EventData* data = new EventData();
-    data->self = this;
-    data->dispatchOp = dispatchOp;
-    data->channel = channel;
-
-    if (!contact->id().isEmpty()) {
-        if (contact->id().startsWith("x-ofono-private")) {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
-        } else if (contact->id().startsWith("x-ofono-unknown")) {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
-        } else {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(contact->id());
-        }
-    } else {
-        mCachedBody = C::gettext("Caller number is not available");
-    }
-
-    notification = notify_notification_new (mDefaultTitle.toStdString().c_str(),
-                                            mCachedBody.toStdString().c_str(),
-                                            mDefaultIcon.toStdString().c_str());
-    notify_notification_set_hint_string(notification,
-                                        "x-canonical-snap-decisions",
-                                        "true");
-    notify_notification_set_hint_string(notification,
-                                        "x-canonical-snap-decisions-swipe",
-                                        "true");
-    notify_notification_set_hint_string(notification,
-                                        "x-canonical-private-button-tint",
-                                        "true");
-    notify_notification_set_hint_string(notification,
-                                        "x-canonical-secondary-icon",
-                                        "incoming-call");
-
-    QString acceptTitle = hasCalls ? C::gettext("Hold + Answer") :
-                                     C::gettext("Accept");
-    notify_notification_add_action (notification,
-                                    "action_accept",
-                                    acceptTitle.toLocal8Bit().data(),
-                                    action_accept,
-                                    data,
-                                    delete_event_data);
-
-#if 0
-    // FIXME: re-enable that once we move to fullscreen notifications
-    if (hasCalls) {
-        notify_notification_add_action (notification,
-                                        "action_hangup_and_accept",
-                                        C::gettext("End + Answer"),
-                                        action_hangup_and_accept,
-                                        data,
-                                        delete_event_data);
-    }
-#endif
-
-    notify_notification_add_action (notification,
-                                    "action_decline_1",
-                                    C::gettext("Decline"),
-                                    action_reject,
-                                    data,
-                                    delete_event_data);
-
-    notify_notification_add_action(notification,
-                                   "action_decline_expansion",
-                                   C::gettext("Message & decline"),
-                                   action_reject,
-                                   data,
-                                   delete_event_data);
-
-    Q_FOREACH(const QString &action, mRejectActions.keys()) {
-        notify_notification_add_action(notification,
-                                       action.toUtf8().data(),
-                                       QString("message:%1").arg(mRejectActions[action]).toUtf8().data(),
-                                       action_reject_message,
-                                       data,
-                                       delete_event_data);
-    }
-
-    mPendingSnapDecision = notification;
-
-    GError *error = NULL;
-    if (!notify_notification_show(notification, &error)) {
-        closeSnapDecision();
-        qWarning() << "Failed to show snap decision:" << error->message;
-        g_error_free (error);
-    }
-
-    if (CallManager::instance()->hasCalls()) {
-        ToneGenerator::instance()->playWaitingTone();
-    } else {
-        // play a ringtone
-        Ringtone::instance()->playIncomingCallSound();
-    }
-
-    if (!hasCalls && GreeterContacts::instance()->incomingCallVibrate()) {
-        mVibrateEffect.setDuration(2000);
-        mVibrateEffect.start();
-        mVibrateTimer.start();
-    }
-
     mChannels.remove(pr);
 
     // and now set up the contact matching for either greeter mode or regular mode
     if (GreeterContacts::isGreeterMode()) {
+        // show the snap decision right away because contact info might never arrive
+        showSnapDecision(dispatchOp, channel);
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
     } else {
         // try to match the contact info
@@ -387,22 +284,28 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         request->setFilter(QContactPhoneNumber::match(contact->id()));
 
         // lambda function to update the notification
-        QObject::connect(request, &QContactAbstractRequest::resultsAvailable, [this, request]() {
-            if (request && request->contacts().size() > 0) {
-                // use the first match
-                QContact contact = request->contacts().at(0);
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, dispatchOp, channel]() {
+            if (!request || request->state() != QContactAbstractRequest::FinishedState) {
+                return;
+            }
 
-                updateNotification(contact);
+            QContact contact;
+
+            // create the snap decision only after the contact match finishes
+            if (request->contacts().size() > 0) {
+                // use the first match
+                contact = request->contacts().at(0);
 
                 // Also notify greeter via AccountsService
                 GreeterContacts::emitContact(contact);
             }
+
+            showSnapDecision(dispatchOp, channel, contact);
         });
 
         request->setManager(ContactUtils::sharedManager());
         request->start();
     }
-
 }
 
 void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
@@ -458,6 +361,138 @@ void Approver::onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const
     }
 
     onRejected(dispatchOp);
+}
+
+bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation,
+                                const Tp::ChannelPtr channel,
+                                const QContact &contact)
+{
+    Tp::ContactPtr telepathyContact = channel->initiatorContact();
+    NotifyNotification* notification;
+    bool hasCalls = CallManager::instance()->hasCalls();
+
+
+    /* initial notification */
+
+    EventData* data = new EventData();
+    data->self = this;
+    data->dispatchOp = dispatchOperation;
+    data->channel = channel;
+    bool unknownNumber = telepathyContact->id().startsWith("x-ofono-") || telepathyContact->id().isEmpty();
+
+    if (!telepathyContact->id().isEmpty()) {
+        if (telepathyContact->id().startsWith("x-ofono-private")) {
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
+        } else if (telepathyContact->id().startsWith("x-ofono-unknown")) {
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
+        } else {
+            mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(telepathyContact->id());
+        }
+    } else {
+        mCachedBody = C::gettext("Caller number is not available");
+    }
+
+    QString displayLabel;
+    QString icon;
+    if (!contact.isEmpty()) {
+        displayLabel = contact.detail<QContactDisplayLabel>().label();
+        icon = contact.detail<QContactAvatar>().imageUrl().toEncoded();
+    }
+
+    if (displayLabel.isEmpty()) {
+        displayLabel = mDefaultTitle;
+    }
+    if (icon.isEmpty()) {
+        icon = mDefaultIcon;
+    }
+
+    notification = notify_notification_new (displayLabel.toStdString().c_str(),
+                                            mCachedBody.toStdString().c_str(),
+                                            icon.toStdString().c_str());
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-snap-decisions",
+                                        "true");
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-snap-decisions-swipe",
+                                        "true");
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-private-button-tint",
+                                        "true");
+    notify_notification_set_hint_string(notification,
+                                        "x-canonical-secondary-icon",
+                                        "incoming-call");
+
+    QString acceptTitle = hasCalls ? C::gettext("Hold + Answer") :
+                                     C::gettext("Accept");
+    notify_notification_add_action (notification,
+                                    "action_accept",
+                                    acceptTitle.toLocal8Bit().data(),
+                                    action_accept,
+                                    data,
+                                    delete_event_data);
+
+#if 0
+    // FIXME: re-enable that once we move to fullscreen notifications
+    if (hasCalls) {
+        notify_notification_add_action (notification,
+                                        "action_hangup_and_accept",
+                                        C::gettext("End + Answer"),
+                                        action_hangup_and_accept,
+                                        data,
+                                        delete_event_data);
+    }
+#endif
+
+    notify_notification_add_action (notification,
+                                    "action_decline_1",
+                                    C::gettext("Decline"),
+                                    action_reject,
+                                    data,
+                                    delete_event_data);
+
+    if (!unknownNumber) {
+        notify_notification_add_action(notification,
+                                       "action_decline_expansion",
+                                       C::gettext("Message & decline"),
+                                       action_reject,
+                                       data,
+                                       delete_event_data);
+
+
+        Q_FOREACH(const QString &action, mRejectActions.keys()) {
+            notify_notification_add_action(notification,
+                                           action.toUtf8().data(),
+                                           QString("message:%1").arg(mRejectActions[action]).toUtf8().data(),
+                                           action_reject_message,
+                                           data,
+                                           delete_event_data);
+        }
+    }
+
+    mPendingSnapDecision = notification;
+
+    GError *error = NULL;
+    if (!notify_notification_show(notification, &error)) {
+        closeSnapDecision();
+        qWarning() << "Failed to show snap decision:" << error->message;
+        g_error_free (error);
+        return false;
+    }
+
+    if (CallManager::instance()->hasCalls()) {
+        ToneGenerator::instance()->playWaitingTone();
+    } else {
+        // play a ringtone
+        Ringtone::instance()->playIncomingCallSound();
+    }
+
+    if (!hasCalls && GreeterContacts::instance()->incomingCallVibrate()) {
+        mVibrateEffect.setDuration(2000);
+        mVibrateEffect.start();
+        mVibrateTimer.start();
+    }
+
+    return true;
 }
 
 Tp::ChannelDispatchOperationPtr Approver::dispatchOperationForIncomingCall()

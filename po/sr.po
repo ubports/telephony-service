@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-20 11:37+0200\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
 "PO-Revision-Date: 2014-08-30 10:03+0000\n"
 "Last-Translator: Данило Шеган <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -59,6 +59,10 @@ msgstr "Данас је послато <b>%1</b> текстуалних пору
 msgid "Accept"
 msgstr "Прихвати"
 
+#: indicator/messagingmenu.cpp:199
+msgid "Call back"
+msgstr ""
+
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "Број позиваоца није доступан"
@@ -79,6 +83,10 @@ msgstr "Позив са непознатог броја"
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
 msgstr "Откажи"
+
+#: indicator/textchannelobserver.cpp:208
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr "Искључите режим у авиону и покушајте поново из програма за поруке."
 
 #: approver/approver.cpp:315
 msgid "Decline"
@@ -133,6 +141,10 @@ msgstr "У реду"
 msgid "Phone Calls"
 msgstr "Телефонски позиви"
 
+#: indicator/textchannelobserver.cpp:517
+msgid "Please, select a SIM card:"
+msgstr "Изаберите СИМ картицу:"
+
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Сакривени број"
@@ -158,6 +170,10 @@ msgstr "СМС"
 msgid "Save"
 msgstr "Сачувај"
 
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
+msgstr ""
+
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Извини, и даље сам заузет. Зваћу те касније."
@@ -179,6 +195,14 @@ msgstr "Одобравање услуге телефонирања"
 msgid "Telephony Service Indicator"
 msgstr "Индикатор услуге телефонирања"
 
+#: indicator/textchannelobserver.cpp:216
+msgid "The message could not be sent"
+msgstr "Не могу да пошаљем поруку"
+
+#: indicator/textchannelobserver.cpp:211
+msgid "Try again from the messaging application."
+msgstr "Покушајте поново из програма за поруке."
+
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Непознат број"
@@ -191,9 +215,17 @@ msgstr "Непознат позивалац"
 msgid "Unknown number"
 msgstr "Непознат број"
 
+#: indicator/textchannelobserver.cpp:206
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr "Откључајте сим картицу и покушајте поново из програма за поруке."
+
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Погледај поруку"
+
+#: indicator/messagingmenu.cpp:313
+msgid "Voicemail"
+msgstr "Говорна пошта"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"

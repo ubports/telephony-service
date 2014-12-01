@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-08-20 11:37+0200\n"
-"PO-Revision-Date: 2014-09-25 03:11+0000\n"
-"Last-Translator: Shushi Kurose <md81bird@hitaki.net>\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
+"PO-Revision-Date: 2014-11-20 05:07+0000\n"
+"Last-Translator: Kentaro Kazuhama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -54,6 +54,10 @@ msgstr "本日、<b>%1</b>件のメッセージ送信"
 msgid "Accept"
 msgstr "応答"
 
+#: indicator/messagingmenu.cpp:199
+msgid "Call back"
+msgstr ""
+
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "その電話番号は利用できません"
@@ -74,6 +78,10 @@ msgstr "不明な番号から着信中"
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
 msgstr "キャンセル"
+
+#: indicator/textchannelobserver.cpp:208
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr ""
 
 #: approver/approver.cpp:315
 msgid "Decline"
@@ -128,6 +136,10 @@ msgstr "OK"
 msgid "Phone Calls"
 msgstr "電話"
 
+#: indicator/textchannelobserver.cpp:517
+msgid "Please, select a SIM card:"
+msgstr ""
+
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "内線番号"
@@ -153,6 +165,10 @@ msgstr "SMS"
 msgid "Save"
 msgstr "保存"
 
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
+msgstr ""
+
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "すみません、まだ忙しいので、あとからかけなおします。"
@@ -160,7 +176,7 @@ msgstr "すみません、まだ忙しいので、あとからかけなおしま
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr ""
+msgstr "本日、<b>%1</b>分間の通話"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
@@ -174,6 +190,14 @@ msgstr "Telephony Service Approver"
 msgid "Telephony Service Indicator"
 msgstr "Telephony Service Indicator"
 
+#: indicator/textchannelobserver.cpp:216
+msgid "The message could not be sent"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:211
+msgid "Try again from the messaging application."
+msgstr ""
+
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "非通知番号"
@@ -186,9 +210,17 @@ msgstr "不明な発信者"
 msgid "Unknown number"
 msgstr "不明な番号"
 
+#: indicator/textchannelobserver.cpp:206
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr ""
+
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "メッセージを表示する"
+
+#: indicator/messagingmenu.cpp:313
+msgid "Voicemail"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"

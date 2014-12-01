@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-20 11:37+0200\n"
+"POT-Creation-Date: 2014-11-04 18:46-0200\n"
 "PO-Revision-Date: 2014-08-26 11:36+0000\n"
 "Last-Translator: ☠Jay ZDLin☠ <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-11-02 06:15+0000\n"
-"X-Generator: Launchpad (build 17211)\n"
+"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
+"X-Generator: Launchpad (build 17252)\n"
 "Language: ru\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -60,6 +60,10 @@ msgstr "<b>%1</b> отправлено сообщений сегодня"
 msgid "Accept"
 msgstr "Принять"
 
+#: indicator/messagingmenu.cpp:199
+msgid "Call back"
+msgstr ""
+
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "Номер абонента не доступен"
@@ -80,6 +84,10 @@ msgstr "Звонок с неизвестного номера"
 #: indicator/ussdindicator.cpp:104
 msgid "Cancel"
 msgstr "Отмена"
+
+#: indicator/textchannelobserver.cpp:208
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr ""
 
 #: approver/approver.cpp:315
 msgid "Decline"
@@ -134,6 +142,10 @@ msgstr "ОК"
 msgid "Phone Calls"
 msgstr "Вызовы"
 
+#: indicator/textchannelobserver.cpp:517
+msgid "Please, select a SIM card:"
+msgstr "Укажите SIM-карту:"
+
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Скрытый номер"
@@ -159,6 +171,10 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Сохранить"
 
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+msgid "Send"
+msgstr ""
+
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Извини, я всё еще занят. Я позвоню тебе позже."
@@ -180,6 +196,14 @@ msgstr ""
 msgid "Telephony Service Indicator"
 msgstr "Индикатор службы телефонии"
 
+#: indicator/textchannelobserver.cpp:216
+msgid "The message could not be sent"
+msgstr "Сообщение не может быть отправлено"
+
+#: indicator/textchannelobserver.cpp:211
+msgid "Try again from the messaging application."
+msgstr "Попробуйте отправить сообщение снова."
+
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Неизвестный номер"
@@ -192,9 +216,17 @@ msgstr "Неизвестный вызов"
 msgid "Unknown number"
 msgstr "Неизвестный номер"
 
+#: indicator/textchannelobserver.cpp:206
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr ""
+
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Показать сообщение"
+
+#: indicator/messagingmenu.cpp:313
+msgid "Voicemail"
+msgstr "Голосовая почта"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
