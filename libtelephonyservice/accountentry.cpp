@@ -48,6 +48,15 @@ QString AccountEntry::displayName() const
     return mAccount->displayName();
 }
 
+QString AccountEntry::selfContactId() const
+{
+    if (!mAccount.isNull() && !mAccount->connection().isNull() &&
+           !mAccount->connection()->selfContact().isNull()) {
+        return mAccount->connection()->selfContact()->id();
+    }
+    return QString();
+}
+
 QString AccountEntry::networkName() const
 {
     if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
@@ -191,6 +200,16 @@ void AccountEntry::watchSelfContactPresence()
             SIGNAL(simLockedChanged()));
 }
 
+void AccountEntry::onSelfHandleChanged(uint handle)
+{
+    watchSelfContactPresence();
+
+    Q_EMIT networkNameChanged();
+    Q_EMIT connectedChanged();
+    Q_EMIT simLockedChanged();
+    Q_EMIT selfContactIdChanged();
+}
+
 void AccountEntry::onConnectionChanged()
 {
     QDBusConnection dbusConnection = QDBusConnection::sessionBus();
@@ -255,12 +274,17 @@ void AccountEntry::onConnectionChanged()
             Q_EMIT voicemailIndicatorChanged();
         }
 
+        connect(mAccount->connection().data(),
+                SIGNAL(selfHandleChanged(uint)),
+                SLOT(onSelfHandleChanged(uint)));
+
         watchSelfContactPresence();
     }
 
     Q_EMIT networkNameChanged();
     Q_EMIT connectedChanged();
     Q_EMIT simLockedChanged();
+    Q_EMIT selfContactIdChanged();
 }
 
 void AccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)
