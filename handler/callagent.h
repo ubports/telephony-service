@@ -41,7 +41,6 @@ protected Q_SLOTS:
     void onStreamAdded(const Tp::CallStreamPtr &stream);
 
     void onFarstreamChannelCreated(Tp::PendingOperation *op);
-    void onFarstreamChannelStateChanged();
 
 private:
     Tp::CallChannelPtr mChannel;

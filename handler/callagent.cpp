@@ -103,24 +103,5 @@ void CallAgent::onFarstreamChannelCreated(Tp::PendingOperation *op)
         return;
     }
 
-    mFarstreamChannel = new FarstreamChannel(pendingChannel->tfChannel());
-
-    connect(mFarstreamChannel,
-            SIGNAL(stateChanged()),
-            SLOT(onFarstreamChannelStateChanged()));
-
-    mFarstreamChannel->init();
-}
-
-void CallAgent::onFarstreamChannelStateChanged()
-{
-    qDebug() << "CallAgent::onFarstreamStateChanged: mFarstreamChannel=" << mFarstreamChannel;
-
-    if (!mFarstreamChannel) {
-        return;
-    }
-
-    if (mFarstreamChannel->state() == Tp::MediaStreamStateConnected) {
-        qDebug() << "BLABLA set mute and volume";
-    }
+    mFarstreamChannel = new FarstreamChannel(pendingChannel->tfChannel(), this);
 }
