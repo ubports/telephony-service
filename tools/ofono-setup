@@ -10,7 +10,7 @@ mc-tool show ofono/ofono/account0 2>&1 > /dev/null
 # if there is not, create accounts and enable them
 if [ $? -eq 1 ]; then
         # get the modems from ofono and sort them alphabetically
-        MODEMS=`/usr/share/ofono/scripts/list-modems | grep --binary-files=text "^\[" | sed 's,^\[ \(.*\) \],\1,g' | sort`
+        MODEMS=`dbus-send --print-reply --system --dest=org.ofono / org.ofono.Manager.GetModems | grep object | cut -f2 -d\" | sort`
         INDEX=0
         # get the translated default sim card name from the telephony-service po files.
         SIM_NAME=$(gettext -d telephony-service "SIM %1")
