@@ -30,7 +30,7 @@ TestCase {
         data.push({input: "6681800", expectedOutput: "668-1800"})                    // Local number
         data.push({input: "7327572923", expectedOutput: "(732) 757-2923"})           // Country number
         data.push({input: "+558187042155", expectedOutput: "+55 81 8704-2155"})      // International number
-        data.push({input: "55555555555", expectedOutput: "55555555555"})             // Ivalid number
+        data.push({input: "55555555555", expectedOutput: "55555555555"})             // Invalid number
         data.push({input: "*144", expectedOutput: "*144"})                           // Special number
         data.push({input: "#123#", expectedOutput: "#123#"})                         // Operators command
         return data
