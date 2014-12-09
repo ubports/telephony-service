@@ -30,9 +30,17 @@ function formatPhone_data()
     var data = [];
     data.push({input: "7572923", expectedOutput: "757-2923", expectedCursorPosition: 8})                    // Local number
     data.push({input: "7327572923", expectedOutput: "(732) 757-2923", expectedCursorPosition: 14})          // Coutry number
+    data.push({input: "7327572923", expectedOutput: "(732) 757-2923", expectedCursorPosition: 14})          // Coutry number
+    data.push({input: "*616176990655", expectedOutput: "*61 (617) 699-0655", expectedCursorPosition: 14})   // Coutry number
     data.push({input: "+558187042155", expectedOutput: "+55 81 8704-2155", expectedCursorPosition: 16})     // International number
     data.push({input: "55555555555", expectedOutput: "55555555555", expectedCursorPosition: 11})            // Ivalid number
-
+    data.push({input: "123#", expectedOutput: "123#", expectedCursorPosition: 4})                           // Special number
+    data.push({input: "#123#", expectedOutput: "#123#", expectedCursorPosition: 5})
+    data.push({input: "*144", expectedOutput: "*144", expectedCursorPosition: 4})
+    data.push({input: "123#456", expectedOutput: "123#456", expectedCursorPosition: 7})
+    data.push({input: "123,456", expectedOutput: "123,456", expectedCursorPosition: 7})
+    data.push({input: "123,;456;", expectedOutput: "123,;456;", expectedCursorPosition: 9})
+    data.push({input: "1+2;3,4*5#6;", expectedOutput: "1+2;3,4*5#6;", expectedCursorPosition: 12})
     return data
 }
 
@@ -61,6 +69,14 @@ function modifyPhone_data()
     data.push({input: "08199086488",  formatedInput: "08199086488", moveCursor: 3,
                action: "remove", text: "",
                newFormatedInput: "(089) 908-6488", expectedCursorPosition: 3})
+
+    // special numbers
+    data.push({input: "123",  formatedInput: "1 23", moveCursor: 4,
+               action: "insert", text: "#",
+               newFormatedInput: "123#", expectedCursorPosition: 4})
+    data.push({input: "144",  formatedInput: "1 44", moveCursor: 0,
+               action: "insert", text: "*",
+               newFormatedInput: "*144", expectedCursorPosition: 1})
 
     return data
 }
