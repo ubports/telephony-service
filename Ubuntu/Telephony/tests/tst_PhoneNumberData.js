@@ -29,9 +29,9 @@ function formatPhone_data()
 {
     var data = [];
     data.push({input: "7572923", expectedOutput: "757-2923", expectedCursorPosition: 8})                    // Local number
-    data.push({input: "7327572923", expectedOutput: "(732) 757-2923", expectedCursorPosition: 14})          // Coutry number
-    data.push({input: "7327572923", expectedOutput: "(732) 757-2923", expectedCursorPosition: 14})          // Coutry number
-    data.push({input: "*616176990655", expectedOutput: "*61 (617) 699-0655", expectedCursorPosition: 14})   // Coutry number
+    data.push({input: "7327572923", expectedOutput: "(732) 757-2923", expectedCursorPosition: 14})          // Country number
+    data.push({input: "7327572923", expectedOutput: "(732) 757-2923", expectedCursorPosition: 14})          // Country number
+    data.push({input: "*616176990655", expectedOutput: "*61 (617) 699-0655", expectedCursorPosition: 14})   // Country number
     data.push({input: "+558187042155", expectedOutput: "+55 81 8704-2155", expectedCursorPosition: 16})     // International number
     data.push({input: "55555555555", expectedOutput: "55555555555", expectedCursorPosition: 11})            // Ivalid number
     data.push({input: "123#", expectedOutput: "123#", expectedCursorPosition: 4})                           // Special number
