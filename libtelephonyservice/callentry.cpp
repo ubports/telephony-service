@@ -72,7 +72,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
             SIGNAL(CallPropertiesChanged(QString, QVariantMap)),
             SLOT(onCallPropertiesChanged(QString,QVariantMap)));
 
-    if (mAccount) {
+    if (mAccount && !mAccount->voicemailNumber().isEmpty()) {
         setVoicemail(phoneNumber() == mAccount->voicemailNumber());
     }
 
