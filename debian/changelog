@@ -1,3 +1,14 @@
+telephony-service (0.1+15.04.20141210-0ubuntu1) vivid; urgency=low
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+  [ Tiago Salem Herrmann ]
+  * Only set voicemail is the phone number is not empty. (LP: #1398431)
+  * Use dbus-send to get the list of modems from ofono.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 10 Dec 2014 18:01:56 +0000
+
 telephony-service (0.1+15.04.20141121.1-0ubuntu1) vivid; urgency=low
 
   [ Alexandre Abreu ]
