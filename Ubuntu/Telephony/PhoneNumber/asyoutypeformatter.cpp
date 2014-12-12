@@ -185,6 +185,11 @@ void AsYouTypeFormatter::updateFormattedText()
 
 QString AsYouTypeFormatter::formatTextImpl(const QString &text, int *cursorPosition)
 {
+    static QList<QChar> validChars;
+    if (validChars.isEmpty()) {
+        validChars << QChar(',') << QChar(';') << QChar('+') << QChar('*') << QChar('#');
+    }
+
     // if the number starts with "+" we will use unknown region otherwise we will use the default region
     QString numberRegion = m_defaultRegionCode;
     if (m_rawText.startsWith("+")) {
@@ -209,7 +214,7 @@ QString AsYouTypeFormatter::formatTextImpl(const QString &text, int *cursorPosit
     for(int i = 0, iMax = text.size(); i < iMax; i++) {
         bool savePosition = (cursorPosition != 0) && (i < *cursorPosition);
         QChar iChar = text.at(i);
-        if (iChar.isDigit() || (iChar.toLatin1() == '+')) {
+        if (iChar.isDigit() || validChars.contains(iChar)) {
             if (savePosition) {
                 m_formatter->InputDigitAndRememberPosition(iChar.toLatin1(), &result);
             } else {
