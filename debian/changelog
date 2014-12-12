@@ -1,3 +1,17 @@
+telephony-service (0.1+15.04.20141212-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Renato Araujo Oliveira Filho ]
+  * Added support for [',', ';', '+', '*', '#'] on phone number fields.
+    (LP: #1399011, #1372548)
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 12 Dec 2014 20:34:51 +0000
+
 telephony-service (0.1+15.04.20141210-0ubuntu1) vivid; urgency=low
 
   [ Ubuntu daily release ]
