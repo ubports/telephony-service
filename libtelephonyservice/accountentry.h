@@ -72,6 +72,7 @@ Q_SIGNALS:
     void voicemailCountChanged();
     void voicemailIndicatorChanged();
     void emergencyCallsAvailableChanged();
+    void removed();
 
 protected Q_SLOTS:
     void initialize();

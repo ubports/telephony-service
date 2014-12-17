@@ -116,6 +116,8 @@ protected:
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);
     void onAccountReady();
+    void onNewAccount(const Tp::AccountPtr &account);
+    void onAccountRemoved();
     void updateConnectedStatus();
     void onSettingsChanged(const QString&);
 
