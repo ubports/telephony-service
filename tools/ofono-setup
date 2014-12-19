@@ -27,6 +27,7 @@ if [ $? -eq 1 ]; then
             INDEX=$((INDEX+1))
             # replace the %1 with the actual index
             NAME=$(echo $SIM_NAME | sed "s/%1$/$INDEX/")
+            mc-tool display ofono/ofono/$ACCOUNT "$NAME"
             # append this entry to the gsettings array
             GSETTINGS_ARRAY="$GSETTINGS_ARRAY '$modem': '$NAME',"
         done

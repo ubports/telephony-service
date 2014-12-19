@@ -127,6 +127,11 @@ void AccountEntry::initialize()
 
     // propagate the display name changes
     connect(mAccount.data(),
+            SIGNAL(removed()),
+            SIGNAL(removed()));
+ 
+    // propagate the display name changes
+    connect(mAccount.data(),
             SIGNAL(displayNameChanged(QString)),
             SIGNAL(displayNameChanged()));
     \
