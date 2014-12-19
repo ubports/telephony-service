@@ -1,3 +1,13 @@
+telephony-service (0.1+15.04.20141219-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Dynamically add and remove telepathy accounts.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 19 Dec 2014 15:25:02 +0000
+
 telephony-service (0.1+15.04.20141212-0ubuntu1) vivid; urgency=low
 
   [ CI Train Bot ]
