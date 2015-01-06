@@ -387,7 +387,7 @@ Tp::TextChannelPtr TextHandler::existingChat(const QStringList &phoneNumbers, co
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
         AccountEntry *channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
-        if (channel->groupContacts(false).size() != phoneNumbers.size()
+        if (!channelAccount || channel->groupContacts(false).size() != phoneNumbers.size()
             || channelAccount->accountId() != accountId) {
             continue;
         }
