@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"X-Launchpad-Export-Date: 2015-01-07 06:18+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -50,7 +50,7 @@ msgstr "本日、<b>%1</b>件のメッセージ受信"
 msgid "<b>%1</b> text messages sent today"
 msgstr "本日、<b>%1</b>件のメッセージ送信"
 
-#: approver/approver.cpp:293
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "応答"
 
@@ -83,11 +83,11 @@ msgstr "キャンセル"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 
-#: approver/approver.cpp:315
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "終了"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "保留して応答"
 

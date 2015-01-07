@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2014-12-16 07:34+0000\n"
+"X-Launchpad-Export-Date: 2015-01-07 06:19+0000\n"
 "X-Generator: Launchpad (build 17286)\n"
 "Language: uk\n"
 
@@ -56,7 +56,7 @@ msgstr "Сьогодні отримано <b>%1</b> текстових пові�
 msgid "<b>%1</b> text messages sent today"
 msgstr "Сьогодні надіслано <b>%1</b> текстових повідомлень"
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "Прийняти"
 
@@ -64,20 +64,20 @@ msgstr "Прийняти"
 msgid "Call back"
 msgstr "Зворотній виклик"
 
-#: approver/approver.cpp:392
+#: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "Номер вхідного дзвінка недоступний"
 
-#: approver/approver.cpp:389
+#: approver/approver.cpp:273
 #, qt-format
 msgid "Calling from %1"
 msgstr "Дзвінок від %1"
 
-#: approver/approver.cpp:385
+#: approver/approver.cpp:269
 msgid "Calling from private number"
 msgstr "Дзвінок з приватного номера"
 
-#: approver/approver.cpp:387
+#: approver/approver.cpp:271
 msgid "Calling from unknown number"
 msgstr "Дзвінок з невідомого номера"
 
@@ -85,17 +85,17 @@ msgstr "Дзвінок з невідомого номера"
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: indicator/textchannelobserver.cpp:207
+#: indicator/textchannelobserver.cpp:208
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Вимкніть режим польоту і повторіть спробу за допомогою програми для роботи з "
 "повідомленнями."
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "Відхилити"
 
-#: approver/approver.cpp:425
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "Утримання + Відповідь"
 
@@ -115,7 +115,7 @@ msgstr "Зараз не можу поговорити. Передзвоню пі
 msgid "I'm running late. I'm on my way."
 msgstr "Запізнююся. У дорозі."
 
-#: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
+#: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
 #, qt-format
 msgid "Message from %1"
 msgstr "Повідомлення від %1"
@@ -136,7 +136,7 @@ msgstr "Сьогодні текстових повідомлень не надх
 msgid "No text messages sent today"
 msgstr "Сьогодні текстових повідомлень не надсилалося"
 
-#: indicator/textchannelobserver.cpp:270 indicator/ussdindicator.cpp:79
+#: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "Гаразд"
 
@@ -144,7 +144,7 @@ msgstr "Гаразд"
 msgid "Phone Calls"
 msgstr "Телефонні дзвінки"
 
-#: indicator/textchannelobserver.cpp:539
+#: indicator/textchannelobserver.cpp:517
 msgid "Please, select a SIM card:"
 msgstr "Будь ласка, виберіть SIM-картку:"
 
@@ -169,7 +169,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "СМС"
 
-#: indicator/textchannelobserver.cpp:276
+#: indicator/textchannelobserver.cpp:277
 msgid "Save"
 msgstr "Зберегти"
 
@@ -198,11 +198,11 @@ msgstr "Підтверджувач служби телефонії"
 msgid "Telephony Service Indicator"
 msgstr "Індикатор служби телефонії"
 
-#: indicator/textchannelobserver.cpp:215
+#: indicator/textchannelobserver.cpp:216
 msgid "The message could not be sent"
 msgstr "Не вдалося надіслати повідомлення"
 
-#: indicator/textchannelobserver.cpp:210
+#: indicator/textchannelobserver.cpp:211
 msgid "Try again from the messaging application."
 msgstr "Повторіть спробу за допомогою програми для роботи з повідомленнями."
 
@@ -218,13 +218,13 @@ msgstr "Невідома особа"
 msgid "Unknown number"
 msgstr "Невідомий номер"
 
-#: indicator/textchannelobserver.cpp:205
+#: indicator/textchannelobserver.cpp:206
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Розблокуйте SIM-картку і повторіть спробу за допомогою програми для роботи з "
 "повідомленнями."
 
-#: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
+#: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Переглянути повідомлення"
 

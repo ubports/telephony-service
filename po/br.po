@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-11-25 07:09+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"X-Launchpad-Export-Date: 2015-01-07 06:18+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -52,7 +52,7 @@ msgstr "<b>%1</b> a gemennadennoù testenn resevet hiziv"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> a gemennadennoù testenn kaset hiziv"
 
-#: approver/approver.cpp:293
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "Asantiñ"
 
@@ -86,11 +86,11 @@ msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Diweredekait ar mod nijerez hag esaeit en-dro diwar an arload kemennadennoù."
 
-#: approver/approver.cpp:315
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "Nac'h"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "Lakaat da c'hortoz + Respont"
 

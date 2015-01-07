@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-11-26 06:53+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"X-Launchpad-Export-Date: 2015-01-07 06:18+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 "Language: hu\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -53,7 +53,7 @@ msgstr "<b>%1</b> szöveges üzenetet fogadott ma"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> szöveges üzenetet küldött ma"
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "Elfogadás"
 
@@ -61,20 +61,20 @@ msgstr "Elfogadás"
 msgid "Call back"
 msgstr "Visszahívás"
 
-#: approver/approver.cpp:392
+#: approver/approver.cpp:276
 msgid "Caller number is not available"
 msgstr "A hívó száma nem érhető el"
 
-#: approver/approver.cpp:389
+#: approver/approver.cpp:273
 #, qt-format
 msgid "Calling from %1"
 msgstr "Hívás innen: %1"
 
-#: approver/approver.cpp:385
+#: approver/approver.cpp:269
 msgid "Calling from private number"
 msgstr "Hívás rejtett számról"
 
-#: approver/approver.cpp:387
+#: approver/approver.cpp:271
 msgid "Calling from unknown number"
 msgstr "Hívás ismeretlen számról"
 
@@ -82,17 +82,17 @@ msgstr "Hívás ismeretlen számról"
 msgid "Cancel"
 msgstr "Mégse"
 
-#: indicator/textchannelobserver.cpp:207
+#: indicator/textchannelobserver.cpp:208
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Kapcsolja ki a repülőgépes módot , és próbálja újra az üzenetek "
 "alkalmazásból."
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "Elutasítás"
 
-#: approver/approver.cpp:425
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "Várakoztatás és válaszolás"
 
@@ -112,7 +112,7 @@ msgstr "Fontos dolgom van, később visszahívlak."
 msgid "I'm running late. I'm on my way."
 msgstr "Úton vagyok, de késni fogok."
 
-#: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
+#: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
 #, qt-format
 msgid "Message from %1"
 msgstr "Üzenet tőle: %1"
@@ -133,7 +133,7 @@ msgstr "Nem kapott szöveges üzenetet ma"
 msgid "No text messages sent today"
 msgstr "Nem küldött szöveges üzenetet ma"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
+#: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "Ok"
 
@@ -141,7 +141,7 @@ msgstr "Ok"
 msgid "Phone Calls"
 msgstr "Telefonhívások"
 
-#: indicator/textchannelobserver.cpp:539
+#: indicator/textchannelobserver.cpp:517
 msgid "Please, select a SIM card:"
 msgstr "Válasszon SIM kártyát:"
 
@@ -166,7 +166,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:276
+#: indicator/textchannelobserver.cpp:277
 msgid "Save"
 msgstr "Mentés"
 
@@ -195,11 +195,11 @@ msgstr "Telefonszolgáltatás jóváhagyó"
 msgid "Telephony Service Indicator"
 msgstr "Telefonszolgáltatás indikátor"
 
-#: indicator/textchannelobserver.cpp:215
+#: indicator/textchannelobserver.cpp:216
 msgid "The message could not be sent"
 msgstr "Az üzenet nem sikerült elküldeni"
 
-#: indicator/textchannelobserver.cpp:210
+#: indicator/textchannelobserver.cpp:211
 msgid "Try again from the messaging application."
 msgstr "Próbálja űjra az üzenetek alkalmazásból."
 
@@ -215,12 +215,12 @@ msgstr "Ismeretlen hívó"
 msgid "Unknown number"
 msgstr "Ismeretlen szám"
 
-#: indicator/textchannelobserver.cpp:205
+#: indicator/textchannelobserver.cpp:206
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Oldja fel a SIM kártyáját és próbálja újra az üzenetek alkalmazásból."
 
-#: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
+#: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
 msgstr "Üzenet megtekintése"
 
