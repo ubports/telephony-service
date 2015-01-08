@@ -60,8 +60,10 @@ int main(int argc, char **argv)
 
     // register the approver
     Approver *approver = new Approver();
-    TelepathyHelper::instance()->registerClient(approver, "TelephonyServiceApprover");
-    TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceObserver");
+    QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, [approver]() {
+        TelepathyHelper::instance()->registerClient(approver, "TelephonyServiceApprover");
+        TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceObserver");
+    });
 
     return app.exec();
 }

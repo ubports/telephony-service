@@ -68,7 +68,9 @@ int main(int argc, char **argv)
     Q_UNUSED(voiceMailIndicator);
 
     // register the observer
-    TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceIndicator");
+    QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, []() {
+        TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceIndicator");
+    });
 
     // Connect the textObserver and the callObserver to the channel observer in TelepathyHelper
     CallChannelObserver *callObserver = new CallChannelObserver();
