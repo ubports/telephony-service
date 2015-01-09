@@ -1,3 +1,16 @@
+telephony-service (0.1+15.04.20150109-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Check if the account exists before accessing the pointer. (LP:
+    #1408029)
+  * Only register telepathy clients and observers after TelepathyHelper
+    is ready. (LP: #1408103)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 09 Jan 2015 13:44:26 +0000
+
 telephony-service (0.1+15.04.20141219-0ubuntu1) vivid; urgency=low
 
   [ CI Train Bot ]
