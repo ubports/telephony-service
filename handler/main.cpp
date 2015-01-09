@@ -46,8 +46,10 @@ int main(int argc, char **argv)
     }
 
     Handler *handler = new Handler();
-    TelepathyHelper::instance()->registerClient(handler, "TelephonyServiceHandler");
-
+    QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, [handler]() {
+        TelepathyHelper::instance()->registerClient(handler, "TelephonyServiceHandler");
+    });
+ 
     QObject::connect(handler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
                      CallHandler::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
     QObject::connect(handler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),

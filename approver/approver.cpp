@@ -479,7 +479,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
         return false;
     }
 
-    if (CallManager::instance()->hasCalls()) {
+    if (hasCalls) {
         ToneGenerator::instance()->playWaitingTone();
     } else {
         // play a ringtone
