@@ -70,15 +70,15 @@ int main(int argc, char **argv)
     // register the observer
     QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, []() {
         TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceIndicator");
-    });
 
-    // Connect the textObserver and the callObserver to the channel observer in TelepathyHelper
-    CallChannelObserver *callObserver = new CallChannelObserver();
-    TextChannelObserver *textObserver = new TextChannelObserver();
-    QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
-                     textObserver, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
-    QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
-                     callObserver, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+        // Connect the textObserver and the callObserver to the channel observer in TelepathyHelper
+        CallChannelObserver *callObserver = new CallChannelObserver();
+        TextChannelObserver *textObserver = new TextChannelObserver();
+        QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
+                         textObserver, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+        QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+                         callObserver, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+    });
 
     USSDIndicator ussdIndicator;
     Q_UNUSED(ussdIndicator);
