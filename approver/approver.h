@@ -83,6 +83,7 @@ private:
     QFeedbackHapticsEffect mVibrateEffect;
     QTimer mVibrateTimer;
     QMap<QString,QString> mRejectActions;
+    bool mFirstTime;
 };
 
 #endif // APPROVER_H

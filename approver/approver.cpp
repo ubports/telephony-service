@@ -32,6 +32,7 @@
 #include "callmanager.h"
 #include "callentry.h"
 #include "tonegenerator.h"
+#include "telepathyhelper.h"
 
 #include <QContactAvatar>
 #include <QContactDisplayLabel>
@@ -54,7 +55,8 @@ namespace C {
 
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
-  mPendingSnapDecision(NULL)
+  mPendingSnapDecision(NULL),
+  mFirstTime(true)
 {
     mDefaultTitle = C::gettext("Unknown caller");
     mDefaultIcon = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
@@ -243,6 +245,7 @@ void Approver::updateNotification(const QContact &contact)
 
 void Approver::onChannelReady(Tp::PendingOperation *op)
 {
+    mFirstTime = false;
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
     if (!pr || !mChannels.contains(pr)) {
         qWarning() << "PendingOperation is not a PendingReady:" << op;
@@ -671,6 +674,21 @@ void Approver::onHandleMediaKeyRequested(bool doubleClick)
 {
     Q_UNUSED(doubleClick)
 
+    // FIXME: Telepathy-qt does not let us know if existing channels are being recovered, 
+    // so if this is the first run, give it some time and call this method again
+    if (mFirstTime) {
+        mFirstTime = false;
+        QTimer *timer = new QTimer(this);
+        timer->setInterval(1000);
+        timer->setSingleShot(true);
+        QObject::connect(timer, &QTimer::timeout, [=]() {
+            onHandleMediaKeyRequested(doubleClick);
+            timer->deleteLater();
+        });
+        timer->start();
+        return;
+    }
+ 
     if (mPendingSnapDecision) {
         onAcceptCallRequested();
         return;
