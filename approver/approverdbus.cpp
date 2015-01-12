@@ -64,3 +64,8 @@ void ApproverDBus::RejectCall()
 {
     Q_EMIT rejectCallRequested();
 }
+
+void ApproverDBus::HandleMediaKey(bool doubleClick)
+{
+    Q_EMIT handleMediaKeyRequested(doubleClick);
+}

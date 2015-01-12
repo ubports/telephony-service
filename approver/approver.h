@@ -70,6 +70,7 @@ private Q_SLOTS:
     void onHangupAndAcceptCallRequested();
     void onAcceptCallRequested();
     void onRejectCallRequested();
+    void onHandleMediaKeyRequested(bool doubleClick);
     void updateNotification(const QtContacts::QContact &contact);
 
 private:

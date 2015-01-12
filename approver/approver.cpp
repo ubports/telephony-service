@@ -66,6 +66,10 @@ Approver::Approver()
     connect(dbus,
             SIGNAL(rejectCallRequested()),
             SLOT(onRejectCallRequested()));
+    connect(dbus,
+            SIGNAL(handleMediaKeyRequested(bool)),
+            SLOT(onHandleMediaKeyRequested(bool)));
+
     dbus->connectToBus();
 
     if (GreeterContacts::isGreeterMode()) {
@@ -661,5 +665,21 @@ void Approver::onRejectCallRequested()
     if (!callDispatchOp.isNull()) {
         onRejected(callDispatchOp);
     }
+}
+
+void Approver::onHandleMediaKeyRequested(bool doubleClick)
+{
+    Q_UNUSED(doubleClick)
+
+    if (mPendingSnapDecision) {
+        onAcceptCallRequested();
+        return;
+    } else if (CallManager::instance()->hasCalls()) {
+        // if there is no incoming call, we should hangup the current active call
+        CallEntry *call =  CallManager::instance()->foregroundCall();
+        if (call) {
+            call->endCall();
+        }
+    } 
 }
 

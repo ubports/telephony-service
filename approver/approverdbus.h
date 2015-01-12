@@ -44,11 +44,13 @@ public Q_SLOTS:
     Q_NOREPLY void HangUpAndAcceptCall();
     Q_NOREPLY void AcceptCall();
     Q_NOREPLY void RejectCall();
+    Q_NOREPLY void HandleMediaKey(bool doubleClick);
 
 Q_SIGNALS:
     void hangUpAndAcceptCallRequested();
     void acceptCallRequested();
     void rejectCallRequested();
+    void handleMediaKeyRequested(bool doubleClick);
 };
 
 #endif // APPROVERDBUS_H
