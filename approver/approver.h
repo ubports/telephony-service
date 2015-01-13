@@ -72,6 +72,8 @@ private Q_SLOTS:
     void onAcceptCallRequested();
     void onRejectCallRequested();
     void updateNotification(const QtContacts::QContact &contact);
+    void onSettleTimerTimeout();
+    void processHandleMediaKey(bool doubleClick);
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
@@ -82,8 +84,8 @@ private:
     QString mCachedBody;
     QFeedbackHapticsEffect mVibrateEffect;
     QTimer mVibrateTimer;
+    QTimer *mSettleTimer;
     QMap<QString,QString> mRejectActions;
-    bool mFirstTime;
 };
 
 #endif // APPROVER_H

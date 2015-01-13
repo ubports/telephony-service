@@ -56,7 +56,7 @@ namespace C {
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
   mPendingSnapDecision(NULL),
-  mFirstTime(true)
+  mSettleTimer(new QTimer(this))
 {
     mDefaultTitle = C::gettext("Unknown caller");
     mDefaultIcon = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
@@ -82,6 +82,17 @@ Approver::Approver()
     mRejectActions["rejectMessage1"] = C::gettext("I'm busy at the moment. I'll call later.");
     mRejectActions["rejectMessage2"] = C::gettext("I'm running late, on my way now.");
     mRejectActions["rejectMessage3"] = C::gettext("Please call me back later.");
+
+    mSettleTimer->setInterval(500);
+    mSettleTimer->setSingleShot(true);
+    connect(mSettleTimer, SIGNAL(timeout()), this, SLOT(onSettleTimerTimeout()));
+    mSettleTimer->start();
+}
+
+void Approver::onSettleTimerTimeout()
+{
+    mSettleTimer->deleteLater();
+    mSettleTimer = NULL;
 }
 
 Approver::~Approver()
@@ -242,7 +253,6 @@ void Approver::updateNotification(const QContact &contact)
 
 void Approver::onChannelReady(Tp::PendingOperation *op)
 {
-    mFirstTime = false;
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
     if (!pr || !mChannels.contains(pr)) {
         qWarning() << "PendingOperation is not a PendingReady:" << op;
@@ -673,33 +683,34 @@ bool Approver::handleMediaKey(bool doubleClick)
 
     // hasCalls gets the value from handler, so even if CallManager isn't ready right now, we know
     // if the event will be handled later
-    bool hasCalls = CallManager::instance()->hasCalls();
-    bool willHandle = mPendingSnapDecision || hasCalls;
+    bool accepted = mPendingSnapDecision || CallManager::instance()->hasCalls();
 
     // FIXME: Telepathy-qt does not let us know if existing channels are being recovered, 
-    // so if this is the first run, give it some time and call this method again
-    if (mFirstTime) {
-        mFirstTime = false;
-        QTimer *timer = new QTimer(this);
-        timer->setInterval(1000);
-        timer->setSingleShot(true);
-        QObject::connect(timer, &QTimer::timeout, [=]() {
+    // so if this is the first run, call this method again when mSettleTimer is done
+    if (mSettleTimer) {
+        QObject::connect(mSettleTimer, &QTimer::timeout, [=]() {
             handleMediaKey(doubleClick);
-            timer->deleteLater();
         });
-        timer->start();
-        return willHandle;
+        return accepted;
     }
- 
+
+    // postpone this to avoid blocking dbus method callers
+    QMetaObject::invokeMethod(this, "processHandleMediaKey", Qt::QueuedConnection, Q_ARG(bool, doubleClick));
+    return accepted;
+}
+
+void Approver::processHandleMediaKey(bool doubleClick)
+{
+    Q_UNUSED(doubleClick)
+
     if (mPendingSnapDecision) {
         onAcceptCallRequested();
-    } else if (hasCalls) {
-        // if there is no incoming call, we should hangup the current active call
+    } else if (CallManager::instance()->hasCalls()) {
+        // if there is no incoming call, we have to hangup the current active call
         CallEntry *call =  CallManager::instance()->foregroundCall();
         if (call) {
             call->endCall();
         }
     }
-    return willHandle;
 }
 
