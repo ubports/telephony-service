@@ -172,6 +172,18 @@ QDBusInterface *TelepathyHelper::handlerInterface() const
     return mHandlerInterface;
 }
 
+QDBusInterface *TelepathyHelper::approverInterface() const
+{
+    if (!mHandlerInterface) {
+        mHandlerInterface = new QDBusInterface("com.canonical.Approver",
+                                               "/com/canonical/Approver",
+                                               "com.canonical.TelephonyServiceApprover",
+                                               QDBusConnection::sessionBus(),
+                                               const_cast<TelepathyHelper*>(this));
+    }
+    return mApproverInterface;
+}
+
 bool TelepathyHelper::connected() const
 {
     if (QCoreApplication::applicationName() != "telephony-service-handler" &&

@@ -380,3 +380,14 @@ void CallManager::playTone(const QString &key)
     /* calling without channel, DTMF tone is played only locally */
     phoneAppHandler->call("SendDTMF", "" , key);
 }
+
+bool CallManager::handleMediaKey(bool doubleClick)
+{
+    QDBusInterface *approverInterface = TelepathyHelper::instance()->approverInterface();
+    QDBusReply<bool> reply = approverInterface->call("HandleMediaKey", doubleClick);
+    if (reply.isValid()) {
+        return reply.value();
+    }
+    return false;
+}
+
