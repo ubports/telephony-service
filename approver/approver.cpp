@@ -61,16 +61,13 @@ Approver::Approver()
     mDefaultTitle = C::gettext("Unknown caller");
     mDefaultIcon = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
 
-    ApproverDBus *dbus = new ApproverDBus();
+    ApproverDBus *dbus = new ApproverDBus(this);
     connect(dbus,
             SIGNAL(acceptCallRequested()),
             SLOT(onAcceptCallRequested()));
     connect(dbus,
             SIGNAL(rejectCallRequested()),
             SLOT(onRejectCallRequested()));
-    connect(dbus,
-            SIGNAL(handleMediaKeyRequested(bool)),
-            SLOT(onHandleMediaKeyRequested(bool)));
 
     dbus->connectToBus();
 
@@ -670,9 +667,13 @@ void Approver::onRejectCallRequested()
     }
 }
 
-void Approver::onHandleMediaKeyRequested(bool doubleClick)
+bool Approver::handleMediaKey(bool doubleClick)
 {
     Q_UNUSED(doubleClick)
+
+    // hasCalls gets the value from handler, so even if CallManager isn't ready right now, we know
+    // if the event will be handled later
+    bool willHandle = mPendingSnapDecision || CallManager::instance()->hasCalls();
 
     // FIXME: Telepathy-qt does not let us know if existing channels are being recovered, 
     // so if this is the first run, give it some time and call this method again
@@ -682,22 +683,22 @@ void Approver::onHandleMediaKeyRequested(bool doubleClick)
         timer->setInterval(1000);
         timer->setSingleShot(true);
         QObject::connect(timer, &QTimer::timeout, [=]() {
-            onHandleMediaKeyRequested(doubleClick);
+            handleMediaKey(doubleClick);
             timer->deleteLater();
         });
         timer->start();
-        return;
+        return willHandle;
     }
  
     if (mPendingSnapDecision) {
         onAcceptCallRequested();
-        return;
     } else if (CallManager::instance()->hasCalls()) {
         // if there is no incoming call, we should hangup the current active call
         CallEntry *call =  CallManager::instance()->foregroundCall();
         if (call) {
             call->endCall();
         }
-    } 
+    }
+    return willHandle;
 }
 

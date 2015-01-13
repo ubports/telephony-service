@@ -56,6 +56,7 @@ public:
     bool showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation,
                           const Tp::ChannelPtr channel,
                           const QContact &contact = QContact());
+    bool handleMediaKey(bool doubleClick);
 
 protected:
     Tp::ChannelDispatchOperationPtr dispatchOperationForIncomingCall();
@@ -70,7 +71,6 @@ private Q_SLOTS:
     void onHangupAndAcceptCallRequested();
     void onAcceptCallRequested();
     void onRejectCallRequested();
-    void onHandleMediaKeyRequested(bool doubleClick);
     void updateNotification(const QtContacts::QContact &contact);
 
 private:

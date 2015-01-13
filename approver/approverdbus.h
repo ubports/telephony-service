@@ -26,6 +26,7 @@
 #include <QtCore/QObject>
 #include <QtDBus/QDBusContext>
 #include "chatmanager.h"
+#include "approver.h"
 
 /**
  * DBus interface for the phone approver
@@ -35,7 +36,7 @@ class ApproverDBus : public QObject, protected QDBusContext
     Q_OBJECT
 
 public:
-    ApproverDBus(QObject* parent=0);
+    ApproverDBus(Approver *approver, QObject* parent=0);
     ~ApproverDBus();
 
     bool connectToBus();
@@ -44,13 +45,14 @@ public Q_SLOTS:
     Q_NOREPLY void HangUpAndAcceptCall();
     Q_NOREPLY void AcceptCall();
     Q_NOREPLY void RejectCall();
-    Q_NOREPLY void HandleMediaKey(bool doubleClick);
+    bool HandleMediaKey(bool doubleClick);
 
 Q_SIGNALS:
     void hangUpAndAcceptCallRequested();
     void acceptCallRequested();
     void rejectCallRequested();
-    void handleMediaKeyRequested(bool doubleClick);
+private:
+    Approver *mApprover;
 };
 
 #endif // APPROVERDBUS_H
