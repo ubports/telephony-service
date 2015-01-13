@@ -673,7 +673,8 @@ bool Approver::handleMediaKey(bool doubleClick)
 
     // hasCalls gets the value from handler, so even if CallManager isn't ready right now, we know
     // if the event will be handled later
-    bool willHandle = mPendingSnapDecision || CallManager::instance()->hasCalls();
+    bool hasCalls = CallManager::instance()->hasCalls();
+    bool willHandle = mPendingSnapDecision || hasCalls;
 
     // FIXME: Telepathy-qt does not let us know if existing channels are being recovered, 
     // so if this is the first run, give it some time and call this method again
@@ -692,7 +693,7 @@ bool Approver::handleMediaKey(bool doubleClick)
  
     if (mPendingSnapDecision) {
         onAcceptCallRequested();
-    } else if (CallManager::instance()->hasCalls()) {
+    } else if (hasCalls) {
         // if there is no incoming call, we should hangup the current active call
         CallEntry *call =  CallManager::instance()->foregroundCall();
         if (call) {
