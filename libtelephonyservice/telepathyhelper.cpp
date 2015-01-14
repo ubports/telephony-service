@@ -174,8 +174,8 @@ QDBusInterface *TelepathyHelper::handlerInterface() const
 
 QDBusInterface *TelepathyHelper::approverInterface() const
 {
-    if (!mHandlerInterface) {
-        mHandlerInterface = new QDBusInterface("org.freedesktop.Telepathy.Client.TelephonyServiceApprover",
+    if (!mApproverInterface) {
+        mApproverInterface = new QDBusInterface("org.freedesktop.Telepathy.Client.TelephonyServiceApprover",
                                                "/com/canonical/Approver",
                                                "com.canonical.TelephonyServiceApprover",
                                                QDBusConnection::sessionBus(),
