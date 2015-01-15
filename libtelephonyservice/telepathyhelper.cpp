@@ -43,6 +43,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
       mFirstTime(true),
       mConnected(false),
       mHandlerInterface(0),
+      mApproverInterface(0),
       mDefaultSimSettings(new QGSettings("com.ubuntu.phone")),
       mFlightModeInterface("org.freedesktop.URfkill",
                            "/org/freedesktop/URfkill",
