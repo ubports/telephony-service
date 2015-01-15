@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-11-04 18:46-0200\n"
-"PO-Revision-Date: 2014-08-27 19:53+0000\n"
+"PO-Revision-Date: 2014-11-25 19:36+0000\n"
 "Last-Translator: Anne <anneonyme017@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"X-Launchpad-Export-Date: 2015-01-07 06:18+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 "Language: fr\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -53,13 +53,13 @@ msgstr "<b>%1</b> SMS reçus aujourd'hui"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> SMS envoyés aujourd'hui"
 
-#: approver/approver.cpp:293
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "Accepter"
 
 #: indicator/messagingmenu.cpp:199
 msgid "Call back"
-msgstr ""
+msgstr "Rappeler"
 
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
@@ -87,11 +87,11 @@ msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Désactivez le mode avion, relancez l'application et réessayez à nouveau."
 
-#: approver/approver.cpp:315
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "Refuser"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "Rester en ligne + Répondre"
 
@@ -171,7 +171,7 @@ msgstr "Enregistrer"
 
 #: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
 msgid "Send"
-msgstr ""
+msgstr "Envoyer"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."

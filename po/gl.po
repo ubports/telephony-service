@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"X-Launchpad-Export-Date: 2015-01-07 06:18+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -52,7 +52,7 @@ msgstr "Hoxe recibiu <b>%1</b> mensaxes"
 msgid "<b>%1</b> text messages sent today"
 msgstr "Hoxe enviou <b>%1</b> mensaxes"
 
-#: approver/approver.cpp:293
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "Aceptar"
 
@@ -85,11 +85,11 @@ msgstr "Cancelar"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "Desactive o modo avión e probe desde o aplicativo de mensaxería."
 
-#: approver/approver.cpp:315
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "Rexeitar"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "Manter + Contestar"
 

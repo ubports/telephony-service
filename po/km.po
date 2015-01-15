@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"X-Launchpad-Export-Date: 2015-01-07 06:18+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -50,7 +50,7 @@ msgstr "ថ្ងៃនេះ​បាន​ទទួល​សារ <b>%1</b>"
 msgid "<b>%1</b> text messages sent today"
 msgstr "ថ្ងៃនេះ​បាន​ផ្ញើ​សារ <b>%1</b>"
 
-#: approver/approver.cpp:293
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "ព្រម​ទទួល"
 
@@ -83,11 +83,11 @@ msgstr "បោះបង់"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 
-#: approver/approver.cpp:315
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "បដិសេធ"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "ចុច​ជាប់ + ឆ្លើយ"
 

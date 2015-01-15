@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
 "n%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"X-Launchpad-Export-Date: 2015-01-07 06:18+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -57,7 +57,7 @@ msgstr "<b>%1</b> današnjih prejetih besedilnih sporočil"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> današnjih poslanih besedilnih sporočil"
 
-#: approver/approver.cpp:293
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "Sprejmi"
 
@@ -90,11 +90,11 @@ msgstr "Prekliči"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 
-#: approver/approver.cpp:315
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "Zavrni"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "Zadrži + Odgovori"
 

@@ -260,6 +260,9 @@ void TelepathyHelper::setupAccountEntry(AccountEntry *entry)
     connect(entry,
             SIGNAL(accountReady()),
             SLOT(onAccountReady()));
+    connect(entry,
+            SIGNAL(removed()),
+            SLOT(onAccountRemoved()));
 }
 
 bool TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
@@ -346,6 +349,57 @@ AccountEntry *TelepathyHelper::activeAccountAt(QQmlListProperty<AccountEntry> *p
     return TelepathyHelper::instance()->activeAccounts()[index];
 }
 
+void TelepathyHelper::onAccountRemoved()
+{
+    AccountEntry *account = qobject_cast<AccountEntry*>(sender());
+    if (!account) {
+        return;
+    }
+    mAccounts.removeAll(account);
+
+    updateConnectedStatus();
+
+    Q_EMIT accountIdsChanged();
+    Q_EMIT accountsChanged();
+    Q_EMIT activeAccountsChanged();
+    onSettingsChanged("defaultSimForMessages");
+    onSettingsChanged("defaultSimForCalls");
+}
+
+void TelepathyHelper::onNewAccount(const Tp::AccountPtr &account)
+{
+    AccountEntry *accountEntry = new AccountEntry(account, this);
+    connect(accountEntry,
+            SIGNAL(connectedChanged()),
+            SIGNAL(activeAccountsChanged()));
+    connect(accountEntry,
+            SIGNAL(emergencyCallsAvailableChanged()),
+            SIGNAL(emergencyCallsAvailableChanged()));
+    setupAccountEntry(accountEntry);
+
+    mAccounts.append(accountEntry);
+
+    QMap<QString, AccountEntry *> sortedOfonoAccounts;
+    QMap<QString, AccountEntry *> sortedOtherAccounts;
+    Q_FOREACH(AccountEntry *account, mAccounts) {
+        QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
+        if (modemObjName.isEmpty()) {
+            sortedOtherAccounts[account->displayName()] = account;
+        } else {
+            sortedOfonoAccounts[modemObjName] = account;
+        }
+    }
+    mAccounts = QList<AccountEntry*>() << sortedOfonoAccounts.values() <<  sortedOtherAccounts.values() ;
+
+    updateConnectedStatus();
+
+    Q_EMIT accountIdsChanged();
+    Q_EMIT accountsChanged();
+    Q_EMIT activeAccountsChanged();
+    onSettingsChanged("defaultSimForMessages");
+    onSettingsChanged("defaultSimForCalls");
+}
+
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 {
     // if the account manager ready job returns an error, just fail silently
@@ -354,32 +408,22 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
         return;
     }
 
+    // handle dynamic account adding and removing
+    connect(mAccountManager.data(), SIGNAL(newAccount(const Tp::AccountPtr &)), SLOT(onNewAccount(const Tp::AccountPtr &)));
+
     Tp::AccountSetPtr accountSet;
-    QMap<QString, AccountEntry *> orderedAccounts;
     // try to find an account of the one of supported protocols
     Q_FOREACH(const QString &protocol, supportedProtocols()) {
         accountSet = mAccountManager->accountsByProtocol(protocol);
         Q_FOREACH(const Tp::AccountPtr &account, accountSet->accounts()) {
-            QString modemObjName = account->parameters().value("modem-objpath").toString();
-            AccountEntry *accountEntry = new AccountEntry(account, this);
-            connect(accountEntry,
-                    SIGNAL(connectedChanged()),
-                    SIGNAL(activeAccountsChanged()));
-            connect(accountEntry,
-                    SIGNAL(emergencyCallsAvailableChanged()),
-                    SIGNAL(emergencyCallsAvailableChanged()));
-            setupAccountEntry(accountEntry);
-            orderedAccounts[modemObjName] = accountEntry;
+            onNewAccount(account);
         }
     }
-    mAccounts = orderedAccounts.values();
 
     if (mAccounts.count() == 0) {
         Q_EMIT setupReady();
         return;
     }
-
-    // FIXME: handle dynamic account adding and removing
 
     updateConnectedStatus();
 

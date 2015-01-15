@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-11-04 18:46-0200\n"
-"PO-Revision-Date: 2014-08-24 12:46+0000\n"
+"PO-Revision-Date: 2014-11-27 00:47+0000\n"
 "Last-Translator: Danial Behzadi <dani.behzi@gmail.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2014-11-23 05:24+0000\n"
-"X-Generator: Launchpad (build 17252)\n"
+"X-Launchpad-Export-Date: 2015-01-07 06:18+0000\n"
+"X-Generator: Launchpad (build 17286)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -50,13 +50,13 @@ msgstr "امروز <b>%1</b> پیام متنی دریافت شد"
 msgid "<b>%1</b> text messages sent today"
 msgstr "امروز <b>%1</b> پیام متنی فرستاده شد"
 
-#: approver/approver.cpp:293
+#: approver/approver.cpp:296
 msgid "Accept"
 msgstr "پذیرش"
 
 #: indicator/messagingmenu.cpp:199
 msgid "Call back"
-msgstr ""
+msgstr "زنگ زدن"
 
 #: approver/approver.cpp:276
 msgid "Caller number is not available"
@@ -81,13 +81,13 @@ msgstr "لغو"
 
 #: indicator/textchannelobserver.cpp:208
 msgid "Deactivate flight mode and try again from the messaging application."
-msgstr ""
+msgstr "حالت پرواز را خاموش کرده و دوباره از برنامه ی پیام‌رسان تلاش کنید."
 
-#: approver/approver.cpp:315
+#: approver/approver.cpp:318
 msgid "Decline"
 msgstr "رد"
 
-#: approver/approver.cpp:292
+#: approver/approver.cpp:295
 msgid "Hold + Answer"
 msgstr "نگه داشتن + پاسخ"
 
@@ -138,7 +138,7 @@ msgstr "تماس‌های تلفنی"
 
 #: indicator/textchannelobserver.cpp:517
 msgid "Please, select a SIM card:"
-msgstr ""
+msgstr "لطفاً سیم‌کارتی را برگزینید:"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
@@ -167,7 +167,7 @@ msgstr "ذخیره"
 
 #: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
 msgid "Send"
-msgstr ""
+msgstr "فرستادن"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
@@ -192,11 +192,11 @@ msgstr "نشانگر خدمات تلفن"
 
 #: indicator/textchannelobserver.cpp:216
 msgid "The message could not be sent"
-msgstr ""
+msgstr "پیام نتوانست فرستاده شود"
 
 #: indicator/textchannelobserver.cpp:211
 msgid "Try again from the messaging application."
-msgstr ""
+msgstr "دوباره از برنامه ی پیام‌رسان تلاش کنید."
 
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
@@ -213,6 +213,7 @@ msgstr "شماره‌ی ناشناس"
 #: indicator/textchannelobserver.cpp:206
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
+"قفل سیم‌کارتتان را باز کرده و دوباره از برنامه ی پیام‌رسان تلاش کنید."
 
 #: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
 msgid "View message"
@@ -220,7 +221,7 @@ msgstr "دیدن پیام"
 
 #: indicator/messagingmenu.cpp:313
 msgid "Voicemail"
-msgstr ""
+msgstr "پست صوتی"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
