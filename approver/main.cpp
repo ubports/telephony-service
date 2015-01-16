@@ -58,11 +58,11 @@ int main(int argc, char **argv)
     qputenv("UBUNTU_PLATFORM_API_BACKEND", "touch_mirclient");
 #endif
 
-    // register the approver
-    Approver *approver = new Approver();
-    QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, [approver]() {
-        TelepathyHelper::instance()->registerClient(approver, "TelephonyServiceApprover");
+    QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, []() {
+        // register the approver
         TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceObserver");
+        Approver *approver = new Approver();
+        TelepathyHelper::instance()->registerClient(approver, "TelephonyServiceApprover");
     });
 
     return app.exec();

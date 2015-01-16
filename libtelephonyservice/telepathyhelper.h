@@ -67,6 +67,7 @@ public:
     QQmlListProperty<AccountEntry> qmlActiveAccounts();
     ChannelObserver *channelObserver() const;
     QDBusInterface *handlerInterface() const;
+    QDBusInterface *approverInterface() const;
     AccountEntry *defaultMessagingAccount() const;
     AccountEntry *defaultCallAccount() const;
 
@@ -136,6 +137,7 @@ private:
     bool mFirstTime;
     bool mConnected;
     mutable QDBusInterface *mHandlerInterface;
+    mutable QDBusInterface *mApproverInterface;
     QGSettings *mDefaultSimSettings;
     QDBusInterface mFlightModeInterface;
 };
