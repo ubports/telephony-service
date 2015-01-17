@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-04 18:46-0200\n"
+"POT-Creation-Date: 2015-01-16 15:24-0200\n"
 "PO-Revision-Date: 2015-01-16 00:09+0000\n"
 "Last-Translator: Víctor R. Ruiz <Unknown>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-01-16 06:20+0000\n"
-"X-Generator: Launchpad (build 17303)\n"
+"X-Launchpad-Export-Date: 2015-01-17 07:07+0000\n"
+"X-Generator: Launchpad (build 17304)\n"
 "Language: es\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -92,6 +92,10 @@ msgstr ""
 msgid "Decline"
 msgstr "Rechazar"
 
+#: approver/approver.cpp:439
+msgid "End + Answer"
+msgstr ""
+
 #: approver/approver.cpp:425
 msgid "Hold + Answer"
 msgstr "En espera + responder"
@@ -104,13 +108,25 @@ msgstr "No pude responderte, ¿podrías llamarme ahora?"
 msgid "I'll be 20 minutes late."
 msgstr "Tardaré 20 minutos."
 
+#: approver/approver.cpp:79
+msgid "I'm busy at the moment. I'll call later."
+msgstr ""
+
 #: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Estoy ocupado/a en este momento. Te llamaré luego."
 
+#: approver/approver.cpp:80
+msgid "I'm running late, on my way now."
+msgstr ""
+
 #: indicator/messagingmenu.cpp:205
 msgid "I'm running late. I'm on my way."
 msgstr "Se me hizo tarde, voy en camino."
+
+#: approver/approver.cpp:456
+msgid "Message & decline"
+msgstr ""
 
 #: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
 #, qt-format
@@ -133,13 +149,17 @@ msgstr "No se recibieron mensajes de texto hoy"
 msgid "No text messages sent today"
 msgstr "No se enviaron mensajes de texto hoy"
 
-#: indicator/textchannelobserver.cpp:270 indicator/ussdindicator.cpp:79
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
 msgid "Ok"
 msgstr "Aceptar"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
 msgstr "Llamadas telefónicas"
+
+#: approver/approver.cpp:81
+msgid "Please call me back later."
+msgstr ""
 
 #: indicator/textchannelobserver.cpp:539
 msgid "Please, select a SIM card:"

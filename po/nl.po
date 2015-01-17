@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2014-11-04 18:46-0200\n"
+"POT-Creation-Date: 2015-01-16 15:24-0200\n"
 "PO-Revision-Date: 2015-01-13 20:08+0000\n"
 "Last-Translator: rob <linuxned@gmail.com>\n"
 "Language-Team: Dutch <nl@li.org>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-01-14 06:48+0000\n"
-"X-Generator: Launchpad (build 17298)\n"
+"X-Launchpad-Export-Date: 2015-01-17 07:07+0000\n"
+"X-Generator: Launchpad (build 17304)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -91,6 +91,10 @@ msgstr ""
 msgid "Decline"
 msgstr "Weigeren"
 
+#: approver/approver.cpp:439
+msgid "End + Answer"
+msgstr ""
+
 #: approver/approver.cpp:425
 msgid "Hold + Answer"
 msgstr "In de wacht + beantwoorden"
@@ -103,13 +107,25 @@ msgstr "Ik heb uw oproep gemist - kunt u me nu bellen?"
 msgid "I'll be 20 minutes late."
 msgstr "Ik kom 20 minuten later."
 
+#: approver/approver.cpp:79
+msgid "I'm busy at the moment. I'll call later."
+msgstr ""
+
 #: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Ik ben momenteel bezig. Ik bel later terug."
 
+#: approver/approver.cpp:80
+msgid "I'm running late, on my way now."
+msgstr ""
+
 #: indicator/messagingmenu.cpp:205
 msgid "I'm running late. I'm on my way."
 msgstr "Ik ben laat. Ik ben onderweg."
+
+#: approver/approver.cpp:456
+msgid "Message & decline"
+msgstr ""
 
 #: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
 #, qt-format
@@ -139,6 +155,10 @@ msgstr "Ok"
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
 msgstr "Telefoongesprekken"
+
+#: approver/approver.cpp:81
+msgid "Please call me back later."
+msgstr ""
 
 #: indicator/textchannelobserver.cpp:539
 msgid "Please, select a SIM card:"
