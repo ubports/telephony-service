@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2015-01-16 01:47+0000\n"
+"PO-Revision-Date: 2015-01-17 17:14+0000\n"
 "Last-Translator: samson <Unknown>\n"
 "Language-Team: Amharic <am@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2015-01-17 07:07+0000\n"
+"X-Launchpad-Export-Date: 2015-01-18 05:03+0000\n"
 "X-Generator: Launchpad (build 17304)\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -52,28 +52,28 @@ msgstr "<b>%1</b> ዛሬ የተቀበሉዋቸው የ ጽሁፍ መልእክቶ�
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> ዛሬ የላኩዋቸው የ ጽሁፍ መልእክቶች"
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:440
 msgid "Accept"
 msgstr "ተቀብያለሁ"
 
 #: indicator/messagingmenu.cpp:199
 msgid "Call back"
-msgstr ""
+msgstr "መልሶ መደወያ"
 
-#: approver/approver.cpp:392
+#: approver/approver.cpp:406
 msgid "Caller number is not available"
 msgstr "የደዋዩ ቁጥር አልተገኘም"
 
-#: approver/approver.cpp:389
+#: approver/approver.cpp:403
 #, qt-format
 msgid "Calling from %1"
 msgstr "ደዋይ ከ %1"
 
-#: approver/approver.cpp:385
+#: approver/approver.cpp:399
 msgid "Calling from private number"
 msgstr "ደዋይ ከ ግል ቁጥር"
 
-#: approver/approver.cpp:387
+#: approver/approver.cpp:401
 msgid "Calling from unknown number"
 msgstr "ደዋይ ካልታወቀ ቁጥር"
 
@@ -85,15 +85,15 @@ msgstr "መሰረዣ"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:462
 msgid "Decline"
 msgstr "አልቀበልም"
 
-#: approver/approver.cpp:439
+#: approver/approver.cpp:453
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:425
+#: approver/approver.cpp:439
 msgid "Hold + Answer"
 msgstr "ይጠብቁ + መመለሻ"
 
@@ -105,15 +105,15 @@ msgstr "ጥሪው አምልጧኛል - አሁን ሊደውሉልኝ ይችላሉ
 msgid "I'll be 20 minutes late."
 msgstr "20 ደቂቆች እዘገያለሁ"
 
-#: approver/approver.cpp:79
+#: approver/approver.cpp:82
 msgid "I'm busy at the moment. I'll call later."
-msgstr ""
+msgstr "ለጊዜው በ ስራ ላይ ነኝ: በኋላ እደውላለሁ"
 
 #: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "አሁን በስራ ላይ ነኝ: በኋላ እደውላለሁ"
 
-#: approver/approver.cpp:80
+#: approver/approver.cpp:83
 msgid "I'm running late, on my way now."
 msgstr ""
 
@@ -121,9 +121,9 @@ msgstr ""
 msgid "I'm running late. I'm on my way."
 msgstr "እየመጣሁ ነው: ነገር ግን እዘገያለሁ"
 
-#: approver/approver.cpp:456
+#: approver/approver.cpp:470
 msgid "Message & decline"
-msgstr ""
+msgstr "መልእክት & አልተቀበሉም"
 
 #: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
 #, qt-format
@@ -146,7 +146,7 @@ msgstr "ዛሬ ምንም የ ጽሁፍ መልእክቶች አልተቀበሉም"
 msgid "No text messages sent today"
 msgstr "ዛሬ ምንም የ ጽሁፍ መልእክቶች አልላኩም"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
+#: indicator/textchannelobserver.cpp:270 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "እሺ"
 
@@ -154,9 +154,9 @@ msgstr "እሺ"
 msgid "Phone Calls"
 msgstr "የስልክ ጥሪዎች"
 
-#: approver/approver.cpp:81
+#: approver/approver.cpp:84
 msgid "Please call me back later."
-msgstr ""
+msgstr "እባክዎን ትንሽ ቆይተው እንደገና ይደውሉ"
 
 #: indicator/textchannelobserver.cpp:539
 msgid "Please, select a SIM card:"
@@ -224,7 +224,7 @@ msgstr ""
 msgid "Unknown Number"
 msgstr "ያልታወቀ ቁጥር"
 
-#: approver/approver.cpp:59
+#: approver/approver.cpp:61
 msgid "Unknown caller"
 msgstr "ያልታወቀ ደዋይ"
 
