@@ -54,6 +54,8 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void callPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
+    void conferenceCallRequestFinished(bool succeeded);
+    void callHoldingFailed(const QString &objectPath);
 
 protected:
     Tp::CallChannelPtr existingCall(const QString &phoneNumber);

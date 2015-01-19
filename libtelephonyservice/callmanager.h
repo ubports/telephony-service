@@ -92,12 +92,14 @@ Q_SIGNALS:
     void voicemailNumberChanged();
     void emergencyNumbersChanged();
     void callIndicatorVisibleChanged(bool visible);
+    void conferenceRequestFailed();
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
     void onChannelObserverUnregistered();
     void onCallEnded();
     void onCallIndicatorVisibleChanged(bool visible);
+    void onConferenceCallRequestFinished(bool succeeded);
 
 private:
     explicit CallManager(QObject *parent = 0);

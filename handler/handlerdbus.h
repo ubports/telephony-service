@@ -77,6 +77,8 @@ Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);
     void CallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
     void CallIndicatorVisibleChanged(bool visible);
+    void ConferenceCallRequestFinished(bool succeeded);
+    void CallHoldingFailed(const QString &objectPath);
 
 private:
     bool mCallIndicatorVisible;
