@@ -1,3 +1,14 @@
+telephony-service (0.1+15.04.20150120.2-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Invoke LiveCall view when answering incoming calls. (LP: #1410961)
+  * Silence incoming calls when power button is pressed. (LP: #1376240)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 20 Jan 2015 16:53:13 +0000
+
 telephony-service (0.1+15.04.20150116-0ubuntu1) vivid; urgency=low
 
   [ Tiago Salem Herrmann ]
