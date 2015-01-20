@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2014 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -33,6 +34,8 @@
 #include <TelepathyQt/ChannelDispatchOperation>
 #include <QFeedbackHapticsEffect>
 
+QTCONTACTS_USE_NAMESPACE
+
 class Approver : public QObject, public Tp::AbstractClientApprover
 {
     Q_OBJECT
@@ -49,6 +52,11 @@ public:
     void onApproved(Tp::ChannelDispatchOperationPtr dispatchOp);
     void onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp);
     void onRejected(Tp::ChannelDispatchOperationPtr dispatchOp);
+    void onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const char *action);
+    bool showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation,
+                          const Tp::ChannelPtr channel,
+                          const QContact &contact = QContact());
+    bool handleMediaKey(bool doubleClick);
 
 protected:
     Tp::ChannelDispatchOperationPtr dispatchOperationForIncomingCall();
@@ -65,6 +73,8 @@ private Q_SLOTS:
     void onRejectCallRequested();
     void updateNotification(const QtContacts::QContact &contact);
     void onUnityStateChanged(int state, int reason);
+    void onSettleTimerTimeout();
+    void processHandleMediaKey(bool doubleClick);
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
@@ -75,6 +85,8 @@ private:
     QString mCachedBody;
     QFeedbackHapticsEffect mVibrateEffect;
     QTimer mVibrateTimer;
+    QTimer *mSettleTimer;
+    QMap<QString,QString> mRejectActions;
 };
 
 #endif // APPROVER_H

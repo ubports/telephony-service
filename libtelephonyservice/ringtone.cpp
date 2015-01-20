@@ -27,7 +27,6 @@ RingtoneWorker::RingtoneWorker(QObject *parent) :
     mMessageAudioPlayer(NULL)
 {
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
-    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
     mCallAudioPlaylist.setCurrentIndex(0);
     mVibrateEffect.setDuration(500);
 }
@@ -46,6 +45,8 @@ void RingtoneWorker::playIncomingCallSound()
         return;
     }
 
+    // pick up the new ringtone in case it changed in the meantime
+    mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
     mCallAudioPlayer = new QMediaPlayer(this);
     mCallAudioPlayer->setAudioRole(QMediaPlayer::AlertRole);
     mCallAudioPlayer->setPlaylist(&mCallAudioPlaylist);
@@ -60,6 +61,7 @@ void RingtoneWorker::stopIncomingCallSound()
         mCallAudioPlayer->deleteLater();
         mCallAudioPlayer = NULL;
     }
+    mCallAudioPlaylist.clear();
 }
 
 void RingtoneWorker::playIncomingMessageSound()

@@ -29,7 +29,7 @@
 static const char* DBUS_SERVICE = "com.canonical.Approver";
 static const char* DBUS_OBJECT_PATH = "/com/canonical/Approver";
 
-ApproverDBus::ApproverDBus(QObject* parent) : QObject(parent)
+ApproverDBus::ApproverDBus(Approver *approver, QObject* parent) : QObject(parent), mApprover(approver)
 {
 }
 
@@ -63,4 +63,9 @@ void ApproverDBus::AcceptCall()
 void ApproverDBus::RejectCall()
 {
     Q_EMIT rejectCallRequested();
+}
+
+bool ApproverDBus::HandleMediaKey(bool doubleClick)
+{
+    return mApprover->handleMediaKey(doubleClick);
 }

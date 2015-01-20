@@ -67,6 +67,7 @@ public:
     QQmlListProperty<AccountEntry> qmlActiveAccounts();
     ChannelObserver *channelObserver() const;
     QDBusInterface *handlerInterface() const;
+    QDBusInterface *approverInterface() const;
     AccountEntry *defaultMessagingAccount() const;
     AccountEntry *defaultCallAccount() const;
 
@@ -80,7 +81,7 @@ public:
     bool emergencyCallsAvailable() const;
     Q_INVOKABLE void unlockSimCards() const;
 
-    void registerClient(Tp::AbstractClient *client, QString name);
+    bool registerClient(Tp::AbstractClient *client, QString name);
 
     // pre-populated channel class specs for conferences
     static Tp::ChannelClassSpec audioConferenceSpec();
@@ -116,6 +117,8 @@ protected:
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *op);
     void onAccountReady();
+    void onNewAccount(const Tp::AccountPtr &account);
+    void onAccountRemoved();
     void updateConnectedStatus();
     void onSettingsChanged(const QString&);
 
@@ -134,6 +137,7 @@ private:
     bool mFirstTime;
     bool mConnected;
     mutable QDBusInterface *mHandlerInterface;
+    mutable QDBusInterface *mApproverInterface;
     QGSettings *mDefaultSimSettings;
     QDBusInterface mFlightModeInterface;
 };

@@ -61,6 +61,7 @@ public:
     Q_INVOKABLE void mergeCalls(CallEntry *firstCall, CallEntry *secondCall);
     Q_INVOKABLE void splitCall(CallEntry *callEntry);
     Q_INVOKABLE void playTone(const QString &key);
+    Q_INVOKABLE bool handleMediaKey(bool doubleClick);
 
     CallEntry *foregroundCall() const;
     CallEntry *backgroundCall() const;

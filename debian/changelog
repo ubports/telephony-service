@@ -1,3 +1,103 @@
+telephony-service (0.1+15.04.20150116-0ubuntu1) vivid; urgency=low
+
+  [ Tiago Salem Herrmann ]
+  * Expose HandleMediaKey(bool doubleClick) to DBus. (LP: #1398427)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 16 Jan 2015 10:28:07 +0000
+
+telephony-service (0.1+15.04.20150109-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Check if the account exists before accessing the pointer. (LP:
+    #1408029)
+  * Only register telepathy clients and observers after TelepathyHelper
+    is ready. (LP: #1408103)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 09 Jan 2015 13:44:26 +0000
+
+telephony-service (0.1+15.04.20141219-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Dynamically add and remove telepathy accounts.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 19 Dec 2014 15:25:02 +0000
+
+telephony-service (0.1+15.04.20141212-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Renato Araujo Oliveira Filho ]
+  * Added support for [',', ';', '+', '*', '#'] on phone number fields.
+    (LP: #1399011, #1372548)
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 12 Dec 2014 20:34:51 +0000
+
+telephony-service (0.1+15.04.20141210-0ubuntu1) vivid; urgency=low
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+  [ Tiago Salem Herrmann ]
+  * Only set voicemail is the phone number is not empty. (LP: #1398431)
+  * Use dbus-send to get the list of modems from ofono.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 10 Dec 2014 18:01:56 +0000
+
+telephony-service (0.1+15.04.20141121.1-0ubuntu1) vivid; urgency=low
+
+  [ Alexandre Abreu ]
+  * Add phone number match to phone utils from libphonenumber. This is
+    mostly useful in phone number replacement cases like:
+
+  [ Tiago Salem Herrmann ]
+  * Provide the translated strings to messaging-menu. Update pot file
+    (LP: #1389234)
+  * Use only active accounts to send messages. (LP: #1389708)
+  * Make sure to always use the selected ringtone on every new incoming
+    call. (LP: #1392222)
+
+  [ CI bot ]
+  * Resync trunk
+
+  [ Timo Jyrinki ]
+  * Merge also lp:~tiagosh/telephony-service/swipe-to-answer
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+  [ Gustavo Pichorim Boiko ]
+  * Update the snap decision to support more actions.
+  * Do not crash if the account manager preparation job does not
+    succeed.
+  * Wait until the contact match request finishes before showing the
+    OSDs. (LP: #1359849)
+  * Do not enable quick replying for icoming calls from unknown or
+    private numbers. (LP: #1394297)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 21 Nov 2014 17:30:02 +0000
+
+telephony-service (0.1+15.04.20141110.2-0ubuntu1) vivid; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Update the snap decision to support more actions. (LP: #1218289)
+  * Do not crash if the account manager preparation job does not
+    succeed.
+
+  [ Tiago Salem Herrmann ]
+  * Use swipe to answer/reject calls (LP: #1358343)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Mon, 10 Nov 2014 18:29:26 +0000
+
 telephony-service (0.1+14.10.20141025~rtm-0ubuntu1) 14.09; urgency=low
 
   [ CI bot ]
