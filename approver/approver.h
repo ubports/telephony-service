@@ -72,6 +72,7 @@ private Q_SLOTS:
     void onAcceptCallRequested();
     void onRejectCallRequested();
     void updateNotification(const QtContacts::QContact &contact);
+    void onUnityStateChanged(int state, int reason);
     void onSettleTimerTimeout();
     void processHandleMediaKey(bool doubleClick);
 
