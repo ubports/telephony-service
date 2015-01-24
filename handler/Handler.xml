@@ -141,6 +141,18 @@
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
         </signal>
+        <signal name="ConferenceCallRequestFinished">
+            <dox:d><![CDATA[
+                A conference call request has finished.
+            ]]></dox:d>
+            <arg name="succeeded" type="b"/>
+        </signal>
+        <signal name="CallHoldingFailed">
+            <dox:d><![CDATA[
+                Setting a call on hold failed
+            ]]></dox:d>
+            <arg name="objectPath" type="s"/>
+        </signal>
         <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
         <property name="CallIndicatorVisible" type="b" access="readwrite"/>
         <signal name="CallIndicatorVisibleChanged">

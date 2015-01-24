@@ -57,6 +57,11 @@ CallManager::CallManager(QObject *parent)
                        "com.canonical.TelephonyServiceHandler",
                        "CallIndicatorVisibleChanged",
                        this, SLOT(onCallIndicatorVisibleChanged(bool)));
+    connection.connect("com.canonical.TelephonyServiceHandler",
+                       "/com/canonical/TelephonyServiceHandler",
+                       "com.canonical.TelephonyServiceHandler",
+                       "ConferenceCallRequestFinished",
+                       this, SLOT(onConferenceCallRequestFinished(bool)));
 }
 
 void CallManager::refreshProperties()
@@ -188,6 +193,13 @@ void CallManager::onCallIndicatorVisibleChanged(bool visible)
 {
     mCallIndicatorVisible = visible;
     Q_EMIT callIndicatorVisibleChanged(visible);
+}
+
+void CallManager::onConferenceCallRequestFinished(bool succeeded)
+{
+    if (!succeeded) {
+        Q_EMIT conferenceRequestFailed();
+    }
 }
 
 CallEntry *CallManager::foregroundCall() const

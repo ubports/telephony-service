@@ -38,6 +38,12 @@ HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent), mCallIndicatorVisib
     connect(CallHandler::instance(),
             SIGNAL(callPropertiesChanged(QString,QVariantMap)),
             SIGNAL(CallPropertiesChanged(QString,QVariantMap)));
+    connect(CallHandler::instance(),
+            SIGNAL(callHoldingFailed(QString)),
+            SIGNAL(CallHoldingFailed(QString)));
+    connect(CallHandler::instance(),
+            SIGNAL(conferenceCallRequestFinished(bool)),
+            SIGNAL(ConferenceCallRequestFinished(bool)));
 }
 
 HandlerDBus::~HandlerDBus()
