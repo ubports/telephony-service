@@ -1,3 +1,11 @@
+telephony-service (0.1+15.04.20150124-0ubuntu1) vivid; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Notify errors when creating conference calls and putting calls on
+    hold. (LP: #1410365)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Sat, 24 Jan 2015 02:03:16 +0000
+
 telephony-service (0.1+15.04.20150120.2-0ubuntu1) vivid; urgency=low
 
   [ CI Train Bot ]
