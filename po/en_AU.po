@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-11-04 18:46-0200\n"
-"PO-Revision-Date: 2014-08-27 10:00+0000\n"
+"POT-Creation-Date: 2015-01-16 15:24-0200\n"
+"PO-Revision-Date: 2015-01-25 05:46+0000\n"
 "Last-Translator: Jared Norris <jarednorris@ubuntu.com>\n"
 "Language-Team: English (Australia) <en_AU@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-01-07 06:19+0000\n"
-"X-Generator: Launchpad (build 17286)\n"
+"X-Launchpad-Export-Date: 2015-01-26 06:54+0000\n"
+"X-Generator: Launchpad (build 17306)\n"
 "Language: \n"
 
 #: indicator/messagingmenu.cpp:256
@@ -53,28 +53,28 @@ msgstr "<b>%1</b> text messages received today"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> text messages sent today"
 
-#: approver/approver.cpp:296
+#: approver/approver.cpp:463
 msgid "Accept"
 msgstr "Accept"
 
 #: indicator/messagingmenu.cpp:199
 msgid "Call back"
-msgstr ""
+msgstr "Call back"
 
-#: approver/approver.cpp:276
+#: approver/approver.cpp:429
 msgid "Caller number is not available"
 msgstr "Caller number is not available"
 
-#: approver/approver.cpp:273
+#: approver/approver.cpp:426
 #, qt-format
 msgid "Calling from %1"
 msgstr "Calling from %1"
 
-#: approver/approver.cpp:269
+#: approver/approver.cpp:422
 msgid "Calling from private number"
 msgstr "Calling from private number"
 
-#: approver/approver.cpp:271
+#: approver/approver.cpp:424
 msgid "Calling from unknown number"
 msgstr "Calling from unknown number"
 
@@ -82,15 +82,19 @@ msgstr "Calling from unknown number"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: indicator/textchannelobserver.cpp:208
+#: indicator/textchannelobserver.cpp:207
 msgid "Deactivate flight mode and try again from the messaging application."
-msgstr ""
+msgstr "Deactivate flight mode and try again from the messaging application."
 
-#: approver/approver.cpp:318
+#: approver/approver.cpp:485
 msgid "Decline"
 msgstr "Decline"
 
-#: approver/approver.cpp:295
+#: approver/approver.cpp:476
+msgid "End + Answer"
+msgstr "End + Answer"
+
+#: approver/approver.cpp:462
 msgid "Hold + Answer"
 msgstr "Hold + Answer"
 
@@ -102,15 +106,27 @@ msgstr "I missed your call - can you call me now?"
 msgid "I'll be 20 minutes late."
 msgstr "I'll be 20 minutes late."
 
+#: approver/approver.cpp:89
+msgid "I'm busy at the moment. I'll call later."
+msgstr "I'm busy at the moment. I'll call later."
+
 #: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "I'm busy at the moment. I'll call you later."
+
+#: approver/approver.cpp:90
+msgid "I'm running late, on my way now."
+msgstr "I'm running late, on my way now."
 
 #: indicator/messagingmenu.cpp:205
 msgid "I'm running late. I'm on my way."
 msgstr "I'm running late. I'm on my way."
 
-#: indicator/textchannelobserver.cpp:343 indicator/textchannelobserver.cpp:418
+#: approver/approver.cpp:493
+msgid "Message & decline"
+msgstr "Message & decline"
+
+#: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
 #, qt-format
 msgid "Message from %1"
 msgstr "Message from %1"
@@ -131,7 +147,7 @@ msgstr "No text messages received today"
 msgid "No text messages sent today"
 msgstr "No text messages sent today"
 
-#: indicator/textchannelobserver.cpp:271 indicator/ussdindicator.cpp:79
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
 msgid "Ok"
 msgstr "Ok"
 
@@ -139,9 +155,13 @@ msgstr "Ok"
 msgid "Phone Calls"
 msgstr "Phone Calls"
 
-#: indicator/textchannelobserver.cpp:517
+#: approver/approver.cpp:91
+msgid "Please call me back later."
+msgstr "Please call me back later."
+
+#: indicator/textchannelobserver.cpp:539
 msgid "Please, select a SIM card:"
-msgstr ""
+msgstr "Please, select a SIM card:"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
@@ -164,13 +184,13 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:277
+#: indicator/textchannelobserver.cpp:276
 msgid "Save"
 msgstr "Save"
 
 #: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
 msgid "Send"
-msgstr ""
+msgstr "Send"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
@@ -193,19 +213,19 @@ msgstr "Telephony Service Approver"
 msgid "Telephony Service Indicator"
 msgstr "Telephony Service Indicator"
 
-#: indicator/textchannelobserver.cpp:216
+#: indicator/textchannelobserver.cpp:215
 msgid "The message could not be sent"
-msgstr ""
+msgstr "The message could not be sent"
 
-#: indicator/textchannelobserver.cpp:211
+#: indicator/textchannelobserver.cpp:210
 msgid "Try again from the messaging application."
-msgstr ""
+msgstr "Try again from the messaging application."
 
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Unknown Number"
 
-#: approver/approver.cpp:59
+#: approver/approver.cpp:61
 msgid "Unknown caller"
 msgstr "Unknown caller"
 
@@ -213,17 +233,17 @@ msgstr "Unknown caller"
 msgid "Unknown number"
 msgstr "Unknown number"
 
-#: indicator/textchannelobserver.cpp:206
+#: indicator/textchannelobserver.cpp:205
 msgid "Unlock your sim card and try again from the messaging application."
-msgstr ""
+msgstr "Unlock your sim card and try again from the messaging application."
 
-#: indicator/textchannelobserver.cpp:228 indicator/textchannelobserver.cpp:363
+#: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
 msgid "View message"
 msgstr "View message"
 
 #: indicator/messagingmenu.cpp:313
 msgid "Voicemail"
-msgstr ""
+msgstr "Voicemail"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"

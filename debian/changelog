@@ -1,3 +1,29 @@
+telephony-service (0.1+15.04.20150124-0ubuntu1) vivid; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Notify errors when creating conference calls and putting calls on
+    hold. (LP: #1410365)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Sat, 24 Jan 2015 02:03:16 +0000
+
+telephony-service (0.1+15.04.20150120.2-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Invoke LiveCall view when answering incoming calls. (LP: #1410961)
+  * Silence incoming calls when power button is pressed. (LP: #1376240)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 20 Jan 2015 16:53:13 +0000
+
+telephony-service (0.1+15.04.20150116-0ubuntu1) vivid; urgency=low
+
+  [ Tiago Salem Herrmann ]
+  * Expose HandleMediaKey(bool doubleClick) to DBus. (LP: #1398427)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 16 Jan 2015 10:28:07 +0000
+
 telephony-service (0.1+15.04.20150109-0ubuntu1) vivid; urgency=low
 
   [ CI Train Bot ]

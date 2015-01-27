@@ -49,6 +49,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
       mConnected(false),
       mHandlerInterface(0),
       mPhoneSettings(new QGSettings("com.ubuntu.phone")),
+      mApproverInterface(0),
       mFlightModeInterface("org.freedesktop.URfkill",
                            "/org/freedesktop/URfkill",
                            "org.freedesktop.URfkill",
@@ -187,6 +188,18 @@ QDBusInterface *TelepathyHelper::handlerInterface() const
                                                const_cast<TelepathyHelper*>(this));
     }
     return mHandlerInterface;
+}
+
+QDBusInterface *TelepathyHelper::approverInterface() const
+{
+    if (!mApproverInterface) {
+        mApproverInterface = new QDBusInterface("org.freedesktop.Telepathy.Client.TelephonyServiceApprover",
+                                               "/com/canonical/Approver",
+                                               "com.canonical.TelephonyServiceApprover",
+                                               QDBusConnection::sessionBus(),
+                                               const_cast<TelepathyHelper*>(this));
+    }
+    return mApproverInterface;
 }
 
 bool TelepathyHelper::connected() const

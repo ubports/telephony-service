@@ -28,6 +28,7 @@
 #include "greetercontacts.h"
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
+#include <TelepathyQt/PendingChannelRequest>
 
 #define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
 #define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
@@ -129,7 +130,12 @@ void CallHandler::setHold(const QString &objectPath, bool hold)
         return;
     }
 
-    channel->requestHold(hold);
+    Tp::PendingOperation *op = channel->requestHold(hold);
+    connect(op, &Tp::PendingOperation::finished, [this, objectPath, op] {
+        if (op->isError()) {
+            Q_EMIT callHoldingFailed(objectPath);
+        }
+    });
 }
 
 void CallHandler::setMuted(const QString &objectPath, bool muted)
@@ -224,7 +230,11 @@ void CallHandler::createConferenceCall(const QStringList &objectPaths)
     }
 
     // there is no need to check the pending request. The new channel will arrive at some point.
-    accountEntry->account()->createConferenceCall(calls, QStringList(), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    Tp::PendingChannelRequest *pcr = accountEntry->account()->createConferenceCall(calls, QStringList(), QDateTime::currentDateTime(),
+                                                                                   TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    connect(pcr, &Tp::PendingChannelRequest::finished, [this, pcr] {
+        Q_EMIT conferenceCallRequestFinished(!pcr->isError());
+    });
 }
 
 void CallHandler::mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath)

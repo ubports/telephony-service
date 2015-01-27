@@ -32,6 +32,7 @@
 #include "callmanager.h"
 #include "callentry.h"
 #include "tonegenerator.h"
+#include "telepathyhelper.h"
 
 #include <QContactAvatar>
 #include <QContactDisplayLabel>
@@ -54,24 +55,33 @@ namespace C {
 
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
-  mPendingSnapDecision(NULL)
+  mPendingSnapDecision(NULL),
+  mSettleTimer(new QTimer(this))
 {
     mDefaultTitle = C::gettext("Unknown caller");
     mDefaultIcon = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
 
-    ApproverDBus *dbus = new ApproverDBus();
+    ApproverDBus *dbus = new ApproverDBus(this);
     connect(dbus,
             SIGNAL(acceptCallRequested()),
             SLOT(onAcceptCallRequested()));
     connect(dbus,
             SIGNAL(rejectCallRequested()),
             SLOT(onRejectCallRequested()));
+
     dbus->connectToBus();
 
     if (GreeterContacts::isGreeterMode()) {
         connect(GreeterContacts::instance(), SIGNAL(contactUpdated(QtContacts::QContact)),
                 this, SLOT(updateNotification(QtContacts::QContact)));
     }
+
+    QDBusConnection::systemBus().connect("com.canonical.Unity.Screen",
+                                         "/com/canonical/Unity/Screen",
+                                         "com.canonical.Unity.Screen",
+                                         "DisplayPowerStateChange",
+                                         this, SLOT(onUnityStateChanged(int,int)));
+
     // WORKAROUND: we need to use a timer as the qtubuntu sensors backend does not support setPeriod()
     mVibrateTimer.setInterval(4000);
     connect(&mVibrateTimer, SIGNAL(timeout()), &mVibrateEffect, SLOT(start()));
@@ -79,6 +89,33 @@ Approver::Approver()
     mRejectActions["rejectMessage1"] = C::gettext("I'm busy at the moment. I'll call later.");
     mRejectActions["rejectMessage2"] = C::gettext("I'm running late, on my way now.");
     mRejectActions["rejectMessage3"] = C::gettext("Please call me back later.");
+
+    mSettleTimer->setInterval(500);
+    mSettleTimer->setSingleShot(true);
+    connect(mSettleTimer, SIGNAL(timeout()), this, SLOT(onSettleTimerTimeout()));
+    mSettleTimer->start();
+}
+
+void Approver::onSettleTimerTimeout()
+{
+    mSettleTimer->deleteLater();
+    mSettleTimer = NULL;
+}
+
+void Approver::onUnityStateChanged(int state, int reason)
+{
+    if (!mPendingSnapDecision) {
+        return;
+    }
+
+    // state == 0 is power off
+    // reason == 2 is power key
+    if (state == 0 && reason == 2) {
+        Ringtone::instance()->stopIncomingCallSound();
+        mVibrateTimer.stop();
+        mVibrateEffect.setDuration(1);
+        mVibrateEffect.start();
+    }
 }
 
 Approver::~Approver()
@@ -316,7 +353,7 @@ void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
 
     // and then launch the dialer-app
-    ApplicationUtils::openUrl(QUrl("application:///dialer-app.desktop"));
+    ApplicationUtils::openUrl(QUrl("dialer:///?view=liveCall"));
 
     mDispatchOps.removeAll(dispatchOp);
 }
@@ -660,6 +697,43 @@ void Approver::onRejectCallRequested()
     Tp::ChannelDispatchOperationPtr callDispatchOp = dispatchOperationForIncomingCall();
     if (!callDispatchOp.isNull()) {
         onRejected(callDispatchOp);
+    }
+}
+
+bool Approver::handleMediaKey(bool doubleClick)
+{
+    Q_UNUSED(doubleClick)
+
+    // hasCalls gets the value from handler, so even if CallManager isn't ready right now, we know
+    // if the event will be handled later
+    bool accepted = mPendingSnapDecision || CallManager::instance()->hasCalls();
+
+    // FIXME: Telepathy-qt does not let us know if existing channels are being recovered, 
+    // so if this is the first run, call this method again when mSettleTimer is done
+    if (mSettleTimer) {
+        QObject::connect(mSettleTimer, &QTimer::timeout, [=]() {
+            handleMediaKey(doubleClick);
+        });
+        return accepted;
+    }
+
+    // postpone this to avoid blocking dbus method callers
+    QMetaObject::invokeMethod(this, "processHandleMediaKey", Qt::QueuedConnection, Q_ARG(bool, doubleClick));
+    return accepted;
+}
+
+void Approver::processHandleMediaKey(bool doubleClick)
+{
+    Q_UNUSED(doubleClick)
+
+    if (mPendingSnapDecision) {
+        onAcceptCallRequested();
+    } else if (CallManager::instance()->hasCalls()) {
+        // if there is no incoming call, we have to hangup the current active call
+        CallEntry *call =  CallManager::instance()->foregroundCall();
+        if (call) {
+            call->endCall();
+        }
     }
 }
 

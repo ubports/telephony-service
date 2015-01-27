@@ -72,6 +72,10 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
             SIGNAL(CallPropertiesChanged(QString, QVariantMap)),
             SLOT(onCallPropertiesChanged(QString,QVariantMap)));
 
+    connect(TelepathyHelper::instance()->handlerInterface(),
+            SIGNAL(CallHoldingFailed(QString)),
+            SLOT(onCallHoldingFailed(QString)));
+
     if (mAccount && !mAccount->voicemailNumber().isEmpty()) {
         setVoicemail(phoneNumber() == mAccount->voicemailNumber());
     }
@@ -153,6 +157,16 @@ void CallEntry::onInternalCallEnded()
     entry->deleteLater();
 }
 
+void CallEntry::onCallHoldingFailed(const QString &objectPath)
+{
+    if (objectPath != mChannel->objectPath()) {
+        return;
+    }
+
+    // make sure we get the hold state again
+    Q_EMIT heldChanged();
+}
+
 void CallEntry::setupCallChannel()
 {
     connect(mChannel.data(),
@@ -163,7 +177,7 @@ void CallEntry::setupCallChannel()
             SLOT(onCallFlagsChanged(Tp::CallFlags)));
     connect(mChannel.data(),
             SIGNAL(localHoldStateChanged(Tp::LocalHoldState,Tp::LocalHoldStateReason)),
-            SIGNAL(heldChanged()));
+            SLOT(onCallLocalHoldStateChanged(Tp::LocalHoldState,Tp::LocalHoldStateReason)));
 
     mLocalMuteState = mMuteInterface.property("LocalMuteState") == 1;
     connect(&mMuteInterface,
@@ -437,6 +451,14 @@ void CallEntry::onCallFlagsChanged(Tp::CallFlags flags)
     Q_UNUSED(flags)
 
     Q_EMIT ringingChanged();
+}
+
+void CallEntry::onCallLocalHoldStateChanged(Tp::LocalHoldState state, Tp::LocalHoldStateReason reason)
+{
+    if (reason == Tp::LocalHoldStateReasonResourceNotAvailable) {
+        Q_EMIT callHoldingFailed();
+    }
+    Q_EMIT heldChanged();
 }
 
 void CallEntry::setVoicemail(bool voicemail)
