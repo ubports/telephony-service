@@ -86,7 +86,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
     connect(mPhoneSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
     connect(&mFlightModeInterface, SIGNAL(FlightModeChanged(bool)), this, SIGNAL(flightModeChanged()));
 
-    mMmsGroupChat = mPhoneSettings->get("mmsGroupChat").value<bool>(); 
+    mMmsGroupChat = mPhoneSettings->get("mmsGroupChatEnabled").value<bool>(); 
 }
 
 TelepathyHelper::~TelepathyHelper()
@@ -121,7 +121,7 @@ QStringList TelepathyHelper::accountIds()
 
 void TelepathyHelper::setMmsGroupChat(bool enable)
 {
-    mPhoneSettings->set("mmsGroupChat", enable);
+    mPhoneSettings->set("mmsGroupChatEnabled", enable);
 }
 
 bool TelepathyHelper::mmsGroupChat()
@@ -549,8 +549,8 @@ void TelepathyHelper::onSettingsChanged(const QString &key)
         }
         mDefaultCallAccount = NULL;
         Q_EMIT defaultCallAccountChanged();
-    } else if (key == "mmsGroupChat") {
-        mMmsGroupChat = mPhoneSettings->get("mmsGroupChat").value<bool>(); 
+    } else if (key == "mmsGroupChatEnabled") {
+        mMmsGroupChat = mPhoneSettings->get("mmsGroupChatEnabled").value<bool>(); 
         Q_EMIT mmsGroupChatChanged();
     }
 }
