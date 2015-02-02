@@ -108,7 +108,6 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
 {
     // try to get a contact for that phone number
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
-    QUrl groupIconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/contact-group.svg");
     QString contactAlias = senderId;
 
     // try to match the contact info
@@ -117,7 +116,11 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
 
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged,
-                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, groupIconPath, contactAlias, this]() {
+                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this]() {
+
+        GFile *file = NULL;
+        GIcon *icon = NULL;
+
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
             return;
@@ -138,15 +141,17 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
         }
 
         if (participantIds.size() > 1) {
-            avatar = groupIconPath;
+            icon = g_themed_icon_new("contact-group");
         }
 
         if (avatar.isEmpty()) {
             avatar = iconPath;
         }
 
-        GFile *file = g_file_new_for_uri(avatar.toString().toUtf8().data());
-        GIcon *icon = g_file_icon_new(file);
+        if (!icon) {
+            file = g_file_new_for_uri(avatar.toString().toUtf8().data());
+            icon = g_file_icon_new(file);
+        }
         MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
                                                                    icon,
                                                                    displayLabel.toUtf8().data(),
@@ -170,7 +175,9 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
         mMessages[messageId] = details;
         messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
 
-        g_object_unref(file);
+        if (file) {
+            g_object_unref(file);
+        }
         g_object_unref(icon);
         g_object_unref(message);
     });
