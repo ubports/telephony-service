@@ -147,7 +147,6 @@ void USSDManager::accountConnectedChanged()
 
         QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
         mStates[accountEntry->accountId()] = ussdIface.property("State").toString();
-        mSerials[accountEntry->accountId()] = ussdIface.property("Serial").toString();
     }
 }
 
@@ -161,7 +160,6 @@ void USSDManager::onAccountsChanged()
         Tp::ConnectionPtr conn(accountEntry->account()->connection());
         disconnectAllSignals(conn);
         mStates.remove(accountEntry->accountId());
-        mSerials.remove(accountEntry->accountId());
 
         if (accountEntry->connected()) {
             QString busName = conn->busName();
@@ -171,7 +169,6 @@ void USSDManager::onAccountsChanged()
 
             QDBusInterface ussdIface(busName, objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
             mStates[accountEntry->accountId()] = ussdIface.property("State").toString();
-            mSerials[accountEntry->accountId()] = ussdIface.property("Serial").toString();
         }
     }
     Q_EMIT stateChanged(state());
@@ -227,9 +224,4 @@ QString USSDManager::state() const
         ++i;
     }
     return "idle";
-}
-
-QString USSDManager::serial(const QString &accountId) const
-{
-    return mSerials[accountId];
 }
