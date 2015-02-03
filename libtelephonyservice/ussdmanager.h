@@ -46,7 +46,6 @@ public:
     Q_INVOKABLE void initiate(const QString &command, const QString &accountId = QString::null);
     Q_INVOKABLE void respond(const QString &reply, const QString &accountId = QString::null);
     Q_INVOKABLE void cancel(const QString &accountId = QString::null);
-    Q_INVOKABLE QString serial(const QString& accountId) const;
 
     bool active() const;
     QString activeAccountId() const;
@@ -85,7 +84,6 @@ private:
     void connectAllSignals(const Tp::ConnectionPtr& conn);
 
     QMap<QString, QString> mStates;
-    QMap<QString, QString> mSerials;
 };
 
 #endif // USSDMANAGER_H
