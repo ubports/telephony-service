@@ -70,7 +70,7 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
-void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &message, const QVariant &attachments, const QString &accountId)
+void ChatManager::sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId)
 {
     AttachmentList newAttachments;
     AccountEntry *account = NULL;
@@ -109,13 +109,13 @@ void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &messag
     }
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMMS", phoneNumbers, QVariant::fromValue(newAttachments), account->accountId());
+    phoneAppHandler->call("SendMMS", recipients, QVariant::fromValue(newAttachments), account->accountId());
 }
 
-void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
+void ChatManager::sendMessage(const QStringList &recipients, const QString &message, const QString &accountId)
 {
-    if (phoneNumbers.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()) {
-        sendMMS(phoneNumbers, message, QVariant(), accountId);
+    if (recipients.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()) {
+        sendMMS(recipients, message, QVariant(), accountId);
         return;
     }
     AccountEntry *account = NULL;
@@ -133,7 +133,7 @@ void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &me
     }
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMessage", phoneNumbers, message, account->accountId());
+    phoneAppHandler->call("SendMessage", recipients, message, account->accountId());
 }
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
@@ -191,7 +191,7 @@ void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::Messag
     }
 }
 
-Tp::TextChannelPtr ChatManager::existingChat(const QStringList &phoneNumbers, const QString &accountId)
+Tp::TextChannelPtr ChatManager::existingChat(const QStringList &recipients, const QString &accountId)
 {
     Tp::TextChannelPtr channel;
 
@@ -199,17 +199,17 @@ Tp::TextChannelPtr ChatManager::existingChat(const QStringList &phoneNumbers, co
         AccountEntry *channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
         int count = 0;
         if (!channelAccount || channelAccount->accountId() != accountId
-                || channel->groupContacts(false).size() != phoneNumbers.size()) {
+                || channel->groupContacts(false).size() != recipients.size()) {
             continue;
         }
-        Q_FOREACH(const QString &phoneNumberNew, phoneNumbers) {
-            Q_FOREACH(const Tp::ContactPtr &phoneNumberOld, channel->groupContacts(false)) {
-                if (PhoneUtils::comparePhoneNumbers(phoneNumberOld->id(), phoneNumberNew)) {
+        Q_FOREACH(const QString &recipientNew, recipients) {
+            Q_FOREACH(const Tp::ContactPtr &recipientOld, channel->groupContacts(false)) {
+                if (PhoneUtils::comparePhoneNumbers(recipientOld->id(), recipientNew)) {
                     count++;
                 }
             }
         }
-        if (count == phoneNumbers.size()) {
+        if (count == recipients.size()) {
             return channel;
         }
 
