@@ -393,9 +393,10 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
 
 void MessagingMenu::sendMessageReply(const QString &messageId, const QString &reply)
 {
-    QString senderId = mMessages[messageId]["senderId"].toString();
-    QString accountId = mMessages[messageId]["accountId"].toString();
-    QStringList participantIds = mMessages[messageId]["participantIds"].toStringList();
+    QVariantMap message = mMessages[messageId];
+    QString senderId = message["senderId"].toString();
+    QString accountId = message["accountId"].toString();
+    QStringList participantIds = message["participantIds"].toStringList();
     QStringList recipients;
     if (!senderId.isEmpty()) {
         recipients << senderId;
@@ -431,8 +432,9 @@ void MessagingMenu::saveFlashMessage(const QString &messageId)
 
 void MessagingMenu::showMessage(const QString &messageId)
 {
-    QString senderId = mMessages[messageId]["senderId"].toString();
-    QStringList participantIds = mMessages[messageId]["participantIds"].toStringList();
+    QVariantMap message = mMessages[messageId];
+    QString senderId = message["senderId"].toString();
+    QStringList participantIds = message["participantIds"].toStringList();
     QStringList recipients;
     if (!senderId.isEmpty()) {
         recipients << senderId;
