@@ -13,13 +13,13 @@ if [ $? -eq 1 ]; then
         if [ "$(getprop rild.libpath '')" == "" ]; then
             exit 0
         fi
-        MODEM_COUNT="`expr $(getprop ril.num_slots 1) - 1`"
+        LAST_MODEM="`expr $(getprop ril.num_slots 1) - 1`"
         # get the translated default sim card name from the telephony-service po files.
         SIM_NAME=$(gettext -d telephony-service "SIM %1")
         GSETTINGS_ARRAY="{"
 
         # and for each modem found create a telepathy account
-        for INDEX in $(seq 0 $MODEM_COUNT); do
+        for INDEX in $(seq 0 $LAST_MODEM); do
             ACCOUNT="account$INDEX"
             echo "creating ofono/ofono/$ACCOUNT"
             mc-tool add ofono/ofono $ACCOUNT string:modem-objpath=/ril_$INDEX
