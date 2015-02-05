@@ -34,13 +34,13 @@ class ChatManager : public QObject
 public:
     static ChatManager *instance();
 
-    Q_INVOKABLE void sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId = QString::null);
-    Q_INVOKABLE void sendMMS(const QStringList &phoneNumbers, const QString &message, const QVariant &attachments, const QString &accountId = QString:: null);
+    Q_INVOKABLE void sendMessage(const QStringList &recipients, const QString &message, const QString &accountId = QString::null);
+    Q_INVOKABLE void sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId = QString:: null);
 
 Q_SIGNALS:
-    void messageReceived(const QString &phoneNumber, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
-    void messageSent(const QString &phoneNumber, const QString &message);
-    void unreadMessagesChanged(const QString &phoneNumber);
+    void messageReceived(const QString &recipient, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
+    void messageSent(const QString &recipient, const QString &message);
+    void unreadMessagesChanged(const QString &recipient);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
@@ -49,10 +49,10 @@ public Q_SLOTS:
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
     void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
 
-    void acknowledgeMessage(const QString &phoneNumber, const QString &messageId, const QString &accountId = QString::null);
+    void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId = QString::null);
 
 protected:
-    Tp::TextChannelPtr existingChat(const QStringList &phoneNumbers, const QString &accountId);
+    Tp::TextChannelPtr existingChat(const QStringList &recipients, const QString &accountId);
 
 protected Q_SLOTS:
     void onAckTimerTriggered();
@@ -61,7 +61,7 @@ private:
     explicit ChatManager(QObject *parent = 0);
 
     QList<Tp::TextChannelPtr> mChannels;
-    QMap<QString, QMap<QString,QStringList> > mMessagesToAck;
+    QMap<QString, QMap<QStringList,QStringList> > mMessagesToAck;
     QTimer mMessagesAckTimer;
 };
 

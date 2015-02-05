@@ -36,6 +36,7 @@ class AccountEntry : public QObject
     Q_OBJECT
     Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
     Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
+    Q_PROPERTY(QString selfContactId READ selfContactId NOTIFY selfContactIdChanged)
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList emergencyNumbers READ emergencyNumbers NOTIFY emergencyNumbersChanged)
     Q_PROPERTY(QString voicemailNumber READ voicemailNumber NOTIFY voicemailNumberChanged)
@@ -50,6 +51,7 @@ public:
     explicit AccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
     QString accountId() const;
     QString displayName() const;
+    QString selfContactId() const;
     QString networkName() const;
     bool simLocked() const;
     void setDisplayName(const QString &name);
@@ -66,6 +68,7 @@ Q_SIGNALS:
     void accountReady();
     void accountIdChanged();
     void displayNameChanged();
+    void selfContactIdChanged();
     void networkNameChanged();
     void simLockedChanged();
     void connectedChanged();
@@ -89,6 +92,7 @@ private Q_SLOTS:
     void onVoicemailNumberChanged(const QString &number);
     void onVoicemailCountChanged(uint count);
     void onVoicemailIndicatorChanged(bool visible);
+    void onSelfHandleChanged(uint handle);
 
 private:
     Tp::AccountPtr mAccount;

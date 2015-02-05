@@ -61,9 +61,9 @@ MessagingMenu::MessagingMenu(QObject *parent) :
     g_object_unref(icon);
 }
 
-void MessagingMenu::addFlashMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text) {
+void MessagingMenu::addFlashMessage(const QString &senderId, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text) {
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
-    QString contactAlias = phoneNumber;
+    QString contactAlias = senderId;
     GFile *file = g_file_new_for_uri(iconPath.toString().toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
  
@@ -90,7 +90,8 @@ void MessagingMenu::addFlashMessage(const QString &phoneNumber, const QString &m
  
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::flashMessageActivateCallback), this);
     QVariantMap details;
-    details["phoneNumber"] = phoneNumber;
+    details["senderId"] = senderId;
+    details["accountId"] = accountId;
     details["messageId"] = messageId;
     details["timestamp"] = timestamp;
     details["text"] = text;
@@ -103,25 +104,30 @@ void MessagingMenu::addFlashMessage(const QString &phoneNumber, const QString &m
  
 }
 
-void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text)
+void MessagingMenu::addMessage(const QString &senderId, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text)
 {
     // try to get a contact for that phone number
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
-    QString contactAlias = phoneNumber;
+    QString contactAlias = senderId;
 
     // try to match the contact info
     QContactFetchRequest *request = new QContactFetchRequest(this);
-    request->setFilter(QContactPhoneNumber::match(phoneNumber));
+    request->setFilter(QContactPhoneNumber::match(senderId));
 
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged,
-                     [request, phoneNumber, messageId, text, timestamp, iconPath, contactAlias, this]() {
+                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this]() {
+
+        GFile *file = NULL;
+        GIcon *icon = NULL;
+
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
             return;
         }
 
         QString displayLabel;
+        QString subTitle;
         QUrl avatar;
 
         if (request->contacts().size() > 0) {
@@ -134,16 +140,22 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
             displayLabel = contactAlias;
         }
 
+        if (participantIds.size() > 1) {
+            icon = g_themed_icon_new("contact-group");
+        }
+
         if (avatar.isEmpty()) {
             avatar = iconPath;
         }
 
-        GFile *file = g_file_new_for_uri(avatar.toString().toUtf8().data());
-        GIcon *icon = g_file_icon_new(file);
+        if (!icon) {
+            file = g_file_new_for_uri(avatar.toString().toUtf8().data());
+            icon = g_file_icon_new(file);
+        }
         MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
                                                                    icon,
                                                                    displayLabel.toUtf8().data(),
-                                                                   NULL,
+                                                                   subTitle.toUtf8().data(),
                                                                    text.toUtf8().data(),
                                                                    timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
         messaging_menu_message_add_action(message,
@@ -156,12 +168,16 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
 
         // save the phone number to use in the actions
         QVariantMap details;
-        details["phoneNumber"] = phoneNumber;
+        details["senderId"] = senderId;
+        details["accountId"] = accountId;
+        details["participantIds"] = participantIds;
  
         mMessages[messageId] = details;
         messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
 
-        g_object_unref(file);
+        if (file) {
+            g_object_unref(file);
+        }
         g_object_unref(icon);
         g_object_unref(message);
     });
@@ -226,7 +242,7 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
     g_object_unref(message);
 }
 
-void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timestamp)
+void MessagingMenu::addCall(const QString &phoneNumber, const QString &accountId, const QDateTime &timestamp)
 {
     Call call;
     bool found = false;
@@ -244,6 +260,7 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
 
     if (!found) {
         call.contactAlias = phoneNumber;
+        call.accountId = accountId;
         call.contactIcon = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
         call.number = phoneNumber;
         call.count = 0;
@@ -376,25 +393,33 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
 
 void MessagingMenu::sendMessageReply(const QString &messageId, const QString &reply)
 {
-    QString phoneNumber = mMessages[messageId]["phoneNumber"].toString();
-    Q_EMIT replyReceived(phoneNumber, reply);
+    QVariantMap message = mMessages[messageId];
+    QString senderId = message["senderId"].toString();
+    QString accountId = message["accountId"].toString();
+    QStringList participantIds = message["participantIds"].toStringList();
+    QStringList recipients;
+    if (!senderId.isEmpty()) {
+        recipients << senderId;
+    }
+    recipients << participantIds;
+    recipients.removeDuplicates();
+    Q_EMIT replyReceived(recipients, accountId, reply);
 
-    Q_EMIT messageRead(phoneNumber, messageId);
+    Q_EMIT messageRead(recipients, accountId, messageId);
 }
 
 void MessagingMenu::saveFlashMessage(const QString &messageId)
 {
     QVariantMap details = mMessages[messageId];
-    // TODO: handle dual sim
-    History::Thread thread = History::Manager::instance()->threadForParticipants(TelepathyHelper::instance()->accountIds()[0],
+    History::Thread thread = History::Manager::instance()->threadForParticipants(details["accountId"].toString(),
                                                                                  History::EventTypeText,
-                                                                                 QStringList() << details["phoneNumber"].toString(),
+                                                                                 QStringList() << details["senderId"].toString(),
                                                                                  History::MatchPhoneNumber,
                                                                                  true);
-    History::TextEvent textEvent(TelepathyHelper::instance()->accountIds()[0], 
+    History::TextEvent textEvent(details["accountId"].toString(),
                                  thread.threadId(), 
                                  details["messageId"].toString(), 
-                                 details["phoneNumber"].toString(),
+                                 details["senderId"].toString(),
                                  details["timestamp"].toDateTime(),
                                  false,
                                  details["text"].toString(),
@@ -407,8 +432,17 @@ void MessagingMenu::saveFlashMessage(const QString &messageId)
 
 void MessagingMenu::showMessage(const QString &messageId)
 {
-    QString phoneNumber = mMessages[messageId]["phoneNumber"].toString();
-    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(phoneNumber))));
+    QVariantMap message = mMessages[messageId];
+    QString senderId = message["senderId"].toString();
+    QStringList participantIds = message["participantIds"].toStringList();
+    QStringList recipients;
+    if (!senderId.isEmpty()) {
+        recipients << senderId;
+    }
+    recipients << participantIds;
+    recipients.removeDuplicates();
+ 
+    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
 }
 
 void MessagingMenu::callBack(const QString &messageId)
@@ -420,9 +454,9 @@ void MessagingMenu::callBack(const QString &messageId)
 
 void MessagingMenu::replyWithMessage(const QString &messageId, const QString &reply)
 {
-    QString phoneNumber = callFromMessageId(messageId).number;
-    qDebug() << "TelephonyService/MessagingMenu: Replying to call" << phoneNumber << "with text" << reply;
-    Q_EMIT replyReceived(phoneNumber, reply);
+    Call call = callFromMessageId(messageId);
+    qDebug() << "TelephonyService/MessagingMenu: Replying to call" << call.number << "with text" << reply;
+    Q_EMIT replyReceived(QStringList() << call.number, call.accountId, reply);
 }
 
 void MessagingMenu::callVoicemail(const QString &messageId)

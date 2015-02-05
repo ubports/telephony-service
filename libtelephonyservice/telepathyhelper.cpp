@@ -35,6 +35,11 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/PendingAccount>
 
+template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStringList &key2) 
+{ 
+    return key1.size() > key2.size();  // sort by operator> !
+}
+
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mDefaultCallAccount(NULL),
@@ -43,8 +48,8 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
       mFirstTime(true),
       mConnected(false),
       mHandlerInterface(0),
+      mPhoneSettings(new QGSettings("com.ubuntu.phone")),
       mApproverInterface(0),
-      mDefaultSimSettings(new QGSettings("com.ubuntu.phone")),
       mFlightModeInterface("org.freedesktop.URfkill",
                            "/org/freedesktop/URfkill",
                            "org.freedesktop.URfkill",
@@ -78,13 +83,15 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
     connect(this, SIGNAL(accountReady()), SIGNAL(setupReady()));
-    connect(mDefaultSimSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
+    connect(mPhoneSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
     connect(&mFlightModeInterface, SIGNAL(FlightModeChanged(bool)), this, SIGNAL(flightModeChanged()));
+
+    mMmsGroupChat = mPhoneSettings->get("mmsGroupChatEnabled").value<bool>(); 
 }
 
 TelepathyHelper::~TelepathyHelper()
 {
-    mDefaultSimSettings->deleteLater();
+    mPhoneSettings->deleteLater();
 }
 
 TelepathyHelper *TelepathyHelper::instance()
@@ -110,6 +117,16 @@ QStringList TelepathyHelper::accountIds()
     }
 
     return ids;
+}
+
+void TelepathyHelper::setMmsGroupChat(bool enable)
+{
+    mPhoneSettings->set("mmsGroupChatEnabled", enable);
+}
+
+bool TelepathyHelper::mmsGroupChat()
+{
+    return mMmsGroupChat;
 }
 
 bool TelepathyHelper::flightMode()
@@ -477,9 +494,9 @@ void TelepathyHelper::setDefaultAccount(AccountType type, AccountEntry* account)
     QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
     if (!modemObjName.isEmpty()) {
         if (type == Call) {
-            mDefaultSimSettings->set("defaultSimForCalls", modemObjName);
+            mPhoneSettings->set("defaultSimForCalls", modemObjName);
         } else if (type == Messaging) {
-            mDefaultSimSettings->set("defaultSimForMessages", modemObjName);
+            mPhoneSettings->set("defaultSimForMessages", modemObjName);
         }
     }
 }
@@ -497,7 +514,7 @@ bool TelepathyHelper::emergencyCallsAvailable() const
 void TelepathyHelper::onSettingsChanged(const QString &key)
 {
     if (key == "defaultSimForMessages") {
-        QString defaultSim = mDefaultSimSettings->get("defaultSimForMessages").value<QString>(); 
+        QString defaultSim = mPhoneSettings->get("defaultSimForMessages").value<QString>(); 
         if (defaultSim == "ask") {
             mDefaultMessagingAccount = NULL;
             Q_EMIT defaultMessagingAccountChanged();
@@ -515,7 +532,7 @@ void TelepathyHelper::onSettingsChanged(const QString &key)
         mDefaultMessagingAccount = NULL;
         Q_EMIT defaultMessagingAccountChanged();
     } else if (key == "defaultSimForCalls") {
-        QString defaultSim = mDefaultSimSettings->get("defaultSimForCalls").value<QString>(); 
+        QString defaultSim = mPhoneSettings->get("defaultSimForCalls").value<QString>(); 
         if (defaultSim == "ask") {
             mDefaultCallAccount = NULL;
             Q_EMIT defaultCallAccountChanged();
@@ -532,6 +549,9 @@ void TelepathyHelper::onSettingsChanged(const QString &key)
         }
         mDefaultCallAccount = NULL;
         Q_EMIT defaultCallAccountChanged();
+    } else if (key == "mmsGroupChatEnabled") {
+        mMmsGroupChat = mPhoneSettings->get("mmsGroupChatEnabled").value<bool>(); 
+        Q_EMIT mmsGroupChatChanged();
     }
 }
 

@@ -44,20 +44,21 @@ public Q_SLOTS:
     void sendMessage(const QStringList &phoneNumbers, const QString &text, const QString &accountId);
 
 protected:
-    void triggerNotificationForMessage(const Tp::ReceivedMessage &message);
-    void showNotificationForMessage(const Tp::ReceivedMessage &message, const QContact &contact = QContact());
-    void showNotificationForFlashMessage(const Tp::ReceivedMessage &message);
+    void showNotificationForFlashMessage(const Tp::ReceivedMessage &message, const QString &accountId);
+    void triggerNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds = QStringList());
+    void showNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds = QStringList(), const QContact &contact = QContact());
 
 protected Q_SLOTS:
     void onTextChannelInvalidated();
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
-    void onReplyReceived(const QString &phoneNumber, const QString &reply);
-    void onMessageRead(const QString &phoneNumber, const QString &encodedMessageId);
+    void onReplyReceived(const QStringList &recipients, const QString &accountId, const QString &reply);
+    void onMessageRead(const QStringList &recipients, const QString &accountId, const QString &encodedMessageId);
     void onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString);
     void updateNotifications(const QtContacts::QContact &contact);
 
 private:
+    void processMessageReceived(const Tp::ReceivedMessage &message, const Tp::TextChannelPtr &textChannel);
     QList<Tp::TextChannelPtr> mChannels;
     QList<Tp::TextChannelPtr> mFlashChannels;
     QMap<NotifyNotification*, NotificationData*> mNotifications;
