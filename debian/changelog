@@ -1,3 +1,10 @@
+telephony-service (0.1+15.04.20150205-0ubuntu1) vivid; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Add initial MMS group chat support. (LP: #1415458)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 05 Feb 2015 12:19:35 +0000
+
 telephony-service (0.1+15.04.20150203-0ubuntu1) vivid; urgency=medium
 
   [ CI Train Bot ]
