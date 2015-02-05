@@ -9,27 +9,28 @@ mc-tool show ofono/ofono/account0 2>&1 > /dev/null
 
 # if there is not, create accounts and enable them
 if [ $? -eq 1 ]; then
-        # get the modems from ofono and sort them alphabetically
-        MODEMS=`dbus-send --print-reply --system --dest=org.ofono / org.ofono.Manager.GetModems | grep object | cut -f2 -d\" | sort`
-        INDEX=0
+        # check if there is at least one modem
+        if [ "$(getprop rild.libpath '')" == "" ]; then
+            exit 0
+        fi
+        LAST_MODEM="`expr $(getprop ril.num_slots 1) - 1`"
         # get the translated default sim card name from the telephony-service po files.
         SIM_NAME=$(gettext -d telephony-service "SIM %1")
         GSETTINGS_ARRAY="{"
 
         # and for each modem found create a telepathy account
-        for modem in $MODEMS; do
+        for INDEX in $(seq 0 $LAST_MODEM); do
             ACCOUNT="account$INDEX"
             echo "creating ofono/ofono/$ACCOUNT"
-            mc-tool add ofono/ofono $ACCOUNT string:modem-objpath=$modem
+            mc-tool add ofono/ofono $ACCOUNT string:modem-objpath=/ril_$INDEX
             echo "enabling ofono/ofono/$ACCOUNT"
             mc-tool enable ofono/ofono/$ACCOUNT
             mc-tool auto-connect ofono/ofono/$ACCOUNT
-            INDEX=$((INDEX+1))
             # replace the %1 with the actual index
-            NAME=$(echo $SIM_NAME | sed "s/%1$/$INDEX/")
+            NAME=$(echo $SIM_NAME | sed "s/%1$/$(($INDEX+1))/")
             mc-tool display ofono/ofono/$ACCOUNT "$NAME"
             # append this entry to the gsettings array
-            GSETTINGS_ARRAY="$GSETTINGS_ARRAY '$modem': '$NAME',"
+            GSETTINGS_ARRAY="$GSETTINGS_ARRAY '/ril_$INDEX': '$NAME',"
         done
         # remove the last "," if present
         GSETTINGS_ARRAY="$(echo $GSETTINGS_ARRAY | sed 's/,$//g')}"
