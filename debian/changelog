@@ -1,3 +1,11 @@
+telephony-service (0.1+15.04.20150205.1-0ubuntu1) vivid; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Avoid using ofono to get the list of modems in ofono-setup. (LP:
+    #1413316)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 05 Feb 2015 20:22:09 +0000
+
 telephony-service (0.1+15.04.20150205-0ubuntu1) vivid; urgency=medium
 
   [ Tiago Salem Herrmann ]
