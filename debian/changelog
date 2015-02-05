@@ -1,3 +1,14 @@
+telephony-service (0.1+15.04.20150203-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Gustavo Pichorim Boiko ]
+  * Move the serial to be a property on account entry, and make sure it
+    is read even when the account is not connected.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 03 Feb 2015 18:45:35 +0000
+
 telephony-service (0.1+15.04.20150124-0ubuntu1) vivid; urgency=low
 
   [ Gustavo Pichorim Boiko ]

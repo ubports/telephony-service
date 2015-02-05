@@ -128,6 +128,11 @@ bool AccountEntry::emergencyCallsAvailable() const
     return status != "flightmode" && status != "nomodem" && status != "";
 }
 
+QString AccountEntry::serial() const
+{
+    return mSerial;
+}
+
 void AccountEntry::initialize()
 {
     if (mAccount.isNull()) {
@@ -282,6 +287,9 @@ void AccountEntry::onConnectionChanged()
         connect(mAccount->connection().data(),
                 SIGNAL(selfHandleChanged(uint)),
                 SLOT(onSelfHandleChanged(uint)));
+        // and get the serial
+        QDBusInterface ussdIface(mConnectionInfo.busName, mConnectionInfo.objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
+        mSerial = ussdIface.property("Serial").toString();
 
         watchSelfContactPresence();
     }
@@ -290,6 +298,7 @@ void AccountEntry::onConnectionChanged()
     Q_EMIT connectedChanged();
     Q_EMIT simLockedChanged();
     Q_EMIT selfContactIdChanged();
+    Q_EMIT serialChanged();
 }
 
 void AccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)

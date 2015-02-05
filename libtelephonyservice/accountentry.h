@@ -45,6 +45,7 @@ class AccountEntry : public QObject
     Q_PROPERTY(QString networkName READ networkName NOTIFY networkNameChanged)
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
     Q_PROPERTY(bool simLocked READ simLocked NOTIFY simLockedChanged)
+    Q_PROPERTY(QString serial READ serial NOTIFY serialChanged)
 
 public:
     explicit AccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
@@ -61,6 +62,7 @@ public:
     bool voicemailIndicator() const;
     Tp::AccountPtr account() const;
     bool emergencyCallsAvailable() const;
+    QString serial() const;
 
 Q_SIGNALS:
     void accountReady();
@@ -75,6 +77,7 @@ Q_SIGNALS:
     void voicemailCountChanged();
     void voicemailIndicatorChanged();
     void emergencyCallsAvailableChanged();
+    void serialChanged();
     void removed();
 
 protected Q_SLOTS:
@@ -98,6 +101,7 @@ private:
     uint mVoicemailCount;
     bool mVoicemailIndicator;
     ConnectionInfo mConnectionInfo;
+    QString mSerial;
 };
 
 #endif // ACCOUNTENTRY_H
