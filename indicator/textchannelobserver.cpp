@@ -32,6 +32,7 @@
 #include "telepathyhelper.h"
 #include "phoneutils.h"
 #include "accountentry.h"
+#include "ofonoaccountentry.h"
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
@@ -211,7 +212,10 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
         History::Manager::instance()->writeEvents(events);
 
         QString failureMessage;
-        if (account->simLocked()) {
+        OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(account);
+        bool simLocked = (ofonoAccount && ofonoAccount->simLocked());
+
+        if (simLocked) {
             failureMessage = C::gettext("Unlock your sim card and try again from the messaging application.");
         } else if (TelepathyHelper::instance()->flightMode()) {
             failureMessage = C::gettext("Deactivate flight mode and try again from the messaging application.");

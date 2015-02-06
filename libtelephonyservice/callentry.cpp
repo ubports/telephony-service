@@ -24,6 +24,7 @@
 #include "callmanager.h"
 #include "telepathyhelper.h"
 #include "accountentry.h"
+#include "ofonoaccountentry.h"
 
 #include <QDBusReply>
 #include <QTime>
@@ -76,8 +77,10 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
             SIGNAL(CallHoldingFailed(QString)),
             SLOT(onCallHoldingFailed(QString)));
 
-    if (mAccount && !mAccount->voicemailNumber().isEmpty()) {
-        setVoicemail(phoneNumber() == mAccount->voicemailNumber());
+    // in case the account is an ofono account, we can check the voicemail number
+    OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(mAccount);
+    if (ofonoAccount && ofonoAccount->voicemailNumber().isEmpty()) {
+        setVoicemail(phoneNumber() == ofonoAccount->voicemailNumber());
     }
 
     Q_EMIT incomingChanged();

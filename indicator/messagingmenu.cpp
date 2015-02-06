@@ -27,6 +27,7 @@
 #include "messagingmenu.h"
 #include "telepathyhelper.h"
 #include "accountentry.h"
+#include "ofonoaccountentry.h"
 #include <QContactAvatar>
 #include <QContactFetchRequest>
 #include <QContactFilter>
@@ -316,11 +317,16 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QString &accountId
 
 void MessagingMenu::showVoicemailEntry(AccountEntry *account)
 {
+    OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(account);
+    if (!ofonoAccount) {
+        return;
+    }
+
     messaging_menu_app_remove_message_by_id(mCallsApp, account->accountId().toUtf8().data());
     mVoicemailIds.removeAll(account->accountId());
 
     QString messageBody = C::gettext("Voicemail messages");
-    uint count = account->voicemailCount();
+    uint count = ofonoAccount->voicemailCount();
     if (count != 0) {
         messageBody = QString::fromUtf8(C::ngettext("%1 voicemail message", "%1 voicemail messages", count)).arg(count);
     }
@@ -340,7 +346,7 @@ void MessagingMenu::showVoicemailEntry(AccountEntry *account)
                                                                QDateTime::currentDateTime().toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
     messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
-    mVoicemailIds.append(account->accountId());
+    mVoicemailIds.append(ofonoAccount->accountId());
 
     g_object_unref(icon);
     g_object_unref(message);
@@ -462,15 +468,15 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
     QString voicemailNumber;
-    Q_FOREACH(AccountEntry *accountEntry, TelepathyHelper::instance()->accounts()) {
-        if (!accountEntry->voicemailNumber().isEmpty() && messageId == accountEntry->accountId()) {
-            voicemailNumber = accountEntry->voicemailNumber();
-            break;
-        }
+    // get the corresponding account
+    OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(TelepathyHelper::instance()->accountForId(messageId));
+    if (ofonoAccount) {
+        voicemailNumber = ofonoAccount->voicemailNumber();
     }
 
     qDebug() << "TelephonyService/MessagingMenu: Calling voicemail for messageId" << messageId;
     if (!voicemailNumber.isEmpty()) {
+        // FIXME: we need to specify which account to use
         ApplicationUtils::openUrl(QUrl(QString("tel:///%1").arg(voicemailNumber)));
     }
 }
