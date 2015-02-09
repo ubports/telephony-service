@@ -8,18 +8,18 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2015-01-17 12:18+0000\n"
-"Last-Translator: Meriuță Cornel <meriutacornel@neacornel.eu>\n"
+"PO-Revision-Date: 2015-02-08 17:04+0000\n"
+"Last-Translator: Marian Vasile <marianvasile1972@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2015-01-18 05:03+0000\n"
-"X-Generator: Launchpad (build 17304)\n"
+"X-Launchpad-Export-Date: 2015-02-09 06:21+0000\n"
+"X-Generator: Launchpad (build 17331)\n"
 
-#: indicator/messagingmenu.cpp:256
+#: indicator/messagingmenu.cpp:273
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -27,7 +27,7 @@ msgstr[0] "%1 apel pierdut"
 msgstr[1] "%1 apeluri pierdute"
 msgstr[2] "%1 de apeluri pierdute"
 
-#: indicator/messagingmenu.cpp:308
+#: indicator/messagingmenu.cpp:325
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -55,28 +55,28 @@ msgstr "<b>%1</b> mesaje text primite astăzi"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> mesaje text trimise astăzi"
 
-#: approver/approver.cpp:440
+#: approver/approver.cpp:463
 msgid "Accept"
 msgstr "Accept"
 
-#: indicator/messagingmenu.cpp:199
+#: indicator/messagingmenu.cpp:215
 msgid "Call back"
 msgstr "Apelează inapoi"
 
-#: approver/approver.cpp:406
+#: approver/approver.cpp:429
 msgid "Caller number is not available"
 msgstr "Numărul apelantului nu este disponibil"
 
-#: approver/approver.cpp:403
+#: approver/approver.cpp:426
 #, qt-format
 msgid "Calling from %1"
 msgstr "Apel de la %1"
 
-#: approver/approver.cpp:399
+#: approver/approver.cpp:422
 msgid "Calling from private number"
 msgstr "Apel de la un număr privat"
 
-#: approver/approver.cpp:401
+#: approver/approver.cpp:424
 msgid "Calling from unknown number"
 msgstr "Apel de la un număr necunoscut"
 
@@ -84,52 +84,52 @@ msgstr "Apel de la un număr necunoscut"
 msgid "Cancel"
 msgstr "Anulează"
 
-#: indicator/textchannelobserver.cpp:207
+#: indicator/textchannelobserver.cpp:217
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Dezactivați modul avion și încercați din nou din aplicația de mesagerie."
 
-#: approver/approver.cpp:462
+#: approver/approver.cpp:485
 msgid "Decline"
 msgstr "Refuz"
 
-#: approver/approver.cpp:453
+#: approver/approver.cpp:476
 msgid "End + Answer"
-msgstr ""
+msgstr "Sfârșit + Răspuns"
 
-#: approver/approver.cpp:439
+#: approver/approver.cpp:462
 msgid "Hold + Answer"
 msgstr "Reține + Răspunde"
 
-#: indicator/messagingmenu.cpp:204
+#: indicator/messagingmenu.cpp:220
 msgid "I missed your call - can you call me now?"
 msgstr "Am pierdut apelul dumneavoastră - Vă pot suna acum?"
 
-#: indicator/messagingmenu.cpp:207
+#: indicator/messagingmenu.cpp:223
 msgid "I'll be 20 minutes late."
 msgstr "Voi întârzia 20 de minute."
 
-#: approver/approver.cpp:82
+#: approver/approver.cpp:89
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Momentan sunt ocupat. Vă sun mai târziu."
 
-#: indicator/messagingmenu.cpp:206
+#: indicator/messagingmenu.cpp:222
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Acum sunt ocupat. Voi suna mai târziu."
 
-#: approver/approver.cpp:83
+#: approver/approver.cpp:90
 msgid "I'm running late, on my way now."
 msgstr "Sunt înîntârziere, sunt pe drum acum."
 
-#: indicator/messagingmenu.cpp:205
+#: indicator/messagingmenu.cpp:221
 msgid "I'm running late. I'm on my way."
 msgstr "Sunt în întârziere. Sunt deja pe drum."
 
-#: approver/approver.cpp:470
+#: approver/approver.cpp:493
 msgid "Message & decline"
-msgstr ""
+msgstr "Mesaj & respingere"
 
-#: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
+#: indicator/textchannelobserver.cpp:415 indicator/textchannelobserver.cpp:464
 #, qt-format
 msgid "Message from %1"
 msgstr "Mesaj de la %1"
@@ -150,7 +150,7 @@ msgstr "Niciun mesaj text primit astăzi"
 msgid "No text messages sent today"
 msgstr "Niciun mesaj text trimis astăzi"
 
-#: indicator/textchannelobserver.cpp:270 indicator/ussdindicator.cpp:79
+#: indicator/textchannelobserver.cpp:285 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "În regulă"
 
@@ -158,11 +158,11 @@ msgstr "În regulă"
 msgid "Phone Calls"
 msgstr "Apeluri telefonice"
 
-#: approver/approver.cpp:84
+#: approver/approver.cpp:91
 msgid "Please call me back later."
 msgstr "Vă rog să mă sunați înapoi mai târziu."
 
-#: indicator/textchannelobserver.cpp:539
+#: indicator/textchannelobserver.cpp:586
 msgid "Please, select a SIM card:"
 msgstr "Selectați un card SIM:"
 
@@ -170,7 +170,7 @@ msgstr "Selectați un card SIM:"
 msgid "Private Number"
 msgstr "Număr privat"
 
-#: indicator/messagingmenu.cpp:259
+#: indicator/messagingmenu.cpp:276
 msgid "Private number"
 msgstr "Număr privat"
 
@@ -187,15 +187,15 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:276
+#: indicator/textchannelobserver.cpp:291
 msgid "Save"
 msgstr "Salvează"
 
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+#: indicator/messagingmenu.cpp:163 indicator/messagingmenu.cpp:230
 msgid "Send"
 msgstr "Trimiteți"
 
-#: indicator/messagingmenu.cpp:208
+#: indicator/messagingmenu.cpp:224
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Îmi pare rău, sunt în continuare ocupat. Voi suna mai târziu."
 
@@ -216,11 +216,11 @@ msgstr "Aprobator serviciu de telefonie"
 msgid "Telephony Service Indicator"
 msgstr "Indicator serviciu de telefonie"
 
-#: indicator/textchannelobserver.cpp:215
+#: indicator/textchannelobserver.cpp:226
 msgid "The message could not be sent"
 msgstr "Mesajul nu a putut fi trimis"
 
-#: indicator/textchannelobserver.cpp:210
+#: indicator/textchannelobserver.cpp:220
 msgid "Try again from the messaging application."
 msgstr "Încercați din nou din aplicația de mesagerie"
 
@@ -232,23 +232,23 @@ msgstr "Număr necunoscut"
 msgid "Unknown caller"
 msgstr "Apelant necunoscut"
 
-#: indicator/messagingmenu.cpp:263
+#: indicator/messagingmenu.cpp:280
 msgid "Unknown number"
 msgstr "Număr necunoscut"
 
-#: indicator/textchannelobserver.cpp:205
+#: indicator/textchannelobserver.cpp:215
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Deblocați cartela SIM și încercați din nou din aplicația de mesagerie."
 
-#: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
+#: indicator/textchannelobserver.cpp:241 indicator/textchannelobserver.cpp:435
 msgid "View message"
 msgstr "Vizualizare mesaj"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:330
 msgid "Voicemail"
 msgstr "Mesagerie vocală"
 
-#: indicator/messagingmenu.cpp:305
+#: indicator/messagingmenu.cpp:322
 msgid "Voicemail messages"
 msgstr "Mesaje vocale"
