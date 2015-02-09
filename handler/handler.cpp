@@ -47,11 +47,16 @@ void Handler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
                              const QDateTime &userActionTime,
                              const Tp::AbstractClientHandler::HandlerInfo &handlerInfo)
 {
-    Q_UNUSED(account)
     Q_UNUSED(connection)
     Q_UNUSED(requestsSatisfied)
     Q_UNUSED(userActionTime)
     Q_UNUSED(handlerInfo)
+
+    if (!TelepathyHelper::instance()->supportedProtocols().contains(account->protocolName())) {
+        context->setFinishedWithError(TP_QT_ERROR_NOT_CAPABLE, "The account for this request is not supported.");
+        return;
+    }
+
 
     Q_FOREACH(const Tp::ChannelPtr channel, channels) {
         Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
