@@ -25,7 +25,7 @@
 #include "telepathyhelper.h"
 
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
-    QObject(parent), mAccount(account)
+    QObject(parent), mAccount(account), mVoicemailCount(0), mVoicemailIndicator(false)
 {
     initialize();
 }
