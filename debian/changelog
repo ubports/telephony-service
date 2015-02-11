@@ -1,3 +1,15 @@
+telephony-service (0.1+15.04.20150211-0ubuntu1) vivid; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Ignore accounts not explicitly supported for now. (LP: #1340758)
+
+  [ Tiago Salem Herrmann ]
+  * Initialize variables to avoid randomly showing the voicemail
+    indicator for telepathy accounts that do not support the voicemail
+    interface.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 11 Feb 2015 18:18:25 +0000
+
 telephony-service (0.1+15.04.20150205.1-0ubuntu1) vivid; urgency=medium
 
   [ Tiago Salem Herrmann ]
