@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2014-09-17 10:08+0000\n"
+"PO-Revision-Date: 2015-02-11 14:53+0000\n"
 "Last-Translator: GunChleoc <Unknown>\n"
 "Language-Team: Fòram na Gàidhlig\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2015-01-17 07:07+0000\n"
-"X-Generator: Launchpad (build 17304)\n"
+"X-Launchpad-Export-Date: 2015-02-12 07:06+0000\n"
+"X-Generator: Launchpad (build 17336)\n"
 "Language: gd\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -58,7 +58,7 @@ msgstr "Chaidh <b>%1</b> teachdaireachdan fhaighinn an-diugh"
 msgid "<b>%1</b> text messages sent today"
 msgstr "Chaidh <b>%1</b> teachdaireachdan a chur an-diugh"
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:463
 msgid "Accept"
 msgstr "Freagair"
 
@@ -66,20 +66,20 @@ msgstr "Freagair"
 msgid "Call back"
 msgstr ""
 
-#: approver/approver.cpp:392
+#: approver/approver.cpp:429
 msgid "Caller number is not available"
 msgstr "Chan eil fhios dè àireamh a tha aig an neach eile"
 
-#: approver/approver.cpp:389
+#: approver/approver.cpp:426
 #, qt-format
 msgid "Calling from %1"
 msgstr "Fòn o %1"
 
-#: approver/approver.cpp:385
+#: approver/approver.cpp:422
 msgid "Calling from private number"
 msgstr "Fòn o àireamh phrìobhaideach"
 
-#: approver/approver.cpp:387
+#: approver/approver.cpp:424
 msgid "Calling from unknown number"
 msgstr "Fòn o àireamh nach aithne dhuinn"
 
@@ -91,15 +91,15 @@ msgstr "Sguir dheth"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:485
 msgid "Decline"
 msgstr "Diùlt"
 
-#: approver/approver.cpp:439
+#: approver/approver.cpp:476
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:425
+#: approver/approver.cpp:462
 msgid "Hold + Answer"
 msgstr "Cum ⁊ freagair"
 
@@ -111,7 +111,7 @@ msgstr "Chaill mi do ghairm - an cuir thu fòn air ais thugam an-dràsta?"
 msgid "I'll be 20 minutes late."
 msgstr "Bidh mi fadalach 20 mionaidean"
 
-#: approver/approver.cpp:79
+#: approver/approver.cpp:89
 msgid "I'm busy at the moment. I'll call later."
 msgstr ""
 
@@ -119,7 +119,7 @@ msgstr ""
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Tha mi trang an-dràsta fhèin. Cuiridh mi fòn air ais thugad."
 
-#: approver/approver.cpp:80
+#: approver/approver.cpp:90
 msgid "I'm running late, on my way now."
 msgstr ""
 
@@ -127,7 +127,7 @@ msgstr ""
 msgid "I'm running late. I'm on my way."
 msgstr "Tha mi fadalach ach air an t-slighe."
 
-#: approver/approver.cpp:456
+#: approver/approver.cpp:493
 msgid "Message & decline"
 msgstr ""
 
@@ -160,7 +160,7 @@ msgstr "Ceart ma-thà"
 msgid "Phone Calls"
 msgstr "Gairmean fòn"
 
-#: approver/approver.cpp:81
+#: approver/approver.cpp:91
 msgid "Please call me back later."
 msgstr ""
 
@@ -195,7 +195,7 @@ msgstr "Sàbhail"
 
 #: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
 msgid "Send"
-msgstr ""
+msgstr "Cuir"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
@@ -232,7 +232,7 @@ msgstr ""
 msgid "Unknown Number"
 msgstr "Àireamh nach aithne dhuinn"
 
-#: approver/approver.cpp:59
+#: approver/approver.cpp:61
 msgid "Unknown caller"
 msgstr "Chan eil fhios cò tha fònadh"
 
@@ -250,7 +250,7 @@ msgstr "Seall an teachdaireachd"
 
 #: indicator/messagingmenu.cpp:313
 msgid "Voicemail"
-msgstr ""
+msgstr "Post-gutha"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
