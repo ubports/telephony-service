@@ -50,11 +50,15 @@ void ChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &co
                                       const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
                                       const Tp::AbstractClientObserver::ObserverInfo &observerInfo)
 {
-    Q_UNUSED(account)
     Q_UNUSED(connection)
     Q_UNUSED(dispatchOperation)
     Q_UNUSED(requestsSatisfied)
     Q_UNUSED(observerInfo)
+
+    if (!TelepathyHelper::instance()->supportedProtocols().contains(account->protocolName())) {
+        context->setFinishedWithError(TP_QT_ERROR_NOT_CAPABLE, "The account for this request is not supported.");
+        return;
+    }
 
     Q_FOREACH (Tp::ChannelPtr channel, channels) {
         mContexts[channel.data()] = context;
