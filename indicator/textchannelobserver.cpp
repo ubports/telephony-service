@@ -258,7 +258,7 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
         return;
     }
 
-    ChatManager::instance()->sendMessage(recipients, text, accountId);
+    ChatManager::instance()->sendMessage(recipients, text, account->accountId());
 }
 
 void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMessage &message, const QString &accountId)
