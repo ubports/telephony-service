@@ -177,7 +177,7 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account || accountId.isEmpty()) {
         // fallback to the default account
-        if (TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->activeAccounts().size() > 1) {
+        if (TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->defaultMessagingAccount()->active()) {
             account = TelepathyHelper::instance()->defaultMessagingAccount();
         } else if (TelepathyHelper::instance()->activeAccounts().size() > 0) {
             account = TelepathyHelper::instance()->activeAccounts()[0];

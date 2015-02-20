@@ -35,6 +35,7 @@ class AccountEntry : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
+    Q_PROPERTY(bool active READ active NOTIFY activeChanged)
     Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
     Q_PROPERTY(QString selfContactId READ selfContactId NOTIFY selfContactIdChanged)
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
@@ -50,6 +51,7 @@ class AccountEntry : public QObject
 public:
     explicit AccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
     QString accountId() const;
+    bool active() const;
     QString displayName() const;
     QString selfContactId() const;
     QString networkName() const;
@@ -67,6 +69,7 @@ public:
 Q_SIGNALS:
     void accountReady();
     void accountIdChanged();
+    void activeChanged();
     void displayNameChanged();
     void selfContactIdChanged();
     void networkNameChanged();

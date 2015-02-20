@@ -39,6 +39,13 @@ QString AccountEntry::accountId() const
     return mAccount->uniqueIdentifier();
 }
 
+bool AccountEntry::active() const
+{
+    return (!mAccount->connection().isNull() &&
+            !mAccount->connection()->selfContact().isNull() &&
+             mAccount->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline);
+}
+
 QString AccountEntry::displayName() const
 {
     if (mAccount.isNull()) {
@@ -218,6 +225,7 @@ void AccountEntry::onSelfHandleChanged(uint handle)
     Q_EMIT connectedChanged();
     Q_EMIT simLockedChanged();
     Q_EMIT selfContactIdChanged();
+    Q_EMIT activeChanged();
 }
 
 void AccountEntry::onConnectionChanged()
@@ -299,6 +307,7 @@ void AccountEntry::onConnectionChanged()
     Q_EMIT simLockedChanged();
     Q_EMIT selfContactIdChanged();
     Q_EMIT serialChanged();
+    Q_EMIT activeChanged();
 }
 
 void AccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)

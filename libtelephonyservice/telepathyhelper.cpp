@@ -152,9 +152,7 @@ QList<AccountEntry*> TelepathyHelper::activeAccounts() const
 {
     QList<AccountEntry*> activeAccountList;
     Q_FOREACH(AccountEntry *account, mAccounts) {
-        if (!account->account()->connection().isNull() &&
-            !account->account()->connection()->selfContact().isNull() &&
-             account->account()->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline) {
+        if (account->active()) {
             activeAccountList << account;
         }
     }
