@@ -1,0 +1,249 @@
+# Occitan (post 1500) translation for telephony-service
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the telephony-service package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: telephony-service\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-16 15:24-0200\n"
+"PO-Revision-Date: 2015-02-20 13:40+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Occitan (post 1500) <oc@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Launchpad-Export-Date: 2015-02-21 05:35+0000\n"
+"X-Generator: Launchpad (build 17355)\n"
+
+#: indicator/messagingmenu.cpp:273
+#, qt-format
+msgid "%1 missed call"
+msgid_plural "%1 missed calls"
+msgstr[0] "%1 sonada mancada"
+msgstr[1] "%1 sonadas mancadas"
+
+#: indicator/messagingmenu.cpp:325
+#, qt-format
+msgid "%1 voicemail message"
+msgid_plural "%1 voicemail messages"
+msgstr[0] "%1 messatge vocal"
+msgstr[1] "%1 messatges vocals"
+
+#: indicator/metrics.cpp:48
+#, qt-format
+msgid "<b>%1</b> calls made today"
+msgstr "<b>%1</b> sonadas emesas uèi"
+
+#: indicator/metrics.cpp:46
+#, qt-format
+msgid "<b>%1</b> calls received today"
+msgstr "<b>%1</b> sonadas recebudas uèi"
+
+#: indicator/metrics.cpp:44
+#, qt-format
+msgid "<b>%1</b> text messages received today"
+msgstr "<b>%1</b> SMS recebuts uèi"
+
+#: indicator/metrics.cpp:42
+#, qt-format
+msgid "<b>%1</b> text messages sent today"
+msgstr "<b>%1</b> SMS mandats uèi"
+
+#: approver/approver.cpp:468
+msgid "Accept"
+msgstr "Acceptar"
+
+#: indicator/messagingmenu.cpp:215
+msgid "Call back"
+msgstr ""
+
+#: approver/approver.cpp:434
+msgid "Caller number is not available"
+msgstr "Lo numèro de sonada es pas disponible"
+
+#: approver/approver.cpp:431
+#, qt-format
+msgid "Calling from %1"
+msgstr "Sonada dempuèi %1"
+
+#: approver/approver.cpp:427
+msgid "Calling from private number"
+msgstr "Sonada dempuèi un numèro privat"
+
+#: approver/approver.cpp:429
+msgid "Calling from unknown number"
+msgstr "Sonada dempuèi un numèro desconegut"
+
+#: indicator/ussdindicator.cpp:104
+msgid "Cancel"
+msgstr "Anullar"
+
+#: indicator/textchannelobserver.cpp:217
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr ""
+
+#: approver/approver.cpp:490
+msgid "Decline"
+msgstr "Refusar"
+
+#: approver/approver.cpp:481
+msgid "End + Answer"
+msgstr ""
+
+#: approver/approver.cpp:467
+msgid "Hold + Answer"
+msgstr "Demorar en linha + Respondre"
+
+#: indicator/messagingmenu.cpp:220
+msgid "I missed your call - can you call me now?"
+msgstr ""
+
+#: indicator/messagingmenu.cpp:223
+msgid "I'll be 20 minutes late."
+msgstr "Serai tardièr de 20 minutas."
+
+#: approver/approver.cpp:89
+msgid "I'm busy at the moment. I'll call later."
+msgstr ""
+
+#: indicator/messagingmenu.cpp:222
+msgid "I'm busy at the moment. I'll call you later."
+msgstr ""
+
+#: approver/approver.cpp:90
+msgid "I'm running late, on my way now."
+msgstr ""
+
+#: indicator/messagingmenu.cpp:221
+msgid "I'm running late. I'm on my way."
+msgstr "Soi tardièr. Soi en camin."
+
+#: approver/approver.cpp:498
+msgid "Message & decline"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:415 indicator/textchannelobserver.cpp:464
+#, qt-format
+msgid "Message from %1"
+msgstr "Messatge de %1"
+
+#: indicator/metrics.cpp:49 indicator/metrics.cpp:51
+msgid "No calls made today"
+msgstr "Pas cap de sonada emesa uèi"
+
+#: indicator/metrics.cpp:47
+msgid "No calls received today"
+msgstr "Pas cap de sonada emesa uèi"
+
+#: indicator/metrics.cpp:45
+msgid "No text messages received today"
+msgstr "Pas de SMS recebuts uèi"
+
+#: indicator/metrics.cpp:43
+msgid "No text messages sent today"
+msgstr "Pas de SMS recebuts uèi"
+
+#: indicator/textchannelobserver.cpp:285 indicator/ussdindicator.cpp:79
+msgid "Ok"
+msgstr "D'acòrdi"
+
+#: indicator/telephony-service-call.desktop.in:3
+msgid "Phone Calls"
+msgstr "Sonadas telefonicas"
+
+#: approver/approver.cpp:91
+msgid "Please call me back later."
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:586
+msgid "Please, select a SIM card:"
+msgstr "Causissètz una carta SIM :"
+
+#: Ubuntu/Telephony/contactwatcher.cpp:136
+msgid "Private Number"
+msgstr "Numèro privat"
+
+#: indicator/messagingmenu.cpp:276
+msgid "Private number"
+msgstr "Numèro privat"
+
+#: indicator/ussdindicator.cpp:82
+msgid "Reply"
+msgstr "Respondre"
+
+#: handler/displaynamesettings.cpp:34
+#, qt-format
+msgid "SIM %1"
+msgstr "SIM %1"
+
+#: indicator/telephony-service-sms.desktop.in:3
+msgid "SMS"
+msgstr "SMS"
+
+#: indicator/textchannelobserver.cpp:291
+msgid "Save"
+msgstr "Enregistrar"
+
+#: indicator/messagingmenu.cpp:163 indicator/messagingmenu.cpp:230
+msgid "Send"
+msgstr ""
+
+#: indicator/messagingmenu.cpp:224
+msgid "Sorry, I'm still busy. I'll call you later."
+msgstr "O planhi, soi encara ocupat. Vos rapelarai pus tard."
+
+#: indicator/metrics.cpp:50
+#, qt-format
+msgid "Spent <b>%1</b> minutes in calls today"
+msgstr "<b>%1</b> minutas passadas a sonar uèi"
+
+#: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
+msgid "Telephony Service"
+msgstr "Servici telefonic"
+
+#: approver/main.cpp:46
+msgid "Telephony Service Approver"
+msgstr "Aprovador de servici telefonic"
+
+#: indicator/main.cpp:50
+msgid "Telephony Service Indicator"
+msgstr "Indicador de servici telefonic"
+
+#: indicator/textchannelobserver.cpp:226
+msgid "The message could not be sent"
+msgstr "Lo messatge pòt pas èsser mandat."
+
+#: indicator/textchannelobserver.cpp:220
+msgid "Try again from the messaging application."
+msgstr ""
+
+#: Ubuntu/Telephony/contactwatcher.cpp:138
+msgid "Unknown Number"
+msgstr "Numèro desconegut"
+
+#: approver/approver.cpp:61
+msgid "Unknown caller"
+msgstr "Sonaire desconegut"
+
+#: indicator/messagingmenu.cpp:280
+msgid "Unknown number"
+msgstr "Numèro desconegut"
+
+#: indicator/textchannelobserver.cpp:215
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:241 indicator/textchannelobserver.cpp:435
+msgid "View message"
+msgstr "Veire lo messatge"
+
+#: indicator/messagingmenu.cpp:330
+msgid "Voicemail"
+msgstr "Messatjariá Vocala"
+
+#: indicator/messagingmenu.cpp:322
+msgid "Voicemail messages"
+msgstr ""
