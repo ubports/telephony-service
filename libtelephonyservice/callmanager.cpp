@@ -23,7 +23,6 @@
 #include "callmanager.h"
 #include "callentry.h"
 #include "telepathyhelper.h"
-#include "greetercontacts.h"
 #include "accountentry.h"
 
 #include <TelepathyQt/ContactManager>
@@ -273,7 +272,9 @@ bool CallManager::hasCalls() const
     // for the availability of calls.
     // this is done only to get the live call view on clients as soon as possible, even before the
     // telepathy observer is configured
-    if (!GreeterContacts::instance()->isGreeterMode()) {
+    // Also, we have to avoid creating instances of GreeterContacts here to query if we are in greeter mode,
+    // otherwise we might end up with a deadlock: unity -> telephony-service -> unity
+    if (qgetenv("XDG_SESSION_CLASS") != "greeter") {
         QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
         QDBusReply<bool> reply = phoneAppHandler->call("HasCalls");
         if (reply.isValid()) {
