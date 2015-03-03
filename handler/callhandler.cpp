@@ -87,7 +87,8 @@ bool CallHandler::hasCalls() const
 }
 
 CallHandler::CallHandler(QObject *parent)
-: QObject(parent)
+: QObject(parent),
+  mHangupRequested(false)
 {
 }
 
@@ -317,7 +318,9 @@ void CallHandler::onCallHangupFinished(Tp::PendingOperation *op)
     // if you request it to be closed, the CallStateEnded will never be reached and the UI
     // and logging will be broken.
     Tp::CallChannelPtr channel = mClosingChannels.take(op);
-    mCallChannels.removeAll(channel);
+    if (mCallChannels.count() == 1) {
+        mHangupRequested = true;
+    }
 }
 
 void CallHandler::onCallChannelInvalidated()
@@ -330,9 +333,10 @@ void CallHandler::onCallChannelInvalidated()
 
     mCallChannels.removeAll(channel);
 
-    if (mCallChannels.isEmpty()) {
+    if (mCallChannels.isEmpty() && !mHangupRequested) {
         ToneGenerator::instance()->playCallEndedTone();
     }
+    mHangupRequested = false;
 }
 
 void CallHandler::onCallStateChanged(Tp::CallState state)

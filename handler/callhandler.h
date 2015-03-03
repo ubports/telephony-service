@@ -73,6 +73,7 @@ private:
     QMap<QString, Tp::ContactPtr> mContacts;
     QList<Tp::CallChannelPtr> mCallChannels;
     QMap<Tp::PendingOperation*,Tp::CallChannelPtr> mClosingChannels;
+    bool mHangupRequested;
 };
 
 #endif // CALLHANDLER_H

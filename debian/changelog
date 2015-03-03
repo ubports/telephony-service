@@ -1,3 +1,23 @@
+telephony-service (0.1+15.04.20150227-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+
+  [ Tiago Salem Herrmann ]
+  * Check if default sim is active before sending messages. (LP:
+    #1423942)
+  * Do not create instance of GreeterContacts to avoid dealock with
+    unity. (LP: #1426399)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Fri, 27 Feb 2015 15:28:57 +0000
+
+telephony-service (0.1+15.04.20150217-0ubuntu1) vivid; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Don't remove the call channel if hangup() does not succeed.
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Tue, 17 Feb 2015 17:24:10 +0000
+
 telephony-service (0.1+15.04.20150211-0ubuntu1) vivid; urgency=medium
 
   [ Gustavo Pichorim Boiko ]

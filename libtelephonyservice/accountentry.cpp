@@ -39,6 +39,13 @@ QString AccountEntry::accountId() const
     return mAccount->uniqueIdentifier();
 }
 
+bool AccountEntry::active() const
+{
+    return (!mAccount->connection().isNull() &&
+            !mAccount->connection()->selfContact().isNull() &&
+             mAccount->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline);
+}
+
 QString AccountEntry::displayName() const
 {
     if (mAccount.isNull()) {
@@ -186,6 +193,7 @@ void AccountEntry::onSelfHandleChanged(uint handle)
     Q_EMIT statusMessageChanged();
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
+    Q_EMIT activeChanged();
 }
 
 void AccountEntry::onConnectionChanged()
@@ -208,4 +216,30 @@ void AccountEntry::onConnectionChanged()
 
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
+    Q_EMIT serialChanged();
+    Q_EMIT activeChanged();
+}
+
+void AccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)
+{
+    mEmergencyNumbers = numbers;
+    Q_EMIT emergencyNumbersChanged();
+}
+
+void AccountEntry::onVoicemailNumberChanged(const QString &number)
+{
+    mVoicemailNumber = number;
+    Q_EMIT voicemailNumberChanged();
+}
+
+void AccountEntry::onVoicemailCountChanged(uint count)
+{
+    mVoicemailCount = count;
+    Q_EMIT voicemailCountChanged();
+}
+
+void AccountEntry::onVoicemailIndicatorChanged(bool visible)
+{
+    mVoicemailIndicator = visible;
+    Q_EMIT voicemailIndicatorChanged();
 }

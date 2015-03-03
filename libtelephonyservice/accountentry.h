@@ -35,6 +35,7 @@ class AccountEntry : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
+    Q_PROPERTY(bool active READ active NOTIFY activeChanged)
     Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
     Q_PROPERTY(QString status READ status NOTIFY statusChanged)
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
@@ -50,6 +51,7 @@ public:
     };
 
     QString accountId() const;
+    bool active() const;
     QString displayName() const;
     QString status() const;
     QString statusMessage() const;
@@ -62,6 +64,7 @@ public:
 Q_SIGNALS:
     void accountReady();
     void accountIdChanged();
+    void activeChanged();
     void displayNameChanged();
     void statusChanged();
     void statusMessageChanged();
