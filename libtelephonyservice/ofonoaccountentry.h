@@ -50,6 +50,7 @@ public:
     // reimplemented from AccountEntry
     virtual AccountEntry::AccountType type() const;
     virtual bool connected() const;
+    virtual bool compareIds(const QString &first, const QString &second) const;
 
 Q_SIGNALS:
     void emergencyNumbersChanged();

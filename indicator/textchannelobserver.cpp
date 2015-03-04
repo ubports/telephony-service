@@ -89,12 +89,15 @@ void flash_notification_action(NotifyNotification* notification, char *action, g
     if (action == QLatin1String("notification_save_action")) {
         NotificationData *notificationData = (NotificationData*) data;
         if (notificationData != NULL) {
+            AccountEntry *account = TelepathyHelper::instance()->accountForId(notificationData->accountId);
+            bool phoneNumberBased = account && (account->type() == AccountEntry::PhoneAccount);
             QStringList recipients;
             recipients << notificationData->senderId << notificationData->participantIds;
             History::Thread thread = History::Manager::instance()->threadForParticipants(notificationData->accountId,
                                                                                          History::EventTypeText,
                                                                                          recipients,
-                                                                                         History::MatchPhoneNumber,
+                                                                                         phoneNumberBased ? History::MatchPhoneNumber :
+                                                                                                            History::MatchCaseSensitive,
                                                                                          true);
             History::TextEvent textEvent(notificationData->accountId,
                                          thread.threadId(), 
@@ -192,10 +195,12 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
 
     // check if the account is available
     if (!account->connected()) {
+        bool phoneNumberBased = account->type() == AccountEntry::PhoneAccount;
         History::Thread thread = History::Manager::instance()->threadForParticipants(account->accountId(),
                                                                                      History::EventTypeText,
                                                                                      recipients,
-                                                                                     History::MatchPhoneNumber,
+                                                                                     phoneNumberBased ? History::MatchPhoneNumber :
+                                                                                                        History::MatchCaseSensitive,
                                                                                      true);
         History::TextEvent textEvent(account->accountId(),
                                      thread.threadId(),
@@ -323,6 +328,11 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
         // in greeter mode we show the notification right away as the contact data might not be received
         showNotificationForMessage(message, accountId, participantIds);
     } else {
+        AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+        if (!account) {
+            return;
+        }
+
         // try to match the contact info
         QContactFetchRequest *request = new QContactFetchRequest(this);
         request->setFilter(QContactPhoneNumber::match(contact->id()));
@@ -345,8 +355,14 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
             showNotificationForMessage(message, accountId, participantIds, contact);
         });
 
-        request->setManager(ContactUtils::sharedManager());
-        request->start();
+        // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
+        if (account->type() == AccountEntry::PhoneAccount) {
+            request->setManager(ContactUtils::sharedManager());
+            request->start();
+        } else {
+            // just emit the signal to pretend we did a contact search
+            Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
+        }
     }
 
 }
@@ -462,6 +478,13 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
     while (i != mNotifications.constEnd()) {
         NotifyNotification *notification = i.key();
         NotificationData *data = i.value();
+
+        AccountEntry *account = TelepathyHelper::instance()->accountForId(data->accountId);
+        if (!account || account->type() != AccountEntry::PhoneAccount) {
+            return;
+        }
+
+        // FIXME: add support for contact matching for non phone number based accounts
         Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
             if (PhoneUtils::comparePhoneNumbers(data->senderId, phoneNumber.number())) {
                 QString displayLabel = contact.detail<QContactDisplayLabel>().label();

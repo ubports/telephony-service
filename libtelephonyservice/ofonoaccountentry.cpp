@@ -21,6 +21,7 @@
 
 #include "ofonoaccountentry.h"
 #include "telepathyhelper.h"
+#include "phoneutils.h"
 
 OfonoAccountEntry::OfonoAccountEntry(const Tp::AccountPtr &account, QObject *parent) :
     AccountEntry(account, parent), mVoicemailCount(0), mVoicemailIndicator(false)
@@ -99,6 +100,11 @@ bool OfonoAccountEntry::connected() const
     return !mAccount.isNull() && !mAccount->connection().isNull() &&
            !mAccount->connection()->selfContact().isNull() &&
             mAccount->connection()->selfContact()->presence().type() == Tp::ConnectionPresenceTypeAvailable;
+}
+
+bool OfonoAccountEntry::compareIds(const QString &first, const QString &second) const
+{
+    return PhoneUtils::comparePhoneNumbers(first, second);
 }
 
 void OfonoAccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)

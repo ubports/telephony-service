@@ -204,7 +204,7 @@ Tp::TextChannelPtr ChatManager::existingChat(const QStringList &recipients, cons
         }
         Q_FOREACH(const QString &recipientNew, recipients) {
             Q_FOREACH(const Tp::ContactPtr &recipientOld, channel->groupContacts(false)) {
-                if (PhoneUtils::comparePhoneNumbers(recipientOld->id(), recipientNew)) {
+                if (channelAccount->compareIds(recipientOld->id(), recipientNew)) {
                     count++;
                 }
             }

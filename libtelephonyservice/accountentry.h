@@ -61,6 +61,8 @@ public:
     Tp::AccountPtr account() const;
     virtual AccountType type() const;
 
+    virtual bool compareIds(const QString &first, const QString &second) const;
+
 Q_SIGNALS:
     void accountReady();
     void accountIdChanged();

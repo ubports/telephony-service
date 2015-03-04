@@ -110,6 +110,11 @@ AccountEntry::AccountType AccountEntry::type() const
     return GenericAccount;
 }
 
+bool AccountEntry::compareIds(const QString &first, const QString &second) const
+{
+    return first == second;
+}
+
 void AccountEntry::initialize()
 {
     if (mAccount.isNull()) {

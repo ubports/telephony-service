@@ -33,6 +33,7 @@
 #include "callentry.h"
 #include "tonegenerator.h"
 #include "telepathyhelper.h"
+#include "accountentry.h"
 
 #include <QContactAvatar>
 #include <QContactDisplayLabel>
@@ -321,6 +322,12 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         showSnapDecision(dispatchOp, channel);
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
     } else {
+        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(callChannel->connection());
+        if (!account) {
+            qCritical() << "Call exists with no account for connection";
+            return;
+        }
+
         // try to match the contact info
         QContactFetchRequest *request = new QContactFetchRequest(this);
         request->setFilter(QContactPhoneNumber::match(contact->id()));
@@ -345,8 +352,14 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
             showSnapDecision(dispatchOp, channel, contact);
         });
 
-        request->setManager(ContactUtils::sharedManager());
-        request->start();
+        // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
+        if (account->type() == AccountEntry::PhoneAccount) {
+            request->setManager(ContactUtils::sharedManager());
+            request->start();
+        } else {
+            // just emit the signal to pretend we did a contact search
+            Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
+        }
     }
 }
 
@@ -397,8 +410,8 @@ void Approver::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
 void Approver::onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const char *action)
 {
     if (mRejectActions.contains(action)) {
-        QString phoneNumber = dispatchOp->channels().first()->targetContact()->id();
-        ChatManager::instance()->sendMessage(QStringList() << phoneNumber, mRejectActions[action],
+        QString targetId = dispatchOp->channels().first()->targetContact()->id();
+        ChatManager::instance()->sendMessage(QStringList() << targetId, mRejectActions[action],
                                              dispatchOp->account()->uniqueIdentifier());
     }
 
