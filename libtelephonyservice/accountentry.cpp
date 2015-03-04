@@ -25,7 +25,7 @@
 #include "telepathyhelper.h"
 
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
-    QObject(parent), mAccount(account), mVoicemailCount(0), mVoicemailIndicator(false)
+    QObject(parent), mAccount(account)
 {
     initialize();
 }
@@ -216,30 +216,5 @@ void AccountEntry::onConnectionChanged()
 
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
-    Q_EMIT serialChanged();
     Q_EMIT activeChanged();
-}
-
-void AccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)
-{
-    mEmergencyNumbers = numbers;
-    Q_EMIT emergencyNumbersChanged();
-}
-
-void AccountEntry::onVoicemailNumberChanged(const QString &number)
-{
-    mVoicemailNumber = number;
-    Q_EMIT voicemailNumberChanged();
-}
-
-void AccountEntry::onVoicemailCountChanged(uint count)
-{
-    mVoicemailCount = count;
-    Q_EMIT voicemailCountChanged();
-}
-
-void AccountEntry::onVoicemailIndicatorChanged(bool visible)
-{
-    mVoicemailIndicator = visible;
-    Q_EMIT voicemailIndicatorChanged();
 }

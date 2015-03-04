@@ -23,7 +23,7 @@
 #include "telepathyhelper.h"
 
 OfonoAccountEntry::OfonoAccountEntry(const Tp::AccountPtr &account, QObject *parent) :
-    AccountEntry(account, parent)
+    AccountEntry(account, parent), mVoicemailCount(0), mVoicemailIndicator(false)
 {
     // the sim lock detection is based on the status message, so whenever it
     // changes, it might mean the sim lock state changed too
