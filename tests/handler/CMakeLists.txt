@@ -1,6 +1,7 @@
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}
+    ${TP_QT5_INCLUDE_DIRS}
     )
 
 macro(generate_test TESTNAME USE_DBUS)

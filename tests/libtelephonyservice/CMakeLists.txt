@@ -1,12 +1,13 @@
+set(LIBTELEPHONYSERVICE_DIR ${CMAKE_SOURCE_DIR}/libtelephonyservice)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/libtelephonyservice
+    ${LIBTELEPHONYSERVICE_DIR}
     )
 
 add_executable(GreeterContactsTestServerExe GreeterContactsTestServer.cpp)
 qt5_use_modules(GreeterContactsTestServerExe Core DBus)
 
-add_executable(GreeterContactsTestExe GreeterContactsTest.cpp ../greetercontacts.cpp)
+add_executable(GreeterContactsTestExe GreeterContactsTest.cpp ${LIBTELEPHONYSERVICE_DIR}/greetercontacts.cpp)
 set_target_properties(GreeterContactsTestExe PROPERTIES COMPILE_DEFINITIONS "AS_BUSNAME=sessionBus;CMAKE_SOURCE_DIR=\"${CMAKE_SOURCE_DIR}\"")
 qt5_use_modules(GreeterContactsTestExe Contacts Core DBus Test)
 

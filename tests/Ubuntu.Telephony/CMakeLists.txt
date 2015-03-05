@@ -1,6 +1,7 @@
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_SOURCE_DIR}/Ubuntu/Telephony
+    ${CMAKE_SOURCE_DIR}/libtelephonyservice
     )
 
 macro(generate_tests)

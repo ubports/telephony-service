@@ -25,4 +25,3 @@ install(TARGETS telephonyservice-qml DESTINATION ${PLUGIN_DIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/qmldir DESTINATION ${PLUGIN_DIR})
 
 add_subdirectory(PhoneNumber)
-add_subdirectory(tests)

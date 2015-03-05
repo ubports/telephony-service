@@ -37,5 +37,3 @@ target_link_libraries(telephonyservice
                       ${GSETTINGS_QT_LDFLAGS})
 
 qt5_use_modules(telephonyservice Contacts Core DBus Feedback Multimedia Qml Quick)
-
-add_subdirectory(tests)
