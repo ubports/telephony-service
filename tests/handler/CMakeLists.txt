@@ -2,12 +2,13 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/../common
     ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${TP_QT5_INCLUDE_DIRS}
     )
 
 macro(generate_test TESTNAME USE_DBUS)
     add_executable(${TESTNAME} ${ARGN} ${TESTNAME}.cpp)
-    qt5_use_modules(${TESTNAME} Core DBus Test)
+    qt5_use_modules(${TESTNAME} Core DBus Test Qml)
     set(TEST_COMMAND )
     if (${USE_DBUS})
         set(TEST_COMMAND -p ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} -p -xunitxml -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
@@ -33,6 +34,7 @@ macro(generate_test TESTNAME USE_DBUS)
                           TIMEOUT 30)
     target_link_libraries(${TESTNAME}
                           ${TP_QT5_LIBRARIES}
+                          telephonyservice
                           mockcontroller
                          )
 endmacro(generate_test)
@@ -40,5 +42,5 @@ endmacro(generate_test)
 configure_file(dbus-test-wrapper.sh.in ${CMAKE_CURRENT_BINARY_DIR}/dbus-test-wrapper.sh)
 
 if (DBUS_RUNNER)
-    generate_test(HandlerTest True telepathyhelper.cpp handlercontroller.cpp approver.cpp)
+    generate_test(HandlerTest True handlercontroller.cpp approver.cpp)
 endif(DBUS_RUNNER)

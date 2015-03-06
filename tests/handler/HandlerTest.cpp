@@ -21,6 +21,7 @@
 #include "handlercontroller.h"
 #include "mockcontroller.h"
 #include "approver.h"
+#include "accountentry.h"
 #include "telepathyhelper.h"
 
 #define DEFAULT_TIMEOUT 15000
@@ -43,11 +44,14 @@ private:
     void waitForCallActive(const QString &callerId);
     Approver *mApprover;
     MockController *mMockController;
+    AccountEntry *mAccount;
 };
 
 void HandlerTest::initTestCase()
 {
-    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(accountReady()));
+    Tp::registerTypes();
+
+    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
     QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
     QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), DEFAULT_TIMEOUT);
 
@@ -62,6 +66,9 @@ void HandlerTest::initTestCase()
 
     // and create the mock controller
     mMockController = new MockController("mock", this);
+
+    mAccount = TelepathyHelper::instance()->accountForId("mock/mock/account0");
+    QVERIFY(mAccount);
 }
 
 void HandlerTest::testMakingCalls()
@@ -69,7 +76,7 @@ void HandlerTest::testMakingCalls()
     QString callerId("1234567");
     QSignalSpy callReceivedSpy(mMockController, SIGNAL(callReceived(QString)));
     // FIXME: add support for multiple accounts
-    HandlerController::instance()->startCall(callerId, TelepathyHelper::instance()->accountId());
+    HandlerController::instance()->startCall(callerId, mAccount->accountId());
     QTRY_COMPARE(callReceivedSpy.count(), 1);
     QCOMPARE(callReceivedSpy.first().first().toString(), callerId);
 
@@ -256,7 +263,7 @@ void HandlerTest::testSendMessage()
     QString message("Hello, world!");
     QSignalSpy messageSentSpy(mMockController, SIGNAL(messageSent(QString,QVariantMap)));
     // FIXME: add support for multiple accounts
-    HandlerController::instance()->sendMessage(recipient, message, TelepathyHelper::instance()->accountId());
+    HandlerController::instance()->sendMessage(recipient, message, mAccount->accountId());
     QTRY_COMPARE(messageSentSpy.count(), 1);
     QString sentMessage = messageSentSpy.first().first().toString();
     QVariantMap messageProperties = messageSentSpy.first().last().value<QVariantMap>();
