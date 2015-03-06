@@ -65,7 +65,7 @@ bool MockConnectionDBus::connectToBus()
         mAdaptor = new MockConnectionAdaptor(this);
     }
 
-    return QDBusConnection::sessionBus().registerObject("/com/canonical/MockConnection", this);
+    return QDBusConnection::sessionBus().registerObject("/com/canonical/MockConnection/" + mConnection->protocolName(), this);
 }
 
 void MockConnectionDBus::PlaceIncomingMessage(const QString &message, const QVariantMap &properties)

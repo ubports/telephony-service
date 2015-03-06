@@ -28,7 +28,7 @@ class MockController : public QObject
 {
     Q_OBJECT
 public:
-    static MockController *instance();
+    explicit MockController(const QString &protocol, QObject *parent = 0);
 
 Q_SIGNALS:
     void messageSent(const QString &message, const QVariantMap &properties);
@@ -46,8 +46,9 @@ public Q_SLOTS:
     void setCallState(const QString &phoneNumber, const QString &state);
 
 private:
-    explicit MockController(QObject *parent = 0);
     QDBusInterface mMockInterface;
+    QString mProtocol;
+    QString mMockObject;
 };
 
 #endif // MOCKCONTROLLER_H

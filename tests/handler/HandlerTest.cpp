@@ -42,10 +42,13 @@ private Q_SLOTS:
 private:
     void waitForCallActive(const QString &callerId);
     Approver *mApprover;
+    MockController *mMockController;
 };
 
 void HandlerTest::initTestCase()
 {
+    mMockController = new MockController("mock", this);
+
     QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(accountReady()));
     QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
     QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), DEFAULT_TIMEOUT);
@@ -63,13 +66,13 @@ void HandlerTest::initTestCase()
 void HandlerTest::testMakingCalls()
 {
     QString callerId("1234567");
-    QSignalSpy callReceivedSpy(MockController::instance(), SIGNAL(callReceived(QString)));
+    QSignalSpy callReceivedSpy(mMockController, SIGNAL(callReceived(QString)));
     // FIXME: add support for multiple accounts
     HandlerController::instance()->startCall(callerId, TelepathyHelper::instance()->accountId());
     QTRY_COMPARE(callReceivedSpy.count(), 1);
     QCOMPARE(callReceivedSpy.first().first().toString(), callerId);
 
-    MockController::instance()->hangupCall(callerId);
+    mMockController->hangupCall(callerId);
 }
 
 void HandlerTest::testHangUpCall()
@@ -81,7 +84,7 @@ void HandlerTest::testHangUpCall()
     properties["State"] = "incoming";
 
     QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
-    QString objectPath = MockController::instance()->placeCall(properties);
+    QString objectPath = mMockController->placeCall(properties);
     QVERIFY(!objectPath.isEmpty());
 
     // wait for the channel to hit the approver
@@ -91,7 +94,7 @@ void HandlerTest::testHangUpCall()
     waitForCallActive(callerId);
 
     // and finally request the hangup
-    QSignalSpy callEndedSpy(MockController::instance(), SIGNAL(callEnded(QString)));
+    QSignalSpy callEndedSpy(mMockController, SIGNAL(callEnded(QString)));
     HandlerController::instance()->hangUpCall(objectPath);
     QTRY_COMPARE(callEndedSpy.count(), 1);
 }
@@ -105,7 +108,7 @@ void HandlerTest::testCallHold()
     properties["State"] = "incoming";
 
     QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
-    QString objectPath = MockController::instance()->placeCall(properties);
+    QString objectPath = mMockController->placeCall(properties);
     QVERIFY(!objectPath.isEmpty());
 
     // wait for the channel to hit the approver
@@ -114,7 +117,7 @@ void HandlerTest::testCallHold()
 
     waitForCallActive(callerId);
 
-    QSignalSpy callStateSpy(MockController::instance(), SIGNAL(callStateChanged(QString,QString,QString)));
+    QSignalSpy callStateSpy(mMockController, SIGNAL(callStateChanged(QString,QString,QString)));
 
     // set the call on hold
     HandlerController::instance()->setHold(objectPath, true);
@@ -127,7 +130,7 @@ void HandlerTest::testCallHold()
     QTRY_COMPARE(callStateSpy.count(), 1);
     QCOMPARE(callStateSpy.first()[2].toString(), QString("active"));
 
-    MockController::instance()->hangupCall(callerId);
+    mMockController->hangupCall(callerId);
 }
 
 void HandlerTest::testCallProperties()
@@ -140,7 +143,7 @@ void HandlerTest::testCallProperties()
 
     QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
     QSignalSpy handlerCallPropertiesSpy(HandlerController::instance(), SIGNAL(callPropertiesChanged(QString,QVariantMap)));
-    MockController::instance()->placeCall(properties);
+    mMockController->placeCall(properties);
 
     // wait for the channel to hit the approver
     QTRY_COMPARE(approverCallSpy.count(), 1);
@@ -196,7 +199,7 @@ void HandlerTest::testConferenceCall()
     properties["State"] = "incoming";
 
     QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
-    QString call1 = MockController::instance()->placeCall(properties);
+    QString call1 = mMockController->placeCall(properties);
 
     // wait for the channel to hit the approver
     QTRY_COMPARE(approverCallSpy.count(), 1);
@@ -206,7 +209,7 @@ void HandlerTest::testConferenceCall()
 
     // make a second call
     properties["Caller"] = callerId2;
-    QString call2 = MockController::instance()->placeCall(properties);
+    QString call2 = mMockController->placeCall(properties);
     // wait for the channel to hit the approver
     QTRY_COMPARE(approverCallSpy.count(), 1);
     mApprover->acceptCall();
@@ -214,27 +217,27 @@ void HandlerTest::testConferenceCall()
     waitForCallActive(callerId2);
 
     // now create the conf call
-    QSignalSpy conferenceCreatedSpy(MockController::instance(), SIGNAL(conferenceCreated(QString)));
+    QSignalSpy conferenceCreatedSpy(mMockController, SIGNAL(conferenceCreated(QString)));
     HandlerController::instance()->createConferenceCall(QStringList() << call1 << call2);
     QTRY_COMPARE(conferenceCreatedSpy.count(), 1);
     QString conferenceObjectPath = conferenceCreatedSpy.first().first().toString();
 
     // now place a third call and try to merge it
     properties["Caller"] = callerId3;
-    QString call3 = MockController::instance()->placeCall(properties);
+    QString call3 = mMockController->placeCall(properties);
     QTRY_COMPARE(approverCallSpy.count(), 1);
     mApprover->acceptCall();
     approverCallSpy.clear();
     waitForCallActive(callerId3);
 
     // merge that call on the conference
-    QSignalSpy channelMergedSpy(MockController::instance(), SIGNAL(channelMerged(QString)));
+    QSignalSpy channelMergedSpy(mMockController, SIGNAL(channelMerged(QString)));
     HandlerController::instance()->mergeCall(conferenceObjectPath, call3);
     QTRY_COMPARE(channelMergedSpy.count(), 1);
     QCOMPARE(channelMergedSpy.first().first().toString(), call3);
 
     // now try to split one of the channels
-    QSignalSpy channelSplittedSpy(MockController::instance(), SIGNAL(channelSplitted(QString)));
+    QSignalSpy channelSplittedSpy(mMockController, SIGNAL(channelSplitted(QString)));
     HandlerController::instance()->splitCall(call2);
     QTRY_COMPARE(channelSplittedSpy.count(), 1);
     QCOMPARE(channelSplittedSpy.first().first().toString(), call2);
@@ -250,7 +253,7 @@ void HandlerTest::testSendMessage()
 {
     QString recipient("22222222");
     QString message("Hello, world!");
-    QSignalSpy messageSentSpy(MockController::instance(), SIGNAL(messageSent(QString,QVariantMap)));
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(messageSent(QString,QVariantMap)));
     // FIXME: add support for multiple accounts
     HandlerController::instance()->sendMessage(recipient, message, TelepathyHelper::instance()->accountId());
     QTRY_COMPARE(messageSentSpy.count(), 1);
@@ -284,7 +287,7 @@ void HandlerTest::testActiveCallIndicator()
 void HandlerTest::waitForCallActive(const QString &callerId)
 {
     // wait until the call state is "accepted"
-    QSignalSpy callStateSpy(MockController::instance(), SIGNAL(callStateChanged(QString,QString,QString)));
+    QSignalSpy callStateSpy(mMockController, SIGNAL(callStateChanged(QString,QString,QString)));
     QString state;
     QString objectPath;
     QString caller;

@@ -21,27 +21,21 @@
 #include "mockcontroller.h"
 #include <QDBusReply>
 
-#define MOCK_SERVICE "com.canonical.MockConnection"
-#define MOCK_OBJECT "/com/canonical/MockConnection"
-#define MOCK_INTERFACE "com.canonical.MockConnection"
+static const QString mockService("com.canonical.MockConnection");
+static const QString mockObject("/com/canonical/MockConnection/%1");
+static const QString mockInterface("com.canonical.MockConnection");
 
-MockController::MockController(QObject *parent) :
-    QObject(parent),
-    mMockInterface(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE)
+MockController::MockController(const QString &protocol, QObject *parent) :
+    QObject(parent), mProtocol(protocol), mMockObject(mockObject.arg(protocol)),
+    mMockInterface(mockService, mockObject.arg(protocol), mockInterface)
 {
-    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "MessageSent", this, SIGNAL(messageSent(QString, QVariantMap)));
-    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "CallReceived", this, SIGNAL(callReceived(QString)));
-    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "CallEnded", this, SIGNAL(callEnded(QString)));
-    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "CallStateChanged", this, SIGNAL(callStateChanged(QString,QString,QString)));
-    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "ConferenceCreated", this, SIGNAL(conferenceCreated(QString)));
-    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "ChannelMerged", this, SIGNAL(channelMerged(QString)));
-    QDBusConnection::sessionBus().connect(MOCK_SERVICE, MOCK_OBJECT, MOCK_INTERFACE, "ChannelSplitted", this, SIGNAL(channelSplitted(QString)));
-}
-
-MockController *MockController::instance()
-{
-    static MockController *self = new MockController();
-    return self;
+    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "MessageSent", this, SIGNAL(messageSent(QString, QVariantMap)));
+    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "CallReceived", this, SIGNAL(callReceived(QString)));
+    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "CallEnded", this, SIGNAL(callEnded(QString)));
+    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "CallStateChanged", this, SIGNAL(callStateChanged(QString,QString,QString)));
+    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "ConferenceCreated", this, SIGNAL(conferenceCreated(QString)));
+    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "ChannelMerged", this, SIGNAL(channelMerged(QString)));
+    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "ChannelSplitted", this, SIGNAL(channelSplitted(QString)));
 }
 
 void MockController::placeIncomingMessage(const QString &message, const QVariantMap &properties)
