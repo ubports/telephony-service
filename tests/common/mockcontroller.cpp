@@ -29,13 +29,20 @@ MockController::MockController(const QString &protocol, QObject *parent) :
     QObject(parent), mProtocol(protocol), mMockObject(mockObject.arg(protocol)),
     mMockInterface(mockService, mockObject.arg(protocol), mockInterface)
 {
-    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "MessageSent", this, SIGNAL(messageSent(QString, QVariantMap)));
-    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "CallReceived", this, SIGNAL(callReceived(QString)));
-    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "CallEnded", this, SIGNAL(callEnded(QString)));
-    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "CallStateChanged", this, SIGNAL(callStateChanged(QString,QString,QString)));
-    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "ConferenceCreated", this, SIGNAL(conferenceCreated(QString)));
-    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "ChannelMerged", this, SIGNAL(channelMerged(QString)));
-    QDBusConnection::sessionBus().connect(mockService, mMockObject, mockInterface, "ChannelSplitted", this, SIGNAL(channelSplitted(QString)));
+    connect(&mMockInterface, SIGNAL(MessageSent(QString, QVariantMap)),
+            this, SIGNAL(messageSent(QString, QVariantMap)));
+    connect(&mMockInterface, SIGNAL(CallReceived(QString)),
+            this, SIGNAL(callReceived(QString)));
+    connect(&mMockInterface, SIGNAL(CallEnded(QString)),
+            this, SIGNAL(callEnded(QString)));
+    connect(&mMockInterface, SIGNAL(CallStateChanged(QString, QString, QString)),
+            this, SIGNAL(callStateChanged(QString,QString,QString)));
+    connect(&mMockInterface, SIGNAL(ConferenceCreated(QString)),
+            this, SIGNAL(conferenceCreated(QString)));
+    connect(&mMockInterface, SIGNAL(ChannelMerged(QString)),
+            this, SIGNAL(channelMerged(QString)));
+    connect(&mMockInterface, SIGNAL(ChannelSplitted(QString)),
+            this, SIGNAL(channelSplitted(QString)));
 }
 
 void MockController::placeIncomingMessage(const QString &message, const QVariantMap &properties)

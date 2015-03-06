@@ -47,8 +47,6 @@ private:
 
 void HandlerTest::initTestCase()
 {
-    mMockController = new MockController("mock", this);
-
     QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(accountReady()));
     QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
     QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), DEFAULT_TIMEOUT);
@@ -61,6 +59,9 @@ void HandlerTest::initTestCase()
 
     // we need to wait in order to give telepathy time to notify about the approver
     QTest::qWait(3000);
+
+    // and create the mock controller
+    mMockController = new MockController("mock", this);
 }
 
 void HandlerTest::testMakingCalls()
