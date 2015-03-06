@@ -35,9 +35,7 @@ indicator/*.service
 indicator/NotificationsInterface.*
 
 Testing
-Ubuntu/Telephony/tests/*Test
 Ubuntu/Telephony/qmldir
-libtelephonyservice/tests/*Test
 CTestTestfile.cmake
 test_*.xml
 cmake_uninstall.cmake
@@ -46,12 +44,10 @@ coverage*
 
 po/*.gmo
 
-tests/handler/HandlerTest
-tests/handler/dbus-test-wrapper.sh
+tests/*/*Test
+tests/common/dbus-test-wrapper.sh
 tests/common/mock/mockconnectionadaptor.*
 tests/common/mock/telepathy-mock
 tests/Ubuntu.Telephony/ContactWatcherTest
-tests/libtelephonyservice/ContactUtilsTest
 tests/libtelephonyservice/GreeterContactsTestExe
 tests/libtelephonyservice/GreeterContactsTestServerExe
-tests/libtelephonyservice/PhoneUtilsTest

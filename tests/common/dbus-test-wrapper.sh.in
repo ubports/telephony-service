@@ -19,7 +19,11 @@ MOCK_PID=$!
 # wait 1 sec for the mock to start up
 sleep 1
 
+# add one generic account
 mc-tool add mock/mock account0
+
+# and one phone account
+mc-tool add mock/ofono account0
 
 @CMAKE_BINARY_DIR@/handler/telephony-service-handler &
 
