@@ -400,7 +400,7 @@ void TelepathyHelper::onNewAccount(const Tp::AccountPtr &account)
     Q_FOREACH(AccountEntry *account, mAccounts) {
         QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
         if (modemObjName.isEmpty()) {
-            sortedOtherAccounts[account->displayName()] = account;
+            sortedOtherAccounts[account->accountId()] = account;
         } else {
             sortedOfonoAccounts[modemObjName] = account;
         }
