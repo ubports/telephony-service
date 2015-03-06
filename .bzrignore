@@ -48,8 +48,8 @@ po/*.gmo
 
 tests/handler/HandlerTest
 tests/handler/dbus-test-wrapper.sh
-tests/handler/mock/mockconnectionadaptor.*
-tests/handler/mock/telepathy-mock
+tests/common/mock/mockconnectionadaptor.*
+tests/common/mock/telepathy-mock
 tests/Ubuntu.Telephony/ContactWatcherTest
 tests/libtelephonyservice/ContactUtilsTest
 tests/libtelephonyservice/GreeterContactsTestExe

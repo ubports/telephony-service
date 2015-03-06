@@ -13,7 +13,7 @@ gnome-keyring-daemon -r -d
 dconf write /org/gnome/empathy/use-conn false
 
 # start the mock connection manager
-@CMAKE_CURRENT_BINARY_DIR@/mock/telepathy-mock &
+@CMAKE_CURRENT_BINARY_DIR@/../common/mock/telepathy-mock &
 MOCK_PID=$!
 
 # wait 1 sec for the mock to start up

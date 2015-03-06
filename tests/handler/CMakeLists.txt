@@ -1,5 +1,6 @@
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/../common
     ${CMAKE_SOURCE_DIR}
     ${TP_QT5_INCLUDE_DIRS}
     )
@@ -32,13 +33,12 @@ macro(generate_test TESTNAME USE_DBUS)
                           TIMEOUT 30)
     target_link_libraries(${TESTNAME}
                           ${TP_QT5_LIBRARIES}
+                          mockcontroller
                          )
 endmacro(generate_test)
 
 configure_file(dbus-test-wrapper.sh.in ${CMAKE_CURRENT_BINARY_DIR}/dbus-test-wrapper.sh)
 
 if (DBUS_RUNNER)
-    generate_test(HandlerTest True telepathyhelper.cpp handlercontroller.cpp mockcontroller.cpp approver.cpp)
+    generate_test(HandlerTest True telepathyhelper.cpp handlercontroller.cpp approver.cpp)
 endif(DBUS_RUNNER)
-
-add_subdirectory(mock)
