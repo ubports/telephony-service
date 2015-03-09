@@ -70,10 +70,7 @@ QString AccountEntry::statusMessage() const
         return QString::null;
     }
     Tp::Presence presence = mAccount->connection()->selfContact()->presence();
-    if (presence.type() == Tp::ConnectionPresenceTypeAvailable) {
-        return presence.statusMessage();
-    }
-    return QString::null;
+    return presence.statusMessage();
 }
 
 QString AccountEntry::selfContactId() const
