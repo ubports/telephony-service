@@ -65,3 +65,8 @@ void MockController::setCallState(const QString &phoneNumber, const QString &sta
 {
     mMockInterface.call("SetCallState", phoneNumber, state);
 }
+
+void MockController::setOnline(bool online)
+{
+    mMockInterface.call("SetOnline", online);
+}

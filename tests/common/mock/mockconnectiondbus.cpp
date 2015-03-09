@@ -87,3 +87,8 @@ void MockConnectionDBus::SetCallState(const QString &phoneNumber, const QString 
 {
     mConnection->setCallState(phoneNumber, state);
 }
+
+void MockConnectionDBus::SetOnline(bool online)
+{
+    mConnection->setOnline(online);
+}

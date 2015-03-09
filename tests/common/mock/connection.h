@@ -111,7 +111,6 @@ private:
     QStringList mModems;
     uint mHandleCount;
     Tp::SimplePresence mSelfPresence;
-    Tp::SimplePresence mRequestedSelfPresence;
 
     MockConnectionDBus *mDBus;
     QStringList mIncomingCalls;

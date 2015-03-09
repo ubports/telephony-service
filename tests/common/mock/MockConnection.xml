@@ -38,6 +38,12 @@
             <arg name="phoneNumber" type="s" direction="in"/>
             <arg name="status" type="s" direction="in"/>
         </method>
+        <method name="SetOnline">
+            <dox:d><![CDATA[
+                Set the account online/offline
+            ]]></dox:d>
+            <arg name="online" type="b" direction="in"/>
+        </method>
         <signal name="MessageSent">
             <dox:d><![CDATA[
                 A message was sent from the client.

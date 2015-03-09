@@ -44,6 +44,7 @@ public Q_SLOTS:
     QString placeCall(const QVariantMap &properties);
     void hangupCall(const QString &callerId);
     void setCallState(const QString &phoneNumber, const QString &state);
+    void setOnline(bool online);
 
 private:
     QDBusInterface mMockInterface;

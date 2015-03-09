@@ -31,7 +31,6 @@ class AccountEntryFactoryTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void testCorrectInstancesCreated();
-
 };
 
 void AccountEntryFactoryTest::initTestCase()

@@ -36,6 +36,7 @@ public:
     QString PlaceCall(const QVariantMap &properties);
     void HangupCall(const QString &callerId);
     void SetCallState(const QString &phoneNumber, const QString &state);
+    void SetOnline(bool online);
 
 Q_SIGNALS:
     // signals that will be relayed into the bus

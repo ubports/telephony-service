@@ -77,26 +77,32 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     // init presence interface
     simplePresenceIface = Tp::BaseConnectionSimplePresenceInterface::create();
     simplePresenceIface->setSetPresenceCallback(Tp::memFun(this,&MockConnection::setPresence));
+    simplePresenceIface->setMaxmimumStatusMessageLength(255);
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(simplePresenceIface));
 
     // Set Presence
     Tp::SimpleStatusSpec presenceOnline;
     presenceOnline.type = Tp::ConnectionPresenceTypeAvailable;
     presenceOnline.maySetOnSelf = true;
-    presenceOnline.canHaveMessage = false;
+    presenceOnline.canHaveMessage = true;
 
     Tp::SimpleStatusSpec presenceOffline;
     presenceOffline.type = Tp::ConnectionPresenceTypeOffline;
     presenceOffline.maySetOnSelf = false;
     presenceOffline.canHaveMessage = false;
 
+    Tp::SimpleStatusSpec presenceAway;
+    presenceAway.type = Tp::ConnectionPresenceTypeAway;
+    presenceAway.maySetOnSelf = true;
+    presenceAway.canHaveMessage = true;
+
     Tp::SimpleStatusSpecMap statuses;
     statuses.insert(QLatin1String("available"), presenceOnline);
     statuses.insert(QLatin1String("offline"), presenceOffline);
+    statuses.insert(QLatin1String("away"), presenceAway);
 
     simplePresenceIface->setStatuses(statuses);
     mSelfPresence.type = Tp::ConnectionPresenceTypeOffline;
-    mRequestedSelfPresence.type = Tp::ConnectionPresenceTypeOffline;
 
     contactsIface = Tp::BaseConnectionContactsInterface::create();
     contactsIface->setGetContactAttributesCallback(Tp::memFun(this,&MockConnection::getContactAttributes));
@@ -149,10 +155,22 @@ MockConnection::~MockConnection()
 
 uint MockConnection::setPresence(const QString& status, const QString& statusMessage, Tp::DBusError *error)
 {
-    qDebug() << "setPresence" << status;
+    Tp::SimpleContactPresences presences;
     if (status == "available") {
-        mRequestedSelfPresence.type = Tp::ConnectionPresenceTypeAvailable;
+        mSelfPresence.status = "available";
+        mSelfPresence.statusMessage = statusMessage;
+        mSelfPresence.type = Tp::ConnectionPresenceTypeAvailable;
+    } else if (status == "away") {
+        mSelfPresence.status = "away";
+        mSelfPresence.statusMessage = statusMessage;
+        mSelfPresence.type = Tp::ConnectionPresenceTypeAway;
+    } else {
+        mSelfPresence.status = "offline";
+        mSelfPresence.statusMessage = "";
+        mSelfPresence.type = Tp::ConnectionPresenceTypeOffline;
     }
+    presences[selfHandle()] = mSelfPresence;
+    simplePresenceIface->setPresences(presences);
     return selfHandle();
 }
 
