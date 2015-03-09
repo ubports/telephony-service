@@ -142,6 +142,10 @@ void AccountEntry::initialize()
             SIGNAL(connectionChanged(Tp::ConnectionPtr)),
             SLOT(onConnectionChanged()));
 
+    connect(this,
+            SIGNAL(connectedChanged()),
+            SIGNAL(activeChanged()));
+
     // and make sure it is enabled and connected
     if (!mAccount->isEnabled()) {
         QTimer::singleShot(0, this, SLOT(ensureEnabled()));
@@ -198,15 +202,12 @@ void AccountEntry::onSelfHandleChanged(uint handle)
     Q_EMIT statusMessageChanged();
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
-    Q_EMIT activeChanged();
 }
 
 void AccountEntry::onConnectionChanged()
 {
     if (!mAccount->connection()) {
-
-
-        // and ensure the account gets connected
+        // ensure the account gets connected
         ensureConnected();
     } else {
         mConnectionInfo.busName = mAccount->connection()->busName();
@@ -221,5 +222,4 @@ void AccountEntry::onConnectionChanged()
 
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
-    Q_EMIT activeChanged();
 }
