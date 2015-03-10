@@ -39,7 +39,7 @@ public:
 
 Q_SIGNALS:
     void messageReceived(const QString &recipient, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
-    void messageSent(const QString &recipient, const QString &message);
+    void messageSent(const QStringList &recipients, const QString &message);
     void unreadMessagesChanged(const QString &recipient);
 
 public Q_SLOTS:
