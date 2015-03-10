@@ -33,6 +33,7 @@ private Q_SLOTS:
     void initTestCase();
     void testSendMessage_data();
     void testSendMessage();
+    void testMessageReceived();
 
 private:
     MockController *mGenericMockController;
@@ -97,6 +98,23 @@ void ChatManagerTest::testSendMessage()
     messageText = messageSentSpy.first()[1].toString();
     QCOMPARE(messageText, message);
     QCOMPARE(messageRecipients, recipients);
+}
+
+void ChatManagerTest::testMessageReceived()
+{
+    QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
+
+    QVariantMap properties;
+    properties["Sender"] = "12345";
+    properties["Recipients"] = (QStringList() << "12345");
+    QString message("Hi there");
+    mGenericMockController->placeIncomingMessage(message, properties);
+
+    QTRY_COMPARE(messageReceivedSpy.count(), 1);
+    QString sender = messageReceivedSpy.first()[0].toString();
+    QString receivedMessage = messageReceivedSpy.first()[1].toString();
+    QCOMPARE(sender, properties["Sender"].toString());
+    QCOMPARE(receivedMessage, message);
 }
 
 QTEST_MAIN(ChatManagerTest)

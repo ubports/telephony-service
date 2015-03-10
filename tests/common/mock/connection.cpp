@@ -158,13 +158,17 @@ MockTextChannel *MockConnection::textChannelForRecipients(const QStringList &rec
             continue;
         }
 
+        bool ok = true;
         Q_FOREACH(const QString &recipient, recipients) {
             if (!channelRecipients.contains(recipient)) {
-                continue;
+                ok = false;
+                break;
             }
         }
 
-        return channel;
+        if (ok) {
+            return channel;
+        }
     }
     return 0;
 }
