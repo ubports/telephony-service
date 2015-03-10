@@ -326,7 +326,8 @@ Tp::BaseChannelPtr MockConnection::createTextChannel(uint targetHandleType,
 
 void MockConnection::onMessageRead(const QString &id)
 {
-    // FIXME: implement
+    // FIXME: check what else to do
+    Q_EMIT messageRead(id);
 }
 
 void MockConnection::onConferenceCallChannelClosed()

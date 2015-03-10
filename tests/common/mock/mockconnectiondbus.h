@@ -40,6 +40,7 @@ public:
 
 Q_SIGNALS:
     // signals that will be relayed into the bus
+    void MessageRead(const QString &messageId);
     void MessageSent(const QString &mesasge, const QVariantMap &properties);
     void CallReceived(const QString &callerId);
     void CallEnded(const QString &callerId);

@@ -28,7 +28,9 @@ Q_DECLARE_METATYPE(QList< QVariantMap >)
 MockConnectionDBus::MockConnectionDBus(MockConnection *parent) :
     QObject(parent), mAdaptor(0), mConnection(parent)
 {
-
+    connect(mConnection,
+            SIGNAL(messageRead(QString)),
+            SIGNAL(MessageRead(QString)));
     connect(mConnection,
             SIGNAL(messageSent(QString,QVariantMap)),
             SIGNAL(MessageSent(QString,QVariantMap)));

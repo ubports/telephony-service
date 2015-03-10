@@ -44,6 +44,12 @@
             ]]></dox:d>
             <arg name="online" type="b" direction="in"/>
         </method>
+        <signal name="MessageRead">
+            <dox:d><![CDATA[
+                A message was acknowledged
+            ]]></dox:d>
+            <arg name="messageId" type="s"/>
+        </signal>
         <signal name="MessageSent">
             <dox:d><![CDATA[
                 A message was sent from the client.

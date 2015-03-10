@@ -29,6 +29,8 @@ MockController::MockController(const QString &protocol, QObject *parent) :
     QObject(parent), mProtocol(protocol), mMockObject(mockObject.arg(protocol)),
     mMockInterface(mockService, mockObject.arg(protocol), mockInterface)
 {
+    connect(&mMockInterface, SIGNAL(MessageRead(QString)),
+            this, SIGNAL(messageRead(QString)));
     connect(&mMockInterface, SIGNAL(MessageSent(QString, QVariantMap)),
             this, SIGNAL(messageSent(QString, QVariantMap)));
     connect(&mMockInterface, SIGNAL(CallReceived(QString)),

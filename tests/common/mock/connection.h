@@ -79,6 +79,7 @@ public:
 
     QString placeCall(const QVariantMap &properties);
 Q_SIGNALS:
+    void messageRead(const QString &messageId);
     void messageSent(const QString &message, const QVariantMap &info);
     void callReceived(const QString &callerId);
     void callEnded(const QString &callerId);

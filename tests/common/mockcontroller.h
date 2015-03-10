@@ -31,6 +31,7 @@ public:
     explicit MockController(const QString &protocol, QObject *parent = 0);
 
 Q_SIGNALS:
+    void messageRead(const QString &messageId);
     void messageSent(const QString &message, const QVariantMap &properties);
     void callReceived(const QString &callerId);
     void callEnded(const QString &callerId);

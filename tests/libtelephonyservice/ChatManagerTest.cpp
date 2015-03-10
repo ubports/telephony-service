@@ -34,6 +34,7 @@ private Q_SLOTS:
     void testSendMessage_data();
     void testSendMessage();
     void testMessageReceived();
+    void testAcknowledgeMessages();
 
 private:
     MockController *mGenericMockController;
@@ -115,6 +116,43 @@ void ChatManagerTest::testMessageReceived()
     QString receivedMessage = messageReceivedSpy.first()[1].toString();
     QCOMPARE(sender, properties["Sender"].toString());
     QCOMPARE(receivedMessage, message);
+}
+
+void ChatManagerTest::testAcknowledgeMessages()
+{
+    QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
+
+    QVariantMap properties;
+    properties["Sender"] = "12345";
+    properties["Recipients"] = (QStringList() << "12345");
+    QStringList messages;
+    messages << "Hi there" << "How are you" << "Always look on the bright side of life";
+    Q_FOREACH(const QString &message, messages) {
+        mGenericMockController->placeIncomingMessage(message, properties);
+        QTest::qWait(100);
+    }
+    QTRY_COMPARE(messageReceivedSpy.count(), messages.count());
+
+    QStringList messageIds;
+    for (int i = 0; i < messages.count(); ++i) {
+        QString messageId = messageReceivedSpy[i][3].toString();
+        messageIds << messageId;
+    }
+
+    QSignalSpy messageReadSpy(mGenericMockController, SIGNAL(messageRead(QString)));
+    Q_FOREACH(const QString &messageId, messageIds) {
+        ChatManager::instance()->acknowledgeMessage(properties["Recipients"].toStringList(), messageId, "mock/mock/account0");
+    }
+
+    QTRY_COMPARE(messageReadSpy.count(), messageIds.count());
+    QStringList receivedIds;
+    for (int i = 0; i < messageReadSpy.count(); ++i) {
+        receivedIds << messageReadSpy[i][0].toString();
+    }
+
+    qSort(receivedIds);
+    qSort(messageIds);
+    QCOMPARE(receivedIds, messageIds);
 }
 
 QTEST_MAIN(ChatManagerTest)
