@@ -148,13 +148,7 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
     connect(channel.data(),
             SIGNAL(messageSent(Tp::Message,Tp::MessageSendingFlags,QString)),
             SLOT(onMessageSent(Tp::Message,Tp::MessageSendingFlags,QString)));
-    connect(channel.data(),
-            SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
-            SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
 
-    if (!channel->targetContact().isNull()){
-        Q_EMIT unreadMessagesChanged(channel->targetContact()->id());
-    }
     Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
         onMessageReceived(message);
     }
@@ -169,13 +163,6 @@ void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
     }
 
     Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken(), true);
-    Q_EMIT unreadMessagesChanged(message.sender()->id());
-}
-
-void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
-{
-    // emit the signal saying the unread messages for a specific number has changed
-    Q_EMIT unreadMessagesChanged(message.sender()->id());
 }
 
 void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message)
