@@ -54,6 +54,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     text.fixedProperties[TP_QT_IFACE_CHANNEL+".TargetHandleType"]  = Tp::HandleTypeContact;
     text.allowedProperties.append(TP_QT_IFACE_CHANNEL+".TargetHandle");
     text.allowedProperties.append(TP_QT_IFACE_CHANNEL+".TargetID");
+    text.allowedProperties.append(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles"));
 
     // set requestable call channel properties
     Tp::RequestableChannelClass call;
@@ -147,6 +148,25 @@ void MockConnection::addMMSToService(const QString &path, const QVariantMap &pro
         mTextChannels[normalizedNumber]->mmsReceived(path, properties);
     }
 #endif
+}
+
+MockTextChannel *MockConnection::textChannelForRecipients(const QStringList &recipients)
+{
+    Q_FOREACH(MockTextChannel *channel, mTextChannels) {
+        QStringList channelRecipients = channel->recipients();
+        if (channelRecipients.length() != recipients.length()) {
+            continue;
+        }
+
+        Q_FOREACH(const QString &recipient, recipients) {
+            if (!channelRecipients.contains(recipient)) {
+                continue;
+            }
+        }
+
+        return channel;
+    }
+    return 0;
 }
 
 MockConnection::~MockConnection()
@@ -266,23 +286,37 @@ Tp::UIntList MockConnection::requestHandles(uint handleType, const QStringList& 
 }
 
 Tp::BaseChannelPtr MockConnection::createTextChannel(uint targetHandleType,
-                                               uint targetHandle, Tp::DBusError *error)
+                                                     uint targetHandle,
+                                                     const QVariantMap &hints,
+                                                     Tp::DBusError *error)
 {
     Q_UNUSED(targetHandleType);
     Q_UNUSED(error);
 
-    QString requestedId = mHandles.value(targetHandle);
+    if (hints.contains(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles")) &&
+            targetHandleType == Tp::HandleTypeNone && targetHandle == 0) {
 
-    if (mTextChannels.contains(requestedId)) {
-        return mTextChannels[requestedId]->baseChannel();
     }
 
-    MockTextChannel *channel = new MockTextChannel(this, requestedId, targetHandle);
+    QStringList recipients;
+    bool flash;
+    if (hints.contains(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles"))) {
+        recipients << inspectHandles(Tp::HandleTypeContact, qdbus_cast<Tp::UIntList>(hints[TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles")]), error);
+    } else {
+        recipients << mHandles.value(targetHandle);
+    }
+
+    if (hints.contains(TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash"))) {
+        flash = hints[TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash")].toBool();
+    }
+
+    // FIXME: test flash messages
+    MockTextChannel *channel = new MockTextChannel(this, recipients, targetHandle);
     QObject::connect(channel, SIGNAL(messageRead(QString)), SLOT(onMessageRead(QString)));
     QObject::connect(channel, SIGNAL(destroyed()), SLOT(onTextChannelClosed()));
     QObject::connect(channel, SIGNAL(messageSent(QString,QVariantMap)), SIGNAL(messageSent(QString,QVariantMap)));
     qDebug() << channel;
-    mTextChannels[requestedId] = channel;
+    mTextChannels << channel;
     return channel->baseChannel();
 }
 
@@ -373,7 +407,7 @@ Tp::BaseChannelPtr MockConnection::createChannel(const QString& channelType, uin
     }
 
     if (channelType == TP_QT_IFACE_CHANNEL_TYPE_TEXT) {
-        return createTextChannel(targetHandleType, targetHandle, error);
+        return createTextChannel(targetHandleType, targetHandle, hints, error);
     } else if (channelType == TP_QT_IFACE_CHANNEL_TYPE_CALL) {
         return createCallChannel(targetHandleType, targetHandle, hints, error);
     } else {
@@ -385,33 +419,36 @@ Tp::BaseChannelPtr MockConnection::createChannel(const QString& channelType, uin
 
 void MockConnection::placeIncomingMessage(const QString &message, const QVariantMap &info)
 {
-    const QString sender = info["Sender"].toString();
-    // check if there is an open channel for this sender and use it
-    Q_FOREACH(const QString &id, mTextChannels.keys()) {
-        if (id == sender) {
-            mTextChannels[id]->messageReceived(message, info);
+    QString sender = info["Sender"].toString();
+    QStringList recipients = info["Recipients"].toStringList();
+
+    MockTextChannel *channel = textChannelForRecipients(recipients);
+    if (!channel) {
+        // request the channel
+        Tp::DBusError error;
+        bool yours;
+        uint handle = newHandle(sender);
+        ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_TEXT,Tp::HandleTypeContact, handle, yours, handle, false, QVariantMap(), &error);
+        if(error.isValid()) {
+            qWarning() << "Error creating channel for incoming message" << error.name() << error.message();
+            return;
+        }
+
+        channel = textChannelForRecipients(recipients);
+        if (!channel) {
             return;
         }
     }
 
-    Tp::DBusError error;
-    bool yours;
-    uint handle = newHandle(sender);
-    ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_TEXT,Tp::HandleTypeContact, handle, yours, handle, false, QVariantMap(), &error);
-    if(error.isValid()) {
-        qWarning() << "Error creating channel for incoming message" << error.name() << error.message();
-        return;
-    }
-    mTextChannels[sender]->messageReceived(message, info);
+    channel->messageReceived(message, info);
 }
 
 void MockConnection::onTextChannelClosed()
 {
     MockTextChannel *channel = static_cast<MockTextChannel*>(sender());
     if (channel) {
-        QString key = mTextChannels.key(channel);
-        qDebug() << "text channel closed for number " << key;
-        mTextChannels.remove(key);
+        qDebug() << "text channel closed for recipients " << channel->recipients();
+        mTextChannels.removeAll(channel);
     }
 }
 

@@ -35,12 +35,18 @@ class MockTextChannel : public QObject
 {
     Q_OBJECT
 public:
-    MockTextChannel(MockConnection *conn, QString phoneNumber, uint targetHandle, QObject *parent = 0);
+    MockTextChannel(MockConnection *conn, QStringList recipients, uint targetHandle, QObject *parent = 0);
     QString sendMessage(const Tp::MessagePartList& message, uint flags, Tp::DBusError* error);
     void messageReceived(const QString & message, const QVariantMap &info);
     Tp::BaseChannelPtr baseChannel();
     void messageAcknowledged(const QString &id);
     void mmsReceived(const QString &id, const QVariantMap &properties);
+
+    void addMembers(QStringList recipients);
+    QStringList recipients() const;
+    Tp::UIntList members();
+    void onAddMembers(const Tp::UIntList& handles, const QString& message, Tp::DBusError* error);
+    void onRemoveMembers(const Tp::UIntList& handles, const QString& message, Tp::DBusError* error);
 
 public Q_SLOTS:
     void placeDeliveryReport(const QString &messageId, const QString &status);
@@ -52,12 +58,14 @@ Q_SIGNALS:
 private:
     ~MockTextChannel();
     Tp::BaseChannelPtr mBaseChannel;
-    QString mPhoneNumber;
+    QStringList mRecipients;
     MockConnection *mConnection;
     uint mTargetHandle;
     Tp::BaseChannelMessagesInterfacePtr mMessagesIface;
+    Tp::BaseChannelGroupInterfacePtr mGroupIface;
     Tp::BaseChannelTextTypePtr mTextChannel;
     uint mMessageCounter;
+    Tp::UIntList mMembers;
 };
 
 #endif // MOCKTEXTCHANNEL_H

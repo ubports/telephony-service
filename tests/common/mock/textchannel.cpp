@@ -36,20 +36,24 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, AttachmentStruct 
     return argument;
 }
 
-MockTextChannel::MockTextChannel(MockConnection *conn, QString phoneNumber, uint targetHandle, QObject *parent):
+MockTextChannel::MockTextChannel(MockConnection *conn, QStringList recipients, uint targetHandle, QObject *parent):
     QObject(parent),
     mConnection(conn),
-    mPhoneNumber(phoneNumber),
+    mRecipients(recipients),
     mTargetHandle(targetHandle),
     mMessageCounter(1)
 {
     qDBusRegisterMetaType<AttachmentStruct>();
     qDBusRegisterMetaType<AttachmentList>();
 
+    Tp::HandleType type = recipients.count() > 1 ? Tp::HandleTypeNone : Tp::HandleTypeContact;
+
+
     Tp::BaseChannelPtr baseChannel = Tp::BaseChannel::create(mConnection,
                                                              TP_QT_IFACE_CHANNEL_TYPE_TEXT,
                                                              targetHandle,
-                                                             Tp::HandleTypeContact);
+                                                             type);
+    mBaseChannel = baseChannel;
     Tp::BaseChannelTextTypePtr textType = Tp::BaseChannelTextType::create(baseChannel.data());
     baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(textType));
 
@@ -67,9 +71,15 @@ MockTextChannel::MockTextChannel(MockConnection *conn, QString phoneNumber, uint
                                                           deliveryReportingSupport);
 
     mMessagesIface->setSendMessageCallback(Tp::memFun(this,&MockTextChannel::sendMessage));
-
     baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mMessagesIface));
-    mBaseChannel = baseChannel;
+
+    // group stuff
+    mGroupIface = Tp::BaseChannelGroupInterface::create(Tp::ChannelGroupFlagCanAdd, conn->selfHandle());
+    mGroupIface->setAddMembersCallback(Tp::memFun(this,&MockTextChannel::onAddMembers));
+    mGroupIface->setRemoveMembersCallback(Tp::memFun(this,&MockTextChannel::onRemoveMembers));
+    baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mGroupIface));
+    addMembers(recipients);
+
     mTextChannel = Tp::BaseChannelTextTypePtr::dynamicCast(mBaseChannel->interface(TP_QT_IFACE_CHANNEL_TYPE_TEXT));
     mTextChannel->setMessageAcknowledgedCallback(Tp::memFun(this,&MockTextChannel::messageAcknowledged));
     QObject::connect(mBaseChannel.data(), SIGNAL(closed()), this, SLOT(deleteLater()));
@@ -101,10 +111,19 @@ QString MockTextChannel::sendMessage(const Tp::MessagePartList& message, uint fl
     QString messageText = body["content"].variant().toString();
     QVariantMap properties;
     properties["SentTime"] = QDateTime::currentDateTime().toString(Qt::ISODate);
-    properties["Recipients"] = QStringList() << mPhoneNumber;
+    properties["Recipients"] = mRecipients;
     properties["Id"] = id;
 
     Q_EMIT messageSent(messageText, properties);
+
+    QTimer *deliveryReportTimer = new QTimer(this);
+    deliveryReportTimer->setSingleShot(true);
+    deliveryReportTimer->setInterval(100);
+    connect(deliveryReportTimer, &QTimer::timeout, [id, deliveryReportTimer, this] {
+        this->placeDeliveryReport(id, "sent");
+        deliveryReportTimer->deleteLater();
+    });
+    deliveryReportTimer->start();
 
     return id;
 }
@@ -125,7 +144,8 @@ void MockTextChannel::placeDeliveryReport(const QString &messageId, const QStrin
     Tp::MessagePartList partList;
     Tp::MessagePart header;
     header["message-sender"] = QDBusVariant(mTargetHandle);
-    header["message-sender-id"] = QDBusVariant(mPhoneNumber);
+    // FIXME: fix it
+    header["message-sender-id"] = QDBusVariant(mRecipients.first());
     header["message-type"] = QDBusVariant(Tp::ChannelTextMessageTypeDeliveryReport);
     header["delivery-status"] = QDBusVariant(delivery_status);
     header["delivery-token"] = QDBusVariant(messageId);
@@ -145,7 +165,7 @@ void MockTextChannel::messageReceived(const QString &message, const QVariantMap 
     header["message-token"] = QDBusVariant(info["SentTime"].toString() +"-" + QString::number(mMessageCounter++));
     header["message-received"] = QDBusVariant(QDateTime::fromString(info["SentTime"].toString(), Qt::ISODate).toTime_t());
     header["message-sender"] = QDBusVariant(mTargetHandle);
-    header["message-sender-id"] = QDBusVariant(mPhoneNumber);
+    header["message-sender-id"] = QDBusVariant(mRecipients.first());
     header["message-type"] = QDBusVariant(Tp::ChannelTextMessageTypeNormal);
     partList << header << body;
 
@@ -197,4 +217,46 @@ void MockTextChannel::mmsReceived(const QString &id, const QVariantMap &properti
     }
 
     mTextChannel->addReceivedMessage(message);
+}
+
+void MockTextChannel::addMembers(QStringList recipients)
+{
+    Tp::UIntList handles;
+    Q_FOREACH(const QString &recipient, recipients) {
+        uint handle = mConnection->ensureHandle(recipient);
+        handles << handle;
+        if (!mRecipients.contains(recipient)) {
+            mRecipients << recipient;
+        }
+        if (!mMembers.contains(handle)) {
+            mMembers << handle;
+        }
+    }
+    mGroupIface->addMembers(handles, recipients);
+}
+
+QStringList MockTextChannel::recipients() const
+{
+    return mRecipients;
+}
+
+Tp::UIntList MockTextChannel::members()
+{
+    return mMembers;
+}
+
+void MockTextChannel::onAddMembers(const Tp::UIntList &handles, const QString &message, Tp::DBusError *error)
+{
+    addMembers(mConnection->inspectHandles(Tp::HandleTypeContact, handles, error));
+}
+
+void MockTextChannel::onRemoveMembers(const Tp::UIntList &handles, const QString &message, Tp::DBusError *error)
+{
+    Q_FOREACH(uint handle, handles) {
+        Q_FOREACH(const QString &recipient, mConnection->inspectHandles(Tp::HandleTypeContact, Tp::UIntList() << handle, error)) {
+            mRecipients.removeAll(recipient);
+        }
+        mMembers.removeAll(handle);
+    }
+    mGroupIface->removeMembers(handles);
 }

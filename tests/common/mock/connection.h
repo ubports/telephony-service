@@ -67,7 +67,9 @@ public:
 
     uint ensureHandle(const QString &id);
     Tp::BaseChannelPtr createTextChannel(uint targetHandleType,
-                                         uint targetHandle, Tp::DBusError *error);
+                                         uint targetHandle,
+                                         const QVariantMap &hints,
+                                         Tp::DBusError *error);
     Tp::BaseChannelPtr createCallChannel(uint targetHandleType,
                                          uint targetHandle,
                                          const QVariantMap &hints,
@@ -102,9 +104,12 @@ public Q_SLOTS:
 
 private:
     void addMMSToService(const QString &path, const QVariantMap &properties, const QString &servicePath);
+
+    MockTextChannel *textChannelForRecipients(const QStringList &recipients);
+
     QMap<uint, QString> mHandles;
 
-    QMap<QString, MockTextChannel*> mTextChannels;
+    QList<MockTextChannel*> mTextChannels;
     QMap<QString, MockCallChannel*> mCallChannels;
     QMap<QString, QString> mInitialCallStatus;
 
