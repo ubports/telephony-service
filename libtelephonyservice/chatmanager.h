@@ -51,9 +51,6 @@ public Q_SLOTS:
 
     void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId = QString::null);
 
-protected:
-    Tp::TextChannelPtr existingChat(const QStringList &recipients, const QString &accountId);
-
 protected Q_SLOTS:
     void onAckTimerTriggered();
 

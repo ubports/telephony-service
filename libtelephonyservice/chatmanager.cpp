@@ -191,33 +191,6 @@ void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::Messag
     }
 }
 
-Tp::TextChannelPtr ChatManager::existingChat(const QStringList &recipients, const QString &accountId)
-{
-    Tp::TextChannelPtr channel;
-
-    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
-        AccountEntry *channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
-        int count = 0;
-        if (!channelAccount || channelAccount->accountId() != accountId
-                || channel->groupContacts(false).size() != recipients.size()) {
-            continue;
-        }
-        Q_FOREACH(const QString &recipientNew, recipients) {
-            Q_FOREACH(const Tp::ContactPtr &recipientOld, channel->groupContacts(false)) {
-                if (channelAccount->compareIds(recipientOld->id(), recipientNew)) {
-                    count++;
-                }
-            }
-        }
-        if (count == recipients.size()) {
-            return channel;
-        }
-
-    }
-
-    return channel;
-}
-
 void ChatManager::acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId)
 {
     AccountEntry *account = NULL;
