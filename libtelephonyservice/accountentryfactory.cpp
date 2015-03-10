@@ -25,7 +25,7 @@
 
 AccountEntry *AccountEntryFactory::createEntry(const Tp::AccountPtr &account, QObject *parent)
 {
-    QString protocol = account->protocolName();
+    QString protocol = account.isNull() ? "" : account->protocolName();
 
     // FIXME: check what other accounts need extra properties/methods
     if (protocol == "ofono") {
@@ -33,8 +33,4 @@ AccountEntry *AccountEntryFactory::createEntry(const Tp::AccountPtr &account, QO
     }
 
     return new AccountEntry(account, parent);
-}
-
-AccountEntryFactory::AccountEntryFactory()
-{
 }

@@ -41,7 +41,8 @@ QString AccountEntry::accountId() const
 
 bool AccountEntry::active() const
 {
-    return (!mAccount->connection().isNull() &&
+    return (!mAccount.isNull() &&
+            !mAccount->connection().isNull() &&
             !mAccount->connection()->selfContact().isNull() &&
              mAccount->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline);
 }

@@ -19,6 +19,7 @@
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
 #include "accountentry.h"
+#include "accountentryfactory.h"
 #include "telepathyhelper.h"
 #include "mockcontroller.h"
 
@@ -42,6 +43,7 @@ private Q_SLOTS:
 private:
     AccountEntry *mAccount;
     Tp::AccountPtr mTpAccount;
+    AccountEntry *mNullAccount;
     MockController *mMockController;
 };
 
@@ -63,6 +65,9 @@ void AccountEntryTest::initTestCase()
     // wait for the connection to appear
     QTRY_VERIFY(!mTpAccount->connection().isNull());
 
+    // create a null account
+    mNullAccount = AccountEntryFactory::createEntry(Tp::AccountPtr(), this);
+
     // and create the mock controller
     mMockController = new MockController("mock", this);
 }
@@ -70,6 +75,7 @@ void AccountEntryTest::initTestCase()
 void AccountEntryTest::testAccountId()
 {
     QCOMPARE(mAccount->accountId(), mTpAccount->uniqueIdentifier());
+    QVERIFY(mNullAccount->accountId().isNull());
 }
 
 void AccountEntryTest::testActive()
@@ -89,6 +95,9 @@ void AccountEntryTest::testActive()
     mMockController->setOnline(true);
     QTRY_VERIFY(mAccount->active());
     QCOMPARE(activeChangedSpy.count(), 1);
+
+    // check that for a null account active is false
+    QVERIFY(!mNullAccount->active());
 }
 
 void AccountEntryTest::testDisplayName()
@@ -111,6 +120,9 @@ void AccountEntryTest::testDisplayName()
     QTRY_COMPARE(mAccount->displayName(), newDisplayName);
     QCOMPARE(displayNameChangedSpy.count(), 1);
     QCOMPARE(mTpAccount->displayName(), newDisplayName);
+
+    // check that for a null account the displayName is null
+    QVERIFY(mNullAccount->displayName().isNull());
 }
 
 void AccountEntryTest::testStatus()
@@ -126,6 +138,9 @@ void AccountEntryTest::testStatus()
 
     QTRY_COMPARE(mAccount->status(), QString("away"));
     QCOMPARE(statusChangedSpy.count(), 1);
+
+    // check that for a null account the status is null
+    QVERIFY(mNullAccount->status().isNull());
 }
 
 void AccountEntryTest::testStatusMessage()
@@ -142,6 +157,9 @@ void AccountEntryTest::testStatusMessage()
 
     QTRY_COMPARE(mAccount->statusMessage(), statusMessage);
     QCOMPARE(statusMessageChangedSpy.count(), 1);
+
+    // check that for a null account the displayName is null
+    QVERIFY(mNullAccount->statusMessage().isNull());
 }
 
 void AccountEntryTest::testConnected()
@@ -161,6 +179,9 @@ void AccountEntryTest::testConnected()
     mMockController->setOnline(true);
     QTRY_VERIFY(mAccount->connected());
     QCOMPARE(connectedChangedSpy.count(), 1);
+
+    // check that for a null account the displayName is null
+    QVERIFY(!mNullAccount->connected());
 }
 
 void AccountEntryTest::testCompareIds_data()

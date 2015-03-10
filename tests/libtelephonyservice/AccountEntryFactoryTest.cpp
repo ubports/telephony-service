@@ -19,6 +19,7 @@
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
 #include "accountentry.h"
+#include "accountentryfactory.h"
 #include "ofonoaccountentry.h"
 #include "telepathyhelper.h"
 
@@ -31,6 +32,7 @@ class AccountEntryFactoryTest : public QObject
 private Q_SLOTS:
     void initTestCase();
     void testCorrectInstancesCreated();
+    void testNullAccount();
 };
 
 void AccountEntryFactoryTest::initTestCase()
@@ -56,6 +58,13 @@ void AccountEntryFactoryTest::testCorrectInstancesCreated()
     QVERIFY(ofonoAccount);
     QCOMPARE(ofonoAccount->type(), AccountEntry::PhoneAccount);
     QVERIFY(qobject_cast<OfonoAccountEntry*>(ofonoAccount));
+}
+
+void AccountEntryFactoryTest::testNullAccount()
+{
+    AccountEntry *nullAccount = AccountEntryFactory::createEntry(Tp::AccountPtr(), this);
+    QVERIFY(nullAccount);
+    QVERIFY(nullAccount->accountId().isNull());
 }
 
 
