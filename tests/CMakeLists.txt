@@ -29,6 +29,9 @@ macro(generate_test TESTNAME USE_DBUS)
                           telephonyservice
                           mockcontroller
                          )
+
+    # as the tests link to telephonyservice, we need to enable coverage on them too
+    enable_coverage(${TESTNAME})
 endmacro(generate_test)
 
 add_subdirectory(common)

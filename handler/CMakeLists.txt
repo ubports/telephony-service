@@ -26,6 +26,8 @@ target_link_libraries(telephony-service-handler
     telephonyservice
     )
 
+enable_coverage(telephony-service-handler)
+
 configure_file(com.canonical.TelephonyServiceHandler.service.in com.canonical.TelephonyServiceHandler.service)
 configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceHandler.service.in org.freedesktop.Telepathy.Client.TelephonyServiceHandler.service)
 
