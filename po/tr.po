@@ -8,25 +8,25 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2014-07-29 19:27+0000\n"
-"Last-Translator: PS Jenkins bot <ps-jenkins@lists.canonical.com>\n"
+"PO-Revision-Date: 2015-03-09 19:44+0000\n"
+"Last-Translator: Mutlu Can YILMAZ <mtlcnylmz@gmail.com>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-01-17 07:07+0000\n"
-"X-Generator: Launchpad (build 17304)\n"
+"X-Launchpad-Export-Date: 2015-03-10 05:47+0000\n"
+"X-Generator: Launchpad (build 17389)\n"
 "Language: tr\n"
 
-#: indicator/messagingmenu.cpp:256
+#: indicator/messagingmenu.cpp:273
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 cevapsız arama"
 msgstr[1] "%1 cevapsız arama"
 
-#: indicator/messagingmenu.cpp:308
+#: indicator/messagingmenu.cpp:325
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -36,45 +36,45 @@ msgstr[1] "%1 sesli mesaj"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "<b>%1</b>, çağrılar yaptı"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "Bugün <b>%1</b> çağrı alındı"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "Bugün <b>%1</b> mesaj alındı"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "Bugün <b>%1</b>mesaj gönderildi."
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:468
 msgid "Accept"
 msgstr "Kabul Et"
 
-#: indicator/messagingmenu.cpp:199
+#: indicator/messagingmenu.cpp:215
 msgid "Call back"
-msgstr ""
+msgstr "Geri ara"
 
-#: approver/approver.cpp:392
+#: approver/approver.cpp:434
 msgid "Caller number is not available"
 msgstr "Arayan numarası kullanılamıyor"
 
-#: approver/approver.cpp:389
+#: approver/approver.cpp:431
 #, qt-format
 msgid "Calling from %1"
 msgstr "%1 kişisinden arama"
 
-#: approver/approver.cpp:385
+#: approver/approver.cpp:427
 msgid "Calling from private number"
 msgstr "Özel numaradan arıyor"
 
-#: approver/approver.cpp:387
+#: approver/approver.cpp:429
 msgid "Calling from unknown number"
 msgstr "Bilinmeyen numaradan arıyor"
 
@@ -82,124 +82,125 @@ msgstr "Bilinmeyen numaradan arıyor"
 msgid "Cancel"
 msgstr "İptal"
 
-#: indicator/textchannelobserver.cpp:207
+#: indicator/textchannelobserver.cpp:217
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
+"Uçak kipini devre dışı bırakın ve mesajlaşma uygulamasından tekrar deneyin."
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:490
 msgid "Decline"
 msgstr "Reddet"
 
-#: approver/approver.cpp:439
+#: approver/approver.cpp:481
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:425
+#: approver/approver.cpp:467
 msgid "Hold + Answer"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:204
+#: indicator/messagingmenu.cpp:220
 msgid "I missed your call - can you call me now?"
 msgstr "Telefona yetişemedim - beni şimdi arar mısın?"
 
-#: indicator/messagingmenu.cpp:207
+#: indicator/messagingmenu.cpp:223
 msgid "I'll be 20 minutes late."
 msgstr "20 dakika geç kalacağım."
 
-#: approver/approver.cpp:79
+#: approver/approver.cpp:89
 msgid "I'm busy at the moment. I'll call later."
-msgstr ""
+msgstr "Şuanda meşgulüm. Daha sonra arayacağım."
 
-#: indicator/messagingmenu.cpp:206
+#: indicator/messagingmenu.cpp:222
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Şu anda meşgulüm. Seni sonra arayacağım."
 
-#: approver/approver.cpp:80
+#: approver/approver.cpp:90
 msgid "I'm running late, on my way now."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:205
+#: indicator/messagingmenu.cpp:221
 msgid "I'm running late. I'm on my way."
 msgstr "Geç kalıyorum. Yoldayım."
 
-#: approver/approver.cpp:456
+#: approver/approver.cpp:498
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
+#: indicator/textchannelobserver.cpp:415 indicator/textchannelobserver.cpp:464
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "%1 kişisinden mesaj"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr ""
+msgstr "Bugün çağrı yapılmadı"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr ""
+msgstr "Bugün çağrı alınmadı"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr ""
+msgstr "Bugün mesaj alınmadı"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr ""
+msgstr "Bugün mesaj gönderilmedi"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
+#: indicator/textchannelobserver.cpp:285 indicator/ussdindicator.cpp:79
 msgid "Ok"
-msgstr ""
+msgstr "Tamam"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
 msgstr "Telefon Çağrıları"
 
-#: approver/approver.cpp:81
+#: approver/approver.cpp:91
 msgid "Please call me back later."
-msgstr ""
+msgstr "Lütfen beni tekrar arayın."
 
-#: indicator/textchannelobserver.cpp:539
+#: indicator/textchannelobserver.cpp:586
 msgid "Please, select a SIM card:"
-msgstr ""
+msgstr "Lütfen bir SIM kart seçin:"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
-msgstr ""
+msgstr "Özek Numara"
 
-#: indicator/messagingmenu.cpp:259
+#: indicator/messagingmenu.cpp:276
 msgid "Private number"
-msgstr ""
+msgstr "Özel numara"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
-msgstr ""
+msgstr "Yanıtla"
 
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr ""
+msgstr "SIM %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:276
+#: indicator/textchannelobserver.cpp:291
 msgid "Save"
 msgstr "Kaydet"
 
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+#: indicator/messagingmenu.cpp:163 indicator/messagingmenu.cpp:230
 msgid "Send"
-msgstr ""
+msgstr "Gönder"
 
-#: indicator/messagingmenu.cpp:208
+#: indicator/messagingmenu.cpp:224
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Üzgünüm, hala meşgulüm. Seni sonra arayacağım."
 
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr ""
+msgstr "Bugün konuşmalarda <b>%1</b> dakika harcandı"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
@@ -213,38 +214,38 @@ msgstr ""
 msgid "Telephony Service Indicator"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:215
+#: indicator/textchannelobserver.cpp:226
 msgid "The message could not be sent"
-msgstr ""
+msgstr "Mesaj gönderilemedi"
 
-#: indicator/textchannelobserver.cpp:210
+#: indicator/textchannelobserver.cpp:220
 msgid "Try again from the messaging application."
-msgstr ""
+msgstr "Mesajlaşma uygulamasından tekrar deneyin."
 
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
-msgstr ""
+msgstr "Bilinmeyen Numara"
 
-#: approver/approver.cpp:59
+#: approver/approver.cpp:61
 msgid "Unknown caller"
 msgstr "Bilinmeyen arayan"
 
-#: indicator/messagingmenu.cpp:263
+#: indicator/messagingmenu.cpp:280
 msgid "Unknown number"
-msgstr ""
+msgstr "Bilinmeyen numara"
 
-#: indicator/textchannelobserver.cpp:205
+#: indicator/textchannelobserver.cpp:215
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
+#: indicator/textchannelobserver.cpp:241 indicator/textchannelobserver.cpp:435
 msgid "View message"
-msgstr ""
+msgstr "Mesajı göster"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:330
 msgid "Voicemail"
-msgstr ""
+msgstr "Sesli mesaj"
 
-#: indicator/messagingmenu.cpp:305
+#: indicator/messagingmenu.cpp:322
 msgid "Voicemail messages"
 msgstr "Telesekreter mesajları"
