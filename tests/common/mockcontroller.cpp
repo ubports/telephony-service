@@ -93,7 +93,12 @@ void MockController::setEmergencyNumbers(const QStringList &numbers)
     mMockInterface.call("SetEmergencyNumbers", numbers);
 }
 
-void MockController::setSerial(const QString &serial)
+QString MockController::serial()
 {
-    mMockInterface.call("SetSerial", serial);
+    QDBusReply<QString> reply = mMockInterface.call("Serial");
+    if (!reply.isValid()) {
+        return QString::null;
+    }
+
+    return reply.value();
 }

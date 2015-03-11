@@ -47,7 +47,7 @@ public:
     void SetEmergencyNumbers(const QStringList &numbers);
 
     // USSD stuff
-    void SetSerial(const QString &serial);
+    QString Serial();
 
 Q_SIGNALS:
     // signals that will be relayed into the bus

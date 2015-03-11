@@ -99,7 +99,7 @@ public:
     void USSDInitiate(const QString &command, Tp::DBusError *error);
     void USSDRespond(const QString &reply, Tp::DBusError *error);
     void USSDCancel(Tp::DBusError *error);
-    void setSerial(const QString &serial);
+    QString serial();
 
 Q_SIGNALS:
     void messageRead(const QString &messageId);

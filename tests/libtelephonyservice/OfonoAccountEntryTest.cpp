@@ -38,24 +38,17 @@ private Q_SLOTS:
     void testVoicemailIndicator();
     void testVoicemailNumber();
     void testVoicemailCount();
+    void testSimLocked();
 
 private:
     OfonoAccountEntry *mAccount;
     Tp::AccountPtr mTpAccount;
     MockController *mMockController;
-    QString mSerial;
 };
 
 void OfonoAccountEntryTest::initTestCase()
 {
     Tp::registerTypes();
-
-    // create the mock controller
-    mMockController = new MockController("ofono", this);
-
-    // set the account serial now before telepathyhelper is created to make sure the account gets it.
-    mSerial = "theserial1";
-    mMockController->setSerial(mSerial);
 
     QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
     QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
@@ -70,6 +63,9 @@ void OfonoAccountEntryTest::initTestCase()
 
     // wait for the connection to appear
     QTRY_VERIFY(!mTpAccount->connection().isNull());
+
+    // create the mock controller
+    mMockController = new MockController("ofono", this);
 }
 
 void OfonoAccountEntryTest::testConnected()
@@ -134,7 +130,7 @@ void OfonoAccountEntryTest::testEmergencyNumbers()
 
 void OfonoAccountEntryTest::testSerial()
 {
-    QCOMPARE(mAccount->serial(), mSerial);
+    QCOMPARE(mAccount->serial(), mMockController->serial());
 }
 
 void OfonoAccountEntryTest::testVoicemailIndicator()
@@ -188,6 +184,20 @@ void OfonoAccountEntryTest::testVoicemailCount()
     mMockController->setVoicemailCount(0);
     QTRY_COMPARE(voicemailCountSpy.count(), 1);
     QCOMPARE((int)mAccount->voicemailCount(), 0);
+}
+
+void OfonoAccountEntryTest::testSimLocked()
+{
+    QSignalSpy simLockedSpy(mAccount, SIGNAL(simLockedChanged()));
+
+    // check that it is not locked by default
+    QVERIFY(!mAccount->simLocked());
+
+    // now try to set the status to simlocked
+    Tp::Presence presence(Tp::ConnectionPresenceTypeAway, "simlocked", "simlocked");
+    mTpAccount->setRequestedPresence(presence);
+    QTRY_COMPARE(simLockedSpy.count(), 1);
+    QVERIFY(mAccount->simLocked());
 }
 
 QTEST_MAIN(OfonoAccountEntryTest)

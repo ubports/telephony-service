@@ -68,11 +68,11 @@
             ]]></dox:d>
             <arg name="numbers" type="as" direction="in"/>
         </method>
-        <method name="SetSerial">
+        <method name="Serial">
             <dox:d><![CDATA[
                 Set the USSD serial
             ]]></dox:d>
-            <arg name="serial" type="s" direction="in"/>
+            <arg name="value" type="s" direction="out"/>
         </method>
         <signal name="MessageRead">
             <dox:d><![CDATA[

@@ -101,6 +101,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     statuses.insert(QLatin1String("available"), presenceOnline);
     statuses.insert(QLatin1String("offline"), presenceOffline);
     statuses.insert(QLatin1String("away"), presenceAway);
+    statuses.insert(QLatin1String("simlocked"), presenceAway);
 
     simplePresenceIface->setStatuses(statuses);
     mSelfPresence.type = Tp::ConnectionPresenceTypeOffline;
@@ -134,6 +135,10 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     supplementaryServicesIface->setInitiateCallback(Tp::memFun(this,&MockConnection::USSDInitiate));
     supplementaryServicesIface->setRespondCallback(Tp::memFun(this,&MockConnection::USSDRespond));
     supplementaryServicesIface->setCancelCallback(Tp::memFun(this,&MockConnection::USSDCancel));
+
+    static int serial = 0;
+    serial++;
+    supplementaryServicesIface->setSerial(QString("accountserial%1").arg(QString::number(serial)));
 
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(supplementaryServicesIface));
 
@@ -209,8 +214,8 @@ uint MockConnection::setPresence(const QString& status, const QString& statusMes
         mSelfPresence.status = "available";
         mSelfPresence.statusMessage = statusMessage;
         mSelfPresence.type = Tp::ConnectionPresenceTypeAvailable;
-    } else if (status == "away") {
-        mSelfPresence.status = "away";
+    } else if (status == "away" || status == "simlocked") {
+        mSelfPresence.status = status;
         mSelfPresence.statusMessage = statusMessage;
         mSelfPresence.type = Tp::ConnectionPresenceTypeAway;
     } else {
@@ -613,9 +618,9 @@ void MockConnection::USSDCancel(Tp::DBusError *error)
     // FIXME: implement
 }
 
-void MockConnection::setSerial(const QString &serial)
+QString MockConnection::serial()
 {
-    supplementaryServicesIface->setSerial(serial);
+    return supplementaryServicesIface->serial();
 }
 
 void MockConnection::hangupCall(const QString &callerId)

@@ -115,7 +115,7 @@ void MockConnectionDBus::SetEmergencyNumbers(const QStringList &numbers)
     mConnection->setEmergencyNumbers(numbers);
 }
 
-void MockConnectionDBus::SetSerial(const QString &serial)
+QString MockConnectionDBus::Serial()
 {
-    mConnection->setSerial(serial);
+    return mConnection->serial();
 }

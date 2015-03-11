@@ -56,7 +56,7 @@ public Q_SLOTS:
     void setEmergencyNumbers(const QStringList &numbers);
 
     // USSD stuff
-    void setSerial(const QString &serial);
+    QString serial();
 
 private:
     QDBusInterface mMockInterface;
