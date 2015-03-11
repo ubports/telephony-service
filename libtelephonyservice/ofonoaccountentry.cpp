@@ -198,6 +198,5 @@ void OfonoAccountEntry::onConnectionChanged()
         mSerial = ussdIface.property("Serial").toString();
     }
 
-    Q_EMIT simLockedChanged();
     Q_EMIT serialChanged();
 }
