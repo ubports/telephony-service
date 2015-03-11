@@ -95,6 +95,12 @@ void MockConnectionDBus::SetOnline(bool online)
     mConnection->setOnline(online);
 }
 
+void MockConnectionDBus::SetPresence(const QString &status, const QString &statusMessage)
+{
+    Tp::DBusError error;
+    mConnection->setPresence(status, statusMessage, &error);
+}
+
 void MockConnectionDBus::SetVoicemailIndicator(bool active)
 {
     mConnection->setVoicemailIndicator(active);

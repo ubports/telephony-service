@@ -132,6 +132,7 @@ private:
     MockTextChannel *textChannelForRecipients(const QStringList &recipients);
 
     QMap<uint, QString> mHandles;
+    Tp::SimpleStatusSpecMap mStatuses;
 
     QList<MockTextChannel*> mTextChannels;
     QMap<QString, MockCallChannel*> mCallChannels;

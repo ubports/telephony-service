@@ -73,6 +73,11 @@ void MockController::setOnline(bool online)
     mMockInterface.call("SetOnline", online);
 }
 
+void MockController::setPresence(const QString &status, const QString &statusMessage)
+{
+    mMockInterface.call("SetPresence", status, statusMessage);
+}
+
 void MockController::setVoicemailNumber(const QString &number)
 {
     mMockInterface.call("SetVoicemailNumber", number);

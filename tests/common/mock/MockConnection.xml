@@ -44,6 +44,13 @@
             ]]></dox:d>
             <arg name="online" type="b" direction="in"/>
         </method>
+        <method name="SetPresence">
+            <dox:d><![CDATA[
+                Set the requested presence
+            ]]></dox:d>
+            <arg name="status" type="s" direction="in"/>
+            <arg name="statusMessage" type="s" direction="in"/>
+        </method>
         <method name="SetVoicemailIndicator">
             <dox:d><![CDATA[
                 Set the voicemail indicator on/off

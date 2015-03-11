@@ -39,6 +39,8 @@ private Q_SLOTS:
     void testVoicemailNumber();
     void testVoicemailCount();
     void testSimLocked();
+    void testEmergencyCallsAvailable_data();
+    void testEmergencyCallsAvailable();
 
 private:
     OfonoAccountEntry *mAccount;
@@ -194,10 +196,41 @@ void OfonoAccountEntryTest::testSimLocked()
     QVERIFY(!mAccount->simLocked());
 
     // now try to set the status to simlocked
-    Tp::Presence presence(Tp::ConnectionPresenceTypeAway, "simlocked", "simlocked");
-    mTpAccount->setRequestedPresence(presence);
+    mMockController->setPresence("simlocked", "simlocked");
     QTRY_COMPARE(simLockedSpy.count(), 1);
     QVERIFY(mAccount->simLocked());
+}
+
+void OfonoAccountEntryTest::testEmergencyCallsAvailable_data()
+{
+    QTest::addColumn<QString>("status");
+    QTest::addColumn<bool>("available");
+
+    QTest::newRow("available") << "available" << true;
+    QTest::newRow("away") << "away" << true;
+    QTest::newRow("simlocked") << "simlocked" << true;
+    QTest::newRow("flightmode") << "flightmode" << false;
+    QTest::newRow("nosim") << "nosim" << true;
+    QTest::newRow("nomodem") << "nomodem" << false;
+    QTest::newRow("registered") << "registered" << true;
+    QTest::newRow("roaming") << "roaming" << true;
+    QTest::newRow("unregistered") << "unregistered" << true;
+    QTest::newRow("denied") << "denied" << true;
+    QTest::newRow("unknown") << "unknown" << true;
+    QTest::newRow("searching") << "searching" << true;
+}
+
+void OfonoAccountEntryTest::testEmergencyCallsAvailable()
+{
+    QFETCH(QString, status);
+    QFETCH(bool, available);
+
+    QSignalSpy statusChangedSpy(mAccount, SIGNAL(statusChanged()));
+    mMockController->setPresence(status, "");
+
+    QTRY_COMPARE(statusChangedSpy.count(), 1);
+    QCOMPARE(mAccount->status(), status);
+    QCOMPARE(mAccount->emergencyCallsAvailable(), available);
 }
 
 QTEST_MAIN(OfonoAccountEntryTest)

@@ -37,6 +37,7 @@ public:
     void HangupCall(const QString &callerId);
     void SetCallState(const QString &phoneNumber, const QString &state);
     void SetOnline(bool online);
+    void SetPresence(const QString &status, const QString &statusMessage);
 
     // voicemail stuff
     void SetVoicemailIndicator(bool active);

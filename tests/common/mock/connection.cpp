@@ -89,21 +89,29 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
 
     Tp::SimpleStatusSpec presenceOffline;
     presenceOffline.type = Tp::ConnectionPresenceTypeOffline;
-    presenceOffline.maySetOnSelf = false;
-    presenceOffline.canHaveMessage = false;
+    presenceOffline.maySetOnSelf = true;
+    presenceOffline.canHaveMessage = true;
 
     Tp::SimpleStatusSpec presenceAway;
     presenceAway.type = Tp::ConnectionPresenceTypeAway;
     presenceAway.maySetOnSelf = true;
     presenceAway.canHaveMessage = true;
 
-    Tp::SimpleStatusSpecMap statuses;
-    statuses.insert(QLatin1String("available"), presenceOnline);
-    statuses.insert(QLatin1String("offline"), presenceOffline);
-    statuses.insert(QLatin1String("away"), presenceAway);
-    statuses.insert(QLatin1String("simlocked"), presenceAway);
+    mStatuses.insert(QLatin1String("available"), presenceOnline);
+    mStatuses.insert(QLatin1String("offline"), presenceOffline);
+    mStatuses.insert(QLatin1String("away"), presenceAway);
+    mStatuses.insert(QLatin1String("simlocked"), presenceAway);
+    mStatuses.insert(QLatin1String("flightmode"), presenceOffline);
+    mStatuses.insert(QLatin1String("nosim"), presenceOffline);
+    mStatuses.insert(QLatin1String("nomodem"), presenceOffline);
+    mStatuses.insert(QLatin1String("registered"), presenceOnline);
+    mStatuses.insert(QLatin1String("roaming"), presenceOnline);
+    mStatuses.insert(QLatin1String("unregistered"), presenceAway);
+    mStatuses.insert(QLatin1String("denied"), presenceAway);
+    mStatuses.insert(QLatin1String("unknown"), presenceAway);
+    mStatuses.insert(QLatin1String("searching"), presenceAway);
 
-    simplePresenceIface->setStatuses(statuses);
+    simplePresenceIface->setStatuses(mStatuses);
     mSelfPresence.type = Tp::ConnectionPresenceTypeOffline;
 
     contactsIface = Tp::BaseConnectionContactsInterface::create();
@@ -209,20 +217,18 @@ MockConnection::~MockConnection()
 
 uint MockConnection::setPresence(const QString& status, const QString& statusMessage, Tp::DBusError *error)
 {
+    qDebug() << "setPresence" << status << statusMessage;
     Tp::SimpleContactPresences presences;
-    if (status == "available") {
-        mSelfPresence.status = "available";
-        mSelfPresence.statusMessage = statusMessage;
-        mSelfPresence.type = Tp::ConnectionPresenceTypeAvailable;
-    } else if (status == "away" || status == "simlocked") {
-        mSelfPresence.status = status;
-        mSelfPresence.statusMessage = statusMessage;
-        mSelfPresence.type = Tp::ConnectionPresenceTypeAway;
-    } else {
-        mSelfPresence.status = "offline";
-        mSelfPresence.statusMessage = "";
-        mSelfPresence.type = Tp::ConnectionPresenceTypeOffline;
+    if (!mStatuses.contains(status) || !mStatuses[status].maySetOnSelf) {
+        error->set(TP_QT_ERROR_INVALID_ARGUMENT, "Status not supported or cannot be set");
+        return selfHandle();
     }
+
+    Tp::SimpleStatusSpec spec = mStatuses[status];
+    mSelfPresence.status = status;
+    mSelfPresence.type = spec.type;
+    mSelfPresence.statusMessage = spec.canHaveMessage ? statusMessage : "";
+
     presences[selfHandle()] = mSelfPresence;
     simplePresenceIface->setPresences(presences);
     return selfHandle();

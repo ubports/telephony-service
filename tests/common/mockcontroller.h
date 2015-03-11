@@ -46,6 +46,7 @@ public Q_SLOTS:
     void hangupCall(const QString &callerId);
     void setCallState(const QString &phoneNumber, const QString &state);
     void setOnline(bool online);
+    void setPresence(const QString &status, const QString &statusMessage);
 
     // voicemail stuff
     void setVoicemailNumber(const QString &number);
