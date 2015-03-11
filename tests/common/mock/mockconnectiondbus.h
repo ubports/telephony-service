@@ -38,6 +38,17 @@ public:
     void SetCallState(const QString &phoneNumber, const QString &state);
     void SetOnline(bool online);
 
+    // voicemail stuff
+    void SetVoicemailIndicator(bool active);
+    void SetVoicemailNumber(const QString &number);
+    void SetVoicemailCount(int count);
+
+    // emergency numbers stuff
+    void SetEmergencyNumbers(const QStringList &numbers);
+
+    // USSD stuff
+    void SetSerial(const QString &serial);
+
 Q_SIGNALS:
     // signals that will be relayed into the bus
     void MessageRead(const QString &messageId);

@@ -94,3 +94,28 @@ void MockConnectionDBus::SetOnline(bool online)
 {
     mConnection->setOnline(online);
 }
+
+void MockConnectionDBus::SetVoicemailIndicator(bool active)
+{
+    mConnection->setVoicemailIndicator(active);
+}
+
+void MockConnectionDBus::SetVoicemailNumber(const QString &number)
+{
+    mConnection->setVoicemailNumber(number);
+}
+
+void MockConnectionDBus::SetVoicemailCount(int count)
+{
+    mConnection->setVoicemailCount(count);
+}
+
+void MockConnectionDBus::SetEmergencyNumbers(const QStringList &numbers)
+{
+    mConnection->setEmergencyNumbers(numbers);
+}
+
+void MockConnectionDBus::SetSerial(const QString &serial)
+{
+    mConnection->setSerial(serial);
+}

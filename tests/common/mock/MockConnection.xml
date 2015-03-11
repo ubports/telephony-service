@@ -44,6 +44,36 @@
             ]]></dox:d>
             <arg name="online" type="b" direction="in"/>
         </method>
+        <method name="SetVoicemailIndicator">
+            <dox:d><![CDATA[
+                Set the voicemail indicator on/off
+            ]]></dox:d>
+            <arg name="active" type="b" direction="in"/>
+        </method>
+        <method name="SetVoicemailNumber">
+            <dox:d><![CDATA[
+                Set the voicemail number
+            ]]></dox:d>
+            <arg name="number" type="s" direction="in"/>
+        </method>
+        <method name="SetVoicemailCount">
+            <dox:d><![CDATA[
+                Set the voicemail count
+            ]]></dox:d>
+            <arg name="count" type="i" direction="in"/>
+        </method>
+        <method name="SetEmergencyNumbers">
+            <dox:d><![CDATA[
+                Set the emergency numbers
+            ]]></dox:d>
+            <arg name="numbers" type="as" direction="in"/>
+        </method>
+        <method name="SetSerial">
+            <dox:d><![CDATA[
+                Set the USSD serial
+            ]]></dox:d>
+            <arg name="serial" type="s" direction="in"/>
+        </method>
         <signal name="MessageRead">
             <dox:d><![CDATA[
                 A message was acknowledged

@@ -36,7 +36,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
                             const QString &protocolName,
                             const QVariantMap &parameters) :
     Tp::BaseConnection(dbusConnection, cmName, protocolName, parameters),
-    mHandleCount(0), mConferenceCall(0)
+    mHandleCount(0), mConferenceCall(0), mVoicemailIndicator(false), mVoicemailCount(0)
 {
     setSelfHandle(newHandle("<SelfHandle>"));
 
@@ -111,6 +111,31 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
                                                  << TP_QT_IFACE_CONNECTION
                                                  << TP_QT_IFACE_CONNECTION_INTERFACE_SIMPLE_PRESENCE);
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(contactsIface));
+
+    // init custom emergency mode interface (not provided by telepathy
+    emergencyModeIface = BaseConnectionEmergencyModeInterface::create();
+    emergencyModeIface->setEmergencyNumbersCallback(Tp::memFun(this,&MockConnection::emergencyNumbers));
+    plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(emergencyModeIface));
+    mEmergencyNumbers << "123" << "456" << "789";
+    emergencyModeIface->setEmergencyNumbers(mEmergencyNumbers);
+
+    // init custom voicemail interface (not provided by telepathy)
+    voicemailIface = BaseConnectionVoicemailInterface::create();
+    voicemailIface->setVoicemailCountCallback(Tp::memFun(this,&MockConnection::voicemailCount));
+    voicemailIface->setVoicemailIndicatorCallback(Tp::memFun(this,&MockConnection::voicemailIndicator));
+    voicemailIface->setVoicemailNumberCallback(Tp::memFun(this,&MockConnection::voicemailNumber));
+    voicemailIface->setVoicemailNumber(mVoicemailNumber);
+    plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(voicemailIface));
+    voicemailIface->setVoicemailCount(mVoicemailCount);
+    voicemailIface->setVoicemailIndicator(mVoicemailIndicator);
+    mVoicemailNumber = "555";
+
+    supplementaryServicesIface = BaseConnectionUSSDInterface::create();
+    supplementaryServicesIface->setInitiateCallback(Tp::memFun(this,&MockConnection::USSDInitiate));
+    supplementaryServicesIface->setRespondCallback(Tp::memFun(this,&MockConnection::USSDRespond));
+    supplementaryServicesIface->setCancelCallback(Tp::memFun(this,&MockConnection::USSDCancel));
+
+    plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(supplementaryServicesIface));
 
     mDBus = new MockConnectionDBus(this);
 
@@ -527,6 +552,70 @@ QString MockConnection::placeCall(const QVariantMap &properties)
     }
 
     return channel->objectPath();
+}
+
+QStringList MockConnection::emergencyNumbers(Tp::DBusError *error)
+{
+    return mEmergencyNumbers;
+}
+
+void MockConnection::setEmergencyNumbers(const QStringList &emergencyNumbers)
+{
+    mEmergencyNumbers = emergencyNumbers;
+    emergencyModeIface->setEmergencyNumbers(emergencyNumbers);
+}
+
+bool MockConnection::voicemailIndicator(Tp::DBusError *error)
+{
+    return mVoicemailIndicator;
+}
+
+void MockConnection::setVoicemailIndicator(bool visible)
+{
+    mVoicemailIndicator = visible;
+    voicemailIface->setVoicemailIndicator(visible);
+}
+
+QString MockConnection::voicemailNumber(Tp::DBusError *error)
+{
+    return mVoicemailNumber;
+}
+
+void MockConnection::setVoicemailNumber(const QString &number)
+{
+    mVoicemailNumber = number;
+    voicemailIface->setVoicemailNumber(mVoicemailNumber);
+}
+
+uint MockConnection::voicemailCount(Tp::DBusError *error)
+{
+    return mVoicemailCount;
+}
+
+void MockConnection::setVoicemailCount(int count)
+{
+    mVoicemailCount = count;
+    voicemailIface->setVoicemailCount(mVoicemailCount);
+}
+
+void MockConnection::USSDInitiate(const QString &command, Tp::DBusError *error)
+{
+    // FIXME: implement
+}
+
+void MockConnection::USSDRespond(const QString &reply, Tp::DBusError *error)
+{
+    // FIXME: implement
+}
+
+void MockConnection::USSDCancel(Tp::DBusError *error)
+{
+    // FIXME: implement
+}
+
+void MockConnection::setSerial(const QString &serial)
+{
+    supplementaryServicesIface->setSerial(serial);
 }
 
 void MockConnection::hangupCall(const QString &callerId)

@@ -47,6 +47,17 @@ public Q_SLOTS:
     void setCallState(const QString &phoneNumber, const QString &state);
     void setOnline(bool online);
 
+    // voicemail stuff
+    void setVoicemailNumber(const QString &number);
+    void setVoicemailIndicator(bool active);
+    void setVoicemailCount(int count);
+
+    // emergency numbers stuff
+    void setEmergencyNumbers(const QStringList &numbers);
+
+    // USSD stuff
+    void setSerial(const QString &serial);
+
 private:
     QDBusInterface mMockInterface;
     QString mProtocol;

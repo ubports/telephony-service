@@ -72,3 +72,28 @@ void MockController::setOnline(bool online)
 {
     mMockInterface.call("SetOnline", online);
 }
+
+void MockController::setVoicemailNumber(const QString &number)
+{
+    mMockInterface.call("SetVoicemailNumber", number);
+}
+
+void MockController::setVoicemailIndicator(bool active)
+{
+    mMockInterface.call("SetVoicemailIndicator", active);
+}
+
+void MockController::setVoicemailCount(int count)
+{
+    mMockInterface.call("SetVoicemailCount", count);
+}
+
+void MockController::setEmergencyNumbers(const QStringList &numbers)
+{
+    mMockInterface.call("SetEmergencyNumbers", numbers);
+}
+
+void MockController::setSerial(const QString &serial)
+{
+    mMockInterface.call("SetSerial", serial);
+}
