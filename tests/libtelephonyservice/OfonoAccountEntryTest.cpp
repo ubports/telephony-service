@@ -30,6 +30,7 @@ class OfonoAccountEntryTest : public QObject
 
 private Q_SLOTS:
     void initTestCase();
+    void testAccountType();
     void testConnected();
     void testCompareIds_data();
     void testCompareIds();
@@ -41,6 +42,7 @@ private Q_SLOTS:
     void testSimLocked();
     void testEmergencyCallsAvailable_data();
     void testEmergencyCallsAvailable();
+    void testNetworkName();
 
 private:
     OfonoAccountEntry *mAccount;
@@ -68,6 +70,11 @@ void OfonoAccountEntryTest::initTestCase()
 
     // create the mock controller
     mMockController = new MockController("ofono", this);
+}
+
+void OfonoAccountEntryTest::testAccountType()
+{
+    QCOMPARE(mAccount->type(), AccountEntry::PhoneAccount);
 }
 
 void OfonoAccountEntryTest::testConnected()
@@ -231,6 +238,19 @@ void OfonoAccountEntryTest::testEmergencyCallsAvailable()
     QTRY_COMPARE(statusChangedSpy.count(), 1);
     QCOMPARE(mAccount->status(), status);
     QCOMPARE(mAccount->emergencyCallsAvailable(), available);
+}
+
+void OfonoAccountEntryTest::testNetworkName()
+{
+    QSignalSpy networkNameChangedSpy(mAccount, SIGNAL(statusMessageChanged()));
+
+    // set the value
+    QString statusMessage("SomeNetwork");
+    Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", statusMessage);
+    mTpAccount->setRequestedPresence(presence);
+
+    QTRY_COMPARE(mAccount->networkName(), statusMessage);
+    QCOMPARE(networkNameChangedSpy.count(), 1);
 }
 
 QTEST_MAIN(OfonoAccountEntryTest)
