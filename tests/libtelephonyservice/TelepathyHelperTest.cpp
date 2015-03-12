@@ -39,6 +39,8 @@ private Q_SLOTS:
     void testAccountSorting();
     void testAccountIds();
     void testActiveAccounts();
+    void testAccountForId();
+    void testAccountForConnection();
     void testEmergencyCallsAvailable();
 
     // helper slots
@@ -254,6 +256,26 @@ void TelepathyHelperTest::testActiveAccounts()
     QCOMPARE(TelepathyHelper::instance()->activeAccounts().count(), 2);
 }
 
+void TelepathyHelperTest::testAccountForId()
+{
+    AccountEntry *genericAccount = TelepathyHelper::instance()->accountForId("mock/mock/account0");
+    QVERIFY(genericAccount);
+    QCOMPARE(genericAccount->accountId(), QString("mock/mock/account0"));
+
+    AccountEntry *phoneAccount = TelepathyHelper::instance()->accountForId("mock/ofono/account0");
+    QVERIFY(phoneAccount);
+    QCOMPARE(phoneAccount->accountId(), QString("mock/ofono/account0"));
+}
+
+void TelepathyHelperTest::testAccountForConnection()
+{
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        AccountEntry *entry = TelepathyHelper::instance()->accountForConnection(account->account()->connection());
+        QVERIFY(entry);
+        QCOMPARE(entry, account);
+    }
+}
+
 void TelepathyHelperTest::testEmergencyCallsAvailable()
 {
     QSignalSpy emergencyCallsSpy(TelepathyHelper::instance(), SIGNAL(emergencyCallsAvailableChanged()));
@@ -268,7 +290,7 @@ void TelepathyHelperTest::testEmergencyCallsAvailable()
     QVERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
 
     // now set the phone account as "flightmode", and see if the emergencyCallsAvailable value
-    mPhoneController->setPresence("flightMode", "");
+    mPhoneController->setPresence("flightmode", "");
     QTRY_COMPARE(emergencyCallsSpy.count(), 1);
     QVERIFY(!TelepathyHelper::instance()->emergencyCallsAvailable());
 
