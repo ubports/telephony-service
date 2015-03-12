@@ -509,7 +509,7 @@ bool TelepathyHelper::emergencyCallsAvailable() const
     // FIXME: this is really ofono specific, so maybe move somewhere else?
     Q_FOREACH(const AccountEntry *account, mAccounts) {
         const OfonoAccountEntry *ofonoAccount = qobject_cast<const OfonoAccountEntry*>(account);
-        if (ofonoAccount->emergencyCallsAvailable()) {
+        if (ofonoAccount && ofonoAccount->emergencyCallsAvailable()) {
             return true;
         }
     }
