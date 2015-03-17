@@ -1,12 +1,15 @@
+set(LIBTELEPHONYSERVICE_DIR ${CMAKE_SOURCE_DIR}/libtelephonyservice)
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/libtelephonyservice
+    ${LIBTELEPHONYSERVICE_DIR}
+    ${TP_QT5_INCLUDE_DIRS}
+    ${CMAKE_SOURCE_DIR}/tests/common
     )
 
 add_executable(GreeterContactsTestServerExe GreeterContactsTestServer.cpp)
 qt5_use_modules(GreeterContactsTestServerExe Core DBus)
 
-add_executable(GreeterContactsTestExe GreeterContactsTest.cpp ../greetercontacts.cpp)
+add_executable(GreeterContactsTestExe GreeterContactsTest.cpp ${LIBTELEPHONYSERVICE_DIR}/greetercontacts.cpp)
 set_target_properties(GreeterContactsTestExe PROPERTIES COMPILE_DEFINITIONS "AS_BUSNAME=sessionBus;CMAKE_SOURCE_DIR=\"${CMAKE_SOURCE_DIR}\"")
 qt5_use_modules(GreeterContactsTestExe Contacts Core DBus Test)
 
@@ -27,18 +30,10 @@ add_test(NAME GreeterContactsTest
     DEPENDENCIES GreeterContactsTestServerExe GreeterContactsTestExe
     )
 
-macro(generate_tests)
-    foreach(test ${ARGN})
-        add_executable(${test} ${test}.cpp)
-        qt5_use_modules(${test} Contacts Core DBus Qml Test)
-        target_link_libraries(${test}
-            telephonyservice
-            )
-        add_test(${test} ${CMAKE_CURRENT_BINARY_DIR}/${test} -platform offscreen -xunitxml -o ${CMAKE_BINARY_DIR}/test_${test}.xml)
-    endforeach(test)
-endmacro(generate_tests)
-
-generate_tests(
-    ContactUtilsTest
-    PhoneUtilsTest
-    )
+generate_test(ContactUtilsTest False)
+generate_test(PhoneUtilsTest False)
+generate_test(AccountEntryFactoryTest True)
+generate_test(AccountEntryTest True)
+generate_test(ChatManagerTest True)
+generate_test(OfonoAccountEntryTest True)
+generate_test(TelepathyHelperTest True)

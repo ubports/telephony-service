@@ -77,20 +77,20 @@ void TextHandler::onConnectedChanged()
         
         if (mPendingMessages.contains(accountId)) {
             // create text channels to send the pending messages
-            Q_FOREACH(const QStringList& phoneNumbers, mPendingMessages[accountId].keys()) {
-                startChat(phoneNumbers, accountId);
+            Q_FOREACH(const QStringList& recipients, mPendingMessages[accountId].keys()) {
+                startChat(recipients, accountId);
             }
         }
         if (mPendingMMSs.contains(accountId)) {
             // create text channels to send the pending MMSs
-            Q_FOREACH(const QStringList& phoneNumbers, mPendingMMSs[accountId].keys()) {
-                startChat(phoneNumbers, accountId);
+            Q_FOREACH(const QStringList& recipients, mPendingMMSs[accountId].keys()) {
+                startChat(recipients, accountId);
             }
         }
         if (mPendingSilentMessages.contains(accountId)) {
             // create text channels to send the pending silent messages
-            Q_FOREACH(const QStringList& phoneNumbers, mPendingSilentMessages[accountId].keys()) {
-                startChat(phoneNumbers, accountId);
+            Q_FOREACH(const QStringList& recipients, mPendingSilentMessages[accountId].keys()) {
+                startChat(recipients, accountId);
             }
         }
 
@@ -103,7 +103,7 @@ TextHandler *TextHandler::instance()
     return handler;
 }
 
-void TextHandler::startChat(const QStringList &phoneNumbers, const QString &accountId)
+void TextHandler::startChat(const QStringList &recipients, const QString &accountId)
 {
     // Request the contact to start chatting to
     // FIXME: make it possible to select which account to use, for now, pick the first one
@@ -113,7 +113,7 @@ void TextHandler::startChat(const QStringList &phoneNumbers, const QString &acco
         return;
     }
 
-    connect(account->account()->connection()->contactManager()->contactsForIdentifiers(phoneNumbers),
+    connect(account->account()->connection()->contactManager()->contactsForIdentifiers(recipients),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
@@ -205,21 +205,21 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
     return message;
 }
 
-void TextHandler::sendMMS(const QStringList &phoneNumbers, const AttachmentList &attachments, const QString &accountId) {
+void TextHandler::sendMMS(const QStringList &recipients, const AttachmentList &attachments, const QString &accountId) {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
         // account does not exist
         return;
     }
     if (!account->connected()) {
-        mPendingMMSs[accountId][phoneNumbers].append(attachments);
+        mPendingMMSs[accountId][recipients].append(attachments);
         return;
     }
 
-    Tp::TextChannelPtr channel = existingChat(phoneNumbers, accountId);
+    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
     if (channel.isNull()) {
-        mPendingMMSs[accountId][phoneNumbers].append(attachments);
-        startChat(phoneNumbers, accountId);
+        mPendingMMSs[accountId][recipients].append(attachments);
+        startChat(recipients, accountId);
         return;
     }
 
@@ -230,7 +230,7 @@ void TextHandler::sendMMS(const QStringList &phoneNumbers, const AttachmentList 
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
-void TextHandler::sendSilentMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
+void TextHandler::sendSilentMessage(const QStringList &recipients, const QString &message, const QString &accountId)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
@@ -238,13 +238,13 @@ void TextHandler::sendSilentMessage(const QStringList &phoneNumbers, const QStri
         return;
     }
     if (!account->connected()) {
-        mPendingSilentMessages[accountId][phoneNumbers].append(message);
+        mPendingSilentMessages[accountId][recipients].append(message);
         return;
     }
-    Tp::TextChannelPtr channel = existingChat(phoneNumbers, accountId);
+    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
     if (channel.isNull()) {
-        mPendingSilentMessages[accountId][phoneNumbers].append(message);
-        startChat(phoneNumbers, accountId);
+        mPendingSilentMessages[accountId][recipients].append(message);
+        startChat(recipients, accountId);
         return;
     }
 
@@ -263,7 +263,7 @@ void TextHandler::sendSilentMessage(const QStringList &phoneNumbers, const QStri
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
-void TextHandler::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
+void TextHandler::sendMessage(const QStringList &recipients, const QString &message, const QString &accountId)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
@@ -271,14 +271,14 @@ void TextHandler::sendMessage(const QStringList &phoneNumbers, const QString &me
         return;
     }
     if (!account->connected()) {
-        mPendingMessages[accountId][phoneNumbers].append(message);
+        mPendingMessages[accountId][recipients].append(message);
         return;
     }
 
-    Tp::TextChannelPtr channel = existingChat(phoneNumbers, accountId);
+    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
     if (channel.isNull()) {
-        mPendingMessages[accountId][phoneNumbers].append(message);
-        startChat(phoneNumbers, accountId);
+        mPendingMessages[accountId][recipients].append(message);
+        startChat(recipients, accountId);
         return;
     }
 
@@ -287,9 +287,9 @@ void TextHandler::sendMessage(const QStringList &phoneNumbers, const QString &me
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
-void TextHandler::acknowledgeMessages(const QStringList &phoneNumbers, const QStringList &messageIds, const QString &accountId)
+void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId)
 {
-    Tp::TextChannelPtr channel = existingChat(phoneNumbers, accountId);
+    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
     if (channel.isNull()) {
         return;
     }
@@ -321,8 +321,8 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
         return;
     }
 
-    Q_FOREACH(const Tp::ContactPtr &phoneNumberOld, channel->groupContacts(false)) {
-        recipients << phoneNumberOld->id();
+    Q_FOREACH(const Tp::ContactPtr &channelContact, channel->groupContacts(false)) {
+        recipients << channelContact->id();
     }
 
     QMap<QStringList, QStringList> &pendingMessages = mPendingMessages[accountId];
@@ -377,25 +377,25 @@ void TextHandler::onMessageSent(Tp::PendingOperation *op)
     }
 }
 
-Tp::TextChannelPtr TextHandler::existingChat(const QStringList &phoneNumbers, const QString &accountId)
+Tp::TextChannelPtr TextHandler::existingChat(const QStringList &targetIds, const QString &accountId)
 {
     Tp::TextChannelPtr channel;
 
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
         AccountEntry *channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
-        if (!channelAccount || channel->groupContacts(false).size() != phoneNumbers.size()
+        if (!channelAccount || channel->groupContacts(false).size() != targetIds.size()
             || channelAccount->accountId() != accountId) {
             continue;
         }
-        Q_FOREACH(const QString &phoneNumberNew, phoneNumbers) {
-            Q_FOREACH(const Tp::ContactPtr &phoneNumberOld, channel->groupContacts(false)) {
-                if (PhoneUtils::comparePhoneNumbers(phoneNumberOld->id(), phoneNumberNew)) {
+        Q_FOREACH(const QString &targetId, targetIds) {
+            Q_FOREACH(const Tp::ContactPtr &channelContact, channel->groupContacts(false)) {
+                if (channelAccount->compareIds(channelContact->id(), targetId)) {
                     count++;
                 }
             }
         }
-        if (count == phoneNumbers.size()) {
+        if (count == targetIds.size()) {
             return channel;
         }
     }

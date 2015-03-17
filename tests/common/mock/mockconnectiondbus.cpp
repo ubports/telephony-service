@@ -28,7 +28,9 @@ Q_DECLARE_METATYPE(QList< QVariantMap >)
 MockConnectionDBus::MockConnectionDBus(MockConnection *parent) :
     QObject(parent), mAdaptor(0), mConnection(parent)
 {
-
+    connect(mConnection,
+            SIGNAL(messageRead(QString)),
+            SIGNAL(MessageRead(QString)));
     connect(mConnection,
             SIGNAL(messageSent(QString,QVariantMap)),
             SIGNAL(MessageSent(QString,QVariantMap)));
@@ -65,7 +67,7 @@ bool MockConnectionDBus::connectToBus()
         mAdaptor = new MockConnectionAdaptor(this);
     }
 
-    return QDBusConnection::sessionBus().registerObject("/com/canonical/MockConnection", this);
+    return QDBusConnection::sessionBus().registerObject("/com/canonical/MockConnection/" + mConnection->protocolName(), this);
 }
 
 void MockConnectionDBus::PlaceIncomingMessage(const QString &message, const QVariantMap &properties)
@@ -86,4 +88,40 @@ void MockConnectionDBus::HangupCall(const QString &callerId)
 void MockConnectionDBus::SetCallState(const QString &phoneNumber, const QString &state)
 {
     mConnection->setCallState(phoneNumber, state);
+}
+
+void MockConnectionDBus::SetOnline(bool online)
+{
+    mConnection->setOnline(online);
+}
+
+void MockConnectionDBus::SetPresence(const QString &status, const QString &statusMessage)
+{
+    Tp::DBusError error;
+    mConnection->setPresence(status, statusMessage, &error);
+}
+
+void MockConnectionDBus::SetVoicemailIndicator(bool active)
+{
+    mConnection->setVoicemailIndicator(active);
+}
+
+void MockConnectionDBus::SetVoicemailNumber(const QString &number)
+{
+    mConnection->setVoicemailNumber(number);
+}
+
+void MockConnectionDBus::SetVoicemailCount(int count)
+{
+    mConnection->setVoicemailCount(count);
+}
+
+void MockConnectionDBus::SetEmergencyNumbers(const QStringList &numbers)
+{
+    mConnection->setEmergencyNumbers(numbers);
+}
+
+QString MockConnectionDBus::Serial()
+{
+    return mConnection->serial();
 }

@@ -34,6 +34,9 @@
 #include "textchannel.h"
 #include "callchannel.h"
 #include "dbustypes.h"
+#include "emergencymodeiface.h"
+#include "ussdiface.h"
+#include "voicemailiface.h"
 
 class MockTextChannel;
 class MockCallChannel;
@@ -65,9 +68,16 @@ public:
     uint newHandle(const QString &identifier);
     QMap<QString, MockCallChannel*> callChannels();
 
+    // phone custom interfaces
+    BaseConnectionEmergencyModeInterfacePtr emergencyModeIface;
+    BaseConnectionVoicemailInterfacePtr voicemailIface;
+    BaseConnectionUSSDInterfacePtr supplementaryServicesIface;
+
     uint ensureHandle(const QString &id);
     Tp::BaseChannelPtr createTextChannel(uint targetHandleType,
-                                         uint targetHandle, Tp::DBusError *error);
+                                         uint targetHandle,
+                                         const QVariantMap &hints,
+                                         Tp::DBusError *error);
     Tp::BaseChannelPtr createCallChannel(uint targetHandleType,
                                          uint targetHandle,
                                          const QVariantMap &hints,
@@ -76,7 +86,23 @@ public:
     ~MockConnection();
 
     QString placeCall(const QVariantMap &properties);
+
+    QStringList emergencyNumbers(Tp::DBusError *error);
+    void setEmergencyNumbers(const QStringList &emergencyNumbers);
+
+    bool voicemailIndicator(Tp::DBusError *error);
+    void setVoicemailIndicator(bool visible);
+    QString voicemailNumber(Tp::DBusError *error);
+    void setVoicemailNumber(const QString &number);
+    uint voicemailCount(Tp::DBusError *error);
+    void setVoicemailCount(int count);
+    void USSDInitiate(const QString &command, Tp::DBusError *error);
+    void USSDRespond(const QString &reply, Tp::DBusError *error);
+    void USSDCancel(Tp::DBusError *error);
+    QString serial();
+
 Q_SIGNALS:
+    void messageRead(const QString &messageId);
     void messageSent(const QString &message, const QVariantMap &info);
     void callReceived(const QString &callerId);
     void callEnded(const QString &callerId);
@@ -102,20 +128,28 @@ public Q_SLOTS:
 
 private:
     void addMMSToService(const QString &path, const QVariantMap &properties, const QString &servicePath);
-    QMap<uint, QString> mHandles;
 
-    QMap<QString, MockTextChannel*> mTextChannels;
+    MockTextChannel *textChannelForRecipients(const QStringList &recipients);
+
+    QMap<uint, QString> mHandles;
+    Tp::SimpleStatusSpecMap mStatuses;
+
+    QList<MockTextChannel*> mTextChannels;
     QMap<QString, MockCallChannel*> mCallChannels;
     QMap<QString, QString> mInitialCallStatus;
 
     QStringList mModems;
     uint mHandleCount;
     Tp::SimplePresence mSelfPresence;
-    Tp::SimplePresence mRequestedSelfPresence;
 
     MockConnectionDBus *mDBus;
     QStringList mIncomingCalls;
     MockConferenceCallChannel *mConferenceCall;
+
+    QStringList mEmergencyNumbers;
+    int mVoicemailCount;
+    bool mVoicemailIndicator;
+    QString mVoicemailNumber;
 };
 
 #endif

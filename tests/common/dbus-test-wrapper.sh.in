@@ -13,15 +13,19 @@ gnome-keyring-daemon -r -d
 dconf write /org/gnome/empathy/use-conn false
 
 # start the mock connection manager
-@CMAKE_CURRENT_BINARY_DIR@/mock/telepathy-mock &
+@CMAKE_BINARY_DIR@/tests/common/mock/telepathy-mock &
 MOCK_PID=$!
 
 # wait 1 sec for the mock to start up
 sleep 1
 
+# add one generic account
 mc-tool add mock/mock account0
 
-@CMAKE_CURRENT_BINARY_DIR@/../telephony-service-handler &
+# and one phone account
+mc-tool add mock/ofono account0
+
+@CMAKE_BINARY_DIR@/handler/telephony-service-handler &
 
 HANDLER_PID=$!
 

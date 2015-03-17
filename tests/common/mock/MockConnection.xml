@@ -38,6 +38,55 @@
             <arg name="phoneNumber" type="s" direction="in"/>
             <arg name="status" type="s" direction="in"/>
         </method>
+        <method name="SetOnline">
+            <dox:d><![CDATA[
+                Set the account online/offline
+            ]]></dox:d>
+            <arg name="online" type="b" direction="in"/>
+        </method>
+        <method name="SetPresence">
+            <dox:d><![CDATA[
+                Set the requested presence
+            ]]></dox:d>
+            <arg name="status" type="s" direction="in"/>
+            <arg name="statusMessage" type="s" direction="in"/>
+        </method>
+        <method name="SetVoicemailIndicator">
+            <dox:d><![CDATA[
+                Set the voicemail indicator on/off
+            ]]></dox:d>
+            <arg name="active" type="b" direction="in"/>
+        </method>
+        <method name="SetVoicemailNumber">
+            <dox:d><![CDATA[
+                Set the voicemail number
+            ]]></dox:d>
+            <arg name="number" type="s" direction="in"/>
+        </method>
+        <method name="SetVoicemailCount">
+            <dox:d><![CDATA[
+                Set the voicemail count
+            ]]></dox:d>
+            <arg name="count" type="i" direction="in"/>
+        </method>
+        <method name="SetEmergencyNumbers">
+            <dox:d><![CDATA[
+                Set the emergency numbers
+            ]]></dox:d>
+            <arg name="numbers" type="as" direction="in"/>
+        </method>
+        <method name="Serial">
+            <dox:d><![CDATA[
+                Set the USSD serial
+            ]]></dox:d>
+            <arg name="value" type="s" direction="out"/>
+        </method>
+        <signal name="MessageRead">
+            <dox:d><![CDATA[
+                A message was acknowledged
+            ]]></dox:d>
+            <arg name="messageId" type="s"/>
+        </signal>
         <signal name="MessageSent">
             <dox:d><![CDATA[
                 A message was sent from the client.
@@ -45,6 +94,7 @@
             <arg name="message" type="s"/>
             <arg name="properties" type="a{sv}"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
         </signal>
         <signal name="CallReceived">
             <dox:d><![CDATA[

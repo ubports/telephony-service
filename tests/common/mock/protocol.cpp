@@ -30,6 +30,11 @@ Protocol::Protocol(const QDBusConnection &dbusConnection, const QString &name)
                                  Tp::RequestableChannelClassSpec::audioCall());
 
     setCreateConnectionCallback(memFun(this, &Protocol::createConnection));
+
+    Tp::ProtocolParameterList parameters;
+    Tp::ProtocolParameter parameter("modem-objpath", "s", 0);
+    parameters << parameter;
+    setParameters(parameters);
 }
 
 Tp::BaseConnectionPtr Protocol::createConnection(const QVariantMap &parameters, Tp::DBusError *error) {

@@ -4,11 +4,14 @@ include_directories(
     ${Qt5DBus_INCLUDE_DIRS}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/libtelephonyservice
     )
 
 find_library(TELEPATHY_QT5_SERVICE_LIBRARIES telepathy-qt5-service)
 
-set(mock_SRCS main.cpp protocol.cpp connection.cpp textchannel.cpp callchannel.cpp conferencecallchannel.cpp mockconnectiondbus.cpp speakeriface.cpp)
+set(mock_SRCS main.cpp protocol.cpp connection.cpp textchannel.cpp callchannel.cpp
+              conferencecallchannel.cpp mockconnectiondbus.cpp speakeriface.cpp
+              emergencymodeiface.cpp ussdiface.cpp voicemailiface.cpp)
 qt5_add_dbus_adaptor(mock_SRCS MockConnection.xml mockconnectiondbus.h MockConnectionDBus)
 
 add_executable(telepathy-mock ${mock_SRCS})

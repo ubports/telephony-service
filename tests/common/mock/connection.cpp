@@ -36,7 +36,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
                             const QString &protocolName,
                             const QVariantMap &parameters) :
     Tp::BaseConnection(dbusConnection, cmName, protocolName, parameters),
-    mHandleCount(0), mConferenceCall(0)
+    mHandleCount(0), mConferenceCall(0), mVoicemailIndicator(false), mVoicemailCount(0)
 {
     setSelfHandle(newHandle("<SelfHandle>"));
 
@@ -54,6 +54,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     text.fixedProperties[TP_QT_IFACE_CHANNEL+".TargetHandleType"]  = Tp::HandleTypeContact;
     text.allowedProperties.append(TP_QT_IFACE_CHANNEL+".TargetHandle");
     text.allowedProperties.append(TP_QT_IFACE_CHANNEL+".TargetID");
+    text.allowedProperties.append(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles"));
 
     // set requestable call channel properties
     Tp::RequestableChannelClass call;
@@ -77,26 +78,41 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     // init presence interface
     simplePresenceIface = Tp::BaseConnectionSimplePresenceInterface::create();
     simplePresenceIface->setSetPresenceCallback(Tp::memFun(this,&MockConnection::setPresence));
+    simplePresenceIface->setMaxmimumStatusMessageLength(255);
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(simplePresenceIface));
 
     // Set Presence
     Tp::SimpleStatusSpec presenceOnline;
     presenceOnline.type = Tp::ConnectionPresenceTypeAvailable;
     presenceOnline.maySetOnSelf = true;
-    presenceOnline.canHaveMessage = false;
+    presenceOnline.canHaveMessage = true;
 
     Tp::SimpleStatusSpec presenceOffline;
     presenceOffline.type = Tp::ConnectionPresenceTypeOffline;
-    presenceOffline.maySetOnSelf = false;
-    presenceOffline.canHaveMessage = false;
+    presenceOffline.maySetOnSelf = true;
+    presenceOffline.canHaveMessage = true;
 
-    Tp::SimpleStatusSpecMap statuses;
-    statuses.insert(QLatin1String("available"), presenceOnline);
-    statuses.insert(QLatin1String("offline"), presenceOffline);
+    Tp::SimpleStatusSpec presenceAway;
+    presenceAway.type = Tp::ConnectionPresenceTypeAway;
+    presenceAway.maySetOnSelf = true;
+    presenceAway.canHaveMessage = true;
 
-    simplePresenceIface->setStatuses(statuses);
+    mStatuses.insert(QLatin1String("available"), presenceOnline);
+    mStatuses.insert(QLatin1String("offline"), presenceOffline);
+    mStatuses.insert(QLatin1String("away"), presenceAway);
+    mStatuses.insert(QLatin1String("simlocked"), presenceAway);
+    mStatuses.insert(QLatin1String("flightmode"), presenceOffline);
+    mStatuses.insert(QLatin1String("nosim"), presenceOffline);
+    mStatuses.insert(QLatin1String("nomodem"), presenceOffline);
+    mStatuses.insert(QLatin1String("registered"), presenceOnline);
+    mStatuses.insert(QLatin1String("roaming"), presenceOnline);
+    mStatuses.insert(QLatin1String("unregistered"), presenceAway);
+    mStatuses.insert(QLatin1String("denied"), presenceAway);
+    mStatuses.insert(QLatin1String("unknown"), presenceAway);
+    mStatuses.insert(QLatin1String("searching"), presenceAway);
+
+    simplePresenceIface->setStatuses(mStatuses);
     mSelfPresence.type = Tp::ConnectionPresenceTypeOffline;
-    mRequestedSelfPresence.type = Tp::ConnectionPresenceTypeOffline;
 
     contactsIface = Tp::BaseConnectionContactsInterface::create();
     contactsIface->setGetContactAttributesCallback(Tp::memFun(this,&MockConnection::getContactAttributes));
@@ -104,6 +120,35 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
                                                  << TP_QT_IFACE_CONNECTION
                                                  << TP_QT_IFACE_CONNECTION_INTERFACE_SIMPLE_PRESENCE);
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(contactsIface));
+
+    // init custom emergency mode interface (not provided by telepathy
+    emergencyModeIface = BaseConnectionEmergencyModeInterface::create();
+    emergencyModeIface->setEmergencyNumbersCallback(Tp::memFun(this,&MockConnection::emergencyNumbers));
+    plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(emergencyModeIface));
+    mEmergencyNumbers << "123" << "456" << "789";
+    emergencyModeIface->setEmergencyNumbers(mEmergencyNumbers);
+
+    // init custom voicemail interface (not provided by telepathy)
+    voicemailIface = BaseConnectionVoicemailInterface::create();
+    voicemailIface->setVoicemailCountCallback(Tp::memFun(this,&MockConnection::voicemailCount));
+    voicemailIface->setVoicemailIndicatorCallback(Tp::memFun(this,&MockConnection::voicemailIndicator));
+    voicemailIface->setVoicemailNumberCallback(Tp::memFun(this,&MockConnection::voicemailNumber));
+    voicemailIface->setVoicemailNumber(mVoicemailNumber);
+    plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(voicemailIface));
+    voicemailIface->setVoicemailCount(mVoicemailCount);
+    voicemailIface->setVoicemailIndicator(mVoicemailIndicator);
+    mVoicemailNumber = "555";
+
+    supplementaryServicesIface = BaseConnectionUSSDInterface::create();
+    supplementaryServicesIface->setInitiateCallback(Tp::memFun(this,&MockConnection::USSDInitiate));
+    supplementaryServicesIface->setRespondCallback(Tp::memFun(this,&MockConnection::USSDRespond));
+    supplementaryServicesIface->setCancelCallback(Tp::memFun(this,&MockConnection::USSDCancel));
+
+    static int serial = 0;
+    serial++;
+    supplementaryServicesIface->setSerial(QString("accountserial%1").arg(QString::number(serial)));
+
+    plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(supplementaryServicesIface));
 
     mDBus = new MockConnectionDBus(this);
 
@@ -143,16 +188,49 @@ void MockConnection::addMMSToService(const QString &path, const QVariantMap &pro
 #endif
 }
 
+MockTextChannel *MockConnection::textChannelForRecipients(const QStringList &recipients)
+{
+    Q_FOREACH(MockTextChannel *channel, mTextChannels) {
+        QStringList channelRecipients = channel->recipients();
+        if (channelRecipients.length() != recipients.length()) {
+            continue;
+        }
+
+        bool ok = true;
+        Q_FOREACH(const QString &recipient, recipients) {
+            if (!channelRecipients.contains(recipient)) {
+                ok = false;
+                break;
+            }
+        }
+
+        if (ok) {
+            return channel;
+        }
+    }
+    return 0;
+}
+
 MockConnection::~MockConnection()
 {
 }
 
 uint MockConnection::setPresence(const QString& status, const QString& statusMessage, Tp::DBusError *error)
 {
-    qDebug() << "setPresence" << status;
-    if (status == "available") {
-        mRequestedSelfPresence.type = Tp::ConnectionPresenceTypeAvailable;
+    qDebug() << "setPresence" << status << statusMessage;
+    Tp::SimpleContactPresences presences;
+    if (!mStatuses.contains(status) || !mStatuses[status].maySetOnSelf) {
+        error->set(TP_QT_ERROR_INVALID_ARGUMENT, "Status not supported or cannot be set");
+        return selfHandle();
     }
+
+    Tp::SimpleStatusSpec spec = mStatuses[status];
+    mSelfPresence.status = status;
+    mSelfPresence.type = spec.type;
+    mSelfPresence.statusMessage = spec.canHaveMessage ? statusMessage : "";
+
+    presences[selfHandle()] = mSelfPresence;
+    simplePresenceIface->setPresences(presences);
     return selfHandle();
 }
 
@@ -248,29 +326,44 @@ Tp::UIntList MockConnection::requestHandles(uint handleType, const QStringList& 
 }
 
 Tp::BaseChannelPtr MockConnection::createTextChannel(uint targetHandleType,
-                                               uint targetHandle, Tp::DBusError *error)
+                                                     uint targetHandle,
+                                                     const QVariantMap &hints,
+                                                     Tp::DBusError *error)
 {
     Q_UNUSED(targetHandleType);
     Q_UNUSED(error);
 
-    QString requestedId = mHandles.value(targetHandle);
+    if (hints.contains(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles")) &&
+            targetHandleType == Tp::HandleTypeNone && targetHandle == 0) {
 
-    if (mTextChannels.contains(requestedId)) {
-        return mTextChannels[requestedId]->baseChannel();
     }
 
-    MockTextChannel *channel = new MockTextChannel(this, requestedId, targetHandle);
+    QStringList recipients;
+    bool flash;
+    if (hints.contains(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles"))) {
+        recipients << inspectHandles(Tp::HandleTypeContact, qdbus_cast<Tp::UIntList>(hints[TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles")]), error);
+    } else {
+        recipients << mHandles.value(targetHandle);
+    }
+
+    if (hints.contains(TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash"))) {
+        flash = hints[TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash")].toBool();
+    }
+
+    // FIXME: test flash messages
+    MockTextChannel *channel = new MockTextChannel(this, recipients, targetHandle);
     QObject::connect(channel, SIGNAL(messageRead(QString)), SLOT(onMessageRead(QString)));
     QObject::connect(channel, SIGNAL(destroyed()), SLOT(onTextChannelClosed()));
     QObject::connect(channel, SIGNAL(messageSent(QString,QVariantMap)), SIGNAL(messageSent(QString,QVariantMap)));
     qDebug() << channel;
-    mTextChannels[requestedId] = channel;
+    mTextChannels << channel;
     return channel->baseChannel();
 }
 
 void MockConnection::onMessageRead(const QString &id)
 {
-    // FIXME: implement
+    // FIXME: check what else to do
+    Q_EMIT messageRead(id);
 }
 
 void MockConnection::onConferenceCallChannelClosed()
@@ -355,7 +448,7 @@ Tp::BaseChannelPtr MockConnection::createChannel(const QString& channelType, uin
     }
 
     if (channelType == TP_QT_IFACE_CHANNEL_TYPE_TEXT) {
-        return createTextChannel(targetHandleType, targetHandle, error);
+        return createTextChannel(targetHandleType, targetHandle, hints, error);
     } else if (channelType == TP_QT_IFACE_CHANNEL_TYPE_CALL) {
         return createCallChannel(targetHandleType, targetHandle, hints, error);
     } else {
@@ -367,33 +460,36 @@ Tp::BaseChannelPtr MockConnection::createChannel(const QString& channelType, uin
 
 void MockConnection::placeIncomingMessage(const QString &message, const QVariantMap &info)
 {
-    const QString sender = info["Sender"].toString();
-    // check if there is an open channel for this sender and use it
-    Q_FOREACH(const QString &id, mTextChannels.keys()) {
-        if (id == sender) {
-            mTextChannels[id]->messageReceived(message, info);
+    QString sender = info["Sender"].toString();
+    QStringList recipients = info["Recipients"].toStringList();
+
+    MockTextChannel *channel = textChannelForRecipients(recipients);
+    if (!channel) {
+        // request the channel
+        Tp::DBusError error;
+        bool yours;
+        uint handle = newHandle(sender);
+        ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_TEXT,Tp::HandleTypeContact, handle, yours, handle, false, QVariantMap(), &error);
+        if(error.isValid()) {
+            qWarning() << "Error creating channel for incoming message" << error.name() << error.message();
+            return;
+        }
+
+        channel = textChannelForRecipients(recipients);
+        if (!channel) {
             return;
         }
     }
 
-    Tp::DBusError error;
-    bool yours;
-    uint handle = newHandle(sender);
-    ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_TEXT,Tp::HandleTypeContact, handle, yours, handle, false, QVariantMap(), &error);
-    if(error.isValid()) {
-        qWarning() << "Error creating channel for incoming message" << error.name() << error.message();
-        return;
-    }
-    mTextChannels[sender]->messageReceived(message, info);
+    channel->messageReceived(message, info);
 }
 
 void MockConnection::onTextChannelClosed()
 {
     MockTextChannel *channel = static_cast<MockTextChannel*>(sender());
     if (channel) {
-        QString key = mTextChannels.key(channel);
-        qDebug() << "text channel closed for number " << key;
-        mTextChannels.remove(key);
+        qDebug() << "text channel closed for recipients " << channel->recipients();
+        mTextChannels.removeAll(channel);
     }
 }
 
@@ -467,6 +563,70 @@ QString MockConnection::placeCall(const QVariantMap &properties)
     }
 
     return channel->objectPath();
+}
+
+QStringList MockConnection::emergencyNumbers(Tp::DBusError *error)
+{
+    return mEmergencyNumbers;
+}
+
+void MockConnection::setEmergencyNumbers(const QStringList &emergencyNumbers)
+{
+    mEmergencyNumbers = emergencyNumbers;
+    emergencyModeIface->setEmergencyNumbers(emergencyNumbers);
+}
+
+bool MockConnection::voicemailIndicator(Tp::DBusError *error)
+{
+    return mVoicemailIndicator;
+}
+
+void MockConnection::setVoicemailIndicator(bool visible)
+{
+    mVoicemailIndicator = visible;
+    voicemailIface->setVoicemailIndicator(visible);
+}
+
+QString MockConnection::voicemailNumber(Tp::DBusError *error)
+{
+    return mVoicemailNumber;
+}
+
+void MockConnection::setVoicemailNumber(const QString &number)
+{
+    mVoicemailNumber = number;
+    voicemailIface->setVoicemailNumber(mVoicemailNumber);
+}
+
+uint MockConnection::voicemailCount(Tp::DBusError *error)
+{
+    return mVoicemailCount;
+}
+
+void MockConnection::setVoicemailCount(int count)
+{
+    mVoicemailCount = count;
+    voicemailIface->setVoicemailCount(mVoicemailCount);
+}
+
+void MockConnection::USSDInitiate(const QString &command, Tp::DBusError *error)
+{
+    // FIXME: implement
+}
+
+void MockConnection::USSDRespond(const QString &reply, Tp::DBusError *error)
+{
+    // FIXME: implement
+}
+
+void MockConnection::USSDCancel(Tp::DBusError *error)
+{
+    // FIXME: implement
+}
+
+QString MockConnection::serial()
+{
+    return supplementaryServicesIface->serial();
 }
 
 void MockConnection::hangupCall(const QString &callerId)

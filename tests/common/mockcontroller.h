@@ -28,9 +28,10 @@ class MockController : public QObject
 {
     Q_OBJECT
 public:
-    static MockController *instance();
+    explicit MockController(const QString &protocol, QObject *parent = 0);
 
 Q_SIGNALS:
+    void messageRead(const QString &messageId);
     void messageSent(const QString &message, const QVariantMap &properties);
     void callReceived(const QString &callerId);
     void callEnded(const QString &callerId);
@@ -44,10 +45,24 @@ public Q_SLOTS:
     QString placeCall(const QVariantMap &properties);
     void hangupCall(const QString &callerId);
     void setCallState(const QString &phoneNumber, const QString &state);
+    void setOnline(bool online);
+    void setPresence(const QString &status, const QString &statusMessage);
+
+    // voicemail stuff
+    void setVoicemailNumber(const QString &number);
+    void setVoicemailIndicator(bool active);
+    void setVoicemailCount(int count);
+
+    // emergency numbers stuff
+    void setEmergencyNumbers(const QStringList &numbers);
+
+    // USSD stuff
+    QString serial();
 
 private:
-    explicit MockController(QObject *parent = 0);
     QDBusInterface mMockInterface;
+    QString mProtocol;
+    QString mMockObject;
 };
 
 #endif // MOCKCONTROLLER_H

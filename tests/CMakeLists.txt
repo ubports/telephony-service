@@ -1,16 +1,11 @@
-include_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}
-    )
-
 macro(generate_test TESTNAME USE_DBUS)
     add_executable(${TESTNAME} ${ARGN} ${TESTNAME}.cpp)
-    qt5_use_modules(${TESTNAME} Core DBus Test)
+    qt5_use_modules(${TESTNAME} Core DBus Test Qml)
     set(TEST_COMMAND )
     if (${USE_DBUS})
         set(TEST_COMMAND -p ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} -p -xunitxml -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
         add_test(${TESTNAME} ${DBUS_RUNNER} --keep-env
-                                            --task ${CMAKE_CURRENT_BINARY_DIR}/dbus-test-wrapper.sh ${TEST_COMMAND})
+                                            --task ${CMAKE_BINARY_DIR}/tests/common/dbus-test-wrapper.sh ${TEST_COMMAND})
     else (${USE_DBUS})
         add_test(${TESTNAME} ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} -xunitxml -o ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
     endif(${USE_DBUS})
@@ -31,13 +26,21 @@ macro(generate_test TESTNAME USE_DBUS)
                           TIMEOUT 30)
     target_link_libraries(${TESTNAME}
                           ${TP_QT5_LIBRARIES}
+                          telephonyservice
+                          mockcontroller
                          )
+
+    # as the tests link to telephonyservice, we need to enable coverage on them too
+    enable_coverage(${TESTNAME})
 endmacro(generate_test)
 
-configure_file(dbus-test-wrapper.sh.in ${CMAKE_CURRENT_BINARY_DIR}/dbus-test-wrapper.sh)
+add_subdirectory(common)
 
-if (DBUS_RUNNER)
-    generate_test(HandlerTest True telepathyhelper.cpp handlercontroller.cpp mockcontroller.cpp approver.cpp)
-endif(DBUS_RUNNER)
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc*")
+    message(STATUS "Handler tests disabled on ppc")
+else()
+    add_subdirectory(handler)
+endif()
 
-add_subdirectory(mock)
+add_subdirectory(libtelephonyservice)
+add_subdirectory(Ubuntu.Telephony)

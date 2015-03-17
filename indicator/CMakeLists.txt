@@ -47,6 +47,8 @@ target_link_libraries(telephony-service-indicator
     telephonyservice
     )
 
+enable_coverage(telephony-service-indicator)
+
 configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceIndicator.service.in org.freedesktop.Telepathy.Client.TelephonyServiceIndicator.service)
 install(TARGETS telephony-service-indicator RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceIndicator.service DESTINATION share/dbus-1/services)

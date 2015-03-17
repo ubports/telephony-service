@@ -38,21 +38,16 @@ public:
     Q_INVOKABLE void sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId = QString:: null);
 
 Q_SIGNALS:
-    void messageReceived(const QString &recipient, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
-    void messageSent(const QString &recipient, const QString &message);
-    void unreadMessagesChanged(const QString &recipient);
+    void messageReceived(const QString &sender, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
+    void messageSent(const QStringList &recipients, const QString &message);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onConnectedChanged();
     void onMessageReceived(const Tp::ReceivedMessage &message);
-    void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
     void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
 
     void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId = QString::null);
-
-protected:
-    Tp::TextChannelPtr existingChat(const QStringList &recipients, const QString &accountId);
 
 protected Q_SLOTS:
     void onAckTimerTriggered();

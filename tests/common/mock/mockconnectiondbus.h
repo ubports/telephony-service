@@ -36,9 +36,23 @@ public:
     QString PlaceCall(const QVariantMap &properties);
     void HangupCall(const QString &callerId);
     void SetCallState(const QString &phoneNumber, const QString &state);
+    void SetOnline(bool online);
+    void SetPresence(const QString &status, const QString &statusMessage);
+
+    // voicemail stuff
+    void SetVoicemailIndicator(bool active);
+    void SetVoicemailNumber(const QString &number);
+    void SetVoicemailCount(int count);
+
+    // emergency numbers stuff
+    void SetEmergencyNumbers(const QStringList &numbers);
+
+    // USSD stuff
+    QString Serial();
 
 Q_SIGNALS:
     // signals that will be relayed into the bus
+    void MessageRead(const QString &messageId);
     void MessageSent(const QString &mesasge, const QVariantMap &properties);
     void CallReceived(const QString &callerId);
     void CallEnded(const QString &callerId);
