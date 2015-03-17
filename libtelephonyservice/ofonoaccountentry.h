@@ -51,6 +51,7 @@ public:
     virtual AccountEntry::AccountType type() const;
     virtual bool connected() const;
     virtual bool compareIds(const QString &first, const QString &second) const;
+    virtual QStringList addressableVCardFields();
 
 Q_SIGNALS:
     void emergencyNumbersChanged();

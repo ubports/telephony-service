@@ -25,7 +25,6 @@
 #include <QObject>
 #include <TelepathyQt/Account>
 
-
 typedef struct {
     QString busName;
     QString objectPath;
@@ -41,6 +40,7 @@ class AccountEntry : public QObject
     Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
     Q_PROPERTY(QString selfContactId READ selfContactId NOTIFY selfContactIdChanged)
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
+    Q_PROPERTY(QStringList addressableVCardFields READ addressableVCardFields NOTIFY addressableVCardFieldsChanged)
     Q_ENUMS(AccountType)
     friend class AccountEntryFactory;
 
@@ -60,6 +60,7 @@ public:
     virtual bool connected() const;
     Tp::AccountPtr account() const;
     virtual AccountType type() const;
+    virtual QStringList addressableVCardFields() const;
 
     virtual bool compareIds(const QString &first, const QString &second) const;
 
@@ -72,6 +73,7 @@ Q_SIGNALS:
     void statusMessageChanged();
     void selfContactIdChanged();
     void connectedChanged();
+    void addressableVCardFieldsChanged();
     void removed();
 
 protected Q_SLOTS:

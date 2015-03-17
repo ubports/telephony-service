@@ -107,6 +107,11 @@ bool OfonoAccountEntry::compareIds(const QString &first, const QString &second) 
     return PhoneUtils::comparePhoneNumbers(first, second);
 }
 
+QStringList OfonoAccountEntry::addressableVCardFields()
+{
+    return mAccount->protocolInfo().addressableVCardFields();
+}
+
 void OfonoAccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)
 {
     mEmergencyNumbers = numbers;

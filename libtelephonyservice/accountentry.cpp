@@ -110,6 +110,11 @@ AccountEntry::AccountType AccountEntry::type() const
     return GenericAccount;
 }
 
+QStringList AccountEntry::addressableVCardFields() const
+{
+    return mAccount->protocolInfo().addressableVCardFields();
+}
+
 bool AccountEntry::compareIds(const QString &first, const QString &second) const
 {
     return first == second;
