@@ -23,6 +23,7 @@
 #include "components.h"
 #include "telepathyhelper.h"
 #include "callentry.h"
+#include "chatentry.h"
 #include "callmanager.h"
 #include "ussdmanager.h"
 #include "channelobserver.h"
@@ -64,6 +65,8 @@ void Components::registerTypes(const char *uri)
     // @uri Telephony
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
     qmlRegisterUncreatableType<CallEntry>(uri, 0, 1, "CallEntry", "Objects of this type are created in CallManager and made available to QML for usage");
+    qmlRegisterUncreatableType<ChatEntry>(uri, 0, 1, "ChatEntry", "Objects of this type are created in ChatManager and made available to QML for usage");
+    qmlRegisterUncreatableType<ContactChatState>(uri, 0, 1, "ContactChatState", "Objects of this type are created in ChatEntry and made available to QML");
     qmlRegisterUncreatableType<AudioOutput>(uri, 0, 1, "AudioOutput", "Objects of this type are created in CallEntry and made available to QML for usage");
     qmlRegisterUncreatableType<AccountEntry>(uri, 0, 1, "AccountEntry", "Objects of this type are created in TelepathyHelper and made available to QML");
     qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");

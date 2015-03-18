@@ -24,25 +24,39 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QMap>
+#include <QQmlListProperty>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 #include "dbustypes.h"
+#include "chatentry.h"
 
 class ChatManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QQmlListProperty<ChatEntry> chats
+                   READ chats
+                   NOTIFY chatsChanged)
 public:
     static ChatManager *instance();
 
     Q_INVOKABLE void sendMessage(const QStringList &recipients, const QString &message, const QString &accountId = QString::null);
     Q_INVOKABLE void sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId = QString:: null);
+    Q_INVOKABLE ChatEntry *chatEntryForParticipants(const QString &accountId, const QStringList &participants, bool create);
+    Q_INVOKABLE ChatEntry *chatEntryForChatId(const QString &accountId, const QString &chatId, bool create);
+
+    QQmlListProperty<ChatEntry> chats();
+    static int chatsCount(QQmlListProperty<ChatEntry> *p);
+    static ChatEntry* chatAt(QQmlListProperty<ChatEntry> *p, int index);
 
 Q_SIGNALS:
     void messageReceived(const QString &sender, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
     void messageSent(const QStringList &recipients, const QString &message);
+    void chatsChanged();
+    void chatEntryCreated(const QString &accountId, const QStringList &participants, const ChatEntry *chatEntry);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
+    void onChannelInvalidated();
     void onConnectedChanged();
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
@@ -54,8 +68,10 @@ protected Q_SLOTS:
 
 private:
     explicit ChatManager(QObject *parent = 0);
+    ChatEntry *chatEntryForChannel(const Tp::TextChannelPtr &channel);
+    QList<ChatEntry*> chatEntries() const;
 
-    QList<Tp::TextChannelPtr> mChannels;
+    mutable QList<ChatEntry*> mChatEntries;
     QMap<QString, QMap<QStringList,QStringList> > mMessagesToAck;
     QTimer mMessagesAckTimer;
 };

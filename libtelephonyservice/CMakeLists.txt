@@ -8,6 +8,7 @@ set(library_SRCS
     callnotification.cpp
     channelobserver.cpp
     chatmanager.cpp
+    chatentry.cpp
     contactutils.cpp
     greetercontacts.cpp
     ofonoaccountentry.cpp
