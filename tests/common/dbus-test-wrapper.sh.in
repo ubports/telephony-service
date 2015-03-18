@@ -1,9 +1,7 @@
 #!/bin/sh -x
 
 # export the home folder to somewhere in /tmp
-TMPDIR=/tmp/telephony_service_test_home
-rm -rf $TMPDIR
-mkdir -p $TMPDIR
+TMPDIR=`mktemp -d`
 export HOME=$TMPDIR
 
 # now run gnome-keyring
@@ -35,5 +33,7 @@ RESULT=$?
 # FIXME: check the variables and things that should not be started
 kill -9 $HANDLER_PID
 kill -9 $MOCK_PID
+
+rm -rf $TMPDIR
 
 return $RESULT
