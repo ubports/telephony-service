@@ -1,9 +1,5 @@
 #!/bin/sh -x
 
-# export the home folder to somewhere in /tmp
-TMPDIR=`mktemp -d`
-export HOME=$TMPDIR
-
 # now run gnome-keyring
 gnome-keyring-daemon -r -d
 
@@ -33,7 +29,5 @@ RESULT=$?
 # FIXME: check the variables and things that should not be started
 kill -9 $HANDLER_PID
 kill -9 $MOCK_PID
-
-rm -rf $TMPDIR
 
 return $RESULT
