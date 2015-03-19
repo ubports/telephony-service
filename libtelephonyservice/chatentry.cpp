@@ -27,10 +27,13 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/Connection>
 
+Q_DECLARE_METATYPE(ContactChatStates)
+
 ChatEntry::ChatEntry(const Tp::TextChannelPtr &channel, QObject *parent) :
     QObject(parent),
     mChannel(channel)
 {
+    qRegisterMetaType<ContactChatStates>();
     mAccount = TelepathyHelper::instance()->accountForConnection(mChannel->connection());
     Q_FOREACH (Tp::ContactPtr contact, mChannel->groupContacts(false)) {
         ContactChatState *state = new ContactChatState(contact->id(), mChannel->chatState(contact));
@@ -63,7 +66,7 @@ void ChatEntry::onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelCha
     Q_EMIT chatStatesChanged();
 }
 
-ChatType ChatEntry::chatType()
+ChatEntry::ChatType ChatEntry::chatType()
 {
     return (ChatType)mChannel->targetHandleType();
 }
@@ -87,7 +90,25 @@ AccountEntry *ChatEntry::account()
     return mAccount;
 }
 
-QList<ContactChatState*> ChatEntry::chatStates()
+QQmlListProperty<ContactChatState> ChatEntry::chatStates()
 {
-    return mChatStates.values();
+    return QQmlListProperty<ContactChatState>(this, 0, chatStatesCount, chatStatesAt);
+}
+
+int ChatEntry::chatStatesCount(QQmlListProperty<ContactChatState> *p)
+{
+    ChatEntry *entry = qobject_cast<ChatEntry*>(p->object);
+    if (!entry) {
+        return 0;
+    }
+    return entry->mChatStates.count();
+}
+
+ContactChatState *ChatEntry::chatStatesAt(QQmlListProperty<ContactChatState> *p, int index)
+{
+    ChatEntry *entry = qobject_cast<ChatEntry*>(p->object);
+    if (!entry) {
+        return 0;
+    }
+    return entry->mChatStates.values()[index];
 }

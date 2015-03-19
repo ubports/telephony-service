@@ -27,12 +27,6 @@
 
 class AccountEntry;
 
-enum ChatType {
-    ChatTypeNone    = Tp::HandleTypeNone,
-    ChatTypeContact = Tp::HandleTypeContact,
-    ChatTypeRoom    = Tp::HandleTypeRoom
-};
-
 class ContactChatState : public QObject
 {
     Q_OBJECT
@@ -53,22 +47,35 @@ private:
     int mState;
 };
 
+typedef QList<ContactChatState* > ContactChatStates;
+
 class ChatEntry : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(AccountEntry* account READ account CONSTANT)
     Q_PROPERTY(ChatType chatType READ chatType CONSTANT)
     Q_PROPERTY(QStringList participants READ participants NOTIFY participantsChanged)
-    Q_PROPERTY(QList<ContactChatState*> chatStates READ chatStates NOTIFY chatStatesChanged)
+    Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates
+               READ chatStates
+               NOTIFY chatStatesChanged)
+
     Q_ENUMS(ChatType)
 public:
+    enum ChatType {
+        ChatTypeNone    = Tp::HandleTypeNone,
+        ChatTypeContact = Tp::HandleTypeContact,
+        ChatTypeRoom    = Tp::HandleTypeRoom
+    };
+
     explicit ChatEntry(const Tp::TextChannelPtr &channel, QObject *parent = 0);
     ~ChatEntry();
     Tp::TextChannelPtr channel();
     AccountEntry *account();
-    QList<ContactChatState*> chatStates();
+    QQmlListProperty<ContactChatState> chatStates();
     QStringList participants();
     ChatType chatType();
+    static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
+    static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
 
 private Q_SLOTS:
     void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);

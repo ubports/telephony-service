@@ -41,7 +41,7 @@ public:
 
     Q_INVOKABLE void sendMessage(const QStringList &recipients, const QString &message, const QString &accountId = QString::null);
     Q_INVOKABLE void sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId = QString:: null);
-    Q_INVOKABLE ChatEntry *chatEntryForParticipants(const QString &accountId, const QStringList &participants, bool create);
+    Q_INVOKABLE ChatEntry *chatEntryForParticipants(const QString &accountId, const QStringList &participants, bool create = false);
     Q_INVOKABLE ChatEntry *chatEntryForChatRoom(const QString &accountId, const QVariantMap &properties, bool create);
 
     QQmlListProperty<ChatEntry> chats();
@@ -52,7 +52,7 @@ Q_SIGNALS:
     void messageReceived(const QString &sender, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
     void messageSent(const QStringList &recipients, const QString &message);
     void chatsChanged();
-    void chatEntryCreated(const QString &accountId, const QStringList &participants, const ChatEntry *chatEntry);
+    void chatEntryCreated(QString accountId, QStringList participants, ChatEntry *chatEntry);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
