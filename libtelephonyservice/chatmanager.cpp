@@ -46,8 +46,10 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, AttachmentStruct 
     argument.endStructure();
     return argument;
 }
+
 ChatManager::ChatManager(QObject *parent)
-: QObject(parent)
+: QObject(parent),
+  mReady(false)
 {
     qDBusRegisterMetaType<AttachmentList>();
     qDBusRegisterMetaType<AttachmentStruct>();
@@ -55,8 +57,18 @@ ChatManager::ChatManager(QObject *parent)
     mMessagesAckTimer.setInterval(1000);
     mMessagesAckTimer.setSingleShot(true);
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
+    connect(TelepathyHelper::instance(), SIGNAL(setupReady()), SLOT(onTelepathyReady()));
     connect(&mMessagesAckTimer, SIGNAL(timeout()), SLOT(onAckTimerTriggered()));
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
+}
+
+void ChatManager::onTelepathyReady()
+{
+    mReady = true;
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mPendingChannels) {
+        onTextChannelAvailable(channel);
+    }
+    mPendingChannels.clear();
 }
 
 void ChatManager::onChannelObserverUnregistered()
@@ -150,6 +162,10 @@ void ChatManager::sendMessage(const QStringList &recipients, const QString &mess
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
+    if (!mReady) {
+        mPendingChannels.append(channel);
+        return;
+    }
     ChatEntry *chatEntry = new ChatEntry(channel, this);
     mChatEntries.append(chatEntry);
 

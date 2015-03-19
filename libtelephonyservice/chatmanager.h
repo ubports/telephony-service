@@ -65,6 +65,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void onChannelObserverUnregistered();
+    void onTelepathyReady();
 
 protected Q_SLOTS:
     void onAckTimerTriggered();
@@ -76,7 +77,9 @@ private:
 
     mutable QList<ChatEntry*> mChatEntries;
     QMap<QString, QMap<QStringList,QStringList> > mMessagesToAck;
+    QList<Tp::TextChannelPtr> mPendingChannels;
     QTimer mMessagesAckTimer;
+    bool mReady;
 };
 
 #endif // CHATMANAGER_H
