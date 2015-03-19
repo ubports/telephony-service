@@ -27,6 +27,12 @@
 
 class AccountEntry;
 
+enum ChatType {
+    ChatTypeNone    = Tp::HandleTypeNone,
+    ChatTypeContact = Tp::HandleTypeContact,
+    ChatTypeRoom    = Tp::HandleTypeRoom
+};
+
 class ContactChatState : public QObject
 {
     Q_OBJECT
@@ -46,11 +52,6 @@ private:
     QString mContactId;
     int mState;
 };
-    enum ChatType {
-        ChatTypeNone    = Tp::HandleTypeNone,
-        ChatTypeContact = Tp::HandleTypeContact,
-        ChatTypeRoom    = Tp::HandleTypeRoom
-    };
 
 class ChatEntry : public QObject
 {

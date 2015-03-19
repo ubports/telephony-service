@@ -44,6 +44,21 @@
             <arg name="messageIds" type="as" direction="in"/>
             <arg name="accountId" type="s" direction="in"/>
         </method>
+        <method name="StartChat">
+            <dox:d><![CDATA[
+                Start a chat with the given participants
+            ]]></dox:d>
+            <arg name="accountId" type="s" direction="in"/>
+            <arg name="participants" type="as" direction="in"/>
+        </method>
+        <method name="StartChatRoom">
+            <dox:d><![CDATA[
+                Start a chat room with the given properties
+            ]]></dox:d>
+            <arg name="accountId" type="s" direction="in"/>
+            <arg name="properties" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+        </method>
 
         <!-- Call Related -->
         <method name="StartCall">

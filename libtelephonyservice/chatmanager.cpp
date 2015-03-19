@@ -54,8 +54,18 @@ ChatManager::ChatManager(QObject *parent)
     // wait one second for other acknowledge calls before acknowledging messages to avoid many round trips
     mMessagesAckTimer.setInterval(1000);
     mMessagesAckTimer.setSingleShot(true);
+    connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
     connect(&mMessagesAckTimer, SIGNAL(timeout()), SLOT(onAckTimerTriggered()));
     connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
+}
+
+void ChatManager::onChannelObserverUnregistered()
+{
+    Q_FOREACH(ChatEntry *entry, mChatEntries) {
+        // for some reason deleteLater is not working
+        delete entry;
+    }
+    mChatEntries.clear();
 }
 
 void ChatManager::onConnectedChanged()
@@ -164,8 +174,13 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 void ChatManager::onChannelInvalidated()
 {
     Tp::TextChannelPtr channel(qobject_cast<Tp::TextChannel*>(sender()));
-    mChatEntries.removeAll(chatEntryForChannel(channel));
-    Q_EMIT chatsChanged();
+    ChatEntry *chatEntry = chatEntryForChannel(channel);
+    if (chatEntry) {
+        mChatEntries.removeAll(chatEntry);
+        // for some reason deleteLater is not working
+        delete chatEntry;
+        Q_EMIT chatsChanged();
+    }
 }
 
 ChatEntry *ChatManager::chatEntryForChannel(const Tp::TextChannelPtr &channel)
@@ -278,14 +293,17 @@ ChatEntry *ChatManager::chatEntryForParticipants(const QString &accountId, const
     }
 
     if (create) {
-
+        QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+        phoneAppHandler->call("StartChat", accountId, participants);
     }
     return NULL;
 }
 
-ChatEntry *ChatManager::chatEntryForChatId(const QString &accountId, const QString &chatId, bool create)
+ChatEntry *ChatManager::chatEntryForChatRoom(const QString &accountId, const QVariantMap &properties, bool create)
 {
-
+    Q_UNUSED(accountId)
+    Q_UNUSED(properties)
+    Q_UNUSED(create)
 }
 
 QQmlListProperty<ChatEntry> ChatManager::chats()

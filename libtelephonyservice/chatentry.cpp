@@ -39,12 +39,8 @@ ChatEntry::ChatEntry(const Tp::TextChannelPtr &channel, QObject *parent) :
 
     connect(channel.data(), SIGNAL(chatStateChanged(const Tp::ContactPtr &, Tp::ChannelChatState)),
                             this, SLOT(onChatStateChanged(const Tp::ContactPtr &,Tp::ChannelChatState)));
-    connect(channel.data(), SIGNAL(groupMembersChanged(
-            const Tp::Contacts &groupMembersAdded,
-            const Tp::Contacts &groupLocalPendingMembersAdded,
-            const Tp::Contacts &groupRemotePendingMembersAdded,
-            const Tp::Contacts &groupMembersRemoved,
-            const Tp::Channel::GroupMemberChangeDetails &details)), this, SIGNAL(participantsChanged()));
+    connect(channel.data(), SIGNAL(groupMembersChanged(const Tp::Contacts &, const Tp::Contacts &, const Tp::Contacts &,
+            const Tp::Contacts &, const Tp::Channel::GroupMemberChangeDetails &)), this, SIGNAL(participantsChanged()));
 }
 
 ChatEntry::~ChatEntry()
@@ -52,7 +48,7 @@ ChatEntry::~ChatEntry()
     QMapIterator<QString, ContactChatState*> it(mChatStates);
     while (it.hasNext()) {
         it.next();
-        it.value()->deleteLater();
+        delete it.value();
     }
 }
 

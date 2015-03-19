@@ -42,7 +42,7 @@ public:
     Q_INVOKABLE void sendMessage(const QStringList &recipients, const QString &message, const QString &accountId = QString::null);
     Q_INVOKABLE void sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId = QString:: null);
     Q_INVOKABLE ChatEntry *chatEntryForParticipants(const QString &accountId, const QStringList &participants, bool create);
-    Q_INVOKABLE ChatEntry *chatEntryForChatId(const QString &accountId, const QString &chatId, bool create);
+    Q_INVOKABLE ChatEntry *chatEntryForChatRoom(const QString &accountId, const QVariantMap &properties, bool create);
 
     QQmlListProperty<ChatEntry> chats();
     static int chatsCount(QQmlListProperty<ChatEntry> *p);
@@ -62,6 +62,9 @@ public Q_SLOTS:
     void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
 
     void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId = QString::null);
+
+private Q_SLOTS:
+    void onChannelObserverUnregistered();
 
 protected Q_SLOTS:
     void onAckTimerTriggered();

@@ -57,7 +57,8 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
                            "org.freedesktop.URfkill",
                            QDBusConnection::systemBus())
 {
-    mAccountFeatures << Tp::Account::FeatureCore;
+    mAccountFeatures << Tp::Account::FeatureCore
+                     << Tp::Account::FeatureProtocolInfo;
     mContactFeatures << Tp::Contact::FeatureAlias
                      << Tp::Contact::FeatureAvatarData
                      << Tp::Contact::FeatureAvatarToken
