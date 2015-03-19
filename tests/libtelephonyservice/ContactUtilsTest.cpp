@@ -34,8 +34,6 @@ private Q_SLOTS:
     void testSharedManagerCreation();
 };
 
-
-
 void ContactUtilsTest::testFormatContactName_data()
 {
     QTest::addColumn<QString>("firstName");

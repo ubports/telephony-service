@@ -52,7 +52,7 @@ void ChatManagerTest::initTestCase()
     TelepathyHelper::instance()->registerChannelObserver();
 
     // just give telepathy some time to register the observer
-    QTest::qWait(1000);
+    QTest::qWait(3000);
 
     // and create the mock controller
     mGenericMockController = new MockController("mock", this);

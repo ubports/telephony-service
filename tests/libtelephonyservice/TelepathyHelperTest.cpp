@@ -97,6 +97,9 @@ void TelepathyHelperTest::initTestCase()
 
     QTRY_VERIFY(ready);
 
+    // give some time for telepathy stuff to settle
+    QTest::qWait(3000);
+
     // and create the mock controller
     mGenericController = new MockController("mock", this);
     mPhoneController = new MockController("ofono", this);
