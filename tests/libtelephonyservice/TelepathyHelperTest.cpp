@@ -97,6 +97,9 @@ void TelepathyHelperTest::initTestCase()
 
     QTRY_VERIFY(ready);
 
+    // give some time for telepathy stuff to settle
+    QTest::qWait(3000);
+
     // and create the mock controller
     mGenericController = new MockController("mock", this);
     mPhoneController = new MockController("ofono", this);
@@ -172,11 +175,11 @@ void TelepathyHelperTest::testAccountSorting()
     // create two accounts with modem-objpath parameters and make sure they are listed first
     QVariantMap parameters;
     parameters["modem-objpath"] = "/phonesim1";
-    Tp::AccountPtr firstAccount = addAccount("ofono", "ofono", "firstPhoneAccount", parameters);
+    Tp::AccountPtr firstAccount = addAccount("mock", "ofono", "firstPhoneAccount", parameters);
     QVERIFY(!firstAccount.isNull());
 
     parameters["modem-objpath"] = "/phonesim2";
-    Tp::AccountPtr secondAccount = addAccount("ofono", "ofono", "secondPhoneAccount", parameters);
+    Tp::AccountPtr secondAccount = addAccount("mock", "ofono", "secondPhoneAccount", parameters);
     QVERIFY(!secondAccount.isNull());
 
     // wait for the accounts to appear;
@@ -188,7 +191,7 @@ void TelepathyHelperTest::testAccountSorting()
 
     // now add a third account that should go before the two others
     parameters["modem-objpath"] = "/phonesim0";
-    Tp::AccountPtr thirdAccount = addAccount("ofono", "ofono", "thirdPhoneAccount", parameters);
+    Tp::AccountPtr thirdAccount = addAccount("mock", "ofono", "thirdPhoneAccount", parameters);
     QVERIFY(!thirdAccount.isNull());
 
     // wait for the accounts to appear;
