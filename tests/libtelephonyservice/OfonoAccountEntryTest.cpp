@@ -68,6 +68,9 @@ void OfonoAccountEntryTest::initTestCase()
     // wait for the connection to appear
     QTRY_VERIFY(!mTpAccount->connection().isNull());
 
+    // wait for the telepathy stuff to initialize
+    QTest::qWait(3000);
+
     // create the mock controller
     mMockController = new MockController("ofono", this);
 }
@@ -232,11 +235,8 @@ void OfonoAccountEntryTest::testEmergencyCallsAvailable()
     QFETCH(QString, status);
     QFETCH(bool, available);
 
-    QSignalSpy statusChangedSpy(mAccount, SIGNAL(statusChanged()));
     mMockController->setPresence(status, "");
-
-    QTRY_COMPARE(statusChangedSpy.count(), 1);
-    QCOMPARE(mAccount->status(), status);
+    QTRY_COMPARE(mAccount->status(), status);
     QCOMPARE(mAccount->emergencyCallsAvailable(), available);
 }
 
