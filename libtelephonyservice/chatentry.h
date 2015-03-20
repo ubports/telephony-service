@@ -60,11 +60,20 @@ class ChatEntry : public QObject
                NOTIFY chatStatesChanged)
 
     Q_ENUMS(ChatType)
+    Q_ENUMS(ChatState)
 public:
     enum ChatType {
         ChatTypeNone    = Tp::HandleTypeNone,
         ChatTypeContact = Tp::HandleTypeContact,
         ChatTypeRoom    = Tp::HandleTypeRoom
+    };
+
+    enum ChatState {
+        ChannelChatStateGone      = Tp::ChannelChatStateGone,
+        ChannelChatStateInactive  = Tp::ChannelChatStateInactive,
+        ChannelChatStateActive    = Tp::ChannelChatStateActive,
+        ChannelChatStatePaused    = Tp::ChannelChatStatePaused,
+        ChannelChatStateComposing = Tp::ChannelChatStateComposing
     };
 
     explicit ChatEntry(const Tp::TextChannelPtr &channel, QObject *parent = 0);
