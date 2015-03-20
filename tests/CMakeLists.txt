@@ -13,7 +13,7 @@ macro(generate_test TESTNAME USE_DBUS)
     # force telepathy not to use system approvers when available,
     # also force usage of memory backend in history-service
     execute_process(COMMAND mktemp -d OUTPUT_VARIABLE TMPDIR)
-    #set(TMPDIR "/tmp/telephony_service_test_home")
+    string(REPLACE "\n" "" TMPDIR ${TMPDIR})
     set(TEST_ENVIRONMENT "HOME=${TMPDIR};"
                          "HISTORY_SQLITE_DBPATH=:memory:;"
                          "XDG_CONFIG_HOME=${TMPDIR};
