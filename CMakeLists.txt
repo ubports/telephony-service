@@ -19,8 +19,6 @@ if (USE_UBUNTU_PLATFORM_API)
     add_definitions(-DUSE_UBUNTU_PLATFORM_API)
 endif (USE_UBUNTU_PLATFORM_API)
 
-find_program(DBUS_RUNNER dbus-test-runner)
-
 set(TELEPHONY_SERVICE_DIR ${CMAKE_INSTALL_DATADIR}/telephony-service)
 
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
