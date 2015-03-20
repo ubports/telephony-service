@@ -68,8 +68,8 @@ public:
     void componentComplete();
 
     // helpers
-    QVariantList wrapIntList(const QList<int> &list);
-    QList<int> unwrapIntList(const QVariantList &list);
+    Q_INVOKABLE QVariantList wrapIntList(const QList<int> &list);
+    Q_INVOKABLE QList<int> unwrapIntList(const QVariantList &list);
 
 Q_SIGNALS:
     void contactIdChanged();

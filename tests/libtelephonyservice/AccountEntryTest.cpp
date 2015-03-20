@@ -68,6 +68,9 @@ void AccountEntryTest::initTestCase()
     // create a null account
     mNullAccount = AccountEntryFactory::createEntry(Tp::AccountPtr(), this);
 
+    // give telepathy some time
+    QTest::qWait(3000);
+
     // and create the mock controller
     mMockController = new MockController("mock", this);
 }
