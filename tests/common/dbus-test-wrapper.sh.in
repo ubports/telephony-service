@@ -44,4 +44,9 @@ kill -9 $MC_PID
 # remove the test dir
 rm -rf $TEST_DIR
 
+# in case the test fails, output the xml file just to help debugging
+if [ $RESULT -ne 0 ]; then
+    cat @CMAKE_BINARY_DIR@/test_`basename $1`.xml
+fi
+
 return $RESULT
