@@ -1,5 +1,8 @@
 #!/bin/sh -x
 
+TEST_DIR=$1
+shift
+
 rm -rf $TEST_DIR
 mkdir -p $TEST_DIR
 
