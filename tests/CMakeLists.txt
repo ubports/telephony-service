@@ -9,6 +9,7 @@ macro(generate_test TESTNAME USE_DBUS)
         set(TEST_COMMAND -p ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} -p -xunitxml -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
         add_test(${TESTNAME} xvfb-run -a -s "-screen 0 1024x768x24"
                  ${DBUS_RUNNER} --keep-env --dbus-config=${CMAKE_BINARY_DIR}/tests/common/dbus-session.conf --max-wait=60
+                                --task dbus-monitor --ignore-return
                                 --task ${CMAKE_BINARY_DIR}/tests/common/dbus-test-wrapper.sh -p ${TMPDIR} ${TEST_COMMAND})
     else (${USE_DBUS})
         add_test(${TESTNAME} xvfb-run -a -s "-screen 0 1024x768x24" ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} -xunitxml -o ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
