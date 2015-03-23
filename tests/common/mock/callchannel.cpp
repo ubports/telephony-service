@@ -172,7 +172,7 @@ MockCallChannel::~MockCallChannel()
 {
     qDebug() << "call channel closed";
     // TODO - for some reason the object is not being removed
-    mConnection->dbusConnection().unregisterObject(mObjPath, QDBusConnection::UnregisterTree);
+    mConnection->dbusConnection().unregisterObject(mBaseChannel->objectPath(), QDBusConnection::UnregisterTree);
 }
 
 Tp::BaseChannelPtr MockCallChannel::baseChannel()

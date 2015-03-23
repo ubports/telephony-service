@@ -39,8 +39,6 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     mConferenceCall(0), mVoicemailIndicator(false), mVoicemailCount(0)
 {
 
-    qDebug() << "BLABLA new connection" << this;
-
     // just to make sure, force the removal of the connection
     QObject::connect(this, SIGNAL(disconnected()),
                            SLOT(deleteLater()));
@@ -162,7 +160,9 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
 
 MockConnection::~MockConnection()
 {
-    qDebug() << "BLABLA good, calling destructor correctly" << this;
+    // FIXME: this needs to be fixed in tp-qt itself at some point
+    dbusConnection().unregisterObject(objectPath(), QDBusConnection::UnregisterTree);
+    dbusConnection().unregisterService(busName());
 }
 
 void MockConnection::addMMSToService(const QString &path, const QVariantMap &properties, const QString &servicePath)
@@ -634,6 +634,12 @@ void MockConnection::USSDCancel(Tp::DBusError *error)
 QString MockConnection::serial()
 {
     return supplementaryServicesIface->serial();
+}
+
+QString MockConnection::uniqueName() const
+{
+    static int count = 0;
+    return QString("connection%1%2").arg((quintptr) this, 0, 16).arg(count++, 0, 16);
 }
 
 void MockConnection::hangupCall(const QString &callerId)

@@ -80,7 +80,6 @@ void AccountEntryTest::cleanup()
 {
     doCleanup();
 
-    qDebug() << "OK it works";
     mAccount->deleteLater();
     mMockController->deleteLater();
 }

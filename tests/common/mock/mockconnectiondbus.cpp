@@ -62,6 +62,11 @@ MockConnectionDBus::MockConnectionDBus(MockConnection *parent) :
     connectToBus();
 }
 
+MockConnectionDBus::~MockConnectionDBus()
+{
+    QDBusConnection::sessionBus().unregisterObject("/com/canonical/MockConnection/" + mConnection->protocolName(), QDBusConnection::UnregisterTree);
+}
+
 bool MockConnectionDBus::connectToBus()
 {
     bool ok = QDBusConnection::sessionBus().registerService("com.canonical.MockConnection");

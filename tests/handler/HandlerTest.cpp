@@ -62,7 +62,6 @@ void HandlerTest::initTestCase()
 
 void HandlerTest::init()
 {
-    qDebug() << "BLABLA init";
     mTpAccount = addAccount("mock", "mock", "the account");
     QVERIFY(!mTpAccount.isNull());
     QTRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
@@ -77,11 +76,7 @@ void HandlerTest::init()
 
 void HandlerTest::cleanup()
 {
-    QSignalSpy destroyedSpy(mMockController, SIGNAL(connectionDestroyed()));
-    qDebug() << "BLABLA cleaning up";
     doCleanup();
-
-    QTRY_COMPARE(destroyedSpy.count(), 1);
     mMockController->deleteLater();
 }
 

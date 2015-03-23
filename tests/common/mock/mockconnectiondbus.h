@@ -30,6 +30,7 @@ class MockConnectionDBus : public QObject, public QDBusContext
     Q_OBJECT
 public:
     explicit MockConnectionDBus(MockConnection *parent);
+    ~MockConnectionDBus();
 
     bool connectToBus();
     void PlaceIncomingMessage(const QString &message, const QVariantMap &properties);

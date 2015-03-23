@@ -46,7 +46,6 @@ Tp::ChannelClassSpecList Approver::channelFilters() const
 void Approver::addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                                         const Tp::ChannelDispatchOperationPtr &dispatchOperation)
 {
-    qDebug() << __PRETTY_FUNCTION__ << this;
     bool willHandle = false;
 
     QList<Tp::ChannelPtr> channels = dispatchOperation->channels();
@@ -69,7 +68,6 @@ void Approver::addDispatchOperation(const Tp::MethodInvocationContextPtr<> &cont
                                   << Tp::CallChannel::FeatureLocalHoldState);
             mChannels[pr] = callChannel;
 
-            qDebug() << "Connecting channel ready" << pr;
             connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onChannelReady(Tp::PendingOperation*)));
             callChannel->setProperty("accountId", QVariant(dispatchOperation->account()->uniqueIdentifier()));
@@ -114,11 +112,10 @@ void Approver::acceptCall()
     Q_FOREACH (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
         QList<Tp::ChannelPtr> channels = dispatchOperation->channels();
         Q_FOREACH (Tp::ChannelPtr channel, channels) {
-            qDebug() << "BLABLA handling maybe";
             if (dispatchOperation->possibleHandlers().contains(TELEPHONY_SERVICE_HANDLER)) {
-                qDebug() << "BLABLA handling";
                 dispatchOperation->handleWith(TELEPHONY_SERVICE_HANDLER);
                 mDispatchOps.removeAll(dispatchOperation);
+                break;
             }
         }
     }
@@ -177,7 +174,6 @@ Tp::ChannelDispatchOperationPtr Approver::dispatchOperation(Tp::PendingOperation
 
 void Approver::onChannelReady(Tp::PendingOperation *op)
 {
-    qDebug() << "Channel ready op" << op;
     Q_EMIT newCall();
 }
 
