@@ -68,6 +68,7 @@ Q_SIGNALS:
 private:
     MockConnectionAdaptor *mAdaptor;
     MockConnection *mConnection;
+    QString mObjectPath;
 };
 
 #endif // MOCKCONNECTIONDBUS_H

@@ -65,15 +65,16 @@ void AccountEntryTest::init()
     mAccount = AccountEntryFactory::createEntry(mTpAccount, this);
     QVERIFY(mAccount);
 
-    // catch the first connected changed signal here
-    QSignalSpy connectedChangedSpy(mAccount, SIGNAL(connectedChanged()));
-    QTRY_COMPARE(connectedChangedSpy.count(), 1);
-
     // make sure the connection is available
     QTRY_VERIFY(!mTpAccount->connection().isNull());
+    QTRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
+    QTRY_VERIFY(mAccount->connected());
 
     // and create the mock controller
     mMockController = new MockController("mock", this);
+
+    // just in case, wait some time
+    QTest::qWait(500);
 }
 
 void AccountEntryTest::cleanup()
@@ -184,13 +185,13 @@ void AccountEntryTest::testConnected()
     // now set the account offline and see if the active flag changes correctly
     mMockController->setOnline(false);
     QTRY_VERIFY(!mAccount->connected());
-    QCOMPARE(connectedChangedSpy.count(), 1);
+    QTRY_COMPARE(connectedChangedSpy.count(), 1);
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
     mMockController->setOnline(true);
     QTRY_VERIFY(mAccount->connected());
-    QCOMPARE(connectedChangedSpy.count(), 1);
+    QTRY_COMPARE(connectedChangedSpy.count(), 1);
 
     // check that for a null account the displayName is null
     QVERIFY(!mNullAccount->connected());

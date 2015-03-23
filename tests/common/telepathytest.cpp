@@ -23,6 +23,7 @@
 #include <TelepathyQt/Account>
 #include "telepathytest.h"
 #include "telepathyhelper.h"
+#include "accountentry.h"
 
 void TelepathyTest::initialize()
 {
@@ -30,6 +31,12 @@ void TelepathyTest::initialize()
 
     QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
     QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
+
+    // just in case, remove any existing account that might be a leftover from
+    // previous test runs
+    Q_FOREACH(const AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        QVERIFY(removeAccount(account->account()));
+    }
 
     // create an account manager instance to help testing
     Tp::Features accountFeatures;

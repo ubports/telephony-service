@@ -65,15 +65,16 @@ void OfonoAccountEntryTest::init()
     mAccount = qobject_cast<OfonoAccountEntry*>(AccountEntryFactory::createEntry(mTpAccount, this));
     QVERIFY(mAccount);
 
-    // catch the first connected changed signal here
-    QSignalSpy connectedChangedSpy(mAccount, SIGNAL(connectedChanged()));
-    QTRY_COMPARE(connectedChangedSpy.count(), 1);
-
-    // wait for the connection to appear
+    // make sure the connection is available
     QTRY_VERIFY(!mTpAccount->connection().isNull());
+    QTRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
+    QTRY_VERIFY(mAccount->connected());
 
     // create the mock controller
     mMockController = new MockController("ofono", this);
+
+    // just in case, wait some time
+    QTest::qWait(500);
 }
 
 void OfonoAccountEntryTest::cleanup()
@@ -90,12 +91,12 @@ void OfonoAccountEntryTest::testAccountType()
 
 void OfonoAccountEntryTest::testConnected()
 {
+    // the mock account is enabled/connected by default, so make sure it is like that
+    QTRY_VERIFY(mAccount->connected());
+
     // right now the ofono account connection status behave exactly like the generic class,
     // but as the code path is different, test it again
     QSignalSpy connectedChangedSpy(mAccount, SIGNAL(connectedChanged()));
-
-    // the mock account is enabled/connected by default, so make sure it is like that
-    QVERIFY(mAccount->connected());
 
     // now set the account offline and see if the active flag changes correctly
     mMockController->setOnline(false);

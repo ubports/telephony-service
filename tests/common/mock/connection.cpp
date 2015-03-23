@@ -38,11 +38,6 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     Tp::BaseConnection(dbusConnection, cmName, protocolName, parameters),
     mConferenceCall(0), mVoicemailIndicator(false), mVoicemailCount(0)
 {
-
-    // just to make sure, force the removal of the connection
-    QObject::connect(this, SIGNAL(disconnected()),
-                           SLOT(deleteLater()));
-
     setSelfHandle(newHandle("<SelfHandle>"));
 
     setConnectCallback(Tp::memFun(this,&MockConnection::connect));
@@ -160,9 +155,6 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
 
 MockConnection::~MockConnection()
 {
-    // FIXME: this needs to be fixed in tp-qt itself at some point
-    dbusConnection().unregisterObject(objectPath(), QDBusConnection::UnregisterTree);
-    dbusConnection().unregisterService(busName());
 }
 
 void MockConnection::addMMSToService(const QString &path, const QVariantMap &properties, const QString &servicePath)
