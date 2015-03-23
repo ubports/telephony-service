@@ -39,6 +39,8 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     mConferenceCall(0), mVoicemailIndicator(false), mVoicemailCount(0)
 {
 
+    qDebug() << "BLABLA new connection" << this;
+
     // just to make sure, force the removal of the connection
     QObject::connect(this, SIGNAL(disconnected()),
                            SLOT(deleteLater()));

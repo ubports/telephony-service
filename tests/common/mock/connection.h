@@ -113,8 +113,6 @@ Q_SIGNALS:
     void channelSplitted(const QString &objectPath);
     void channelSplitted(const QDBusObjectPath &objectPath);
 
-    void disconnected();
-
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &info);
     void hangupCall(const QString &callerId);
