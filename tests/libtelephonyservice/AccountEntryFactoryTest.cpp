@@ -18,14 +18,13 @@
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
+#include "telepathytest.h"
 #include "accountentry.h"
 #include "accountentryfactory.h"
 #include "ofonoaccountentry.h"
 #include "telepathyhelper.h"
 
-#define DEFAULT_TIMEOUT 15000
-
-class AccountEntryFactoryTest : public QObject
+class AccountEntryFactoryTest : public TelepathyTest
 {
     Q_OBJECT
 
@@ -37,24 +36,20 @@ private Q_SLOTS:
 
 void AccountEntryFactoryTest::initTestCase()
 {
-    Tp::registerTypes();
-
-    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
-    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
-    QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), DEFAULT_TIMEOUT);
-
-    // we need to wait in order to give telepathy time to notify about the approver
-    QTest::qWait(3000);
+    initialize();
 }
 
 void AccountEntryFactoryTest::testCorrectInstancesCreated()
 {
-    AccountEntry *genericAccount = TelepathyHelper::instance()->accountForId("mock/mock/account0");
+    Tp::AccountPtr genericTpAccount = addAccount("mock", "mock", "generic");
+    QVERIFY(!genericTpAccount.isNull());
+    AccountEntry *genericAccount = AccountEntryFactory::createEntry(genericTpAccount, this);
     QVERIFY(genericAccount);
     QCOMPARE(genericAccount->type(), AccountEntry::GenericAccount);
     QVERIFY(!qobject_cast<OfonoAccountEntry*>(genericAccount));
 
-    AccountEntry *ofonoAccount = TelepathyHelper::instance()->accountForId("mock/ofono/account0");
+    Tp::AccountPtr ofonoTpAccount = addAccount("mock", "ofono", "phone account");
+    AccountEntry *ofonoAccount = AccountEntryFactory::createEntry(ofonoTpAccount, this);
     QVERIFY(ofonoAccount);
     QCOMPARE(ofonoAccount->type(), AccountEntry::PhoneAccount);
     QVERIFY(qobject_cast<OfonoAccountEntry*>(ofonoAccount));

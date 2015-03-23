@@ -111,18 +111,23 @@ function(generate_telepathy_test TESTNAME)
     set(TASKS --task gnome-keyring-daemon -p -r -p -d --task-name gnome-keyring --ignore-return
               --task /usr/lib/dconf/dconf-service --task-name dconf-service --ignore-return
               --task dconf -p write -p /org/gnome/empathy/use-conn -p false --task-name dconf-write --wait-for ca.desrt.dconf --ignore-return
-              --task /usr/lib/telepathy/mission-control-5 --task-name mission-control --ignore-return
+              --task /usr/lib/telepathy/mission-control-5 --task-name mission-control --wait-for ca.desrt.dconf --ignore-return
               --task ${CMAKE_BINARY_DIR}/tests/common/mock/telepathy-mock --task-name telepathy-mock --wait-for org.freedesktop.Telepathy.MissionControl5 --ignore-return
               # FIXME: maybe it would be better to decide whether to run the handler in a per-test basis?
-              --task ${CMAKE_BINARY_DIR}/handler/telephony-service-handler --task-name telephony-service-handler --ignore-return
+              --task ${CMAKE_BINARY_DIR}/handler/telephony-service-handler --task-name telephony-service-handler --wait-for org.freedesktop.Telepathy.ConnectionManager.mock --ignore-return
               ${ARG_TASKS})
 
     if (NOT DEFINED ARG_LIBRARIES)
-        set(ARG_LIBRARIES ${TP_QT5_LIBRARIES} telephonyservice mockcontroller)
+        set(ARG_LIBRARIES ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest)
     endif(NOT DEFINED ARG_LIBRARIES)
 
     if (NOT DEFINED ARG_QT5_MODULES)
         set(ARG_QT5_MODULES Core DBus Test Qml)
     endif (NOT DEFINED ARG_QT5_MODULES)
-    generate_test(${TESTNAME} ${ARGN} TASKS ${TASKS} LIBRARIES ${ARG_LIBRARIES} QT5_MODULES ${ARG_QT5_MODULES} USE_DBUS USE_UI)
+    generate_test(${TESTNAME} ${ARGN}
+                  TASKS ${TASKS}
+                  LIBRARIES ${ARG_LIBRARIES} 
+                  QT5_MODULES ${ARG_QT5_MODULES} 
+                  USE_DBUS USE_UI 
+                  WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceHandler)
 endfunction(generate_telepathy_test)

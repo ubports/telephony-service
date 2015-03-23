@@ -61,6 +61,9 @@ Q_SIGNALS:
     void ChannelMerged(const QString &objectPath);
     void ChannelSplitted(const QString &objectPath);
 
+    void Disconnected();
+    void Destroyed();
+
 private:
     MockConnectionAdaptor *mAdaptor;
     MockConnection *mConnection;

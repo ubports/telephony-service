@@ -36,8 +36,13 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
                             const QString &protocolName,
                             const QVariantMap &parameters) :
     Tp::BaseConnection(dbusConnection, cmName, protocolName, parameters),
-    mHandleCount(0), mConferenceCall(0), mVoicemailIndicator(false), mVoicemailCount(0)
+    mConferenceCall(0), mVoicemailIndicator(false), mVoicemailCount(0)
 {
+
+    // just to make sure, force the removal of the connection
+    QObject::connect(this, SIGNAL(disconnected()),
+                           SLOT(deleteLater()));
+
     setSelfHandle(newHandle("<SelfHandle>"));
 
     setConnectCallback(Tp::memFun(this,&MockConnection::connect));
@@ -151,8 +156,11 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(supplementaryServicesIface));
 
     mDBus = new MockConnectionDBus(this);
+}
 
-    setOnline(true);
+MockConnection::~MockConnection()
+{
+    qDebug() << "BLABLA good, calling destructor correctly" << this;
 }
 
 void MockConnection::addMMSToService(const QString &path, const QVariantMap &properties, const QString &servicePath)
@@ -211,10 +219,6 @@ MockTextChannel *MockConnection::textChannelForRecipients(const QStringList &rec
     return 0;
 }
 
-MockConnection::~MockConnection()
-{
-}
-
 uint MockConnection::setPresence(const QString& status, const QString& statusMessage, Tp::DBusError *error)
 {
     qDebug() << "setPresence" << status << statusMessage;
@@ -268,8 +272,9 @@ void MockConnection::setOnline(bool online)
 
 uint MockConnection::newHandle(const QString &identifier)
 {
-    mHandles[++mHandleCount] = identifier;
-    return mHandleCount;
+    static int handleCount = 0;
+    mHandles[++handleCount] = identifier;
+    return handleCount;
 }
 
 QMap<QString, MockCallChannel *> MockConnection::callChannels()

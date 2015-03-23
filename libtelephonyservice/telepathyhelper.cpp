@@ -246,10 +246,7 @@ void TelepathyHelper::registerChannelObserver(const QString &observerName)
 
 void TelepathyHelper::unregisterChannelObserver()
 {
-    Tp::AbstractClientPtr clientPtr(mChannelObserver);
-    if (clientPtr) {
-        mClientRegistrar->unregisterClient(clientPtr);
-    }
+    unregisterClient(mChannelObserver);
     mChannelObserver->deleteLater();
     mChannelObserver = NULL;
     Q_EMIT channelObserverUnregistered();
@@ -312,6 +309,15 @@ bool TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
     }
 
     return succeeded;
+}
+
+bool TelepathyHelper::unregisterClient(Tp::AbstractClient *client)
+{
+    Tp::AbstractClientPtr clientPtr(client);
+    if (clientPtr) {
+        return mClientRegistrar->unregisterClient(clientPtr);
+    }
+    return false;
 }
 
 AccountEntry *TelepathyHelper::accountForConnection(const Tp::ConnectionPtr &connection) const

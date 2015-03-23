@@ -45,6 +45,10 @@ MockController::MockController(const QString &protocol, QObject *parent) :
             this, SIGNAL(channelMerged(QString)));
     connect(&mMockInterface, SIGNAL(ChannelSplitted(QString)),
             this, SIGNAL(channelSplitted(QString)));
+    connect(&mMockInterface, SIGNAL(Disconnected()),
+            this, SIGNAL(disconnected()));
+    connect(&mMockInterface, SIGNAL(Destroyed()),
+            this, SIGNAL(connectionDestroyed()));
 }
 
 void MockController::placeIncomingMessage(const QString &message, const QVariantMap &properties)

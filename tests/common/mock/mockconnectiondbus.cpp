@@ -52,6 +52,12 @@ MockConnectionDBus::MockConnectionDBus(MockConnection *parent) :
     connect(mConnection,
             SIGNAL(channelSplitted(QString)),
             SIGNAL(ChannelSplitted(QString)));
+    connect(mConnection,
+            SIGNAL(disconnected()),
+            SIGNAL(Disconnected()));
+    connect(mConnection,
+            SIGNAL(destroyed()),
+            SIGNAL(Destroyed()));
     qDBusRegisterMetaType<QList<QVariantMap> >();
     connectToBus();
 }

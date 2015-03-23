@@ -113,6 +113,8 @@ Q_SIGNALS:
     void channelSplitted(const QString &objectPath);
     void channelSplitted(const QDBusObjectPath &objectPath);
 
+    void disconnected();
+
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &info);
     void hangupCall(const QString &callerId);
@@ -139,7 +141,6 @@ private:
     QMap<QString, QString> mInitialCallStatus;
 
     QStringList mModems;
-    uint mHandleCount;
     Tp::SimplePresence mSelfPresence;
 
     MockConnectionDBus *mDBus;

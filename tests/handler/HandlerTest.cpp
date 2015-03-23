@@ -18,20 +18,22 @@
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
+#include "telepathytest.h"
 #include "handlercontroller.h"
 #include "mockcontroller.h"
 #include "approver.h"
 #include "accountentry.h"
+#include "accountentryfactory.h"
 #include "telepathyhelper.h"
 
-#define DEFAULT_TIMEOUT 15000
-
-class HandlerTest : public QObject
+class HandlerTest : public TelepathyTest
 {
     Q_OBJECT
 
 private Q_SLOTS:
     void initTestCase();
+    void init();
+    void cleanup();
     void testMakingCalls();
     void testHangUpCall();
     void testCallHold();
@@ -44,31 +46,43 @@ private:
     void waitForCallActive(const QString &callerId);
     Approver *mApprover;
     MockController *mMockController;
-    AccountEntry *mAccount;
+    Tp::AccountPtr mTpAccount;
 };
 
 void HandlerTest::initTestCase()
 {
-    Tp::registerTypes();
-
-    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
-    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
-    QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), DEFAULT_TIMEOUT);
+    initialize();
 
     // register the approver
     mApprover = new Approver(this);
     TelepathyHelper::instance()->registerClient(mApprover, "TelephonyTestApprover");
     // Tp-qt does not set registered status to approvers
     QTRY_VERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(TELEPHONY_SERVICE_APPROVER));
+}
 
-    // we need to wait in order to give telepathy time to notify about the approver
-    QTest::qWait(3000);
+void HandlerTest::init()
+{
+    qDebug() << "BLABLA init";
+    mTpAccount = addAccount("mock", "mock", "the account");
+    QVERIFY(!mTpAccount.isNull());
+    QTRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
+
+    // make sure the connection is available
+    QTRY_VERIFY(!mTpAccount->connection().isNull());
+    QTRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
 
     // and create the mock controller
     mMockController = new MockController("mock", this);
+}
 
-    mAccount = TelepathyHelper::instance()->accountForId("mock/mock/account0");
-    QVERIFY(mAccount);
+void HandlerTest::cleanup()
+{
+    QSignalSpy destroyedSpy(mMockController, SIGNAL(connectionDestroyed()));
+    qDebug() << "BLABLA cleaning up";
+    doCleanup();
+
+    QTRY_COMPARE(destroyedSpy.count(), 1);
+    mMockController->deleteLater();
 }
 
 void HandlerTest::testMakingCalls()
@@ -76,7 +90,7 @@ void HandlerTest::testMakingCalls()
     QString callerId("1234567");
     QSignalSpy callReceivedSpy(mMockController, SIGNAL(callReceived(QString)));
     // FIXME: add support for multiple accounts
-    HandlerController::instance()->startCall(callerId, mAccount->accountId());
+    HandlerController::instance()->startCall(callerId, mTpAccount->uniqueIdentifier());
     QTRY_COMPARE(callReceivedSpy.count(), 1);
     QCOMPARE(callReceivedSpy.first().first().toString(), callerId);
 
@@ -211,6 +225,7 @@ void HandlerTest::testConferenceCall()
 
     // wait for the channel to hit the approver
     QTRY_COMPARE(approverCallSpy.count(), 1);
+    qDebug() << "First call: " << approverCallSpy.count();
     mApprover->acceptCall();
     approverCallSpy.clear();
     waitForCallActive(callerId1);
@@ -220,6 +235,7 @@ void HandlerTest::testConferenceCall()
     QString call2 = mMockController->placeCall(properties);
     // wait for the channel to hit the approver
     QTRY_COMPARE(approverCallSpy.count(), 1);
+    qDebug() << "Second call: " << approverCallSpy.count();
     mApprover->acceptCall();
     approverCallSpy.clear();
     waitForCallActive(callerId2);
@@ -234,6 +250,7 @@ void HandlerTest::testConferenceCall()
     properties["Caller"] = callerId3;
     QString call3 = mMockController->placeCall(properties);
     QTRY_COMPARE(approverCallSpy.count(), 1);
+    qDebug() << "Third call: " << approverCallSpy.count();
     mApprover->acceptCall();
     approverCallSpy.clear();
     waitForCallActive(callerId3);
@@ -263,7 +280,7 @@ void HandlerTest::testSendMessage()
     QString message("Hello, world!");
     QSignalSpy messageSentSpy(mMockController, SIGNAL(messageSent(QString,QVariantMap)));
     // FIXME: add support for multiple accounts
-    HandlerController::instance()->sendMessage(recipient, message, mAccount->accountId());
+    HandlerController::instance()->sendMessage(recipient, message, mTpAccount->uniqueIdentifier());
     QTRY_COMPARE(messageSentSpy.count(), 1);
     QString sentMessage = messageSentSpy.first().first().toString();
     QVariantMap messageProperties = messageSentSpy.first().last().value<QVariantMap>();

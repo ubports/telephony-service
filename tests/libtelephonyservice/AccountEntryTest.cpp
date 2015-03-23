@@ -18,19 +18,20 @@
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
+#include "telepathytest.h"
 #include "accountentry.h"
 #include "accountentryfactory.h"
 #include "telepathyhelper.h"
 #include "mockcontroller.h"
 
-#define DEFAULT_TIMEOUT 15000
-
-class AccountEntryTest : public QObject
+class AccountEntryTest : public TelepathyTest
 {
     Q_OBJECT
 
 private Q_SLOTS:
     void initTestCase();
+    void init();
+    void cleanup();
     void testAccountId();
     void testActive();
     void testDisplayName();
@@ -49,30 +50,39 @@ private:
 
 void AccountEntryTest::initTestCase()
 {
-    Tp::registerTypes();
-
-    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
-    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
-    QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), DEFAULT_TIMEOUT);
-
-    mAccount = TelepathyHelper::instance()->accountForId("mock/mock/account0");
-    QVERIFY(mAccount);
-
-    mTpAccount = mAccount->account();
-    QVERIFY(!mTpAccount.isNull());
-    QTRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
-
-    // wait for the connection to appear
-    QTRY_VERIFY(!mTpAccount->connection().isNull());
+    initialize();
 
     // create a null account
     mNullAccount = AccountEntryFactory::createEntry(Tp::AccountPtr(), this);
+}
 
-    // give telepathy some time
-    QTest::qWait(3000);
+void AccountEntryTest::init()
+{
+    mTpAccount = addAccount("mock", "mock", "the account");
+    QVERIFY(!mTpAccount.isNull());
+    QTRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
+
+    mAccount = AccountEntryFactory::createEntry(mTpAccount, this);
+    QVERIFY(mAccount);
+
+    // catch the first connected changed signal here
+    QSignalSpy connectedChangedSpy(mAccount, SIGNAL(connectedChanged()));
+    QTRY_COMPARE(connectedChangedSpy.count(), 1);
+
+    // make sure the connection is available
+    QTRY_VERIFY(!mTpAccount->connection().isNull());
 
     // and create the mock controller
     mMockController = new MockController("mock", this);
+}
+
+void AccountEntryTest::cleanup()
+{
+    doCleanup();
+
+    qDebug() << "OK it works";
+    mAccount->deleteLater();
+    mMockController->deleteLater();
 }
 
 void AccountEntryTest::testAccountId()
