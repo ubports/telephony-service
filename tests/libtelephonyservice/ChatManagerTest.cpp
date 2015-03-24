@@ -36,7 +36,7 @@ private Q_SLOTS:
     void testSendMessage();
     void testMessageReceived();
     void testAcknowledgeMessages();
-    void testChatState();
+    void testChatEntry();
 
 private:
     Tp::AccountPtr mGenericTpAccount;
@@ -174,7 +174,7 @@ void ChatManagerTest::testAcknowledgeMessages()
     QCOMPARE(receivedIds, messageIds);
 }
 
-void ChatManagerTest::testChatState()
+void ChatManagerTest::testChatEntry()
 {
     QStringList recipients;
     recipients << "user@domain.com" << "user2@domain.com";
@@ -189,19 +189,6 @@ void ChatManagerTest::testChatState()
     QCOMPARE(QString("mock/mock/account0"), arguments.at(0).toString());
     QCOMPARE(recipients, arguments.at(1).toStringList());
     QCOMPARE(entry, arguments.at(2).value<ChatEntry*>());
-    
-    QQmlListProperty<ContactChatState> chatStates = entry->chatStates();
-    QCOMPARE(entry->chatStatesCount(&chatStates), 1);
-
-    QSignalSpy chatStateChangedSpy(entry->chatStatesAt(&chatStates, 0), SIGNAL(stateChanged()));
-    mGenericMockController->changeChatState("user2@domain.com", ChatEntry::ChannelChatStateComposing);
-    QTRY_COMPARE(chatStateChangedSpy.count(), 1);
-    QCOMPARE(entry->chatStatesAt(&chatStates, 0)->state(), (int)ChatEntry::ChannelChatStateComposing);
-    chatStateChangedSpy.clear();
-
-    mGenericMockController->changeChatState("user2@domain.com", ChatEntry::ChannelChatStatePaused);
-    QTRY_COMPARE(chatStateChangedSpy.count(), 1);
-    QCOMPARE(entry->chatStatesAt(&chatStates, 0)->state(), (int)ChatEntry::ChannelChatStatePaused);
 }
 
 QTEST_MAIN(ChatManagerTest)
