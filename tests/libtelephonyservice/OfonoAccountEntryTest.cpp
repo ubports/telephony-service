@@ -18,18 +18,19 @@
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
+#include "telepathytest.h"
 #include "ofonoaccountentry.h"
-#include "telepathyhelper.h"
+#include "accountentryfactory.h"
 #include "mockcontroller.h"
 
-#define DEFAULT_TIMEOUT 15000
-
-class OfonoAccountEntryTest : public QObject
+class OfonoAccountEntryTest : public TelepathyTest
 {
     Q_OBJECT
 
 private Q_SLOTS:
     void initTestCase();
+    void init();
+    void cleanup();
     void testAccountType();
     void testConnected();
     void testCompareIds_data();
@@ -52,27 +53,35 @@ private:
 
 void OfonoAccountEntryTest::initTestCase()
 {
-    Tp::registerTypes();
+    initialize();
+}
 
-    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
-    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
-    QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), DEFAULT_TIMEOUT);
-
-    mAccount = qobject_cast<OfonoAccountEntry*>(TelepathyHelper::instance()->accountForId("mock/ofono/account0"));
-    QVERIFY(mAccount);
-
-    mTpAccount = mAccount->account();
+void OfonoAccountEntryTest::init()
+{
+    mTpAccount = addAccount("mock", "ofono", "phone account");
     QVERIFY(!mTpAccount.isNull());
     QTRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
 
-    // wait for the connection to appear
-    QTRY_VERIFY(!mTpAccount->connection().isNull());
+    mAccount = qobject_cast<OfonoAccountEntry*>(AccountEntryFactory::createEntry(mTpAccount, this));
+    QVERIFY(mAccount);
 
-    // wait for the telepathy stuff to initialize
-    QTest::qWait(3000);
+    // make sure the connection is available
+    QTRY_VERIFY(!mTpAccount->connection().isNull());
+    QTRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
+    QTRY_VERIFY(mAccount->connected());
 
     // create the mock controller
     mMockController = new MockController("ofono", this);
+
+    // just in case, wait some time
+    QTest::qWait(500);
+}
+
+void OfonoAccountEntryTest::cleanup()
+{
+    doCleanup();
+    mAccount->deleteLater();
+    mMockController->deleteLater();
 }
 
 void OfonoAccountEntryTest::testAccountType()
@@ -82,12 +91,12 @@ void OfonoAccountEntryTest::testAccountType()
 
 void OfonoAccountEntryTest::testConnected()
 {
+    // the mock account is enabled/connected by default, so make sure it is like that
+    QTRY_VERIFY(mAccount->connected());
+
     // right now the ofono account connection status behave exactly like the generic class,
     // but as the code path is different, test it again
     QSignalSpy connectedChangedSpy(mAccount, SIGNAL(connectedChanged()));
-
-    // the mock account is enabled/connected by default, so make sure it is like that
-    QVERIFY(mAccount->connected());
 
     // now set the account offline and see if the active flag changes correctly
     mMockController->setOnline(false);

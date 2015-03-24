@@ -30,6 +30,7 @@ class MockConnectionDBus : public QObject, public QDBusContext
     Q_OBJECT
 public:
     explicit MockConnectionDBus(MockConnection *parent);
+    ~MockConnectionDBus();
 
     bool connectToBus();
     void PlaceIncomingMessage(const QString &message, const QVariantMap &properties);
@@ -62,9 +63,13 @@ Q_SIGNALS:
     void ChannelMerged(const QString &objectPath);
     void ChannelSplitted(const QString &objectPath);
 
+    void Disconnected();
+    void Destroyed();
+
 private:
     MockConnectionAdaptor *mAdaptor;
     MockConnection *mConnection;
+    QString mObjectPath;
 };
 
 #endif // MOCKCONNECTIONDBUS_H

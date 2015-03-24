@@ -115,6 +115,7 @@ void Approver::acceptCall()
             if (dispatchOperation->possibleHandlers().contains(TELEPHONY_SERVICE_HANDLER)) {
                 dispatchOperation->handleWith(TELEPHONY_SERVICE_HANDLER);
                 mDispatchOps.removeAll(dispatchOperation);
+                break;
             }
         }
     }

@@ -39,6 +39,8 @@ Q_SIGNALS:
     void conferenceCreated(const QString &objectPath);
     void channelMerged(const QString &objectPath);
     void channelSplitted(const QString &objectPath);
+    void disconnected();
+    void connectionDestroyed();
 
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &properties);

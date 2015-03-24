@@ -36,7 +36,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
                             const QString &protocolName,
                             const QVariantMap &parameters) :
     Tp::BaseConnection(dbusConnection, cmName, protocolName, parameters),
-    mHandleCount(0), mConferenceCall(0), mVoicemailIndicator(false), mVoicemailCount(0)
+    mConferenceCall(0), mVoicemailIndicator(false), mVoicemailCount(0)
 {
     setSelfHandle(newHandle("<SelfHandle>"));
 
@@ -151,8 +151,10 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(supplementaryServicesIface));
 
     mDBus = new MockConnectionDBus(this);
+}
 
-    setOnline(true);
+MockConnection::~MockConnection()
+{
 }
 
 void MockConnection::addMMSToService(const QString &path, const QVariantMap &properties, const QString &servicePath)
@@ -211,10 +213,6 @@ MockTextChannel *MockConnection::textChannelForRecipients(const QStringList &rec
     return 0;
 }
 
-MockConnection::~MockConnection()
-{
-}
-
 uint MockConnection::setPresence(const QString& status, const QString& statusMessage, Tp::DBusError *error)
 {
     qDebug() << "setPresence" << status << statusMessage;
@@ -268,8 +266,9 @@ void MockConnection::setOnline(bool online)
 
 uint MockConnection::newHandle(const QString &identifier)
 {
-    mHandles[++mHandleCount] = identifier;
-    return mHandleCount;
+    static int handleCount = 0;
+    mHandles[++handleCount] = identifier;
+    return handleCount;
 }
 
 QMap<QString, MockCallChannel *> MockConnection::callChannels()
@@ -627,6 +626,12 @@ void MockConnection::USSDCancel(Tp::DBusError *error)
 QString MockConnection::serial()
 {
     return supplementaryServicesIface->serial();
+}
+
+QString MockConnection::uniqueName() const
+{
+    static int count = 0;
+    return QString("connection%1%2").arg((quintptr) this, 0, 16).arg(count++, 0, 16);
 }
 
 void MockConnection::hangupCall(const QString &callerId)

@@ -24,7 +24,6 @@
 #include <QStringList>
 #include <unistd.h>
 
-
 #include <QDebug>
 bool listGetCalled = false;
 bool userGetCalled = false;

@@ -21,19 +21,20 @@
 #include <TelepathyQt/PendingAccount>
 #include <TelepathyQt/PendingOperation>
 #include <TelepathyQt/Account>
+#include "telepathytest.h"
 #include "accountentry.h"
 #include "accountentryfactory.h"
 #include "telepathyhelper.h"
 #include "mockcontroller.h"
 
-#define DEFAULT_TIMEOUT 15000
-
-class TelepathyHelperTest : public QObject
+class TelepathyHelperTest : public TelepathyTest
 {
     Q_OBJECT
 
 private Q_SLOTS:
     void initTestCase();
+    void init();
+    void cleanup();
     void testConnected();
     void testAccounts();
     void testAccountSorting();
@@ -43,66 +44,39 @@ private Q_SLOTS:
     void testAccountForConnection();
     void testEmergencyCallsAvailable();
 
-    // helper slots
-    void onAccountManagerReady(Tp::PendingOperation *op);
-    Tp::AccountPtr addAccount(const QString &manager,
-                              const QString &protocol,
-                              const QString &displayName,
-                              const QVariantMap &parameters = QVariantMap());
-    bool removeAccount(const Tp::AccountPtr &account);
-
 private:
+    Tp::AccountPtr mGenericTpAccount;
+    Tp::AccountPtr mPhoneTpAccount;
     MockController *mGenericController;
     MockController *mPhoneController;
-    Tp::AccountManagerPtr mAccountManager;
-
-    bool ready;
 };
 
 void TelepathyHelperTest::initTestCase()
 {
-    Tp::registerTypes();
+    initialize();
+}
 
-    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
-    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
-    QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), DEFAULT_TIMEOUT);
+void TelepathyHelperTest::init()
+{
+    // add two accounts
+    mGenericTpAccount = addAccount("mock", "mock", "the generic account");
+    QTRY_VERIFY(!mGenericTpAccount->connection().isNull());
 
-    // create an account manager instance to help testing
-    Tp::Features accountFeatures;
-    accountFeatures << Tp::Account::FeatureCore;
-    Tp::Features contactFeatures;
-    contactFeatures << Tp::Contact::FeatureAlias
-                    << Tp::Contact::FeatureAvatarData
-                    << Tp::Contact::FeatureAvatarToken
-                    << Tp::Contact::FeatureCapabilities
-                    << Tp::Contact::FeatureSimplePresence;
-    Tp::Features connectionFeatures;
-    connectionFeatures << Tp::Connection::FeatureCore
-                       << Tp::Connection::FeatureSelfContact
-                       << Tp::Connection::FeatureSimplePresence;
-
-    Tp::ChannelFactoryPtr channelFactory = Tp::ChannelFactory::create(QDBusConnection::sessionBus());
-    channelFactory->addCommonFeatures(Tp::Channel::FeatureCore);
-
-    mAccountManager = Tp::AccountManager::create(
-            Tp::AccountFactory::create(QDBusConnection::sessionBus(), accountFeatures),
-            Tp::ConnectionFactory::create(QDBusConnection::sessionBus(), connectionFeatures),
-            channelFactory,
-            Tp::ContactFactory::create(contactFeatures));
-
-    ready = false;
-    connect(mAccountManager->becomeReady(Tp::AccountManager::FeatureCore),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onAccountManagerReady(Tp::PendingOperation*)));
-
-    QTRY_VERIFY(ready);
-
-    // give some time for telepathy stuff to settle
-    QTest::qWait(3000);
+    mPhoneTpAccount = addAccount("mock", "ofono", "the phone account");
+    QTRY_VERIFY(!mPhoneTpAccount->connection().isNull());
 
     // and create the mock controller
     mGenericController = new MockController("mock", this);
     mPhoneController = new MockController("ofono", this);
+}
+
+void TelepathyHelperTest::cleanup()
+{
+    // the accounts are removed in the parent class.
+    doCleanup();
+
+    mGenericController->deleteLater();
+    mPhoneController->deleteLater();
 }
 
 void TelepathyHelperTest::testConnected()
@@ -207,8 +181,6 @@ void TelepathyHelperTest::testAccountSorting()
 void TelepathyHelperTest::testAccountIds()
 {
     QCOMPARE(TelepathyHelper::instance()->accountIds().count(), 2);
-    QVERIFY(TelepathyHelper::instance()->accountIds().contains("mock/mock/account0"));
-    QVERIFY(TelepathyHelper::instance()->accountIds().contains("mock/ofono/account0"));
 
     // now check that new accounts are captured
     QSignalSpy accountIdsChangedSpy(TelepathyHelper::instance(), SIGNAL(accountIdsChanged()));
@@ -243,7 +215,7 @@ void TelepathyHelperTest::testActiveAccounts()
     mGenericController->setOnline(false);
     QTRY_COMPARE_WITH_TIMEOUT(activeAccountsSpy.count(), 1, 10);
     QCOMPARE(TelepathyHelper::instance()->activeAccounts().count(), 1);
-    QCOMPARE(TelepathyHelper::instance()->activeAccounts()[0]->accountId(), QString("mock/ofono/account0"));
+    QCOMPARE(TelepathyHelper::instance()->activeAccounts()[0]->accountId(), mPhoneTpAccount->uniqueIdentifier());
 
     // set the other account offline to make sure
     activeAccountsSpy.clear();
@@ -261,13 +233,13 @@ void TelepathyHelperTest::testActiveAccounts()
 
 void TelepathyHelperTest::testAccountForId()
 {
-    AccountEntry *genericAccount = TelepathyHelper::instance()->accountForId("mock/mock/account0");
+    AccountEntry *genericAccount = TelepathyHelper::instance()->accountForId(mGenericTpAccount->uniqueIdentifier());
     QVERIFY(genericAccount);
-    QCOMPARE(genericAccount->accountId(), QString("mock/mock/account0"));
+    QCOMPARE(genericAccount->accountId(), mGenericTpAccount->uniqueIdentifier());
 
-    AccountEntry *phoneAccount = TelepathyHelper::instance()->accountForId("mock/ofono/account0");
+    AccountEntry *phoneAccount = TelepathyHelper::instance()->accountForId(mPhoneTpAccount->uniqueIdentifier());
     QVERIFY(phoneAccount);
-    QCOMPARE(phoneAccount->accountId(), QString("mock/ofono/account0"));
+    QCOMPARE(phoneAccount->accountId(), mPhoneTpAccount->uniqueIdentifier());
 }
 
 void TelepathyHelperTest::testAccountForConnection()
@@ -308,53 +280,6 @@ void TelepathyHelperTest::testEmergencyCallsAvailable()
     mPhoneController->setOnline(true);
     QTRY_COMPARE(emergencyCallsSpy.count(), 1);
     QVERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
-}
-
-// -------------- Helpers -----------------------
-
-void TelepathyHelperTest::onAccountManagerReady(Tp::PendingOperation *op)
-{
-    ready = true;
-}
-
-Tp::AccountPtr TelepathyHelperTest::addAccount(const QString &manager, const QString &protocol, const QString &displayName, const QVariantMap &parameters)
-{
-    bool finished = false;
-    Tp::AccountPtr account;
-    connect(mAccountManager->createAccount(manager, protocol, displayName, parameters), &Tp::PendingOperation::finished,
-            [&](Tp::PendingOperation *op) {
-        Tp::PendingAccount *pa = qobject_cast<Tp::PendingAccount*>(op);
-        if (op->isError() || !pa) {
-            qCritical() << "Failed to create account:" << op->errorName() << op->errorMessage();
-            finished = true;
-            return;
-        }
-
-        account = pa->account();
-        finished = true;
-    });
-
-    while (!finished) {
-        QTest::qWait(100);
-    }
-    return account;
-}
-
-bool TelepathyHelperTest::removeAccount(const Tp::AccountPtr &account)
-{
-    bool success = false;
-    bool finished = false;
-
-    connect(account->remove(), &Tp::PendingOperation::finished,
-            [&](Tp::PendingOperation *op) {
-        success = !op->isError();
-        finished = true;
-    });
-
-    while (!finished) {
-        QTest::qWait(100);
-    }
-    return success;
 }
 
 QTEST_MAIN(TelepathyHelperTest)

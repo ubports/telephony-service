@@ -18,19 +18,20 @@
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
+#include "telepathytest.h"
 #include "accountentry.h"
 #include "chatmanager.h"
 #include "telepathyhelper.h"
 #include "mockcontroller.h"
 
-#define DEFAULT_TIMEOUT 15000
-
-class ChatManagerTest : public QObject
+class ChatManagerTest : public TelepathyTest
 {
     Q_OBJECT
 
 private Q_SLOTS:
     void initTestCase();
+    void init();
+    void cleanup();
     void testSendMessage_data();
     void testSendMessage();
     void testMessageReceived();
@@ -38,26 +39,43 @@ private Q_SLOTS:
     void testChatState();
 
 private:
+    Tp::AccountPtr mGenericTpAccount;
+    Tp::AccountPtr mPhoneTpAccount;
     MockController *mGenericMockController;
     MockController *mPhoneMockController;
 };
 
 void ChatManagerTest::initTestCase()
 {
-    Tp::registerTypes();
-
-    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
-    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
-    QTRY_VERIFY_WITH_TIMEOUT(TelepathyHelper::instance()->connected(), DEFAULT_TIMEOUT);
+    initialize();
 
     TelepathyHelper::instance()->registerChannelObserver();
 
     // just give telepathy some time to register the observer
-    QTest::qWait(3000);
+    QTest::qWait(1000);
+}
+
+void ChatManagerTest::init()
+{
+    // add two accounts
+    mGenericTpAccount = addAccount("mock", "mock", "the generic account");
+    QTRY_VERIFY(!mGenericTpAccount->connection().isNull());
+
+    mPhoneTpAccount = addAccount("mock", "ofono", "the phone account");
+    QTRY_VERIFY(!mPhoneTpAccount->connection().isNull());
 
     // and create the mock controller
     mGenericMockController = new MockController("mock", this);
     mPhoneMockController = new MockController("ofono", this);
+}
+
+void ChatManagerTest::cleanup()
+{
+    // the accounts are removed in the parent class.
+    doCleanup();
+
+    mGenericMockController->deleteLater();
+    mPhoneMockController->deleteLater();
 }
 
 void ChatManagerTest::testSendMessage_data()
@@ -80,7 +98,7 @@ void ChatManagerTest::testSendMessage()
     // just to make it easier, sort the recipients
     qSort(recipients);
 
-    MockController *controller = (accountId == "mock/mock/account0") ? mGenericMockController : mPhoneMockController;
+    MockController *controller = accountId.startsWith("mock/mock") ? mGenericMockController : mPhoneMockController;
     QSignalSpy controllerMessageSentSpy(controller, SIGNAL(messageSent(QString,QVariantMap)));
     QSignalSpy messageSentSpy(ChatManager::instance(), SIGNAL(messageSent(QStringList,QString)));
 

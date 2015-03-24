@@ -141,5 +141,15 @@
             ]]></dox:d>
             <arg name="objectPath" type="s"/>
         </signal>
+        <signal name="Disconnected">
+            <dox:d><![CDATA[
+                The account was disconnected
+            ]]></dox:d>
+        </signal>
+        <signal name="Destroyed">
+            <dox:d><![CDATA[
+                The connection object was destroyed
+            ]]></dox:d>
+        </signal>
     </interface>
 </node>

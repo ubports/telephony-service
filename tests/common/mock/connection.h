@@ -101,6 +101,10 @@ public:
     void USSDCancel(Tp::DBusError *error);
     QString serial();
 
+    // FIXME: there is a problem in telepathy-qt that connection object paths and services are not properly unregistered
+    // and thus if we gain the same memory address (and thus the same pointer) every time we reconnect, there might be some problems
+    QString uniqueName() const;
+
 Q_SIGNALS:
     void messageRead(const QString &messageId);
     void messageSent(const QString &message, const QVariantMap &info);
@@ -140,7 +144,6 @@ private:
     QMap<QString, QString> mInitialCallStatus;
 
     QStringList mModems;
-    uint mHandleCount;
     Tp::SimplePresence mSelfPresence;
 
     MockConnectionDBus *mDBus;

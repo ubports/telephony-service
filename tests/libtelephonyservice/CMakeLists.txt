@@ -9,31 +9,20 @@ include_directories(
 add_executable(GreeterContactsTestServerExe GreeterContactsTestServer.cpp)
 qt5_use_modules(GreeterContactsTestServerExe Core DBus)
 
-add_executable(GreeterContactsTestExe GreeterContactsTest.cpp ${LIBTELEPHONYSERVICE_DIR}/greetercontacts.cpp)
-set_target_properties(GreeterContactsTestExe PROPERTIES COMPILE_DEFINITIONS "AS_BUSNAME=sessionBus;CMAKE_SOURCE_DIR=\"${CMAKE_SOURCE_DIR}\"")
-qt5_use_modules(GreeterContactsTestExe Contacts Core DBus Test)
+generate_test(GreeterContactsTest USE_DBUS
+              SOURCES GreeterContactsTest.cpp ${LIBTELEPHONYSERVICE_DIR}/greetercontacts.cpp
+              QT5_MODULES Contacts Core DBus Test
+              ENVIRONMENT XDG_SESSION_CLASS=greeter XDG_GREETER_DATA_DIR=${CMAKE_BINARY_DIR}/Testing/Temporary
+              TASKS --task env --ignore-return --task ${CMAKE_CURRENT_BINARY_DIR}/GreeterContactsTestServerExe --task-name server --ignore-return
+              WAIT_FOR org.freedesktop.Accounts)
+set_target_properties(GreeterContactsTest PROPERTIES COMPILE_DEFINITIONS "AS_BUSNAME=sessionBus;CMAKE_SOURCE_DIR=\"${CMAKE_SOURCE_DIR}\"")
+add_dependencies(GreeterContactsTest GreeterContactsTestServerExe)
 
-add_test(NAME GreeterContactsTest
-    COMMAND env
-        -u LD_PRELOAD  # fakeroot's preload doesn't play well with dbus-test-runner
-        -u LD_LIBRARY_PATH  # fakeroot fills this too
-        XDG_SESSION_CLASS=greeter
-        XDG_GREETER_DATA_DIR=${CMAKE_BINARY_DIR}/Testing/Temporary
-        dbus-test-runner
-        --task ${CMAKE_CURRENT_BINARY_DIR}/GreeterContactsTestServerExe
-        --task-name server
-        --ignore-return
-        --task ${CMAKE_CURRENT_BINARY_DIR}/GreeterContactsTestExe
-        --task-name test
-        --wait-for org.freedesktop.Accounts
-        -p -xunitxml -p -o -p ${CMAKE_BINARY_DIR}/test_GreeterContactsTest.xml
-    DEPENDENCIES GreeterContactsTestServerExe GreeterContactsTestExe
-    )
+generate_test(ContactUtilsTest SOURCES ContactUtilsTest.cpp QT5_MODULES Contacts Core Test LIBRARIES telephonyservice USE_UI)
+generate_test(PhoneUtilsTest SOURCES PhoneUtilsTest.cpp LIBRARIES telephonyservice USE_UI)
 
-generate_test(ContactUtilsTest False)
-generate_test(PhoneUtilsTest False)
-generate_test(AccountEntryFactoryTest True)
-generate_test(AccountEntryTest True)
-generate_test(ChatManagerTest True)
-generate_test(OfonoAccountEntryTest True)
-generate_test(TelepathyHelperTest True)
+generate_telepathy_test(AccountEntryFactoryTest SOURCES AccountEntryFactoryTest.cpp)
+generate_telepathy_test(AccountEntryTest SOURCES AccountEntryTest.cpp)
+generate_telepathy_test(ChatManagerTest SOURCES ChatManagerTest.cpp)
+generate_telepathy_test(OfonoAccountEntryTest SOURCES OfonoAccountEntryTest.cpp)
+generate_telepathy_test(TelepathyHelperTest SOURCES TelepathyHelperTest.cpp)

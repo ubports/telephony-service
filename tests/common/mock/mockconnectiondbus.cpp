@@ -52,8 +52,20 @@ MockConnectionDBus::MockConnectionDBus(MockConnection *parent) :
     connect(mConnection,
             SIGNAL(channelSplitted(QString)),
             SIGNAL(ChannelSplitted(QString)));
+    connect(mConnection,
+            SIGNAL(disconnected()),
+            SIGNAL(Disconnected()));
+    connect(mConnection,
+            SIGNAL(destroyed()),
+            SIGNAL(Destroyed()));
     qDBusRegisterMetaType<QList<QVariantMap> >();
+    mObjectPath = "/com/canonical/MockConnection/" + mConnection->protocolName();
     connectToBus();
+}
+
+MockConnectionDBus::~MockConnectionDBus()
+{
+    QDBusConnection::sessionBus().unregisterObject(mObjectPath, QDBusConnection::UnregisterTree);
 }
 
 bool MockConnectionDBus::connectToBus()
@@ -67,7 +79,7 @@ bool MockConnectionDBus::connectToBus()
         mAdaptor = new MockConnectionAdaptor(this);
     }
 
-    return QDBusConnection::sessionBus().registerObject("/com/canonical/MockConnection/" + mConnection->protocolName(), this);
+    return QDBusConnection::sessionBus().registerObject(mObjectPath, this);
 }
 
 void MockConnectionDBus::PlaceIncomingMessage(const QString &message, const QVariantMap &properties)

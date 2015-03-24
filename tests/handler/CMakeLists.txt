@@ -6,6 +6,4 @@ include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     )
 
-if (DBUS_RUNNER)
-    generate_test(HandlerTest True handlercontroller.cpp approver.cpp)
-endif(DBUS_RUNNER)
+generate_telepathy_test(HandlerTest SOURCES HandlerTest.cpp handlercontroller.cpp approver.cpp TASKS --task dbus-monitor --ignore-return)

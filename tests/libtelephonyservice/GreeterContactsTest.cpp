@@ -281,8 +281,7 @@ void GreeterContactsTest::waitForInitialQuery()
                          "com.canonical.TelephonyServiceApprover",
                          QDBusConnection::sessionBus());
     QSignalSpy spy(&iface, SIGNAL(InitialQueriesDone()));
-    QVERIFY(spy.wait());
-    QCOMPARE(spy.count(), 1);
+    QTRY_COMPARE(spy.count(), 1);
 }
 
 void GreeterContactsTest::makeGreeterContacts()
@@ -293,8 +292,7 @@ void GreeterContactsTest::makeGreeterContacts()
 
 void GreeterContactsTest::waitForUpdatedSignal(bool convertedPath)
 {
-    QVERIFY(mSpy->wait());
-    QCOMPARE(mSpy->count(), 1);
+    QTRY_COMPARE(mSpy->count(), 1);
 
     QList<QVariant> arguments = mSpy->takeFirst();
     QContact expectedContact = makeTestContact(convertedPath);
