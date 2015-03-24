@@ -17,6 +17,13 @@
             <arg name="properties" type="a{sv}" direction="in"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
         </method>
+        <method name="ChangeChatState">
+            <dox:d><![CDATA[
+                Change chat state of a contact
+            ]]></dox:d>
+            <arg name="userId" type="s" direction="in"/>
+            <arg name="state" type="i" direction="in"/>
+        </method>
         <method name="PlaceCall">
             <dox:d><![CDATA[
                 Simulates an incoming call
