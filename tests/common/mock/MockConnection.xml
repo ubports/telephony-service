@@ -21,6 +21,7 @@
             <dox:d><![CDATA[
                 Change chat state of a contact
             ]]></dox:d>
+            <arg name="participants" type="as" direction="in"/>
             <arg name="userId" type="s" direction="in"/>
             <arg name="state" type="i" direction="in"/>
         </method>

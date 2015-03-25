@@ -121,7 +121,7 @@ public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &info);
     void hangupCall(const QString &callerId);
     void setCallState(const QString &phoneNumber, const QString &state);
-    void changeChatState(const QString &userId, int state);
+    void changeChatState(const QStringList &participants, const QString &userId, int state);
     void onTextChannelClosed();
     void onCallChannelClosed();
     void onCallChannelDestroyed();

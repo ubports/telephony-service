@@ -69,42 +69,46 @@ void ChatEntryTest::cleanup()
 
 void ChatEntryTest::testContactChatState()
 {
-    QStringList recipients;
-    recipients << "user@domain.com" << "user2@domain.com";
+    QStringList participants;
+    participants << "user@domain.com" << "user2@domain.com";
     QSignalSpy chatEntryCreatedSpy(ChatManager::instance(), SIGNAL(chatEntryCreated(QString, QStringList,ChatEntry *)));
-    ChatEntry *entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", recipients, true);
+    ChatEntry *entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", participants, true);
     QVERIFY(entry == NULL);
     QTRY_COMPARE(chatEntryCreatedSpy.count(), 1);
 
-    entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", recipients, false);
+    entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", participants, false);
     QVERIFY(entry != NULL);
     QList<QVariant> arguments = chatEntryCreatedSpy.takeFirst();
     QCOMPARE(QString("mock/mock/account0"), arguments.at(0).toString());
-    QCOMPARE(recipients, arguments.at(1).toStringList());
+    QCOMPARE(participants.toSet(), arguments.at(1).toStringList().toSet());
     QCOMPARE(entry, arguments.at(2).value<ChatEntry*>());
     
     QQmlListProperty<ContactChatState> chatStates = entry->chatStates();
-    QCOMPARE(entry->chatStatesCount(&chatStates), 1);
+    QCOMPARE(entry->chatStatesCount(&chatStates), 2);
 
-    QSignalSpy chatStateChangedSpy(entry->chatStatesAt(&chatStates, 0), SIGNAL(stateChanged()));
-    mGenericMockController->changeChatState("user@domain.com", ChatEntry::ChannelChatStateComposing);
-    QTRY_COMPARE(chatStateChangedSpy.count(), 1);
-    QCOMPARE(entry->chatStatesAt(&chatStates, 0)->state(), (int)ChatEntry::ChannelChatStateComposing);
-    chatStateChangedSpy.clear();
+    // change state of contact 1
+    ContactChatState *contactChatState1 = entry->chatStatesAt(&chatStates, 0);
+    QSignalSpy chatStateChangedSpy1(contactChatState1, SIGNAL(stateChanged()));
+    mGenericMockController->changeChatState(participants, contactChatState1->contactId(), ChatEntry::ChannelChatStateComposing);
+    QTRY_COMPARE(chatStateChangedSpy1.count(), 1);
+    QCOMPARE(contactChatState1->state(), (int)ChatEntry::ChannelChatStateComposing);
+    chatStateChangedSpy1.clear();
 
-    mGenericMockController->changeChatState("user@domain.com", ChatEntry::ChannelChatStatePaused);
-    QTRY_COMPARE(chatStateChangedSpy.count(), 1);
+    mGenericMockController->changeChatState(participants, contactChatState1->contactId(), ChatEntry::ChannelChatStatePaused);
+    QTRY_COMPARE(chatStateChangedSpy1.count(), 1);
     QCOMPARE(entry->chatStatesAt(&chatStates, 0)->state(), (int)ChatEntry::ChannelChatStatePaused);
-    chatStateChangedSpy.clear();
 
-    mGenericMockController->changeChatState("user2@domain.com", ChatEntry::ChannelChatStateComposing);
-    QTRY_COMPARE(chatStateChangedSpy.count(), 1);
-    QCOMPARE(entry->chatStatesAt(&chatStates, 0)->state(), (int)ChatEntry::ChannelChatStateComposing);
-    chatStateChangedSpy.clear();
+    // change state of contact 2
+    ContactChatState *contactChatState2 = entry->chatStatesAt(&chatStates, 1);
+    QSignalSpy chatStateChangedSpy2(contactChatState2, SIGNAL(stateChanged()));
+    mGenericMockController->changeChatState(participants, contactChatState2->contactId(), ChatEntry::ChannelChatStateComposing);
+    QTRY_COMPARE(chatStateChangedSpy2.count(), 1);
+    QCOMPARE(contactChatState2->state(), (int)ChatEntry::ChannelChatStateComposing);
+    chatStateChangedSpy2.clear();
 
-    mGenericMockController->changeChatState("user2@domain.com", ChatEntry::ChannelChatStatePaused);
-    QTRY_COMPARE(chatStateChangedSpy.count(), 1);
-    QCOMPARE(entry->chatStatesAt(&chatStates, 0)->state(), (int)ChatEntry::ChannelChatStatePaused);
+    mGenericMockController->changeChatState(participants, contactChatState2->contactId(), ChatEntry::ChannelChatStatePaused);
+    QTRY_COMPARE(chatStateChangedSpy2.count(), 1);
+    QCOMPARE(contactChatState2->state(), (int)ChatEntry::ChannelChatStatePaused);
 }
 
 QTEST_MAIN(ChatEntryTest)

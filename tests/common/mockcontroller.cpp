@@ -56,9 +56,9 @@ void MockController::placeIncomingMessage(const QString &message, const QVariant
     mMockInterface.call("PlaceIncomingMessage", message, properties);
 }
 
-void MockController::changeChatState(const QString &userId, int state)
+void MockController::changeChatState(const QStringList &participants, const QString &userId, int state)
 {
-    mMockInterface.call("ChangeChatState", userId, state);
+    mMockInterface.call("ChangeChatState", participants, userId, state);
 }
 
 QString MockController::placeCall(const QVariantMap &properties)

@@ -187,7 +187,7 @@ void ChatManagerTest::testChatEntry()
     QVERIFY(entry != NULL);
     QList<QVariant> arguments = chatEntryCreatedSpy.takeFirst();
     QCOMPARE(QString("mock/mock/account0"), arguments.at(0).toString());
-    QCOMPARE(recipients, arguments.at(1).toStringList());
+    QCOMPARE(recipients.toSet(), arguments.at(1).toStringList().toSet());
     QCOMPARE(entry, arguments.at(2).value<ChatEntry*>());
 }
 
