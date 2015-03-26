@@ -79,7 +79,7 @@ function(generate_test TESTNAME)
                                     MC_MANAGER_DIR=${TMPDIR})
             endif ()
 
-            set(TEST_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -p -xunitxml -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
+            set(TEST_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -p -o -p -,txt -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml,xunitxml)
             if (DEFINED ARG_WAIT_FOR)
                 SET(TEST_COMMAND ${TEST_COMMAND} --wait-for ${ARG_WAIT_FOR})
             endif ()
@@ -87,7 +87,7 @@ function(generate_test TESTNAME)
             add_test(${TESTNAME} ${DBUS_RUNNER} --keep-env --dbus-config=${CMAKE_BINARY_DIR}/tests/common/dbus-session.conf --max-wait=${ARG_TIMEOUT}
                                                 ${ARG_TASKS} --task ${TEST_COMMAND} --task-name ${TESTNAME})
         else ()
-            add_test(${TESTNAME} ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -xunitxml -o ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
+            add_test(${TESTNAME} ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -o -,txt -o ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml,xunitxml)
         endif()
 
         set_tests_properties(${TESTNAME} PROPERTIES

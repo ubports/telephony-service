@@ -220,7 +220,6 @@ void HandlerTest::testConferenceCall()
 
     // wait for the channel to hit the approver
     QTRY_COMPARE(approverCallSpy.count(), 1);
-    qDebug() << "First call: " << approverCallSpy.count();
     mApprover->acceptCall();
     approverCallSpy.clear();
     waitForCallActive(callerId1);
@@ -230,7 +229,6 @@ void HandlerTest::testConferenceCall()
     QString call2 = mMockController->placeCall(properties);
     // wait for the channel to hit the approver
     QTRY_COMPARE(approverCallSpy.count(), 1);
-    qDebug() << "Second call: " << approverCallSpy.count();
     mApprover->acceptCall();
     approverCallSpy.clear();
     waitForCallActive(callerId2);
@@ -245,7 +243,6 @@ void HandlerTest::testConferenceCall()
     properties["Caller"] = callerId3;
     QString call3 = mMockController->placeCall(properties);
     QTRY_COMPARE(approverCallSpy.count(), 1);
-    qDebug() << "Third call: " << approverCallSpy.count();
     mApprover->acceptCall();
     approverCallSpy.clear();
     waitForCallActive(callerId3);
