@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2015-01-28 14:05+0000\n"
+"PO-Revision-Date: 2015-03-25 09:39+0000\n"
 "Last-Translator: Dražen Matešić <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,10 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
 "n%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2015-01-29 06:00+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-03-26 05:27+0000\n"
+"X-Generator: Launchpad (build 17413)\n"
 
-#: indicator/messagingmenu.cpp:256
+#: indicator/messagingmenu.cpp:273
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -28,7 +28,7 @@ msgstr[1] "%1 zgrešen klic"
 msgstr[2] "%1 zgrešena klica"
 msgstr[3] "%1 zgrešeni klici"
 
-#: indicator/messagingmenu.cpp:308
+#: indicator/messagingmenu.cpp:325
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -45,40 +45,40 @@ msgstr "<b>%1</b> današnjih opravljenih klicev"
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr "<b>%1</b> današnjih prejetih klicev"
+msgstr "<b>%1</b> danes prejetih klicev"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr "<b>%1</b> današnjih prejetih besedilnih sporočil"
+msgstr "<b>%1</b> danes prejetih besedilnih sporočil"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr "<b>%1</b> današnjih poslanih besedilnih sporočil"
+msgstr "<b>%1</b> danes poslanih besedilnih sporočil"
 
-#: approver/approver.cpp:463
+#: approver/approver.cpp:468
 msgid "Accept"
 msgstr "Sprejmi"
 
-#: indicator/messagingmenu.cpp:199
+#: indicator/messagingmenu.cpp:215
 msgid "Call back"
 msgstr "Povratni klic"
 
-#: approver/approver.cpp:429
+#: approver/approver.cpp:434
 msgid "Caller number is not available"
 msgstr "Številka klicatelja ni na voljo"
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:431
 #, qt-format
 msgid "Calling from %1"
 msgstr "Klic od %1"
 
-#: approver/approver.cpp:422
+#: approver/approver.cpp:427
 msgid "Calling from private number"
 msgstr "Klic od zasebne številke"
 
-#: approver/approver.cpp:424
+#: approver/approver.cpp:429
 msgid "Calling from unknown number"
 msgstr "Klic od neznane številke"
 
@@ -86,28 +86,28 @@ msgstr "Klic od neznane številke"
 msgid "Cancel"
 msgstr "Prekliči"
 
-#: indicator/textchannelobserver.cpp:207
+#: indicator/textchannelobserver.cpp:217
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Onemogočite letalski način ter poskusite znova iz programa sporočanja."
 
-#: approver/approver.cpp:485
+#: approver/approver.cpp:490
 msgid "Decline"
 msgstr "Zavrni"
 
-#: approver/approver.cpp:476
+#: approver/approver.cpp:481
 msgid "End + Answer"
 msgstr "Končaj + Odgovori"
 
-#: approver/approver.cpp:462
+#: approver/approver.cpp:467
 msgid "Hold + Answer"
 msgstr "Zadrži + Odgovori"
 
-#: indicator/messagingmenu.cpp:204
+#: indicator/messagingmenu.cpp:220
 msgid "I missed your call - can you call me now?"
 msgstr "Zgrešil sem tvoj klic - me lahko pokličeš zdaj?"
 
-#: indicator/messagingmenu.cpp:207
+#: indicator/messagingmenu.cpp:223
 msgid "I'll be 20 minutes late."
 msgstr "Zamudil bom 20 minut."
 
@@ -115,7 +115,7 @@ msgstr "Zamudil bom 20 minut."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Trenutno sem zaseden. Pokličem kasneje."
 
-#: indicator/messagingmenu.cpp:206
+#: indicator/messagingmenu.cpp:222
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Trenutno sem zaseden. Poklical te bom kasneje."
 
@@ -123,36 +123,36 @@ msgstr "Trenutno sem zaseden. Poklical te bom kasneje."
 msgid "I'm running late, on my way now."
 msgstr "Pozen sem, sem že na poti"
 
-#: indicator/messagingmenu.cpp:205
+#: indicator/messagingmenu.cpp:221
 msgid "I'm running late. I'm on my way."
 msgstr "Zamujam. Sem že na poti."
 
-#: approver/approver.cpp:493
+#: approver/approver.cpp:498
 msgid "Message & decline"
 msgstr "Sporoči in zavrni"
 
-#: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
+#: indicator/textchannelobserver.cpp:415 indicator/textchannelobserver.cpp:464
 #, qt-format
 msgid "Message from %1"
 msgstr "Sporočilo od %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr "Danes ni opravljenih klicev"
+msgstr "Danes ni bilo opravljenih klicev"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr "Danes ni prejetih klicev"
+msgstr "Danes ni bilo prejetih klicev"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr "Danes ni prejetih besedilnih sporočil"
+msgstr "Danes ni bilo prejetih besedilnih sporočil"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr "Danes ni poslanih besedilnih sporočil"
+msgstr "Danes ni bilo poslanih besedilnih sporočil"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
+#: indicator/textchannelobserver.cpp:285 indicator/ussdindicator.cpp:79
 msgid "Ok"
 msgstr "V redu"
 
@@ -164,7 +164,7 @@ msgstr "Telefonski klici"
 msgid "Please call me back later."
 msgstr "Kasneje me prosim pokliči nazaj."
 
-#: indicator/textchannelobserver.cpp:539
+#: indicator/textchannelobserver.cpp:586
 msgid "Please, select a SIM card:"
 msgstr "Izberite kartico SIM:"
 
@@ -172,7 +172,7 @@ msgstr "Izberite kartico SIM:"
 msgid "Private Number"
 msgstr "Zasebna številka"
 
-#: indicator/messagingmenu.cpp:259
+#: indicator/messagingmenu.cpp:276
 msgid "Private number"
 msgstr "Zasebna številka"
 
@@ -189,22 +189,22 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:276
+#: indicator/textchannelobserver.cpp:291
 msgid "Save"
 msgstr "Shrani"
 
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+#: indicator/messagingmenu.cpp:163 indicator/messagingmenu.cpp:230
 msgid "Send"
 msgstr "Pošlji"
 
-#: indicator/messagingmenu.cpp:208
+#: indicator/messagingmenu.cpp:224
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr "Oprosti, trenutno sem zaseden. Poklical te bom kasneje."
+msgstr "Oprosti, še vedno sem zaseden. Poklical te bom kasneje."
 
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr "<b>%1</b> današnjih porabljenih minut za klice"
+msgstr "<b>%1</b> danes porabljenih minut za klice"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
@@ -218,11 +218,11 @@ msgstr "Odobritelj telefonske storitve"
 msgid "Telephony Service Indicator"
 msgstr "Kazalnik telefonske storitve"
 
-#: indicator/textchannelobserver.cpp:215
+#: indicator/textchannelobserver.cpp:226
 msgid "The message could not be sent"
 msgstr "Tega sporočila ni bilo mogoče poslati"
 
-#: indicator/textchannelobserver.cpp:210
+#: indicator/textchannelobserver.cpp:220
 msgid "Try again from the messaging application."
 msgstr "Poskusite znova iz programa za sporočanje."
 
@@ -234,22 +234,22 @@ msgstr "Neznana številka"
 msgid "Unknown caller"
 msgstr "Neznan klicatelj"
 
-#: indicator/messagingmenu.cpp:263
+#: indicator/messagingmenu.cpp:280
 msgid "Unknown number"
 msgstr "Neznana številka"
 
-#: indicator/textchannelobserver.cpp:205
+#: indicator/textchannelobserver.cpp:215
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Odklenite kartico sim ter poskusite znova iz programa za sporočanje."
 
-#: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
+#: indicator/textchannelobserver.cpp:241 indicator/textchannelobserver.cpp:435
 msgid "View message"
 msgstr "Ogled sporočila"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:330
 msgid "Voicemail"
 msgstr "Glasovna pošta"
 
-#: indicator/messagingmenu.cpp:305
+#: indicator/messagingmenu.cpp:322
 msgid "Voicemail messages"
 msgstr "Sporočila glasovne pošte"
