@@ -6,4 +6,4 @@ include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     )
 
-generate_telepathy_test(HandlerTest SOURCES HandlerTest.cpp handlercontroller.cpp approver.cpp TASKS --task dbus-monitor --ignore-return)
+generate_telepathy_test(HandlerTest SOURCES HandlerTest.cpp handlercontroller.cpp approver.cpp)
