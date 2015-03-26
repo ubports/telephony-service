@@ -213,7 +213,7 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
                                      History::MessageStatusPermanentlyFailed);
         History::Events events;
         events.append(textEvent);
-                                 
+
         History::Manager::instance()->writeEvents(events);
 
         QString failureMessage;
@@ -222,7 +222,7 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
 
         if (simLocked) {
             failureMessage = C::gettext("Unlock your sim card and try again from the messaging application.");
-        } else if (TelepathyHelper::instance()->flightMode()) {
+        } else if (ofonoAccount && TelepathyHelper::instance()->flightMode()) {
             failureMessage = C::gettext("Deactivate flight mode and try again from the messaging application.");
         } else {
             // generic error

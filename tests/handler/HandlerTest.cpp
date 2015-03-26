@@ -203,6 +203,7 @@ void HandlerTest::testCallProperties()
     QCOMPARE(dtmfStringFromMethod, dtmfString);
 
     HandlerController::instance()->hangUpCall(objectPath);
+    QTest::qWait(500);
 }
 
 void HandlerTest::testConferenceCall()
@@ -264,6 +265,9 @@ void HandlerTest::testConferenceCall()
     HandlerController::instance()->hangUpCall(call1);
     HandlerController::instance()->hangUpCall(call2);
     HandlerController::instance()->hangUpCall(call3);
+
+    // just to make sure it is all done before removing the accounts
+    QTest::qWait(500);
 }
 
 void HandlerTest::testSendMessage()
