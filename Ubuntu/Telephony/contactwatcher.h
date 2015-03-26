@@ -40,6 +40,7 @@ class ContactWatcher : public QObject, public QQmlParserStatus
     Q_PROPERTY(QString avatar READ avatar NOTIFY avatarChanged)
     Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged)
     Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier NOTIFY identifierChanged)
+    Q_PROPERTY(QString phoneNumber READ identifier WRITE setIdentifier NOTIFY identifierChanged)
     // The details property changes according to the detail type.
     // One property is always present on the map though, the "detailType" property.
     Q_PROPERTY(QVariantMap detailProperties READ detailProperties NOTIFY detailPropertiesChanged)
