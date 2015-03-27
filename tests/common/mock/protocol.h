@@ -31,6 +31,7 @@ class Protocol : public Tp::BaseProtocol
 
 public:
     Protocol(const QDBusConnection &dbusConnection, const QString &name);
+    Tp::BaseProtocolAddressingInterfacePtr addressingIface;
 
 private:
     Tp::BaseConnectionPtr createConnection(const QVariantMap &parameters, Tp::DBusError *error);

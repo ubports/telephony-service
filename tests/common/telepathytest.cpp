@@ -40,7 +40,8 @@ void TelepathyTest::initialize()
 
     // create an account manager instance to help testing
     Tp::Features accountFeatures;
-    accountFeatures << Tp::Account::FeatureCore;
+    accountFeatures << Tp::Account::FeatureCore
+                    << Tp::Account::FeatureProtocolInfo;
     Tp::Features contactFeatures;
     contactFeatures << Tp::Contact::FeatureAlias
                     << Tp::Contact::FeatureAvatarData

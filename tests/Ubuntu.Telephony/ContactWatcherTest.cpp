@@ -438,6 +438,11 @@ void ContactWatcherTest::testAddressableFields()
     watcher.setAddressableFields(addressableFields);
     QCOMPARE(addressableFieldsSpy.count(), 1);
     QCOMPARE(watcher.addressableFields(), addressableFields);
+
+    // set the addressable fields to an empty value and make sure it falls back to "tel"
+    watcher.setAddressableFields(QStringList());
+    QCOMPARE(watcher.addressableFields().count(), 1);
+    QCOMPARE(watcher.addressableFields()[0], QString("tel"));
 }
 
 void ContactWatcherTest::testExtendedFieldMatch()

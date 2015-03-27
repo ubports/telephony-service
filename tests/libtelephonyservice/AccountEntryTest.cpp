@@ -40,6 +40,7 @@ private Q_SLOTS:
     void testConnected();
     void testCompareIds_data();
     void testCompareIds();
+    void testAddressableVCardFields();
 
 private:
     AccountEntry *mAccount;
@@ -215,6 +216,12 @@ void AccountEntryTest::testCompareIds()
     QFETCH(bool, expectedResult);
 
     QCOMPARE(mAccount->compareIds(first, second), expectedResult);
+}
+
+void AccountEntryTest::testAddressableVCardFields()
+{
+    QVERIFY(!mAccount->addressableVCardFields().isEmpty());
+    QCOMPARE(mAccount->addressableVCardFields(), mTpAccount->protocolInfo().addressableVCardFields());
 }
 
 QTEST_MAIN(AccountEntryTest)

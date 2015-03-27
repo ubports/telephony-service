@@ -219,6 +219,10 @@ QStringList ContactWatcher::addressableFields() const
 void ContactWatcher::setAddressableFields(const QStringList &fields)
 {
     mAddressableFields = fields;
+    // if the addressable fields is empty, fall back to matching phone numbers
+    if (mAddressableFields.isEmpty()) {
+            mAddressableFields << "tel";
+    }
     Q_EMIT addressableFieldsChanged();
 
     startSearching();

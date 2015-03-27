@@ -44,6 +44,7 @@ private Q_SLOTS:
     void testEmergencyCallsAvailable_data();
     void testEmergencyCallsAvailable();
     void testNetworkName();
+    void testAddressableVCardFields();
 
 private:
     OfonoAccountEntry *mAccount;
@@ -260,6 +261,12 @@ void OfonoAccountEntryTest::testNetworkName()
 
     QTRY_COMPARE(mAccount->networkName(), statusMessage);
     QCOMPARE(networkNameChangedSpy.count(), 1);
+}
+
+void OfonoAccountEntryTest::testAddressableVCardFields()
+{
+    QVERIFY(!mAccount->addressableVCardFields().isEmpty());
+    QCOMPARE(mAccount->addressableVCardFields(), mTpAccount->protocolInfo().addressableVCardFields());
 }
 
 QTEST_MAIN(OfonoAccountEntryTest)
