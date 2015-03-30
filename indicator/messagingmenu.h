@@ -32,7 +32,7 @@ class Call
 {
 public:
     Call() : count(0) { }
-    QString number;
+    QString targetId;
     int count;
     QString contactAlias;
     QUrl contactIcon;
@@ -41,7 +41,7 @@ public:
     QDateTime timestamp;
 
     bool operator==(const Call &other) {
-        return other.number == number;
+        return other.targetId == targetId;
     }
 };
 
@@ -56,7 +56,7 @@ public:
     void addFlashMessage(const QString &senderId, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text);
     void removeMessage(const QString &messageId);
 
-    void addCall(const QString &phoneNumber, const QString &accountId, const QDateTime &timestamp);
+    void addCall(const QString &targetId, const QString &accountId, const QDateTime &timestamp);
     void addCallToMessagingMenu(Call call, const QString &text);
 
     static void flashMessageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
@@ -68,7 +68,7 @@ public:
 
 Q_SIGNALS:
     void replyReceived(const QStringList &recipients, const QString &accountId, const QString &reply);
-    void messageRead(const QStringList &phoneNumber, const QString &accountId, const QString &messageId);
+    void messageRead(const QStringList &recipients, const QString &accountId, const QString &messageId);
 
 private Q_SLOTS:
     void sendMessageReply(const QString &messageId, const QString &reply);

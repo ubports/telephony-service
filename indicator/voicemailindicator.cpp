@@ -23,6 +23,7 @@
 #include "telepathyhelper.h"
 #include "messagingmenu.h"
 #include "accountentry.h"
+#include "ofonoaccountentry.h"
 #include <QDebug>
 #include <QDBusReply>
 
@@ -37,13 +38,17 @@ VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
 void VoiceMailIndicator::onAccountReady()
 {
     Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(account);
+        if (!ofonoAccount) {
+            continue;
+        }
         // disconnect previous signals if any
-        disconnect(account, SIGNAL(voicemailIndicatorChanged()), this, SLOT(onVoicemailIndicatorChanged()));
-        disconnect(account, SIGNAL(voicemailCountChanged()), this, SLOT(onVoicemailIndicatorChanged()));
+        disconnect(ofonoAccount, SIGNAL(voicemailIndicatorChanged()), this, SLOT(onVoicemailIndicatorChanged()));
+        disconnect(ofonoAccount, SIGNAL(voicemailCountChanged()), this, SLOT(onVoicemailIndicatorChanged()));
  
-        connect(account, SIGNAL(voicemailIndicatorChanged()), this, SLOT(onVoicemailIndicatorChanged()));
-        connect(account, SIGNAL(voicemailCountChanged()), this, SLOT(onVoicemailIndicatorChanged()));
-        if (account->voicemailIndicator()) {
+        connect(ofonoAccount, SIGNAL(voicemailIndicatorChanged()), this, SLOT(onVoicemailIndicatorChanged()));
+        connect(ofonoAccount, SIGNAL(voicemailCountChanged()), this, SLOT(onVoicemailIndicatorChanged()));
+        if (ofonoAccount->voicemailIndicator()) {
             MessagingMenu::instance()->showVoicemailEntry(account);
         } else {
             MessagingMenu::instance()->hideVoicemailEntry(account);
@@ -53,14 +58,14 @@ void VoiceMailIndicator::onAccountReady()
 
 void VoiceMailIndicator::onVoicemailIndicatorChanged()
 {
-    AccountEntry *account = qobject_cast<AccountEntry*>(sender());
-    if (!account) {
+    OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(sender());
+    if (!ofonoAccount) {
         return;
     }
 
-    if (account->voicemailIndicator()) {
-        MessagingMenu::instance()->showVoicemailEntry(account);
+    if (ofonoAccount->voicemailIndicator()) {
+        MessagingMenu::instance()->showVoicemailEntry(ofonoAccount);
     } else {
-        MessagingMenu::instance()->hideVoicemailEntry(account);
+        MessagingMenu::instance()->hideVoicemailEntry(ofonoAccount);
     }
 }

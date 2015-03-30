@@ -40,7 +40,7 @@ public:
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
-    void startCall(const QString &phoneNumber, const QString &accountId);
+    void startCall(const QString &targetId, const QString &accountId);
     void hangUpCall(const QString &objectPath);
     void setHold(const QString &objectPath, bool hold);
     void setMuted(const QString &objectPath, bool muted);
@@ -58,7 +58,7 @@ Q_SIGNALS:
     void callHoldingFailed(const QString &objectPath);
 
 protected:
-    Tp::CallChannelPtr existingCall(const QString &phoneNumber);
+    Tp::CallChannelPtr existingCall(const QString &targetId);
     Tp::CallChannelPtr callFromObjectPath(const QString &objectPath);
 
 protected Q_SLOTS:

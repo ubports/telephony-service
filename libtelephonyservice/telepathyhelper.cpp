@@ -22,6 +22,8 @@
 
 #include "telepathyhelper.h"
 #include "accountentry.h"
+#include "ofonoaccountentry.h"
+#include "accountentryfactory.h"
 #include "chatmanager.h"
 #include "callmanager.h"
 #include "config.h"
@@ -55,7 +57,8 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
                            "org.freedesktop.URfkill",
                            QDBusConnection::systemBus())
 {
-    mAccountFeatures << Tp::Account::FeatureCore;
+    mAccountFeatures << Tp::Account::FeatureCore
+                     << Tp::Account::FeatureProtocolInfo;
     mContactFeatures << Tp::Contact::FeatureAlias
                      << Tp::Contact::FeatureAvatarData
                      << Tp::Contact::FeatureAvatarToken
@@ -269,11 +272,21 @@ void TelepathyHelper::setupAccountEntry(AccountEntry *entry)
             SIGNAL(connectedChanged()),
             SLOT(updateConnectedStatus()));
     connect(entry,
+            SIGNAL(connectedChanged()),
+            SIGNAL(activeAccountsChanged()));
+    connect(entry,
             SIGNAL(accountReady()),
             SLOT(onAccountReady()));
     connect(entry,
             SIGNAL(removed()),
             SLOT(onAccountRemoved()));
+
+    OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(entry);
+    if (ofonoAccount) {
+        connect(ofonoAccount,
+                SIGNAL(emergencyCallsAvailableChanged()),
+                SIGNAL(emergencyCallsAvailableChanged()));
+    }
 }
 
 bool TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
@@ -379,15 +392,8 @@ void TelepathyHelper::onAccountRemoved()
 
 void TelepathyHelper::onNewAccount(const Tp::AccountPtr &account)
 {
-    AccountEntry *accountEntry = new AccountEntry(account, this);
-    connect(accountEntry,
-            SIGNAL(connectedChanged()),
-            SIGNAL(activeAccountsChanged()));
-    connect(accountEntry,
-            SIGNAL(emergencyCallsAvailableChanged()),
-            SIGNAL(emergencyCallsAvailableChanged()));
+    AccountEntry *accountEntry = AccountEntryFactory::createEntry(account, this);
     setupAccountEntry(accountEntry);
-
     mAccounts.append(accountEntry);
 
     QMap<QString, AccountEntry *> sortedOfonoAccounts;
@@ -501,8 +507,10 @@ void TelepathyHelper::setDefaultAccount(AccountType type, AccountEntry* account)
 
 bool TelepathyHelper::emergencyCallsAvailable() const
 {
+    // FIXME: this is really ofono specific, so maybe move somewhere else?
     Q_FOREACH(const AccountEntry *account, mAccounts) {
-        if (account->emergencyCallsAvailable()) {
+        const OfonoAccountEntry *ofonoAccount = qobject_cast<const OfonoAccountEntry*>(account);
+        if (ofonoAccount && ofonoAccount->emergencyCallsAvailable()) {
             return true;
         }
     }

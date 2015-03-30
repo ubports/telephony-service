@@ -92,7 +92,7 @@ CallHandler::CallHandler(QObject *parent)
 {
 }
 
-void CallHandler::startCall(const QString &phoneNumber, const QString &accountId)
+void CallHandler::startCall(const QString &targetId, const QString &accountId)
 {
     // Request the contact to start audio call
     AccountEntry *accountEntry = TelepathyHelper::instance()->accountForId(accountId);
@@ -105,7 +105,7 @@ void CallHandler::startCall(const QString &phoneNumber, const QString &accountId
         return;
     }
 
-    connect(connection->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
+    connect(connection->contactManager()->contactsForIdentifiers(QStringList() << targetId),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
@@ -354,7 +354,7 @@ void CallHandler::onCallStateChanged(Tp::CallState state)
     }
 }
 
-Tp::CallChannelPtr CallHandler::existingCall(const QString &phoneNumber)
+Tp::CallChannelPtr CallHandler::existingCall(const QString &targetId)
 {
     Tp::CallChannelPtr channel;
     Q_FOREACH(const Tp::CallChannelPtr &ch, mCallChannels) {
@@ -362,7 +362,12 @@ Tp::CallChannelPtr CallHandler::existingCall(const QString &phoneNumber)
             continue;
         }
 
-        if (PhoneUtils::comparePhoneNumbers(ch->targetContact()->id(), phoneNumber)) {
+        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(ch->connection());
+        if (!account) {
+            continue;
+        }
+
+        if (account->compareIds(ch->targetContact()->id(), targetId)) {
             channel = ch;
             break;
         }
