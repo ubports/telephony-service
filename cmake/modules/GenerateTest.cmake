@@ -36,7 +36,7 @@ function(generate_test TESTNAME)
     endif ()
 
     if (NOT DEFINED ARG_TIMEOUT)
-        set(ARG_TIMEOUT 30)
+        set(ARG_TIMEOUT 60)
     endif ()
 
     if (NOT DEFINED ARG_QT5_MODULES)

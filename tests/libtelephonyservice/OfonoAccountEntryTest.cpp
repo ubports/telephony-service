@@ -152,7 +152,7 @@ void OfonoAccountEntryTest::testEmergencyNumbers()
 
 void OfonoAccountEntryTest::testSerial()
 {
-    QCOMPARE(mAccount->serial(), mMockController->serial());
+    QTRY_COMPARE(mAccount->serial(), mMockController->serial());
 }
 
 void OfonoAccountEntryTest::testVoicemailIndicator()
