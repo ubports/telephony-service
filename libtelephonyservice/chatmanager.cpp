@@ -26,6 +26,7 @@
 #include "dbustypes.h"
 #include "accountentry.h"
 
+#include <TelepathyQt/Contact>
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 #include <QDBusArgument>
@@ -114,6 +115,7 @@ void ChatManager::sendMMS(const QStringList &recipients, const QString &message,
 
 void ChatManager::sendMessage(const QStringList &recipients, const QString &message, const QString &accountId)
 {
+    // FIXME: this probably should be handle internally by telepathy-ofono
     if (recipients.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()) {
         sendMMS(recipients, message, QVariant(), accountId);
         return;
@@ -173,9 +175,12 @@ void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::Messag
         return;
     }
 
-    if (!channel->targetContact().isNull()) {
-        Q_EMIT messageSent(channel->targetContact()->id(), sentMessage.text());
+    QStringList recipients;
+    Q_FOREACH(const Tp::ContactPtr &contact, channel->groupContacts(false)) {
+        recipients << contact->id();
     }
+
+    Q_EMIT messageSent(recipients, sentMessage.text());
 }
 
 void ChatManager::acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId)

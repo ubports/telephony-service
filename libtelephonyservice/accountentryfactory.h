@@ -31,8 +31,6 @@ class AccountEntryFactory
 public:
     static AccountEntry *createEntry(const Tp::AccountPtr &account, QObject *parent = 0);
 
-private:
-    explicit AccountEntryFactory();
 };
 
 #endif // ACCOUNTENTRYFACTORY_H

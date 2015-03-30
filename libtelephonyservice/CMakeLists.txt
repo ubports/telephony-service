@@ -38,4 +38,4 @@ target_link_libraries(telephonyservice
 
 qt5_use_modules(telephonyservice Contacts Core DBus Feedback Multimedia Qml Quick)
 
-add_subdirectory(tests)
+enable_coverage(telephonyservice)

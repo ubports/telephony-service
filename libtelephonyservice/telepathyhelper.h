@@ -87,6 +87,7 @@ public:
     Q_INVOKABLE void unlockSimCards() const;
 
     bool registerClient(Tp::AbstractClient *client, QString name);
+    bool unregisterClient(Tp::AbstractClient *client);
 
     // pre-populated channel class specs for conferences
     static Tp::ChannelClassSpec audioConferenceSpec();

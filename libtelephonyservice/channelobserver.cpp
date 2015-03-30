@@ -38,6 +38,7 @@ Tp::ChannelClassSpecList ChannelObserver::channelFilters() const
     specList << TelepathyHelper::audioConferenceSpec();
     specList << Tp::ChannelClassSpec::audioCall();
     specList << Tp::ChannelClassSpec::textChat();
+    specList << Tp::ChannelClassSpec::unnamedTextChat();
 
     return specList;
 }

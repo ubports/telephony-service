@@ -41,7 +41,8 @@ QString AccountEntry::accountId() const
 
 bool AccountEntry::active() const
 {
-    return (!mAccount->connection().isNull() &&
+    return (!mAccount.isNull() &&
+            !mAccount->connection().isNull() &&
             !mAccount->connection()->selfContact().isNull() &&
              mAccount->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline);
 }
@@ -70,10 +71,7 @@ QString AccountEntry::statusMessage() const
         return QString::null;
     }
     Tp::Presence presence = mAccount->connection()->selfContact()->presence();
-    if (presence.type() == Tp::ConnectionPresenceTypeAvailable) {
-        return presence.statusMessage();
-    }
-    return QString::null;
+    return presence.statusMessage();
 }
 
 QString AccountEntry::selfContactId() const
@@ -147,6 +145,10 @@ void AccountEntry::initialize()
             SIGNAL(connectionChanged(Tp::ConnectionPtr)),
             SLOT(onConnectionChanged()));
 
+    connect(this,
+            SIGNAL(connectedChanged()),
+            SIGNAL(activeChanged()));
+
     // and make sure it is enabled and connected
     if (!mAccount->isEnabled()) {
         QTimer::singleShot(0, this, SLOT(ensureEnabled()));
@@ -203,15 +205,12 @@ void AccountEntry::onSelfHandleChanged(uint handle)
     Q_EMIT statusMessageChanged();
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
-    Q_EMIT activeChanged();
 }
 
 void AccountEntry::onConnectionChanged()
 {
     if (!mAccount->connection()) {
-
-
-        // and ensure the account gets connected
+        // ensure the account gets connected
         ensureConnected();
     } else {
         mConnectionInfo.busName = mAccount->connection()->busName();
@@ -226,5 +225,4 @@ void AccountEntry::onConnectionChanged()
 
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
-    Q_EMIT activeChanged();
 }
