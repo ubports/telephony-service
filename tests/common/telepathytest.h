@@ -23,7 +23,7 @@
 #include <TelepathyQt/Account>
 #include "telepathyhelper.h"
 
-#define DEFAULT_TIMEOUT 15
+#define DEFAULT_TIMEOUT 15000
 
 class TelepathyTest : public QObject
 {
