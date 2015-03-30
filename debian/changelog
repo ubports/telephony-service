@@ -1,3 +1,36 @@
+telephony-service (0.1+15.04.20150330.1-0ubuntu1) vivid; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Move all tests to root/tests to make it easier to share components
+    Add tests to existing components Add tests to make sure supporting
+    non-phone based accounts works Fix problems found while writing the
+    tests. Fix coverage reports removed: handler/tests/dbus-test-
+    wrapper.sh.in handler/tests/telepathyhelper.cpp
+    handler/tests/telepathyhelper.h added:
+    cmake/modules/GenerateTest.cmake tests/ tests/CMakeLists.txt
+    tests/common/ tests/common/CMakeLists.txt tests/common/dbus-
+    services/ tests/common/dbus-services/CMakeLists.txt
+    tests/common/dbus-session.conf.in
+    tests/common/mock/emergencymodeiface.cpp
+    tests/common/mock/emergencymodeiface.h
+    tests/common/mock/ussdiface.cpp tests/common/mock/ussdiface.h
+    tests/common/mock/voicemailiface.cpp
+    tests/common/mock/voicemailiface.h tests/common/telepathytest.cpp
+    tests/common/telepathytest.h
+    tests/libtelephonyservice/AccountEntryFactoryTest.cpp
+    tests/libtelephonyservice/AccountEntryTest.cpp
+    tests/libtelephonyservice/ChatManagerTest.cpp
+    tests/libtelephonyservice/OfonoAccountEntryTest.cpp
+    tests/libtelephonyservice/TelepathyHelperTest.cpp renamed:
+    Ubuntu/Telephony/tests/ => tests/Ubuntu.Telephony/ handler/tests/ =>
+    tests/handler/ handler/tests/mock/ => tests/common/mock/
+    handler/tests/mockcontroller.cpp => tests/common/mockcontroller.cpp
+    handler/tests/mockcontroller.h => tests/common/mockcontroller.h
+    libtelephonyservice/tests/ => tests/libtelephonyservice/
+  * Support accounts not based on phone numbers.
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 30 Mar 2015 20:56:48 +0000
+
 telephony-service (0.1+15.04.20150227-0ubuntu1) vivid; urgency=medium
 
   [ CI Train Bot ]
