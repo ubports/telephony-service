@@ -15,17 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-04-01 05:30+0000\n"
+"X-Launchpad-Export-Date: 2015-04-03 05:47+0000\n"
 "X-Generator: Launchpad (build 17413)\n"
 
-#: indicator/messagingmenu.cpp:273
+#: indicator/messagingmenu.cpp:294
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 αναπάντητη κλήση"
 msgstr[1] "%1 αναπάντητες κλήσεις"
 
-#: indicator/messagingmenu.cpp:325
+#: indicator/messagingmenu.cpp:360
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -52,28 +52,28 @@ msgstr "<b>%1</b> μηνύματα ελήφθησαν σήμερα"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> μηνύματα στάλθηκαν σήμερα"
 
-#: approver/approver.cpp:468
+#: approver/approver.cpp:481
 msgid "Accept"
 msgstr "Αποδοχή"
 
-#: indicator/messagingmenu.cpp:215
+#: indicator/messagingmenu.cpp:230
 msgid "Call back"
 msgstr "Επανάκληση"
 
-#: approver/approver.cpp:434
+#: approver/approver.cpp:447
 msgid "Caller number is not available"
 msgstr "Ο αριθμός που καλείτε δεν είναι διαθέσιμος"
 
-#: approver/approver.cpp:431
+#: approver/approver.cpp:444
 #, qt-format
 msgid "Calling from %1"
 msgstr "Κλήση από %1"
 
-#: approver/approver.cpp:427
+#: approver/approver.cpp:440
 msgid "Calling from private number"
 msgstr "Κλήση από αριθμό με απόκρυψη"
 
-#: approver/approver.cpp:429
+#: approver/approver.cpp:442
 msgid "Calling from unknown number"
 msgstr "Κλήση από άγνωστο αριθμό"
 
@@ -81,53 +81,53 @@ msgstr "Κλήση από άγνωστο αριθμό"
 msgid "Cancel"
 msgstr "Ακύρωση"
 
-#: indicator/textchannelobserver.cpp:217
+#: indicator/textchannelobserver.cpp:226
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Απενεργοποιείστε την λειτουργία πτήσης και προσπαθήστε ξανά από την εφαρμογή "
 "μηνυμάτων."
 
-#: approver/approver.cpp:490
+#: approver/approver.cpp:503
 msgid "Decline"
 msgstr "Απόρριψη"
 
-#: approver/approver.cpp:481
+#: approver/approver.cpp:494
 msgid "End + Answer"
 msgstr "Τέλος + Απάντηση"
 
-#: approver/approver.cpp:467
+#: approver/approver.cpp:480
 msgid "Hold + Answer"
 msgstr "Αναμονή + Απάντηση"
 
-#: indicator/messagingmenu.cpp:220
+#: indicator/messagingmenu.cpp:235
 msgid "I missed your call - can you call me now?"
 msgstr "Δεν πρόλαβα την κλήση σου μπορείς να καλέσεις τώρα;"
 
-#: indicator/messagingmenu.cpp:223
+#: indicator/messagingmenu.cpp:238
 msgid "I'll be 20 minutes late."
 msgstr "Θα καθυστερήσω 20 λεπτά."
 
-#: approver/approver.cpp:89
+#: approver/approver.cpp:90
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Είμαι απασχολημένος αυτή την στιγμή. Θα καλέσω αργότερα."
 
-#: indicator/messagingmenu.cpp:222
+#: indicator/messagingmenu.cpp:237
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Είμαι απασχολημένος αυτή την στιγμή. Θα σε καλέσω αργότερα."
 
-#: approver/approver.cpp:90
+#: approver/approver.cpp:91
 msgid "I'm running late, on my way now."
 msgstr "Καθυστέρησα λιγάκι. Έρχομαι τώρα."
 
-#: indicator/messagingmenu.cpp:221
+#: indicator/messagingmenu.cpp:236
 msgid "I'm running late. I'm on my way."
 msgstr "Καθυστέρησα λιγάκι. Έρχομαι."
 
-#: approver/approver.cpp:498
+#: approver/approver.cpp:511
 msgid "Message & decline"
 msgstr "Μήνυμα & απόρριψη"
 
-#: indicator/textchannelobserver.cpp:415 indicator/textchannelobserver.cpp:464
+#: indicator/textchannelobserver.cpp:435 indicator/textchannelobserver.cpp:491
 #, qt-format
 msgid "Message from %1"
 msgstr "Μήνυμα από %1"
@@ -148,7 +148,7 @@ msgstr "Δεν ελήφθησαν μηνύματα σήμερα"
 msgid "No text messages sent today"
 msgstr "Δεν στάλθηκαν μηνύματα σήμερα"
 
-#: indicator/textchannelobserver.cpp:285 indicator/ussdindicator.cpp:79
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:294
 msgid "Ok"
 msgstr "Εντάξει"
 
@@ -156,19 +156,19 @@ msgstr "Εντάξει"
 msgid "Phone Calls"
 msgstr "Κλήσεις"
 
-#: approver/approver.cpp:91
+#: approver/approver.cpp:92
 msgid "Please call me back later."
 msgstr "Παρακαλώ καλέστε με αργότερα."
 
-#: indicator/textchannelobserver.cpp:586
+#: indicator/textchannelobserver.cpp:613
 msgid "Please, select a SIM card:"
 msgstr "Παρακαλώ επιλέξτε κάρτα SIM:"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:136
+#: Ubuntu/Telephony/contactwatcher.cpp:179
 msgid "Private Number"
 msgstr "Με απόκρυψη"
 
-#: indicator/messagingmenu.cpp:276
+#: indicator/messagingmenu.cpp:297
 msgid "Private number"
 msgstr "Με απόκρυψη"
 
@@ -185,15 +185,15 @@ msgstr "Κάρτα SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:291
+#: indicator/textchannelobserver.cpp:300
 msgid "Save"
 msgstr "Αποθήκευση"
 
-#: indicator/messagingmenu.cpp:163 indicator/messagingmenu.cpp:230
+#: indicator/messagingmenu.cpp:172 indicator/messagingmenu.cpp:245
 msgid "Send"
 msgstr "Αποστολή"
 
-#: indicator/messagingmenu.cpp:224
+#: indicator/messagingmenu.cpp:239
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Συγνώμη είμαι ακόμη απασχολημένος. Θα σε καλέσω αργότερα."
 
@@ -202,7 +202,7 @@ msgstr "Συγνώμη είμαι ακόμη απασχολημένος. Θα σ
 msgid "Spent <b>%1</b> minutes in calls today"
 msgstr "Μιλήσατε <b>%1</b> λεπτά σήμερα"
 
-#: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
+#: indicator/messagingmenu.cpp:56 indicator/messagingmenu.cpp:60
 msgid "Telephony Service"
 msgstr "Υπηρεσία τηλεφωνίας"
 
@@ -214,40 +214,40 @@ msgstr "Υποστήριξη τηλεφωνικής υπηρεσίας"
 msgid "Telephony Service Indicator"
 msgstr "Ένδειξη τηλεφωνικής υπηρεσίας"
 
-#: indicator/textchannelobserver.cpp:226
+#: indicator/textchannelobserver.cpp:235
 msgid "The message could not be sent"
 msgstr "Το μήνυμα δεν μπόρεσε να σταλεί"
 
-#: indicator/textchannelobserver.cpp:220
+#: indicator/textchannelobserver.cpp:229
 msgid "Try again from the messaging application."
 msgstr "Προσπαθήστε ξανά από την εφαρμογή μηνυμάτων."
 
-#: Ubuntu/Telephony/contactwatcher.cpp:138
+#: Ubuntu/Telephony/contactwatcher.cpp:181
 msgid "Unknown Number"
 msgstr "Άγνωστος Αριθμός"
 
-#: approver/approver.cpp:61
+#: approver/approver.cpp:62
 msgid "Unknown caller"
 msgstr "Άγνωστος"
 
-#: indicator/messagingmenu.cpp:280
+#: indicator/messagingmenu.cpp:301
 msgid "Unknown number"
 msgstr "Άγνωστος Αριθμός"
 
-#: indicator/textchannelobserver.cpp:215
+#: indicator/textchannelobserver.cpp:224
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Ξεκλειδώστε την κάρτα sim σας και προσπαθήστε ξανά από την εφαρμογή "
 "μηνυμάτων."
 
-#: indicator/textchannelobserver.cpp:241 indicator/textchannelobserver.cpp:435
+#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:455
 msgid "View message"
 msgstr "Προβολή μηνύματος"
 
-#: indicator/messagingmenu.cpp:330
+#: indicator/messagingmenu.cpp:365
 msgid "Voicemail"
 msgstr "Τηλεφωνητής"
 
-#: indicator/messagingmenu.cpp:322
+#: indicator/messagingmenu.cpp:357
 msgid "Voicemail messages"
 msgstr "Μηνύματα τηλεφωνητή"
