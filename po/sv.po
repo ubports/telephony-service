@@ -15,18 +15,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-04-03 05:47+0000\n"
+"X-Launchpad-Export-Date: 2015-04-04 05:46+0000\n"
 "X-Generator: Launchpad (build 17413)\n"
 "Language: sv\n"
 
-#: indicator/messagingmenu.cpp:294
+#: indicator/messagingmenu.cpp:256
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 missat samtal"
 msgstr[1] "%1 missade samtal"
 
-#: indicator/messagingmenu.cpp:360
+#: indicator/messagingmenu.cpp:308
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -53,28 +53,28 @@ msgstr "<b>%1</b> textmeddelanden mottagna idag"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> textmeddelanden skickade idag"
 
-#: approver/approver.cpp:481
+#: approver/approver.cpp:463
 msgid "Accept"
 msgstr "Acceptera"
 
-#: indicator/messagingmenu.cpp:230
+#: indicator/messagingmenu.cpp:199
 msgid "Call back"
 msgstr "Ring upp"
 
-#: approver/approver.cpp:447
+#: approver/approver.cpp:429
 msgid "Caller number is not available"
 msgstr "Uppringarens nummer är inte tillgängligt"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:426
 #, qt-format
 msgid "Calling from %1"
 msgstr "Ringer från %1"
 
-#: approver/approver.cpp:440
+#: approver/approver.cpp:422
 msgid "Calling from private number"
 msgstr "Ringer från dolt nummer"
 
-#: approver/approver.cpp:442
+#: approver/approver.cpp:424
 msgid "Calling from unknown number"
 msgstr "Ringer från okänt nummer"
 
@@ -82,51 +82,51 @@ msgstr "Ringer från okänt nummer"
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: indicator/textchannelobserver.cpp:226
+#: indicator/textchannelobserver.cpp:207
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "Inaktivera flygläge och prova igen från meddelandeprogrammet."
 
-#: approver/approver.cpp:503
+#: approver/approver.cpp:485
 msgid "Decline"
 msgstr "Avvisa"
 
-#: approver/approver.cpp:494
+#: approver/approver.cpp:476
 msgid "End + Answer"
 msgstr "Avsluta + Svara"
 
-#: approver/approver.cpp:480
+#: approver/approver.cpp:462
 msgid "Hold + Answer"
 msgstr "Vänta + Svara"
 
-#: indicator/messagingmenu.cpp:235
+#: indicator/messagingmenu.cpp:204
 msgid "I missed your call - can you call me now?"
 msgstr "Jag missade ditt samtal. Kan du ringa mig nu?"
 
-#: indicator/messagingmenu.cpp:238
+#: indicator/messagingmenu.cpp:207
 msgid "I'll be 20 minutes late."
 msgstr "Jag kommer 20 minuter försent."
 
-#: approver/approver.cpp:90
+#: approver/approver.cpp:89
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Jag är upptagen för tillfället. Jag ringer upp senare."
 
-#: indicator/messagingmenu.cpp:237
+#: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Just nu är jag upptagen. Jag ringer dig lite senare."
 
-#: approver/approver.cpp:91
+#: approver/approver.cpp:90
 msgid "I'm running late, on my way now."
 msgstr "Jag är sen, men är på väg nu."
 
-#: indicator/messagingmenu.cpp:236
+#: indicator/messagingmenu.cpp:205
 msgid "I'm running late. I'm on my way."
 msgstr "Jag är försenad, men jag är på väg."
 
-#: approver/approver.cpp:511
+#: approver/approver.cpp:493
 msgid "Message & decline"
 msgstr "Meddela och neka"
 
-#: indicator/textchannelobserver.cpp:435 indicator/textchannelobserver.cpp:491
+#: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
 #, qt-format
 msgid "Message from %1"
 msgstr "Meddelande från %1"
@@ -147,7 +147,7 @@ msgstr "Inga textmeddelanden mottagna idag"
 msgid "No text messages sent today"
 msgstr "Inga textmeddelanden skickade idag"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:294
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
 msgid "Ok"
 msgstr "OK"
 
@@ -155,19 +155,19 @@ msgstr "OK"
 msgid "Phone Calls"
 msgstr "Telefonsamtal"
 
-#: approver/approver.cpp:92
+#: approver/approver.cpp:91
 msgid "Please call me back later."
 msgstr "Ring upp mig senare."
 
-#: indicator/textchannelobserver.cpp:613
+#: indicator/textchannelobserver.cpp:539
 msgid "Please, select a SIM card:"
 msgstr "Välj ett SIM-kort:"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:179
+#: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
 msgstr "Dolt nummer"
 
-#: indicator/messagingmenu.cpp:297
+#: indicator/messagingmenu.cpp:259
 msgid "Private number"
 msgstr "Dolt nummer"
 
@@ -184,15 +184,15 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:300
+#: indicator/textchannelobserver.cpp:276
 msgid "Save"
 msgstr "Spara"
 
-#: indicator/messagingmenu.cpp:172 indicator/messagingmenu.cpp:245
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
 msgid "Send"
 msgstr "Skicka"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Jag är fortfarande upptagen. Ringer dig senare."
 
@@ -201,7 +201,7 @@ msgstr "Jag är fortfarande upptagen. Ringer dig senare."
 msgid "Spent <b>%1</b> minutes in calls today"
 msgstr "Spenderat <b>%1</b> minuter i samtal idag"
 
-#: indicator/messagingmenu.cpp:56 indicator/messagingmenu.cpp:60
+#: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
 msgstr "Telefonitjänst"
 
@@ -213,38 +213,38 @@ msgstr "Godkännare av telefonitjänst"
 msgid "Telephony Service Indicator"
 msgstr "Telefonitjänstindikator"
 
-#: indicator/textchannelobserver.cpp:235
+#: indicator/textchannelobserver.cpp:215
 msgid "The message could not be sent"
 msgstr "Meddelandet kunde inte skickas"
 
-#: indicator/textchannelobserver.cpp:229
+#: indicator/textchannelobserver.cpp:210
 msgid "Try again from the messaging application."
 msgstr "Prova igen från meddelandeprogrammet."
 
-#: Ubuntu/Telephony/contactwatcher.cpp:181
+#: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
 msgstr "Okänt nummer"
 
-#: approver/approver.cpp:62
+#: approver/approver.cpp:61
 msgid "Unknown caller"
 msgstr "Okänd uppringare"
 
-#: indicator/messagingmenu.cpp:301
+#: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
 msgstr "Okänt nummer"
 
-#: indicator/textchannelobserver.cpp:224
+#: indicator/textchannelobserver.cpp:205
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Lås upp ditt simkort och prova igen från meddelandeprogrammet."
 
-#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:455
+#: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
 msgid "View message"
 msgstr "Visa meddelande"
 
-#: indicator/messagingmenu.cpp:365
+#: indicator/messagingmenu.cpp:313
 msgid "Voicemail"
 msgstr "Röstbrevlåda"
 
-#: indicator/messagingmenu.cpp:357
+#: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
 msgstr "Meddelanden på telefonsvararen"
