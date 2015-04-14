@@ -26,6 +26,7 @@
 #include "dbustypes.h"
 #include "accountentry.h"
 
+#include <TelepathyQt/Contact>
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 #include <QDBusArgument>
@@ -114,6 +115,7 @@ void ChatManager::sendMMS(const QStringList &recipients, const QString &message,
 
 void ChatManager::sendMessage(const QStringList &recipients, const QString &message, const QString &accountId)
 {
+    // FIXME: this probably should be handle internally by telepathy-ofono
     if (recipients.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()) {
         sendMMS(recipients, message, QVariant(), accountId);
         return;
@@ -146,13 +148,7 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
     connect(channel.data(),
             SIGNAL(messageSent(Tp::Message,Tp::MessageSendingFlags,QString)),
             SLOT(onMessageSent(Tp::Message,Tp::MessageSendingFlags,QString)));
-    connect(channel.data(),
-            SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
-            SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
 
-    if (!channel->targetContact().isNull()){
-        Q_EMIT unreadMessagesChanged(channel->targetContact()->id());
-    }
     Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
         onMessageReceived(message);
     }
@@ -167,13 +163,6 @@ void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
     }
 
     Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken(), true);
-    Q_EMIT unreadMessagesChanged(message.sender()->id());
-}
-
-void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
-{
-    // emit the signal saying the unread messages for a specific number has changed
-    Q_EMIT unreadMessagesChanged(message.sender()->id());
 }
 
 void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message)
@@ -186,36 +175,12 @@ void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::Messag
         return;
     }
 
-    if (!channel->targetContact().isNull()) {
-        Q_EMIT messageSent(channel->targetContact()->id(), sentMessage.text());
-    }
-}
-
-Tp::TextChannelPtr ChatManager::existingChat(const QStringList &recipients, const QString &accountId)
-{
-    Tp::TextChannelPtr channel;
-
-    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
-        AccountEntry *channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
-        int count = 0;
-        if (!channelAccount || channelAccount->accountId() != accountId
-                || channel->groupContacts(false).size() != recipients.size()) {
-            continue;
-        }
-        Q_FOREACH(const QString &recipientNew, recipients) {
-            Q_FOREACH(const Tp::ContactPtr &recipientOld, channel->groupContacts(false)) {
-                if (PhoneUtils::comparePhoneNumbers(recipientOld->id(), recipientNew)) {
-                    count++;
-                }
-            }
-        }
-        if (count == recipients.size()) {
-            return channel;
-        }
-
+    QStringList recipients;
+    Q_FOREACH(const Tp::ContactPtr &contact, channel->groupContacts(false)) {
+        recipients << contact->id();
     }
 
-    return channel;
+    Q_EMIT messageSent(recipients, sentMessage.text());
 }
 
 void ChatManager::acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId)

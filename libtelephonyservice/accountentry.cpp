@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2015 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -25,7 +25,7 @@
 #include "telepathyhelper.h"
 
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
-    QObject(parent), mAccount(account), mVoicemailCount(0), mVoicemailIndicator(false)
+    QObject(parent), mAccount(account)
 {
     initialize();
 }
@@ -41,7 +41,8 @@ QString AccountEntry::accountId() const
 
 bool AccountEntry::active() const
 {
-    return (!mAccount->connection().isNull() &&
+    return (!mAccount.isNull() &&
+            !mAccount->connection().isNull() &&
             !mAccount->connection()->selfContact().isNull() &&
              mAccount->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline);
 }
@@ -55,6 +56,24 @@ QString AccountEntry::displayName() const
     return mAccount->displayName();
 }
 
+QString AccountEntry::status() const
+{
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
+        return QString::null;
+    }
+    Tp::Presence presence = mAccount->connection()->selfContact()->presence();
+    return presence.status();
+}
+
+QString AccountEntry::statusMessage() const
+{
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
+        return QString::null;
+    }
+    Tp::Presence presence = mAccount->connection()->selfContact()->presence();
+    return presence.statusMessage();
+}
+
 QString AccountEntry::selfContactId() const
 {
     if (!mAccount.isNull() && !mAccount->connection().isNull() &&
@@ -62,27 +81,6 @@ QString AccountEntry::selfContactId() const
         return mAccount->connection()->selfContact()->id();
     }
     return QString();
-}
-
-QString AccountEntry::networkName() const
-{
-    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
-        return QString::null;
-    }
-    Tp::Presence presence = mAccount->connection()->selfContact()->presence();
-    if (presence.type() == Tp::ConnectionPresenceTypeAvailable) {
-        return presence.statusMessage();
-    }
-    return QString::null;
-}
-
-bool AccountEntry::simLocked() const
-{
-    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
-        return false;
-    }
-    Tp::Presence presence = mAccount->connection()->selfContact()->presence();
-    return (presence.type() == Tp::ConnectionPresenceTypeAway && presence.status() == "simlocked");
 }
 
 void AccountEntry::setDisplayName(const QString &name)
@@ -100,44 +98,24 @@ bool AccountEntry::connected() const
             mAccount->connection()->selfContact()->presence().type() == Tp::ConnectionPresenceTypeAvailable;
 }
 
-QStringList AccountEntry::emergencyNumbers() const
-{
-    return mEmergencyNumbers;
-}
-
-QString AccountEntry::voicemailNumber() const
-{
-    return mVoicemailNumber;
-}
-
-bool AccountEntry::voicemailIndicator() const
-{
-    return mVoicemailIndicator;
-}
-
-uint AccountEntry::voicemailCount() const
-{
-    return mVoicemailCount;
-}
-
 Tp::AccountPtr AccountEntry::account() const
 {
     return mAccount;
 }
 
-bool AccountEntry::emergencyCallsAvailable() const
+AccountEntry::AccountType AccountEntry::type() const
 {
-    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
-        return false;
-    }
-
-    QString status = mAccount->connection()->selfContact()->presence().status();
-    return status != "flightmode" && status != "nomodem" && status != "";
+    return GenericAccount;
 }
 
-QString AccountEntry::serial() const
+QStringList AccountEntry::addressableVCardFields() const
 {
-    return mSerial;
+    return mAccount->protocolInfo().addressableVCardFields();
+}
+
+bool AccountEntry::compareIds(const QString &first, const QString &second) const
+{
+    return first == second;
 }
 
 void AccountEntry::initialize()
@@ -166,6 +144,10 @@ void AccountEntry::initialize()
     connect(mAccount.data(),
             SIGNAL(connectionChanged(Tp::ConnectionPtr)),
             SLOT(onConnectionChanged()));
+
+    connect(this,
+            SIGNAL(connectedChanged()),
+            SIGNAL(activeChanged()));
 
     // and make sure it is enabled and connected
     if (!mAccount->isEnabled()) {
@@ -208,128 +190,39 @@ void AccountEntry::watchSelfContactPresence()
             SIGNAL(connectedChanged()));
     connect(mAccount->connection()->selfContact().data(),
             SIGNAL(presenceChanged(Tp::Presence)),
-            SIGNAL(networkNameChanged()));
+            SIGNAL(statusMessageChanged()));
     connect(mAccount->connection()->selfContact().data(),
             SIGNAL(presenceChanged(Tp::Presence)),
-            SIGNAL(emergencyCallsAvailableChanged()));
-    connect(mAccount->connection()->selfContact().data(),
-            SIGNAL(presenceChanged(Tp::Presence)),
-            SIGNAL(simLockedChanged()));
+            SIGNAL(statusChanged()));
 }
 
 void AccountEntry::onSelfHandleChanged(uint handle)
 {
+    Q_UNUSED(handle)
     watchSelfContactPresence();
 
-    Q_EMIT networkNameChanged();
+    Q_EMIT statusChanged();
+    Q_EMIT statusMessageChanged();
     Q_EMIT connectedChanged();
-    Q_EMIT simLockedChanged();
     Q_EMIT selfContactIdChanged();
-    Q_EMIT activeChanged();
 }
 
 void AccountEntry::onConnectionChanged()
 {
-    QDBusConnection dbusConnection = QDBusConnection::sessionBus();
     if (!mAccount->connection()) {
-        // disconnect any previous dbus connections
-        if (!mConnectionInfo.objectPath.isEmpty()) {
-            dbusConnection.disconnect(mConnectionInfo.busName, mConnectionInfo.objectPath,
-                                      CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE, "EmergencyNumbersChanged",
-                                      this, SLOT(onEmergencyNumbersChanged(QStringList)));
-        }
-
-        // and ensure the account gets connected
+        // ensure the account gets connected
         ensureConnected();
     } else {
         mConnectionInfo.busName = mAccount->connection()->busName();
         mConnectionInfo.objectPath = mAccount->connection()->objectPath();
 
-        // connect the emergency numbers changed signal
-        dbusConnection.connect(mConnectionInfo.busName, mConnectionInfo.objectPath,
-                               CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE, "EmergencyNumbersChanged",
-                               this, SLOT(onEmergencyNumbersChanged(QStringList)));
-
-        // and get the current value of the emergency numbers
-        QDBusInterface connIface(mConnectionInfo.busName, mConnectionInfo.objectPath, CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE);
-        QDBusReply<QStringList> replyNumbers = connIface.call("EmergencyNumbers");
-        if (replyNumbers.isValid()) {
-            mEmergencyNumbers = replyNumbers.value();
-            Q_EMIT emergencyNumbersChanged();
-        }
-
-        // connect the voicemail number changed signal
-        dbusConnection.connect(mConnectionInfo.busName, mConnectionInfo.objectPath,
-                               CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailNumberChanged",
-                               this, SLOT(onVoicemailNumberChanged(QString)));
-
-        QDBusInterface voicemailIface(mConnectionInfo.busName, mConnectionInfo.objectPath, CANONICAL_TELEPHONY_VOICEMAIL_IFACE);
-        QDBusReply<QString> replyNumber = voicemailIface.call("VoicemailNumber");
-        if (replyNumber.isValid()) {
-            mVoicemailNumber = replyNumber.value();
-            Q_EMIT voicemailNumberChanged();
-        }
-
-        // connect the voicemail count changed signal
-        dbusConnection.connect(mConnectionInfo.busName, mConnectionInfo.objectPath,
-                               CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailCountChanged",
-                               this, SLOT(onVoicemailCountChanged(uint)));
-
-        QDBusReply<uint> replyCount = voicemailIface.call("VoicemailCount");
-        if (replyCount.isValid()) {
-            mVoicemailCount = replyCount.value();
-            Q_EMIT voicemailCountChanged();
-        }
-
-        // connect the voicemail indicator changed signal
-        dbusConnection.connect(mConnectionInfo.busName, mConnectionInfo.objectPath,
-                               CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailIndicatorChanged",
-                               this, SLOT(onVoicemailIndicatorChanged(bool)));
-
-        QDBusReply<bool> replyIndicator = voicemailIface.call("VoicemailIndicator");
-        if (replyIndicator.isValid()) {
-            mVoicemailIndicator = replyIndicator.value();
-            Q_EMIT voicemailIndicatorChanged();
-        }
-
         connect(mAccount->connection().data(),
                 SIGNAL(selfHandleChanged(uint)),
                 SLOT(onSelfHandleChanged(uint)));
-        // and get the serial
-        QDBusInterface ussdIface(mConnectionInfo.busName, mConnectionInfo.objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
-        mSerial = ussdIface.property("Serial").toString();
 
         watchSelfContactPresence();
     }
 
-    Q_EMIT networkNameChanged();
     Q_EMIT connectedChanged();
-    Q_EMIT simLockedChanged();
     Q_EMIT selfContactIdChanged();
-    Q_EMIT serialChanged();
-    Q_EMIT activeChanged();
-}
-
-void AccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)
-{
-    mEmergencyNumbers = numbers;
-    Q_EMIT emergencyNumbersChanged();
-}
-
-void AccountEntry::onVoicemailNumberChanged(const QString &number)
-{
-    mVoicemailNumber = number;
-    Q_EMIT voicemailNumberChanged();
-}
-
-void AccountEntry::onVoicemailCountChanged(uint count)
-{
-    mVoicemailCount = count;
-    Q_EMIT voicemailCountChanged();
-}
-
-void AccountEntry::onVoicemailIndicatorChanged(bool visible)
-{
-    mVoicemailIndicator = visible;
-    Q_EMIT voicemailIndicatorChanged();
 }

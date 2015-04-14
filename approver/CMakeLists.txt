@@ -25,6 +25,8 @@ target_link_libraries(telephony-service-approver
     telephonyservice
     )
 
+enable_coverage(telephony-service-approver)
+
 configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service.in org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service)
 install(TARGETS telephony-service-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service DESTINATION share/dbus-1/services)

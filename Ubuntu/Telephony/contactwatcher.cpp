@@ -1,7 +1,8 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2015 Canonical, Ltd.
  *
  * Authors:
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of telephony-service.
@@ -22,12 +23,17 @@
 #include "contactwatcher.h"
 #include "contactutils.h"
 #include "phoneutils.h"
+#include "accountentry.h"
+#include "telepathyhelper.h"
 #include <QContactManager>
 #include <QContactFetchByIdRequest>
 #include <QContactFetchRequest>
 #include <QContactAvatar>
-#include <QContactDetailFilter>
+#include <QContactExtendedDetail>
 #include <QContactPhoneNumber>
+#include <QContactDetailFilter>
+#include <QContactIntersectionFilter>
+#include <QContactUnionFilter>
 
 namespace C {
 #include <libintl.h>
@@ -36,6 +42,8 @@ namespace C {
 ContactWatcher::ContactWatcher(QObject *parent) :
     QObject(parent), mRequest(0), mInteractive(false), mCompleted(false)
 {
+    // addressable VCard fields defaults to "tel" only
+    mAddressableFields << "tel";
     connect(ContactUtils::sharedManager(),
             SIGNAL(contactsAdded(QList<QContactId>)),
             SLOT(onContactsAdded(QList<QContactId>)));
@@ -55,10 +63,10 @@ ContactWatcher::~ContactWatcher()
     }
 }
 
-void ContactWatcher::searchByPhoneNumber(const QString &phoneNumber)
+void ContactWatcher::startSearching()
 {
-    if (!mCompleted) {
-        // componenty is not ready yet
+    if (!mCompleted || mIdentifier.isEmpty()) {
+        // componenty is not ready yet or no identifier given
         return;
     }
 
@@ -68,13 +76,58 @@ void ContactWatcher::searchByPhoneNumber(const QString &phoneNumber)
         mRequest->deleteLater();
     }
 
+    // FIXME: search for all the fields
     mRequest = new QContactFetchRequest(this);
-    mRequest->setFilter(QContactPhoneNumber::match(phoneNumber));
+
+    QContactUnionFilter topLevelFilter;
+    Q_FOREACH(const QString &field, mAddressableFields) {
+        if (field == "tel") {
+            topLevelFilter.append(QContactPhoneNumber::match(mIdentifier));
+        } else {
+            // FIXME: handle more fields
+            // rely on a generic field filter
+            QContactDetailFilter nameFilter = QContactDetailFilter();
+            nameFilter.setDetailType(QContactExtendedDetail::Type, QContactExtendedDetail::FieldName);
+            nameFilter.setMatchFlags(QContactFilter::MatchExactly);
+            nameFilter.setValue(field);
+
+            QContactDetailFilter valueFilter = QContactDetailFilter();
+            valueFilter.setDetailType(QContactExtendedDetail::Type, QContactExtendedDetail::FieldData);
+            valueFilter.setMatchFlags(QContactFilter::MatchExactly);
+            valueFilter.setValue(mIdentifier);
+
+            QContactIntersectionFilter intersectionFilter;
+            intersectionFilter.append(nameFilter);
+            intersectionFilter.append(valueFilter);
+
+            topLevelFilter.append(intersectionFilter);
+        }
+    }
+
+    mRequest->setFilter(topLevelFilter);
     connect(mRequest, SIGNAL(stateChanged(QContactAbstractRequest::State)),
                       SLOT(onRequestStateChanged(QContactAbstractRequest::State)));
-    connect(mRequest, SIGNAL(resultsAvailable()), SLOT(resultsAvailable()));
+    connect(mRequest, SIGNAL(resultsAvailable()), SLOT(onResultsAvailable()));
     mRequest->setManager(ContactUtils::sharedManager());
     mRequest->start();
+}
+
+QVariantList ContactWatcher::wrapIntList(const QList<int> &list)
+{
+    QVariantList resultList;
+    Q_FOREACH(int value, list) {
+        resultList << value;
+    }
+    return resultList;
+}
+
+QList<int> ContactWatcher::unwrapIntList(const QVariantList &list)
+{
+    QList<int> resultList;
+    Q_FOREACH(const QVariant &value, list) {
+        resultList << value.toInt();
+    }
+    return resultList;
 }
 
 QString ContactWatcher::contactId() const
@@ -97,40 +150,30 @@ QString ContactWatcher::alias() const
     return mAlias;
 }
 
-QString ContactWatcher::phoneNumber() const
+QString ContactWatcher::identifier() const
 {
-    return mPhoneNumber;
+    return mIdentifier;
 }
 
-QList<int> ContactWatcher::phoneNumberSubTypes() const
+void ContactWatcher::setIdentifier(const QString &identifier)
 {
-    return mPhoneNumberSubTypes;
-}
-
-QList<int> ContactWatcher::phoneNumberContexts() const
-{
-    return mPhoneNumberContexts;
-}
-
-void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
-{
-    if (mPhoneNumber == phoneNumber) {
+    if (mIdentifier == identifier) {
         return;
     }
 
-    const bool isPrivate = phoneNumber.startsWith("x-ofono-private");
-    const bool isUnknown = phoneNumber.startsWith("x-ofono-unknown");
-    const bool isInteractive = !phoneNumber.isEmpty() && !isPrivate && !isUnknown;
+    // FIXME: ofono stuff, maybe move somewhere else?
+    const bool isPrivate = identifier.startsWith("x-ofono-private");
+    const bool isUnknown = identifier.startsWith("x-ofono-unknown");
+    const bool isInteractive = !identifier.isEmpty() && !isPrivate && !isUnknown;
 
-    mPhoneNumber = phoneNumber;
-    Q_EMIT phoneNumberChanged();
+    mIdentifier = identifier;
+    Q_EMIT identifierChanged();
 
-    if (mPhoneNumber.isEmpty() || isPrivate || isUnknown) {
+    if (mIdentifier.isEmpty() || isPrivate || isUnknown) {
         mAlias.clear();
         mContactId = QContactId();
         mAvatar.clear();
-        mPhoneNumberSubTypes.clear();
-        mPhoneNumberContexts.clear();
+        mDetailProperties.clear();
 
         if (isPrivate) {
             mAlias = C::gettext("Private Number");
@@ -141,17 +184,21 @@ void ContactWatcher::setPhoneNumber(const QString &phoneNumber)
         Q_EMIT contactIdChanged();
         Q_EMIT avatarChanged();
         Q_EMIT aliasChanged();
-        Q_EMIT phoneNumberSubTypesChanged();
-        Q_EMIT phoneNumberContextsChanged();
+        Q_EMIT detailPropertiesChanged();
         Q_EMIT isUnknownChanged();
     } else {
-        searchByPhoneNumber(mPhoneNumber);
+        startSearching();
     }
 
     if (isInteractive != mInteractive) {
         mInteractive = isInteractive;
         Q_EMIT interactiveChanged();
     }
+}
+
+QVariantMap ContactWatcher::detailProperties() const
+{
+    return mDetailProperties;
 }
 
 bool ContactWatcher::isUnknown() const
@@ -164,6 +211,23 @@ bool ContactWatcher::interactive() const
     return mInteractive;
 }
 
+QStringList ContactWatcher::addressableFields() const
+{
+    return mAddressableFields;
+}
+
+void ContactWatcher::setAddressableFields(const QStringList &fields)
+{
+    mAddressableFields = fields;
+    // if the addressable fields is empty, fall back to matching phone numbers
+    if (mAddressableFields.isEmpty()) {
+            mAddressableFields << "tel";
+    }
+    Q_EMIT addressableFieldsChanged();
+
+    startSearching();
+}
+
 void ContactWatcher::classBegin()
 {
 }
@@ -171,30 +235,25 @@ void ContactWatcher::classBegin()
 void ContactWatcher::componentComplete()
 {
     mCompleted = true;
-    // query for phone if the phone number was initialized
-    if (!mPhoneNumber.isEmpty()) {
-        searchByPhoneNumber(mPhoneNumber);
-    }
+    startSearching();
 }
 
 void ContactWatcher::onContactsAdded(QList<QContactId> ids)
 {
     // ignore this signal if we have a contact already
     // or if we have no phone number set
-    if (!mContactId.isNull() || mPhoneNumber.isEmpty()) {
+    if (!mContactId.isNull() || mIdentifier.isEmpty()) {
         return;
     }
 
-    searchByPhoneNumber(mPhoneNumber);
+    startSearching();
 }
 
 void ContactWatcher::onContactsChanged(QList<QContactId> ids)
 {
     // check for changes even if we have this contact already,
     // as the number might have changed, thus invalidating the current contact
-    if (!mPhoneNumber.isEmpty() || ids.contains(mContactId)) {
-        searchByPhoneNumber(mPhoneNumber);
-    }
+    startSearching();
 }
 
 void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
@@ -204,22 +263,18 @@ void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
         mAlias.clear();
         mContactId = QContactId();
         mAvatar.clear();
-        mPhoneNumberSubTypes.clear();
-        mPhoneNumberContexts.clear();
+        mDetailProperties.clear();
         Q_EMIT contactIdChanged();
         Q_EMIT avatarChanged();
         Q_EMIT aliasChanged();
-        Q_EMIT phoneNumberSubTypesChanged();
-        Q_EMIT phoneNumberContextsChanged();
+        Q_EMIT detailPropertiesChanged();
         Q_EMIT isUnknownChanged();
 
-        if (!mPhoneNumber.isEmpty()) {
-            searchByPhoneNumber(mPhoneNumber);
-        }
+        startSearching();
     }
 }
 
-void ContactWatcher::resultsAvailable()
+void ContactWatcher::onResultsAvailable()
 {
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest*>(sender());
     if (request && request->contacts().size() > 0) {
@@ -243,18 +298,19 @@ void ContactWatcher::resultsAvailable()
             Q_EMIT isUnknownChanged();
         }
 
-        Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
-            if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mPhoneNumber)) {
-                QList<int> newSubTypes = phoneNumber.subTypes();
-                if (newSubTypes != mPhoneNumberSubTypes) {
-                    mPhoneNumberSubTypes = phoneNumber.subTypes();
-                    Q_EMIT phoneNumberSubTypesChanged();
+        Q_FOREACH(const QString &field, mAddressableFields) {
+            if (field == "tel") {
+                Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
+                    if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mIdentifier)) {
+                        mDetailProperties["type"] = (int)QContactDetail::TypePhoneNumber;
+                        mDetailProperties["phoneNumberSubTypes"] = wrapIntList(phoneNumber.subTypes());
+                        mDetailProperties["phoneNumberContexts"] = wrapIntList(phoneNumber.contexts());
+                        Q_EMIT detailPropertiesChanged();
+                        break;
+                    }
                 }
-                QList<int> newContexts = phoneNumber.contexts();
-                if (newContexts != mPhoneNumberContexts) {
-                    mPhoneNumberContexts =  newContexts;
-                    Q_EMIT phoneNumberContextsChanged();
-                }
+            } else {
+                // FIXME: add proper support for more fields
             }
         }
     }
@@ -272,14 +328,12 @@ void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
             mAlias.clear();
             mContactId = QContactId();
             mAvatar.clear();
-            mPhoneNumberSubTypes.clear();
-            mPhoneNumberContexts.clear();
+            mDetailProperties.clear();
 
             Q_EMIT contactIdChanged();
             Q_EMIT avatarChanged();
             Q_EMIT aliasChanged();
-            Q_EMIT phoneNumberSubTypesChanged();
-            Q_EMIT phoneNumberContextsChanged();
+            Q_EMIT detailPropertiesChanged();
             Q_EMIT isUnknownChanged();
         }
     }

@@ -1,5 +1,6 @@
 set(library_SRCS
     accountentry.cpp
+    accountentryfactory.cpp
     audiooutput.cpp
     applicationutils.cpp
     callentry.cpp
@@ -9,6 +10,7 @@ set(library_SRCS
     chatmanager.cpp
     contactutils.cpp
     greetercontacts.cpp
+    ofonoaccountentry.cpp
     phoneutils.cpp
     ringtone.cpp
     telepathyhelper.cpp
@@ -36,4 +38,4 @@ target_link_libraries(telephonyservice
 
 qt5_use_modules(telephonyservice Contacts Core DBus Feedback Multimedia Qml Quick)
 
-add_subdirectory(tests)
+enable_coverage(telephonyservice)
