@@ -2,7 +2,7 @@
 
 get_telepathy_ofono_accounts()
 {
-    mc-tool list | grep "^ofono/ofono/"
+    mc-tool list | grep "^ofono/ofono/" | sort
 }
 
 check_mission_control_running() {
