@@ -1,3 +1,13 @@
+telephony-service (0.1+15.04.20150414-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ Gustavo Pichorim Boiko ]
+  * Expose the account type to QML. (LP: #1439718)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Tue, 14 Apr 2015 17:37:11 +0000
+
 telephony-service (0.1+15.04.20150330.1-0ubuntu1) vivid; urgency=medium
 
   [ Gustavo Pichorim Boiko ]
