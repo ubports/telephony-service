@@ -102,13 +102,13 @@ void OfonoAccountEntryTest::testConnected()
     // now set the account offline and see if the active flag changes correctly
     mMockController->setOnline(false);
     QTRY_VERIFY(!mAccount->connected());
-    QCOMPARE(connectedChangedSpy.count(), 1);
+    QTRY_COMPARE(connectedChangedSpy.count(), 1);
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
     mMockController->setOnline(true);
     QTRY_VERIFY(mAccount->connected());
-    QCOMPARE(connectedChangedSpy.count(), 1);
+    QTRY_COMPARE(connectedChangedSpy.count(), 1);
 }
 
 void OfonoAccountEntryTest::testCompareIds_data()
