@@ -75,7 +75,7 @@ void OfonoAccountEntryTest::init()
     mMockController = new MockController("ofono", this);
 
     // just in case, wait some time
-    QTest::qWait(500);
+    QTest::qWait(1000);
 }
 
 void OfonoAccountEntryTest::cleanup()

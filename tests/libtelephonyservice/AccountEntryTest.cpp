@@ -75,7 +75,7 @@ void AccountEntryTest::init()
     mMockController = new MockController("mock", this);
 
     // just in case, wait some time
-    QTest::qWait(500);
+    QTest::qWait(1000);
 }
 
 void AccountEntryTest::cleanup()
