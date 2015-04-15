@@ -188,6 +188,9 @@ void AccountEntryTest::testConnected()
     QTRY_VERIFY(!mAccount->connected());
     QTRY_COMPARE(connectedChangedSpy.count(), 1);
 
+    // it shouldn't be necessary, but in any case
+    QTest::qWait(500);
+
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
     mMockController->setOnline(true);
