@@ -165,13 +165,13 @@ void OfonoAccountEntryTest::testVoicemailIndicator()
     // set to true
     mMockController->setVoicemailIndicator(true);
     QTRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
-    QVERIFY(mAccount->voicemailIndicator());
+    QTRY_VERIFY(mAccount->voicemailIndicator());
 
     // and set back to false
     voiceMailIndicatorSpy.clear();
     mMockController->setVoicemailIndicator(false);
     QTRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
-    QVERIFY(!mAccount->voicemailIndicator());
+    QTRY_VERIFY(!mAccount->voicemailIndicator());
 }
 
 void OfonoAccountEntryTest::testVoicemailNumber()
@@ -260,7 +260,7 @@ void OfonoAccountEntryTest::testNetworkName()
     mTpAccount->setRequestedPresence(presence);
 
     QTRY_COMPARE(mAccount->networkName(), statusMessage);
-    QCOMPARE(networkNameChangedSpy.count(), 1);
+    QTRY_COMPARE(networkNameChangedSpy.count(), 1);
 }
 
 void OfonoAccountEntryTest::testAddressableVCardFields()

@@ -151,7 +151,7 @@ void AccountEntryTest::testStatus()
     mTpAccount->setRequestedPresence(presence);
 
     QTRY_COMPARE(mAccount->status(), QString("away"));
-    QCOMPARE(statusChangedSpy.count(), 1);
+    QTRY_COMPARE(statusChangedSpy.count(), 1);
 
     // check that for a null account the status is null
     QVERIFY(mNullAccount->status().isNull());
@@ -170,7 +170,7 @@ void AccountEntryTest::testStatusMessage()
     mTpAccount->setRequestedPresence(presence);
 
     QTRY_COMPARE(mAccount->statusMessage(), statusMessage);
-    QCOMPARE(statusMessageChangedSpy.count(), 1);
+    QTRY_COMPARE(statusMessageChangedSpy.count(), 1);
 
     // check that for a null account the displayName is null
     QVERIFY(mNullAccount->statusMessage().isNull());
