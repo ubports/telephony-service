@@ -113,6 +113,7 @@ function(generate_telepathy_test TESTNAME)
               --task dconf -p write -p /org/gnome/empathy/use-conn -p false --task-name dconf-write --wait-for ca.desrt.dconf --ignore-return
               --task /usr/lib/telepathy/mission-control-5 --task-name mission-control --wait-for ca.desrt.dconf --ignore-return
               --task ${CMAKE_BINARY_DIR}/tests/common/mock/telepathy-mock --task-name telepathy-mock --wait-for org.freedesktop.Telepathy.MissionControl5 --ignore-return
+              --task dbus-monitor --task-name dbus-monitor --ignore-return
               # FIXME: maybe it would be better to decide whether to run the handler in a per-test basis?
               --task ${CMAKE_BINARY_DIR}/handler/telephony-service-handler --task-name telephony-service-handler --wait-for org.freedesktop.Telepathy.ConnectionManager.mock --ignore-return
               ${ARG_TASKS})
