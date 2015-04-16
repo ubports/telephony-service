@@ -1,3 +1,13 @@
+telephony-service (0.1+15.04.20150416.2-0ubuntu1) vivid; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Another attempt to fix the failures that happen only on jenkins.
+
+  [ Tiago Salem Herrmann ]
+  * Add sanity check to ofono-setup. (LP: #1439566)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 16 Apr 2015 16:47:13 +0000
+
 telephony-service (0.1+15.04.20150414-0ubuntu1) vivid; urgency=medium
 
   [ CI Train Bot ]
