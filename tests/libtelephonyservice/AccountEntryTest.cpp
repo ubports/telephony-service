@@ -166,8 +166,7 @@ void AccountEntryTest::testStatusMessage()
 
     // and now set a new value
     QString statusMessage("I am online");
-    Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", statusMessage);
-    mTpAccount->setRequestedPresence(presence);
+    mMockController->setPresence("available", statusMessage);
 
     QTRY_COMPARE(mAccount->statusMessage(), statusMessage);
     QTRY_COMPARE(statusMessageChangedSpy.count(), 1);

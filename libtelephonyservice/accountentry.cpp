@@ -149,6 +149,14 @@ void AccountEntry::initialize()
             SIGNAL(connectedChanged()),
             SIGNAL(activeChanged()));
 
+    // emit the statusChanged and statusMessageChanged signals together with the connectedChanged to be consistent
+    connect(this,
+            SIGNAL(connectedChanged()),
+            SIGNAL(statusChanged()));
+    connect(this,
+            SIGNAL(connectedChanged()),
+            SIGNAL(statusMessageChanged()));
+
     // and make sure it is enabled and connected
     if (!mAccount->isEnabled()) {
         QTimer::singleShot(0, this, SLOT(ensureEnabled()));
@@ -188,12 +196,6 @@ void AccountEntry::watchSelfContactPresence()
     connect(mAccount->connection()->selfContact().data(),
             SIGNAL(presenceChanged(Tp::Presence)),
             SIGNAL(connectedChanged()));
-    connect(mAccount->connection()->selfContact().data(),
-            SIGNAL(presenceChanged(Tp::Presence)),
-            SIGNAL(statusMessageChanged()));
-    connect(mAccount->connection()->selfContact().data(),
-            SIGNAL(presenceChanged(Tp::Presence)),
-            SIGNAL(statusChanged()));
 }
 
 void AccountEntry::onSelfHandleChanged(uint handle)
@@ -201,8 +203,6 @@ void AccountEntry::onSelfHandleChanged(uint handle)
     Q_UNUSED(handle)
     watchSelfContactPresence();
 
-    Q_EMIT statusChanged();
-    Q_EMIT statusMessageChanged();
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
 }
