@@ -217,7 +217,7 @@ void TelepathyHelperTest::testActiveAccounts()
     // now set one of the accounts as offline and make sure it is captured
     mGenericController->setOnline(false);
     QTRY_COMPARE_WITH_TIMEOUT(activeAccountsSpy.count(), 1, DEFAULT_TIMEOUT);
-    QCOMPARE(TelepathyHelper::instance()->activeAccounts().count(), 1);
+    QTRY_COMPARE(TelepathyHelper::instance()->activeAccounts().count(), 1);
     QCOMPARE(TelepathyHelper::instance()->activeAccounts()[0]->accountId(), mPhoneTpAccount->uniqueIdentifier());
 
     // set the other account offline to make sure
@@ -231,7 +231,7 @@ void TelepathyHelperTest::testActiveAccounts()
     mGenericController->setOnline(true);
     mPhoneController->setOnline(true);
     QTRY_COMPARE_WITH_TIMEOUT(activeAccountsSpy.count(), 2, DEFAULT_TIMEOUT);
-    QCOMPARE(TelepathyHelper::instance()->activeAccounts().count(), 2);
+    QTRY_COMPARE(TelepathyHelper::instance()->activeAccounts().count(), 2);
 }
 
 void TelepathyHelperTest::testAccountForId()
