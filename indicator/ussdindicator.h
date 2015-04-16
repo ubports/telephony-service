@@ -27,13 +27,14 @@
 #include "indicator/NotificationsInterface.h"
 #include "ussdmanager.h"
 #include "ussdmenu.h"
+#include "ofonoaccountentry.h"
 
 class USSDIndicator : public QObject
 {
     Q_OBJECT
 public:
     explicit USSDIndicator(QObject *parent = 0);
-    void showUSSDNotification(const QString &message, bool replyRequired);
+    void showUSSDNotification(const QString &message, bool replyRequired, USSDManager *ussdManager);
 
 public Q_SLOTS:
     void onNotificationReceived(const QString &message);
@@ -43,12 +44,17 @@ public Q_SLOTS:
     void onStateChanged(const QString &state);
     void actionInvoked(uint id, const QString &actionKey);
     void notificationClosed(uint id, uint reason);
+private Q_SLOTS:
+    void setupAccounts();
+
 private:
     unsigned int m_notificationId;
     USSDMenu m_menuRequest;
     USSDMenu m_menuNotification;
     QString mPendingMessage;
     org::freedesktop::Notifications m_notifications;
+    QMap<int, USSDManager*> mUSSDRequests;
+    QList<OfonoAccountEntry*> mAccounts;
 };
 
 #endif // USSDINDICATOR_H
