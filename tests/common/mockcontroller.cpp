@@ -23,10 +23,9 @@
 
 static const QString mockService("com.canonical.MockConnection");
 static const QString mockObject("/com/canonical/MockConnection/%1");
-static const QString mockInterface("com.canonical.MockConnection");
 
 MockController::MockController(const QString &protocol, QObject *parent) :
-    ComCanonicalMockConnectionInterface(mockService, mockObject.arg(protocol), QDBusConnection::sessionBus(), this),
+    ComCanonicalMockConnectionInterface(mockService, mockObject.arg(protocol), QDBusConnection::sessionBus(), parent),
     mProtocol(protocol), mMockObject(mockObject.arg(protocol))
 {
 }
