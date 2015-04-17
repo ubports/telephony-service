@@ -37,6 +37,7 @@ private Q_SLOTS:
     void cleanup();
     void testConnected();
     void testAccounts();
+    void testPhoneAccounts();
     void testAccountSorting();
     void testAccountIds();
     void testActiveAccounts();
@@ -142,6 +143,37 @@ void TelepathyHelperTest::testAccounts()
     QCOMPARE(TelepathyHelper::instance()->accounts().count(), 2);
     QCOMPARE(TelepathyHelper::instance()->accounts()[0]->accountId(), first->accountId());
     QCOMPARE(TelepathyHelper::instance()->accounts()[1]->accountId(), second->accountId());
+}
+
+void TelepathyHelperTest::testPhoneAccounts()
+{
+    QCOMPARE(TelepathyHelper::instance()->phoneAccounts().count(), 1);
+    AccountEntry *phoneAccount = TelepathyHelper::instance()->phoneAccounts()[0];
+    QVERIFY(phoneAccount->accountId() == mPhoneTpAccount->uniqueIdentifier());
+
+    // now check that new phone accounts are captured
+    QSignalSpy phoneAccountsChangedSpy(TelepathyHelper::instance(), SIGNAL(phoneAccountsChanged()));
+    Tp::AccountPtr newAccount = addAccount("mock", "ofono", "extra");
+    QVERIFY(!newAccount.isNull());
+
+    QTRY_COMPARE(phoneAccountsChangedSpy.count(), 1);
+    QCOMPARE(TelepathyHelper::instance()->phoneAccounts().count(), 2);
+
+    bool accountFound = false;
+    Q_FOREACH(AccountEntry *entry, TelepathyHelper::instance()->phoneAccounts()) {
+        if (entry->accountId() == newAccount->uniqueIdentifier()) {
+            accountFound = true;
+            break;
+        }
+    }
+    QVERIFY(accountFound);
+
+    // now remove the extra phone account and make sure it is properly removed
+    phoneAccountsChangedSpy.clear();
+    QVERIFY(removeAccount(newAccount));
+    QTRY_COMPARE(phoneAccountsChangedSpy.count(), 1);
+    QCOMPARE(TelepathyHelper::instance()->phoneAccounts().count(), 1);
+    QCOMPARE(TelepathyHelper::instance()->phoneAccounts()[0]->accountId(), phoneAccount->accountId());
 }
 
 void TelepathyHelperTest::testAccountSorting()
