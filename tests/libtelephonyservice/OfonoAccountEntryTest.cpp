@@ -100,13 +100,13 @@ void OfonoAccountEntryTest::testConnected()
     QSignalSpy connectedChangedSpy(mAccount, SIGNAL(connectedChanged()));
 
     // now set the account offline and see if the active flag changes correctly
-    mMockController->setOnline(false);
+    mMockController->SetOnline(false);
     QTRY_VERIFY(!mAccount->connected());
     QCOMPARE(connectedChangedSpy.count(), 1);
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
-    mMockController->setOnline(true);
+    mMockController->SetOnline(true);
     QTRY_VERIFY(mAccount->connected());
     QCOMPARE(connectedChangedSpy.count(), 1);
 }
@@ -141,7 +141,7 @@ void OfonoAccountEntryTest::testEmergencyNumbers()
     QStringList numbers;
     numbers << "111" << "190" << "911";
     qSort(numbers);
-    mMockController->setEmergencyNumbers(numbers);
+    mMockController->SetEmergencyNumbers(numbers);
     QTRY_COMPARE(emergencyNumbersChangedSpy.count(), 1);
 
     QStringList emergencyNumbers = mAccount->emergencyNumbers();
@@ -163,13 +163,13 @@ void OfonoAccountEntryTest::testVoicemailIndicator()
     QSignalSpy voiceMailIndicatorSpy(mAccount, SIGNAL(voicemailIndicatorChanged()));
 
     // set to true
-    mMockController->setVoicemailIndicator(true);
+    mMockController->SetVoicemailIndicator(true);
     QTRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
     QVERIFY(mAccount->voicemailIndicator());
 
     // and set back to false
     voiceMailIndicatorSpy.clear();
-    mMockController->setVoicemailIndicator(false);
+    mMockController->SetVoicemailIndicator(false);
     QTRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
     QVERIFY(!mAccount->voicemailIndicator());
 }
@@ -183,7 +183,7 @@ void OfonoAccountEntryTest::testVoicemailNumber()
 
     // try changing the number
     QString number("12345");
-    mMockController->setVoicemailNumber(number);
+    mMockController->SetVoicemailNumber(number);
     QTRY_COMPARE(voicemailNumberSpy.count(), 1);
     QCOMPARE(mAccount->voicemailNumber(), number);
 }
@@ -197,13 +197,13 @@ void OfonoAccountEntryTest::testVoicemailCount()
 
     // set it to a bigger value
     int count = 10;
-    mMockController->setVoicemailCount(count);
+    mMockController->SetVoicemailCount(count);
     QTRY_COMPARE(voicemailCountSpy.count(), 1);
     QCOMPARE((int)mAccount->voicemailCount(), count);
 
     // and back to zero
     voicemailCountSpy.clear();
-    mMockController->setVoicemailCount(0);
+    mMockController->SetVoicemailCount(0);
     QTRY_COMPARE(voicemailCountSpy.count(), 1);
     QCOMPARE((int)mAccount->voicemailCount(), 0);
 }
@@ -216,7 +216,7 @@ void OfonoAccountEntryTest::testSimLocked()
     QVERIFY(!mAccount->simLocked());
 
     // now try to set the status to simlocked
-    mMockController->setPresence("simlocked", "simlocked");
+    mMockController->SetPresence("simlocked", "simlocked");
     QTRY_COMPARE(simLockedSpy.count(), 1);
     QVERIFY(mAccount->simLocked());
 }
@@ -245,7 +245,7 @@ void OfonoAccountEntryTest::testEmergencyCallsAvailable()
     QFETCH(QString, status);
     QFETCH(bool, available);
 
-    mMockController->setPresence(status, "");
+    mMockController->SetPresence(status, "");
     QTRY_COMPARE(mAccount->status(), status);
     QCOMPARE(mAccount->emergencyCallsAvailable(), available);
 }

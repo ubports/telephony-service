@@ -87,25 +87,25 @@ void TelepathyHelperTest::testConnected()
     QVERIFY(TelepathyHelper::instance()->connected());
 
     // set one of the accounts offline and check that the connected status stays true
-    mGenericController->setOnline(false);
+    mGenericController->SetOnline(false);
     QTest::qWait(1000);
     QCOMPARE(connectedChangedSpy.count(), 0);
     QVERIFY(TelepathyHelper::instance()->connected());
 
     // and set the other account as offline too. This time connected needs to change to false
-    mPhoneController->setOnline(false);
+    mPhoneController->SetOnline(false);
     QTRY_COMPARE(connectedChangedSpy.count(), 1);
     QVERIFY(!TelepathyHelper::instance()->connected());
 
     // now set one of the accounts back online
     connectedChangedSpy.clear();
-    mPhoneController->setOnline(true);
+    mPhoneController->SetOnline(true);
     QTRY_COMPARE(connectedChangedSpy.count(), 1);
     QVERIFY(TelepathyHelper::instance()->connected());
 
     // and the other one just in case
     connectedChangedSpy.clear();
-    mGenericController->setOnline(true);
+    mGenericController->SetOnline(true);
     QTest::qWait(1000);
     QCOMPARE(connectedChangedSpy.count(), 0);
     QVERIFY(TelepathyHelper::instance()->connected());
@@ -212,21 +212,21 @@ void TelepathyHelperTest::testActiveAccounts()
     QCOMPARE(TelepathyHelper::instance()->activeAccounts().count(), 2);
 
     // now set one of the accounts as offline and make sure it is captured
-    mGenericController->setOnline(false);
+    mGenericController->SetOnline(false);
     QTRY_COMPARE_WITH_TIMEOUT(activeAccountsSpy.count(), 1, DEFAULT_TIMEOUT);
     QCOMPARE(TelepathyHelper::instance()->activeAccounts().count(), 1);
     QCOMPARE(TelepathyHelper::instance()->activeAccounts()[0]->accountId(), mPhoneTpAccount->uniqueIdentifier());
 
     // set the other account offline to make sure
     activeAccountsSpy.clear();
-    mPhoneController->setOnline(false);
+    mPhoneController->SetOnline(false);
     QTRY_COMPARE_WITH_TIMEOUT(activeAccountsSpy.count(), 1, DEFAULT_TIMEOUT);
     QVERIFY(TelepathyHelper::instance()->activeAccounts().isEmpty());
 
     // and set both accounts online again
     activeAccountsSpy.clear();
-    mGenericController->setOnline(true);
-    mPhoneController->setOnline(true);
+    mGenericController->SetOnline(true);
+    mPhoneController->SetOnline(true);
     QTRY_COMPARE_WITH_TIMEOUT(activeAccountsSpy.count(), 2, DEFAULT_TIMEOUT);
     QCOMPARE(TelepathyHelper::instance()->activeAccounts().count(), 2);
 }
@@ -259,25 +259,25 @@ void TelepathyHelperTest::testEmergencyCallsAvailable()
     QVERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
 
     // set the generic account as "flightmode" and make sure it doesn't affect the emergencyCallsAvailable
-    mGenericController->setPresence("flightmode", "");
+    mGenericController->SetPresence("flightmode", "");
     QTest::qWait(500);
     QCOMPARE(emergencyCallsSpy.count(), 0);
     QVERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
 
     // now set the phone account as "flightmode", and see if the emergencyCallsAvailable value
-    mPhoneController->setPresence("flightmode", "");
+    mPhoneController->SetPresence("flightmode", "");
     QTRY_COMPARE(emergencyCallsSpy.count(), 1);
     QVERIFY(!TelepathyHelper::instance()->emergencyCallsAvailable());
 
     // set the generic account online and check if it affects the value
     emergencyCallsSpy.clear();
-    mGenericController->setOnline(true);
+    mGenericController->SetOnline(true);
     QTest::qWait(500);
     QCOMPARE(emergencyCallsSpy.count(), 0);
     QVERIFY(!TelepathyHelper::instance()->emergencyCallsAvailable());
 
     // and finally set the phone account back online
-    mPhoneController->setOnline(true);
+    mPhoneController->SetOnline(true);
     QTRY_COMPARE(emergencyCallsSpy.count(), 1);
     QVERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
 }

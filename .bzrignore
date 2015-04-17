@@ -46,6 +46,7 @@ po/*.gmo
 
 tests/*/*Test
 tests/common/dbus-test-wrapper.sh
+tests/common/MockConnectionInterface.*
 tests/common/mock/mockconnectionadaptor.*
 tests/common/mock/telepathy-mock
 tests/Ubuntu.Telephony/ContactWatcherTest
