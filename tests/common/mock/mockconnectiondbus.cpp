@@ -53,6 +53,15 @@ MockConnectionDBus::MockConnectionDBus(MockConnection *parent) :
             SIGNAL(channelSplitted(QString)),
             SIGNAL(ChannelSplitted(QString)));
     connect(mConnection,
+            SIGNAL(ussdInitiateCalled(QString)),
+            SIGNAL(USSDInitiateCalled(QString)));
+    connect(mConnection,
+            SIGNAL(ussdRespondCalled(QString)),
+            SIGNAL(USSDRespondCalled(QString)));
+    connect(mConnection,
+            SIGNAL(ussdCancelCalled()),
+            SIGNAL(USSDCancelCalled()));
+    connect(mConnection,
             SIGNAL(disconnected()),
             SIGNAL(Disconnected()));
     connect(mConnection,
@@ -136,4 +145,69 @@ void MockConnectionDBus::SetEmergencyNumbers(const QStringList &numbers)
 QString MockConnectionDBus::Serial()
 {
     return mConnection->serial();
+}
+
+void MockConnectionDBus::TriggerUSSDNotificationReceived(const QString &message)
+{
+    mConnection->supplementaryServicesIface->NotificationReceived(message);
+}
+
+void MockConnectionDBus::TriggerUSSDRequestReceived(const QString &message)
+{
+    mConnection->supplementaryServicesIface->RequestReceived(message);
+}
+
+void MockConnectionDBus::TriggerUSSDInitiateUSSDComplete(const QString &ussdResp)
+{
+    mConnection->supplementaryServicesIface->InitiateUSSDComplete(ussdResp);
+}
+
+void MockConnectionDBus::TriggerUSSDRespondComplete(bool success, const QString &ussdResp)
+{
+    mConnection->supplementaryServicesIface->RespondComplete(success, ussdResp);
+}
+
+void MockConnectionDBus::TriggerUSSDBarringComplete(const QString &ssOp, const QString &cbService, const QVariantMap &cbMap)
+{
+    mConnection->supplementaryServicesIface->BarringComplete(ssOp, cbService, cbMap);
+}
+
+void MockConnectionDBus::TriggerUSSDForwardingComplete(const QString &ssOp, const QString &cfService, const QVariantMap &cfMap)
+{
+    mConnection->supplementaryServicesIface->ForwardingComplete(ssOp, cfService, cfMap);
+}
+
+void MockConnectionDBus::TriggerUSSDWaitingComplete(const QString &ssOp, const QVariantMap &cwMap)
+{
+    mConnection->supplementaryServicesIface->WaitingComplete(ssOp, cwMap);
+}
+
+void MockConnectionDBus::TriggerUSSDCallingLinePresentationComplete(const QString &ssOp, const QString &status)
+{
+    mConnection->supplementaryServicesIface->CallingLinePresentationComplete(ssOp, status);
+}
+
+void MockConnectionDBus::TriggerUSSDConnectedLinePresentationComplete(const QString &ssOp, const QString &status)
+{
+    mConnection->supplementaryServicesIface->ConnectedLinePresentationComplete(ssOp, status);
+}
+
+void MockConnectionDBus::TriggerUSSDCallingLineRestrictionComplete(const QString &ssOp, const QString &status)
+{
+    mConnection->supplementaryServicesIface->CallingLineRestrictionComplete(ssOp, status);
+}
+
+void MockConnectionDBus::TriggerUSSDConnectedLineRestrictionComplete(const QString &ssOp, const QString &status)
+{
+    mConnection->supplementaryServicesIface->ConnectedLineRestrictionComplete(ssOp, status);
+}
+
+void MockConnectionDBus::TriggerUSSDInitiateFailed()
+{
+    mConnection->supplementaryServicesIface->InitiateFailed();
+}
+
+void MockConnectionDBus::TriggerUSSDStateChanged(const QString &state)
+{
+    mConnection->supplementaryServicesIface->StateChanged(state);
 }
