@@ -1,5 +1,6 @@
 include_directories(${TP_QT5_INCLUDE_DIRS}
-                    ${CMAKE_SOURCE_DIR}/libtelephonyservice)
+                    ${CMAKE_SOURCE_DIR}/libtelephonyservice
+                    ${CMAKE_CURRENT_BINARY_DIR})
 
 configure_file(dbus-session.conf.in ${CMAKE_CURRENT_BINARY_DIR}/dbus-session.conf)
 
