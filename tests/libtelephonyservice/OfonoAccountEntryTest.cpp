@@ -256,7 +256,7 @@ void OfonoAccountEntryTest::testNetworkName()
 
     // set the value
     QString statusMessage("SomeNetwork");
-    mMockController->setPresence("available", statusMessage);
+    mMockController->SetPresence("available", statusMessage);
 
     QTRY_COMPARE(mAccount->networkName(), statusMessage);
     QTRY_COMPARE(networkNameChangedSpy.count(), 1);
