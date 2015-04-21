@@ -4,6 +4,7 @@ include_directories(
     ${LIBTELEPHONYSERVICE_DIR}
     ${TP_QT5_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/tests/common
+    ${CMAKE_BINARY_DIR}/tests/common
     )
 
 add_executable(GreeterContactsTestServerExe GreeterContactsTestServer.cpp)
