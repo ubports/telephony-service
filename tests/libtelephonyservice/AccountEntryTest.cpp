@@ -75,7 +75,7 @@ void AccountEntryTest::init()
     mMockController = new MockController("mock", this);
 
     // just in case, wait some time
-    QTest::qWait(500);
+    QTest::qWait(1000);
 }
 
 void AccountEntryTest::cleanup()
@@ -151,7 +151,7 @@ void AccountEntryTest::testStatus()
     mTpAccount->setRequestedPresence(presence);
 
     QTRY_COMPARE(mAccount->status(), QString("away"));
-    QCOMPARE(statusChangedSpy.count(), 1);
+    QTRY_COMPARE(statusChangedSpy.count(), 1);
 
     // check that for a null account the status is null
     QVERIFY(mNullAccount->status().isNull());
@@ -166,11 +166,10 @@ void AccountEntryTest::testStatusMessage()
 
     // and now set a new value
     QString statusMessage("I am online");
-    Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", statusMessage);
-    mTpAccount->setRequestedPresence(presence);
+    mMockController->setPresence("available", statusMessage);
 
     QTRY_COMPARE(mAccount->statusMessage(), statusMessage);
-    QCOMPARE(statusMessageChangedSpy.count(), 1);
+    QTRY_COMPARE(statusMessageChangedSpy.count(), 1);
 
     // check that for a null account the displayName is null
     QVERIFY(mNullAccount->statusMessage().isNull());
@@ -187,6 +186,9 @@ void AccountEntryTest::testConnected()
     mMockController->SetOnline(false);
     QTRY_VERIFY(!mAccount->connected());
     QTRY_COMPARE(connectedChangedSpy.count(), 1);
+
+    // it shouldn't be necessary, but in any case
+    QTest::qWait(500);
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
