@@ -108,7 +108,7 @@ void ToneGenerator::playWaitingTone()
         stopTone();
     }
 
-    if (startEventTone((uint)79)) {
+    if (startEventTone(WAITING_TONE)) {
         mWaitingPlaybackTimer->start(WAITING_PLAYBACK_DURATION);
     }
 }
@@ -121,6 +121,6 @@ void ToneGenerator::stopWaitingTone()
 
 void ToneGenerator::playCallEndedTone()
 {
-    startEventTone((uint)257);
+    startEventTone(CALL_ENDED_TONE);
     QTimer::singleShot(2000, this, SLOT(stopTone()));
 }
