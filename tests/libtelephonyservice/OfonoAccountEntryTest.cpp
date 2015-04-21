@@ -75,7 +75,7 @@ void OfonoAccountEntryTest::init()
     mMockController = new MockController("ofono", this);
 
     // just in case, wait some time
-    QTest::qWait(500);
+    QTest::qWait(1000);
 }
 
 void OfonoAccountEntryTest::cleanup()
@@ -102,13 +102,13 @@ void OfonoAccountEntryTest::testConnected()
     // now set the account offline and see if the active flag changes correctly
     mMockController->setOnline(false);
     QTRY_VERIFY(!mAccount->connected());
-    QCOMPARE(connectedChangedSpy.count(), 1);
+    QTRY_COMPARE(connectedChangedSpy.count(), 1);
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
     mMockController->setOnline(true);
     QTRY_VERIFY(mAccount->connected());
-    QCOMPARE(connectedChangedSpy.count(), 1);
+    QTRY_COMPARE(connectedChangedSpy.count(), 1);
 }
 
 void OfonoAccountEntryTest::testCompareIds_data()
@@ -165,13 +165,13 @@ void OfonoAccountEntryTest::testVoicemailIndicator()
     // set to true
     mMockController->setVoicemailIndicator(true);
     QTRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
-    QVERIFY(mAccount->voicemailIndicator());
+    QTRY_VERIFY(mAccount->voicemailIndicator());
 
     // and set back to false
     voiceMailIndicatorSpy.clear();
     mMockController->setVoicemailIndicator(false);
     QTRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
-    QVERIFY(!mAccount->voicemailIndicator());
+    QTRY_VERIFY(!mAccount->voicemailIndicator());
 }
 
 void OfonoAccountEntryTest::testVoicemailNumber()
@@ -256,11 +256,10 @@ void OfonoAccountEntryTest::testNetworkName()
 
     // set the value
     QString statusMessage("SomeNetwork");
-    Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", statusMessage);
-    mTpAccount->setRequestedPresence(presence);
+    mMockController->setPresence("available", statusMessage);
 
     QTRY_COMPARE(mAccount->networkName(), statusMessage);
-    QCOMPARE(networkNameChangedSpy.count(), 1);
+    QTRY_COMPARE(networkNameChangedSpy.count(), 1);
 }
 
 void OfonoAccountEntryTest::testAddressableVCardFields()
