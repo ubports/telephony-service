@@ -179,7 +179,7 @@ void OfonoAccountEntryTest::testVoicemailNumber()
     QSignalSpy voicemailNumberSpy(mAccount, SIGNAL(voicemailNumberChanged()));
 
     // check that the number is not empty at startup
-    QVERIFY(!mAccount->voicemailNumber().isEmpty());
+    QTRY_VERIFY(!mAccount->voicemailNumber().isEmpty());
 
     // try changing the number
     QString number("12345");
