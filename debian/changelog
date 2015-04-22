@@ -1,3 +1,21 @@
+telephony-service (0.1+15.04.20150421-0ubuntu1) vivid; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Add unit tests for the ToneGenerator class. added:
+    tests/libtelephonyservice/ToneGeneratorMock.cpp
+    tests/libtelephonyservice/ToneGeneratorTest.cpp
+
+  [ You-Sheng Yang ]
+  * Class ToneGenerator creates a oneshot timer to keep track of when to
+    send a StopTone req after successfully sending a StartEventTone one.
+    However, when playDTMFTone() is called the second time within the
+    timeout interval (0.2s), it's currently completely ignored and no
+    tone will ever be generated. As a result, when someone presses
+    dialpad buttons very quickly, some of them sound missed because not
+    each of them is accompanied by a DTMF tone. (LP: #1403600)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Tue, 21 Apr 2015 13:07:12 +0000
+
 telephony-service (0.1+15.04.20150416.2-0ubuntu1) vivid; urgency=medium
 
   [ Gustavo Pichorim Boiko ]
