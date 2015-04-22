@@ -62,12 +62,18 @@ void USSDIndicator::setupAccounts()
 void USSDIndicator::onNotificationReceived(const QString &message)
 {
     USSDManager *ussdManager = qobject_cast<USSDManager*>(sender());
+    if (!ussdManager) {
+        return;
+    }
     showUSSDNotification(message, false, ussdManager);
 }
 
 void USSDIndicator::onRequestReceived(const QString &message)
 {
     USSDManager *ussdManager = qobject_cast<USSDManager*>(sender());
+    if (!ussdManager) {
+        return;
+    }
     showUSSDNotification(message, true, ussdManager);
 }
 
@@ -83,7 +89,10 @@ void USSDIndicator::onInitiateUSSDComplete(const QString &ussdResp)
 void USSDIndicator::onRespondComplete(bool success, const QString &ussdResp)
 {
     USSDManager *ussdManager = qobject_cast<USSDManager*>(sender());
-    if (success && ussdManager) {
+    if (!ussdManager) {
+        return;
+    }
+    if (success) {
         showUSSDNotification(ussdResp, (ussdManager->state() == "user-response"), ussdManager);
     }
 }
