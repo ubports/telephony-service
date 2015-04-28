@@ -81,6 +81,8 @@ void CallEntryTest::cleanup()
 
     mMockController->deleteLater();
     mAccount->deleteLater();
+    mCallChannel = Tp::CallChannelPtr();
+    QTest::qWait(1000);
 }
 
 void CallEntryTest::testIsVoicemail_data()
@@ -115,7 +117,6 @@ void CallEntryTest::testIsVoicemail()
 
     callEntry->endCall();
     callEntry->deleteLater();
-    mCallChannel = Tp::CallChannelPtr();
 }
 
 void CallEntryTest::onCallChannelAvailable(const Tp::CallChannelPtr &channel)
