@@ -7,6 +7,7 @@ set(qt_SRCS
     ussdindicator.cpp
     ussdmenu.cpp
     voicemailindicator.cpp
+    indicatordbus.cpp
     )
 
 set_source_files_properties(
@@ -20,8 +21,10 @@ qt5_add_dbus_interface(
         "${DATA_DIR}/org.freedesktop.Notifications.xml"
         NotificationsInterface
 )
+qt5_add_dbus_adaptor(qt_SRCS Indicator.xml indicator/indicatordbus.h IndicatorDBus)
 
 set(indicator_SRCS main.cpp ${qt_SRCS})
+
 
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}

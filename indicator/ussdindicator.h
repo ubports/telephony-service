@@ -44,6 +44,7 @@ public Q_SLOTS:
     void onStateChanged(const QString &state);
     void actionInvoked(uint id, const QString &actionKey);
     void notificationClosed(uint id, uint reason);
+    void clear();
 private Q_SLOTS:
     void setupAccounts();
 

@@ -24,6 +24,7 @@
 
 #include "applicationutils.h"
 #include "callchannelobserver.h"
+#include "indicatordbus.h"
 #include "metrics.h"
 #include "telepathyhelper.h"
 #include "textchannelobserver.h"
@@ -85,6 +86,12 @@ int main(int argc, char **argv)
 
     // instanciate the metrics helper
     Metrics::instance();
+
+    // create the dbus object and connect its signals
+    IndicatorDBus dbus;
+    QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
+                     &ussdIndicator, SLOT(clear()));
+    dbus.connectToBus();
 
     return app.exec();
 }
