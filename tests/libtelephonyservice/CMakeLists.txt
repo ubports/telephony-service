@@ -33,6 +33,7 @@ generate_test(PhoneUtilsTest SOURCES PhoneUtilsTest.cpp LIBRARIES telephonyservi
 
 generate_telepathy_test(AccountEntryFactoryTest SOURCES AccountEntryFactoryTest.cpp)
 generate_telepathy_test(AccountEntryTest SOURCES AccountEntryTest.cpp)
+generate_telepathy_test(CallEntryTest SOURCES CallEntryTest.cpp)
 generate_telepathy_test(ChatManagerTest SOURCES ChatManagerTest.cpp)
 generate_telepathy_test(OfonoAccountEntryTest SOURCES OfonoAccountEntryTest.cpp)
 generate_telepathy_test(TelepathyHelperTest SOURCES TelepathyHelperTest.cpp)
