@@ -17,7 +17,6 @@
  */
 
 #include <QtCore/QObject>
-#include <QtTest/QtTest>
 #include <TelepathyQt/PendingAccount>
 #include <TelepathyQt/PendingOperation>
 #include <TelepathyQt/Account>
@@ -30,7 +29,7 @@ void TelepathyTest::initialize()
     Tp::registerTypes();
 
     QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
-    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
+    TRY_COMPARE(spy.count(), 1);
 
     // just in case, remove any existing account that might be a leftover from
     // previous test runs
@@ -68,10 +67,7 @@ void TelepathyTest::initialize()
         mReady = true;
     });
 
-    QTRY_VERIFY(mReady);
-
-    // give some time for telepathy stuff to settle
-    QTest::qWait(1000);
+    TRY_VERIFY(mReady);
 }
 
 void TelepathyTest::doCleanup()
@@ -104,6 +100,7 @@ Tp::AccountPtr TelepathyTest::addAccount(const QString &manager, const QString &
     while (!finished) {
         QTest::qWait(100);
     }
+
     mAccounts << account;
     return account;
 }
@@ -122,6 +119,7 @@ bool TelepathyTest::removeAccount(const Tp::AccountPtr &account)
     while (!finished) {
         QTest::qWait(100);
     }
+
     if (success) {
         mAccounts.removeAll(account);
     }

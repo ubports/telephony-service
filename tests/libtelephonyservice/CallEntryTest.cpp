@@ -20,6 +20,7 @@
 #include <QtTest/QtTest>
 #include "telepathytest.h"
 #include "callentry.h"
+#include "callmanager.h"
 #include "telepathyhelper.h"
 #include "mockcontroller.h"
 #include "ofonoaccountentry.h"
@@ -59,20 +60,17 @@ void CallEntryTest::init()
 {
     mTpAccount = addAccount("mock", "ofono", "the account");
     QVERIFY(!mTpAccount.isNull());
-    QTRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
+    TRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
 
     mAccount = qobject_cast<OfonoAccountEntry*>(AccountEntryFactory::createEntry(mTpAccount, this));
     QVERIFY(mAccount);
 
     // make sure the connection is available
-    QTRY_VERIFY(!mTpAccount->connection().isNull());
-    QTRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
+    TRY_VERIFY(!mTpAccount->connection().isNull());
+    TRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
 
     // and create the mock controller
     mMockController = new MockController("ofono", this);
-
-    // just in case, wait some time
-    QTest::qWait(1000);
 }
 
 void CallEntryTest::cleanup()
@@ -82,7 +80,9 @@ void CallEntryTest::cleanup()
     mMockController->deleteLater();
     mAccount->deleteLater();
     mCallChannel = Tp::CallChannelPtr();
-    QTest::qWait(1000);
+
+    // wait until all the calls are gone before the next test
+    TRY_VERIFY(!CallManager::instance()->hasCalls());
 }
 
 void CallEntryTest::testIsVoicemail_data()
@@ -102,14 +102,14 @@ void CallEntryTest::testIsVoicemail()
     QFETCH(bool, isVoicemail);
 
     mMockController->setVoicemailNumber(voicemailNumber);
-    QTRY_COMPARE(mAccount->voicemailNumber(), voicemailNumber);
+    TRY_COMPARE(mAccount->voicemailNumber(), voicemailNumber);
 
     // now place a call to a number that is not the voicemail number
     QVariantMap properties;
     properties["Caller"] = callNumber;
     properties["State"] = "incoming";
     mMockController->placeCall(properties);
-    QTRY_VERIFY(!mCallChannel.isNull());
+    TRY_VERIFY(!mCallChannel.isNull());
     QCOMPARE(mCallChannel->targetContact()->id(), callNumber);
 
     CallEntry *callEntry = new CallEntry(mCallChannel);

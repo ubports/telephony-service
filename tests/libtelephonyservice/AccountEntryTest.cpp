@@ -61,21 +61,22 @@ void AccountEntryTest::init()
 {
     mTpAccount = addAccount("mock", "mock", "the account");
     QVERIFY(!mTpAccount.isNull());
-    QTRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
+    TRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
 
     mAccount = AccountEntryFactory::createEntry(mTpAccount, this);
     QVERIFY(mAccount);
+    QSignalSpy statusChangedSpy(mAccount, SIGNAL(statusChanged()));
 
     // make sure the connection is available
-    QTRY_VERIFY(!mTpAccount->connection().isNull());
-    QTRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
-    QTRY_VERIFY(mAccount->connected());
+    TRY_VERIFY(!mTpAccount->connection().isNull());
+    TRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
+    TRY_VERIFY(mAccount->connected());
 
     // and create the mock controller
     mMockController = new MockController("mock", this);
 
-    // just in case, wait some time
-    QTest::qWait(1000);
+    // catch the first status changed signal
+    TRY_COMPARE(statusChangedSpy.count(), 1);
 }
 
 void AccountEntryTest::cleanup()
@@ -101,14 +102,14 @@ void AccountEntryTest::testActive()
 
     // now set the account offline and see if the active flag changes correctly
     mMockController->setOnline(false);
-    QTRY_VERIFY(!mAccount->active());
-    QCOMPARE(activeChangedSpy.count(), 1);
+    TRY_COMPARE(activeChangedSpy.count(), 1);
+    QVERIFY(!mAccount->active());
 
     // now re-enable the account and check that the entry is updated
     activeChangedSpy.clear();
     mMockController->setOnline(true);
-    QTRY_VERIFY(mAccount->active());
-    QCOMPARE(activeChangedSpy.count(), 1);
+    TRY_COMPARE(activeChangedSpy.count(), 1);
+    QVERIFY(mAccount->active());
 
     // check that for a null account active is false
     QVERIFY(!mNullAccount->active());
@@ -124,14 +125,14 @@ void AccountEntryTest::testDisplayName()
     // now try to set the display in the telepathy account directly and see that the entry gets updated
     QString newDisplayName = "some other display name";
     mTpAccount->setDisplayName(newDisplayName);
-    QTRY_COMPARE(mAccount->displayName(), newDisplayName);
+    TRY_COMPARE(mAccount->displayName(), newDisplayName);
     QCOMPARE(displayNameChangedSpy.count(), 1);
 
     // and try setting the display name in the entry itself
     displayNameChangedSpy.clear();
     newDisplayName = "changing again";
     mAccount->setDisplayName(newDisplayName);
-    QTRY_COMPARE(mAccount->displayName(), newDisplayName);
+    TRY_COMPARE(mAccount->displayName(), newDisplayName);
     QCOMPARE(displayNameChangedSpy.count(), 1);
     QCOMPARE(mTpAccount->displayName(), newDisplayName);
 
@@ -147,11 +148,10 @@ void AccountEntryTest::testStatus()
     QCOMPARE(mAccount->status(), mTpAccount->connection()->selfContact()->presence().status());
 
     // and now set a new value
-    Tp::Presence presence(Tp::ConnectionPresenceTypeAway, "away", "away");
-    mTpAccount->setRequestedPresence(presence);
+    mMockController->setPresence("away", "away");
 
-    QTRY_COMPARE(mAccount->status(), QString("away"));
-    QTRY_COMPARE(statusChangedSpy.count(), 1);
+    TRY_COMPARE(statusChangedSpy.count(), 1);
+    QCOMPARE(mAccount->status(), QString("away"));
 
     // check that for a null account the status is null
     QVERIFY(mNullAccount->status().isNull());
@@ -162,14 +162,14 @@ void AccountEntryTest::testStatusMessage()
     QSignalSpy statusMessageChangedSpy(mAccount, SIGNAL(statusMessageChanged()));
 
     // check that the value is correct already
-    QTRY_COMPARE(mAccount->statusMessage(), mTpAccount->connection()->selfContact()->presence().statusMessage());
+    TRY_COMPARE(mAccount->statusMessage(), mTpAccount->connection()->selfContact()->presence().statusMessage());
 
     // and now set a new value
     QString statusMessage("I am online");
     mMockController->setPresence("available", statusMessage);
 
-    QTRY_COMPARE(mAccount->statusMessage(), statusMessage);
-    QTRY_COMPARE(statusMessageChangedSpy.count(), 1);
+    TRY_COMPARE(statusMessageChangedSpy.count(), 1);
+    QCOMPARE(mAccount->statusMessage(), statusMessage);
 
     // check that for a null account the displayName is null
     QVERIFY(mNullAccount->statusMessage().isNull());
@@ -184,17 +184,14 @@ void AccountEntryTest::testConnected()
 
     // now set the account offline and see if the active flag changes correctly
     mMockController->setOnline(false);
-    QTRY_VERIFY(!mAccount->connected());
-    QTRY_COMPARE(connectedChangedSpy.count(), 1);
-
-    // it shouldn't be necessary, but in any case
-    QTest::qWait(500);
+    TRY_COMPARE(connectedChangedSpy.count(), 1);
+    QVERIFY(!mAccount->connected());
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
     mMockController->setOnline(true);
-    QTRY_VERIFY(mAccount->connected());
-    QTRY_COMPARE(connectedChangedSpy.count(), 1);
+    TRY_COMPARE(connectedChangedSpy.count(), 1);
+    QVERIFY(mAccount->connected());
 
     // check that for a null account the displayName is null
     QVERIFY(!mNullAccount->connected());
