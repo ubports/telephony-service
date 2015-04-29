@@ -26,6 +26,8 @@
 #include "ofonoaccountentry.h"
 #include "accountentryfactory.h"
 
+Q_DECLARE_METATYPE(AccountEntry*)
+
 class CallEntryTest : public TelepathyTest
 {
     Q_OBJECT
@@ -49,6 +51,7 @@ private:
 
 void CallEntryTest::initTestCase()
 {
+    qRegisterMetaType<AccountEntry*>();
     initialize();
     TelepathyHelper::instance()->registerChannelObserver();
     connect(TelepathyHelper::instance()->channelObserver(),
@@ -58,11 +61,13 @@ void CallEntryTest::initTestCase()
 
 void CallEntryTest::init()
 {
+    QSignalSpy accountSpy(TelepathyHelper::instance(), SIGNAL(accountAdded(AccountEntry*)));
     mTpAccount = addAccount("mock", "ofono", "the account");
     QVERIFY(!mTpAccount.isNull());
-
-    mAccount = qobject_cast<OfonoAccountEntry*>(AccountEntryFactory::createEntry(mTpAccount, this));
+    TRY_COMPARE(accountSpy.count(), 1);
+    mAccount = qobject_cast<OfonoAccountEntry*>(accountSpy.first().first().value<AccountEntry*>());
     QVERIFY(mAccount);
+    TRY_VERIFY(mAccount->ready());
 
     // and create the mock controller
     mMockController = new MockController("ofono", this);
