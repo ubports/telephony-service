@@ -188,7 +188,6 @@ void AccountEntry::ensureConnected()
         onConnectionChanged();
     }
 
-    mReady = true;
     Q_EMIT accountReady();
 }
 
@@ -226,6 +225,8 @@ void AccountEntry::onConnectionChanged()
                 SLOT(onSelfHandleChanged(uint)));
 
         watchSelfContactPresence();
+
+        mReady = true;
     }
 
     Q_EMIT connectedChanged();

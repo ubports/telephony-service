@@ -91,7 +91,7 @@ void CallEntryTest::testIsVoicemail_data()
     QTest::addColumn<QString>("callNumber");
     QTest::addColumn<bool>("isVoicemail");
 
-    QTest::newRow("calling voicemail") << "*123" << "*123" << true;
+    QTest::newRow("calling voicemail") << "*1234" << "*1234" << true;
     QTest::newRow("calling other number") << "*1234" << "5555555" << false;
 }
 

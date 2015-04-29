@@ -137,7 +137,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(voicemailIface));
     voicemailIface->setVoicemailCount(mVoicemailCount);
     voicemailIface->setVoicemailIndicator(mVoicemailIndicator);
-    mVoicemailNumber = "555";
+    mVoicemailNumber = "*555";
 
     supplementaryServicesIface = BaseConnectionUSSDInterface::create();
     supplementaryServicesIface->setInitiateCallback(Tp::memFun(this,&MockConnection::USSDInitiate));
