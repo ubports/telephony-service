@@ -266,7 +266,7 @@ void TelepathyHelperTest::testEmergencyCallsAvailable()
     QSignalSpy emergencyCallsSpy(TelepathyHelper::instance(), SIGNAL(emergencyCallsAvailableChanged()));
 
     // check that calls are available by default
-    QVERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
+    TRY_VERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
 
     // set the generic account as "flightmode" and make sure it doesn't affect the emergencyCallsAvailable
     mGenericController->setPresence("flightmode", "");
