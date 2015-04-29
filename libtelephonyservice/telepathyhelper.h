@@ -105,6 +105,7 @@ Q_SIGNALS:
     void connectedChanged();
     void accountIdsChanged();
     void accountsChanged();
+    void accountAdded(AccountEntry *account);
     void activeAccountsChanged();
     void setupReady();
     void defaultMessagingAccountChanged();

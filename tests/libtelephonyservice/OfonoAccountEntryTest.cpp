@@ -61,22 +61,15 @@ void OfonoAccountEntryTest::init()
 {
     mTpAccount = addAccount("mock", "ofono", "phone account");
     QVERIFY(!mTpAccount.isNull());
-    TRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
-
     mAccount = qobject_cast<OfonoAccountEntry*>(AccountEntryFactory::createEntry(mTpAccount, this));
     QVERIFY(mAccount);
-    QSignalSpy statusChangedSpy(mAccount, SIGNAL(statusChanged()));
+    TRY_VERIFY(mAccount->ready());
 
     // make sure the connection is available
-    TRY_VERIFY(!mTpAccount->connection().isNull());
-    TRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
     TRY_VERIFY(mAccount->connected());
 
     // create the mock controller
     mMockController = new MockController("ofono", this);
-
-    // catch the first statusChanged signal
-    TRY_COMPARE(statusChangedSpy.count(), 1);
 }
 
 void OfonoAccountEntryTest::cleanup()

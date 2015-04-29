@@ -54,10 +54,9 @@ void ChatManagerTest::init()
 {
     // add two accounts
     mGenericTpAccount = addAccount("mock", "mock", "the generic account");
-    TRY_VERIFY(!mGenericTpAccount->connection().isNull());
-
+    QVERIFY(!mGenericTpAccount.isNull());
     mPhoneTpAccount = addAccount("mock", "ofono", "the phone account");
-    TRY_VERIFY(!mPhoneTpAccount->connection().isNull());
+    QVERIFY(!mPhoneTpAccount.isNull());
 
     // and create the mock controller
     mGenericMockController = new MockController("mock", this);

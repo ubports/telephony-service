@@ -27,6 +27,8 @@
 #include "telepathyhelper.h"
 #include "mockcontroller.h"
 
+Q_DECLARE_METATYPE(AccountEntry*)
+
 class TelepathyHelperTest : public TelepathyTest
 {
     Q_OBJECT
@@ -44,6 +46,11 @@ private Q_SLOTS:
     void testAccountForConnection();
     void testEmergencyCallsAvailable();
 
+protected:
+    Tp::AccountPtr addAccountAndWait(const QString &manager,
+                                     const QString &protocol,
+                                     const QString &displayName,
+                                     const QVariantMap &parameters = QVariantMap());
 private:
     Tp::AccountPtr mGenericTpAccount;
     Tp::AccountPtr mPhoneTpAccount;
@@ -53,17 +60,20 @@ private:
 
 void TelepathyHelperTest::initTestCase()
 {
+    qRegisterMetaType<AccountEntry*>();
     initialize();
+    QSignalSpy setupReadySpy(TelepathyHelper::instance(), SIGNAL(setupReady()));
+    TRY_COMPARE(setupReadySpy.count(), 1);
 }
 
 void TelepathyHelperTest::init()
 {
     // add two accounts
-    mGenericTpAccount = addAccount("mock", "mock", "the generic account");
-    TRY_VERIFY(!mGenericTpAccount->connection().isNull());
+    mGenericTpAccount = addAccountAndWait("mock", "mock", "the generic account");
+    QVERIFY(!mGenericTpAccount.isNull());
 
-    mPhoneTpAccount = addAccount("mock", "ofono", "the phone account");
-    TRY_VERIFY(!mPhoneTpAccount->connection().isNull());
+    mPhoneTpAccount = addAccountAndWait("mock", "ofono", "the phone account");
+    QVERIFY(!mPhoneTpAccount.isNull());
 
     // and create the mock controller
     mGenericController = new MockController("mock", this);
@@ -120,7 +130,7 @@ void TelepathyHelperTest::testAccounts()
 
     // now check that new accounts are captured
     QSignalSpy accountsChangedSpy(TelepathyHelper::instance(), SIGNAL(accountsChanged()));
-    Tp::AccountPtr newAccount = addAccount("mock", "mock", "extra");
+    Tp::AccountPtr newAccount = addAccountAndWait("mock", "mock", "extra");
     QVERIFY(!newAccount.isNull());
 
     TRY_COMPARE(accountsChangedSpy.count(), 1);
@@ -149,11 +159,11 @@ void TelepathyHelperTest::testAccountSorting()
     // create two accounts with modem-objpath parameters and make sure they are listed first
     QVariantMap parameters;
     parameters["modem-objpath"] = "/phonesim1";
-    Tp::AccountPtr firstAccount = addAccount("mock", "ofono", "firstPhoneAccount", parameters);
+    Tp::AccountPtr firstAccount = addAccountAndWait("mock", "ofono", "firstPhoneAccount", parameters);
     QVERIFY(!firstAccount.isNull());
 
     parameters["modem-objpath"] = "/phonesim2";
-    Tp::AccountPtr secondAccount = addAccount("mock", "ofono", "secondPhoneAccount", parameters);
+    Tp::AccountPtr secondAccount = addAccountAndWait("mock", "ofono", "secondPhoneAccount", parameters);
     QVERIFY(!secondAccount.isNull());
 
     // wait for the accounts to appear;
@@ -165,7 +175,7 @@ void TelepathyHelperTest::testAccountSorting()
 
     // now add a third account that should go before the two others
     parameters["modem-objpath"] = "/phonesim0";
-    Tp::AccountPtr thirdAccount = addAccount("mock", "ofono", "thirdPhoneAccount", parameters);
+    Tp::AccountPtr thirdAccount = addAccountAndWait("mock", "ofono", "thirdPhoneAccount", parameters);
     QVERIFY(!thirdAccount.isNull());
 
     // wait for the accounts to appear;
@@ -184,7 +194,7 @@ void TelepathyHelperTest::testAccountIds()
 
     // now check that new accounts are captured
     QSignalSpy accountIdsChangedSpy(TelepathyHelper::instance(), SIGNAL(accountIdsChanged()));
-    Tp::AccountPtr newAccount = addAccount("mock", "mock", "extra");
+    Tp::AccountPtr newAccount = addAccountAndWait("mock", "mock", "extra");
     QVERIFY(!newAccount.isNull());
 
     TRY_COMPARE(accountIdsChangedSpy.count(), 1);
@@ -280,6 +290,19 @@ void TelepathyHelperTest::testEmergencyCallsAvailable()
     mPhoneController->setOnline(true);
     TRY_COMPARE(emergencyCallsSpy.count(), 1);
     QVERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
+}
+
+Tp::AccountPtr TelepathyHelperTest::addAccountAndWait(const QString &manager, const QString &protocol, const QString &displayName, const QVariantMap &parameters)
+{
+    QSignalSpy accountAddedSpy(TelepathyHelper::instance(), SIGNAL(accountAdded(AccountEntry*)));
+    Tp::AccountPtr account = addAccount(manager, protocol, displayName, parameters);
+
+    WAIT_FOR(accountAddedSpy.count() == 1);
+
+    AccountEntry *accountEntry = accountAddedSpy.first().first().value<AccountEntry*>();
+    WAIT_FOR(accountEntry->ready());
+
+    return account;
 }
 
 QTEST_MAIN(TelepathyHelperTest)

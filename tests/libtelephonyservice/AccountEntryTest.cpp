@@ -21,7 +21,6 @@
 #include "telepathytest.h"
 #include "accountentry.h"
 #include "accountentryfactory.h"
-#include "telepathyhelper.h"
 #include "mockcontroller.h"
 
 class AccountEntryTest : public TelepathyTest
@@ -61,22 +60,16 @@ void AccountEntryTest::init()
 {
     mTpAccount = addAccount("mock", "mock", "the account");
     QVERIFY(!mTpAccount.isNull());
-    TRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
 
     mAccount = AccountEntryFactory::createEntry(mTpAccount, this);
     QVERIFY(mAccount);
-    QSignalSpy statusChangedSpy(mAccount, SIGNAL(statusChanged()));
+    TRY_VERIFY(mAccount->ready());
 
     // make sure the connection is available
-    TRY_VERIFY(!mTpAccount->connection().isNull());
-    TRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
     TRY_VERIFY(mAccount->connected());
 
     // and create the mock controller
     mMockController = new MockController("mock", this);
-
-    // catch the first status changed signal
-    TRY_COMPARE(statusChangedSpy.count(), 1);
 }
 
 void AccountEntryTest::cleanup()
@@ -102,7 +95,7 @@ void AccountEntryTest::testActive()
 
     // now set the account offline and see if the active flag changes correctly
     mMockController->setOnline(false);
-    TRY_COMPARE(activeChangedSpy.count(), 1);
+    TRY_VERIFY(activeChangedSpy.count() > 0);
     QVERIFY(!mAccount->active());
 
     // now re-enable the account and check that the entry is updated
