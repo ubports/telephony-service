@@ -4,7 +4,7 @@
  * Authors:
  *  Ugo Riboni <ugo.riboni@canonical.com>
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
- *  Gustavo Pichorim Boiko <gustavo.boiko@gmail.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -49,4 +49,4 @@ Q_SIGNALS:
 
 };
 
-#endif // IndicatorDBus_H
+#endif // INDICATORDBUS_H

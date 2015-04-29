@@ -4,6 +4,7 @@
  * Authors:
  *  Ugo Riboni <ugo.riboni@canonical.com>
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
