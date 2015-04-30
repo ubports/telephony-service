@@ -54,7 +54,6 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", ChatManager::instance());
     mRootContext->setContextProperty("callManager", CallManager::instance());
-    mRootContext->setContextProperty("ussdManager", USSDManager::instance());
     mRootContext->setContextProperty("greeter", GreeterContacts::instance());
 
 }
@@ -66,6 +65,7 @@ void Components::registerTypes(const char *uri)
     qmlRegisterUncreatableType<CallEntry>(uri, 0, 1, "CallEntry", "Objects of this type are created in CallManager and made available to QML for usage");
     qmlRegisterUncreatableType<AudioOutput>(uri, 0, 1, "AudioOutput", "Objects of this type are created in CallEntry and made available to QML for usage");
     qmlRegisterUncreatableType<AccountEntry>(uri, 0, 1, "AccountEntry", "Objects of this type are created in TelepathyHelper and made available to QML");
+    qmlRegisterUncreatableType<USSDManager>(uri, 0, 1, "USSDManager", "Objects of this type are created in AccountEntry and made available to QML");
     qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");
     qmlRegisterType<PhoneUtils>(uri, 0, 1, "PhoneUtils");
 }
