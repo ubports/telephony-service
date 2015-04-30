@@ -68,8 +68,14 @@ int main(int argc, char **argv)
     VoiceMailIndicator voiceMailIndicator;
     Q_UNUSED(voiceMailIndicator);
 
+    // create the dbus object and connect its signals
+    USSDIndicator ussdIndicator;
+    IndicatorDBus dbus;
+    QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
+                     &ussdIndicator, SLOT(clear()));
+
     // register the observer
-    QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, []() {
+    QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, [&]() {
         TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceIndicator");
 
         // Connect the textObserver and the callObserver to the channel observer in TelepathyHelper
@@ -79,18 +85,13 @@ int main(int argc, char **argv)
                          textObserver, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
         QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
                          callObserver, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+        QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
+                         textObserver, SLOT(clearNotifications()));
     });
-
-    USSDIndicator ussdIndicator;
-    Q_UNUSED(ussdIndicator);
 
     // instanciate the metrics helper
     Metrics::instance();
 
-    // create the dbus object and connect its signals
-    IndicatorDBus dbus;
-    QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
-                     &ussdIndicator, SLOT(clear()));
     dbus.connectToBus();
 
     return app.exec();
