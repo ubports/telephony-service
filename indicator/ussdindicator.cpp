@@ -165,3 +165,16 @@ void USSDIndicator::notificationClosed(uint id, uint reason) {
     m_notifications.CloseNotification(m_notificationId);
     m_notificationId = 0;
 }
+
+void USSDIndicator::clear()
+{
+    if (m_notificationId != 0) {
+        USSDManager *ussdManager = mUSSDRequests.take(m_notificationId);
+        if (ussdManager) {
+            ussdManager->cancel();
+        }
+
+        m_notifications.CloseNotification(m_notificationId);
+        m_notificationId = 0;
+    }
+}
