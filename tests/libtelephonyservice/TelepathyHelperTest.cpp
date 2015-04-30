@@ -276,7 +276,7 @@ void TelepathyHelperTest::testEmergencyCallsAvailable()
 
     // now set the phone account as "flightmode", and see if the emergencyCallsAvailable value
     mPhoneController->setPresence("flightmode", "");
-    TRY_COMPARE(emergencyCallsSpy.count(), 1);
+    TRY_VERIFY(emergencyCallsSpy.count() > 0);
     QVERIFY(!TelepathyHelper::instance()->emergencyCallsAvailable());
 
     // set the generic account online and check if it affects the value
@@ -288,7 +288,7 @@ void TelepathyHelperTest::testEmergencyCallsAvailable()
 
     // and finally set the phone account back online
     mPhoneController->setOnline(true);
-    TRY_COMPARE(emergencyCallsSpy.count(), 1);
+    TRY_VERIFY(emergencyCallsSpy.count() > 0);
     QVERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
 }
 
