@@ -100,13 +100,13 @@ void AccountEntryTest::testActive()
     QVERIFY(mAccount->active());
 
     // now set the account offline and see if the active flag changes correctly
-    mMockController->setOnline(false);
+    mMockController->SetOnline(false);
     QTRY_VERIFY(!mAccount->active());
     QCOMPARE(activeChangedSpy.count(), 1);
 
     // now re-enable the account and check that the entry is updated
     activeChangedSpy.clear();
-    mMockController->setOnline(true);
+    mMockController->SetOnline(true);
     QTRY_VERIFY(mAccount->active());
     QCOMPARE(activeChangedSpy.count(), 1);
 
@@ -166,7 +166,7 @@ void AccountEntryTest::testStatusMessage()
 
     // and now set a new value
     QString statusMessage("I am online");
-    mMockController->setPresence("available", statusMessage);
+    mMockController->SetPresence("available", statusMessage);
 
     QTRY_COMPARE(mAccount->statusMessage(), statusMessage);
     QTRY_COMPARE(statusMessageChangedSpy.count(), 1);
@@ -183,7 +183,7 @@ void AccountEntryTest::testConnected()
     QVERIFY(mAccount->connected());
 
     // now set the account offline and see if the active flag changes correctly
-    mMockController->setOnline(false);
+    mMockController->SetOnline(false);
     QTRY_VERIFY(!mAccount->connected());
     QTRY_COMPARE(connectedChangedSpy.count(), 1);
 
@@ -192,7 +192,7 @@ void AccountEntryTest::testConnected()
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
-    mMockController->setOnline(true);
+    mMockController->SetOnline(true);
     QTRY_VERIFY(mAccount->connected());
     QTRY_COMPARE(connectedChangedSpy.count(), 1);
 

@@ -117,6 +117,11 @@ Q_SIGNALS:
     void channelSplitted(const QString &objectPath);
     void channelSplitted(const QDBusObjectPath &objectPath);
 
+    // USSD notifications
+    void ussdInitiateCalled(const QString &command);
+    void ussdRespondCalled(const QString &reply);
+    void ussdCancelCalled();
+
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &info);
     void hangupCall(const QString &callerId);

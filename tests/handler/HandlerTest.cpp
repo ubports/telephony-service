@@ -83,13 +83,13 @@ void HandlerTest::cleanup()
 void HandlerTest::testMakingCalls()
 {
     QString callerId("1234567");
-    QSignalSpy callReceivedSpy(mMockController, SIGNAL(callReceived(QString)));
+    QSignalSpy callReceivedSpy(mMockController, SIGNAL(CallReceived(QString)));
     // FIXME: add support for multiple accounts
     HandlerController::instance()->startCall(callerId, mTpAccount->uniqueIdentifier());
     QTRY_COMPARE(callReceivedSpy.count(), 1);
     QCOMPARE(callReceivedSpy.first().first().toString(), callerId);
 
-    mMockController->hangupCall(callerId);
+    mMockController->HangupCall(callerId);
 }
 
 void HandlerTest::testHangUpCall()
@@ -111,7 +111,7 @@ void HandlerTest::testHangUpCall()
     waitForCallActive(callerId);
 
     // and finally request the hangup
-    QSignalSpy callEndedSpy(mMockController, SIGNAL(callEnded(QString)));
+    QSignalSpy callEndedSpy(mMockController, SIGNAL(CallEnded(QString)));
     HandlerController::instance()->hangUpCall(objectPath);
     QTRY_COMPARE(callEndedSpy.count(), 1);
 }
@@ -134,7 +134,7 @@ void HandlerTest::testCallHold()
 
     waitForCallActive(callerId);
 
-    QSignalSpy callStateSpy(mMockController, SIGNAL(callStateChanged(QString,QString,QString)));
+    QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
 
     // set the call on hold
     HandlerController::instance()->setHold(objectPath, true);
@@ -147,7 +147,7 @@ void HandlerTest::testCallHold()
     QTRY_COMPARE(callStateSpy.count(), 1);
     QCOMPARE(callStateSpy.first()[2].toString(), QString("active"));
 
-    mMockController->hangupCall(callerId);
+    mMockController->HangupCall(callerId);
 }
 
 void HandlerTest::testCallProperties()
@@ -235,7 +235,7 @@ void HandlerTest::testConferenceCall()
     waitForCallActive(callerId2);
 
     // now create the conf call
-    QSignalSpy conferenceCreatedSpy(mMockController, SIGNAL(conferenceCreated(QString)));
+    QSignalSpy conferenceCreatedSpy(mMockController, SIGNAL(ConferenceCreated(QString)));
     HandlerController::instance()->createConferenceCall(QStringList() << call1 << call2);
     QTRY_COMPARE(conferenceCreatedSpy.count(), 1);
     QString conferenceObjectPath = conferenceCreatedSpy.first().first().toString();
@@ -249,13 +249,13 @@ void HandlerTest::testConferenceCall()
     waitForCallActive(callerId3);
 
     // merge that call on the conference
-    QSignalSpy channelMergedSpy(mMockController, SIGNAL(channelMerged(QString)));
+    QSignalSpy channelMergedSpy(mMockController, SIGNAL(ChannelMerged(QString)));
     HandlerController::instance()->mergeCall(conferenceObjectPath, call3);
     QTRY_COMPARE(channelMergedSpy.count(), 1);
     QCOMPARE(channelMergedSpy.first().first().toString(), call3);
 
     // now try to split one of the channels
-    QSignalSpy channelSplittedSpy(mMockController, SIGNAL(channelSplitted(QString)));
+    QSignalSpy channelSplittedSpy(mMockController, SIGNAL(ChannelSplitted(QString)));
     HandlerController::instance()->splitCall(call2);
     QTRY_COMPARE(channelSplittedSpy.count(), 1);
     QCOMPARE(channelSplittedSpy.first().first().toString(), call2);
@@ -274,7 +274,7 @@ void HandlerTest::testSendMessage()
 {
     QString recipient("22222222");
     QString message("Hello, world!");
-    QSignalSpy messageSentSpy(mMockController, SIGNAL(messageSent(QString,QVariantMap)));
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
     // FIXME: add support for multiple accounts
     HandlerController::instance()->sendMessage(recipient, message, mTpAccount->uniqueIdentifier());
     QTRY_COMPARE(messageSentSpy.count(), 1);
@@ -308,7 +308,7 @@ void HandlerTest::testActiveCallIndicator()
 void HandlerTest::waitForCallActive(const QString &callerId)
 {
     // wait until the call state is "accepted"
-    QSignalSpy callStateSpy(mMockController, SIGNAL(callStateChanged(QString,QString,QString)));
+    QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
     QString state;
     QString objectPath;
     QString caller;

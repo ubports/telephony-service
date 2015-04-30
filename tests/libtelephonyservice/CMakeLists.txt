@@ -4,6 +4,7 @@ include_directories(
     ${LIBTELEPHONYSERVICE_DIR}
     ${TP_QT5_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/tests/common
+    ${CMAKE_BINARY_DIR}/tests/common
     )
 
 add_executable(GreeterContactsTestServerExe GreeterContactsTestServer.cpp)
@@ -36,3 +37,4 @@ generate_telepathy_test(AccountEntryTest SOURCES AccountEntryTest.cpp)
 generate_telepathy_test(ChatManagerTest SOURCES ChatManagerTest.cpp)
 generate_telepathy_test(OfonoAccountEntryTest SOURCES OfonoAccountEntryTest.cpp)
 generate_telepathy_test(TelepathyHelperTest SOURCES TelepathyHelperTest.cpp)
+generate_telepathy_test(USSDManagerTest SOURCES USSDManagerTest.cpp)
