@@ -37,6 +37,13 @@ OfonoAccountEntry::OfonoAccountEntry(const Tp::AccountPtr &account, QObject *par
     connect(this,
             SIGNAL(statusMessageChanged()),
             SIGNAL(emergencyCallsAvailableChanged()));
+
+    mUssdManager = new USSDManager(this, this);
+}
+
+USSDManager *OfonoAccountEntry::ussdManager() const
+{
+    return mUssdManager;
 }
 
 QStringList OfonoAccountEntry::emergencyNumbers() const

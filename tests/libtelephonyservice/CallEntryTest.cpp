@@ -101,7 +101,7 @@ void CallEntryTest::testIsVoicemail()
     QFETCH(QString, callNumber);
     QFETCH(bool, isVoicemail);
 
-    mMockController->setVoicemailNumber(voicemailNumber);
+    mMockController->SetVoicemailNumber(voicemailNumber);
     TRY_COMPARE(mAccount->voicemailNumber(), voicemailNumber);
 
     // now place a call to a number that is not the voicemail number

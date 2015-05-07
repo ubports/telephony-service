@@ -69,7 +69,7 @@ function(generate_test TESTNAME)
         qt5_use_modules(${TESTNAME} ${ARG_QT5_MODULES})
 
         if (${ARG_USE_DBUS})
-            execute_process(COMMAND mktemp -d OUTPUT_VARIABLE TMPDIR)
+            execute_process(COMMAND mktemp -d /tmp/${TESTNAME}.XXXXX OUTPUT_VARIABLE TMPDIR)
             string(REPLACE "\n" "" TMPDIR ${TMPDIR})
 
             if (NOT DEFINED ARG_ENVIRONMENT)

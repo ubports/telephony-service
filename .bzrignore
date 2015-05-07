@@ -33,6 +33,7 @@ handler/handleradaptor.*
 indicator/*.desktop
 indicator/*.service
 indicator/NotificationsInterface.*
+indicator/indicatoradaptor.*
 
 Testing
 Ubuntu/Telephony/qmldir
@@ -46,6 +47,7 @@ po/*.gmo
 
 tests/*/*Test
 tests/common/dbus-test-wrapper.sh
+tests/common/MockConnectionInterface.*
 tests/common/mock/mockconnectionadaptor.*
 tests/common/mock/telepathy-mock
 tests/common/dbus-session.conf

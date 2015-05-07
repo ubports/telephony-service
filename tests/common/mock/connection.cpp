@@ -610,17 +610,20 @@ void MockConnection::setVoicemailCount(int count)
 
 void MockConnection::USSDInitiate(const QString &command, Tp::DBusError *error)
 {
-    // FIXME: implement
+    // just emit a signal saying we received the command
+    Q_EMIT ussdInitiateCalled(command);
 }
 
 void MockConnection::USSDRespond(const QString &reply, Tp::DBusError *error)
 {
-    // FIXME: implement
+    // just emit a signal saying we received the reply
+    Q_EMIT ussdRespondCalled(reply);
 }
 
 void MockConnection::USSDCancel(Tp::DBusError *error)
 {
-    // FIXME: implement
+    // just emit a signal saying the operation was cancelled
+    Q_EMIT ussdCancelCalled();
 }
 
 QString MockConnection::serial()

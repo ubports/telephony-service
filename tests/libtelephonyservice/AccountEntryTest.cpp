@@ -94,13 +94,13 @@ void AccountEntryTest::testActive()
     QVERIFY(mAccount->active());
 
     // now set the account offline and see if the active flag changes correctly
-    mMockController->setOnline(false);
+    mMockController->SetOnline(false);
     TRY_VERIFY(activeChangedSpy.count() > 0);
     QVERIFY(!mAccount->active());
 
     // now re-enable the account and check that the entry is updated
     activeChangedSpy.clear();
-    mMockController->setOnline(true);
+    mMockController->SetOnline(true);
     TRY_VERIFY(activeChangedSpy.count() > 0);
     QVERIFY(mAccount->active());
 
@@ -141,7 +141,7 @@ void AccountEntryTest::testStatus()
     QCOMPARE(mAccount->status(), mTpAccount->connection()->selfContact()->presence().status());
 
     // and now set a new value
-    mMockController->setPresence("away", "away");
+    mMockController->SetPresence("away", "away");
 
     TRY_COMPARE(statusChangedSpy.count(), 1);
     QCOMPARE(mAccount->status(), QString("away"));
@@ -159,7 +159,7 @@ void AccountEntryTest::testStatusMessage()
 
     // and now set a new value
     QString statusMessage("I am online");
-    mMockController->setPresence("available", statusMessage);
+    mMockController->SetPresence("available", statusMessage);
 
     TRY_COMPARE(statusMessageChangedSpy.count(), 1);
     QCOMPARE(mAccount->statusMessage(), statusMessage);
@@ -176,13 +176,13 @@ void AccountEntryTest::testConnected()
     QVERIFY(mAccount->connected());
 
     // now set the account offline and see if the active flag changes correctly
-    mMockController->setOnline(false);
+    mMockController->SetOnline(false);
     TRY_VERIFY(connectedChangedSpy.count() > 0);
     QVERIFY(!mAccount->connected());
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
-    mMockController->setOnline(true);
+    mMockController->SetOnline(true);
     // because of the way the mock was implemented, sometimes this can return two connectedChanged() signals.
     TRY_VERIFY(connectedChangedSpy.count() > 0);
     QVERIFY(mAccount->connected());

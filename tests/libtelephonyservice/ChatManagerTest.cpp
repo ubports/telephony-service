@@ -93,7 +93,7 @@ void ChatManagerTest::testSendMessage()
     qSort(recipients);
 
     MockController *controller = accountId.startsWith("mock/mock") ? mGenericMockController : mPhoneMockController;
-    QSignalSpy controllerMessageSentSpy(controller, SIGNAL(messageSent(QString,QVariantMap)));
+    QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantMap)));
     QSignalSpy messageSentSpy(ChatManager::instance(), SIGNAL(messageSent(QStringList,QString)));
 
     ChatManager::instance()->sendMessage(recipients, message, accountId);
@@ -122,7 +122,7 @@ void ChatManagerTest::testMessageReceived()
     properties["Sender"] = "12345";
     properties["Recipients"] = (QStringList() << "12345");
     QString message("Hi there");
-    mGenericMockController->placeIncomingMessage(message, properties);
+    mGenericMockController->PlaceIncomingMessage(message, properties);
 
     TRY_COMPARE(messageReceivedSpy.count(), 1);
     QString sender = messageReceivedSpy.first()[0].toString();
@@ -141,7 +141,7 @@ void ChatManagerTest::testAcknowledgeMessages()
     QStringList messages;
     messages << "Hi there" << "How are you" << "Always look on the bright side of life";
     Q_FOREACH(const QString &message, messages) {
-        mGenericMockController->placeIncomingMessage(message, properties);
+        mGenericMockController->PlaceIncomingMessage(message, properties);
         // the wait shouldn't be needed, but just in case
         QTest::qWait(50);
     }
@@ -153,7 +153,7 @@ void ChatManagerTest::testAcknowledgeMessages()
         messageIds << messageId;
     }
 
-    QSignalSpy messageReadSpy(mGenericMockController, SIGNAL(messageRead(QString)));
+    QSignalSpy messageReadSpy(mGenericMockController, SIGNAL(MessageRead(QString)));
     Q_FOREACH(const QString &messageId, messageIds) {
         ChatManager::instance()->acknowledgeMessage(properties["Recipients"].toStringList(), messageId, "mock/mock/account0");
     }

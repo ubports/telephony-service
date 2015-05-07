@@ -1,3 +1,19 @@
+telephony-service (0.1+15.04.20150430.1-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ Gustavo Pichorim Boiko ]
+  * Add an initial set of tests to make sure USSD is working.
+  * Make it possible to clear the notifications. This is intended to be
+    used by application tests.
+
+  [ Tiago Salem Herrmann ]
+  * Add an USSDManager instance to each OfonoAccountEntry. (LP:
+    #1438273)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 30 Apr 2015 15:55:24 +0000
+
 telephony-service (0.1+15.04.20150421-0ubuntu1) vivid; urgency=medium
 
   [ Gustavo Pichorim Boiko ]
