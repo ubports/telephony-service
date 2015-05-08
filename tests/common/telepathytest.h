@@ -22,7 +22,7 @@
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
 #include <TelepathyQt/Account>
-#include "telepathyhelper.h"
+#include <TelepathyQt/AccountManager>
 
 #define DEFAULT_TIMEOUT 15000
 

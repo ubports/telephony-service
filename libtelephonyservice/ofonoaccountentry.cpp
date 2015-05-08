@@ -20,8 +20,8 @@
  */
 
 #include "ofonoaccountentry.h"
-#include "telepathyhelper.h"
 #include "phoneutils.h"
+#include "telepathyhelper.h"
 
 OfonoAccountEntry::OfonoAccountEntry(const Tp::AccountPtr &account, QObject *parent) :
     AccountEntry(account, parent), mVoicemailCount(0), mVoicemailIndicator(false)

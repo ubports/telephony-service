@@ -68,6 +68,10 @@ void AccountEntryTest::init()
     // make sure the connection is available
     TRY_VERIFY(mAccount->connected());
 
+    // and make sure the status and status message are the ones we expect
+    TRY_COMPARE(mAccount->status(), QString("available"));
+    TRY_COMPARE(mAccount->statusMessage(), QString("online"));
+
     // and create the mock controller
     mMockController = new MockController("mock", this);
 }
@@ -178,14 +182,14 @@ void AccountEntryTest::testConnected()
     // now set the account offline and see if the active flag changes correctly
     mMockController->SetOnline(false);
     TRY_VERIFY(connectedChangedSpy.count() > 0);
-    QVERIFY(!mAccount->connected());
+    TRY_VERIFY(!mAccount->connected());
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
     mMockController->SetOnline(true);
     // because of the way the mock was implemented, sometimes this can return two connectedChanged() signals.
     TRY_VERIFY(connectedChangedSpy.count() > 0);
-    QVERIFY(mAccount->connected());
+    TRY_VERIFY(mAccount->connected());
 
     // check that for a null account the displayName is null
     QVERIFY(!mNullAccount->connected());
