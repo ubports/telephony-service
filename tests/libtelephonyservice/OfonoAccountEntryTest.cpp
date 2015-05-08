@@ -98,13 +98,13 @@ void OfonoAccountEntryTest::testConnected()
     QSignalSpy connectedChangedSpy(mAccount, SIGNAL(connectedChanged()));
 
     // now set the account offline and see if the active flag changes correctly
-    mMockController->SetOnline(false);
+    mMockController->SetPresence("away", "away");
     TRY_VERIFY(connectedChangedSpy.count() > 0);
     TRY_VERIFY(!mAccount->connected());
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
-    mMockController->SetOnline(true);
+    mMockController->SetPresence("available", "online");
     // because of the way the mock was implemented, sometimes this can return two connectedChanged() signals.
     TRY_VERIFY(connectedChangedSpy.count() > 0);
     TRY_VERIFY(mAccount->connected());
