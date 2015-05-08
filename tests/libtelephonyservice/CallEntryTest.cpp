@@ -68,6 +68,8 @@ void CallEntryTest::init()
     mAccount = qobject_cast<OfonoAccountEntry*>(accountSpy.first().first().value<AccountEntry*>());
     QVERIFY(mAccount);
     TRY_VERIFY(mAccount->ready());
+    TRY_COMPARE(mAccount->status(), QString("available"));
+    TRY_COMPARE(mAccount->statusMessage(), QString("online"));
 
     // and create the mock controller
     mMockController = new MockController("ofono", this);
