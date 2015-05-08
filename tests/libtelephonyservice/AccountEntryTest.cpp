@@ -70,7 +70,6 @@ void AccountEntryTest::init()
 
     // and make sure the status and status message are the ones we expect
     TRY_COMPARE(mAccount->status(), QString("available"));
-    TRY_COMPARE(mAccount->statusMessage(), QString("online"));
 
     // and create the mock controller
     mMockController = new MockController("mock", this);
@@ -96,7 +95,6 @@ void AccountEntryTest::testActive()
     QVERIFY(mAccount->active());
     // FIXME: setting the account as offline, triggers an automatic reconnection and the
     // test fails. In the future we might want to re-enable this and test some other way.
-#if 0
     QSignalSpy activeChangedSpy(mAccount, SIGNAL(activeChanged()));
 
     // now set the account away and see if the active flag changes correctly
@@ -110,7 +108,6 @@ void AccountEntryTest::testActive()
     mMockController->SetOnline(true);
     TRY_VERIFY(activeChangedSpy.count() > 0);
     QVERIFY(mAccount->active());
-#endif
 
     // check that for a null account active is false
     QVERIFY(!mNullAccount->active());

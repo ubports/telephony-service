@@ -336,7 +336,6 @@ Tp::AccountPtr TelepathyHelperTest::addAccountAndWait(const QString &manager, co
 
     // and make sure the status and status message are the ones we expect
     WAIT_FOR(accountEntry->status() == QString("available"));
-    WAIT_FOR(accountEntry->statusMessage() == QString("online"));
 
     return account;
 }

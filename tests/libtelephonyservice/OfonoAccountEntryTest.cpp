@@ -70,7 +70,6 @@ void OfonoAccountEntryTest::init()
 
     // and make sure the status and status message are the ones we expect
     TRY_COMPARE(mAccount->status(), QString("available"));
-    TRY_COMPARE(mAccount->statusMessage(), QString("online"));
 
     // create the mock controller
     mMockController = new MockController("ofono", this);
