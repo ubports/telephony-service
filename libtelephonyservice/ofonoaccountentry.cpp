@@ -182,7 +182,7 @@ void OfonoAccountEntry::onConnectionChanged()
             mVoicemailNumber = replyNumber.value();
             Q_EMIT voicemailNumberChanged();
         } else {
-            qCritical() << "Could not get voicemail number!";
+            qWarning() << "Could not get voicemail number!";
         }
 
         // connect the voicemail count changed signal
