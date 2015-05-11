@@ -20,8 +20,8 @@
  */
 
 #include "ofonoaccountentry.h"
-#include "telepathyhelper.h"
 #include "phoneutils.h"
+#include "telepathyhelper.h"
 
 OfonoAccountEntry::OfonoAccountEntry(const Tp::AccountPtr &account, QObject *parent) :
     AccountEntry(account, parent), mVoicemailCount(0), mVoicemailIndicator(false)
@@ -181,6 +181,8 @@ void OfonoAccountEntry::onConnectionChanged()
         if (replyNumber.isValid()) {
             mVoicemailNumber = replyNumber.value();
             Q_EMIT voicemailNumberChanged();
+        } else {
+            qWarning() << "Could not get voicemail number!";
         }
 
         // connect the voicemail count changed signal

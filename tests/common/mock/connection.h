@@ -59,6 +59,7 @@ public:
                                      uint targetHandle, const QVariantMap& hints, Tp::DBusError *error);
     Tp::ContactAttributesMap getContactAttributes(const Tp::UIntList &handles, const QStringList &ifaces, Tp::DBusError *error);
     uint setPresence(const QString& status, const QString& statusMessage, Tp::DBusError *error);
+    uint setPresenceFail(const QString& status, const QString& statusMessage, Tp::DBusError *error);
     void connect(Tp::DBusError *error);
     void setOnline(bool online);
 

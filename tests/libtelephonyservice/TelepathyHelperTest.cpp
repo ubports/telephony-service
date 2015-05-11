@@ -27,6 +27,8 @@
 #include "telepathyhelper.h"
 #include "mockcontroller.h"
 
+Q_DECLARE_METATYPE(AccountEntry*)
+
 class TelepathyHelperTest : public TelepathyTest
 {
     Q_OBJECT
@@ -45,6 +47,11 @@ private Q_SLOTS:
     void testAccountForConnection();
     void testEmergencyCallsAvailable();
 
+protected:
+    Tp::AccountPtr addAccountAndWait(const QString &manager,
+                                     const QString &protocol,
+                                     const QString &displayName,
+                                     const QVariantMap &parameters = QVariantMap());
 private:
     Tp::AccountPtr mGenericTpAccount;
     Tp::AccountPtr mPhoneTpAccount;
@@ -54,24 +61,24 @@ private:
 
 void TelepathyHelperTest::initTestCase()
 {
+    qRegisterMetaType<AccountEntry*>();
     initialize();
+    QSignalSpy setupReadySpy(TelepathyHelper::instance(), SIGNAL(setupReady()));
+    TRY_COMPARE(setupReadySpy.count(), 1);
 }
 
 void TelepathyHelperTest::init()
 {
     // add two accounts
-    mGenericTpAccount = addAccount("mock", "mock", "the generic account");
-    QTRY_VERIFY(!mGenericTpAccount->connection().isNull());
+    mGenericTpAccount = addAccountAndWait("mock", "mock", "the generic account");
+    QVERIFY(!mGenericTpAccount.isNull());
 
-    mPhoneTpAccount = addAccount("mock", "ofono", "the phone account");
-    QTRY_VERIFY(!mPhoneTpAccount->connection().isNull());
+    mPhoneTpAccount = addAccountAndWait("mock", "ofono", "the phone account");
+    QVERIFY(!mPhoneTpAccount.isNull());
 
     // and create the mock controller
     mGenericController = new MockController("mock", this);
     mPhoneController = new MockController("ofono", this);
-
-    // just in case, wait some time
-    QTest::qWait(1000);
 }
 
 void TelepathyHelperTest::cleanup()
@@ -98,13 +105,13 @@ void TelepathyHelperTest::testConnected()
 
     // and set the other account as offline too. This time connected needs to change to false
     mPhoneController->SetOnline(false);
-    QTRY_COMPARE(connectedChangedSpy.count(), 1);
+    TRY_COMPARE(connectedChangedSpy.count(), 1);
     QVERIFY(!TelepathyHelper::instance()->connected());
 
     // now set one of the accounts back online
     connectedChangedSpy.clear();
     mPhoneController->SetOnline(true);
-    QTRY_COMPARE(connectedChangedSpy.count(), 1);
+    TRY_COMPARE(connectedChangedSpy.count(), 1);
     QVERIFY(TelepathyHelper::instance()->connected());
 
     // and the other one just in case
@@ -124,10 +131,10 @@ void TelepathyHelperTest::testAccounts()
 
     // now check that new accounts are captured
     QSignalSpy accountsChangedSpy(TelepathyHelper::instance(), SIGNAL(accountsChanged()));
-    Tp::AccountPtr newAccount = addAccount("mock", "mock", "extra");
+    Tp::AccountPtr newAccount = addAccountAndWait("mock", "mock", "extra");
     QVERIFY(!newAccount.isNull());
 
-    QTRY_COMPARE(accountsChangedSpy.count(), 1);
+    TRY_COMPARE(accountsChangedSpy.count(), 1);
     QCOMPARE(TelepathyHelper::instance()->accounts().count(), 3);
 
     bool accountFound = false;
@@ -142,7 +149,7 @@ void TelepathyHelperTest::testAccounts()
     // now remove the extra account and make sure it is properly removed
     accountsChangedSpy.clear();
     QVERIFY(removeAccount(newAccount));
-    QTRY_COMPARE(accountsChangedSpy.count(), 1);
+    TRY_COMPARE(accountsChangedSpy.count(), 1);
     QCOMPARE(TelepathyHelper::instance()->accounts().count(), 2);
     QCOMPARE(TelepathyHelper::instance()->accounts()[0]->accountId(), first->accountId());
     QCOMPARE(TelepathyHelper::instance()->accounts()[1]->accountId(), second->accountId());
@@ -184,15 +191,15 @@ void TelepathyHelperTest::testAccountSorting()
     // create two accounts with modem-objpath parameters and make sure they are listed first
     QVariantMap parameters;
     parameters["modem-objpath"] = "/phonesim1";
-    Tp::AccountPtr firstAccount = addAccount("mock", "ofono", "firstPhoneAccount", parameters);
+    Tp::AccountPtr firstAccount = addAccountAndWait("mock", "ofono", "firstPhoneAccount", parameters);
     QVERIFY(!firstAccount.isNull());
 
     parameters["modem-objpath"] = "/phonesim2";
-    Tp::AccountPtr secondAccount = addAccount("mock", "ofono", "secondPhoneAccount", parameters);
+    Tp::AccountPtr secondAccount = addAccountAndWait("mock", "ofono", "secondPhoneAccount", parameters);
     QVERIFY(!secondAccount.isNull());
 
     // wait for the accounts to appear;
-    QTRY_COMPARE(TelepathyHelper::instance()->accounts().count(), 4);
+    TRY_COMPARE(TelepathyHelper::instance()->accounts().count(), 4);
 
     // and check the order
     QCOMPARE(TelepathyHelper::instance()->accounts()[0]->accountId(), firstAccount->uniqueIdentifier());
@@ -200,11 +207,11 @@ void TelepathyHelperTest::testAccountSorting()
 
     // now add a third account that should go before the two others
     parameters["modem-objpath"] = "/phonesim0";
-    Tp::AccountPtr thirdAccount = addAccount("mock", "ofono", "thirdPhoneAccount", parameters);
+    Tp::AccountPtr thirdAccount = addAccountAndWait("mock", "ofono", "thirdPhoneAccount", parameters);
     QVERIFY(!thirdAccount.isNull());
 
     // wait for the accounts to appear;
-    QTRY_COMPARE(TelepathyHelper::instance()->accounts().count(), 5);
+    TRY_COMPARE(TelepathyHelper::instance()->accounts().count(), 5);
     QCOMPARE(TelepathyHelper::instance()->accounts()[0]->accountId(), thirdAccount->uniqueIdentifier());
 
     // and remove the created accounts
@@ -219,10 +226,10 @@ void TelepathyHelperTest::testAccountIds()
 
     // now check that new accounts are captured
     QSignalSpy accountIdsChangedSpy(TelepathyHelper::instance(), SIGNAL(accountIdsChanged()));
-    Tp::AccountPtr newAccount = addAccount("mock", "mock", "extra");
+    Tp::AccountPtr newAccount = addAccountAndWait("mock", "mock", "extra");
     QVERIFY(!newAccount.isNull());
 
-    QTRY_COMPARE(accountIdsChangedSpy.count(), 1);
+    TRY_COMPARE(accountIdsChangedSpy.count(), 1);
     QCOMPARE(TelepathyHelper::instance()->accountIds().count(), 3);
 
     // just to make sure check that each account id matches one account
@@ -233,7 +240,7 @@ void TelepathyHelperTest::testAccountIds()
     // now remove the extra account and make sure it is properly removed
     accountIdsChangedSpy.clear();
     QVERIFY(removeAccount(newAccount));
-    QTRY_COMPARE(accountIdsChangedSpy.count(), 1);
+    TRY_COMPARE(accountIdsChangedSpy.count(), 1);
     QCOMPARE(TelepathyHelper::instance()->accountIds().count(), 2);
     QCOMPARE(TelepathyHelper::instance()->accountIds()[0], TelepathyHelper::instance()->accounts()[0]->accountId());
     QCOMPARE(TelepathyHelper::instance()->accountIds()[1], TelepathyHelper::instance()->accounts()[1]->accountId());
@@ -248,22 +255,22 @@ void TelepathyHelperTest::testActiveAccounts()
 
     // now set one of the accounts as offline and make sure it is captured
     mGenericController->SetOnline(false);
-    QTRY_COMPARE_WITH_TIMEOUT(activeAccountsSpy.count(), 1, DEFAULT_TIMEOUT);
+    TRY_COMPARE(activeAccountsSpy.count(), 1);
     QTRY_COMPARE(TelepathyHelper::instance()->activeAccounts().count(), 1);
     QCOMPARE(TelepathyHelper::instance()->activeAccounts()[0]->accountId(), mPhoneTpAccount->uniqueIdentifier());
 
     // set the other account offline to make sure
     activeAccountsSpy.clear();
     mPhoneController->SetOnline(false);
-    QTRY_COMPARE_WITH_TIMEOUT(activeAccountsSpy.count(), 1, DEFAULT_TIMEOUT);
+    TRY_COMPARE(activeAccountsSpy.count(), 1);
     QVERIFY(TelepathyHelper::instance()->activeAccounts().isEmpty());
 
     // and set both accounts online again
     activeAccountsSpy.clear();
     mGenericController->SetOnline(true);
     mPhoneController->SetOnline(true);
-    QTRY_COMPARE_WITH_TIMEOUT(activeAccountsSpy.count(), 2, DEFAULT_TIMEOUT);
-    QTRY_COMPARE(TelepathyHelper::instance()->activeAccounts().count(), 2);
+    TRY_COMPARE(activeAccountsSpy.count(), 2);
+    QCOMPARE(TelepathyHelper::instance()->activeAccounts().count(), 2);
 }
 
 void TelepathyHelperTest::testAccountForId()
@@ -291,7 +298,7 @@ void TelepathyHelperTest::testEmergencyCallsAvailable()
     QSignalSpy emergencyCallsSpy(TelepathyHelper::instance(), SIGNAL(emergencyCallsAvailableChanged()));
 
     // check that calls are available by default
-    QVERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
+    TRY_VERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
 
     // set the generic account as "flightmode" and make sure it doesn't affect the emergencyCallsAvailable
     mGenericController->SetPresence("flightmode", "");
@@ -301,7 +308,7 @@ void TelepathyHelperTest::testEmergencyCallsAvailable()
 
     // now set the phone account as "flightmode", and see if the emergencyCallsAvailable value
     mPhoneController->SetPresence("flightmode", "");
-    QTRY_COMPARE(emergencyCallsSpy.count(), 1);
+    TRY_VERIFY(emergencyCallsSpy.count() > 0);
     QVERIFY(!TelepathyHelper::instance()->emergencyCallsAvailable());
 
     // set the generic account online and check if it affects the value
@@ -313,8 +320,24 @@ void TelepathyHelperTest::testEmergencyCallsAvailable()
 
     // and finally set the phone account back online
     mPhoneController->SetOnline(true);
-    QTRY_COMPARE(emergencyCallsSpy.count(), 1);
+    TRY_VERIFY(emergencyCallsSpy.count() > 0);
     QVERIFY(TelepathyHelper::instance()->emergencyCallsAvailable());
+}
+
+Tp::AccountPtr TelepathyHelperTest::addAccountAndWait(const QString &manager, const QString &protocol, const QString &displayName, const QVariantMap &parameters)
+{
+    QSignalSpy accountAddedSpy(TelepathyHelper::instance(), SIGNAL(accountAdded(AccountEntry*)));
+    Tp::AccountPtr account = addAccount(manager, protocol, displayName, parameters);
+
+    WAIT_FOR(accountAddedSpy.count() == 1);
+
+    AccountEntry *accountEntry = accountAddedSpy.first().first().value<AccountEntry*>();
+    WAIT_FOR(accountEntry->ready());
+
+    // and make sure the status and status message are the ones we expect
+    WAIT_FOR(accountEntry->status() == QString("available"));
+
+    return account;
 }
 
 QTEST_MAIN(TelepathyHelperTest)

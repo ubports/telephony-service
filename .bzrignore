@@ -33,6 +33,7 @@ handler/handleradaptor.*
 indicator/*.desktop
 indicator/*.service
 indicator/NotificationsInterface.*
+indicator/indicatoradaptor.*
 
 Testing
 Ubuntu/Telephony/qmldir

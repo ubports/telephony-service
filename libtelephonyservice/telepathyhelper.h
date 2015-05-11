@@ -110,6 +110,7 @@ Q_SIGNALS:
     void connectedChanged();
     void accountIdsChanged();
     void accountsChanged();
+    void accountAdded(AccountEntry *account);
     void phoneAccountsChanged();
     void activeAccountsChanged();
     void setupReady();

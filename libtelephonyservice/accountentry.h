@@ -51,6 +51,7 @@ public:
         GenericAccount
     };
 
+    bool ready() const;
     QString accountId() const;
     bool active() const;
     QString displayName() const;
@@ -90,6 +91,7 @@ protected:
 
     Tp::AccountPtr mAccount;
     ConnectionInfo mConnectionInfo;
+    bool mReady;
 };
 
 #endif // ACCOUNTENTRY_H

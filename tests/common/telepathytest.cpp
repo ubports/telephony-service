@@ -17,7 +17,6 @@
  */
 
 #include <QtCore/QObject>
-#include <QtTest/QtTest>
 #include <TelepathyQt/PendingAccount>
 #include <TelepathyQt/PendingOperation>
 #include <TelepathyQt/Account>
@@ -28,15 +27,6 @@
 void TelepathyTest::initialize()
 {
     Tp::registerTypes();
-
-    QSignalSpy spy(TelepathyHelper::instance(), SIGNAL(setupReady()));
-    QTRY_COMPARE_WITH_TIMEOUT(spy.count(), 1, DEFAULT_TIMEOUT);
-
-    // just in case, remove any existing account that might be a leftover from
-    // previous test runs
-    Q_FOREACH(const AccountEntry *account, TelepathyHelper::instance()->accounts()) {
-        QVERIFY(removeAccount(account->account()));
-    }
 
     // create an account manager instance to help testing
     Tp::Features accountFeatures;
@@ -65,13 +55,15 @@ void TelepathyTest::initialize()
     mReady = false;
     connect(mAccountManager->becomeReady(Tp::AccountManager::FeatureCore),
             &Tp::PendingOperation::finished, [=]{
+        Q_FOREACH(const Tp::AccountPtr &account, mAccountManager->allAccounts()) {
+            Tp::PendingOperation *op = account->remove();
+            WAIT_FOR(op->isFinished());
+        }
+
         mReady = true;
     });
 
-    QTRY_VERIFY(mReady);
-
-    // give some time for telepathy stuff to settle
-    QTest::qWait(1000);
+    TRY_VERIFY(mReady);
 }
 
 void TelepathyTest::doCleanup()
@@ -101,9 +93,11 @@ Tp::AccountPtr TelepathyTest::addAccount(const QString &manager, const QString &
         finished = true;
     });
 
-    while (!finished) {
-        QTest::qWait(100);
-    }
+    WAIT_FOR(finished);
+    WAIT_FOR(!account->connection().isNull());
+    WAIT_FOR(account->connectionStatus() == Tp::ConnectionStatusConnected);
+    WAIT_FOR(account->connection()->selfContact()->presence().type() == Tp::ConnectionPresenceTypeAvailable);
+
     mAccounts << account;
     return account;
 }
@@ -119,9 +113,8 @@ bool TelepathyTest::removeAccount(const Tp::AccountPtr &account)
         finished = true;
     });
 
-    while (!finished) {
-        QTest::qWait(100);
-    }
+    WAIT_FOR(finished);
+
     if (success) {
         mAccounts.removeAll(account);
     }

@@ -451,6 +451,7 @@ void TelepathyHelper::onNewAccount(const Tp::AccountPtr &account)
     Q_EMIT activeAccountsChanged();
     onSettingsChanged("defaultSimForMessages");
     onSettingsChanged("defaultSimForCalls");
+    Q_EMIT accountAdded(accountEntry);
 }
 
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
