@@ -28,7 +28,6 @@ RingtoneWorker::RingtoneWorker(QObject *parent) :
 {
     mCallAudioPlaylist.setPlaybackMode(QMediaPlaylist::Loop);
     mCallAudioPlaylist.setCurrentIndex(0);
-    mVibrateEffect.setDuration(500);
 }
 
 void RingtoneWorker::playIncomingCallSound()
@@ -66,10 +65,6 @@ void RingtoneWorker::stopIncomingCallSound()
 
 void RingtoneWorker::playIncomingMessageSound()
 {
-    if (GreeterContacts::instance()->incomingMessageVibrate()) {
-        mVibrateEffect.start();
-    }
-
     if (!qgetenv("PA_DISABLED").isEmpty()) {
         return;
     }
@@ -108,9 +103,10 @@ void RingtoneWorker::stopIncomingMessageSound()
 Ringtone::Ringtone(QObject *parent) :
     QObject(parent)
 {
-    mWorker = new RingtoneWorker(this);
+    mWorker = new RingtoneWorker();
     mWorker->moveToThread(&mThread);
     mThread.start();
+    mVibrateEffect.setDuration(500);
 }
 
 Ringtone::~Ringtone()
@@ -137,6 +133,10 @@ void Ringtone::stopIncomingCallSound()
 
 void Ringtone::playIncomingMessageSound()
 {
+    if (GreeterContacts::instance()->incomingMessageVibrate()) {
+        mVibrateEffect.start();
+    }
+
     QMetaObject::invokeMethod(mWorker, "playIncomingMessageSound", Qt::QueuedConnection);
 }
 
