@@ -344,6 +344,30 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
     }
 }
 
+void MessagingMenu::removeCall(const QString &targetId, const QString &accountId)
+{
+    Call call;
+    bool found = false;
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account) {
+        qWarning() << "Account not found for id" << accountId;
+        return;
+    }
+
+    Q_FOREACH(Call callMessage, mCalls) {
+        // FIXME: we need a better strategy to group calls from different accounts
+        if (account->compareIds(callMessage.targetId, targetId)) {
+            call = callMessage;
+            found = true;
+            mCalls.removeOne(callMessage);
+
+            // remove the previous entry and add a new one increasing the missed call count
+            messaging_menu_app_remove_message_by_id(mCallsApp, callMessage.messageId.toUtf8().data());
+            break;
+        }
+    }
+}
+
 void MessagingMenu::showVoicemailEntry(AccountEntry *account)
 {
     OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(account);

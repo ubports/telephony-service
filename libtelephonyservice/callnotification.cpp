@@ -20,18 +20,20 @@
  */
 
 #include "callnotification.h"
-#include "contactutils.h"
+//#include "contactutils.h"
 #include "config.h"
-#include <QContactAvatar>
-#include <QContactFetchRequest>
-#include <QContactPhoneNumber>
-#include <libnotify/notify.h>
+//#include <QContactAvatar>
+//#include <QContactFetchRequest>
+//#include <QContactPhoneNumber>
+//#include <libnotify/notify.h>
 namespace C {
 #include <libintl.h>
 }
 
 CallNotification::CallNotification(QObject *parent) :
-    QObject(parent)
+    QObject(parent), mIndicatorIface("com.canonical.TelephonyServiceIndicator",
+                                     "/com/canonical/TelephonyServiceIndicator",
+                                     "com.canonical.TelephonyServiceIndicator")
 {
 }
 
@@ -106,4 +108,9 @@ void CallNotification::showNotificationForCall(const QStringList &participants, 
     request->setManager(ContactUtils::sharedManager());
     request->start();
 #endif
+}
+
+void CallNotification::clearCallNotification(const QString &participantId, const QString &accountId)
+{
+    mIndicatorIface.asyncCall("ClearCallNotification", participantId, accountId);
 }
