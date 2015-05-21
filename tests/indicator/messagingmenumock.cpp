@@ -37,15 +37,18 @@ enum MessageProperties
     NUM_PROPERTIES
 };
 
+#define PROP_DESKTOP_ID 1
+
 static void messaging_menu_app_set_property (GObject      *object,
                                              guint         prop_id,
                                              const GValue *value,
                                              GParamSpec   *pspec)
 {
     qDebug() << __PRETTY_FUNCTION__;
-    Q_ASSERT(prop_id == 0);
-    MessagingMenuApp *app = MESSAGING_MENU_APP (object);
-    app->desktopId = g_value_dup_string (value);
+    if (prop_id == PROP_DESKTOP_ID) {
+        MessagingMenuApp *app = MESSAGING_MENU_APP (object);
+        app->desktopId = g_value_dup_string (value);
+    }
 }
 
 static void messaging_menu_app_class_init (MessagingMenuAppClass *klass)
@@ -60,7 +63,7 @@ static void messaging_menu_app_class_init (MessagingMenuAppClass *klass)
                                            NULL,
                                            (GParamFlags)(G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
 
-      g_object_class_install_property (object_class, 0, prop);
+    g_object_class_install_property (object_class, PROP_DESKTOP_ID, prop);
 }
 
 static void messaging_menu_app_init (MessagingMenuApp *app)

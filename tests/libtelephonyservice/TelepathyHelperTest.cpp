@@ -262,7 +262,7 @@ void TelepathyHelperTest::testActiveAccounts()
     // set the other account offline to make sure
     activeAccountsSpy.clear();
     mPhoneController->SetOnline(false);
-    TRY_COMPARE(activeAccountsSpy.count(), 1);
+    TRY_VERIFY(activeAccountsSpy.count() > 0);
     QVERIFY(TelepathyHelper::instance()->activeAccounts().isEmpty());
 
     // and set both accounts online again
