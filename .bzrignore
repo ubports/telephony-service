@@ -55,4 +55,4 @@ tests/common/dbus-services/*
 tests/Ubuntu.Telephony/ContactWatcherTest
 tests/libtelephonyservice/GreeterContactsTestExe
 tests/libtelephonyservice/GreeterContactsTestServerExe
-tests/libtelephonyservice/ToneGeneratorMock
+tests/libtelephonyservice/*Mock
