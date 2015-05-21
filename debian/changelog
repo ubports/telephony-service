@@ -1,3 +1,13 @@
+telephony-service (0.1+15.04.20150521.1-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk. added: po/cs.po
+
+  [ Tiago Salem Herrmann ]
+  * Properly move ringtone calls to a separate thread.
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 21 May 2015 18:45:49 +0000
+
 telephony-service (0.1+15.04.20150511.1-0ubuntu1) vivid; urgency=medium
 
   [ CI Train Bot ]
