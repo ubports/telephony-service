@@ -3,7 +3,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../common
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
-    ${CMAKE_BINARY_DIR}/indicator
+    ${CMAKE_SOURCE_DIR}/indicator
     ${MESSAGING_MENU_INCLUDE_DIRS}
     ${TP_QT5_INCLUDE_DIRS}
     ${HISTORY_INCLUDE_DIRS}
