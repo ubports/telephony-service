@@ -18,6 +18,7 @@
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
+#include "contactutils.h"
 #include "telepathytest.h"
 #include "messagingmenu.h"
 #include "messagingmenumock.h"
@@ -43,6 +44,9 @@ void MessagingMenuTest::initTestCase()
 
     // just trigger the creation of the mock singleton
     MessagingMenuMock::instance();
+
+    // use the memory contact backend
+    ContactUtils::sharedManager("memory");
 
     QSignalSpy accountAddedSpy(TelepathyHelper::instance(), SIGNAL(accountAdded(AccountEntry*)));
     mAccount = addAccount("mock", "ofono", "theAccount");
