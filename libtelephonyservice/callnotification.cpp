@@ -20,12 +20,8 @@
  */
 
 #include "callnotification.h"
-//#include "contactutils.h"
 #include "config.h"
-//#include <QContactAvatar>
-//#include <QContactFetchRequest>
-//#include <QContactPhoneNumber>
-//#include <libnotify/notify.h>
+
 namespace C {
 #include <libintl.h>
 }
