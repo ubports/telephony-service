@@ -47,6 +47,8 @@ private:
 void ChatManagerTest::initTestCase()
 {
     initialize();
+    // set to false so group chat messages are not sent as MMS
+    mPhoneSettings.set("mmsGroupChatEnabled", false);
     TelepathyHelper::instance()->registerChannelObserver();
 }
 
