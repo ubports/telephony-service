@@ -275,6 +275,7 @@ QStringList TelepathyHelper::supportedProtocols() const
     protocols << "ufa"
               << "tel"
               << "ofono"
+              << "multimedia"
               << "mock"; // used for tests
     return protocols;
 }
