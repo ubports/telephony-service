@@ -25,7 +25,7 @@ existing_account_for_modem_objpath() {
 }
 
 # do not wait for a network connection to launch the connection managers
-dconf write /org/gnome/empathy/use-conn false 2>&1 > /dev/null
+dconf write /org/gnome/empathy/use-conn true 2>&1 > /dev/null
 
 retries=0
 # make sure telepathy is correctly running before we setup the accounts
