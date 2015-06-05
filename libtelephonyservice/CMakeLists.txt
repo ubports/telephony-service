@@ -10,6 +10,7 @@ set(library_SRCS
     chatmanager.cpp
     contactutils.cpp
     greetercontacts.cpp
+    multimediaaccountentry.cpp
     ofonoaccountentry.cpp
     phoneutils.cpp
     ringtone.cpp
