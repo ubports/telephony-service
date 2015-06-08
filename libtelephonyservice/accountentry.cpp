@@ -181,7 +181,7 @@ void AccountEntry::ensureEnabled()
 void AccountEntry::ensureConnected()
 {
     // if the account is not connected, request it to connect
-    if (!mAccount->connection() || mAccount->connectionStatus() != Tp::ConnectionStatusConnected) {
+    if (!mAccount->connection() || mAccount->connectionStatus() == Tp::ConnectionStatusDisconnected) {
         Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", "online");
         mAccount->setRequestedPresence(presence);
     } else {
