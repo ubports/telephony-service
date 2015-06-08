@@ -24,6 +24,11 @@
 #include "telepathyhelper.h"
 #include "accountentry.h"
 
+TelepathyTest::TelepathyTest() : mPhoneSettings("com.ubuntu.phone")
+{
+
+}
+
 void TelepathyTest::initialize()
 {
     Tp::registerTypes();
