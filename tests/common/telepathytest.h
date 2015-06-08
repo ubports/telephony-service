@@ -23,6 +23,7 @@
 #include <QtTest/QtTest>
 #include <TelepathyQt/Account>
 #include <TelepathyQt/AccountManager>
+#include <QGSettings>
 
 #define DEFAULT_TIMEOUT 15000
 
@@ -34,6 +35,8 @@
 class TelepathyTest : public QObject
 {
     Q_OBJECT
+public:
+    TelepathyTest();
 
 protected:
     void initialize();
@@ -51,6 +54,8 @@ protected:
 private Q_SLOTS:
     void cleanup();
 
+protected:
+    QGSettings mPhoneSettings;
 private:
     Tp::AccountManagerPtr mAccountManager;
     bool mReady;

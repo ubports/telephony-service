@@ -5,6 +5,7 @@ include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/tests/common
     ${CMAKE_BINARY_DIR}/tests/common
+    ${GSETTINGS_QT_INCLUDE_DIRS}
     )
 
 add_executable(GreeterContactsTestServerExe GreeterContactsTestServer.cpp)
