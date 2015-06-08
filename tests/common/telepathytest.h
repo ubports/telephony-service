@@ -22,8 +22,8 @@
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
 #include <TelepathyQt/Account>
-#include "qgsettings.h"
 #include <TelepathyQt/AccountManager>
+#include <QGSettings>
 
 #define DEFAULT_TIMEOUT 15000
 
