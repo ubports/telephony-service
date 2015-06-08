@@ -7,6 +7,7 @@ include_directories(
     ${MESSAGING_MENU_INCLUDE_DIRS}
     ${TP_QT5_INCLUDE_DIRS}
     ${HISTORY_INCLUDE_DIRS}
+    ${GSETTINGS_QT_INCLUDE_DIRS}
     )
 
 generate_telepathy_test(MessagingMenuTest
