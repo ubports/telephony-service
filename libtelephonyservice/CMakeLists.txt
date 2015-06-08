@@ -12,6 +12,7 @@ set(library_SRCS
     greetercontacts.cpp
     ofonoaccountentry.cpp
     phoneutils.cpp
+    protocolmanager.cpp
     ringtone.cpp
     telepathyhelper.cpp
     tonegenerator.cpp
