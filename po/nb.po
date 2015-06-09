@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-01-19 06:28+0000\n"
-"X-Generator: Launchpad (build 17304)\n"
+"X-Launchpad-Export-Date: 2015-05-29 05:36+0000\n"
+"X-Generator: Launchpad (build 17532)\n"
 "Language: nb\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -53,7 +53,7 @@ msgstr "Mottatt <b>%1</b> tekstmeldinger i dag"
 msgid "<b>%1</b> text messages sent today"
 msgstr "Sendt <b>%1</b> tekstmeldinger i dag"
 
-#: approver/approver.cpp:440
+#: approver/approver.cpp:463
 msgid "Accept"
 msgstr "Godta"
 
@@ -61,20 +61,20 @@ msgstr "Godta"
 msgid "Call back"
 msgstr "Ring tilbake"
 
-#: approver/approver.cpp:406
+#: approver/approver.cpp:429
 msgid "Caller number is not available"
 msgstr "Anropsnummer er ikke tilgjengelig"
 
-#: approver/approver.cpp:403
+#: approver/approver.cpp:426
 #, qt-format
 msgid "Calling from %1"
 msgstr "Ringer fra %1"
 
-#: approver/approver.cpp:399
+#: approver/approver.cpp:422
 msgid "Calling from private number"
 msgstr "Ringer fra skjult nummer"
 
-#: approver/approver.cpp:401
+#: approver/approver.cpp:424
 msgid "Calling from unknown number"
 msgstr "Ringer fra ukjent nummer"
 
@@ -86,15 +86,15 @@ msgstr "Avbryt"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "Slå av flymodus og prøv igjen fra meldingsprogrammet."
 
-#: approver/approver.cpp:462
+#: approver/approver.cpp:485
 msgid "Decline"
 msgstr "Avslå"
 
-#: approver/approver.cpp:453
+#: approver/approver.cpp:476
 msgid "End + Answer"
 msgstr "Avslutt + svar"
 
-#: approver/approver.cpp:439
+#: approver/approver.cpp:462
 msgid "Hold + Answer"
 msgstr "Hold + Svar"
 
@@ -106,7 +106,7 @@ msgstr "Jeg gikk glipp av anropet ditt. Kan du ringe meg nå?"
 msgid "I'll be 20 minutes late."
 msgstr "Jeg blir 20 minutter forsinket."
 
-#: approver/approver.cpp:82
+#: approver/approver.cpp:89
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Jeg er opptatt for øyeblikket. Ringer deg senere."
 
@@ -114,7 +114,7 @@ msgstr "Jeg er opptatt for øyeblikket. Ringer deg senere."
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Jeg er opptatt akkurat nå. Ringer deg senere."
 
-#: approver/approver.cpp:83
+#: approver/approver.cpp:90
 msgid "I'm running late, on my way now."
 msgstr "Jeg blir forsinket. Er på vei nå."
 
@@ -122,7 +122,7 @@ msgstr "Jeg blir forsinket. Er på vei nå."
 msgid "I'm running late. I'm on my way."
 msgstr "Jeg blir noe forsinket. Er på vei."
 
-#: approver/approver.cpp:470
+#: approver/approver.cpp:493
 msgid "Message & decline"
 msgstr "Send melding og avvis"
 
@@ -147,7 +147,7 @@ msgstr "Ingen mottatte tekstmeldinger i dag"
 msgid "No text messages sent today"
 msgstr "Ingen sendte tekstmeldinger i dag"
 
-#: indicator/textchannelobserver.cpp:270 indicator/ussdindicator.cpp:79
+#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
 msgid "Ok"
 msgstr "OK"
 
@@ -155,7 +155,7 @@ msgstr "OK"
 msgid "Phone Calls"
 msgstr "Telefonsamtaler"
 
-#: approver/approver.cpp:84
+#: approver/approver.cpp:91
 msgid "Please call me back later."
 msgstr "Ring meg heller senere."
 

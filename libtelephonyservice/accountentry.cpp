@@ -22,12 +22,16 @@
 #include <TelepathyQt/PendingOperation>
 #include <QTimer>
 #include "accountentry.h"
-#include "telepathyhelper.h"
 
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
-    QObject(parent), mAccount(account)
+    QObject(parent), mAccount(account), mReady(false)
 {
     initialize();
+}
+
+bool AccountEntry::ready() const
+{
+    return mReady;
 }
 
 QString AccountEntry::accountId() const
@@ -177,13 +181,14 @@ void AccountEntry::ensureEnabled()
 void AccountEntry::ensureConnected()
 {
     // if the account is not connected, request it to connect
-    if (!mAccount->connection() || mAccount->connectionStatus() != Tp::ConnectionStatusConnected) {
+    if (!mAccount->connection() || mAccount->connectionStatus() == Tp::ConnectionStatusDisconnected) {
         Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", "online");
         mAccount->setRequestedPresence(presence);
     } else {
         onConnectionChanged();
     }
 
+    mReady = true;
     Q_EMIT accountReady();
 }
 

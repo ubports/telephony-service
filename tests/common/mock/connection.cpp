@@ -77,7 +77,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
 
     // init presence interface
     simplePresenceIface = Tp::BaseConnectionSimplePresenceInterface::create();
-    simplePresenceIface->setSetPresenceCallback(Tp::memFun(this,&MockConnection::setPresence));
+    simplePresenceIface->setSetPresenceCallback(Tp::memFun(this,&MockConnection::setPresenceFail));
     simplePresenceIface->setMaxmimumStatusMessageLength(255);
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(simplePresenceIface));
 
@@ -137,7 +137,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(voicemailIface));
     voicemailIface->setVoicemailCount(mVoicemailCount);
     voicemailIface->setVoicemailIndicator(mVoicemailIndicator);
-    mVoicemailNumber = "555";
+    mVoicemailNumber = "*555";
 
     supplementaryServicesIface = BaseConnectionUSSDInterface::create();
     supplementaryServicesIface->setInitiateCallback(Tp::memFun(this,&MockConnection::USSDInitiate));
@@ -151,6 +151,8 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(supplementaryServicesIface));
 
     mDBus = new MockConnectionDBus(this);
+
+    setOnline(true);
 }
 
 MockConnection::~MockConnection()
@@ -229,6 +231,12 @@ uint MockConnection::setPresence(const QString& status, const QString& statusMes
 
     presences[selfHandle()] = mSelfPresence;
     simplePresenceIface->setPresences(presences);
+    return selfHandle();
+}
+
+uint MockConnection::setPresenceFail(const QString &status, const QString &statusMessage, Tp::DBusError *error)
+{
+    error->set(TP_QT_ERROR_NOT_AVAILABLE, "Can't change online status: Operation not supported");
     return selfHandle();
 }
 
@@ -610,17 +618,20 @@ void MockConnection::setVoicemailCount(int count)
 
 void MockConnection::USSDInitiate(const QString &command, Tp::DBusError *error)
 {
-    // FIXME: implement
+    // just emit a signal saying we received the command
+    Q_EMIT ussdInitiateCalled(command);
 }
 
 void MockConnection::USSDRespond(const QString &reply, Tp::DBusError *error)
 {
-    // FIXME: implement
+    // just emit a signal saying we received the reply
+    Q_EMIT ussdRespondCalled(reply);
 }
 
 void MockConnection::USSDCancel(Tp::DBusError *error)
 {
-    // FIXME: implement
+    // just emit a signal saying the operation was cancelled
+    Q_EMIT ussdCancelCalled();
 }
 
 QString MockConnection::serial()

@@ -162,6 +162,22 @@ QList<AccountEntry*> TelepathyHelper::activeAccounts() const
     return activeAccountList;
 }
 
+QList<AccountEntry*> TelepathyHelper::phoneAccounts() const
+{
+    QList<AccountEntry*> accountList;
+    Q_FOREACH(AccountEntry *account, mAccounts) {
+        if (account->type() == AccountEntry::PhoneAccount) {
+            accountList << account;
+        }
+    }
+    return accountList;
+}
+
+QQmlListProperty<AccountEntry> TelepathyHelper::qmlPhoneAccounts()
+{
+    return QQmlListProperty<AccountEntry>(this, 0, phoneAccountsCount, phoneAccountAt);
+}
+
 QQmlListProperty<AccountEntry> TelepathyHelper::qmlAccounts()
 {
     return QQmlListProperty<AccountEntry>(this, 0, accountsCount, accountAt);
@@ -357,10 +373,22 @@ Tp::ChannelClassSpec TelepathyHelper::audioConferenceSpec()
     return spec;
 }
 
+int TelepathyHelper::phoneAccountsCount(QQmlListProperty<AccountEntry> *p)
+{
+    Q_UNUSED(p)
+    return TelepathyHelper::instance()->phoneAccounts().count();
+}
+
 int TelepathyHelper::accountsCount(QQmlListProperty<AccountEntry> *p)
 {
     Q_UNUSED(p)
     return TelepathyHelper::instance()->accounts().count();
+}
+
+AccountEntry *TelepathyHelper::phoneAccountAt(QQmlListProperty<AccountEntry> *p, int index)
+{
+    Q_UNUSED(p)
+    return TelepathyHelper::instance()->phoneAccounts()[index];
 }
 
 AccountEntry *TelepathyHelper::accountAt(QQmlListProperty<AccountEntry> *p, int index)
@@ -391,6 +419,7 @@ void TelepathyHelper::onAccountRemoved()
 
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
+    Q_EMIT phoneAccountsChanged();
     Q_EMIT activeAccountsChanged();
     onSettingsChanged("defaultSimForMessages");
     onSettingsChanged("defaultSimForCalls");
@@ -418,9 +447,11 @@ void TelepathyHelper::onNewAccount(const Tp::AccountPtr &account)
 
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
+    Q_EMIT phoneAccountsChanged();
     Q_EMIT activeAccountsChanged();
     onSettingsChanged("defaultSimForMessages");
     onSettingsChanged("defaultSimForCalls");
+    Q_EMIT accountAdded(accountEntry);
 }
 
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
@@ -452,6 +483,7 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
+    Q_EMIT phoneAccountsChanged();
     Q_EMIT activeAccountsChanged();
     onSettingsChanged("defaultSimForMessages");
     onSettingsChanged("defaultSimForCalls");

@@ -42,6 +42,7 @@ public:
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr textChannel);
     void sendMessage(const QStringList &recipients, const QString &text, const QString &accountId);
+    void clearNotifications();
 
 protected:
     void showNotificationForFlashMessage(const Tp::ReceivedMessage &message, const QString &accountId);

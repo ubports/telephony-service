@@ -270,6 +270,14 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
     ChatManager::instance()->sendMessage(recipients, text, account->accountId());
 }
 
+void TextChannelObserver::clearNotifications()
+{
+    Q_FOREACH(NotifyNotification *notification, mNotifications.keys()) {
+        GError *error = NULL;
+        notify_notification_close(notification, &error);
+    }
+}
+
 void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMessage &message, const QString &accountId)
 {
     Tp::ContactPtr contact = message.sender();

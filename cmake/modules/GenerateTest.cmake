@@ -69,14 +69,15 @@ function(generate_test TESTNAME)
         qt5_use_modules(${TESTNAME} ${ARG_QT5_MODULES})
 
         if (${ARG_USE_DBUS})
-            execute_process(COMMAND mktemp -d OUTPUT_VARIABLE TMPDIR)
+            execute_process(COMMAND mktemp -d /tmp/${TESTNAME}.XXXXX OUTPUT_VARIABLE TMPDIR)
             string(REPLACE "\n" "" TMPDIR ${TMPDIR})
 
             if (NOT DEFINED ARG_ENVIRONMENT)
                 set(ARG_ENVIRONMENT HOME=${TMPDIR}
                                     HISTORY_SQLITE_DBPATH=:memory:
                                     MC_ACCOUNT_DIR=${TMPDIR}
-                                    MC_MANAGER_DIR=${TMPDIR})
+                                    MC_MANAGER_DIR=${TMPDIR}
+                                    MC_CLIENTS_DIR=${TMPDIR})
             endif ()
 
             set(TEST_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -p -o -p -,txt -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml,xunitxml)
@@ -113,7 +114,6 @@ function(generate_telepathy_test TESTNAME)
               --task dconf -p write -p /org/gnome/empathy/use-conn -p false --task-name dconf-write --wait-for ca.desrt.dconf --ignore-return
               --task /usr/lib/telepathy/mission-control-5 --task-name mission-control --wait-for ca.desrt.dconf --ignore-return
               --task ${CMAKE_BINARY_DIR}/tests/common/mock/telepathy-mock --task-name telepathy-mock --wait-for org.freedesktop.Telepathy.MissionControl5 --ignore-return
-              --task dbus-monitor --task-name dbus-monitor --ignore-return
               # FIXME: maybe it would be better to decide whether to run the handler in a per-test basis?
               --task ${CMAKE_BINARY_DIR}/handler/telephony-service-handler --task-name telephony-service-handler --wait-for org.freedesktop.Telepathy.ConnectionManager.mock --ignore-return
               ${ARG_TASKS})
