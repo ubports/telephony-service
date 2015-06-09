@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-04-08 05:45+0000\n"
-"X-Generator: Launchpad (build 17413)\n"
+"X-Launchpad-Export-Date: 2015-05-29 05:36+0000\n"
+"X-Generator: Launchpad (build 17532)\n"
 "Language: de\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -106,7 +106,7 @@ msgstr "Ich habe Ihren Anruf verpasst – können Sie mich jetzt anrufen?"
 
 #: indicator/messagingmenu.cpp:207
 msgid "I'll be 20 minutes late."
-msgstr "Ich komme 20 Minuten zu spät."
+msgstr "Ich komme 20 Minuten später."
 
 #: approver/approver.cpp:89
 msgid "I'm busy at the moment. I'll call later."
@@ -196,8 +196,7 @@ msgstr "Senden"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr ""
-"Entschuldigung, ich bin noch beschäftigt. Ich werde Sie später anrufen."
+msgstr "Leider bin ich noch beschäftigt. Ich werde Sie später anrufen."
 
 #: indicator/metrics.cpp:50
 #, qt-format

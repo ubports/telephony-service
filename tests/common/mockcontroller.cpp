@@ -23,88 +23,27 @@
 
 static const QString mockService("com.canonical.MockConnection");
 static const QString mockObject("/com/canonical/MockConnection/%1");
-static const QString mockInterface("com.canonical.MockConnection");
 
 MockController::MockController(const QString &protocol, QObject *parent) :
-    QObject(parent), mProtocol(protocol), mMockObject(mockObject.arg(protocol)),
-    mMockInterface(mockService, mockObject.arg(protocol), mockInterface)
+    ComCanonicalMockConnectionInterface(mockService, mockObject.arg(protocol), QDBusConnection::sessionBus(), parent),
+    mProtocol(protocol), mMockObject(mockObject.arg(protocol))
 {
-    connect(&mMockInterface, SIGNAL(MessageRead(QString)),
-            this, SIGNAL(messageRead(QString)));
-    connect(&mMockInterface, SIGNAL(MessageSent(QString, QVariantMap)),
-            this, SIGNAL(messageSent(QString, QVariantMap)));
-    connect(&mMockInterface, SIGNAL(CallReceived(QString)),
-            this, SIGNAL(callReceived(QString)));
-    connect(&mMockInterface, SIGNAL(CallEnded(QString)),
-            this, SIGNAL(callEnded(QString)));
-    connect(&mMockInterface, SIGNAL(CallStateChanged(QString, QString, QString)),
-            this, SIGNAL(callStateChanged(QString,QString,QString)));
-    connect(&mMockInterface, SIGNAL(ConferenceCreated(QString)),
-            this, SIGNAL(conferenceCreated(QString)));
-    connect(&mMockInterface, SIGNAL(ChannelMerged(QString)),
-            this, SIGNAL(channelMerged(QString)));
-    connect(&mMockInterface, SIGNAL(ChannelSplitted(QString)),
-            this, SIGNAL(channelSplitted(QString)));
-    connect(&mMockInterface, SIGNAL(Disconnected()),
-            this, SIGNAL(disconnected()));
-    connect(&mMockInterface, SIGNAL(Destroyed()),
-            this, SIGNAL(connectionDestroyed()));
-}
-
-void MockController::placeIncomingMessage(const QString &message, const QVariantMap &properties)
-{
-    mMockInterface.call("PlaceIncomingMessage", message, properties);
 }
 
 QString MockController::placeCall(const QVariantMap &properties)
 {
-    QDBusReply<QString> reply = mMockInterface.call("PlaceCall", properties);
-    return reply;
-}
-
-void MockController::hangupCall(const QString &callerId)
-{
-    mMockInterface.call("HangupCall", callerId);
-}
-
-void MockController::setCallState(const QString &phoneNumber, const QString &state)
-{
-    mMockInterface.call("SetCallState", phoneNumber, state);
-}
-
-void MockController::setOnline(bool online)
-{
-    mMockInterface.call("SetOnline", online);
-}
-
-void MockController::setPresence(const QString &status, const QString &statusMessage)
-{
-    mMockInterface.call("SetPresence", status, statusMessage);
-}
-
-void MockController::setVoicemailNumber(const QString &number)
-{
-    mMockInterface.call("SetVoicemailNumber", number);
-}
-
-void MockController::setVoicemailIndicator(bool active)
-{
-    mMockInterface.call("SetVoicemailIndicator", active);
-}
-
-void MockController::setVoicemailCount(int count)
-{
-    mMockInterface.call("SetVoicemailCount", count);
-}
-
-void MockController::setEmergencyNumbers(const QStringList &numbers)
-{
-    mMockInterface.call("SetEmergencyNumbers", numbers);
+    QDBusPendingReply<QString> reply = PlaceCall(properties);
+    reply.waitForFinished();
+    if (!reply.isValid()) {
+        return QString::null;
+    }
+    return reply.value();
 }
 
 QString MockController::serial()
 {
-    QDBusReply<QString> reply = mMockInterface.call("Serial");
+    QDBusPendingReply<QString> reply = Serial();
+    reply.waitForFinished();
     if (!reply.isValid()) {
         return QString::null;
     }

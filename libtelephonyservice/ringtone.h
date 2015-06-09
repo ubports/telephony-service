@@ -52,7 +52,6 @@ private:
     QMediaPlaylist mCallAudioPlaylist;
 
     QMediaPlayer *mMessageAudioPlayer;
-    QFeedbackHapticsEffect mVibrateEffect;
 };
 
 class Ringtone : public QObject
@@ -71,6 +70,7 @@ public Q_SLOTS:
 
 private:
     explicit Ringtone(QObject *parent = 0);
+    QFeedbackHapticsEffect mVibrateEffect;
     RingtoneWorker *mWorker;
     QThread mThread;
 };

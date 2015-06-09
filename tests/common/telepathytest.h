@@ -20,14 +20,23 @@
 #define TELEPATHYTEST_H
 
 #include <QtCore/QObject>
+#include <QtTest/QtTest>
 #include <TelepathyQt/Account>
-#include "telepathyhelper.h"
+#include <TelepathyQt/AccountManager>
+#include <QGSettings>
 
 #define DEFAULT_TIMEOUT 15000
+
+#define TRY_VERIFY(x) QTRY_VERIFY_WITH_TIMEOUT((x), DEFAULT_TIMEOUT)
+#define TRY_COMPARE(x, y) QTRY_COMPARE_WITH_TIMEOUT((x), (y), DEFAULT_TIMEOUT)
+
+#define WAIT_FOR(x) while (!(x)) { qDebug() << "Waiting for:" << #x ; QTest::qWait(100); }
 
 class TelepathyTest : public QObject
 {
     Q_OBJECT
+public:
+    TelepathyTest();
 
 protected:
     void initialize();
@@ -45,6 +54,8 @@ protected:
 private Q_SLOTS:
     void cleanup();
 
+protected:
+    QGSettings mPhoneSettings;
 private:
     Tp::AccountManagerPtr mAccountManager;
     bool mReady;

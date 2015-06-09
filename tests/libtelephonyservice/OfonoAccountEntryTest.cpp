@@ -61,21 +61,18 @@ void OfonoAccountEntryTest::init()
 {
     mTpAccount = addAccount("mock", "ofono", "phone account");
     QVERIFY(!mTpAccount.isNull());
-    QTRY_VERIFY(mTpAccount->isReady(Tp::Account::FeatureCore));
-
     mAccount = qobject_cast<OfonoAccountEntry*>(AccountEntryFactory::createEntry(mTpAccount, this));
     QVERIFY(mAccount);
+    TRY_VERIFY(mAccount->ready());
 
     // make sure the connection is available
-    QTRY_VERIFY(!mTpAccount->connection().isNull());
-    QTRY_COMPARE(mTpAccount->connection()->selfContact()->presence().type(), Tp::ConnectionPresenceTypeAvailable);
-    QTRY_VERIFY(mAccount->connected());
+    TRY_VERIFY(mAccount->connected());
+
+    // and make sure the status and status message are the ones we expect
+    TRY_COMPARE(mAccount->status(), QString("available"));
 
     // create the mock controller
     mMockController = new MockController("ofono", this);
-
-    // just in case, wait some time
-    QTest::qWait(500);
 }
 
 void OfonoAccountEntryTest::cleanup()
@@ -93,22 +90,23 @@ void OfonoAccountEntryTest::testAccountType()
 void OfonoAccountEntryTest::testConnected()
 {
     // the mock account is enabled/connected by default, so make sure it is like that
-    QTRY_VERIFY(mAccount->connected());
+    TRY_VERIFY(mAccount->connected());
 
     // right now the ofono account connection status behave exactly like the generic class,
     // but as the code path is different, test it again
     QSignalSpy connectedChangedSpy(mAccount, SIGNAL(connectedChanged()));
 
     // now set the account offline and see if the active flag changes correctly
-    mMockController->setOnline(false);
-    QTRY_VERIFY(!mAccount->connected());
-    QCOMPARE(connectedChangedSpy.count(), 1);
+    mMockController->SetPresence("away", "away");
+    TRY_VERIFY(connectedChangedSpy.count() > 0);
+    TRY_VERIFY(!mAccount->connected());
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
-    mMockController->setOnline(true);
-    QTRY_VERIFY(mAccount->connected());
-    QCOMPARE(connectedChangedSpy.count(), 1);
+    mMockController->SetPresence("available", "online");
+    // because of the way the mock was implemented, sometimes this can return two connectedChanged() signals.
+    TRY_VERIFY(connectedChangedSpy.count() > 0);
+    TRY_VERIFY(mAccount->connected());
 }
 
 void OfonoAccountEntryTest::testCompareIds_data()
@@ -141,8 +139,8 @@ void OfonoAccountEntryTest::testEmergencyNumbers()
     QStringList numbers;
     numbers << "111" << "190" << "911";
     qSort(numbers);
-    mMockController->setEmergencyNumbers(numbers);
-    QTRY_COMPARE(emergencyNumbersChangedSpy.count(), 1);
+    mMockController->SetEmergencyNumbers(numbers);
+    TRY_COMPARE(emergencyNumbersChangedSpy.count(), 1);
 
     QStringList emergencyNumbers = mAccount->emergencyNumbers();
     qSort(emergencyNumbers);
@@ -152,7 +150,7 @@ void OfonoAccountEntryTest::testEmergencyNumbers()
 
 void OfonoAccountEntryTest::testSerial()
 {
-    QTRY_COMPARE(mAccount->serial(), mMockController->serial());
+    TRY_COMPARE(mAccount->serial(), mMockController->serial());
 }
 
 void OfonoAccountEntryTest::testVoicemailIndicator()
@@ -163,28 +161,28 @@ void OfonoAccountEntryTest::testVoicemailIndicator()
     QSignalSpy voiceMailIndicatorSpy(mAccount, SIGNAL(voicemailIndicatorChanged()));
 
     // set to true
-    mMockController->setVoicemailIndicator(true);
-    QTRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
+    mMockController->SetVoicemailIndicator(true);
+    TRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
     QVERIFY(mAccount->voicemailIndicator());
 
     // and set back to false
     voiceMailIndicatorSpy.clear();
-    mMockController->setVoicemailIndicator(false);
-    QTRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
+    mMockController->SetVoicemailIndicator(false);
+    TRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
     QVERIFY(!mAccount->voicemailIndicator());
 }
 
 void OfonoAccountEntryTest::testVoicemailNumber()
 {
-    QSignalSpy voicemailNumberSpy(mAccount, SIGNAL(voicemailNumberChanged()));
-
     // check that the number is not empty at startup
-    QVERIFY(!mAccount->voicemailNumber().isEmpty());
+    TRY_VERIFY(!mAccount->voicemailNumber().isEmpty());
+
+    QSignalSpy voicemailNumberSpy(mAccount, SIGNAL(voicemailNumberChanged()));
 
     // try changing the number
     QString number("12345");
-    mMockController->setVoicemailNumber(number);
-    QTRY_COMPARE(voicemailNumberSpy.count(), 1);
+    mMockController->SetVoicemailNumber(number);
+    TRY_COMPARE(voicemailNumberSpy.count(), 1);
     QCOMPARE(mAccount->voicemailNumber(), number);
 }
 
@@ -197,14 +195,14 @@ void OfonoAccountEntryTest::testVoicemailCount()
 
     // set it to a bigger value
     int count = 10;
-    mMockController->setVoicemailCount(count);
-    QTRY_COMPARE(voicemailCountSpy.count(), 1);
+    mMockController->SetVoicemailCount(count);
+    TRY_COMPARE(voicemailCountSpy.count(), 1);
     QCOMPARE((int)mAccount->voicemailCount(), count);
 
     // and back to zero
     voicemailCountSpy.clear();
-    mMockController->setVoicemailCount(0);
-    QTRY_COMPARE(voicemailCountSpy.count(), 1);
+    mMockController->SetVoicemailCount(0);
+    TRY_COMPARE(voicemailCountSpy.count(), 1);
     QCOMPARE((int)mAccount->voicemailCount(), 0);
 }
 
@@ -216,8 +214,8 @@ void OfonoAccountEntryTest::testSimLocked()
     QVERIFY(!mAccount->simLocked());
 
     // now try to set the status to simlocked
-    mMockController->setPresence("simlocked", "simlocked");
-    QTRY_COMPARE(simLockedSpy.count(), 1);
+    mMockController->SetPresence("simlocked", "simlocked");
+    TRY_COMPARE(simLockedSpy.count(), 1);
     QVERIFY(mAccount->simLocked());
 }
 
@@ -245,8 +243,8 @@ void OfonoAccountEntryTest::testEmergencyCallsAvailable()
     QFETCH(QString, status);
     QFETCH(bool, available);
 
-    mMockController->setPresence(status, "");
-    QTRY_COMPARE(mAccount->status(), status);
+    mMockController->SetPresence(status, "");
+    TRY_COMPARE(mAccount->status(), status);
     QCOMPARE(mAccount->emergencyCallsAvailable(), available);
 }
 
@@ -256,11 +254,10 @@ void OfonoAccountEntryTest::testNetworkName()
 
     // set the value
     QString statusMessage("SomeNetwork");
-    Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", statusMessage);
-    mTpAccount->setRequestedPresence(presence);
+    mMockController->SetPresence("available", statusMessage);
 
-    QTRY_COMPARE(mAccount->networkName(), statusMessage);
-    QCOMPARE(networkNameChangedSpy.count(), 1);
+    TRY_COMPARE(networkNameChangedSpy.count(), 1);
+    QCOMPARE(mAccount->networkName(), statusMessage);
 }
 
 void OfonoAccountEntryTest::testAddressableVCardFields()

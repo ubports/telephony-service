@@ -23,7 +23,6 @@
 #define APPLICATIONUTILS_H
 
 #include <QObject>
-#include <QDBusServiceWatcher>
 #include <QUrl>
 
 class ApplicationUtils : public QObject

@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2015-01-17 07:07+0000\n"
-"X-Generator: Launchpad (build 17304)\n"
+"X-Launchpad-Export-Date: 2015-05-29 05:36+0000\n"
+"X-Generator: Launchpad (build 17532)\n"
 "Language: fr\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -53,7 +53,7 @@ msgstr "<b>%1</b> SMS reçus aujourd'hui"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> SMS envoyés aujourd'hui"
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:463
 msgid "Accept"
 msgstr "Accepter"
 
@@ -61,20 +61,20 @@ msgstr "Accepter"
 msgid "Call back"
 msgstr "Rappeler"
 
-#: approver/approver.cpp:392
+#: approver/approver.cpp:429
 msgid "Caller number is not available"
 msgstr "Le numéro d'appel n'est pas disponible"
 
-#: approver/approver.cpp:389
+#: approver/approver.cpp:426
 #, qt-format
 msgid "Calling from %1"
 msgstr "Appel depuis %1"
 
-#: approver/approver.cpp:385
+#: approver/approver.cpp:422
 msgid "Calling from private number"
 msgstr "Appel depuis un numéro privé"
 
-#: approver/approver.cpp:387
+#: approver/approver.cpp:424
 msgid "Calling from unknown number"
 msgstr "Appel depuis un numéro inconnu"
 
@@ -87,15 +87,15 @@ msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Désactivez le mode avion, relancez l'application et réessayez à nouveau."
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:485
 msgid "Decline"
 msgstr "Refuser"
 
-#: approver/approver.cpp:439
+#: approver/approver.cpp:476
 msgid "End + Answer"
 msgstr "Terminer + Répondre"
 
-#: approver/approver.cpp:425
+#: approver/approver.cpp:462
 msgid "Hold + Answer"
 msgstr "Rester en ligne + Répondre"
 
@@ -107,7 +107,7 @@ msgstr "J'ai manqué votre appel - pouvez-vous m'appeler maintenant ?"
 msgid "I'll be 20 minutes late."
 msgstr "J'aurai 20 minutes de retard."
 
-#: approver/approver.cpp:79
+#: approver/approver.cpp:89
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Je suis occupé pour le moment. Je vous rappellerai plus tard."
 
@@ -115,7 +115,7 @@ msgstr "Je suis occupé pour le moment. Je vous rappellerai plus tard."
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Je suis occupé(e) pour le moment. Je vous rappelle plus tard."
 
-#: approver/approver.cpp:80
+#: approver/approver.cpp:90
 msgid "I'm running late, on my way now."
 msgstr "Je suis en retard et actuellement en chemin."
 
@@ -123,7 +123,7 @@ msgstr "Je suis en retard et actuellement en chemin."
 msgid "I'm running late. I'm on my way."
 msgstr "Je suis en retard. Je suis en chemin."
 
-#: approver/approver.cpp:456
+#: approver/approver.cpp:493
 msgid "Message & decline"
 msgstr "Envoyer un message & décliner"
 
@@ -156,7 +156,7 @@ msgstr "Ok"
 msgid "Phone Calls"
 msgstr "Appels téléphoniques"
 
-#: approver/approver.cpp:81
+#: approver/approver.cpp:91
 msgid "Please call me back later."
 msgstr "Veuillez me rappeler plus tard."
 
@@ -226,7 +226,7 @@ msgstr "Essayez à nouveau depuis l'application."
 msgid "Unknown Number"
 msgstr "Numéro inconnu"
 
-#: approver/approver.cpp:59
+#: approver/approver.cpp:61
 msgid "Unknown caller"
 msgstr "Numéro inconnu"
 

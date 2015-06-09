@@ -33,6 +33,7 @@ typedef struct {
 class AccountEntry : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(AccountType type READ type CONSTANT)
     Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
     Q_PROPERTY(bool active READ active NOTIFY activeChanged)
     Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
@@ -50,6 +51,7 @@ public:
         GenericAccount
     };
 
+    bool ready() const;
     QString accountId() const;
     bool active() const;
     QString displayName() const;
@@ -89,6 +91,7 @@ protected:
 
     Tp::AccountPtr mAccount;
     ConnectionInfo mConnectionInfo;
+    bool mReady;
 };
 
 #endif // ACCOUNTENTRY_H
