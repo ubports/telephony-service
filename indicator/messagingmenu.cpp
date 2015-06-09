@@ -310,13 +310,17 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
     QContactFetchRequest *request = new QContactFetchRequest(this);
     request->setFilter(QContactPhoneNumber::match(targetId));
 
+    //FIXME: on arm64 the connect() statement below fails at runtime with the following output:
+    //QObject::connect: signal not found in QtContacts::QContactFetchRequest
+    // so we just disable it
+#ifndef __aarch64__
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, call, text, this]() {
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
             return;
         }
-
+#endif
         Call newCall = call;
         if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
@@ -332,7 +336,9 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
             }
         }
         addCallToMessagingMenu(newCall, text);
+#ifndef __aarch64__
     });
+
 
     // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
     if (account->type() == AccountEntry::PhoneAccount) {
@@ -341,6 +347,31 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
     } else {
         // just emit the signal to pretend we did a contact search
         Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
+    }
+#endif
+}
+
+void MessagingMenu::removeCall(const QString &targetId, const QString &accountId)
+{
+    Call call;
+    bool found = false;
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account) {
+        qWarning() << "Account not found for id" << accountId;
+        return;
+    }
+
+    Q_FOREACH(Call callMessage, mCalls) {
+        // FIXME: we need a better strategy to group calls from different accounts
+        if (account->compareIds(callMessage.targetId, targetId)) {
+            call = callMessage;
+            found = true;
+            mCalls.removeOne(callMessage);
+
+            // remove the previous entry and add a new one increasing the missed call count
+            messaging_menu_app_remove_message_by_id(mCallsApp, callMessage.messageId.toUtf8().data());
+            break;
+        }
     }
 }
 

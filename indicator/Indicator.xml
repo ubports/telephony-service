@@ -14,5 +14,11 @@
                 Remove any notification currently being displayed.
             ]]></dox:d>
         </method>
+        <method name="ClearCallNotification">
+            <dox:d><![CDATA[
+                Remove notifications for the given call
+            ]]></dox:d>
+             <arg name="targetId" type="s" direction="in"/>
+             <arg name="accountId" type="s" direction="in"/>
     </interface>
 </node>

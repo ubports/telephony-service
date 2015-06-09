@@ -23,6 +23,7 @@
 #define CALLNOTIFICATION_H
 
 #include <QObject>
+#include <QDBusInterface>
 
 class CallNotification : public QObject
 {
@@ -37,9 +38,11 @@ public:
 public Q_SLOTS:
     static CallNotification *instance();
     void showNotificationForCall(const QStringList &participants, NotificationReason reason);
+    void clearCallNotification(const QString &participantId, const QString &accountId);
 
 private:
     explicit CallNotification(QObject *parent = 0);
+    QDBusInterface mIndicatorIface;
 };
 
 #endif // CALLNOTIFICATION_H

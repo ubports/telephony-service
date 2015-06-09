@@ -43,6 +43,7 @@ public:
 
 public Q_SLOTS:
     Q_NOREPLY void ClearNotifications();
+    Q_NOREPLY void ClearCallNotification(const QString &targetId, const QString &accountId);
 
 Q_SIGNALS:
     void clearNotificationsRequested();

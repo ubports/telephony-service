@@ -14,6 +14,9 @@ qt5_use_modules(GreeterContactsTestServerExe Core DBus)
 add_executable(ToneGeneratorMock ToneGeneratorMock.cpp)
 qt5_use_modules(ToneGeneratorMock Core DBus)
 
+add_executable(IndicatorMock IndicatorMock.cpp)
+qt5_use_modules(IndicatorMock Core DBus)
+
 generate_test(GreeterContactsTest USE_DBUS
               SOURCES GreeterContactsTest.cpp ${LIBTELEPHONYSERVICE_DIR}/greetercontacts.cpp
               QT5_MODULES Contacts Core DBus Test
@@ -29,6 +32,12 @@ generate_test(ToneGeneratorTest USE_DBUS
               TASKS --task ${CMAKE_CURRENT_BINARY_DIR}/ToneGeneratorMock --task-name tone-gen --ignore-return
               WAIT_FOR com.Nokia.Telephony.Tones)
 add_dependencies(ToneGeneratorTest ToneGeneratorMock)
+
+generate_test(CallNotificationTest USE_DBUS
+              SOURCES CallNotificationTest.cpp ${LIBTELEPHONYSERVICE_DIR}/callnotification.cpp
+              QT5_MODULES Core DBus Test
+              TASKS --task ${CMAKE_CURRENT_BINARY_DIR}/IndicatorMock --task-name indicator --ignore-return
+              WAIT_FOR com.canonical.TelephonyServiceIndicator)
 
 generate_test(ContactUtilsTest SOURCES ContactUtilsTest.cpp QT5_MODULES Contacts Core Test LIBRARIES telephonyservice USE_UI)
 generate_test(PhoneUtilsTest SOURCES PhoneUtilsTest.cpp LIBRARIES telephonyservice USE_UI)

@@ -25,6 +25,7 @@
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>
 #include <QDBusReply>
+#include <QDBusServiceWatcher>
 #include <QDebug>
 #include <QProcess>
 #include <TelepathyQt/Constants>

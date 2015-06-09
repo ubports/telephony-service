@@ -23,6 +23,7 @@
 
 #include "indicatordbus.h"
 #include "indicatoradaptor.h"
+#include "messagingmenu.h"
 
 // Qt
 #include <QtDBus/QDBusConnection>
@@ -55,5 +56,10 @@ IndicatorDBus::connectToBus()
 void IndicatorDBus::ClearNotifications()
 {
     Q_EMIT clearNotificationsRequested();
+}
+
+void IndicatorDBus::ClearCallNotification(const QString &targetId, const QString &accountId)
+{
+    MessagingMenu::instance()->removeCall(targetId, accountId);
 }
 
