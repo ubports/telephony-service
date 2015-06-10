@@ -41,6 +41,13 @@ generate_test(CallNotificationTest USE_DBUS
 
 generate_test(ContactUtilsTest SOURCES ContactUtilsTest.cpp QT5_MODULES Contacts Core Test LIBRARIES telephonyservice USE_UI)
 generate_test(PhoneUtilsTest SOURCES PhoneUtilsTest.cpp LIBRARIES telephonyservice USE_UI)
+generate_test(ProtocolTest
+              SOURCES ProtocolTest.cpp ${LIBTELEPHONYSERVICE_DIR}/protocol.cpp
+              ENVIRONMENT TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_CURRENT_SOURCE_DIR}/testProtocols)
+generate_test(ProtocolManagerTest
+              SOURCES ProtocolManagerTest.cpp ${LIBTELEPHONYSERVICE_DIR}/protocol.cpp ${LIBTELEPHONYSERVICE_DIR}/protocolmanager.cpp
+              QT5_MODULES Core Qml Test
+              ENVIRONMENT TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_CURRENT_SOURCE_DIR}/testProtocols)
 
 generate_telepathy_test(AccountEntryFactoryTest SOURCES AccountEntryFactoryTest.cpp)
 generate_telepathy_test(AccountEntryTest SOURCES AccountEntryTest.cpp)
