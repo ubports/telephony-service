@@ -28,6 +28,7 @@
 #include "callmanager.h"
 #include "config.h"
 #include "greetercontacts.h"
+#include "protocolmanager.h"
 
 #include "qgsettings.h"
 
@@ -269,16 +270,6 @@ void TelepathyHelper::unregisterChannelObserver()
     Q_EMIT channelObserverUnregistered();
 }
 
-QStringList TelepathyHelper::supportedProtocols() const
-{
-    QStringList protocols;
-    protocols << "ufa"
-              << "tel"
-              << "ofono"
-              << "mock"; // used for tests
-    return protocols;
-}
-
 void TelepathyHelper::setupAccountEntry(AccountEntry *entry)
 {
     connect(entry,
@@ -467,7 +458,7 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
     Tp::AccountSetPtr accountSet;
     // try to find an account of the one of supported protocols
-    Q_FOREACH(const QString &protocol, supportedProtocols()) {
+    Q_FOREACH(const QString &protocol, ProtocolManager::instance()->protocolNames()) {
         accountSet = mAccountManager->accountsByProtocol(protocol);
         Q_FOREACH(const Tp::AccountPtr &account, accountSet->accounts()) {
             onNewAccount(account);

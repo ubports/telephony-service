@@ -42,11 +42,17 @@ class ProtocolManager : public QObject
     Q_PROPERTY(QQmlListProperty<Protocol> voiceProtocols
                READ qmlVoiceProtocols
                NOTIFY protocolsChanged)
+    /// @brief the name of all supported protocols
+    Q_PROPERTY(QStringList protocolNames READ protocolNames NOTIFY protocolsChanged)
+
 public:
     static ProtocolManager *instance();
 
     /// @brief returns all supported protocols
     Protocols protocols() const;
+
+    /// @brief return the name of all supported protocols
+    QStringList protocolNames() const;
 
     /// @brief returns all protocols matching the given flags
     Protocols protocolsForFeatures(Protocol::Features features) const;
@@ -59,6 +65,9 @@ public:
 
     /// @brief returns the protocol information for the given @ref protocolName or 0 if not supported
     Protocol *protocolByName(const QString &protocolName) const;
+
+    /// @brief checks if a given @ref protocolName is supported
+    bool isProtocolSupported(const QString &protocolName) const;
 
     // QML protocols property helpers
     QQmlListProperty<Protocol> qmlProtocols();

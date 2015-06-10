@@ -20,11 +20,12 @@
  */
 
 #include "protocol.h"
+#include <QFileInfo>
+#include <QSettings>
 
 Protocol::Protocol(const QString &name, Features features, const QString &fallbackProtocol, QObject *parent)
 : QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol)
 {
-
 }
 
 QString Protocol::name() const
@@ -40,4 +41,29 @@ Protocol::Features Protocol::features() const
 QString Protocol::fallbackProtocol() const
 {
     return mFallbackProtocol;
+}
+
+Protocol *Protocol::fromFile(const QString &fileName)
+{
+    QFileInfo file(fileName);
+    if (!file.isReadable() || file.suffix() != "protocol") {
+        return 0;
+    }
+
+    QString protocolName = file.baseName();
+    QSettings settings(fileName, QSettings::IniFormat);
+    settings.beginGroup("Protocol");
+    QString name = settings.value("Name", protocolName).toString();
+    QStringList featureList = settings.value("Features").toStringList();
+    Protocol::Features features;
+    Q_FOREACH(const QString &feature, featureList) {
+        if (feature == "text") {
+            features |= Protocol::TextChats;
+        } else if (feature == "voice") {
+            features |= Protocol::VoiceCalls;
+        }
+    }
+    QString fallbackProtocol = settings.value("FallbackProtocol").toString();
+
+    return new Protocol(name, features, fallbackProtocol);
 }

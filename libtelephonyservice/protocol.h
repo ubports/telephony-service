@@ -47,6 +47,8 @@ public:
     Features features() const;
     QString fallbackProtocol() const;
 
+    static Protocol *fromFile(const QString &fileName);
+
     friend class ProtocolManager;
 
 protected:

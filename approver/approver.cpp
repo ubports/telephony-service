@@ -31,6 +31,7 @@
 #include "ringtone.h"
 #include "callmanager.h"
 #include "callentry.h"
+#include "protocolmanager.h"
 #include "tonegenerator.h"
 #include "telepathyhelper.h"
 #include "accountentry.h"
@@ -147,7 +148,7 @@ Tp::ChannelDispatchOperationPtr Approver::dispatchOperation(Tp::PendingOperation
 void Approver::addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                                         const Tp::ChannelDispatchOperationPtr &dispatchOperation)
 {
-    if (!TelepathyHelper::instance()->supportedProtocols().contains(dispatchOperation->account()->protocolName())) {
+    if (!ProtocolManager::instance()->isProtocolSupported(dispatchOperation->account()->protocolName())) {
         context->setFinishedWithError(TP_QT_ERROR_NOT_CAPABLE, "The account for this request is not supported.");
         return;
     }

@@ -20,6 +20,8 @@
  */
 
 #include "protocolmanager.h"
+#include "config.h"
+#include <QDir>
 
 ProtocolManager *ProtocolManager::instance()
 {
@@ -30,6 +32,15 @@ ProtocolManager *ProtocolManager::instance()
 Protocols ProtocolManager::protocols() const
 {
     return mProtocols;
+}
+
+QStringList ProtocolManager::protocolNames() const
+{
+    QStringList names;
+    Q_FOREACH(const Protocol *protocol, mProtocols) {
+        names << protocol->name();
+    }
+    return names;
 }
 
 Protocols ProtocolManager::protocolsForFeatures(Protocol::Features features) const
@@ -61,6 +72,11 @@ Protocol *ProtocolManager::protocolByName(const QString &protocolName) const
         }
     }
     return 0;
+}
+
+bool ProtocolManager::isProtocolSupported(const QString &protocolName) const
+{
+    return protocolByName(protocolName) != 0;
 }
 
 QQmlListProperty<Protocol> ProtocolManager::qmlProtocols()
@@ -116,7 +132,18 @@ Protocol *ProtocolManager::qmlVoiceProtocolsAt(QQmlListProperty<Protocol> *p, in
 
 void ProtocolManager::loadSupportedProtocols()
 {
-    // FIXME: implement
+    QDir dir(protocolsDir());
+    Q_FOREACH(QString entry, dir.entryList()) {
+        if (!entry.endsWith(".protocol")) {
+            continue;
+        }
+        Protocol *protocol = Protocol::fromFile(dir.absoluteFilePath(entry));
+        if (protocol) {
+            protocol->setParent(this);
+            mProtocols << protocol;
+        }
+    }
+
     Q_EMIT protocolsChanged();
 }
 

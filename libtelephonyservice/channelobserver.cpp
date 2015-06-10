@@ -20,6 +20,7 @@
  */
 
 #include "channelobserver.h"
+#include "protocolmanager.h"
 #include "telepathyhelper.h"
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/ChannelClassSpecList>
@@ -56,7 +57,7 @@ void ChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &co
     Q_UNUSED(requestsSatisfied)
     Q_UNUSED(observerInfo)
 
-    if (!TelepathyHelper::instance()->supportedProtocols().contains(account->protocolName())) {
+    if (!ProtocolManager::instance()->isProtocolSupported(account->protocolName())) {
         context->setFinishedWithError(TP_QT_ERROR_NOT_CAPABLE, "The account for this request is not supported.");
         return;
     }

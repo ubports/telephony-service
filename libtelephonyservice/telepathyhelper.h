@@ -123,7 +123,6 @@ Q_SIGNALS:
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);
     Q_INVOKABLE void unregisterChannelObserver();
-    QStringList supportedProtocols() const;
 
 protected:
     void setupAccountEntry(AccountEntry *entry);
