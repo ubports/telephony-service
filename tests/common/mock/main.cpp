@@ -39,8 +39,13 @@ int main(int argc, char *argv[])
     Tp::BaseProtocolPtr phoneProto = Tp::BaseProtocol::create<Protocol>(
             QDBusConnection::sessionBus(), QLatin1String("ofono"));
 
+    // create a multimedia protocol
+    Tp::BaseProtocolPtr multimediaProto = Tp::BaseProtocol::create<Protocol>(
+            QDBusConnection::sessionBus(), QLatin1String("multimedia"));
+
     Tp::BaseConnectionManagerPtr cm = Tp::BaseConnectionManager::create(
             QDBusConnection::sessionBus(), QLatin1String("mock"));
+    cm->addProtocol(multimediaProto);
     cm->addProtocol(phoneProto);
     cm->addProtocol(proto);
     cm->registerObject();
