@@ -270,15 +270,34 @@ void TextHandler::sendMessage(const QStringList &recipients, const QString &mess
         // account does not exist
         return;
     }
+
+    // check if the message should be sent via multimedia account
+    if (account->type() == AccountEntry::PhoneAccount) {
+        // we just use fallback to 1-1 chats
+        if (recipients.size() == 1) {
+
+            Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
+                // TODO: we have to find the multimedia account that matches the same phone number, 
+                // but for now we just pick any multimedia connected account
+                if (newAccount->type() == AccountEntry::MultimediaAccount) {
+                    if (newAccount->connected()) {
+                        account = newAccount;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     if (!account->connected()) {
-        mPendingMessages[accountId][recipients].append(message);
+        mPendingMessages[account->accountId()][recipients].append(message);
         return;
     }
 
-    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
+    Tp::TextChannelPtr channel = existingChat(recipients, account->accountId());
     if (channel.isNull()) {
-        mPendingMessages[accountId][recipients].append(message);
-        startChat(recipients, accountId);
+        mPendingMessages[account->accountId()][recipients].append(message);
+        startChat(recipients, account->accountId());
         return;
     }
 

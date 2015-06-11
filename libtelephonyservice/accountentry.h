@@ -51,6 +51,7 @@ class AccountEntry : public QObject
 public:
     enum AccountType {
         PhoneAccount,
+        MultimediaAccount,
         GenericAccount
     };
 

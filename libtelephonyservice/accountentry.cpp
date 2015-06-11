@@ -202,7 +202,7 @@ void AccountEntry::ensureConnected()
 
 void AccountEntry::watchSelfContactPresence()
 {
-    if (mAccount.isNull() || mAccount->connection().isNull()) {
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
         return;
     }
 
