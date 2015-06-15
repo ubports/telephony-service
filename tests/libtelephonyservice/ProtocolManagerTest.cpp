@@ -18,12 +18,25 @@
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
+#include <QTemporaryDir>
+#include <QDir>
+#include <QFile>
 
 #include "config.h"
 #include "protocolmanager.h"
 
 Q_DECLARE_METATYPE(Protocols)
 Q_DECLARE_METATYPE(Protocol::Features)
+
+// inheriting just to make the constructor public for testing
+class ProtocolManagerWrapper : public ProtocolManager
+{
+    Q_OBJECT
+public:
+    ProtocolManagerWrapper(const QString &dir, QObject *parent = 0)
+        : ProtocolManager(dir, parent) { }
+};
+
 class ProtocolManagerTest : public QObject
 {
     Q_OBJECT
@@ -40,6 +53,7 @@ private Q_SLOTS:
     void testVoiceProtocols();
     void testIsProtocolSupported_data();
     void testIsProtocolSupported();
+    void testFileSystemWatch();
 };
 
 void ProtocolManagerTest::initTestCase()
@@ -150,6 +164,29 @@ void ProtocolManagerTest::testIsProtocolSupported()
     QFETCH(QString, protocolName);
     QFETCH(bool, supported);
     QCOMPARE(ProtocolManager::instance()->isProtocolSupported(protocolName), supported);
+}
+
+void ProtocolManagerTest::testFileSystemWatch()
+{
+    QTemporaryDir tempDir;
+    tempDir.setAutoRemove(true);
+    QVERIFY(tempDir.isValid());
+
+    QDir dir(tempDir.path());
+
+    ProtocolManagerWrapper manager(tempDir.path());
+    QSignalSpy protocolsChangedSpy(&manager, SIGNAL(protocolsChanged()));
+
+    QFile foobar(dir.absoluteFilePath("foobar.protocol"));
+    QVERIFY(foobar.open(QFile::WriteOnly));
+
+    foobar.write("[Protocol]\nName=foobar\nFeatures=read,write\n");
+    QVERIFY(foobar.flush());
+    foobar.close();
+
+    QTRY_COMPARE(protocolsChangedSpy.count(), 1);
+    QCOMPARE(manager.protocols().count(), 1);
+    QCOMPARE(manager.protocols()[0]->name(), QString("foobar"));
 }
 
 QTEST_MAIN(ProtocolManagerTest)

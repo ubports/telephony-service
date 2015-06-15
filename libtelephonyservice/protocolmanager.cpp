@@ -23,9 +23,19 @@
 #include "config.h"
 #include <QDir>
 
+ProtocolManager::ProtocolManager(const QString &dir, QObject *parent) :
+    QObject(parent), mProtocolsDir(dir)
+{
+    mFileWatcher.addPath(mProtocolsDir);
+    connect(&mFileWatcher,
+            SIGNAL(directoryChanged(QString)),
+            SLOT(loadSupportedProtocols()));
+    loadSupportedProtocols();
+}
+
 ProtocolManager *ProtocolManager::instance()
 {
-    static ProtocolManager self;
+    static ProtocolManager self(protocolsDir());
     return &self;
 }
 
@@ -132,7 +142,14 @@ Protocol *ProtocolManager::qmlVoiceProtocolsAt(QQmlListProperty<Protocol> *p, in
 
 void ProtocolManager::loadSupportedProtocols()
 {
-    QDir dir(protocolsDir());
+    // clear previous entries
+    Q_FOREACH(Protocol *protocol, mProtocols) {
+        protocol->deleteLater();
+    }
+    mProtocols.clear();
+
+    // and scan the directory
+    QDir dir(mProtocolsDir);
     Q_FOREACH(QString entry, dir.entryList()) {
         if (!entry.endsWith(".protocol")) {
             continue;
@@ -145,10 +162,4 @@ void ProtocolManager::loadSupportedProtocols()
     }
 
     Q_EMIT protocolsChanged();
-}
-
-ProtocolManager::ProtocolManager(QObject *parent) :
-    QObject(parent)
-{
-    loadSupportedProtocols();
 }

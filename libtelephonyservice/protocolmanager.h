@@ -23,6 +23,7 @@
 #define PROTOCOLMANAGER_H
 
 #include <QObject>
+#include <QFileSystemWatcher>
 #include <QQmlListProperty>
 #include "protocol.h"
 
@@ -90,10 +91,13 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void loadSupportedProtocols();
 
-private:
-    explicit ProtocolManager(QObject *parent = 0);
-    Protocols mProtocols;
+protected:
+    explicit ProtocolManager(const QString &dir, QObject *parent = 0);
 
+private:
+    Protocols mProtocols;
+    QFileSystemWatcher mFileWatcher;
+    QString mProtocolsDir;
 };
 
 #endif // PROTOCOLMANAGER_H
