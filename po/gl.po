@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2015-06-13 23:14+0000\n"
+"PO-Revision-Date: 2015-06-16 10:02+0000\n"
 "Last-Translator: Marcos Lans <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-06-14 05:44+0000\n"
+"X-Launchpad-Export-Date: 2015-06-16 11:20+0000\n"
 "X-Generator: Launchpad (build 17557)\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -123,7 +123,7 @@ msgstr "Chego tarde. Estou en camiño."
 
 #: approver/approver.cpp:493
 msgid "Message & decline"
-msgstr "Mensaxe e rexeitar"
+msgstr "Rexeitar cunha mensaxe"
 
 #: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
 #, qt-format
