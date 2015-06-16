@@ -36,7 +36,7 @@ MockConferenceCallChannel::MockConferenceCallChannel(MockConnection *conn, QList
         }
     }
 
-    Tp::BaseChannelPtr baseChannel = Tp::BaseChannel::create(mConnection, TP_QT_IFACE_CHANNEL_TYPE_CALL, 0, Tp::HandleTypeNone);
+    Tp::BaseChannelPtr baseChannel = Tp::BaseChannel::create(mConnection, TP_QT_IFACE_CHANNEL_TYPE_CALL, Tp::HandleTypeNone, 0);
     Tp::BaseChannelCallTypePtr callType = Tp::BaseChannelCallType::create(baseChannel.data(),
                                                                           true,
                                                                           Tp::StreamTransportTypeUnknown,
