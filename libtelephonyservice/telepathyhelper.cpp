@@ -155,7 +155,7 @@ QList<AccountEntry*> TelepathyHelper::activeAccounts() const
 {
     QList<AccountEntry*> activeAccountList;
     Q_FOREACH(AccountEntry *account, mAccounts) {
-        if (account->active()) {
+        if (account->active() && account->type() != AccountEntry::MultimediaAccount) {
             activeAccountList << account;
         }
     }
@@ -275,6 +275,7 @@ QStringList TelepathyHelper::supportedProtocols() const
     protocols << "ufa"
               << "tel"
               << "ofono"
+              << "multimedia"
               << "mock"; // used for tests
     return protocols;
 }
