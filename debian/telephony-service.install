@@ -14,5 +14,6 @@ usr/share/notify-osd/icons/gnome/scalable/status/notification-unknown-call.svg
 usr/share/polkit-1/actions/*TelephonyService*.policy
 usr/share/telepathy/clients/TelephonyService*.client
 usr/share/telephony-service/assets/*
+usr/share/telephony-service/protocols/*
 var/lib/polkit-1/localauthority/10-vendor.d/*TelephonyService*.pkla
 upstart/telephony-service-indicator.conf /usr/share/upstart/sessions

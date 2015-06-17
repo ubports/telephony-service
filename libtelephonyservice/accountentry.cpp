@@ -22,9 +22,10 @@
 #include <TelepathyQt/PendingOperation>
 #include <QTimer>
 #include "accountentry.h"
+#include "protocolmanager.h"
 
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
-    QObject(parent), mAccount(account), mReady(false)
+    QObject(parent), mAccount(account), mReady(false), mProtocol(0)
 {
     initialize();
 }
@@ -122,11 +123,18 @@ bool AccountEntry::compareIds(const QString &first, const QString &second) const
     return first == second;
 }
 
+Protocol *AccountEntry::protocolInfo() const
+{
+    return mProtocol;
+}
+
 void AccountEntry::initialize()
 {
     if (mAccount.isNull()) {
         return;
     }
+
+    mProtocol = ProtocolManager::instance()->protocolByName(mAccount->protocolName());
 
     // propagate the display name changes
     connect(mAccount.data(),

@@ -88,6 +88,7 @@ add_subdirectory(tools)
 add_subdirectory(icons)
 add_subdirectory(po)
 add_subdirectory(tests)
+add_subdirectory(protocols)
 
 include(EnableCoverageReport)
 #####################################################################

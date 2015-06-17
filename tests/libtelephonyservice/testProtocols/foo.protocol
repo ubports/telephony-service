@@ -1,0 +1,4 @@
+[Protocol]
+Name=foo
+Features=text,voice
+FallbackProtocol=bar

@@ -13,6 +13,8 @@ set(library_SRCS
     multimediaaccountentry.cpp
     ofonoaccountentry.cpp
     phoneutils.cpp
+    protocol.cpp
+    protocolmanager.cpp
     ringtone.cpp
     telepathyhelper.cpp
     tonegenerator.cpp
