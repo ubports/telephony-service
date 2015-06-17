@@ -1,3 +1,19 @@
+telephony-service (0.1+15.10.20150617-0ubuntu1) wily; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+
+  [ Gustavo Pichorim Boiko ]
+  * Make it possible to specify the list of supported protocols
+    dynamically by installing .protocol files in /usr/share/telephony-
+    service/protocols
+
+  [ Tiago Salem Herrmann ]
+  * Add multimedia connection manager support
+  * Remove slashes when normalizing phone numbers. (LP: #1462090)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Wed, 17 Jun 2015 20:39:47 +0000
+
 telephony-service (0.1+15.10.20150608.4-0ubuntu1) wily; urgency=medium
 
   [ Gustavo Pichorim Boiko ]
