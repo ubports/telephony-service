@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2015-02-13 00:54+0000\n"
+"PO-Revision-Date: 2015-06-18 17:29+0000\n"
 "Last-Translator: Ivo Xavier <ivofernandes12@gmail.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-05-29 05:36+0000\n"
-"X-Generator: Launchpad (build 17532)\n"
+"X-Launchpad-Export-Date: 2015-06-19 05:01+0000\n"
+"X-Generator: Launchpad (build 17570)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -29,8 +29,8 @@ msgstr[1] "%1 chamadas perdidas"
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
-msgstr[0] "%1 mensagem de voicemail"
-msgstr[1] "%1 mensagens de voicemail"
+msgstr[0] "%1 mensagem de voz"
+msgstr[1] "%1 mensagens de voz"
 
 #: indicator/metrics.cpp:48
 #, qt-format
@@ -84,7 +84,7 @@ msgstr "Cancelar"
 #: indicator/textchannelobserver.cpp:207
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
-"Desative o modo avião e tente novamente através da aplicação das mensagens."
+"Desative o modo avião e tente novamente através da app das mensagens."
 
 #: approver/approver.cpp:485
 msgid "Decline"
@@ -100,7 +100,7 @@ msgstr "Segurar + Responder"
 
 #: indicator/messagingmenu.cpp:204
 msgid "I missed your call - can you call me now?"
-msgstr "Não atendi a sua chamada - pode ligar-me agora?"
+msgstr "Não atendi a sua chamada - pode ligar agora?"
 
 #: indicator/messagingmenu.cpp:207
 msgid "I'll be 20 minutes late."
@@ -133,19 +133,19 @@ msgstr "Mensagem de %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr "Nenhuma chamada feita hoje"
+msgstr "Sem chamadas feitas hoje"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr "Nenhuma chamada recebida hoje"
+msgstr "Sem chamadas recebidas hoje"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr "Nenhuma mensagem de texto recebida hoje"
+msgstr "Sem mensagens de texto recebidas hoje"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr "Nenhuma mensagem de texto enviada hoje"
+msgstr "Sem mensagens de texto enviadas hoje"
 
 #: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
 msgid "Ok"
@@ -219,7 +219,7 @@ msgstr "A mensagem não foi enviada"
 
 #: indicator/textchannelobserver.cpp:210
 msgid "Try again from the messaging application."
-msgstr "Tente novamente através da aplicação das mensagens."
+msgstr "Tente novamente através da app das mensagens."
 
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
@@ -236,8 +236,7 @@ msgstr "Número desconhecido"
 #: indicator/textchannelobserver.cpp:205
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
-"Desbloqueie o seu cartão SIM e tente novamente através da aplicação das "
-"mensagens."
+"Desbloqueie o seu cartão SIM e tente novamente através da app das mensagens."
 
 #: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
 msgid "View message"
