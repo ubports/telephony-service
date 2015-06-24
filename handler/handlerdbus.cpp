@@ -65,9 +65,9 @@ QStringList HandlerDBus::AccountIds()
     return TelepathyHelper::instance()->accountIds();
 }
 
-bool HandlerDBus::IsConnected()
+bool HandlerDBus::IsReady()
 {
-    return TelepathyHelper::instance()->connected();
+    return TelepathyHelper::instance()->ready();
 }
 
 bool HandlerDBus::callIndicatorVisible() const
