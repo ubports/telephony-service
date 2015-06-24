@@ -45,11 +45,11 @@ template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStr
 
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
+      mPendingAccountReady(0),
       mDefaultCallAccount(NULL),
       mDefaultMessagingAccount(NULL),
       mChannelObserver(0),
-      mFirstTime(true),
-      mConnected(false),
+      mReady(false),
       mHandlerInterface(0),
       mPhoneSettings(new QGSettings("com.ubuntu.phone")),
       mApproverInterface(0),
@@ -86,7 +86,6 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
             SLOT(onAccountManagerReady(Tp::PendingOperation*)));
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
-    connect(this, SIGNAL(accountReady()), SIGNAL(setupReady()));
     connect(mPhoneSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
     connect(&mFlightModeInterface, SIGNAL(FlightModeChanged(bool)), this, SIGNAL(flightModeChanged()));
 
@@ -220,21 +219,20 @@ QDBusInterface *TelepathyHelper::approverInterface() const
     return mApproverInterface;
 }
 
-bool TelepathyHelper::connected() const
+bool TelepathyHelper::ready() const
 {
     if (QCoreApplication::applicationName() != "telephony-service-handler" &&
         mAccounts.isEmpty() &&
         !GreeterContacts::instance()->isGreeterMode()) {
         // get the status from the handler
-        QDBusReply<bool> reply = handlerInterface()->call("IsConnected");
+        QDBusReply<bool> reply = handlerInterface()->call("IsReady");
         if (reply.isValid()) {
             return reply.value();
         }
     }
 
-    return mConnected;
+    return mReady;
 }
-
 
 void TelepathyHelper::registerChannelObserver(const QString &observerName)
 {
@@ -272,9 +270,6 @@ void TelepathyHelper::unregisterChannelObserver()
 
 void TelepathyHelper::setupAccountEntry(AccountEntry *entry)
 {
-    connect(entry,
-            SIGNAL(connectedChanged()),
-            SLOT(updateConnectedStatus()));
     connect(entry,
             SIGNAL(connectedChanged()),
             SIGNAL(activeAccountsChanged()));
@@ -406,8 +401,6 @@ void TelepathyHelper::onAccountRemoved()
     }
     mAccounts.removeAll(account);
 
-    updateConnectedStatus();
-
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
     Q_EMIT phoneAccountsChanged();
@@ -433,8 +426,6 @@ void TelepathyHelper::onNewAccount(const Tp::AccountPtr &account)
         }
     }
     mAccounts = QList<AccountEntry*>() << sortedOfonoAccounts.values() <<  sortedOtherAccounts.values() ;
-
-    updateConnectedStatus();
 
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
@@ -465,12 +456,14 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
         }
     }
 
-    if (mAccounts.count() == 0) {
+    // get the number of pending accounts to be processed first
+    mPendingAccountReady = mAccounts.count();
+
+    if (mPendingAccountReady == 0) {
+        mReady = true;
         Q_EMIT setupReady();
         return;
     }
-
-    updateConnectedStatus();
 
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
@@ -482,29 +475,15 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 
 void TelepathyHelper::onAccountReady()
 {
-    if (mFirstTime) {
-        Q_EMIT accountReady();
+    if (mReady) {
+        return;
     }
 
-    mFirstTime = false;
-}
+    mPendingAccountReady--;
 
-void TelepathyHelper::updateConnectedStatus()
-{
-    bool previousConnectedStatus = mConnected;
-    mConnected = false;
-
-    // check if any of the accounts is currently connected
-    Q_FOREACH(AccountEntry *account, mAccounts) {
-        if (account->connected()) {
-            mConnected = true;
-            break;
-        }
-    }
-
-    // avoid emitting changed signals when the pro
-    if (mConnected != previousConnectedStatus) {
-        Q_EMIT connectedChanged();
+    if (mPendingAccountReady == 0) {
+        mReady = true;
+        Q_EMIT setupReady();
     }
 }
 

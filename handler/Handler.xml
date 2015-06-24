@@ -118,9 +118,9 @@
             ]]></dox:d>
             <arg name="result" type="as" direction="out"/>
         </method>
-        <method name="IsConnected">
+        <method name="IsReady">
             <dox:d><![CDATA[
-                Returns true if there is at least one account connected
+                Returns true if TelepathyHelper is ready
             ]]></dox:d>
             <arg name="result" type="b" direction="out"/>
         </method>

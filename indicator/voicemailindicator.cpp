@@ -31,8 +31,8 @@ VoiceMailIndicator::VoiceMailIndicator(QObject *parent)
 : QObject(parent),
   mConnection(QDBusConnection::sessionBus())
 {
-    connect(TelepathyHelper::instance(), SIGNAL(accountReady()), SLOT(onAccountReady()));
-    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onAccountReady()));
+    connect(TelepathyHelper::instance(), SIGNAL(setupReady()), SLOT(onAccountReady()));
+    connect(TelepathyHelper::instance(), SIGNAL(accountsChanged()), SLOT(onAccountReady()));
 }
 
 void VoiceMailIndicator::onAccountReady()
