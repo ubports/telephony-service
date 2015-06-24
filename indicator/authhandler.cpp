@@ -110,7 +110,7 @@ void AuthHandler::processStatusChange(AccountEntry *account, Tp::ConnectionStatu
 
     notificationHints["x-canonical-private-menu-model"] = menuModelPaths;
 
-    int notificationId = m_notifications.Notify("telephony-service-indicator",
+    uint notificationId = m_notifications.Notify("telephony-service-indicator",
                         0, "", title, message, actions, notificationHints, 0);
     mAuthFailureRequests[notificationId] = account;
 }
@@ -138,7 +138,7 @@ void AuthHandler::notificationClosed(uint id, uint reason) {
 
 void AuthHandler::clear()
 {
-    Q_FOREACH (int id, mAuthFailureRequests.keys()) {
+    Q_FOREACH (uint id, mAuthFailureRequests.keys()) {
         mAuthFailureRequests.remove(id);
         m_notifications.CloseNotification(id);
     }

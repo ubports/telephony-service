@@ -44,10 +44,9 @@ private Q_SLOTS:
 
 private:
     void processStatusChange(AccountEntry *account, Tp::ConnectionStatus status);
-    unsigned int m_notificationId;
     NotificationMenu m_menuNotification;
     org::freedesktop::Notifications m_notifications;
-    QMap<int, AccountEntry*> mAuthFailureRequests;
+    QMap<uint, AccountEntry*> mAuthFailureRequests;
     QStringList mIgnoredAccounts;
 };
 
