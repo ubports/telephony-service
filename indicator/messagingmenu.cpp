@@ -105,11 +105,10 @@ void MessagingMenu::addFlashMessage(const QString &senderId, const QString &acco
  
 }
 
-void MessagingMenu::addMessage(const QString &senderId, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text)
+void MessagingMenu::addMessage(const QString &senderId, const QString &contactAlias, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text)
 {
     // try to get a contact for that phone number
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
-    QString contactAlias = senderId;
 
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
@@ -125,13 +124,13 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
 
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged,
-                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this]() {
+                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this](QContactAbstractRequest::State newState) {
 
         GFile *file = NULL;
         GIcon *icon = NULL;
 
         // only process the results after the finished state is reached
-        if (request->state() != QContactAbstractRequest::FinishedState) {
+        if (newState != QContactAbstractRequest::FinishedState) {
             return;
         }
 

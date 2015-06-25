@@ -346,9 +346,9 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
         QContactFetchRequest *request = new QContactFetchRequest(this);
         request->setFilter(QContactPhoneNumber::match(contact->id()));
 
-        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, accountId, participantIds, message]() {
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, accountId, participantIds, message](QContactAbstractRequest::State newState) {
             // only process the results after the finished state is reached
-            if (request->state() != QContactAbstractRequest::FinishedState) {
+            if (newState != QContactAbstractRequest::FinishedState) {
                 return;
             }
 
@@ -369,11 +369,10 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
             request->setManager(ContactUtils::sharedManager());
             request->start();
         } else {
-            request->deleteLater();
-            showNotificationForMessage(message, accountId, participantIds, QContact());
+            // just emit the signal to pretend we did a contact search
+            Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
         }
     }
-
 }
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds, const QContact &contact)
@@ -421,7 +420,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         return;
     }
 
-    MessagingMenu::instance()->addMessage(telepathyContact->id(), participantIds, accountId, token.toHex(), message.received(), messageText);
+    MessagingMenu::instance()->addMessage(telepathyContact->id(), telepathyContact->alias(), participantIds, accountId, token.toHex(), message.received(), messageText);
 
     QString alias;
     QString avatar;
@@ -626,8 +625,15 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
 
 void TextChannelObserver::onReplyReceived(const QStringList &recipients, const QString &accountId, const QString &reply)
 {
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account) {
+        return;
+    }
+
     // FIXME - we need to find a better way to deal with dual sim in the messaging-menu
-    if (!TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->activeAccounts().size() > 1) {
+    if (!TelepathyHelper::instance()->defaultMessagingAccount()
+            && TelepathyHelper::instance()->activeAccounts().size() > 1
+            && account->type() != AccountEntry::GenericAccount) {
         NotifyNotification *notification = notify_notification_new(C::gettext("Please, select a SIM card:"),
                                                                    reply.toStdString().c_str(),
                                                                    "");
@@ -660,8 +666,12 @@ void TextChannelObserver::onReplyReceived(const QStringList &recipients, const Q
         return;
     }
 
-    // FIXME: for now we dont specify any accountId
-    sendMessage(recipients, reply, "");
+    if (account->type() == AccountEntry::GenericAccount) {
+        sendMessage(recipients, reply, accountId);
+    } else {
+        // FIXME: for now we dont specify any accountId
+        sendMessage(recipients, reply, "");
+    }
 }
 
 void TextChannelObserver::onMessageRead(const QStringList &recipients, const QString &accountId, const QString &encodedMessageId)
