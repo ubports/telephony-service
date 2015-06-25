@@ -181,7 +181,8 @@ void AccountEntryTest::testConnected()
     QVERIFY(mAccount->connected());
 
     // now set the account offline and see if the active flag changes correctly
-    mMockController->SetPresence("away", "away");
+    //mMockController->SetPresence("offline", "offline");
+    mAccount->account()->reconnect();
     TRY_VERIFY(connectedChangedSpy.count() > 0);
     TRY_VERIFY(!mAccount->connected());
 
