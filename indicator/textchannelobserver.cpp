@@ -36,6 +36,7 @@
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
+#include <TelepathyQt/ReferencedHandles>
 #include <QContactAvatar>
 #include <QContactDisplayLabel>
 #include <QContactFetchRequest>
@@ -368,8 +369,8 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
             request->setManager(ContactUtils::sharedManager());
             request->start();
         } else {
-            // just emit the signal to pretend we did a contact search
-            Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
+            request->deleteLater();
+            showNotificationForMessage(message, accountId, participantIds, QContact());
         }
     }
 
@@ -576,6 +577,11 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
 
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(textChannel->connection());
     if (!account) {
+        return;
+    }
+
+    if (!account->account()->connection().isNull() && 
+            message.sender()->handle().at(0) == account->account()->connection()->selfHandle()) {
         return;
     }
     
