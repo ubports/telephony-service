@@ -88,7 +88,7 @@ protected Q_SLOTS:
     virtual void initialize();
     virtual void watchSelfContactPresence();
     virtual void onConnectionChanged(Tp::ConnectionPtr connection);
-    virtual void onSelfHandleChanged(uint handle);
+    virtual void onSelfContactChanged();
 
 protected:
     explicit AccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
