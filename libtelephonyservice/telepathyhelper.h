@@ -45,7 +45,7 @@ class QGSettings;
 class TelepathyHelper : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
+    Q_PROPERTY(bool ready READ ready NOTIFY setupReady)
     Q_PROPERTY(QStringList accountIds READ accountIds NOTIFY accountIdsChanged)
     Q_PROPERTY(QQmlListProperty<AccountEntry> accounts READ qmlAccounts NOTIFY accountsChanged)
     Q_PROPERTY(QQmlListProperty<AccountEntry> phoneAccounts READ qmlPhoneAccounts NOTIFY phoneAccountsChanged)
@@ -81,7 +81,7 @@ public:
     void setMmsGroupChat(bool value);
     bool flightMode();
     void setFlightMode(bool value);
-    bool connected() const;
+    bool ready() const;
     QStringList accountIds();
     AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
     Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
@@ -106,8 +106,6 @@ public:
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
     void channelObserverUnregistered();
-    void accountReady();
-    void connectedChanged();
     void accountIdsChanged();
     void accountsChanged();
     void accountAdded(AccountEntry *account);
@@ -132,7 +130,6 @@ private Q_SLOTS:
     void onAccountReady();
     void onNewAccount(const Tp::AccountPtr &account);
     void onAccountRemoved();
-    void updateConnectedStatus();
     void onSettingsChanged(const QString&);
 
 private:
@@ -144,11 +141,11 @@ private:
     Tp::Features mConnectionFeatures;
     Tp::ClientRegistrarPtr mClientRegistrar;
     QList<AccountEntry*> mAccounts;
+    int mPendingAccountReady;
     AccountEntry *mDefaultCallAccount;
     AccountEntry *mDefaultMessagingAccount;
     ChannelObserver *mChannelObserver;
-    bool mFirstTime;
-    bool mConnected;
+    bool mReady;
     bool mMmsGroupChat;
     mutable QDBusInterface *mHandlerInterface;
     QGSettings *mPhoneSettings;
