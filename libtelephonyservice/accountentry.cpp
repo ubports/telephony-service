@@ -192,9 +192,8 @@ void AccountEntry::watchSelfContactPresence()
 
 }
 
-void AccountEntry::onSelfHandleChanged(uint handle)
+void AccountEntry::onSelfContactChanged()
 {
-    Q_UNUSED(handle)
     watchSelfContactPresence();
 
     Q_EMIT connectedChanged();
@@ -208,8 +207,8 @@ void AccountEntry::onConnectionChanged(Tp::ConnectionPtr connection)
         mConnectionInfo.objectPath = connection->objectPath();
 
         connect(connection.data(),
-                SIGNAL(selfHandleChanged(uint)),
-                SLOT(onSelfHandleChanged(uint)));
+                SIGNAL(selfContactChanged()),
+                SLOT(onSelfContactChanged()));
 
         watchSelfContactPresence();
     } else {
