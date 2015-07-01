@@ -41,8 +41,11 @@ private Q_SLOTS:
     void testConferenceCall();
     void testSendMessage();
     void testActiveCallIndicator();
+    void testNotApprovedChannels();
 
 private:
+    void registerApprover();
+    void unregisterApprover();
     void waitForCallActive(const QString &callerId);
     Approver *mApprover;
     MockController *mMockController;
@@ -56,11 +59,7 @@ void HandlerTest::initTestCase()
     QSignalSpy setupReadySpy(TelepathyHelper::instance(), SIGNAL(setupReady()));
     TRY_COMPARE(setupReadySpy.count(), 1);
 
-    // register the approver
-    mApprover = new Approver(this);
-    TelepathyHelper::instance()->registerClient(mApprover, "TelephonyTestApprover");
-    // Tp-qt does not set registered status to approvers
-    TRY_VERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(TELEPHONY_SERVICE_APPROVER));
+    registerApprover();
 }
 
 void HandlerTest::init()
@@ -302,21 +301,59 @@ void HandlerTest::testActiveCallIndicator()
     QVERIFY(!HandlerController::instance()->callIndicatorVisible());
 }
 
+void HandlerTest::testNotApprovedChannels()
+{
+    // make sure we get no approvers
+    unregisterApprover();
+
+    QVariantMap properties;
+    properties["Caller"] = "123456";
+    properties["State"] = "incoming";
+    QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
+    QString objectPath = mMockController->placeCall(properties);
+    QVERIFY(!objectPath.isEmpty());
+
+    // wait for a few seconds
+    QTest::qWait(5000);
+
+    // no state changes should happen, as the channel was not accepted
+    QVERIFY(callStateSpy.isEmpty());
+
+    registerApprover();
+}
+
+void HandlerTest::registerApprover()
+{
+    // register the approver
+    mApprover = new Approver(this);
+    QVERIFY(TelepathyHelper::instance()->registerClient(mApprover, "TelephonyTestApprover"));
+    // Tp-qt does not set registered status to approvers
+    TRY_VERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(TELEPHONY_SERVICE_APPROVER));
+}
+
+void HandlerTest::unregisterApprover()
+{
+    QVERIFY(TelepathyHelper::instance()->unregisterClient(mApprover));
+    mApprover->deleteLater();
+    mApprover = NULL;
+    TRY_VERIFY(!QDBusConnection::sessionBus().interface()->isServiceRegistered(TELEPHONY_SERVICE_APPROVER));
+}
+
 void HandlerTest::waitForCallActive(const QString &callerId)
 {
-    // wait until the call state is "accepted"
     QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
     QString state;
     QString objectPath;
     QString caller;
     int tries = 0;
-    while (state != "active" && caller != callerId && tries < 5) {
+    while ((state != "active" || caller != callerId) && tries < 5) {
         TRY_COMPARE(callStateSpy.count(), 1);
         caller = callStateSpy.first()[0].toString();
         objectPath = callStateSpy.first()[1].toString();
         state = callStateSpy.first()[2].toString();
         callStateSpy.clear();
         tries++;
+        qDebug() << "Waiting for call active, try " << tries << " failed.";
     }
 
     QCOMPARE(caller, callerId);
