@@ -55,8 +55,7 @@ public:
 
     QStringList inspectHandles(uint handleType, const Tp::UIntList& handles, Tp::DBusError *error);
     Tp::UIntList requestHandles(uint handleType, const QStringList& identifiers, Tp::DBusError* error);
-    Tp::BaseChannelPtr createChannel(const QString& channelType, uint targetHandleType,
-                                     uint targetHandle, const QVariantMap& hints, Tp::DBusError *error);
+    Tp::BaseChannelPtr createChannel(const QVariantMap& request, Tp::DBusError *error);
     Tp::ContactAttributesMap getContactAttributes(const Tp::UIntList &handles, const QStringList &ifaces, Tp::DBusError *error);
     uint setPresence(const QString& status, const QString& statusMessage, Tp::DBusError *error);
     uint setPresenceFail(const QString& status, const QString& statusMessage, Tp::DBusError *error);
