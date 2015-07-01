@@ -21,6 +21,7 @@
  */
 
 #include "handler.h"
+#include "accountentry.h"
 #include "protocolmanager.h"
 #include "telepathyhelper.h"
 
@@ -85,6 +86,7 @@ void Handler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
             connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onCallChannelReady(Tp::PendingOperation*)));
             mReadyRequests[pr] = callChannel;
+            mContexts[callChannel.data()] = context;
             continue;
         }
 
@@ -134,7 +136,7 @@ void Handler::onCallChannelReady(Tp::PendingOperation *op)
         return;
     }
 
-    Tp::ChannelPtr channel = mReadyRequests[pr];
+    Tp::ChannelPtr channel = mReadyRequests.take(pr);
     Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
 
     if(!callChannel) {
@@ -142,7 +144,22 @@ void Handler::onCallChannelReady(Tp::PendingOperation *op)
         return;
     }
 
-    mReadyRequests.remove(pr);
+    // if the call is neither Accepted nor Active, it means it got dispatched directly to the handler without passing
+    // through any approver. For phone calls, this would mean calls getting auto-accepted which is not desirable
+    // so we return an error here
+    bool incoming = false;
+    AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(callChannel->connection());
+    if (accountEntry) {
+        incoming = callChannel->initiatorContact() != accountEntry->account()->connection()->selfContact();
+    }
+    if (incoming && callChannel->callState() != Tp::CallStateAccepted && callChannel->callState() != Tp::CallStateActive) {
+        if (mContexts.contains(callChannel.data())) {
+            qWarning() << "Available channel was not approved by telephony-service-approver, ignoring it.";
+            Tp::MethodInvocationContextPtr<> context = mContexts.take(callChannel.data());
+            context->setFinishedWithError(TP_QT_ERROR_CONFUSED, "Only channels approved and accepted by telephony-service-approver are supported");
+        }
+        return;
+    }
 
     Q_EMIT callChannelAvailable(callChannel);
 }

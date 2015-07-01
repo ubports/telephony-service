@@ -264,8 +264,6 @@ void CallHandler::splitCall(const QString &objectPath)
 
 void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
-    channel->accept();
-
     QDBusInterface callChannelIface(channel->busName(), channel->objectPath(), DBUS_PROPERTIES_IFACE);
     QDBusMessage reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE);
     QVariantList args = reply.arguments();

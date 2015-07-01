@@ -368,6 +368,8 @@ void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
 {
     closeSnapDecision();
 
+    acceptCallChannels(dispatchOp);
+
     // forward the channel to the handler
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
 
@@ -385,6 +387,8 @@ void Approver::onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
     if (CallManager::instance()->foregroundCall()) {
         CallManager::instance()->foregroundCall()->endCall();
     }
+
+    acceptCallChannels(dispatchOp);
 
     // forward the channel to the handler
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
@@ -549,6 +553,17 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     }
 
     return true;
+}
+
+void Approver::acceptCallChannels(const Tp::ChannelDispatchOperationPtr dispatchOp)
+{
+    // accept all channels
+    Q_FOREACH(Tp::ChannelPtr channel, dispatchOp->channels()) {
+        Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
+        if (callChannel) {
+            callChannel->accept();
+        }
+    }
 }
 
 Tp::ChannelDispatchOperationPtr Approver::dispatchOperationForIncomingCall()
