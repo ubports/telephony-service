@@ -61,6 +61,7 @@ void Handler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
 
 
     Q_FOREACH(const Tp::ChannelPtr channel, channels) {
+        mContexts[channel.data()] = context;
         Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
         if (textChannel) {
             Tp::PendingReady *pr = textChannel->becomeReady(Tp::Features()
@@ -86,12 +87,10 @@ void Handler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
             connect(pr, SIGNAL(finished(Tp::PendingOperation*)),
                     SLOT(onCallChannelReady(Tp::PendingOperation*)));
             mReadyRequests[pr] = callChannel;
-            mContexts[callChannel.data()] = context;
             continue;
         }
 
     }
-    context->setFinished();
 }
 
 Tp::ChannelClassSpecList Handler::channelFilters()
@@ -123,6 +122,10 @@ void Handler::onTextChannelReady(Tp::PendingOperation *op)
     }
 
     mReadyRequests.remove(pr);
+    Tp::MethodInvocationContextPtr<> context = mContexts.take(textChannel.data());
+    if (context) {
+        context->setFinished();
+    }
 
     Q_EMIT textChannelAvailable(textChannel);
 }
@@ -138,8 +141,12 @@ void Handler::onCallChannelReady(Tp::PendingOperation *op)
 
     Tp::ChannelPtr channel = mReadyRequests.take(pr);
     Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
+    Tp::MethodInvocationContextPtr<> context = mContexts.take(channel.data());
 
     if(!callChannel) {
+        if (context) {
+            context->setFinishedWithError(TP_QT_ERROR_CONFUSED, "Channel was not a call channel");
+        }
         qCritical() << "The saved channel is not a Tp::CallChannel";
         return;
     }
@@ -153,12 +160,15 @@ void Handler::onCallChannelReady(Tp::PendingOperation *op)
         incoming = callChannel->initiatorContact() != accountEntry->account()->connection()->selfContact();
     }
     if (incoming && callChannel->callState() != Tp::CallStateAccepted && callChannel->callState() != Tp::CallStateActive) {
-        if (mContexts.contains(callChannel.data())) {
-            qWarning() << "Available channel was not approved by telephony-service-approver, ignoring it.";
-            Tp::MethodInvocationContextPtr<> context = mContexts.take(callChannel.data());
-            context->setFinishedWithError(TP_QT_ERROR_CONFUSED, "Only channels approved and accepted by telephony-service-approver are supported");
+        qWarning() << "Available channel was not approved by telephony-service-approver, ignoring it.";
+        if (context) {
+            context->setFinishedWithError(TP_QT_ERROR_NOT_CAPABLE, "Only channels approved and accepted by telephony-service-approver are supported");
         }
         return;
+    }
+
+    if (context) {
+        context->setFinished();
     }
 
     Q_EMIT callChannelAvailable(callChannel);
