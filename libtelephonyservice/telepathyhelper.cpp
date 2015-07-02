@@ -466,6 +466,7 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
     }
 
     if (mAccounts.count() == 0) {
+        mFirstTime = false;
         Q_EMIT setupReady();
         return;
     }
