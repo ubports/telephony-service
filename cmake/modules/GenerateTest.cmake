@@ -77,7 +77,8 @@ function(generate_test TESTNAME)
                                     HISTORY_SQLITE_DBPATH=:memory:
                                     MC_ACCOUNT_DIR=${TMPDIR}
                                     MC_MANAGER_DIR=${TMPDIR}
-                                    MC_CLIENTS_DIR=${TMPDIR})
+                                    MC_CLIENTS_DIR=${TMPDIR}
+                                    TELEPHONY_SERVICE_TEST=1)
             endif ()
 
             set(TEST_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -p -o -p -,txt -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml,xunitxml)
