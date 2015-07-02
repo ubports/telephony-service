@@ -32,6 +32,12 @@ ApproverController *ApproverController::instance()
     return self;
 }
 
+ApproverController::ApproverController(QObject *parent) :
+    QObject(parent),
+    mApproverInterface(APPROVER_SERVICE, APPROVER_OBJECT, APPROVER_INTERFACE)
+{
+}
+
 void ApproverController::acceptCall()
 {
     mApproverInterface.call("AcceptCall");
@@ -40,10 +46,4 @@ void ApproverController::acceptCall()
 void ApproverController::hangUpAndAcceptCall()
 {
     mApproverInterface.call("HangUpAndAcceptCall");
-}
-
-ApproverController::ApproverController(QObject *parent) :
-    QObject(parent),
-    mApproverInterface(APPROVER_SERVICE, APPROVER_OBJECT, APPROVER_INTERFACE)
-{
 }

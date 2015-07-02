@@ -33,6 +33,7 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
+    void testSnapDecisionTimeout();
     void testAcceptCall();
 
 private:
@@ -47,8 +48,6 @@ void ApproverTest::initTestCase()
 
     QSignalSpy setupReadySpy(TelepathyHelper::instance(), SIGNAL(setupReady()));
     TRY_COMPARE(setupReadySpy.count(), 1);
-
-    TRY_VERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered("com.canonical.Approver"));
 }
 
 void ApproverTest::init()
@@ -65,6 +64,22 @@ void ApproverTest::cleanup()
     mMockController->deleteLater();
 }
 
+void ApproverTest::testSnapDecisionTimeout()
+{
+    QString callerId("12345");
+    QVariantMap properties;
+    properties["Caller"] = callerId;
+    properties["State"] = "incoming";
+
+    QDBusInterface notificationsMock("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications");
+    QSignalSpy notificationSpy(&notificationsMock, SIGNAL(MockNotificationReceived(QString, uint, QString, QString, QString, QStringList, QVariantMap, int)));
+    mMockController->placeCall(properties);
+    TRY_COMPARE(notificationSpy.count(), 1);
+    QVariantMap hints = notificationSpy.first()[6].toMap();
+    QVERIFY(hints.contains("x-canonical-snap-decisions-timeout"));
+    QCOMPARE(hints["x-canonical-snap-decisions-timeout"].toInt(), -1);
+}
+
 void ApproverTest::testAcceptCall()
 {
     QString callerId("7654321");
@@ -72,17 +87,20 @@ void ApproverTest::testAcceptCall()
     QVariantMap properties;
     properties["Caller"] = callerId;
     properties["State"] = "incoming";
-    mMockController->placeCall(properties);
 
-    // we don't have a reliable way to check if the call hit the approver yet
-    QTest::qWait(5000);
+    QDBusInterface notificationsMock("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications");
+    QSignalSpy notificationSpy(&notificationsMock, SIGNAL(MockNotificationReceived(QString, uint, QString, QString, QString, QStringList, QVariantMap, int)));
+    QString objectPath = mMockController->placeCall(properties);
+    TRY_COMPARE(notificationSpy.count(), 1);
 
-    qDebug() << "Accepting the call";
+    // at this point we are already sure the approver has the call, as the notification was placed
     QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
     ApproverController::instance()->acceptCall();
     TRY_COMPARE(callStateSpy.count(), 1);
     QCOMPARE(callStateSpy.first()[0].toString(), callerId);
-    QCOMPARE(callStateSpy.first()[1].toString(), QString("accepted"));
+    QCOMPARE(callStateSpy.first()[1].toString(), objectPath);
+    QCOMPARE(callStateSpy.first()[2].toString(), QString("accepted"));
+    mMockController->HangupCall(callerId);
 }
 
 QTEST_MAIN(ApproverTest)

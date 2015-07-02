@@ -334,8 +334,8 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         request->setFilter(QContactPhoneNumber::match(contact->id()));
 
         // lambda function to update the notification
-        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, dispatchOp, channel]() {
-            if (!request || request->state() != QContactAbstractRequest::FinishedState) {
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, dispatchOp, channel](QContactAbstractRequest::State state) {
+            if (!request || state != QContactAbstractRequest::FinishedState) {
                 return;
             }
 
@@ -349,7 +349,6 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                 // Also notify greeter via AccountsService
                 GreeterContacts::emitContact(contact);
             }
-
             showSnapDecision(dispatchOp, channel, contact);
         });
 
