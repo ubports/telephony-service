@@ -162,6 +162,8 @@ void HandlerTest::testCallProperties()
     TRY_COMPARE(approverCallSpy.count(), 1);
     mApprover->acceptCall();
 
+    waitForCallActive(callerId);
+
     // wait until the call properties are changed
     TRY_VERIFY(handlerCallPropertiesSpy.count() > 0);
     QString objectPath = handlerCallPropertiesSpy.last()[0].toString();
@@ -303,29 +305,33 @@ void HandlerTest::testActiveCallIndicator()
 
 void HandlerTest::testNotApprovedChannels()
 {
-    // make sure we get no approvers
-    unregisterApprover();
-
     QVariantMap properties;
     properties["Caller"] = "123456";
     properties["State"] = "incoming";
+
+    QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
+
     QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
     QString objectPath = mMockController->placeCall(properties);
     QVERIFY(!objectPath.isEmpty());
 
+    // wait for the channel to hit the approver
+    TRY_COMPARE(approverCallSpy.count(), 1);
+
+    // accept the call but do not call callChannel->accept() on the channel
+    mApprover->acceptCall(false);
+
     // wait for a few seconds
-    QTest::qWait(5000);
+    QTest::qWait(3000);
 
     // no state changes should happen, as the channel was not accepted
     QVERIFY(callStateSpy.isEmpty());
-
-    registerApprover();
 }
 
 void HandlerTest::registerApprover()
 {
     // register the approver
-    mApprover = new Approver(this);
+    mApprover = new Approver();
     QVERIFY(TelepathyHelper::instance()->registerClient(mApprover, "TelephonyTestApprover"));
     // Tp-qt does not set registered status to approvers
     TRY_VERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(TELEPHONY_SERVICE_APPROVER));
