@@ -105,7 +105,7 @@ endfunction(generate_test)
 
 function(generate_telepathy_test TESTNAME)
     set(options "")
-    set(oneValueArgs "")
+    set(oneValueArgs WAIT_FOR)
     set(multiValueArgs TASKS LIBRARIES QT5_MODULES)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
@@ -125,10 +125,13 @@ function(generate_telepathy_test TESTNAME)
     if (NOT DEFINED ARG_QT5_MODULES)
         set(ARG_QT5_MODULES Core DBus Test Qml)
     endif (NOT DEFINED ARG_QT5_MODULES)
+    if (NOT DEFINED ARG_WAIT_FOR)
+        set(ARG_WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceHandler)
+    endif (NOT DEFINED ARG_WAIT_FOR)
     generate_test(${TESTNAME} ${ARGN}
                   TASKS ${TASKS}
                   LIBRARIES ${ARG_LIBRARIES} 
                   QT5_MODULES ${ARG_QT5_MODULES} 
                   USE_DBUS USE_UI 
-                  WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceHandler)
+                  WAIT_FOR ${ARG_WAIT_FOR})
 endfunction(generate_telepathy_test)
