@@ -75,8 +75,9 @@ void ApproverTest::testAcceptCall()
     mMockController->placeCall(properties);
 
     // we don't have a reliable way to check if the call hit the approver yet
-    QTest::qWait(3000);
+    QTest::qWait(5000);
 
+    qDebug() << "Accepting the call";
     QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
     ApproverController::instance()->acceptCall();
     TRY_COMPARE(callStateSpy.count(), 1);
