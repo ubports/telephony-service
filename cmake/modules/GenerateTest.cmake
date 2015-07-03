@@ -110,6 +110,7 @@ function(generate_telepathy_test TESTNAME)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     set(TASKS --task gnome-keyring-daemon -p -r -p -d --task-name gnome-keyring --ignore-return
+              --task ${CMAKE_BINARY_DIR}/tests/common/NotificationsMock --task-name notifications --ignore-return
               --task /usr/lib/dconf/dconf-service --task-name dconf-service --ignore-return
               --task dconf -p write -p /org/gnome/empathy/use-conn -p false --task-name dconf-write --wait-for ca.desrt.dconf --ignore-return
               --task /usr/lib/telepathy/mission-control-5 --task-name mission-control --wait-for ca.desrt.dconf --ignore-return
