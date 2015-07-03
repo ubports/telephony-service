@@ -122,7 +122,12 @@ void CallEntryTest::testIsVoicemail()
 
 void CallEntryTest::onCallChannelAvailable(const Tp::CallChannelPtr &channel)
 {
-    mCallChannel = channel;
+    channel->accept();
+    connect(channel->becomeReady(Tp::Features() << Tp::CallChannel::FeatureCore
+                                                << Tp::CallChannel::FeatureCallState),
+            &Tp::PendingOperation::finished, [this, channel] {
+        mCallChannel = channel;
+    });
 }
 
 QTEST_MAIN(CallEntryTest)

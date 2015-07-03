@@ -32,8 +32,9 @@ class NotificationsMock : public QObject
     Q_CLASSINFO("D-Bus Interface", NOTIFICATIONS_DBUS_SERVICE_NAME)
 
 public:
-    Q_SCRIPTABLE void Notify(QString app_name, uint replaces_id, QString app_icon, QString summary, QString body, QStringList actions, QVariantMap hints, int expire_timeout);
+    Q_SCRIPTABLE uint Notify(QString app_name, uint replaces_id, QString app_icon, QString summary, QString body, QStringList actions, QVariantMap hints, int expire_timeout);
     Q_SCRIPTABLE void CloseNotification(uint id);
+    Q_SCRIPTABLE QString GetServerInformation(QString& vendor, QString& version, QString& spec_version);
 
     // Mock specific method
     Q_SCRIPTABLE void MockInvokeAction(uint id, QString action_key);
@@ -46,9 +47,11 @@ Q_SIGNALS:
     Q_SCRIPTABLE void MockNotificationReceived(QString app_name, uint replaces_id, QString app_icon, QString summary, QString body, QStringList actions, QVariantMap hints, int expire_timeout);
 };
 
-void NotificationsMock::Notify(QString app_name, uint replaces_id, QString app_icon, QString summary, QString body, QStringList actions, QVariantMap hints, int expire_timeout)
+uint NotificationsMock::Notify(QString app_name, uint replaces_id, QString app_icon, QString summary, QString body, QStringList actions, QVariantMap hints, int expire_timeout)
 {
     Q_EMIT MockNotificationReceived(app_name, replaces_id, app_icon, summary, body, actions, hints, expire_timeout);
+    static uint id = 1;
+    return (replaces_id != 0 ? replaces_id : id++);
 }
 
 void NotificationsMock::MockInvokeAction(uint id, QString action_key)
@@ -60,6 +63,11 @@ void NotificationsMock::MockInvokeAction(uint id, QString action_key)
 void NotificationsMock::CloseNotification(uint id)
 {
     Q_EMIT NotificationClosed(id, 3); // 3 is closed by a CloseNotification() call
+}
+
+QString NotificationsMock::GetServerInformation(QString &vendor, QString &version, QString &spec_version)
+{
+    return QString();
 }
 
 int main(int argc, char **argv)

@@ -40,6 +40,7 @@ public Q_SLOTS:
     void setMuted(const QString &objectPath, bool muted);
     void setSpeakerMode(const QString &objectPath, bool enabled);
     void sendDTMF(const QString &objectPath, const QString &key);
+    bool hasCalls();
 
     // conference call methods
     void createConferenceCall(const QStringList &objectPaths);

@@ -12,6 +12,9 @@ include(CheckIncludeFile)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
+# just to make debug easier, print the system processor
+message(STATUS "System processor: ${CMAKE_SYSTEM_PROCESSOR}")
+
 # Check if should build using ubuntu platform api
 check_include_file_cxx("ubuntu/application/init.h" USE_UBUNTU_PLATFORM_API)
 

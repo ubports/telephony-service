@@ -334,8 +334,8 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         request->setFilter(QContactPhoneNumber::match(contact->id()));
 
         // lambda function to update the notification
-        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, dispatchOp, channel]() {
-            if (!request || request->state() != QContactAbstractRequest::FinishedState) {
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, dispatchOp, channel](QContactAbstractRequest::State state) {
+            if (!request || state != QContactAbstractRequest::FinishedState) {
                 return;
             }
 
@@ -349,7 +349,6 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                 // Also notify greeter via AccountsService
                 GreeterContacts::emitContact(contact);
             }
-
             showSnapDecision(dispatchOp, channel, contact);
         });
 
@@ -368,6 +367,8 @@ void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
 {
     closeSnapDecision();
 
+    acceptCallChannels(dispatchOp);
+
     // forward the channel to the handler
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
 
@@ -385,6 +386,8 @@ void Approver::onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
     if (CallManager::instance()->foregroundCall()) {
         CallManager::instance()->foregroundCall()->endCall();
     }
+
+    acceptCallChannels(dispatchOp);
 
     // forward the channel to the handler
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
@@ -552,6 +555,17 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     }
 
     return true;
+}
+
+void Approver::acceptCallChannels(const Tp::ChannelDispatchOperationPtr dispatchOp)
+{
+    // accept all channels
+    Q_FOREACH(Tp::ChannelPtr channel, dispatchOp->channels()) {
+        Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
+        if (callChannel) {
+            callChannel->accept();
+        }
+    }
 }
 
 Tp::ChannelDispatchOperationPtr Approver::dispatchOperationForIncomingCall()
