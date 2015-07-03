@@ -8,7 +8,9 @@ include_directories(
     ${GSETTINGS_QT_INCLUDE_DIRS}
     )
 
-generate_telepathy_test(ApproverTest
-                        SOURCES ApproverTest.cpp approvercontroller.cpp
-                        TASKS --task ${CMAKE_BINARY_DIR}/approver/telephony-service-approver --task-name telephony-service-approver --wait-for com.canonical.TelephonyServiceHandler --ignore-return
-                        WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceApprover)
+if (NOT "${CMAKE_SYSTEM_PROCESSOR}" EQUAL "aarch64")
+    generate_telepathy_test(ApproverTest
+                            SOURCES ApproverTest.cpp approvercontroller.cpp
+                            TASKS --task ${CMAKE_BINARY_DIR}/approver/telephony-service-approver --task-name telephony-service-approver --wait-for com.canonical.TelephonyServiceHandler --ignore-return
+                            WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceApprover)
+endif()
