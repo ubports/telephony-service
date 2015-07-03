@@ -1,3 +1,23 @@
+telephony-service (0.1+15.04.20150703.1-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ Gustavo Pichorim Boiko ]
+  * Prevent telephony-service from auto-accepting calls in the case of
+    an approver failure. added: tests/approver/
+    tests/approver/ApproverTest.cpp tests/approver/CMakeLists.txt
+    tests/approver/approvercontroller.cpp
+    tests/approver/approvercontroller.h
+
+  [ Tiago Salem Herrmann ]
+  * Do not let USSD and incoming call snap decisions timeout. Initialize
+    m_notificationId with -1, as 0 is a valid id. Do not call
+    CloseNotification() when notificationClosed() is received to avoid
+    loop. (LP: #1453004)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Fri, 03 Jul 2015 18:38:15 +0000
+
 telephony-service (0.1+15.04.20150617-0ubuntu1) vivid; urgency=medium
 
   [ CI Train Bot ]
