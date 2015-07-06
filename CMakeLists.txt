@@ -50,6 +50,11 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+# sbuild/cross-compilation fallback:
+if (QT_INSTALL_QML STREQUAL "")
+    set(QT_INSTALL_QML ${CMAKE_INSTALL_LIBDIR}/qt5/qml)
+endif()
+
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
