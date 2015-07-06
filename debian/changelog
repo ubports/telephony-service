@@ -1,3 +1,31 @@
+telephony-service (0.1+15.04.20150706.1-0ubuntu1) vivid; urgency=medium
+
+  [ Andreas Pokorny ]
+  * sbuild fix
+
+  [ Gustavo Pichorim Boiko ]
+  * Do not update the pot file automatically on builds, it causes
+    conflicts when multiple changes are applied together.
+
+  [ Iain Lane ]
+  * We don't inherit from the 'gnome' icon theme any more, so our icons
+    weren't being found in a default Unity session using ubuntu-mono-
+    dark. We do, however, inherit from Humanity, so put the icons under
+    this theme. (LP: #1412709)
+
+  [ Sebastien Bacher ]
+  * Don't play keypad sounds in silentmode (LP: #1384274)
+  * don't unref a non owned variant, g_variant_new_strv() returns a
+    floating reference which is consumed by calling
+    messaging_menu_message_add_action() thanks Lars Uebernickel for
+    pointing the issue (LP: #1427286)
+
+  [ Tiago Salem Herrmann ]
+  * Check if targetContact() returns a valid pointer before using it.
+    (LP: #1433068)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 06 Jul 2015 23:32:23 +0000
+
 telephony-service (0.1+15.04.20150703.1-0ubuntu1) vivid; urgency=medium
 
   [ CI Train Bot ]
