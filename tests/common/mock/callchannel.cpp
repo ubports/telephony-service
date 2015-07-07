@@ -28,7 +28,7 @@ MockCallChannel::MockCallChannel(MockConnection *conn, QString phoneNumber, QStr
     mTargetHandle(targetHandle),
     mState(state)
 {
-    Tp::BaseChannelPtr baseChannel = Tp::BaseChannel::create(mConnection, TP_QT_IFACE_CHANNEL_TYPE_CALL, targetHandle, Tp::HandleTypeContact);
+    Tp::BaseChannelPtr baseChannel = Tp::BaseChannel::create(mConnection, TP_QT_IFACE_CHANNEL_TYPE_CALL, Tp::HandleTypeContact, targetHandle);
     Tp::BaseChannelCallTypePtr callType = Tp::BaseChannelCallType::create(baseChannel.data(),
                                                                           true,
                                                                           Tp::StreamTransportTypeUnknown,
