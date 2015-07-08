@@ -77,7 +77,8 @@ function(generate_test TESTNAME)
                                     HISTORY_SQLITE_DBPATH=:memory:
                                     MC_ACCOUNT_DIR=${TMPDIR}
                                     MC_MANAGER_DIR=${TMPDIR}
-                                    MC_CLIENTS_DIR=${TMPDIR})
+                                    MC_CLIENTS_DIR=${TMPDIR}
+                                    TELEPHONY_SERVICE_TEST=1)
             endif ()
 
             set(TEST_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -p -o -p -,txt -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml,xunitxml)
@@ -105,11 +106,12 @@ endfunction(generate_test)
 
 function(generate_telepathy_test TESTNAME)
     set(options "")
-    set(oneValueArgs "")
+    set(oneValueArgs WAIT_FOR)
     set(multiValueArgs TASKS LIBRARIES QT5_MODULES)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     set(TASKS --task gnome-keyring-daemon -p -r -p -d --task-name gnome-keyring --ignore-return
+              --task ${CMAKE_BINARY_DIR}/tests/common/NotificationsMock --task-name notifications --ignore-return
               --task /usr/lib/dconf/dconf-service --task-name dconf-service --ignore-return
               --task dconf -p write -p /org/gnome/empathy/use-conn -p false --task-name dconf-write --wait-for ca.desrt.dconf --ignore-return
               --task /usr/lib/telepathy/mission-control-5 --task-name mission-control --wait-for ca.desrt.dconf --ignore-return
@@ -125,10 +127,13 @@ function(generate_telepathy_test TESTNAME)
     if (NOT DEFINED ARG_QT5_MODULES)
         set(ARG_QT5_MODULES Core DBus Test Qml)
     endif (NOT DEFINED ARG_QT5_MODULES)
+    if (NOT DEFINED ARG_WAIT_FOR)
+        set(ARG_WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceHandler)
+    endif (NOT DEFINED ARG_WAIT_FOR)
     generate_test(${TESTNAME} ${ARGN}
                   TASKS ${TASKS}
                   LIBRARIES ${ARG_LIBRARIES} 
                   QT5_MODULES ${ARG_QT5_MODULES} 
                   USE_DBUS USE_UI 
-                  WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceHandler)
+                  WAIT_FOR ${ARG_WAIT_FOR})
 endfunction(generate_telepathy_test)

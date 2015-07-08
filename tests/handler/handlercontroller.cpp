@@ -99,6 +99,12 @@ void HandlerController::sendDTMF(const QString &objectPath, const QString &key)
     mHandlerInterface.call("SendDTMF", objectPath, key);
 }
 
+bool HandlerController::hasCalls()
+{
+    QDBusReply<bool> reply = mHandlerInterface.call("HasCalls");
+    return reply.isValid() && reply.value();
+}
+
 void HandlerController::createConferenceCall(const QStringList &objectPaths)
 {
     mHandlerInterface.call("CreateConferenceCall", objectPaths);
