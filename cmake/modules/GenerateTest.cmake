@@ -36,7 +36,7 @@ function(generate_test TESTNAME)
     endif ()
 
     if (NOT DEFINED ARG_TIMEOUT)
-        set(ARG_TIMEOUT 30)
+        set(ARG_TIMEOUT 60)
     endif ()
 
     if (NOT DEFINED ARG_QT5_MODULES)
@@ -69,17 +69,18 @@ function(generate_test TESTNAME)
         qt5_use_modules(${TESTNAME} ${ARG_QT5_MODULES})
 
         if (${ARG_USE_DBUS})
-            execute_process(COMMAND mktemp -d OUTPUT_VARIABLE TMPDIR)
+            execute_process(COMMAND mktemp -d /tmp/${TESTNAME}.XXXXX OUTPUT_VARIABLE TMPDIR)
             string(REPLACE "\n" "" TMPDIR ${TMPDIR})
 
             if (NOT DEFINED ARG_ENVIRONMENT)
                 set(ARG_ENVIRONMENT HOME=${TMPDIR}
                                     HISTORY_SQLITE_DBPATH=:memory:
                                     MC_ACCOUNT_DIR=${TMPDIR}
-                                    MC_MANAGER_DIR=${TMPDIR})
+                                    MC_MANAGER_DIR=${TMPDIR}
+                                    MC_CLIENTS_DIR=${TMPDIR})
             endif ()
 
-            set(TEST_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -p -xunitxml -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
+            set(TEST_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -p -o -p -,txt -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml,xunitxml)
             if (DEFINED ARG_WAIT_FOR)
                 SET(TEST_COMMAND ${TEST_COMMAND} --wait-for ${ARG_WAIT_FOR})
             endif ()
@@ -87,7 +88,7 @@ function(generate_test TESTNAME)
             add_test(${TESTNAME} ${DBUS_RUNNER} --keep-env --dbus-config=${CMAKE_BINARY_DIR}/tests/common/dbus-session.conf --max-wait=${ARG_TIMEOUT}
                                                 ${ARG_TASKS} --task ${TEST_COMMAND} --task-name ${TESTNAME})
         else ()
-            add_test(${TESTNAME} ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -xunitxml -o ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml)
+            add_test(${TESTNAME} ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -o -,txt -o ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml,xunitxml)
         endif()
 
         set_tests_properties(${TESTNAME} PROPERTIES

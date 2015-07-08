@@ -90,7 +90,7 @@ void flash_notification_action(NotifyNotification* notification, char *action, g
         NotificationData *notificationData = (NotificationData*) data;
         if (notificationData != NULL) {
             AccountEntry *account = TelepathyHelper::instance()->accountForId(notificationData->accountId);
-            bool phoneNumberBased = account && (account->type() == AccountEntry::PhoneAccount);
+            bool phoneNumberBased = account && (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount);
             QStringList recipients;
             recipients << notificationData->senderId << notificationData->participantIds;
             History::Thread thread = History::Manager::instance()->threadForParticipants(notificationData->accountId,
@@ -195,7 +195,7 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
 
     // check if the account is available
     if (!account->connected()) {
-        bool phoneNumberBased = account->type() == AccountEntry::PhoneAccount;
+        bool phoneNumberBased = account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount;
         History::Thread thread = History::Manager::instance()->threadForParticipants(account->accountId(),
                                                                                      History::EventTypeText,
                                                                                      recipients,
@@ -213,7 +213,7 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
                                      History::MessageStatusPermanentlyFailed);
         History::Events events;
         events.append(textEvent);
-                                 
+
         History::Manager::instance()->writeEvents(events);
 
         QString failureMessage;
@@ -222,7 +222,7 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
 
         if (simLocked) {
             failureMessage = C::gettext("Unlock your sim card and try again from the messaging application.");
-        } else if (TelepathyHelper::instance()->flightMode()) {
+        } else if (ofonoAccount && TelepathyHelper::instance()->flightMode()) {
             failureMessage = C::gettext("Deactivate flight mode and try again from the messaging application.");
         } else {
             // generic error
@@ -268,6 +268,14 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
     }
 
     ChatManager::instance()->sendMessage(recipients, text, account->accountId());
+}
+
+void TextChannelObserver::clearNotifications()
+{
+    Q_FOREACH(NotifyNotification *notification, mNotifications.keys()) {
+        GError *error = NULL;
+        notify_notification_close(notification, &error);
+    }
 }
 
 void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMessage &message, const QString &accountId)
@@ -356,7 +364,7 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
         });
 
         // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
-        if (account->type() == AccountEntry::PhoneAccount) {
+        if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
             request->setManager(ContactUtils::sharedManager());
             request->start();
         } else {
@@ -372,6 +380,8 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     Tp::ContactPtr telepathyContact = message.sender();
     QString messageText = message.text();
 
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+
     Tp::MessagePartList messageParts = message.parts();
     bool mms = message.header()["mms"].variant().toBool();
     if (mms) {
@@ -383,19 +393,21 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
                 break;
             }
         }
-        // WORKAROUND: powerd can't decide when to wake up the screen on incoming mms's
-        // as the download of the attachments is made by another daemon, so we wake up
-        // the screen here.
-        if (!CallManager::instance()->hasCalls()) {
-            QDBusInterface unityIface("com.canonical.Unity.Screen",
-                                      "/com/canonical/Unity/Screen",
-                                      "com.canonical.Unity.Screen",
-                                      QDBusConnection::systemBus());
-            QList<QVariant> args;
-            args.append("on");
-            args.append(0);
-            unityIface.callWithArgumentList(QDBus::NoBlock, "setScreenPowerMode", args);
-        }
+    }
+
+    // WORKAROUND: powerd can't decide when to wake up the screen on incoming mms's
+    // (or other telepathy accounts) as the download of the attachments is made by 
+    // another daemon, so we wake up the screen here.
+    if (!CallManager::instance()->hasCalls() &&
+           (mms || account->type() != AccountEntry::PhoneAccount)) {
+        QDBusInterface unityIface("com.canonical.Unity.Screen",
+                                  "/com/canonical/Unity/Screen",
+                                  "com.canonical.Unity.Screen",
+                                  QDBusConnection::systemBus());
+        QList<QVariant> args;
+        args.append("on");
+        args.append(0);
+        unityIface.callWithArgumentList(QDBus::NoBlock, "setScreenPowerMode", args);
     }
 
     // add the message to the messaging menu (use hex format to avoid invalid characters)
@@ -480,7 +492,7 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
         NotificationData *data = i.value();
 
         AccountEntry *account = TelepathyHelper::instance()->accountForId(data->accountId);
-        if (!account || account->type() != AccountEntry::PhoneAccount) {
+        if (!account || (account->type() != AccountEntry::PhoneAccount && account->type() != AccountEntry::MultimediaAccount)) {
             return;
         }
 

@@ -25,6 +25,8 @@
 #include <QObject>
 #include <TelepathyQt/Account>
 
+class Protocol;
+
 typedef struct {
     QString busName;
     QString objectPath;
@@ -33,6 +35,7 @@ typedef struct {
 class AccountEntry : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(AccountType type READ type CONSTANT)
     Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
     Q_PROPERTY(bool active READ active NOTIFY activeChanged)
     Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
@@ -41,15 +44,18 @@ class AccountEntry : public QObject
     Q_PROPERTY(QString selfContactId READ selfContactId NOTIFY selfContactIdChanged)
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList addressableVCardFields READ addressableVCardFields NOTIFY addressableVCardFieldsChanged)
+    Q_PROPERTY(Protocol* protocolInfo READ protocolInfo CONSTANT)
     Q_ENUMS(AccountType)
     friend class AccountEntryFactory;
 
 public:
     enum AccountType {
         PhoneAccount,
+        MultimediaAccount,
         GenericAccount
     };
 
+    bool ready() const;
     QString accountId() const;
     bool active() const;
     QString displayName() const;
@@ -63,6 +69,8 @@ public:
     virtual QStringList addressableVCardFields() const;
 
     virtual bool compareIds(const QString &first, const QString &second) const;
+
+    Protocol *protocolInfo() const;
 
 Q_SIGNALS:
     void accountReady();
@@ -89,6 +97,8 @@ protected:
 
     Tp::AccountPtr mAccount;
     ConnectionInfo mConnectionInfo;
+    bool mReady;
+    Protocol *mProtocol;
 };
 
 #endif // ACCOUNTENTRY_H

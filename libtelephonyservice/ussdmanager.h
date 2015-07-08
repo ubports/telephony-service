@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2015 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -28,6 +28,7 @@
 #include <TelepathyQt/Connection>
 
 class TelepathyHelper;
+class AccountEntry;
 
 class USSDManager : public QObject
 {
@@ -35,30 +36,23 @@ class USSDManager : public QObject
     Q_PROPERTY(bool active 
                READ active
                NOTIFY activeChanged)
-    Q_PROPERTY(QString activeAccountId
-               READ activeAccountId
-               NOTIFY activeAccountIdChanged)
     Q_PROPERTY(QString state 
                READ state
                NOTIFY stateChanged)
 public:
-    static USSDManager *instance();
-    Q_INVOKABLE void initiate(const QString &command, const QString &accountId = QString::null);
-    Q_INVOKABLE void respond(const QString &reply, const QString &accountId = QString::null);
-    Q_INVOKABLE void cancel(const QString &accountId = QString::null);
+    explicit USSDManager(AccountEntry *account, QObject *parent = 0);
+    Q_INVOKABLE void initiate(const QString &command);
+    Q_INVOKABLE void respond(const QString &reply);
+    Q_INVOKABLE void cancel();
 
     bool active() const;
-    QString activeAccountId() const;
     QString state() const;
 
 public Q_SLOTS:
-    void onAccountsChanged();
     void onStateChanged(const QString &state);
-    void accountConnectedChanged();
 
 Q_SIGNALS:
     void activeChanged();
-    void activeAccountIdChanged();
     void stateChanged(const QString &state);
 
     void notificationReceived(const QString &message);
@@ -75,15 +69,17 @@ Q_SIGNALS:
     void connectedLineRestrictionComplete(const QString &ssOp, const QString &status);
     void initiateFailed();
 
+private Q_SLOTS:
+    void onConnectionChanged();
+
 private:
-    explicit USSDManager(QObject *parent = 0);
+    void connectAllSignals();
+    void disconnectAllSignals();
 
-    Tp::ConnectionPtr connectionForAccountId(const QString &accountId = QString::null);
-
-    void disconnectAllSignals(const Tp::ConnectionPtr& conn);
-    void connectAllSignals(const Tp::ConnectionPtr& conn);
-
-    QMap<QString, QString> mStates;
+    QString mState;
+    QString mBusName;
+    QString mObjectPath;
+    AccountEntry *mAccount;
 };
 
 #endif // USSDMANAGER_H

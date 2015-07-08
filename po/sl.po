@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2015-01-28 14:05+0000\n"
+"PO-Revision-Date: 2015-03-25 09:39+0000\n"
 "Last-Translator: Dražen Matešić <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
 "n%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2015-01-29 06:00+0000\n"
-"X-Generator: Launchpad (build 17306)\n"
+"X-Launchpad-Export-Date: 2015-05-29 05:36+0000\n"
+"X-Generator: Launchpad (build 17532)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -45,17 +45,17 @@ msgstr "<b>%1</b> današnjih opravljenih klicev"
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr "<b>%1</b> današnjih prejetih klicev"
+msgstr "<b>%1</b> danes prejetih klicev"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr "<b>%1</b> današnjih prejetih besedilnih sporočil"
+msgstr "<b>%1</b> danes prejetih besedilnih sporočil"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr "<b>%1</b> današnjih poslanih besedilnih sporočil"
+msgstr "<b>%1</b> danes poslanih besedilnih sporočil"
 
 #: approver/approver.cpp:463
 msgid "Accept"
@@ -138,19 +138,19 @@ msgstr "Sporočilo od %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr "Danes ni opravljenih klicev"
+msgstr "Danes ni bilo opravljenih klicev"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr "Danes ni prejetih klicev"
+msgstr "Danes ni bilo prejetih klicev"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr "Danes ni prejetih besedilnih sporočil"
+msgstr "Danes ni bilo prejetih besedilnih sporočil"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr "Danes ni poslanih besedilnih sporočil"
+msgstr "Danes ni bilo poslanih besedilnih sporočil"
 
 #: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
 msgid "Ok"
@@ -199,12 +199,12 @@ msgstr "Pošlji"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr "Oprosti, trenutno sem zaseden. Poklical te bom kasneje."
+msgstr "Oprosti, še vedno sem zaseden. Poklical te bom kasneje."
 
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr "<b>%1</b> današnjih porabljenih minut za klice"
+msgstr "<b>%1</b> danes porabljenih minut za klice"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"

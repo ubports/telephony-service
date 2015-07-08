@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-01-17 07:07+0000\n"
-"X-Generator: Launchpad (build 17304)\n"
+"X-Launchpad-Export-Date: 2015-05-29 05:36+0000\n"
+"X-Generator: Launchpad (build 17532)\n"
 "Language: he\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -53,7 +53,7 @@ msgstr "<b>%1</b> הודעות התקבלו היום"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> הודעות נשלחו היום"
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:463
 msgid "Accept"
 msgstr "קבלה"
 
@@ -61,20 +61,20 @@ msgstr "קבלה"
 msgid "Call back"
 msgstr "להתקשר בחזרה"
 
-#: approver/approver.cpp:392
+#: approver/approver.cpp:429
 msgid "Caller number is not available"
 msgstr "מספר המען אינו זמין"
 
-#: approver/approver.cpp:389
+#: approver/approver.cpp:426
 #, qt-format
 msgid "Calling from %1"
 msgstr "שיחה מ%1"
 
-#: approver/approver.cpp:385
+#: approver/approver.cpp:422
 msgid "Calling from private number"
 msgstr "שיחה ממספר פרטי"
 
-#: approver/approver.cpp:387
+#: approver/approver.cpp:424
 msgid "Calling from unknown number"
 msgstr "שיחה ממספר לא ידוע"
 
@@ -86,15 +86,15 @@ msgstr "ביטול"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "מוטב לנטרל את מצב הטיסה ולנסות שוב מיישום ההודעות."
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:485
 msgid "Decline"
 msgstr "דחיה"
 
-#: approver/approver.cpp:439
+#: approver/approver.cpp:476
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:425
+#: approver/approver.cpp:462
 msgid "Hold + Answer"
 msgstr "החזקה + מענה"
 
@@ -106,7 +106,7 @@ msgstr "פספסתי את שיחתך - אפשר להתקשר אלי בחזרה?"
 msgid "I'll be 20 minutes late."
 msgstr "אאחר ב־20 דקות."
 
-#: approver/approver.cpp:79
+#: approver/approver.cpp:89
 msgid "I'm busy at the moment. I'll call later."
 msgstr ""
 
@@ -114,7 +114,7 @@ msgstr ""
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "אין לי אפשרות לענות כרגע. אתקשר מאוחר יותר."
 
-#: approver/approver.cpp:80
+#: approver/approver.cpp:90
 msgid "I'm running late, on my way now."
 msgstr ""
 
@@ -122,7 +122,7 @@ msgstr ""
 msgid "I'm running late. I'm on my way."
 msgstr "אאחר. אני בדרך."
 
-#: approver/approver.cpp:456
+#: approver/approver.cpp:493
 msgid "Message & decline"
 msgstr ""
 
@@ -155,7 +155,7 @@ msgstr "אישור"
 msgid "Phone Calls"
 msgstr "שיחות טלפון"
 
-#: approver/approver.cpp:81
+#: approver/approver.cpp:91
 msgid "Please call me back later."
 msgstr ""
 
@@ -225,7 +225,7 @@ msgstr "כדאי לנסות שוב מיישום ההודעות."
 msgid "Unknown Number"
 msgstr "מספר לא ידוע"
 
-#: approver/approver.cpp:59
+#: approver/approver.cpp:61
 msgid "Unknown caller"
 msgstr "מתקשר לא ידוע"
 

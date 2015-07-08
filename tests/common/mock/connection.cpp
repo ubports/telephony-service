@@ -77,8 +77,8 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
 
     // init presence interface
     simplePresenceIface = Tp::BaseConnectionSimplePresenceInterface::create();
-    simplePresenceIface->setSetPresenceCallback(Tp::memFun(this,&MockConnection::setPresence));
-    simplePresenceIface->setMaxmimumStatusMessageLength(255);
+    simplePresenceIface->setSetPresenceCallback(Tp::memFun(this,&MockConnection::setPresenceFail));
+    simplePresenceIface->setMaximumStatusMessageLength(255);
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(simplePresenceIface));
 
     // Set Presence
@@ -137,7 +137,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(voicemailIface));
     voicemailIface->setVoicemailCount(mVoicemailCount);
     voicemailIface->setVoicemailIndicator(mVoicemailIndicator);
-    mVoicemailNumber = "555";
+    mVoicemailNumber = "*555";
 
     supplementaryServicesIface = BaseConnectionUSSDInterface::create();
     supplementaryServicesIface->setInitiateCallback(Tp::memFun(this,&MockConnection::USSDInitiate));
@@ -151,6 +151,8 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(supplementaryServicesIface));
 
     mDBus = new MockConnectionDBus(this);
+
+    setOnline(true);
 }
 
 MockConnection::~MockConnection()
@@ -229,6 +231,12 @@ uint MockConnection::setPresence(const QString& status, const QString& statusMes
 
     presences[selfHandle()] = mSelfPresence;
     simplePresenceIface->setPresences(presences);
+    return selfHandle();
+}
+
+uint MockConnection::setPresenceFail(const QString &status, const QString &statusMessage, Tp::DBusError *error)
+{
+    error->set(TP_QT_ERROR_NOT_AVAILABLE, "Can't change online status: Operation not supported");
     return selfHandle();
 }
 
@@ -437,9 +445,11 @@ Tp::BaseChannelPtr MockConnection::createCallChannel(uint targetHandleType, uint
     return mCallChannels[requestedId]->baseChannel();
 }
 
-Tp::BaseChannelPtr MockConnection::createChannel(const QString& channelType, uint targetHandleType,
-                                               uint targetHandle, const QVariantMap &hints, Tp::DBusError *error)
+Tp::BaseChannelPtr MockConnection::createChannel(const QVariantMap &request, Tp::DBusError *error)
 {
+    const QString channelType = request.value(TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType")).toString();
+    uint targetHandleType = request.value(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType")).toUInt();
+    uint targetHandle = request.value(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandle")).toUInt();
     qDebug() << "MockConnection::createChannel" << targetHandle;
     if (mSelfPresence.type != Tp::ConnectionPresenceTypeAvailable) {
         error->set(TP_QT_ERROR_NETWORK_ERROR, "No network available");
@@ -447,9 +457,9 @@ Tp::BaseChannelPtr MockConnection::createChannel(const QString& channelType, uin
     }
 
     if (channelType == TP_QT_IFACE_CHANNEL_TYPE_TEXT) {
-        return createTextChannel(targetHandleType, targetHandle, hints, error);
+        return createTextChannel(targetHandleType, targetHandle, request, error);
     } else if (channelType == TP_QT_IFACE_CHANNEL_TYPE_CALL) {
-        return createCallChannel(targetHandleType, targetHandle, hints, error);
+        return createCallChannel(targetHandleType, targetHandle, request, error);
     } else {
         error->set(TP_QT_ERROR_NOT_IMPLEMENTED, "Channel type not available");
     }
@@ -466,9 +476,14 @@ void MockConnection::placeIncomingMessage(const QString &message, const QVariant
     if (!channel) {
         // request the channel
         Tp::DBusError error;
+        QVariantMap request;
         bool yours;
         uint handle = newHandle(sender);
-        ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_TEXT,Tp::HandleTypeContact, handle, yours, handle, false, QVariantMap(), &error);
+        request[TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType")] = TP_QT_IFACE_CHANNEL_TYPE_TEXT;
+        request[TP_QT_IFACE_CHANNEL + QLatin1String(".InitiatorHandle")] = handle;
+        request[TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType")] = Tp::HandleTypeContact;
+        request[TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandle")] = handle;
+        ensureChannel(request, yours, false, &error);
         if(error.isValid()) {
             qWarning() << "Error creating channel for incoming message" << error.name() << error.message();
             return;
@@ -554,8 +569,13 @@ QString MockConnection::placeCall(const QVariantMap &properties)
 
     mInitialCallStatus[callerId] = state;
     mIncomingCalls.append(callerId);
-
-    Tp::BaseChannelPtr channel  = ensureChannel(TP_QT_IFACE_CHANNEL_TYPE_CALL, Tp::HandleTypeContact, handle, yours, initiatorHandle, false, QVariantMap(), &error);
+    QVariantMap request;
+    request[TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType")] = TP_QT_IFACE_CHANNEL_TYPE_CALL;
+    request[TP_QT_IFACE_CHANNEL + QLatin1String(".InitiatorHandle")] = initiatorHandle;
+    request[TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType")] = Tp::HandleTypeContact;
+    request[TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandle")] = handle;
+ 
+    Tp::BaseChannelPtr channel  = ensureChannel(request, yours, false, &error);
     if (error.isValid() || channel.isNull()) {
         qWarning() << "error creating the channel " << error.name() << error.message();
         return QString();
@@ -610,17 +630,20 @@ void MockConnection::setVoicemailCount(int count)
 
 void MockConnection::USSDInitiate(const QString &command, Tp::DBusError *error)
 {
-    // FIXME: implement
+    // just emit a signal saying we received the command
+    Q_EMIT ussdInitiateCalled(command);
 }
 
 void MockConnection::USSDRespond(const QString &reply, Tp::DBusError *error)
 {
-    // FIXME: implement
+    // just emit a signal saying we received the reply
+    Q_EMIT ussdRespondCalled(reply);
 }
 
 void MockConnection::USSDCancel(Tp::DBusError *error)
 {
-    // FIXME: implement
+    // just emit a signal saying the operation was cancelled
+    Q_EMIT ussdCancelCalled();
 }
 
 QString MockConnection::serial()

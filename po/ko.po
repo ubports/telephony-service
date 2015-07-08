@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2015-01-17 07:07+0000\n"
-"X-Generator: Launchpad (build 17304)\n"
+"X-Launchpad-Export-Date: 2015-05-29 05:36+0000\n"
+"X-Generator: Launchpad (build 17532)\n"
 "Language: ko\n"
 
 #: indicator/messagingmenu.cpp:256
@@ -51,28 +51,28 @@ msgstr "오늘 <b>%1</b>개의 텍스트 메시지를 받았습니다."
 msgid "<b>%1</b> text messages sent today"
 msgstr "오늘 <b>%1</b>개의 텍스트 메시지를 보냈습니다."
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:463
 msgid "Accept"
 msgstr "승인"
 
 #: indicator/messagingmenu.cpp:199
 msgid "Call back"
-msgstr ""
+msgstr "부재중 번호로 전화"
 
-#: approver/approver.cpp:392
+#: approver/approver.cpp:429
 msgid "Caller number is not available"
 msgstr "발신자 번호를 표시할 수 없습니다"
 
-#: approver/approver.cpp:389
+#: approver/approver.cpp:426
 #, qt-format
 msgid "Calling from %1"
 msgstr "%1에서 전화가 걸러오는 중"
 
-#: approver/approver.cpp:385
+#: approver/approver.cpp:422
 msgid "Calling from private number"
 msgstr "개인 전용 번호로 전화가 걸려오는 중"
 
-#: approver/approver.cpp:387
+#: approver/approver.cpp:424
 msgid "Calling from unknown number"
 msgstr "알 수 없는 번호로 전화가 왔습니다."
 
@@ -84,15 +84,15 @@ msgstr "취소"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "비행 모드를 해제한 후 메시지 프로그램에서 다시 시도해주십시오."
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:485
 msgid "Decline"
 msgstr "거부"
 
-#: approver/approver.cpp:439
+#: approver/approver.cpp:476
 msgid "End + Answer"
-msgstr ""
+msgstr "끝내기 + 받기"
 
-#: approver/approver.cpp:425
+#: approver/approver.cpp:462
 msgid "Hold + Answer"
 msgstr "대기 + 받기"
 
@@ -104,25 +104,25 @@ msgstr "전화를 받지 못했습니다. 지금 전화드려도 괜찮으십니
 msgid "I'll be 20 minutes late."
 msgstr "20분 정도 늦을 것 같습니다."
 
-#: approver/approver.cpp:79
+#: approver/approver.cpp:89
 msgid "I'm busy at the moment. I'll call later."
-msgstr ""
+msgstr "지금은 바쁘니 나중에 다시 걸겠습니다."
 
 #: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "지금 전화를 받을 수 없습니다. 곧 연락드리겠습니다."
 
-#: approver/approver.cpp:80
+#: approver/approver.cpp:90
 msgid "I'm running late, on my way now."
-msgstr ""
+msgstr "지금 가고 있지만 늦을 것 같습니다."
 
 #: indicator/messagingmenu.cpp:205
 msgid "I'm running late. I'm on my way."
 msgstr "조금 늦어서 지금 가고 있습니다."
 
-#: approver/approver.cpp:456
+#: approver/approver.cpp:493
 msgid "Message & decline"
-msgstr ""
+msgstr "메시지 & 거절"
 
 #: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
 #, qt-format
@@ -153,9 +153,9 @@ msgstr "확인"
 msgid "Phone Calls"
 msgstr "전화 통화"
 
-#: approver/approver.cpp:81
+#: approver/approver.cpp:91
 msgid "Please call me back later."
-msgstr ""
+msgstr "나중에 다시 걸어주십시오."
 
 #: indicator/textchannelobserver.cpp:539
 msgid "Please, select a SIM card:"
@@ -188,7 +188,7 @@ msgstr "저장"
 
 #: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
 msgid "Send"
-msgstr ""
+msgstr "보내기"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
@@ -223,7 +223,7 @@ msgstr "메시지 프로그램에서 다시 시도해주십시오."
 msgid "Unknown Number"
 msgstr "알 수 없는 번호"
 
-#: approver/approver.cpp:59
+#: approver/approver.cpp:61
 msgid "Unknown caller"
 msgstr "알 수 없는 발신자"
 

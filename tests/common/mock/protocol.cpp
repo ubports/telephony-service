@@ -35,9 +35,17 @@ Protocol::Protocol(const QDBusConnection &dbusConnection, const QString &name)
     Tp::ProtocolParameter parameter("modem-objpath", "s", 0);
     parameters << parameter;
     setParameters(parameters);
+
+    addressingIface = Tp::BaseProtocolAddressingInterface::create();
+    if (name == "ofono") {
+        addressingIface->setAddressableVCardFields(QStringList() << "tel");
+    } else {
+        addressingIface->setAddressableVCardFields(QStringList() << "x-mock-im" << "x-sip");
+    }
+    plugInterface(addressingIface);
 }
 
 Tp::BaseConnectionPtr Protocol::createConnection(const QVariantMap &parameters, Tp::DBusError *error) {
     Q_UNUSED(error);
-    return Tp::BaseConnection::create<MockConnection>(QDBusConnection::sessionBus(), "mock", name().toLatin1(), parameters);
+    return Tp::BaseConnection::create<MockConnection>("mock", name().toLatin1(), parameters);
 }

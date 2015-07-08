@@ -44,6 +44,7 @@ void PhoneUtilsTest::testIsPhoneNumber_data()
     QTest::newRow("number with extension") << "12345678#123" << true;
     QTest::newRow("number with comma") << "33333333,1,1" << true;
     QTest::newRow("number with semicolon") << "33333333;1" << true;
+    QTest::newRow("number with slash") << "+421 2/123 456 78" << true;
     QTest::newRow("short/emergency number") << "190" << true;
     QTest::newRow("non phone numbers") << "abcdefg" << false;
 }

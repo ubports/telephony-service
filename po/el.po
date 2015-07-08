@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2015-02-15 23:23+0000\n"
-"Last-Translator: j3lc <x_nikos@yahoo.gr>\n"
+"PO-Revision-Date: 2015-03-31 14:02+0000\n"
+"Last-Translator: tzem <athmakrigiannis@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-02-16 06:51+0000\n"
-"X-Generator: Launchpad (build 17341)\n"
+"X-Launchpad-Export-Date: 2015-05-29 05:36+0000\n"
+"X-Generator: Launchpad (build 17532)\n"
 
 #: indicator/messagingmenu.cpp:256
 #, qt-format
@@ -208,11 +208,11 @@ msgstr "Υπηρεσία τηλεφωνίας"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr ""
+msgstr "Υποστήριξη τηλεφωνικής υπηρεσίας"
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr ""
+msgstr "Ένδειξη τηλεφωνικής υπηρεσίας"
 
 #: indicator/textchannelobserver.cpp:215
 msgid "The message could not be sent"

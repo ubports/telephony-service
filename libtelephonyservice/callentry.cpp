@@ -79,7 +79,7 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
 
     // in case the account is an ofono account, we can check the voicemail number
     OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(mAccount);
-    if (ofonoAccount && ofonoAccount->voicemailNumber().isEmpty()) {
+    if (ofonoAccount && !ofonoAccount->voicemailNumber().isEmpty()) {
         setVoicemail(phoneNumber() == ofonoAccount->voicemailNumber());
     }
 

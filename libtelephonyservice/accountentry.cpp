@@ -22,12 +22,17 @@
 #include <TelepathyQt/PendingOperation>
 #include <QTimer>
 #include "accountentry.h"
-#include "telepathyhelper.h"
+#include "protocolmanager.h"
 
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
-    QObject(parent), mAccount(account)
+    QObject(parent), mAccount(account), mReady(false), mProtocol(0)
 {
     initialize();
+}
+
+bool AccountEntry::ready() const
+{
+    return mReady;
 }
 
 QString AccountEntry::accountId() const
@@ -118,11 +123,18 @@ bool AccountEntry::compareIds(const QString &first, const QString &second) const
     return first == second;
 }
 
+Protocol *AccountEntry::protocolInfo() const
+{
+    return mProtocol;
+}
+
 void AccountEntry::initialize()
 {
     if (mAccount.isNull()) {
         return;
     }
+
+    mProtocol = ProtocolManager::instance()->protocolByName(mAccount->protocolName());
 
     // propagate the display name changes
     connect(mAccount.data(),
@@ -149,6 +161,14 @@ void AccountEntry::initialize()
             SIGNAL(connectedChanged()),
             SIGNAL(activeChanged()));
 
+    // emit the statusChanged and statusMessageChanged signals together with the connectedChanged to be consistent
+    connect(this,
+            SIGNAL(connectedChanged()),
+            SIGNAL(statusChanged()));
+    connect(this,
+            SIGNAL(connectedChanged()),
+            SIGNAL(statusMessageChanged()));
+
     // and make sure it is enabled and connected
     if (!mAccount->isEnabled()) {
         QTimer::singleShot(0, this, SLOT(ensureEnabled()));
@@ -169,31 +189,26 @@ void AccountEntry::ensureEnabled()
 void AccountEntry::ensureConnected()
 {
     // if the account is not connected, request it to connect
-    if (!mAccount->connection() || mAccount->connectionStatus() != Tp::ConnectionStatusConnected) {
+    if (!mAccount->connection() || mAccount->connectionStatus() == Tp::ConnectionStatusDisconnected) {
         Tp::Presence presence(Tp::ConnectionPresenceTypeAvailable, "available", "online");
         mAccount->setRequestedPresence(presence);
     } else {
         onConnectionChanged();
     }
 
+    mReady = true;
     Q_EMIT accountReady();
 }
 
 void AccountEntry::watchSelfContactPresence()
 {
-    if (mAccount.isNull() || mAccount->connection().isNull()) {
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->selfContact().isNull()) {
         return;
     }
 
     connect(mAccount->connection()->selfContact().data(),
             SIGNAL(presenceChanged(Tp::Presence)),
             SIGNAL(connectedChanged()));
-    connect(mAccount->connection()->selfContact().data(),
-            SIGNAL(presenceChanged(Tp::Presence)),
-            SIGNAL(statusMessageChanged()));
-    connect(mAccount->connection()->selfContact().data(),
-            SIGNAL(presenceChanged(Tp::Presence)),
-            SIGNAL(statusChanged()));
 }
 
 void AccountEntry::onSelfHandleChanged(uint handle)
@@ -201,8 +216,6 @@ void AccountEntry::onSelfHandleChanged(uint handle)
     Q_UNUSED(handle)
     watchSelfContactPresence();
 
-    Q_EMIT statusChanged();
-    Q_EMIT statusMessageChanged();
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
 }

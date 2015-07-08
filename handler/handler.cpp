@@ -21,6 +21,7 @@
  */
 
 #include "handler.h"
+#include "protocolmanager.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/MethodInvocationContext>
@@ -52,7 +53,7 @@ void Handler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
     Q_UNUSED(userActionTime)
     Q_UNUSED(handlerInfo)
 
-    if (!TelepathyHelper::instance()->supportedProtocols().contains(account->protocolName())) {
+    if (!ProtocolManager::instance()->isProtocolSupported(account->protocolName())) {
         context->setFinishedWithError(TP_QT_ERROR_NOT_CAPABLE, "The account for this request is not supported.");
         return;
     }

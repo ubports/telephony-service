@@ -48,6 +48,7 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList accountIds READ accountIds NOTIFY accountIdsChanged)
     Q_PROPERTY(QQmlListProperty<AccountEntry> accounts READ qmlAccounts NOTIFY accountsChanged)
+    Q_PROPERTY(QQmlListProperty<AccountEntry> phoneAccounts READ qmlPhoneAccounts NOTIFY phoneAccountsChanged)
     Q_PROPERTY(QQmlListProperty<AccountEntry> activeAccounts READ qmlActiveAccounts NOTIFY activeAccountsChanged)
     Q_PROPERTY(AccountEntry *defaultMessagingAccount READ defaultMessagingAccount NOTIFY defaultMessagingAccountChanged)
     Q_PROPERTY(AccountEntry *defaultCallAccount READ defaultCallAccount NOTIFY defaultCallAccountChanged)
@@ -65,8 +66,10 @@ public:
 
     static TelepathyHelper *instance();
     QList<AccountEntry*> accounts() const;
+    QList<AccountEntry*> phoneAccounts() const;
     QList<AccountEntry*> activeAccounts() const;
     QQmlListProperty<AccountEntry> qmlAccounts();
+    QQmlListProperty<AccountEntry> qmlPhoneAccounts();
     QQmlListProperty<AccountEntry> qmlActiveAccounts();
     ChannelObserver *channelObserver() const;
     QDBusInterface *handlerInterface() const;
@@ -97,7 +100,9 @@ public:
     static AccountEntry *accountAt(QQmlListProperty<AccountEntry> *p, int index);
     static int activeAccountsCount(QQmlListProperty<AccountEntry> *p);
     static AccountEntry *activeAccountAt(QQmlListProperty<AccountEntry> *p, int index);
-
+    static int phoneAccountsCount(QQmlListProperty<AccountEntry> *p);
+    static AccountEntry *phoneAccountAt(QQmlListProperty<AccountEntry> *p, int index);
+ 
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
     void channelObserverUnregistered();
@@ -105,6 +110,8 @@ Q_SIGNALS:
     void connectedChanged();
     void accountIdsChanged();
     void accountsChanged();
+    void accountAdded(AccountEntry *account);
+    void phoneAccountsChanged();
     void activeAccountsChanged();
     void setupReady();
     void defaultMessagingAccountChanged();
@@ -116,7 +123,6 @@ Q_SIGNALS:
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);
     Q_INVOKABLE void unregisterChannelObserver();
-    QStringList supportedProtocols() const;
 
 protected:
     void setupAccountEntry(AccountEntry *entry);

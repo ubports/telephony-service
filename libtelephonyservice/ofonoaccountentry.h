@@ -23,6 +23,7 @@
 #define OFONOACCOUNTENTRY_H
 
 #include "accountentry.h"
+#include "ussdmanager.h"
 
 class OfonoAccountEntry : public AccountEntry
 {
@@ -35,6 +36,7 @@ class OfonoAccountEntry : public AccountEntry
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
     Q_PROPERTY(bool simLocked READ simLocked NOTIFY simLockedChanged)
     Q_PROPERTY(QString serial READ serial NOTIFY serialChanged)
+    Q_PROPERTY(USSDManager* ussdManager READ ussdManager CONSTANT)
     friend class AccountEntryFactory;
 
 public:
@@ -46,6 +48,7 @@ public:
     bool emergencyCallsAvailable() const;
     bool simLocked() const;
     QString serial() const;
+    USSDManager *ussdManager() const;
 
     // reimplemented from AccountEntry
     virtual AccountEntry::AccountType type() const;
@@ -81,6 +84,7 @@ private:
     uint mVoicemailCount;
     bool mVoicemailIndicator;
     QString mSerial;
+    USSDManager *mUssdManager;
 };
 
 #endif // OFONOACCOUNTENTRY_H

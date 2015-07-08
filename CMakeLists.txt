@@ -88,6 +88,7 @@ add_subdirectory(tools)
 add_subdirectory(icons)
 add_subdirectory(po)
 add_subdirectory(tests)
+add_subdirectory(protocols)
 
 include(EnableCoverageReport)
 #####################################################################
@@ -106,5 +107,4 @@ IF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
   GET_DIRECTORY_PROPERTY(COVERAGE_TARGETS DIRECTORY ${CMAKE_SOURCE_DIR} COVERAGE_TARGETS)
   ENABLE_COVERAGE_REPORT(TARGETS ${COVERAGE_TARGETS})
 ENDIF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
-
 

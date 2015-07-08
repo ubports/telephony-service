@@ -51,8 +51,8 @@ MockTextChannel::MockTextChannel(MockConnection *conn, QStringList recipients, u
 
     Tp::BaseChannelPtr baseChannel = Tp::BaseChannel::create(mConnection,
                                                              TP_QT_IFACE_CHANNEL_TYPE_TEXT,
-                                                             targetHandle,
-                                                             type);
+                                                             type,
+                                                             targetHandle);
     mBaseChannel = baseChannel;
     Tp::BaseChannelTextTypePtr textType = Tp::BaseChannelTextType::create(baseChannel.data());
     baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(textType));

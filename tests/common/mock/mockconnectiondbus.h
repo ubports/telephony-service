@@ -51,6 +51,19 @@ public:
 
     // USSD stuff
     QString Serial();
+    void TriggerUSSDNotificationReceived(const QString &message);
+    void TriggerUSSDRequestReceived(const QString &message);
+    void TriggerUSSDInitiateUSSDComplete(const QString &ussdResp);
+    void TriggerUSSDRespondComplete(bool success, const QString &ussdResp);
+    void TriggerUSSDBarringComplete(const QString &ssOp, const QString &cbService, const QVariantMap &cbMap);
+    void TriggerUSSDForwardingComplete(const QString &ssOp, const QString &cfService, const QVariantMap &cfMap);
+    void TriggerUSSDWaitingComplete(const QString &ssOp, const QVariantMap &cwMap);
+    void TriggerUSSDCallingLinePresentationComplete(const QString &ssOp, const QString &status);
+    void TriggerUSSDConnectedLinePresentationComplete(const QString &ssOp, const QString &status);
+    void TriggerUSSDCallingLineRestrictionComplete(const QString &ssOp, const QString &status);
+    void TriggerUSSDConnectedLineRestrictionComplete(const QString &ssOp, const QString &status);
+    void TriggerUSSDInitiateFailed();
+    void TriggerUSSDStateChanged(const QString &state);
 
 Q_SIGNALS:
     // signals that will be relayed into the bus
@@ -62,6 +75,11 @@ Q_SIGNALS:
     void ConferenceCreated(const QString &objectPath);
     void ChannelMerged(const QString &objectPath);
     void ChannelSplitted(const QString &objectPath);
+
+    // USSD stuff
+    void USSDInitiateCalled(const QString &command);
+    void USSDRespondCalled(const QString &reply);
+    void USSDCancelCalled();
 
     void Disconnected();
     void Destroyed();

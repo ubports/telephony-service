@@ -55,10 +55,10 @@ public:
 
     QStringList inspectHandles(uint handleType, const Tp::UIntList& handles, Tp::DBusError *error);
     Tp::UIntList requestHandles(uint handleType, const QStringList& identifiers, Tp::DBusError* error);
-    Tp::BaseChannelPtr createChannel(const QString& channelType, uint targetHandleType,
-                                     uint targetHandle, const QVariantMap& hints, Tp::DBusError *error);
+    Tp::BaseChannelPtr createChannel(const QVariantMap& request, Tp::DBusError *error);
     Tp::ContactAttributesMap getContactAttributes(const Tp::UIntList &handles, const QStringList &ifaces, Tp::DBusError *error);
     uint setPresence(const QString& status, const QString& statusMessage, Tp::DBusError *error);
+    uint setPresenceFail(const QString& status, const QString& statusMessage, Tp::DBusError *error);
     void connect(Tp::DBusError *error);
     void setOnline(bool online);
 
@@ -116,6 +116,11 @@ Q_SIGNALS:
     void channelMerged(const QString &objectPath);
     void channelSplitted(const QString &objectPath);
     void channelSplitted(const QDBusObjectPath &objectPath);
+
+    // USSD notifications
+    void ussdInitiateCalled(const QString &command);
+    void ussdRespondCalled(const QString &reply);
+    void ussdCancelCalled();
 
 public Q_SLOTS:
     void placeIncomingMessage(const QString &message, const QVariantMap &info);

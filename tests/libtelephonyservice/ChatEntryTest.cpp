@@ -89,24 +89,24 @@ void ChatEntryTest::testContactChatState()
     // change state of contact 1
     ContactChatState *contactChatState1 = entry->chatStatesAt(&chatStates, 0);
     QSignalSpy chatStateChangedSpy1(contactChatState1, SIGNAL(stateChanged()));
-    mGenericMockController->changeChatState(participants, contactChatState1->contactId(), ChatEntry::ChannelChatStateComposing);
+    mGenericMockController->ChangeChatState(participants, contactChatState1->contactId(), ChatEntry::ChannelChatStateComposing);
     QTRY_COMPARE(chatStateChangedSpy1.count(), 1);
     QCOMPARE(contactChatState1->state(), (int)ChatEntry::ChannelChatStateComposing);
     chatStateChangedSpy1.clear();
 
-    mGenericMockController->changeChatState(participants, contactChatState1->contactId(), ChatEntry::ChannelChatStatePaused);
+    mGenericMockController->ChangeChatState(participants, contactChatState1->contactId(), ChatEntry::ChannelChatStatePaused);
     QTRY_COMPARE(chatStateChangedSpy1.count(), 1);
     QCOMPARE(entry->chatStatesAt(&chatStates, 0)->state(), (int)ChatEntry::ChannelChatStatePaused);
 
     // change state of contact 2
     ContactChatState *contactChatState2 = entry->chatStatesAt(&chatStates, 1);
     QSignalSpy chatStateChangedSpy2(contactChatState2, SIGNAL(stateChanged()));
-    mGenericMockController->changeChatState(participants, contactChatState2->contactId(), ChatEntry::ChannelChatStateComposing);
+    mGenericMockController->ChangeChatState(participants, contactChatState2->contactId(), ChatEntry::ChannelChatStateComposing);
     QTRY_COMPARE(chatStateChangedSpy2.count(), 1);
     QCOMPARE(contactChatState2->state(), (int)ChatEntry::ChannelChatStateComposing);
     chatStateChangedSpy2.clear();
 
-    mGenericMockController->changeChatState(participants, contactChatState2->contactId(), ChatEntry::ChannelChatStatePaused);
+    mGenericMockController->ChangeChatState(participants, contactChatState2->contactId(), ChatEntry::ChannelChatStatePaused);
     QTRY_COMPARE(chatStateChangedSpy2.count(), 1);
     QCOMPARE(contactChatState2->state(), (int)ChatEntry::ChannelChatStatePaused);
 }

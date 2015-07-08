@@ -85,9 +85,99 @@
         </method>
         <method name="Serial">
             <dox:d><![CDATA[
-                Set the USSD serial
+                Get the USSD serial
             ]]></dox:d>
             <arg name="value" type="s" direction="out"/>
+        </method>
+        <method name="TriggerUSSDNotificationReceived">
+            <dox:d><![CDATA[
+                Trigger USSD method NotificationReceived
+            ]]></dox:d>
+            <arg name="message" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDRequestReceived">
+            <dox:d><![CDATA[
+                Trigger USSD method RequestReceived
+            ]]></dox:d>
+            <arg name="message" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDInitiateUSSDComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method InitiateUSSDComplete
+            ]]></dox:d>
+            <arg name="ussdResp" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDRespondComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method RespondComplete
+            ]]></dox:d>
+            <arg name="success" type="b" direction="in"/>
+            <arg name="ussdResp" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDBarringComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method BarringComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="cbService" type="s" direction="in"/>
+            <arg name="cbMap" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QVariantMap"/>
+        </method>
+        <method name="TriggerUSSDForwardingComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method ForwardingComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="cfService" type="s" direction="in"/>
+            <arg name="cfMap" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QVariantMap"/>
+        </method>
+        <method name="TriggerUSSDWaitingComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method WaitingComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="cwMap" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+        </method>
+        <method name="TriggerUSSDCallingLinePresentationComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method CallingLinePresentationComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="status" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDConnectedLinePresentationComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method ConnectedLinePresentationComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="status" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDCallingLineRestrictionComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method CallingLineRestrictionComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="status" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDConnectedLineRestrictionComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method ConnectedLineRestrictionComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="status" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDInitiateFailed">
+            <dox:d><![CDATA[
+                Trigger USSD method InitiateFailed
+            ]]></dox:d>
+        </method>
+        <method name="TriggerUSSDStateChanged">
+            <dox:d><![CDATA[
+                Trigger USSD method StateChanged
+            ]]></dox:d>
+            <arg name="state" type="s" direction="in"/>
         </method>
         <signal name="MessageRead">
             <dox:d><![CDATA[
@@ -141,6 +231,23 @@
                 A channel was splitted from the conference
             ]]></dox:d>
             <arg name="objectPath" type="s"/>
+        </signal>
+        <signal name="USSDInitiateCalled">
+            <dox:d><![CDATA[
+                USSDInitiate was called
+            ]]></dox:d>
+            <arg name="command" type="s"/>
+        </signal>
+        <signal name="USSDRespondCalled">
+            <dox:d><![CDATA[
+                USSDRespond was called
+            ]]></dox:d>
+            <arg name="reply" type="s"/>
+        </signal>
+        <signal name="USSDCancelCalled">
+            <dox:d><![CDATA[
+                USSDInitiate was called
+            ]]></dox:d>
         </signal>
         <signal name="Disconnected">
             <dox:d><![CDATA[

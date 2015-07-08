@@ -22,48 +22,20 @@
 #define MOCKCONTROLLER_H
 
 #include <QObject>
-#include <QDBusInterface>
+#include "MockConnectionInterface.h"
 
-class MockController : public QObject
+class MockController : public ComCanonicalMockConnectionInterface
 {
     Q_OBJECT
 public:
     explicit MockController(const QString &protocol, QObject *parent = 0);
 
-Q_SIGNALS:
-    void messageRead(const QString &messageId);
-    void messageSent(const QString &message, const QVariantMap &properties);
-    void callReceived(const QString &callerId);
-    void callEnded(const QString &callerId);
-    void callStateChanged(const QString &callerId, const QString &objectPath, const QString &state);
-    void conferenceCreated(const QString &objectPath);
-    void channelMerged(const QString &objectPath);
-    void channelSplitted(const QString &objectPath);
-    void disconnected();
-    void connectionDestroyed();
-
 public Q_SLOTS:
-    void placeIncomingMessage(const QString &message, const QVariantMap &properties);
-    void changeChatState(const QStringList &participants, const QString &userId, int state);
+    // We only reimplement the methods that need sync replies
     QString placeCall(const QVariantMap &properties);
-    void hangupCall(const QString &callerId);
-    void setCallState(const QString &phoneNumber, const QString &state);
-    void setOnline(bool online);
-    void setPresence(const QString &status, const QString &statusMessage);
-
-    // voicemail stuff
-    void setVoicemailNumber(const QString &number);
-    void setVoicemailIndicator(bool active);
-    void setVoicemailCount(int count);
-
-    // emergency numbers stuff
-    void setEmergencyNumbers(const QStringList &numbers);
-
-    // USSD stuff
     QString serial();
 
 private:
-    QDBusInterface mMockInterface;
     QString mProtocol;
     QString mMockObject;
 };
