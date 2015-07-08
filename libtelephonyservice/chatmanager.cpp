@@ -59,7 +59,7 @@ ChatManager::ChatManager(QObject *parent)
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
     connect(TelepathyHelper::instance(), SIGNAL(setupReady()), SLOT(onTelepathyReady()));
     connect(&mMessagesAckTimer, SIGNAL(timeout()), SLOT(onAckTimerTriggered()));
-    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
+    connect(TelepathyHelper::instance(), SIGNAL(setupReady()), SLOT(onConnectedChanged()));
 }
 
 void ChatManager::onTelepathyReady()
@@ -82,7 +82,7 @@ void ChatManager::onChannelObserverUnregistered()
 
 void ChatManager::onConnectedChanged()
 {
-    if (TelepathyHelper::instance()->connected()) {
+    if (TelepathyHelper::instance()->ready()) {
         onAckTimerTriggered();
     }
 }

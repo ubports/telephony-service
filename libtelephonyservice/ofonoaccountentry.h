@@ -53,6 +53,7 @@ public:
     // reimplemented from AccountEntry
     virtual AccountEntry::AccountType type() const;
     virtual bool connected() const;
+    virtual bool active() const;
     virtual bool compareIds(const QString &first, const QString &second) const;
     virtual QStringList addressableVCardFields();
 
@@ -73,7 +74,7 @@ private Q_SLOTS:
     void onVoicemailIndicatorChanged(bool visible);
 
     // reimplemented from AccountEntry
-    void onConnectionChanged();
+    void onConnectionChanged(Tp::ConnectionPtr connection);
 
 protected:
     explicit OfonoAccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);

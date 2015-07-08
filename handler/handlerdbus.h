@@ -47,7 +47,7 @@ public:
     QVariantMap GetCallProperties(const QString &objectPath);
     bool HasCalls();
     QStringList AccountIds();
-    bool IsConnected();
+    bool IsReady();
     bool callIndicatorVisible() const;
     void setCallIndicatorVisible(bool visible);
 
