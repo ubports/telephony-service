@@ -56,6 +56,7 @@ private Q_SLOTS:
 
 private:
     QMap<Tp::PendingReady*, Tp::ChannelPtr> mReadyRequests;
+    QMap<Tp::Channel*, Tp::MethodInvocationContextPtr<> > mContexts;
 };
 
 #endif // HANDLER_H

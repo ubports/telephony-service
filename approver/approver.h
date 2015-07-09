@@ -56,6 +56,7 @@ public:
     bool showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation,
                           const Tp::ChannelPtr channel,
                           const QContact &contact = QContact());
+    void acceptCallChannels(const Tp::ChannelDispatchOperationPtr dispatchOp);
     bool handleMediaKey(bool doubleClick);
 
 protected:
