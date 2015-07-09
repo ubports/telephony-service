@@ -49,7 +49,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, AttachmentStruct 
 
 ChatManager::ChatManager(QObject *parent)
 : QObject(parent),
-  mReady(TelepathyHelper::instance()->connected())
+  mReady(TelepathyHelper::instance()->ready())
 {
     qDBusRegisterMetaType<AttachmentList>();
     qDBusRegisterMetaType<AttachmentStruct>();
