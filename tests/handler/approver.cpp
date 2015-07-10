@@ -107,11 +107,17 @@ void Approver::processChannels()
     }
 }
 
-void Approver::acceptCall()
+void Approver::acceptCall(bool callAcceptOnChannel)
 {
     Q_FOREACH (Tp::ChannelDispatchOperationPtr dispatchOperation, mDispatchOps) {
         QList<Tp::ChannelPtr> channels = dispatchOperation->channels();
         Q_FOREACH (Tp::ChannelPtr channel, channels) {
+            if (callAcceptOnChannel) {
+                Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
+                if (callChannel) {
+                    callChannel->accept();
+                }
+            }
             if (dispatchOperation->possibleHandlers().contains(TELEPHONY_SERVICE_HANDLER)) {
                 dispatchOperation->handleWith(TELEPHONY_SERVICE_HANDLER);
                 mDispatchOps.removeAll(dispatchOperation);

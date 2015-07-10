@@ -12,6 +12,9 @@ include(CheckIncludeFile)
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
 
+# just to make debug easier, print the system processor
+message(STATUS "System processor: ${CMAKE_SYSTEM_PROCESSOR}")
+
 # Check if should build using ubuntu platform api
 check_include_file_cxx("ubuntu/application/init.h" USE_UBUNTU_PLATFORM_API)
 
@@ -46,6 +49,11 @@ execute_process(
     OUTPUT_VARIABLE QT_INSTALL_QML
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+
+# sbuild/cross-compilation fallback:
+if (QT_INSTALL_QML STREQUAL "")
+    set(QT_INSTALL_QML ${CMAKE_INSTALL_LIBDIR}/qt5/qml)
+endif()
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)

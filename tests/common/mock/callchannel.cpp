@@ -28,7 +28,7 @@ MockCallChannel::MockCallChannel(MockConnection *conn, QString phoneNumber, QStr
     mTargetHandle(targetHandle),
     mState(state)
 {
-    Tp::BaseChannelPtr baseChannel = Tp::BaseChannel::create(mConnection, TP_QT_IFACE_CHANNEL_TYPE_CALL, targetHandle, Tp::HandleTypeContact);
+    Tp::BaseChannelPtr baseChannel = Tp::BaseChannel::create(mConnection, TP_QT_IFACE_CHANNEL_TYPE_CALL, Tp::HandleTypeContact, targetHandle);
     Tp::BaseChannelCallTypePtr callType = Tp::BaseChannelCallType::create(baseChannel.data(),
                                                                           true,
                                                                           Tp::StreamTransportTypeUnknown,
@@ -68,7 +68,15 @@ void MockCallChannel::onHangup(uint reason, const QString &detailedReason, const
 
 void MockCallChannel::onAccept(Tp::DBusError*)
 {
-    setCallState("active");
+    setCallState("accepted");
+    QTimer *timer = new QTimer(this);
+    timer->setSingleShot(true);
+    timer->setInterval(100);
+    connect(timer, &QTimer::timeout, [this, timer]() {
+        setCallState("active");
+        timer->deleteLater();
+    });
+    timer->start();
 }
 
 void MockCallChannel::init()
@@ -195,6 +203,8 @@ void MockCallChannel::setCallState(const QString &state)
         }
         mCallChannel->setCallState(Tp::CallStateEnded, 0, reason, stateDetails);
         mBaseChannel->close();
+    } else if (state == "accepted") {
+        mCallChannel->setCallState(Tp::CallStateAccepted, 0, reason, stateDetails);
     } else if (state == "active") {
         qDebug() << "active";
         mHoldIface->setHoldState(Tp::LocalHoldStateUnheld, Tp::LocalHoldStateReasonNone);

@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2014-07-31 14:18+0000\n"
-"Last-Translator: Anthony Wong <anthony.wong@ubuntu.com>\n"
+"PO-Revision-Date: 2015-06-29 02:38+0000\n"
+"Last-Translator: Ian Li <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2015-05-29 05:36+0000\n"
-"X-Generator: Launchpad (build 17532)\n"
+"X-Launchpad-Export-Date: 2015-07-09 05:59+0000\n"
+"X-Generator: Launchpad (build 17608)\n"
 "Language: \n"
 
 #: indicator/messagingmenu.cpp:256
@@ -34,22 +34,22 @@ msgstr[0] "%1 个语音信息"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "今日呼出 <b>%1</b> 个通话"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "今日接听 <b>%1</b> 个通话"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "今日收到 <b>%1</b> 条短信"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "今日发送 <b>%1</b> 条短信"
 
 #: approver/approver.cpp:463
 msgid "Accept"
@@ -57,7 +57,7 @@ msgstr "接听"
 
 #: indicator/messagingmenu.cpp:199
 msgid "Call back"
-msgstr ""
+msgstr "回电"
 
 #: approver/approver.cpp:429
 msgid "Caller number is not available"
@@ -70,7 +70,7 @@ msgstr "%1 的来电"
 
 #: approver/approver.cpp:422
 msgid "Calling from private number"
-msgstr "私人号码来电"
+msgstr "私密号码来电"
 
 #: approver/approver.cpp:424
 msgid "Calling from unknown number"
@@ -82,7 +82,7 @@ msgstr "取消"
 
 #: indicator/textchannelobserver.cpp:207
 msgid "Deactivate flight mode and try again from the messaging application."
-msgstr ""
+msgstr "关闭飞行模式并在短信应用中重试。"
 
 #: approver/approver.cpp:485
 msgid "Decline"
@@ -90,11 +90,11 @@ msgstr "拒绝"
 
 #: approver/approver.cpp:476
 msgid "End + Answer"
-msgstr ""
+msgstr "挂断 + 应答"
 
 #: approver/approver.cpp:462
 msgid "Hold + Answer"
-msgstr ""
+msgstr "挂起 + 应答"
 
 #: indicator/messagingmenu.cpp:204
 msgid "I missed your call - can you call me now?"
@@ -106,7 +106,7 @@ msgstr "我将会迟到20分钟。"
 
 #: approver/approver.cpp:89
 msgid "I'm busy at the moment. I'll call later."
-msgstr ""
+msgstr "此刻我正忙。稍后我将回电。"
 
 #: indicator/messagingmenu.cpp:206
 msgid "I'm busy at the moment. I'll call you later."
@@ -114,7 +114,7 @@ msgstr "现在正忙，待会儿回您电话。"
 
 #: approver/approver.cpp:90
 msgid "I'm running late, on my way now."
-msgstr ""
+msgstr "我迟了，正在路上。"
 
 #: indicator/messagingmenu.cpp:205
 msgid "I'm running late. I'm on my way."
@@ -122,28 +122,28 @@ msgstr "快迟到了，我这就动身。"
 
 #: approver/approver.cpp:493
 msgid "Message & decline"
-msgstr ""
+msgstr "拒接并发送短信"
 
 #: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "来自 %1 的短信"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr ""
+msgstr "今日无呼出"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr ""
+msgstr "今日无接听"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr ""
+msgstr "今日未收到短信"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr ""
+msgstr "今日未发送短信"
 
 #: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
 msgid "Ok"
@@ -155,19 +155,19 @@ msgstr "手机通话"
 
 #: approver/approver.cpp:91
 msgid "Please call me back later."
-msgstr ""
+msgstr "请稍后再呼叫我。"
 
 #: indicator/textchannelobserver.cpp:539
 msgid "Please, select a SIM card:"
-msgstr ""
+msgstr "请选择一张SIM卡:"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:136
 msgid "Private Number"
-msgstr ""
+msgstr "私密号码"
 
 #: indicator/messagingmenu.cpp:259
 msgid "Private number"
-msgstr ""
+msgstr "私密号码"
 
 #: indicator/ussdindicator.cpp:82
 msgid "Reply"
@@ -176,7 +176,7 @@ msgstr "回复"
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr ""
+msgstr "SIM卡 %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
@@ -188,7 +188,7 @@ msgstr "保存"
 
 #: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
 msgid "Send"
-msgstr ""
+msgstr "发送"
 
 #: indicator/messagingmenu.cpp:208
 msgid "Sorry, I'm still busy. I'll call you later."
@@ -197,27 +197,27 @@ msgstr "抱歉，我还在忙，待会儿给您回电话。"
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr ""
+msgstr "今日通话时长 <b>%1</b> 分钟"
 
 #: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
 msgid "Telephony Service"
-msgstr ""
+msgstr "电话服务"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr ""
+msgstr "电话服务核准"
 
 #: indicator/main.cpp:50
 msgid "Telephony Service Indicator"
-msgstr ""
+msgstr "电话服务指示器"
 
 #: indicator/textchannelobserver.cpp:215
 msgid "The message could not be sent"
-msgstr ""
+msgstr "本短信无法被发送"
 
 #: indicator/textchannelobserver.cpp:210
 msgid "Try again from the messaging application."
-msgstr ""
+msgstr "请使用短信应用重试。"
 
 #: Ubuntu/Telephony/contactwatcher.cpp:138
 msgid "Unknown Number"
@@ -229,11 +229,11 @@ msgstr "未知来电者"
 
 #: indicator/messagingmenu.cpp:263
 msgid "Unknown number"
-msgstr ""
+msgstr "未知号码"
 
 #: indicator/textchannelobserver.cpp:205
 msgid "Unlock your sim card and try again from the messaging application."
-msgstr ""
+msgstr "请解锁你的SIM卡，然后在短信应用中重试。"
 
 #: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
 msgid "View message"
@@ -241,7 +241,7 @@ msgstr "检视讯息"
 
 #: indicator/messagingmenu.cpp:313
 msgid "Voicemail"
-msgstr ""
+msgstr "语音信箱"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Voicemail messages"
