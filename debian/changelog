@@ -1,3 +1,18 @@
+telephony-service (0.1+15.10.20150709-0ubuntu1) wily; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Sync the fixes that were released in OTA5: (LP: #1384274, #1433068,
+    #1412709, #1427286, #1453004)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 09 Jul 2015 13:46:05 +0000
+
+telephony-service (0.1+15.10.20150706.1-0ubuntu1) wily; urgency=medium
+
+  [ Alberto Aguirre ]
+  * No change rebuid against platform-api 3
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 06 Jul 2015 22:06:19 +0000
+
 telephony-service (0.1+15.10.20150701-0ubuntu1) wily; urgency=medium
 
   [ CI Train Bot ]

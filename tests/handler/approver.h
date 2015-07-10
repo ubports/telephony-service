@@ -44,7 +44,7 @@ Q_SIGNALS:
     void newCall();
 
 public Q_SLOTS:
-    void acceptCall();
+    void acceptCall(bool callAcceptOnChannel = true);
     void rejectCall();
 
 private Q_SLOTS:
