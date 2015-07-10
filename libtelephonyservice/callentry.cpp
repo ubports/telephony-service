@@ -295,7 +295,7 @@ bool CallEntry::ringing() const
 
 QString CallEntry::phoneNumber() const
 {
-    if (mChannel->isConference() || !mChannel->actualFeatures().contains(Tp::CallChannel::FeatureCore)) {
+    if (mChannel->isConference() || !mChannel->actualFeatures().contains(Tp::CallChannel::FeatureCore) || mChannel->targetContact().isNull()) {
         return "";
     }
     return mChannel->targetContact()->id();

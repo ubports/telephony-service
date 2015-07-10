@@ -177,7 +177,8 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
      * play locally (via tone generator) only if we are on a call, or if this is 
      * dialpad sounds
      */
-    if (GreeterContacts::instance()->dialpadSoundsEnabled() && objectPath.isEmpty()
+    if (GreeterContacts::instance()->dialpadSoundsEnabled() && 
+        !GreeterContacts::instance()->silentMode() && objectPath.isEmpty()
         || !objectPath.isEmpty()) {
         ToneGenerator::instance()->playDTMFTone((uint)event);
     }
@@ -264,8 +265,6 @@ void CallHandler::splitCall(const QString &objectPath)
 
 void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
-    channel->accept();
-
     QDBusInterface callChannelIface(channel->busName(), channel->objectPath(), DBUS_PROPERTIES_IFACE);
     QDBusMessage reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE);
     QVariantList args = reply.arguments();
