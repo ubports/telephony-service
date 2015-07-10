@@ -22,7 +22,6 @@
 
 #include "callagent.h"
 #include "callhandler.h"
-#include "phoneutils.h"
 #include "telepathyhelper.h"
 #include "accountentry.h"
 #include "tonegenerator.h"
@@ -91,7 +90,7 @@ CallHandler::CallHandler(QObject *parent)
 {
 }
 
-void CallHandler::startCall(const QString &phoneNumber, const QString &accountId)
+void CallHandler::startCall(const QString &id, const QString &accountId)
 {
     // Request the contact to start audio call
     AccountEntry *accountEntry = TelepathyHelper::instance()->accountForId(accountId);
@@ -104,7 +103,7 @@ void CallHandler::startCall(const QString &phoneNumber, const QString &accountId
         return;
     }
 
-    connect(connection->contactManager()->contactsForIdentifiers(QStringList() << phoneNumber),
+    connect(connection->contactManager()->contactsForIdentifiers(QStringList() << id),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
@@ -343,23 +342,6 @@ void CallHandler::onCallStateChanged(Tp::CallState state)
         Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
         break;
     }
-}
-
-Tp::CallChannelPtr CallHandler::existingCall(const QString &phoneNumber)
-{
-    Tp::CallChannelPtr channel;
-    Q_FOREACH(const Tp::CallChannelPtr &ch, mCallChannels) {
-        if (ch->isConference()) {
-            continue;
-        }
-
-        if (PhoneUtils::comparePhoneNumbers(ch->targetContact()->id(), phoneNumber)) {
-            channel = ch;
-            break;
-        }
-    }
-
-    return channel;
 }
 
 Tp::CallChannelPtr CallHandler::callFromObjectPath(const QString &objectPath)
