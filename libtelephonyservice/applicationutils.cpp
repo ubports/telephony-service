@@ -60,13 +60,15 @@ bool ApplicationUtils::checkApplicationRunning(const QString &serviceName)
 bool ApplicationUtils::openUrl(const QUrl &url)
 {
 #ifdef USE_UBUNTU_PLATFORM_API
-    UAUrlDispatcherSession* session = ua_url_dispatcher_session();
-    if (!session)
-        return false;
+    if (qgetenv("TELEPHONY_SERVICE_TEST").isEmpty()) {
+        UAUrlDispatcherSession* session = ua_url_dispatcher_session();
+        if (!session)
+            return false;
 
-    ua_url_dispatcher_session_open(session, url.toEncoded().constData(), NULL, NULL);
+        ua_url_dispatcher_session_open(session, url.toEncoded().constData(), NULL, NULL);
 
-    free(session);
+        free(session);
+    }
 #endif
     return true;
 }

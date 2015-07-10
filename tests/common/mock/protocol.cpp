@@ -47,5 +47,5 @@ Protocol::Protocol(const QDBusConnection &dbusConnection, const QString &name)
 
 Tp::BaseConnectionPtr Protocol::createConnection(const QVariantMap &parameters, Tp::DBusError *error) {
     Q_UNUSED(error);
-    return Tp::BaseConnection::create<MockConnection>(QDBusConnection::sessionBus(), "mock", name().toLatin1(), parameters);
+    return Tp::BaseConnection::create<MockConnection>("mock", name().toLatin1(), parameters);
 }

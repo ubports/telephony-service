@@ -34,6 +34,7 @@ USSDIndicator::USSDIndicator(QObject *parent)
 : QObject(parent),
   m_menuRequest("ussd", true),
   m_menuNotification("ussd", false),
+  m_notificationId(-1),
   m_notifications("org.freedesktop.Notifications",
                   "/org/freedesktop/Notifications", QDBusConnection::sessionBus())
 {
@@ -99,7 +100,13 @@ void USSDIndicator::onRespondComplete(bool success, const QString &ussdResp)
 
 void USSDIndicator::onStateChanged(const QString &state)
 {
-    // TODO: check if we should close notifications when the state is idle
+    if (m_notificationId == -1) {
+        return;
+    }
+
+    if (state == "idle") {
+        m_notifications.CloseNotification(m_notificationId);
+    }
 }
 
 void USSDIndicator::showUSSDNotification(const QString &message, bool replyRequired, USSDManager *ussdManager)
@@ -116,6 +123,7 @@ void USSDIndicator::showUSSDNotification(const QString &message, bool replyRequi
     QVariantMap notificationHints;
     notificationHints["x-canonical-snap-decisions"] = "true";
     notificationHints["x-canonical-private-button-tint"] = "true";
+    notificationHints["x-canonical-snap-decisions-timeout"] = -1;
 
     QVariantMap menuModelActions;
     menuModelActions["notifications"] = menu->actionPath();
@@ -148,7 +156,7 @@ void USSDIndicator::actionInvoked(uint id, const QString &actionKey)
         return;
     }
 
-    m_notificationId = 0;
+    m_notificationId = -1;
 
     if (actionKey == "reply_id") {
         ussdManager->respond(m_menuRequest.response());
@@ -162,19 +170,18 @@ void USSDIndicator::notificationClosed(uint id, uint reason) {
     if (id != m_notificationId) {
         return;
     }
-    m_notifications.CloseNotification(m_notificationId);
-    m_notificationId = 0;
+    m_notificationId = -1;
 }
 
 void USSDIndicator::clear()
 {
-    if (m_notificationId != 0) {
+    if (m_notificationId != -1) {
         USSDManager *ussdManager = mUSSDRequests.take(m_notificationId);
         if (ussdManager) {
             ussdManager->cancel();
         }
 
         m_notifications.CloseNotification(m_notificationId);
-        m_notificationId = 0;
+        m_notificationId = -1;
     }
 }
