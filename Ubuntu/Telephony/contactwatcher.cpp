@@ -176,9 +176,9 @@ void ContactWatcher::setIdentifier(const QString &identifier)
         mDetailProperties.clear();
 
         if (isPrivate) {
-            mAlias = C::gettext("Private Number");
+            mAlias = C::dgettext("telephony-service", "Private Number");
         } else if (isUnknown) {
-            mAlias = C::gettext("Unknown Number");
+            mAlias = C::dgettext("telephony-service", "Unknown Number");
         }
 
         Q_EMIT contactIdChanged();
