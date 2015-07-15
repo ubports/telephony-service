@@ -26,6 +26,7 @@
 #include <phonenumbers/phonenumbermatch.h>
 #include <phonenumbers/phonenumbermatcher.h>
 #include <phonenumbers/phonenumberutil.h>
+#include <phonenumbers/shortnumberutil.h>
 
 #include <QLocale>
 #include <QDebug>
@@ -86,3 +87,9 @@ bool PhoneUtils::isPhoneNumber(const QString &phoneNumber)
     return true;
 }
 
+bool PhoneUtils::isEmergencyNumber(const QString &phoneNumber)
+{
+    static const i18n::phonenumbers::ShortNumberUtil short_util;
+    QString region = QLocale::system().name().split("_").last();
+    return short_util.ConnectsToEmergencyNumber(phoneNumber.toStdString(), region.toStdString());
+}
