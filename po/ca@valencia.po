@@ -15,18 +15,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-07-09 05:59+0000\n"
-"X-Generator: Launchpad (build 17608)\n"
+"X-Launchpad-Export-Date: 2015-07-17 05:37+0000\n"
+"X-Generator: Launchpad (build 17628)\n"
 "Language: ca\n"
 
-#: indicator/messagingmenu.cpp:256
+#: indicator/messagingmenu.cpp:293
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 cridada perduda"
 msgstr[1] "%1 cridades perdudes"
 
-#: indicator/messagingmenu.cpp:308
+#: indicator/messagingmenu.cpp:390
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -53,82 +53,82 @@ msgstr "<b>%1</b> missatges de text rebuts hui"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> missatges de text enviats hui"
 
-#: approver/approver.cpp:463
+#: approver/approver.cpp:488
 msgid "Accept"
 msgstr "Accepta"
 
-#: indicator/messagingmenu.cpp:199
+#: indicator/messagingmenu.cpp:230
 msgid "Call back"
 msgstr "Crida"
 
-#: approver/approver.cpp:429
+#: approver/approver.cpp:451
 msgid "Caller number is not available"
 msgstr "El número de la cridada entrant no està disponible"
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:448
 #, qt-format
 msgid "Calling from %1"
 msgstr "S'està cridant des de %1"
 
-#: approver/approver.cpp:422
+#: approver/approver.cpp:444
 msgid "Calling from private number"
 msgstr "S'està cridant des d'un número privat"
 
-#: approver/approver.cpp:424
+#: approver/approver.cpp:446
 msgid "Calling from unknown number"
 msgstr "S'està cridant des d'un número desconegut"
 
-#: indicator/ussdindicator.cpp:104
+#: indicator/ussdindicator.cpp:142
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: indicator/textchannelobserver.cpp:207
+#: indicator/textchannelobserver.cpp:226
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Desactiveu el mode d'avió i torneu-ho a intentar des de l'aplicació de "
 "missatgeria."
 
-#: approver/approver.cpp:485
+#: approver/approver.cpp:510
 msgid "Decline"
 msgstr "Rebutja"
 
-#: approver/approver.cpp:476
+#: approver/approver.cpp:501
 msgid "End + Answer"
 msgstr "Finalitza i contesta"
 
-#: approver/approver.cpp:462
+#: approver/approver.cpp:487
 msgid "Hold + Answer"
 msgstr "Retenció i resposta"
 
-#: indicator/messagingmenu.cpp:204
+#: indicator/messagingmenu.cpp:235
 msgid "I missed your call - can you call me now?"
 msgstr "No he pogut contestar - em pots cridar ara?"
 
-#: indicator/messagingmenu.cpp:207
+#: indicator/messagingmenu.cpp:238
 msgid "I'll be 20 minutes late."
 msgstr "Arribaré 20 minuts tard."
 
-#: approver/approver.cpp:89
+#: approver/approver.cpp:91
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Ara mateix tinc faena. Cridaré més tard."
 
-#: indicator/messagingmenu.cpp:206
+#: indicator/messagingmenu.cpp:237
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Ara mateix estic enfeina. Cridaré més tard."
 
-#: approver/approver.cpp:90
+#: approver/approver.cpp:92
 msgid "I'm running late, on my way now."
 msgstr "Vaig venint, però arribaré tard."
 
-#: indicator/messagingmenu.cpp:205
+#: indicator/messagingmenu.cpp:236
 msgid "I'm running late. I'm on my way."
 msgstr "Arribo tard. Ja estic venint."
 
-#: approver/approver.cpp:493
+#: approver/approver.cpp:518
 msgid "Message & decline"
 msgstr "Envia un missatge i declina"
 
-#: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
+#: indicator/textchannelobserver.cpp:447 indicator/textchannelobserver.cpp:503
 #, qt-format
 msgid "Message from %1"
 msgstr "Missatge d'en/na %1"
@@ -149,7 +149,7 @@ msgstr "Hui no heu rebut cap missatge de text"
 msgid "No text messages sent today"
 msgstr "Hui no heu enviat cap missatge de text"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
 msgid "Ok"
 msgstr "D'acord"
 
@@ -157,23 +157,23 @@ msgstr "D'acord"
 msgid "Phone Calls"
 msgstr "Cridades de telèfon"
 
-#: approver/approver.cpp:91
+#: approver/approver.cpp:93
 msgid "Please call me back later."
 msgstr "Crida'm més tard."
 
-#: indicator/textchannelobserver.cpp:539
+#: indicator/textchannelobserver.cpp:625
 msgid "Please, select a SIM card:"
 msgstr "Seleccioneu una targeta SIM:"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:136
+#: Ubuntu/Telephony/contactwatcher.cpp:179
 msgid "Private Number"
 msgstr "Númeor privat"
 
-#: indicator/messagingmenu.cpp:259
+#: indicator/messagingmenu.cpp:296
 msgid "Private number"
 msgstr "Número privat"
 
-#: indicator/ussdindicator.cpp:82
+#: indicator/ussdindicator.cpp:119
 msgid "Reply"
 msgstr "Resposta"
 
@@ -186,15 +186,15 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:276
+#: indicator/textchannelobserver.cpp:308
 msgid "Save"
 msgstr "Guarda"
 
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+#: indicator/messagingmenu.cpp:172 indicator/messagingmenu.cpp:245
 msgid "Send"
 msgstr "Envia"
 
-#: indicator/messagingmenu.cpp:208
+#: indicator/messagingmenu.cpp:239
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Tinc faena, et cridaré més tard"
 
@@ -203,7 +203,7 @@ msgstr "Tinc faena, et cridaré més tard"
 msgid "Spent <b>%1</b> minutes in calls today"
 msgstr "Heu estat <b>%1</b> minuts en cridades hui"
 
-#: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
+#: indicator/messagingmenu.cpp:56 indicator/messagingmenu.cpp:60
 msgid "Telephony Service"
 msgstr "Servei de telefonia"
 
@@ -211,44 +211,44 @@ msgstr "Servei de telefonia"
 msgid "Telephony Service Approver"
 msgstr "Aprovador del servei de telefonia"
 
-#: indicator/main.cpp:50
+#: indicator/main.cpp:51
 msgid "Telephony Service Indicator"
 msgstr "Indicador del servei de telefonia"
 
-#: indicator/textchannelobserver.cpp:215
+#: indicator/textchannelobserver.cpp:235
 msgid "The message could not be sent"
 msgstr "No s'ha pogut enviar el missatge"
 
-#: indicator/textchannelobserver.cpp:210
+#: indicator/textchannelobserver.cpp:229
 msgid "Try again from the messaging application."
 msgstr "Torneu-ho a intentar per a l'aplicació de missatgeria."
 
-#: Ubuntu/Telephony/contactwatcher.cpp:138
+#: Ubuntu/Telephony/contactwatcher.cpp:181
 msgid "Unknown Number"
 msgstr "Número desconegut"
 
-#: approver/approver.cpp:61
+#: approver/approver.cpp:63
 msgid "Unknown caller"
 msgstr "Número entrant desconegut"
 
-#: indicator/messagingmenu.cpp:263
+#: indicator/messagingmenu.cpp:300
 msgid "Unknown number"
 msgstr "Número desconegut"
 
-#: indicator/textchannelobserver.cpp:205
+#: indicator/textchannelobserver.cpp:224
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Desbloqueu la targeta SIM i torneu-ho a provar des de l'aplicació de "
 "missatgeria."
 
-#: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
+#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:467
 msgid "View message"
 msgstr "Mostra el missatge"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail"
 msgstr "Bústia de veu"
 
-#: indicator/messagingmenu.cpp:305
+#: indicator/messagingmenu.cpp:387
 msgid "Voicemail messages"
 msgstr "Missatges de veu"
