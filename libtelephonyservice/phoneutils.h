@@ -35,6 +35,8 @@ public:
     Q_INVOKABLE static bool isPhoneNumber(const QString &phoneNumber);
     Q_INVOKABLE static QString normalizePhoneNumber(const QString &phoneNumber);
     Q_INVOKABLE static bool isEmergencyNumber(const QString &phoneNumber);
+private:
+    static QString region();
     
 };
 
