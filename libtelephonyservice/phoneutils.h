@@ -31,12 +31,14 @@ class PhoneUtils : public QObject
     Q_OBJECT
 public:
     explicit PhoneUtils(QObject *parent = 0);
+    Q_INVOKABLE static void setCountryCode(const QString &countryCode);
+    Q_INVOKABLE static QString countryCode();
     Q_INVOKABLE static bool comparePhoneNumbers(const QString &number1, const QString &number2);
     Q_INVOKABLE static bool isPhoneNumber(const QString &phoneNumber);
     Q_INVOKABLE static QString normalizePhoneNumber(const QString &phoneNumber);
-    Q_INVOKABLE static bool isEmergencyNumber(const QString &phoneNumber);
+    Q_INVOKABLE static bool isEmergencyNumber(const QString &phoneNumber, const QString &countryCode = QString());
 private:
-    static QString region();
+    static QString mCountryCode;
     
 };
 

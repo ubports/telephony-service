@@ -31,20 +31,31 @@
 #include <QLocale>
 #include <QDebug>
 
+QString PhoneUtils::mCountryCode = QString();
+
 PhoneUtils::PhoneUtils(QObject *parent) :
     QObject(parent)
 {
 }
 
-QString PhoneUtils::region()
+void PhoneUtils::setCountryCode(const QString &countryCode)
 {
-     QString countryCode = QLocale::system().name().split("_").last();
-     if (countryCode.size() < 2) {
-         // fallback to US if no valid country code was provided, otherwise libphonenumber
-         // will fail to parse any numbers
-         return QString("US");
-     }
-     return countryCode;
+    mCountryCode = countryCode;
+}
+
+QString PhoneUtils::countryCode()
+{
+    if (!mCountryCode.isEmpty()) {
+        return mCountryCode;
+    }
+
+    QString countryCode = QLocale::system().name().split("_").last();
+    if (countryCode.size() < 2) {
+        // fallback to US if no valid country code was provided, otherwise libphonenumber
+        // will fail to parse any numbers
+        return QString("US");
+    }
+    return countryCode;
 }
 
 QString PhoneUtils::normalizePhoneNumber(const QString &phoneNumber)
@@ -77,7 +88,7 @@ bool PhoneUtils::isPhoneNumber(const QString &phoneNumber)
     std::string formattedNumber;
     i18n::phonenumbers::PhoneNumber number;
     i18n::phonenumbers::PhoneNumberUtil::ErrorType error;
-    error = phonenumberUtil->Parse(phoneNumber.toStdString(), region().toStdString(), &number);
+    error = phonenumberUtil->Parse(phoneNumber.toStdString(), countryCode().toStdString(), &number);
 
     switch(error) {
     case i18n::phonenumbers::PhoneNumberUtil::INVALID_COUNTRY_CODE_ERROR:
@@ -97,8 +108,12 @@ bool PhoneUtils::isPhoneNumber(const QString &phoneNumber)
     return true;
 }
 
-bool PhoneUtils::isEmergencyNumber(const QString &phoneNumber)
+bool PhoneUtils::isEmergencyNumber(const QString &phoneNumber, const QString &countryCode)
 {
+    QString finalCode = countryCode;
+    if (finalCode.isEmpty()) {
+        finalCode = PhoneUtils::countryCode();
+    }
     static const i18n::phonenumbers::ShortNumberUtil short_util;
-    return short_util.ConnectsToEmergencyNumber(phoneNumber.toStdString(), region().toStdString());
+    return short_util.ConnectsToEmergencyNumber(phoneNumber.toStdString(), finalCode.toStdString());
 }
