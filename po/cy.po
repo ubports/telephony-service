@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : n==2 ? 1 : (n != 8 && n != 11) ? "
 "2 : 3;\n"
-"X-Launchpad-Export-Date: 2015-07-20 04:59+0000\n"
+"X-Launchpad-Export-Date: 2015-07-21 05:35+0000\n"
 "X-Generator: Launchpad (build 17628)\n"
 
 #: indicator/messagingmenu.cpp:293
@@ -151,7 +151,7 @@ msgstr "Heb dderbyn neges destun heddiw."
 msgid "No text messages sent today"
 msgstr "Heb anfon neges destun heddiw."
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "Iawn"
 
