@@ -115,5 +115,5 @@ bool PhoneUtils::isEmergencyNumber(const QString &phoneNumber, const QString &co
         finalCode = PhoneUtils::countryCode();
     }
     static const i18n::phonenumbers::ShortNumberUtil short_util;
-    return short_util.ConnectsToEmergencyNumber(phoneNumber.toStdString(), finalCode.toStdString());
+    return short_util.IsEmergencyNumber(normalizePhoneNumber(phoneNumber).toStdString(), finalCode.toStdString());
 }
