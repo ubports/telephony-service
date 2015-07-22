@@ -35,6 +35,7 @@ private Q_SLOTS:
     void cleanup();
     void testSnapDecisionTimeout();
     void testAcceptCall();
+    void testCarKitOutgoingCall();
 
 private:
     void waitForCallActive(const QString &callerId);
@@ -101,6 +102,33 @@ void ApproverTest::testAcceptCall()
     QCOMPARE(callStateSpy.first()[0].toString(), callerId);
     QCOMPARE(callStateSpy.first()[1].toString(), objectPath);
     QCOMPARE(callStateSpy.first()[2].toString(), QString("accepted"));
+    mMockController->HangupCall(callerId);
+}
+
+void ApproverTest::testCarKitOutgoingCall()
+{
+    // make sure that an outgoing call placed outside of telepathy is handle correctly
+    QString callerId("2345678");
+
+    QVariantMap properties;
+    properties["Caller"] = callerId;
+    properties["State"] = "outgoing";
+
+    QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
+
+    QDBusInterface notificationsMock("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications");
+    QSignalSpy notificationSpy(&notificationsMock, SIGNAL(MockNotificationReceived(QString, uint, QString, QString, QString, QStringList, QVariantMap, int)));
+    QString objectPath = mMockController->placeCall(properties);
+
+    // wait for a few seconds and check that no notification was displayed
+    QTest::qWait(3000);
+    QCOMPARE(notificationSpy.count(), 0);
+
+    // check that the call state is not "accepted"
+    TRY_VERIFY(callStateSpy.count() > 0);
+    QCOMPARE(callStateSpy.last()[0].toString(), callerId);
+    QCOMPARE(callStateSpy.last()[1].toString(), objectPath);
+    QCOMPARE(callStateSpy.last()[2].toString(), QString("initialized"));
     mMockController->HangupCall(callerId);
 }
 
