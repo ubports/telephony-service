@@ -61,6 +61,7 @@ public:
 
 protected:
     Tp::ChannelDispatchOperationPtr dispatchOperationForIncomingCall();
+    bool isIncoming(const Tp::ChannelPtr &channel);
 
 private Q_SLOTS:
     void processChannels();

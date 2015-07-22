@@ -302,9 +302,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         return;
     }
 
-    bool isIncoming = channel->initiatorContact() != dispatchOp->connection()->selfContact();
-
-    if (isIncoming && !callChannel->isRequested() && callChannel->callState() == Tp::CallStateInitialised) {
+    if (isIncoming(channel) && !callChannel->isRequested() && callChannel->callState() == Tp::CallStateInitialised) {
         callChannel->setRinging();
     } else {
         onApproved(dispatchOp);
@@ -562,7 +560,7 @@ void Approver::acceptCallChannels(const Tp::ChannelDispatchOperationPtr dispatch
     // accept all channels
     Q_FOREACH(Tp::ChannelPtr channel, dispatchOp->channels()) {
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
-        if (callChannel) {
+        if (callChannel && isIncoming(callChannel)) {
             callChannel->accept();
         }
     }
@@ -589,6 +587,11 @@ Tp::ChannelDispatchOperationPtr Approver::dispatchOperationForIncomingCall()
     }
 
     return callDispatchOp;
+}
+
+bool Approver::isIncoming(const Tp::ChannelPtr &channel)
+{
+   return channel->initiatorContact() != channel->connection()->selfContact();
 }
 
 void Approver::processChannels()
