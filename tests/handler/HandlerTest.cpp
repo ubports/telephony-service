@@ -306,7 +306,8 @@ void HandlerTest::testActiveCallIndicator()
 void HandlerTest::testNotApprovedChannels()
 {
     QVariantMap properties;
-    properties["Caller"] = "123456";
+    QString callerId = "123456";
+    properties["Caller"] = callerId;
     properties["State"] = "incoming";
 
     QSignalSpy approverCallSpy(mApprover, SIGNAL(newCall()));
@@ -324,8 +325,11 @@ void HandlerTest::testNotApprovedChannels()
     // wait for a few seconds
     QTest::qWait(3000);
 
-    // no state changes should happen, as the channel was not accepted
-    QVERIFY(callStateSpy.isEmpty());
+    // the last state received should be initialized
+    TRY_VERIFY(callStateSpy.count() > 0);
+    QCOMPARE(callStateSpy.last()[0].toString(), callerId);
+    QCOMPARE(callStateSpy.last()[1].toString(), objectPath);
+    QCOMPARE(callStateSpy.last()[2].toString(), QString("initialized"));
 }
 
 void HandlerTest::registerApprover()
