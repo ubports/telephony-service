@@ -301,7 +301,7 @@ void ContactWatcher::onResultsAvailable()
         Q_FOREACH(const QString &field, mAddressableFields) {
             if (field == "tel") {
                 Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
-                    if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mIdentifier)) {
+                    if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mIdentifier) > PhoneUtils::NO_MATCH) {
                         mDetailProperties["type"] = (int)QContactDetail::TypePhoneNumber;
                         mDetailProperties["phoneNumberSubTypes"] = wrapIntList(phoneNumber.subTypes());
                         mDetailProperties["phoneNumberContexts"] = wrapIntList(phoneNumber.contexts());

@@ -116,7 +116,7 @@ bool OfonoAccountEntry::connected() const
 
 bool OfonoAccountEntry::compareIds(const QString &first, const QString &second) const
 {
-    return PhoneUtils::comparePhoneNumbers(first, second);
+    return PhoneUtils::comparePhoneNumbers(first, second) > PhoneUtils::NO_MATCH;
 }
 
 QStringList OfonoAccountEntry::addressableVCardFields()

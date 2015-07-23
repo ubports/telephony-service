@@ -69,17 +69,21 @@ QString PhoneUtils::normalizePhoneNumber(const QString &phoneNumber)
     return QString::fromStdString(number);
 }
 
-bool PhoneUtils::comparePhoneNumbers(const QString &phoneNumberA, const QString &phoneNumberB)
+PhoneUtils::PhoneNumberMatchType PhoneUtils::comparePhoneNumbers(const QString &phoneNumberA, const QString &phoneNumberB)
 {
     static i18n::phonenumbers::PhoneNumberUtil *phonenumberUtil = i18n::phonenumbers::PhoneNumberUtil::GetInstance();
+
+    if (phoneNumberA.size() < 3 || phoneNumberB.size() < 3) {
+        return phoneNumberA == phoneNumberB ? PhoneUtils::EXACT_MATCH : PhoneUtils::NO_MATCH;
+    }
     // just do a simple string comparison if we are dealing with non phone numbers
     if (!isPhoneNumber(phoneNumberA) || !isPhoneNumber(phoneNumberB)) {
-        return phoneNumberA == phoneNumberB;
+        return phoneNumberA == phoneNumberB ? PhoneUtils::EXACT_MATCH : PhoneUtils::INVALID_NUMBER;
     }
     i18n::phonenumbers::PhoneNumberUtil::MatchType match = phonenumberUtil->
             IsNumberMatchWithTwoStrings(phoneNumberA.toStdString(),
                                         phoneNumberB.toStdString());
-    return (match > i18n::phonenumbers::PhoneNumberUtil::NO_MATCH);
+    return (PhoneNumberMatchType)match;
 }
 
 bool PhoneUtils::isPhoneNumber(const QString &phoneNumber)
