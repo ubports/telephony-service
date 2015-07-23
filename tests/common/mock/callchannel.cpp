@@ -101,7 +101,7 @@ void MockCallChannel::init()
         memberFlags[mTargetHandle] = Tp::CallMemberFlagRinging;
     }
 
-    setCallState("initializing");
+    setCallState("initialising");
 
     mCallContent = Tp::BaseCallContent::create(baseChannel()->dbusConnection(), baseChannel().data(), "audio", Tp::MediaStreamTypeAudio, Tp::MediaStreamDirectionNone);
 
@@ -114,7 +114,7 @@ void MockCallChannel::init()
 
     mCallChannel->setMembersFlags(memberFlags, identifiers, Tp::UIntList(), reason);
 
-    setCallState("initialized");
+    setCallState("initialised");
     QObject::connect(mBaseChannel.data(), SIGNAL(closed()), this, SLOT(deleteLater()));
 }
 
@@ -225,10 +225,10 @@ void MockCallChannel::setCallState(const QString &state)
     } else if (state == "waiting") {
         mIncoming = true;
         qDebug() << "waiting";
-    } else if (state == "initializing") {
+    } else if (state == "initialising") {
         reason.reason = Tp::CallStateChangeReasonProgressMade;
         mCallChannel->setCallState(Tp::CallStateInitialising, 0, reason, stateDetails);
-    } else if (state == "initialized") {
+    } else if (state == "initialised") {
         reason.reason = Tp::CallStateChangeReasonProgressMade;
         mCallChannel->setCallState(Tp::CallStateInitialised, 0, reason, stateDetails);
     }
