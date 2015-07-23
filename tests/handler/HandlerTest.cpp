@@ -325,11 +325,11 @@ void HandlerTest::testNotApprovedChannels()
     // wait for a few seconds
     QTest::qWait(3000);
 
-    // the last state received should be initialized
+    // the last state received should be initialised
     TRY_VERIFY(callStateSpy.count() > 0);
     QCOMPARE(callStateSpy.last()[0].toString(), callerId);
     QCOMPARE(callStateSpy.last()[1].toString(), objectPath);
-    QCOMPARE(callStateSpy.last()[2].toString(), QString("initialized"));
+    QCOMPARE(callStateSpy.last()[2].toString(), QString("initialised"));
 }
 
 void HandlerTest::registerApprover()

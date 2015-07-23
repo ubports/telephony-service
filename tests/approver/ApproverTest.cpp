@@ -128,7 +128,7 @@ void ApproverTest::testCarKitOutgoingCall()
     TRY_VERIFY(callStateSpy.count() > 0);
     QCOMPARE(callStateSpy.last()[0].toString(), callerId);
     QCOMPARE(callStateSpy.last()[1].toString(), objectPath);
-    QCOMPARE(callStateSpy.last()[2].toString(), QString("initialized"));
+    QCOMPARE(callStateSpy.last()[2].toString(), QString("initialised"));
     mMockController->HangupCall(callerId);
 }
 
