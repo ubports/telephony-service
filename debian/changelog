@@ -1,3 +1,11 @@
+telephony-service (0.1+15.10.20150717-0ubuntu1) wily; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Specify the domain when translating unknown and private number
+    strings. (LP: #1470938)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Fri, 17 Jul 2015 18:20:41 +0000
+
 telephony-service (0.1+15.10.20150709-0ubuntu1) wily; urgency=medium
 
   [ Gustavo Pichorim Boiko ]
