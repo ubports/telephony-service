@@ -36,6 +36,7 @@ private Q_SLOTS:
     void testSnapDecisionTimeout();
     void testAcceptCall();
     void testCarKitOutgoingCall();
+    void testCarKitIncomingCall();
 
 private:
     void waitForCallActive(const QString &callerId);
@@ -129,6 +130,38 @@ void ApproverTest::testCarKitOutgoingCall()
     QCOMPARE(callStateSpy.last()[0].toString(), callerId);
     QCOMPARE(callStateSpy.last()[1].toString(), objectPath);
     QCOMPARE(callStateSpy.last()[2].toString(), QString("initialised"));
+    mMockController->HangupCall(callerId);
+}
+
+void ApproverTest::testCarKitIncomingCall()
+{
+    // make sure that an outgoing call placed outside of telepathy is handle correctly
+    QString callerId("3456789");
+
+    QVariantMap properties;
+    properties["Caller"] = callerId;
+    properties["State"] = "incoming";
+
+    QDBusInterface notificationsMock("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications");
+    QSignalSpy notificationSpy(&notificationsMock, SIGNAL(MockNotificationReceived(QString, uint, QString, QString, QString, QStringList, QVariantMap, int)));
+    QString objectPath = mMockController->placeCall(properties);
+
+    TRY_COMPARE(notificationSpy.count(), 1);
+
+    // at this point we are already sure the approver has the call, as the notification was placed
+    QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
+
+    // now set the call state as active to simulate the call being answered on the car kit
+    mMockController->SetCallState(callerId, "active");
+
+    // wait for a few seconds while the approver approves the channel and give it to the handler
+    QTest::qWait(3000);
+    QCOMPARE(callStateSpy.count(), 1);
+    QCOMPARE(callStateSpy.first()[0].toString(), callerId);
+    QCOMPARE(callStateSpy.first()[1].toString(), objectPath);
+
+    // the call state needs to be active. If it is in any other state, it is because the approver wrongly called Accept() on the channel
+    QCOMPARE(callStateSpy.first()[2].toString(), QString("active"));
     mMockController->HangupCall(callerId);
 }
 

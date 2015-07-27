@@ -560,7 +560,7 @@ void Approver::acceptCallChannels(const Tp::ChannelDispatchOperationPtr dispatch
     // accept all channels
     Q_FOREACH(Tp::ChannelPtr channel, dispatchOp->channels()) {
         Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
-        if (callChannel && isIncoming(callChannel)) {
+        if (callChannel && isIncoming(callChannel) && callChannel->callState() != Tp::CallStateActive) {
             callChannel->accept();
         }
     }
