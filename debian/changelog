@@ -1,3 +1,14 @@
+telephony-service (0.1+15.10.20150727-0ubuntu1) wily; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk. added: po/cy.po
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure outgoing calls are not set as accepted by the approver.
+    (LP: #1476826)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 27 Jul 2015 19:38:59 +0000
+
 telephony-service (0.1+15.10.20150717-0ubuntu1) wily; urgency=medium
 
   [ Gustavo Pichorim Boiko ]
