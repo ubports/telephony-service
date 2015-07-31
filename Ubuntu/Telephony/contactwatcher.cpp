@@ -274,12 +274,51 @@ void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
     }
 }
 
+bool ContactWatcher::checkPhoneNumberMatch(const QString &phoneNumber)
+{
+    // we don't use libphonenumber directly here as we don't want to match 
+    // short numbers, and some big numbers match with SHORT_NSN_MATCH sometimes
+    QString normalizedPhone1 = PhoneUtils::normalizePhoneNumber(phoneNumber);
+    QString normalizedPhone2 = PhoneUtils::normalizePhoneNumber(mIdentifier);
+    if (normalizedPhone1.size() < 7 || normalizedPhone2.size() < 7) {
+        return normalizedPhone1 == normalizedPhone2;
+    }
+
+    return (PhoneUtils::comparePhoneNumbers(phoneNumber, mIdentifier) > PhoneUtils::NO_MATCH);
+}
+
 void ContactWatcher::onResultsAvailable()
 {
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest*>(sender());
     if (request && request->contacts().size() > 0) {
-        // use the first match
-        QContact contact = request->contacts().at(0);
+        QContact contact;
+        // iterate over all contacts
+        Q_FOREACH(const QString &field, mAddressableFields) {
+            if (!contact.isEmpty()) {
+                break;
+            }
+            if (field == "tel") {
+                Q_FOREACH(const QContact &resultContact, request->contacts()) {
+                    Q_FOREACH(const QContactPhoneNumber phoneNumber, resultContact.details(QContactDetail::TypePhoneNumber)) {
+                        if (checkPhoneNumberMatch(phoneNumber.number())) {
+                            contact = resultContact;
+                            break;
+                        }
+                    }
+                    if (!contact.isEmpty()) {
+                        break;
+                    }
+                }
+                if (!contact.isEmpty()) {
+                    break;
+                }
+            } else {
+                // FIXME: add proper support for non-phonenumber ids
+                contact = request->contacts().at(0);
+                break;
+            }
+        }
+
         if (contact.id() != mContactId) {
             mContactId = contact.id();
             Q_EMIT contactIdChanged();
@@ -301,7 +340,7 @@ void ContactWatcher::onResultsAvailable()
         Q_FOREACH(const QString &field, mAddressableFields) {
             if (field == "tel") {
                 Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
-                    if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mIdentifier) > PhoneUtils::NO_MATCH) {
+                    if (checkPhoneNumberMatch(phoneNumber.number())) {
                         mDetailProperties["type"] = (int)QContactDetail::TypePhoneNumber;
                         mDetailProperties["phoneNumberSubTypes"] = wrapIntList(phoneNumber.subTypes());
                         mDetailProperties["phoneNumberContexts"] = wrapIntList(phoneNumber.contexts());
