@@ -51,6 +51,11 @@ QStringList OfonoAccountEntry::emergencyNumbers() const
     return mEmergencyNumbers;
 }
 
+QString OfonoAccountEntry::countryCode() const
+{
+    return mCountryCode;
+}
+
 QString OfonoAccountEntry::voicemailNumber() const
 {
     return mVoicemailNumber;
@@ -111,7 +116,7 @@ bool OfonoAccountEntry::connected() const
 
 bool OfonoAccountEntry::compareIds(const QString &first, const QString &second) const
 {
-    return PhoneUtils::comparePhoneNumbers(first, second);
+    return PhoneUtils::comparePhoneNumbers(first, second) > PhoneUtils::NO_MATCH;
 }
 
 QStringList OfonoAccountEntry::addressableVCardFields()
@@ -123,6 +128,12 @@ void OfonoAccountEntry::onEmergencyNumbersChanged(const QStringList &numbers)
 {
     mEmergencyNumbers = numbers;
     Q_EMIT emergencyNumbersChanged();
+}
+
+void OfonoAccountEntry::onCountryCodeChanged(const QString &countryCode)
+{
+    mCountryCode = countryCode;
+    Q_EMIT countryCodeChanged();
 }
 
 void OfonoAccountEntry::onVoicemailNumberChanged(const QString &number)
@@ -156,6 +167,9 @@ void OfonoAccountEntry::onConnectionChanged()
             dbusConnection.disconnect(mConnectionInfo.busName, mConnectionInfo.objectPath,
                                       CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE, "EmergencyNumbersChanged",
                                       this, SLOT(onEmergencyNumbersChanged(QStringList)));
+            dbusConnection.disconnect(mConnectionInfo.busName, mConnectionInfo.objectPath,
+                                      CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE, "CountryCodeChanged",
+                                      this, SLOT(onCountryCodeChanged(QString)));
         }
     } else {
         // connect the emergency numbers changed signal
@@ -169,6 +183,18 @@ void OfonoAccountEntry::onConnectionChanged()
         if (replyNumbers.isValid()) {
             mEmergencyNumbers = replyNumbers.value();
             Q_EMIT emergencyNumbersChanged();
+        }
+
+        // connect the country code changed signal
+        dbusConnection.connect(mConnectionInfo.busName, mConnectionInfo.objectPath,
+                               CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE, "CountryCodeChanged",
+                               this, SLOT(onCountryCodeChanged(QString)));
+
+        // and get the current value of the country code
+        QDBusReply<QString> replyCountryCode = connIface.call("CountryCode");
+        if (replyCountryCode.isValid()) {
+            mCountryCode = replyCountryCode.value();
+            Q_EMIT countryCodeChanged();
         }
 
         // connect the voicemail number changed signal

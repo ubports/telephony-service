@@ -36,6 +36,7 @@ private Q_SLOTS:
     void testCompareIds_data();
     void testCompareIds();
     void testEmergencyNumbers();
+    void testCountryCode();
     void testSerial();
     void testVoicemailIndicator();
     void testVoicemailNumber();
@@ -146,6 +147,23 @@ void OfonoAccountEntryTest::testEmergencyNumbers()
     qSort(emergencyNumbers);
 
     QCOMPARE(emergencyNumbers, numbers);
+}
+
+void OfonoAccountEntryTest::testCountryCode()
+{
+    QSignalSpy countryCodeChangedSpy(mAccount, SIGNAL(countryCodeChanged()));
+
+    // check that the countryCode is not empty at startup
+    QVERIFY(!mAccount->countryCode().isEmpty());
+    QCOMPARE(mAccount->countryCode(), QString("US"));
+
+    QString countryCode("BR");
+    mMockController->SetCountryCode("BR");
+    TRY_COMPARE(countryCodeChangedSpy.count(), 1);
+
+    QString cc = mAccount->countryCode();
+
+    QCOMPARE(cc, countryCode);
 }
 
 void OfonoAccountEntryTest::testSerial()

@@ -1,8 +1,10 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2015 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Renato Araujo Oliveira Filho <renato.filho@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -20,32 +22,102 @@
  */
 
 #include "phoneutils.h"
-#include "phonenumberutils.h"
+
+#include <phonenumbers/phonenumbermatch.h>
+#include <phonenumbers/phonenumbermatcher.h>
+#include <phonenumbers/phonenumberutil.h>
+#include <phonenumbers/shortnumberutil.h>
+
+#include <QLocale>
+#include <QDebug>
+
+QString PhoneUtils::mCountryCode = QString();
 
 PhoneUtils::PhoneUtils(QObject *parent) :
     QObject(parent)
 {
 }
 
-bool PhoneUtils::comparePhoneNumbers(const QString &number1, const QString &number2)
+void PhoneUtils::setCountryCode(const QString &countryCode)
 {
-    if (isPhoneNumber(number1) && isPhoneNumber(number2)) {
-        return PhoneNumberUtils::compareLoosely(number1, number2);
+    mCountryCode = countryCode;
+}
+
+QString PhoneUtils::countryCode()
+{
+    if (!mCountryCode.isEmpty()) {
+        return mCountryCode;
     }
 
-    // if at least one of the id's is not a phone number, then perform a simple string comparison
-    return number1 == number2;
+    QString countryCode = QLocale::system().name().split("_").last();
+    if (countryCode.size() < 2) {
+        // fallback to US if no valid country code was provided, otherwise libphonenumber
+        // will fail to parse any numbers
+        return QString("US");
+    }
+    return countryCode;
 }
 
-bool PhoneUtils::isPhoneNumber(const QString &identifier) {
-    // remove all non diable digits
-    QString finalNumber = QString(identifier).replace(QRegExp("[p+*#/(),;-]"),"");
-    finalNumber = finalNumber.replace(QRegExp("(\\s+)"), "");
-    // if empty, the number is invalid
-    if (finalNumber.isEmpty())
+QString PhoneUtils::normalizePhoneNumber(const QString &phoneNumber)
+{
+    static i18n::phonenumbers::PhoneNumberUtil *phonenumberUtil = i18n::phonenumbers::PhoneNumberUtil::GetInstance();
+    if (!isPhoneNumber(phoneNumber)) {
+        return phoneNumber;
+    }
+    std::string number = phoneNumber.toStdString();
+    phonenumberUtil->NormalizeDiallableCharsOnly(&number);
+    return QString::fromStdString(number);
+}
+
+PhoneUtils::PhoneNumberMatchType PhoneUtils::comparePhoneNumbers(const QString &phoneNumberA, const QString &phoneNumberB)
+{
+    static i18n::phonenumbers::PhoneNumberUtil *phonenumberUtil = i18n::phonenumbers::PhoneNumberUtil::GetInstance();
+
+    if (phoneNumberA.size() < 3 || phoneNumberB.size() < 3) {
+        return phoneNumberA == phoneNumberB ? PhoneUtils::EXACT_MATCH : PhoneUtils::NO_MATCH;
+    }
+    // just do a simple string comparison if we are dealing with non phone numbers
+    if (!isPhoneNumber(phoneNumberA) || !isPhoneNumber(phoneNumberB)) {
+        return phoneNumberA == phoneNumberB ? PhoneUtils::EXACT_MATCH : PhoneUtils::INVALID_NUMBER;
+    }
+    i18n::phonenumbers::PhoneNumberUtil::MatchType match = phonenumberUtil->
+            IsNumberMatchWithTwoStrings(phoneNumberA.toStdString(),
+                                        phoneNumberB.toStdString());
+    return (PhoneNumberMatchType)match;
+}
+
+bool PhoneUtils::isPhoneNumber(const QString &phoneNumber)
+{
+    static i18n::phonenumbers::PhoneNumberUtil *phonenumberUtil = i18n::phonenumbers::PhoneNumberUtil::GetInstance();
+    std::string formattedNumber;
+    i18n::phonenumbers::PhoneNumber number;
+    i18n::phonenumbers::PhoneNumberUtil::ErrorType error;
+    error = phonenumberUtil->Parse(phoneNumber.toStdString(), countryCode().toStdString(), &number);
+
+    switch(error) {
+    case i18n::phonenumbers::PhoneNumberUtil::INVALID_COUNTRY_CODE_ERROR:
+        qWarning() << "Invalid country code for:" << phoneNumber;
         return false;
-
-    finalNumber = finalNumber.replace(QRegExp("(\\d+)"), "");
-    return finalNumber.isEmpty();
+    case i18n::phonenumbers::PhoneNumberUtil::NOT_A_NUMBER:
+        qWarning() << "The phone number is not a valid number:" << phoneNumber;
+        return false;
+    case i18n::phonenumbers::PhoneNumberUtil::TOO_SHORT_AFTER_IDD:
+    case i18n::phonenumbers::PhoneNumberUtil::TOO_SHORT_NSN:
+    case i18n::phonenumbers::PhoneNumberUtil::TOO_LONG_NSN:
+        qWarning() << "Invalid phone number" << phoneNumber;
+        return false;
+    default:
+        break;
+    }
+    return true;
 }
 
+bool PhoneUtils::isEmergencyNumber(const QString &phoneNumber, const QString &countryCode)
+{
+    QString finalCode = countryCode;
+    if (finalCode.isEmpty()) {
+        finalCode = PhoneUtils::countryCode();
+    }
+    static const i18n::phonenumbers::ShortNumberUtil short_util;
+    return short_util.IsEmergencyNumber(normalizePhoneNumber(phoneNumber).toStdString(), finalCode.toStdString());
+}
