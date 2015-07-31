@@ -91,7 +91,6 @@ protected Q_SLOTS:
 
 private:
     void startSearching();
-    bool checkPhoneNumberMatch(const QString &phoneNumber);
 
     QContactFetchRequest *mRequest;
     QContactId mContactId;
