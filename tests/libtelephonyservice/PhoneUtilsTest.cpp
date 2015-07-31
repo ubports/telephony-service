@@ -69,7 +69,7 @@ void PhoneUtilsTest::testComparePhoneNumbers_data()
     QTest::newRow("number with extension") << "12345678#123" << "12345678" << PhoneUtils::SHORT_NSN_MATCH;
     QTest::newRow("both numbers with extension") << "(123)12345678#1" << "12345678#1" << PhoneUtils::SHORT_NSN_MATCH;
     QTest::newRow("numbers with different extension") << "1234567#1" << "1234567#2" << PhoneUtils::NO_MATCH;
-    QTest::newRow("short/emergency numbers") << "190" << "190" << PhoneUtils::NSN_MATCH;
+    QTest::newRow("short/emergency numbers") << "190" << "190" << PhoneUtils::EXACT_MATCH;
     QTest::newRow("different short/emergency numbers") << "911" << "11" << PhoneUtils::NO_MATCH;
     QTest::newRow("different numbers") << "12345678" << "1234567" << PhoneUtils::NO_MATCH;
     QTest::newRow("both non phone numbers") << "abcdefg" << "abcdefg" << PhoneUtils::EXACT_MATCH;
