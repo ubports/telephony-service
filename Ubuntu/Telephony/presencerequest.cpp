@@ -43,6 +43,8 @@ void PresenceRequest::startPresenceRequest()
 
     AccountEntry *account = TelepathyHelper::instance()->accountForId(mAccountId);
     if (!account || account->account()->connection().isNull()) {
+        mContact.reset();
+        onPresenceChanged();
         return;
     }
  
