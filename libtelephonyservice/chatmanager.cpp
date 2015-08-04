@@ -73,11 +73,13 @@ void ChatManager::onTelepathyReady()
 
 void ChatManager::onChannelObserverUnregistered()
 {
-    Q_FOREACH(ChatEntry *entry, mChatEntries) {
+    QList<ChatEntry*> tmp = mChatEntries;
+    mChatEntries.clear();
+    Q_EMIT chatsChanged();
+    Q_FOREACH(ChatEntry *entry, tmp) {
         // for some reason deleteLater is not working
         delete entry;
     }
-    mChatEntries.clear();
 }
 
 void ChatManager::onConnectedChanged()

@@ -48,7 +48,10 @@ ChatEntry::ChatEntry(const Tp::TextChannelPtr &channel, QObject *parent) :
 
 ChatEntry::~ChatEntry()
 {
-    QMapIterator<QString, ContactChatState*> it(mChatStates);
+    QMap<QString, ContactChatState*> tmp = mChatStates;
+    mChatStates.clear();
+    Q_EMIT chatStatesChanged();
+    QMapIterator<QString, ContactChatState*> it(tmp);
     while (it.hasNext()) {
         it.next();
         delete it.value();
@@ -61,6 +64,7 @@ void ChatEntry::onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelCha
         mChatStates[contact->id()]->setState(state);
         return;
     }
+
     ContactChatState *newState = new ContactChatState(contact->id(), state);
     mChatStates[contact->id()] = newState;
     Q_EMIT chatStatesChanged();
