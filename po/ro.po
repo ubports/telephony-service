@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:37+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -55,7 +55,7 @@ msgstr "<b>%1</b> mesaje text primite astăzi"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> mesaje text trimise astăzi"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "Accept"
 
@@ -63,20 +63,20 @@ msgstr "Accept"
 msgid "Call back"
 msgstr "Apelează inapoi"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "Numărul apelantului nu este disponibil"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "Apel de la %1"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "Apel de la un număr privat"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "Apel de la un număr necunoscut"
 
@@ -89,15 +89,15 @@ msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Dezactivați modul avion și încercați din nou din aplicația de mesagerie."
 
-#: approver/approver.cpp:510
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "Refuz"
 
-#: approver/approver.cpp:501
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr "Sfârșit + Răspuns"
 
-#: approver/approver.cpp:487
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "Reține + Răspunde"
 
@@ -125,7 +125,7 @@ msgstr "Sunt înîntârziere, sunt pe drum acum."
 msgid "I'm running late. I'm on my way."
 msgstr "Sunt în întârziere. Sunt deja pe drum."
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr "Mesaj & respingere"
 
@@ -150,7 +150,7 @@ msgstr "Niciun mesaj text primit astăzi"
 msgid "No text messages sent today"
 msgstr "Niciun mesaj text trimis astăzi"
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "În regulă"
 

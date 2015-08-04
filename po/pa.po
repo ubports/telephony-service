@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:37+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -52,7 +52,7 @@ msgstr "<b>%1</b> ਅੱਜ ਮਿਲੇ ਟੈਕਸਟ ਸੁਨੇਹੇ"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> ਅੱਜ ਭੇਜੇ ਗਏ ਟੈਕਸਟ ਸੁਨੇਹੇ"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "ਮਨਜ਼ੂਰ"
 
@@ -60,20 +60,20 @@ msgstr "ਮਨਜ਼ੂਰ"
 msgid "Call back"
 msgstr "ਮੁੜ ਕਾਲ ਕਰੋ"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "ਕਾਲਰ ਨੰਬਰ ਮੌਜੂਦ ਨਹੀਂ"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "%1 ਤੋਂ ਕਾਲ ਕਰ ਰਿਹਾ"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "ਨਿੱਜੀ ਨੰਬਰ ਤੋਂ ਕਾਲ ਕਰ ਰਿਹਾ"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "ਅਣਪਛਾਤੇ ਨੰਬਰ ਤੋਂ ਕਾਲ ਕਰ ਰਿਹਾ"
 
@@ -85,15 +85,15 @@ msgstr "ਰੱਦ"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "ਹਵਾਈ ਮੋਡ ਬੰਦ ਕਰੋ ਅਤੇ ਮੈਸੇਜ਼ਿੰਗ ਐਪਲੀਕੇਸ਼ਨ ਤੋਂ ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ।"
 
-#: approver/approver.cpp:510
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "ਇਨਕਾਰ"
 
-#: approver/approver.cpp:501
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr "ਅੰਤ + ਜਵਾਬ"
 
-#: approver/approver.cpp:487
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "ਰੱਖੋ + ਜਵਾਬ"
 
@@ -121,7 +121,7 @@ msgstr "ਮੈਨੂੰ ਦੇਰੀ ਹੋ ਰਹੀ ਹੈ, ਮੈਂ ਹਾ�
 msgid "I'm running late. I'm on my way."
 msgstr "ਮੈਨੂੰ ਦੇਰੀ ਹੋ ਰਹੀ ਹੈ, ਮੈਂ ਰਾਹ ਵਿੱਚ ਹਾਂ।"
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr "ਸੁਨੇਹਾ ਅਤੇ ਇਨਕਾਰ"
 
@@ -146,7 +146,7 @@ msgstr "ਅੱਜ ਕੋਈ ਟੈਕਸਟ ਸੁਨੇਹਾ ਨਹੀਂ ਮ�
 msgid "No text messages sent today"
 msgstr "ਅੱਜ ਕੋਈ ਟੈਕਸਟ ਸੁਨੇਹਾ ਨਹੀਂ ਭੇਜਿਆ"
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "ਠੀਕ"
 

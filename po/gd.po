@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:37+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 "Language: gd\n"
 
 #: indicator/messagingmenu.cpp:293
@@ -58,7 +58,7 @@ msgstr "Chaidh <b>%1</b> teachdaireachdan fhaighinn an-diugh"
 msgid "<b>%1</b> text messages sent today"
 msgstr "Chaidh <b>%1</b> teachdaireachdan a chur an-diugh"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "Freagair"
 
@@ -66,20 +66,20 @@ msgstr "Freagair"
 msgid "Call back"
 msgstr "Fònaig air ais"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "Chan eil fhios dè àireamh a tha aig an neach eile"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "Fòn o %1"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "Fòn o àireamh phrìobhaideach"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "Fòn o àireamh nach aithne dhuinn"
 
@@ -93,15 +93,15 @@ msgstr ""
 "Cuir am modh itealain à comas is feuch ris a-rithist o aplacaid nan "
 "teachdaireachdan."
 
-#: approver/approver.cpp:510
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "Diùlt"
 
-#: approver/approver.cpp:501
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr "Crìochnaich + Freagair"
 
-#: approver/approver.cpp:487
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "Cum ⁊ freagair"
 
@@ -129,7 +129,7 @@ msgstr "Tha mi fadalach ach air an t-slighe a-nis."
 msgid "I'm running late. I'm on my way."
 msgstr "Tha mi fadalach ach air an t-slighe."
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr "Teachdaireachd ⁊ diùlt"
 
@@ -154,7 +154,7 @@ msgstr "Cha d' fhuaireadh teachdaireachd an-diugh"
 msgid "No text messages sent today"
 msgstr "Cha do chuireadh teachdaireachd an-diugh"
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "Ceart ma-thà"
 

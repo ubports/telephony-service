@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:37+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -50,7 +50,7 @@ msgstr "بۈگۈن <b>%1</b> دانە تېكىست ئۇچۇرى قوبۇل قى�
 msgid "<b>%1</b> text messages sent today"
 msgstr "بۈگۈن <b>%1</b> دانە تېكىست ئۇچۇرى ئەۋەتىلدى"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "قوشۇل"
 
@@ -58,20 +58,20 @@ msgstr "قوشۇل"
 msgid "Call back"
 msgstr ""
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "تېلېفون نومۇرى يوق"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "تېلېفون %1 دىن كەلدى"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "شەخسىي نومۇردىن تېلېفون كەلدى"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "ناتونۇش تېلېفون كەلدى"
 
@@ -84,15 +84,15 @@ msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "ئايروپىلان ھالىتىنى ئاكتىپسىزلاڭ ۋە ئۇچۇر پروگراممىسىدا قايتا سىناپ كۆرۈڭ."
 
-#: approver/approver.cpp:510
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "قوشۇلما"
 
-#: approver/approver.cpp:501
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:487
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "ساقلىتىپ قويۇپ جاۋاب بەر"
 
@@ -120,7 +120,7 @@ msgstr ""
 msgid "I'm running late. I'm on my way."
 msgstr "كېچىكىپ قالدىم. ھازىر يولدا."
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr "بۈگۈن ھېچقانداق تېكىست ئۇچۇرى كەلمىدى"
 msgid "No text messages sent today"
 msgstr "بۈگۈن ھېچقانداق تېكىست ئۇچۇرى ئەۋەتىلمىدى"
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "تامام"
 

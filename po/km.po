@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:37+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -50,7 +50,7 @@ msgstr "ថ្ងៃនេះ​បាន​ទទួល​សារ <b>%1</b>"
 msgid "<b>%1</b> text messages sent today"
 msgstr "ថ្ងៃនេះ​បាន​ផ្ញើ​សារ <b>%1</b>"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "ព្រម​ទទួល"
 
@@ -58,20 +58,20 @@ msgstr "ព្រម​ទទួល"
 msgid "Call back"
 msgstr ""
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "មិន​មាន​លេខ​អ្នក​ហៅ"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "កំពុង​ហៅ​ពី %1"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "កំពុង​ហៅ​ពី​លេខ​ឯកជន"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "កំពុង​ហៅ​ពី​លេខ​មិន​ស្គាល់"
 
@@ -83,15 +83,15 @@ msgstr "បោះបង់"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 
-#: approver/approver.cpp:510
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "បដិសេធ"
 
-#: approver/approver.cpp:501
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:487
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "ចុច​ជាប់ + ឆ្លើយ"
 
@@ -120,7 +120,7 @@ msgstr ""
 msgid "I'm running late. I'm on my way."
 msgstr "ខ្ញុំ​យឺត​ហើយ។ ខ្ញុំ​នៅ​តាម​ផ្លូវ។"
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr ""
 
@@ -145,7 +145,7 @@ msgstr "ថ្ងៃនេះ​មិន​បាន​ទទួល​សារ
 msgid "No text messages sent today"
 msgstr "ថ្ងៃនេះ​មិន​បាន​ផ្ញើ​សារ"
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "យល់ព្រម"
 

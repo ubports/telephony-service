@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:37+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -52,7 +52,7 @@ msgstr "Hoxe recibiu <b>%1</b> mensaxes"
 msgid "<b>%1</b> text messages sent today"
 msgstr "Hoxe enviou <b>%1</b> mensaxes"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "Aceptar"
 
@@ -60,20 +60,20 @@ msgstr "Aceptar"
 msgid "Call back"
 msgstr "Chamar de volta"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "O número do comunicante non está dispoñíbel"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "Chamada de %1"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "Chamada desde un número privado"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "Chamada desde un número descoñecido"
 
@@ -85,15 +85,15 @@ msgstr "Cancelar"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "Desactive o modo avión e probe desde o aplicativo de mensaxería."
 
-#: approver/approver.cpp:510
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "Rexeitar"
 
-#: approver/approver.cpp:501
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr "Rematar + Responder"
 
-#: approver/approver.cpp:487
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "Manter + Contestar"
 
@@ -121,7 +121,7 @@ msgstr "Chego tarde, estou en camiño."
 msgid "I'm running late. I'm on my way."
 msgstr "Chego tarde. Estou en camiño."
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr "Rexeitar cunha mensaxe"
 
@@ -146,7 +146,7 @@ msgstr "Hoxe non recibiu mensaxes de texto"
 msgid "No text messages sent today"
 msgstr "Hoxe non enviou mensaxes de texto"
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "Aceptar"
 

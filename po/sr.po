@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:37+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -55,7 +55,7 @@ msgstr "Данас је примљено <b>%1</b> текстуалних пор
 msgid "<b>%1</b> text messages sent today"
 msgstr "Данас је послато <b>%1</b> текстуалних порука"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "Прихвати"
 
@@ -63,20 +63,20 @@ msgstr "Прихвати"
 msgid "Call back"
 msgstr ""
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "Број позиваоца није доступан"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "Зове са %1"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "Позив са сакривеног броја"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "Позив са непознатог броја"
 
@@ -88,15 +88,15 @@ msgstr "Откажи"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "Искључите режим у авиону и покушајте поново из програма за поруке."
 
-#: approver/approver.cpp:510
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "Одбиј"
 
-#: approver/approver.cpp:501
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:487
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "Задржи и одговори"
 
@@ -124,7 +124,7 @@ msgstr ""
 msgid "I'm running late. I'm on my way."
 msgstr "Касним. На путу сам."
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr ""
 
@@ -149,7 +149,7 @@ msgstr "Данас нема примљених порука"
 msgid "No text messages sent today"
 msgstr "Данас није било послатих порука"
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "У реду"
 

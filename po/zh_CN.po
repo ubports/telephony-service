@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:37+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 "Language: \n"
 
 #: indicator/messagingmenu.cpp:293
@@ -51,7 +51,7 @@ msgstr "今日收到 <b>%1</b> 条短信"
 msgid "<b>%1</b> text messages sent today"
 msgstr "今日发送 <b>%1</b> 条短信"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "接听"
 
@@ -59,20 +59,20 @@ msgstr "接听"
 msgid "Call back"
 msgstr "回电"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "没有对方来电号码"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "%1 的来电"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "私密号码来电"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "陌生号码来电"
 
@@ -84,15 +84,15 @@ msgstr "取消"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "关闭飞行模式并在短信应用中重试。"
 
-#: approver/approver.cpp:510
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "拒绝"
 
-#: approver/approver.cpp:501
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr "挂断 + 应答"
 
-#: approver/approver.cpp:487
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "挂起 + 应答"
 
@@ -120,7 +120,7 @@ msgstr "我迟了，正在路上。"
 msgid "I'm running late. I'm on my way."
 msgstr "快迟到了，我这就动身。"
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr "拒接并发送短信"
 
@@ -145,7 +145,7 @@ msgstr "今日未收到短信"
 msgid "No text messages sent today"
 msgstr "今日未发送短信"
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "确定"
 

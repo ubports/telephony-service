@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : n==2 ? 1 : (n != 8 && n != 11) ? "
 "2 : 3;\n"
-"X-Launchpad-Export-Date: 2015-07-21 05:35+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -57,7 +57,7 @@ msgstr "Derbyniwyd <b>%1</b> neges destun heddiw"
 msgid "<b>%1</b> text messages sent today"
 msgstr "Anfonwyd <b>%1</b> neges destun heddiw"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "Derbyn"
 
@@ -65,20 +65,20 @@ msgstr "Derbyn"
 msgid "Call back"
 msgstr "Galw nôl"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "Rhif galw ddim ar gael"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "Yn galw o %1"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "Yn galw o rif preifat"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "Yn galw o rif anhysbys"
 
@@ -90,15 +90,15 @@ msgstr "Diddymu"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "Dadweithredu modd hedfan a cheisio eto o'r ap negeseuon."
 
-#: approver/approver.cpp:510
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "Gwrthod"
 
-#: approver/approver.cpp:501
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr "Gorffen + Ateb"
 
-#: approver/approver.cpp:487
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "Dal + Ateb"
 
@@ -126,7 +126,7 @@ msgstr "Rwy'n hwyr ond ar fy ffordd nawr."
 msgid "I'm running late. I'm on my way."
 msgstr "Rwy'n hwyr ond ar fy ffordd."
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr "Anfon neges & gwrthod"
 

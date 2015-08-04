@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2015-07-17 05:37+0000\n"
-"X-Generator: Launchpad (build 17628)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 "Language: \n"
 
 #: indicator/messagingmenu.cpp:293
@@ -51,7 +51,7 @@ msgstr "今日收到 <b>%1</b> 封文字訊息"
 msgid "<b>%1</b> text messages sent today"
 msgstr "今日發出 <b>%1</b> 封文字訊息"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "接聽"
 
@@ -59,20 +59,20 @@ msgstr "接聽"
 msgid "Call back"
 msgstr "回撥"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "無法查看來電號碼"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "%1 來電"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "私人號碼來電"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "來電號碼不明"
 
@@ -84,15 +84,15 @@ msgstr "取消"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "請關閉飛安模式，並回到訊息程式中再試一次。"
 
-#: approver/approver.cpp:510
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "拒接"
 
-#: approver/approver.cpp:501
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr "結束 + 接聽"
 
-#: approver/approver.cpp:487
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "Hold + 接聽"
 
@@ -120,7 +120,7 @@ msgstr "我快遲到了，現在正在路上。"
 msgid "I'm running late. I'm on my way."
 msgstr "正在來了，遲些才到。"
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr "傳訊息並拒接"
 
@@ -145,7 +145,7 @@ msgstr "今日沒有收到文字訊息"
 msgid "No text messages sent today"
 msgstr "今日沒有發出文字訊息"
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "確定"
 
