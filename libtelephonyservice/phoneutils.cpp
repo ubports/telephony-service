@@ -26,7 +26,7 @@
 #include <phonenumbers/phonenumbermatch.h>
 #include <phonenumbers/phonenumbermatcher.h>
 #include <phonenumbers/phonenumberutil.h>
-#include <phonenumbers/shortnumberutil.h>
+#include <phonenumbers/shortnumberinfo.h>
 
 #include <QLocale>
 #include <QDebug>
@@ -122,6 +122,6 @@ bool PhoneUtils::isEmergencyNumber(const QString &phoneNumber, const QString &co
     if (finalCode.isEmpty()) {
         finalCode = PhoneUtils::countryCode();
     }
-    static const i18n::phonenumbers::ShortNumberUtil short_util;
-    return short_util.IsEmergencyNumber(normalizePhoneNumber(phoneNumber).toStdString(), finalCode.toStdString());
+    static const i18n::phonenumbers::ShortNumberInfo short_info;
+    return short_info.IsEmergencyNumber(normalizePhoneNumber(phoneNumber).toStdString(), finalCode.toStdString());
 }
