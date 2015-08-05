@@ -129,12 +129,21 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
     if (notificationData != NULL) {
         // launch the messaging-app to show the message
         QStringList recipients;
+        QString accountId = notificationData->accountId;
         if (!notificationData->senderId.isEmpty()) {
             recipients << notificationData->senderId;
         }
         recipients << notificationData->participantIds;
         recipients.removeDuplicates();
-        ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+ 
+        QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+        AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+        if (account && account->type() == AccountEntry::GenericAccount) {
+            url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
+        }
+  
+        ApplicationUtils::openUrl(url);
+
         notification_closed(notification, notificationData->notificationList);
     }
     g_object_unref(notification);

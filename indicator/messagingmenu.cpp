@@ -501,6 +501,7 @@ void MessagingMenu::showMessage(const QString &messageId)
 {
     QVariantMap message = mMessages[messageId];
     QString senderId = message["senderId"].toString();
+    QString accountId = message["accountId"].toString();
     QStringList participantIds = message["participantIds"].toStringList();
     QStringList recipients;
     if (!senderId.isEmpty()) {
@@ -508,8 +509,14 @@ void MessagingMenu::showMessage(const QString &messageId)
     }
     recipients << participantIds;
     recipients.removeDuplicates();
+
+    QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (account && account->type() == AccountEntry::GenericAccount) {
+        url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
+    }
  
-    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+    ApplicationUtils::openUrl(url);
 }
 
 void MessagingMenu::callBack(const QString &messageId)
