@@ -51,8 +51,8 @@ QStringList MultimediaAccountEntry::addressableVCardFields()
     return mAccount->protocolInfo().addressableVCardFields();
 }
 
-void MultimediaAccountEntry::onConnectionChanged()
+void MultimediaAccountEntry::onConnectionChanged(Tp::ConnectionPtr connection)
 {
     // make sure the generic code is also run
-    AccountEntry::onConnectionChanged();
+    AccountEntry::onConnectionChanged(connection);
 }

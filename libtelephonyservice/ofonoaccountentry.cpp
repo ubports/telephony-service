@@ -102,6 +102,14 @@ AccountEntry::AccountType OfonoAccountEntry::type() const
     return AccountEntry::PhoneAccount;
 }
 
+bool OfonoAccountEntry::active() const
+{
+    return (!mAccount.isNull() &&
+            !mAccount->connection().isNull() &&
+            !mAccount->connection()->selfContact().isNull() &&
+             mAccount->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline);
+}
+
 bool OfonoAccountEntry::connected() const
 {
     return !mAccount.isNull() && !mAccount->connection().isNull() &&
@@ -143,19 +151,31 @@ void OfonoAccountEntry::onVoicemailIndicatorChanged(bool visible)
     Q_EMIT voicemailIndicatorChanged();
 }
 
-void OfonoAccountEntry::onConnectionChanged()
+void OfonoAccountEntry::onConnectionChanged(Tp::ConnectionPtr connection)
 {
     // make sure the generic code is also run
-    AccountEntry::onConnectionChanged();
+    AccountEntry::onConnectionChanged(connection);
 
     QDBusConnection dbusConnection = QDBusConnection::sessionBus();
 
-    if (!mAccount->connection()) {
+    if (!connection) {
         // disconnect any previous dbus connections
         if (!mConnectionInfo.objectPath.isEmpty()) {
             dbusConnection.disconnect(mConnectionInfo.busName, mConnectionInfo.objectPath,
                                       CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE, "EmergencyNumbersChanged",
                                       this, SLOT(onEmergencyNumbersChanged(QStringList)));
+            // connect the voicemail number changed signal
+            dbusConnection.disconnect(mConnectionInfo.busName, mConnectionInfo.objectPath,
+                                      CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailNumberChanged",
+                                      this, SLOT(onVoicemailNumberChanged(QString)));
+
+            dbusConnection.disconnect(mConnectionInfo.busName, mConnectionInfo.objectPath,
+                                      CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailCountChanged",
+                                      this, SLOT(onVoicemailCountChanged(uint)));
+
+            dbusConnection.disconnect(mConnectionInfo.busName, mConnectionInfo.objectPath,
+                                      CANONICAL_TELEPHONY_VOICEMAIL_IFACE, "VoicemailIndicatorChanged",
+                                      this, SLOT(onVoicemailIndicatorChanged(bool)));
         }
     } else {
         // connect the emergency numbers changed signal
@@ -168,7 +188,9 @@ void OfonoAccountEntry::onConnectionChanged()
         QDBusReply<QStringList> replyNumbers = connIface.call("EmergencyNumbers");
         if (replyNumbers.isValid()) {
             mEmergencyNumbers = replyNumbers.value();
-            Q_EMIT emergencyNumbersChanged();
+            if (mReady) {
+                Q_EMIT emergencyNumbersChanged();
+            }
         }
 
         // connect the voicemail number changed signal
@@ -180,7 +202,9 @@ void OfonoAccountEntry::onConnectionChanged()
         QDBusReply<QString> replyNumber = voicemailIface.call("VoicemailNumber");
         if (replyNumber.isValid()) {
             mVoicemailNumber = replyNumber.value();
-            Q_EMIT voicemailNumberChanged();
+            if (mReady) {
+                Q_EMIT voicemailNumberChanged();
+            }
         } else {
             qWarning() << "Could not get voicemail number!";
         }
@@ -193,7 +217,9 @@ void OfonoAccountEntry::onConnectionChanged()
         QDBusReply<uint> replyCount = voicemailIface.call("VoicemailCount");
         if (replyCount.isValid()) {
             mVoicemailCount = replyCount.value();
-            Q_EMIT voicemailCountChanged();
+            if (mReady) {
+                Q_EMIT voicemailCountChanged();
+            }
         }
 
         // connect the voicemail indicator changed signal
@@ -204,13 +230,16 @@ void OfonoAccountEntry::onConnectionChanged()
         QDBusReply<bool> replyIndicator = voicemailIface.call("VoicemailIndicator");
         if (replyIndicator.isValid()) {
             mVoicemailIndicator = replyIndicator.value();
-            Q_EMIT voicemailIndicatorChanged();
+            if (mReady) {
+                Q_EMIT voicemailIndicatorChanged();
+            }
         }
 
         // and get the serial
         QDBusInterface ussdIface(mConnectionInfo.busName, mConnectionInfo.objectPath, CANONICAL_TELEPHONY_USSD_IFACE);
         mSerial = ussdIface.property("Serial").toString();
+        if (mReady) {
+            Q_EMIT serialChanged();
+        }
     }
-
-    Q_EMIT serialChanged();
 }
