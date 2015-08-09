@@ -34,8 +34,7 @@ class ChatManager : public QObject
 public:
     static ChatManager *instance();
 
-    Q_INVOKABLE void sendMessage(const QStringList &recipients, const QString &message, const QString &accountId = QString::null);
-    Q_INVOKABLE void sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId = QString:: null);
+    Q_INVOKABLE void sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
 
 Q_SIGNALS:
     void messageReceived(const QString &sender, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);

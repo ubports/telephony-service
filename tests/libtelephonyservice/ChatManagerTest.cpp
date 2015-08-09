@@ -98,7 +98,7 @@ void ChatManagerTest::testSendMessage()
     QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantMap)));
     QSignalSpy messageSentSpy(ChatManager::instance(), SIGNAL(messageSent(QStringList,QString)));
 
-    ChatManager::instance()->sendMessage(recipients, message, accountId);
+    ChatManager::instance()->sendMessage(accountId, recipients, message);
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
     QString messageText = controllerMessageSentSpy.first()[0].toString();

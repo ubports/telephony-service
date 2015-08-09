@@ -46,6 +46,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, AttachmentStruct 
     argument.endStructure();
     return argument;
 }
+
 ChatManager::ChatManager(QObject *parent)
 : QObject(parent)
 {
@@ -71,19 +72,15 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
-void ChatManager::sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId)
+void ChatManager::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const QVariant &attachments, const QVariantMap &properties)
 {
-    AttachmentList newAttachments;
-    AccountEntry *account = NULL;
-    if (accountId.isNull() || accountId.isEmpty()) {
-        account = TelepathyHelper::instance()->defaultMessagingAccount();
-        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
-            account = TelepathyHelper::instance()->activeAccounts()[0];
-        }
-    } else {
-        account = TelepathyHelper::instance()->accountForId(accountId);
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+
+    if (!account) {
+        return;
     }
 
+    AttachmentList newAttachments;
     Q_FOREACH (const QVariant &attachment, attachments.toList()) {
         AttachmentStruct newAttachment;
         QVariantList list = attachment.toList();
@@ -93,49 +90,8 @@ void ChatManager::sendMMS(const QStringList &recipients, const QString &message,
         newAttachments << newAttachment;
     }
 
-    if (!message.isEmpty()) {
-        AttachmentStruct textAttachment;
-        QTemporaryFile textFile("/tmp/XXXXX");
-        textFile.setAutoRemove(false);
-        if (!textFile.open()) {
-            // FIXME: return error
-            return;
-        }
-        textFile.write(message.toUtf8().data());
-        textFile.close();
-        textAttachment.id = "text_0.txt";
-        textAttachment.contentType = "text/plain;charset=UTF-8";
-        textAttachment.filePath = textFile.fileName();
-        newAttachments << textAttachment;
-    }
-
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMMS", recipients, QVariant::fromValue(newAttachments), account->accountId());
-}
-
-void ChatManager::sendMessage(const QStringList &recipients, const QString &message, const QString &accountId)
-{
-    // FIXME: this probably should be handle internally by telepathy-ofono
-    if (recipients.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()) {
-        sendMMS(recipients, message, QVariant(), accountId);
-        return;
-    }
-    AccountEntry *account = NULL;
-    if (accountId.isNull() || accountId.isEmpty()) {
-        account = TelepathyHelper::instance()->defaultMessagingAccount();
-        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
-            account = TelepathyHelper::instance()->activeAccounts()[0];
-        }
-    } else {
-        account = TelepathyHelper::instance()->accountForId(accountId);
-    }
-
-    if (!account) {
-        return;
-    }
-
-    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMessage", recipients, message, account->accountId());
+    phoneAppHandler->call("SendMessage", account->accountId(), recipients, message, QVariant::fromValue(newAttachments), properties);
 }
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)

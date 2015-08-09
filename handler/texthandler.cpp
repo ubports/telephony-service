@@ -55,6 +55,7 @@ TextHandler::TextHandler(QObject *parent)
 {
     qDBusRegisterMetaType<AttachmentStruct>();
     qDBusRegisterMetaType<AttachmentList>();
+    qRegisterMetaType<PendingMessage>();
 
     // track when the account becomes available
     connect(TelepathyHelper::instance(),
@@ -75,25 +76,27 @@ void TextHandler::onConnectedChanged()
             continue;
         }
         
-        if (mPendingMessages.contains(accountId)) {
-            // create text channels to send the pending messages
-            Q_FOREACH(const QStringList& recipients, mPendingMessages[accountId].keys()) {
-                startChat(recipients, accountId);
+        // create text channels to send the pending messages
+        QList<QStringList> recipientsList;
+        Q_FOREACH(const PendingMessage &pendingMessage, mPendingMessages) {
+            if (accountId != pendingMessage.accountId) {
+                continue;
+            }
+            bool found = false;
+            // avoid adding twice the same list of participants
+            Q_FOREACH(const QStringList &recipients, recipientsList) {
+                if (recipients == pendingMessage.recipients) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                recipientsList << pendingMessage.recipients;
             }
         }
-        if (mPendingMMSs.contains(accountId)) {
-            // create text channels to send the pending MMSs
-            Q_FOREACH(const QStringList& recipients, mPendingMMSs[accountId].keys()) {
-                startChat(recipients, accountId);
-            }
+        Q_FOREACH(const QStringList& recipients, recipientsList) {
+            startChat(recipients, accountId);
         }
-        if (mPendingSilentMessages.contains(accountId)) {
-            // create text channels to send the pending silent messages
-            Q_FOREACH(const QStringList& recipients, mPendingSilentMessages[accountId].keys()) {
-                startChat(recipients, accountId);
-            }
-        }
-
     }
 }
 
@@ -132,19 +135,36 @@ void TextHandler::startChat(const Tp::AccountPtr &account, const Tp::Contacts &c
     }
 }
 
-Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
+Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessage)
 {
     Tp::MessagePartList message;
     Tp::MessagePart header;
-    QString attachmentFilename;
     QString smil, regions, parts;
-    bool hasImage = false, hasText = false;
+    bool hasImage = false, hasText = false, isMMS = false;
+
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(pendingMessage.accountId);
+    if (!account) {
+        // account does not exist
+        return Tp::MessagePartList();
+    }
+
+    QVariantMap::const_iterator it = pendingMessage.properties.begin();
+    for (; it != pendingMessage.properties.end(); ++it) {
+        header[it.key()] = QDBusVariant(it.value());
+    }
+
+    // check if this message should be sent as an MMS
+    if (account->type() == AccountEntry::PhoneAccount) {
+        isMMS = (pendingMessage.attachments.size() > 0 ||
+                 (header.contains("x-canonical-mms") && header["x-canonical-mms"].variant().toBool()) ||
+                 (pendingMessage.recipients.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()));
+    }
 
     header["message-type"] = QDBusVariant(0);
-    // FIXME: make this conditional once we add support for other IM protocols
-    header["mms"] = QDBusVariant(true);
     message << header;
-    Q_FOREACH(const AttachmentStruct &attachment, attachments) {
+
+    // convert AttachmentList struct into telepathy Message parts
+    Q_FOREACH(const AttachmentStruct &attachment, pendingMessage.attachments) {
         QByteArray fileData;
         QString newFilePath = QString(attachment.filePath).replace("file://", "");
         QFile attachmentFile(newFilePath);
@@ -153,31 +173,39 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
             continue;
         }
         if (attachment.contentType.startsWith("image/")) {
-            hasImage = true;
-            parts += QString(SMIL_IMAGE_PART).arg(attachment.id);
-            // check if we need to reduce de image size in case it's bigger than 300k
-            if (attachmentFile.size() > 307200) {
-                QImage scaledImage(newFilePath);
-                if (!scaledImage.isNull()) {
-                    QBuffer buffer(&fileData);
-                    buffer.open(QIODevice::WriteOnly);
-                    scaledImage.scaled(640, 640, Qt::KeepAspectRatio).save(&buffer, "jpg");
-                } else {
-                    fileData = attachmentFile.readAll();
+            if (isMMS) {
+                hasImage = true;
+                parts += QString(SMIL_IMAGE_PART).arg(attachment.id);
+                // check if we need to reduce de image size in case it's bigger than 300k
+                // this check is only valid for MMS
+                if (attachmentFile.size() > 307200) {
+                    QImage scaledImage(newFilePath);
+                    if (!scaledImage.isNull()) {
+                        QBuffer buffer(&fileData);
+                        buffer.open(QIODevice::WriteOnly);
+                        scaledImage.scaled(640, 640, Qt::KeepAspectRatio).save(&buffer, "jpg");
+                    } else {
+                        fileData = attachmentFile.readAll();
+                    }
                 }
             } else {
                 fileData = attachmentFile.readAll();
             }
         } else if (attachment.contentType.startsWith("text/plain")) {
-            hasText = true;
-            parts += QString(SMIL_TEXT_PART).arg(attachment.id);
+            if (isMMS) {
+                hasText = true;
+                parts += QString(SMIL_TEXT_PART).arg(attachment.id);
+            }
             fileData = attachmentFile.readAll();
-            attachmentFile.remove();
         } else if (attachment.contentType.startsWith("text/vcard") ||
                    attachment.contentType.startsWith("text/x-vcard")) {
             fileData = attachmentFile.readAll();
-        } else {
+        } else if (isMMS) {
+            // for MMS we just support the contentTypes above
             continue;
+        } else {
+            // if this is not an MMS, simply add the attachment and try to send it.
+            fileData = attachmentFile.readAll();
         }
 
         if (hasText) {
@@ -192,78 +220,39 @@ Tp::MessagePartList TextHandler::buildMMS(const AttachmentList &attachments)
         part["identifier"] = QDBusVariant(attachment.id);
         part["content"] = QDBusVariant(fileData);
         part["size"] = QDBusVariant(fileData.size());
+ 
         message << part;
     }
 
-    Tp::MessagePart smilPart;
-    smil = QString(SMIL_FILE).arg(regions).arg(parts);
-    smilPart["content-type"] =  QDBusVariant(QString("application/smil"));
-    smilPart["identifier"] = QDBusVariant(QString("smil.xml"));
-    smilPart["content"] = QDBusVariant(smil);
-    smilPart["size"] = QDBusVariant(smil.size());
-    message << smilPart;
+    if (!pendingMessage.message.isEmpty()) {
+        Tp::MessagePart part;
+        QString tmpTextId("text_0.txt");
+        part["content-type"] =  QDBusVariant(QString("text/plain"));
+        part["identifier"] = QDBusVariant(tmpTextId);
+        part["content"] = QDBusVariant(pendingMessage.message);
+        part["size"] = QDBusVariant(pendingMessage.message.size());
+        if (isMMS) {
+            parts += QString(SMIL_TEXT_PART).arg(tmpTextId);
+            regions += QString(SMIL_TEXT_REGION);
+        }
+        message << part;
+    }
+
+    if (isMMS) {
+        Tp::MessagePart smilPart;
+        smil = QString(SMIL_FILE).arg(regions).arg(parts);
+        smilPart["content-type"] =  QDBusVariant(QString("application/smil"));
+        smilPart["identifier"] = QDBusVariant(QString("smil.xml"));
+        smilPart["content"] = QDBusVariant(smil);
+        smilPart["size"] = QDBusVariant(smil.size());
+ 
+        message << smilPart;
+    }
+
     return message;
 }
 
-void TextHandler::sendMMS(const QStringList &recipients, const AttachmentList &attachments, const QString &accountId) {
-    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
-    if (!account) {
-        // account does not exist
-        return;
-    }
-    if (!account->connected()) {
-        mPendingMMSs[accountId][recipients].append(attachments);
-        return;
-    }
-
-    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
-    if (channel.isNull()) {
-        mPendingMMSs[accountId][recipients].append(attachments);
-        startChat(recipients, accountId);
-        return;
-    }
-
-    Tp::MessagePartList message = buildMMS(attachments);
-
-    connect(channel->send(message),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onMessageSent(Tp::PendingOperation*)));
-}
-
-void TextHandler::sendSilentMessage(const QStringList &recipients, const QString &message, const QString &accountId)
-{
-    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
-    if (!account) {
-        // account does not exist
-        return;
-    }
-    if (!account->connected()) {
-        mPendingSilentMessages[accountId][recipients].append(message);
-        return;
-    }
-    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
-    if (channel.isNull()) {
-        mPendingSilentMessages[accountId][recipients].append(message);
-        startChat(recipients, accountId);
-        return;
-    }
-
-    qDebug() << "TextHandler::sendSilentMessage" << message;
-    Tp::MessagePart header;
-    Tp::MessagePart body;
-    Tp::MessagePartList fullMessage;
-    header["message-type"] = QDBusVariant(0);
-    header["skip-storage"] = QDBusVariant(true);
-    body["content"] = QDBusVariant(message);
-    body["content-type"] = QDBusVariant("text/plain");
-    fullMessage << header << body;
-
-    connect(channel->send(fullMessage),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onMessageSent(Tp::PendingOperation*)));
-}
-
-void TextHandler::sendMessage(const QStringList &recipients, const QString &message, const QString &accountId)
+void TextHandler::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
@@ -289,19 +278,23 @@ void TextHandler::sendMessage(const QStringList &recipients, const QString &mess
         }
     }
 
+    // keep recipient list always sorted to be able to compare
+    QStringList sortedRecipients = recipients;
+    sortedRecipients.sort();
+    PendingMessage pendingMessage = {account->accountId(), sortedRecipients, message, attachments, properties};
     if (!account->connected()) {
-        mPendingMessages[account->accountId()][recipients].append(message);
+        mPendingMessages.append(pendingMessage);
         return;
     }
 
-    Tp::TextChannelPtr channel = existingChat(recipients, account->accountId());
+    Tp::TextChannelPtr channel = existingChat(sortedRecipients, account->accountId());
     if (channel.isNull()) {
-        mPendingMessages[account->accountId()][recipients].append(message);
-        startChat(recipients, account->accountId());
+        mPendingMessages.append(pendingMessage);
+        startChat(sortedRecipients, account->accountId());
         return;
     }
 
-    connect(channel->send(message),
+    connect(channel->send(buildMessage(pendingMessage)),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
@@ -334,9 +327,7 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
     mChannels.append(channel);
 
     // check for pending messages for this channel
-    if (!mPendingMessages.contains(accountId) && 
-        !mPendingMMSs.contains(accountId) &&
-        !mPendingSilentMessages.contains(accountId)) {
+    if (mPendingMessages.isEmpty()) {
         return;
     }
 
@@ -344,40 +335,14 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
         recipients << channelContact->id();
     }
 
-    QMap<QStringList, QStringList> &pendingMessages = mPendingMessages[accountId];
-    QMap<QStringList, QStringList>::iterator it = pendingMessages.begin();
-    while (it != pendingMessages.end()) {
-        if (existingChat(it.key(), accountId) == channel) {
-            Q_FOREACH(const QString &message, it.value()) {
-                sendMessage(recipients, message, accountId);
-            }
-            it = pendingMessages.erase(it);
+    QList<PendingMessage>::iterator it = mPendingMessages.begin();
+    while (it != mPendingMessages.end()) {
+        // FIXME: we can't trust recipients for group chats in regular IM accounts
+        if (it->accountId == accountId && existingChat(it->recipients, accountId) == channel) {
+            sendMessage(it->accountId, it->recipients, it->message, it->attachments, it->properties);
+            it = mPendingMessages.erase(it);
         } else {
             ++it;
-        }
-    }
-    QMap<QStringList, QList<AttachmentList>> &pendingMMSs = mPendingMMSs[accountId];
-    QMap<QStringList, QList<AttachmentList>>::iterator it2 = pendingMMSs.begin();
-    while (it2 != pendingMMSs.end()) {
-        if (existingChat(it2.key(), accountId) == channel) {
-            Q_FOREACH(const AttachmentList &attachments, it2.value()) {
-                sendMMS(recipients, attachments, accountId);
-            }
-            it2 = pendingMMSs.erase(it2);
-        } else {
-            ++it2;
-        }
-    }
-    QMap<QStringList, QStringList> &pendingSilentMessages = mPendingSilentMessages[accountId];
-    QMap<QStringList, QStringList>::iterator it3 = pendingSilentMessages.begin();
-    while (it3 != pendingSilentMessages.end()) {
-        if (existingChat(it3.key(), accountId) == channel) {
-            Q_FOREACH(const QString &message, it3.value()) {
-                sendSilentMessage(recipients, message, accountId);
-            }
-            it3 = pendingSilentMessages.erase(it3);
-        } else {
-            ++it3;
         }
     }
 }

@@ -55,9 +55,7 @@ public Q_SLOTS:
     bool connectToBus();
 
     // messages related
-    Q_NOREPLY void SendMessage(const QStringList &number, const QString &message, const QString &accountId);
-    Q_NOREPLY void SendSilentMessage(const QStringList &number, const QString &message, const QString &accountId);
-    Q_NOREPLY void SendMMS(const QStringList &numbers, const AttachmentList &attachments, const QString &accountId);
+    Q_NOREPLY void SendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
     Q_NOREPLY void AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId);
 
     // call related
