@@ -75,6 +75,7 @@ void PhoneUtilsTest::testComparePhoneNumbers_data()
     QTest::newRow("both non phone numbers") << "abcdefg" << "abcdefg" << PhoneUtils::EXACT_MATCH;
     QTest::newRow("different non phone numbers") << "abcdefg" << "bcdefg" << PhoneUtils::INVALID_NUMBER;
     QTest::newRow("phone number and custom string") << "abc12345678" << "12345678" << PhoneUtils::NSN_MATCH;
+    QTest::newRow("phone number with slash") << "+421 2/123 456 78" << "212345678" << true;
     // FIXME: check what other cases we need to test here"
 }
 
