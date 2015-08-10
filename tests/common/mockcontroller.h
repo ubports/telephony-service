@@ -30,7 +30,6 @@ class MockController : public ComCanonicalMockConnectionInterface
 public:
     explicit MockController(const QString &protocol, QObject *parent = 0);
 
-
 public Q_SLOTS:
     // We only reimplement the methods that need sync replies
     QString placeCall(const QVariantMap &properties);

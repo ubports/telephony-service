@@ -675,3 +675,13 @@ void MockConnection::setCallState(const QString &phoneNumber, const QString &sta
 
     mCallChannels[phoneNumber]->setCallState(state);
 }
+
+void MockConnection::changeChatState(const QStringList &participants, const QString &userId, int state)
+{
+    MockTextChannel *channel = textChannelForRecipients(participants);
+    if (!channel) {
+        return;
+    }
+
+    channel->changeChatState(userId, state);
+}

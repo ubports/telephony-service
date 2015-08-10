@@ -73,6 +73,9 @@ MockTextChannel::MockTextChannel(MockConnection *conn, QStringList recipients, u
     mMessagesIface->setSendMessageCallback(Tp::memFun(this,&MockTextChannel::sendMessage));
     baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mMessagesIface));
 
+    mChatStateIface = Tp::BaseChannelChatStateInterface::create();
+    baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mChatStateIface));
+
     // group stuff
     mGroupIface = Tp::BaseChannelGroupInterface::create(Tp::ChannelGroupFlagCanAdd, conn->selfHandle());
     mGroupIface->setAddMembersCallback(Tp::memFun(this,&MockTextChannel::onAddMembers));
@@ -259,4 +262,9 @@ void MockTextChannel::onRemoveMembers(const Tp::UIntList &handles, const QString
         mMembers.removeAll(handle);
     }
     mGroupIface->removeMembers(handles);
+}
+
+void MockTextChannel::changeChatState(const QString &userId, int state)
+{
+    Q_EMIT mChatStateIface->chatStateChanged(mConnection->ensureHandle(userId), state);
 }

@@ -36,6 +36,7 @@ private Q_SLOTS:
     void testSendMessage();
     void testMessageReceived();
     void testAcknowledgeMessages();
+    void testChatEntry();
 
 private:
     Tp::AccountPtr mGenericTpAccount;
@@ -50,6 +51,9 @@ void ChatManagerTest::initTestCase()
     // set to false so group chat messages are not sent as MMS
     mPhoneSettings.set("mmsGroupChatEnabled", false);
     TelepathyHelper::instance()->registerChannelObserver();
+
+    // just give telepathy some time to register the observer
+    QTest::qWait(1000);
 }
 
 void ChatManagerTest::init()
@@ -169,6 +173,23 @@ void ChatManagerTest::testAcknowledgeMessages()
     qSort(receivedIds);
     qSort(messageIds);
     QCOMPARE(receivedIds, messageIds);
+}
+
+void ChatManagerTest::testChatEntry()
+{
+    QStringList recipients;
+    recipients << "user@domain.com" << "user2@domain.com";
+    QSignalSpy chatEntryCreatedSpy(ChatManager::instance(), SIGNAL(chatEntryCreated(QString, QStringList,ChatEntry *)));
+    ChatEntry *entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", recipients, true);
+    QVERIFY(entry == NULL);
+    QTRY_COMPARE(chatEntryCreatedSpy.count(), 1);
+
+    entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", recipients, false);
+    QVERIFY(entry != NULL);
+    QList<QVariant> arguments = chatEntryCreatedSpy.takeFirst();
+    QCOMPARE(QString("mock/mock/account0"), arguments.at(0).toString());
+    QCOMPARE(recipients.toSet(), arguments.at(1).toStringList().toSet());
+    QCOMPARE(entry, arguments.at(2).value<ChatEntry*>());
 }
 
 QTEST_MAIN(ChatManagerTest)
