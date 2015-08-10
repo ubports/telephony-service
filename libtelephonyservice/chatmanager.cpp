@@ -109,7 +109,19 @@ void ChatManager::sendMessage(const QString &accountId, const QStringList &recip
         QVariantList list = attachment.toList();
         newAttachment.id = list.at(0).toString();
         newAttachment.contentType = list.at(1).toString();
-        newAttachment.filePath = list.at(2).toString();
+
+        // we can't give the original path to handler, as it might be removed
+        // from history by the time it tries to read the file
+        // we copy the file and the handler will remove it
+        QTemporaryFile tmpFile("/tmp/XXXXX");
+        tmpFile.setAutoRemove(false);
+        if (!tmpFile.open()) {
+            // FIXME: return error
+            return;
+        }
+        QFile::copy(list.at(2).toString(), tmpFile.fileName());
+        newAttachment.filePath = tmpFile.fileName();
+
         newAttachments << newAttachment;
     }
 

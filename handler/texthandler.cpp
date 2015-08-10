@@ -211,11 +211,14 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
             fileData = attachmentFile.readAll();
         } else if (isMMS) {
             // for MMS we just support the contentTypes above
+            attachmentFile.remove();
             continue;
         } else {
             // if this is not an MMS, simply add the attachment and try to send it.
             fileData = attachmentFile.readAll();
         }
+
+        attachmentFile.remove();
 
         if (hasText) {
             regions += QString(SMIL_TEXT_REGION);
