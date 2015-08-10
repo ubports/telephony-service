@@ -164,6 +164,9 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
         isMMS = (pendingMessage.attachments.size() > 0 ||
                  (header.contains("x-canonical-mms") && header["x-canonical-mms"].variant().toBool()) ||
                  (pendingMessage.recipients.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()));
+        if (isMMS) {
+            header["x-canonical-mms"] = QDBusVariant(true);
+        }
     }
 
     header["message-type"] = QDBusVariant(0);
