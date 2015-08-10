@@ -3,6 +3,8 @@
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Renato Araujo Oliveira Filho <renato.filho@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -22,15 +24,31 @@
 #ifndef PHONEUTILS_H
 #define PHONEUTILS_H
 
+#include <phonenumbers/phonenumberutil.h>
 #include <QObject>
 
 class PhoneUtils : public QObject
 {
     Q_OBJECT
+    Q_ENUMS(PhoneNumberMatchType)
+        
 public:
+    enum PhoneNumberMatchType {
+        INVALID_NUMBER = i18n::phonenumbers::PhoneNumberUtil::INVALID_NUMBER,
+        NO_MATCH = i18n::phonenumbers::PhoneNumberUtil::NO_MATCH,
+        SHORT_NSN_MATCH = i18n::phonenumbers::PhoneNumberUtil::SHORT_NSN_MATCH,
+        NSN_MATCH = i18n::phonenumbers::PhoneNumberUtil::NSN_MATCH,
+        EXACT_MATCH = i18n::phonenumbers::PhoneNumberUtil::EXACT_MATCH
+    };
     explicit PhoneUtils(QObject *parent = 0);
-    Q_INVOKABLE static bool comparePhoneNumbers(const QString &number1, const QString &number2);
-    Q_INVOKABLE static bool isPhoneNumber(const QString &identifier);
+    Q_INVOKABLE static void setCountryCode(const QString &countryCode);
+    Q_INVOKABLE static QString countryCode();
+    Q_INVOKABLE static PhoneNumberMatchType comparePhoneNumbers(const QString &number1, const QString &number2);
+    Q_INVOKABLE static bool isPhoneNumber(const QString &phoneNumber);
+    Q_INVOKABLE static QString normalizePhoneNumber(const QString &phoneNumber);
+    Q_INVOKABLE static bool isEmergencyNumber(const QString &phoneNumber, const QString &countryCode = QString());
+private:
+    static QString mCountryCode;
     
 };
 

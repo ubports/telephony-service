@@ -43,7 +43,7 @@ bool MultimediaAccountEntry::connected() const
 
 bool MultimediaAccountEntry::compareIds(const QString &first, const QString &second) const
 {
-    return PhoneUtils::comparePhoneNumbers(first, second);
+    return PhoneUtils::comparePhoneNumbers(first, second) > PhoneUtils::NO_MATCH;
 }
 
 QStringList MultimediaAccountEntry::addressableVCardFields()

@@ -38,6 +38,7 @@ struct TP_QT_NO_EXPORT BaseConnectionEmergencyModeInterface::Private {
     EmergencyNumbersCallback emergencyNumbersCB;
     BaseConnectionEmergencyModeInterface::Adaptee *adaptee;
     QString fakeEmergencyNumber;
+    QString countryCode;
 };
 
 BaseConnectionEmergencyModeInterface::Adaptee::~Adaptee()
@@ -63,6 +64,11 @@ void BaseConnectionEmergencyModeInterface::Adaptee::emergencyNumbers(const Conne
     }
 }
 
+void BaseConnectionEmergencyModeInterface::Adaptee::countryCode(const ConnectionInterfaceEmergencyModeAdaptor::CountryCodeContextPtr &context)
+{
+    context->setFinished(mInterface->mPriv->countryCode);
+}
+
 BaseConnectionEmergencyModeInterface::BaseConnectionEmergencyModeInterface()
     : AbstractConnectionInterface(TP_QT_IFACE_CONNECTION_EMERGENCYMODE),
       mPriv(new Private(this))
@@ -86,8 +92,14 @@ void BaseConnectionEmergencyModeInterface::setEmergencyNumbers(const QStringList
     if (!mPriv->fakeEmergencyNumber.isEmpty()) {
         finalEmergencyList << mPriv->fakeEmergencyNumber;
     }
-
+    
     Q_EMIT mPriv->adaptee->emergencyNumbersChanged(finalEmergencyList);
+}
+
+void BaseConnectionEmergencyModeInterface::setCountryCode(const QString &countryCode)
+{
+    mPriv->countryCode = countryCode;
+    Q_EMIT mPriv->adaptee->countryCodeChanged(mPriv->countryCode);
 }
 
 void BaseConnectionEmergencyModeInterface::setFakeEmergencyNumber(const QString &fakeEmergencyNumber)
@@ -112,6 +124,7 @@ ConnectionInterfaceEmergencyModeAdaptor::ConnectionInterfaceEmergencyModeAdaptor
     : Tp::AbstractAdaptor(bus, adaptee, parent)
 {
     connect(adaptee, SIGNAL(emergencyNumbersChanged(QStringList)), SIGNAL(EmergencyNumbersChanged(QStringList)));
+    connect(adaptee, SIGNAL(countryCodeChanged(QString)), SIGNAL(CountryCodeChanged(QString)));
 }
 
 ConnectionInterfaceEmergencyModeAdaptor::~ConnectionInterfaceEmergencyModeAdaptor()
@@ -130,4 +143,18 @@ QStringList ConnectionInterfaceEmergencyModeAdaptor::EmergencyNumbers(const QDBu
     QMetaObject::invokeMethod(adaptee(), "emergencyNumbers",
         Q_ARG(ConnectionInterfaceEmergencyModeAdaptor::EmergencyNumbersContextPtr, ctx));
     return QStringList();
+}
+
+QString ConnectionInterfaceEmergencyModeAdaptor::CountryCode(const QDBusMessage& dbusMessage)
+{
+    if (!adaptee()->metaObject()->indexOfMethod("countryCode(ConnectionInterfaceEmergencyModeAdaptor::CountryCodeContextPtr)") == -1) {
+        dbusConnection().send(dbusMessage.createErrorReply(TP_QT_ERROR_NOT_IMPLEMENTED, QLatin1String("Not implemented")));
+        return QString();
+    }
+
+    CountryCodeContextPtr ctx = CountryCodeContextPtr(
+            new Tp::MethodInvocationContext< QString >(dbusConnection(), dbusMessage));
+    QMetaObject::invokeMethod(adaptee(), "countryCode",
+        Q_ARG(ConnectionInterfaceEmergencyModeAdaptor::CountryCodeContextPtr, ctx));
+    return QString();
 }
