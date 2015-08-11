@@ -154,8 +154,10 @@ void OfonoAccountEntryTest::testCountryCode()
     QSignalSpy countryCodeChangedSpy(mAccount, SIGNAL(countryCodeChanged()));
 
     // check that the countryCode is not empty at startup
-    QVERIFY(!mAccount->countryCode().isEmpty());
+    QTRY_VERIFY(!mAccount->countryCode().isEmpty());
     QCOMPARE(mAccount->countryCode(), QString("US"));
+
+    countryCodeChangedSpy.clear();
 
     QString countryCode("BR");
     mMockController->SetCountryCode("BR");
