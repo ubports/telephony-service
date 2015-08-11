@@ -154,6 +154,10 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
         return Tp::MessagePartList();
     }
 
+    bool temporaryFiles = (pendingMessage.properties.contains("x-canonical-tmp-files") &&
+                           pendingMessage.properties["x-canonical-tmp-files"].toBool());
+
+    // add the remaining properties to the message header
     QVariantMap::const_iterator it = pendingMessage.properties.begin();
     for (; it != pendingMessage.properties.end(); ++it) {
         header[it.key()] = QDBusVariant(it.value());
@@ -168,6 +172,9 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
             header["x-canonical-mms"] = QDBusVariant(true);
         }
     }
+
+    // this flag should not be in the message header, it's only useful for the handler
+    header.remove("x-canonical-tmp-files");
 
     header["message-type"] = QDBusVariant(0);
     message << header;
@@ -211,14 +218,18 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
             fileData = attachmentFile.readAll();
         } else if (isMMS) {
             // for MMS we just support the contentTypes above
-            attachmentFile.remove();
+            if (temporaryFiles) {
+                attachmentFile.remove();
+            }
             continue;
         } else {
             // if this is not an MMS, simply add the attachment and try to send it.
             fileData = attachmentFile.readAll();
         }
 
-        attachmentFile.remove();
+        if (temporaryFiles) {
+            attachmentFile.remove();
+        }
 
         if (hasText) {
             regions += QString(SMIL_TEXT_REGION);

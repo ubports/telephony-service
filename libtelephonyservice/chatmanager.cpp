@@ -103,6 +103,9 @@ void ChatManager::sendMessage(const QString &accountId, const QStringList &recip
         return;
     }
 
+    // check if files should be copied to a temporary location before passing them to handler
+    bool tmpFiles = (properties.contains("x-canonical-tmp-files") && properties["x-canonical-tmp-files"].toBool());
+
     AttachmentList newAttachments;
     Q_FOREACH (const QVariant &attachment, attachments.toList()) {
         AttachmentStruct newAttachment;
@@ -110,18 +113,31 @@ void ChatManager::sendMessage(const QString &accountId, const QStringList &recip
         newAttachment.id = list.at(0).toString();
         newAttachment.contentType = list.at(1).toString();
 
-        // we can't give the original path to handler, as it might be removed
-        // from history by the time it tries to read the file
-        // we copy the file and the handler will remove it
-        QTemporaryFile tmpFile("/tmp/XXXXX");
-        tmpFile.setAutoRemove(false);
-        if (!tmpFile.open()) {
-            // FIXME: return error
-            return;
+        if (tmpFiles) {
+            // we can't give the original path to handler, as it might be removed
+            // from history database by the time it tries to read the file,
+            // so we duplicate the file and the handler will remove it
+            QTemporaryFile tmpFile("/tmp/XXXXX");
+            tmpFile.setAutoRemove(false);
+            if (!tmpFile.open()) {
+                qWarning() << "Unable to create a temporary file";
+                return;
+            }
+            QFile originalFile(list.at(2).toString());
+            if (!originalFile.open(QIODevice::ReadOnly)) {
+                qWarning() << "Attachment file not found";
+                return;
+            }
+            if (tmpFile.write(originalFile.readAll()) == -1) {
+                qWarning() << "Failed to write attachment to a temporary file";
+                return;
+            }
+            newAttachment.filePath = tmpFile.fileName();
+            tmpFile.close();
+            originalFile.close();
+        } else {
+            newAttachment.filePath = list.at(2).toString();
         }
-        QFile::copy(list.at(2).toString(), tmpFile.fileName());
-        newAttachment.filePath = tmpFile.fileName();
-
         newAttachments << newAttachment;
     }
 
