@@ -498,7 +498,7 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
 
         // FIXME: add support for contact matching for non phone number based accounts
         Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
-            if (PhoneUtils::comparePhoneNumbers(data->senderId, phoneNumber.number())) {
+            if (PhoneUtils::comparePhoneNumbers(data->senderId, phoneNumber.number()) > PhoneUtils::NO_MATCH) {
                 QString displayLabel = contact.detail<QContactDisplayLabel>().label();
                 QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
                 QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();

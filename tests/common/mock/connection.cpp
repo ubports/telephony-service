@@ -127,6 +127,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     plugInterface(Tp::AbstractConnectionInterfacePtr::dynamicCast(emergencyModeIface));
     mEmergencyNumbers << "123" << "456" << "789";
     emergencyModeIface->setEmergencyNumbers(mEmergencyNumbers);
+    emergencyModeIface->setCountryCode("US");
 
     // init custom voicemail interface (not provided by telepathy)
     voicemailIface = BaseConnectionVoicemailInterface::create();
@@ -593,6 +594,12 @@ void MockConnection::setEmergencyNumbers(const QStringList &emergencyNumbers)
 {
     mEmergencyNumbers = emergencyNumbers;
     emergencyModeIface->setEmergencyNumbers(emergencyNumbers);
+}
+
+void MockConnection::setCountryCode(const QString &countryCode)
+{
+    mCountryCode = countryCode;
+    emergencyModeIface->setCountryCode(countryCode);
 }
 
 bool MockConnection::voicemailIndicator(Tp::DBusError *error)

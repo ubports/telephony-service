@@ -157,6 +157,12 @@ void MockConnectionDBus::SetEmergencyNumbers(const QStringList &numbers)
     mConnection->setEmergencyNumbers(numbers);
 }
 
+void MockConnectionDBus::SetCountryCode(const QString &countryCode)
+{
+    qDebug() << __PRETTY_FUNCTION__ << countryCode;
+    mConnection->setCountryCode(countryCode);
+}
+
 QString MockConnectionDBus::Serial()
 {
     qDebug() << __PRETTY_FUNCTION__ << mConnection->serial();

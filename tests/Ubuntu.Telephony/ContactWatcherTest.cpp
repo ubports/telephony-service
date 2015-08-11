@@ -46,6 +46,7 @@ private Q_SLOTS:
     void testLateSearch();
     void testAddressableFields();
     void testExtendedFieldMatch();
+    void testSimilarPhoneNumbers();
 
 private:
     QContact createContact(const QString &firstName,
@@ -472,6 +473,51 @@ void ContactWatcherTest::testExtendedFieldMatch()
 
     QTRY_COMPARE(contactIdSpy.count(), 1);
     QCOMPARE(watcher.contactId(), contact.id().toString());
+}
+
+void ContactWatcherTest::testSimilarPhoneNumbers()
+{
+    QString contactIdentifierA("+352 661 123456");
+    QString contactIdentifierB("+352 691 123456");
+    QContact contactA = createContact("FirstName",
+                                     "LastName",
+                                     "file://some_file",
+                                     QStringList() << contactIdentifierA,
+                                     QList<int>() << 0 << 1 << 2,
+                                     QList<int>() << 3 << 4 << 5);
+    QContact contactB = createContact("FirstName",
+                                     "LastName",
+                                     "file://some_file",
+                                     QStringList() << contactIdentifierB,
+                                     QList<int>() << 0 << 1 << 2,
+                                     QList<int>() << 3 << 4 << 5);
+    ContactWatcher watcherA;
+    QSignalSpy contactIdSpyA(&watcherA, SIGNAL(contactIdChanged()));
+
+    // try to match contact A
+    watcherA.setIdentifier(contactIdentifierA);
+
+    // mark as complete
+    watcherA.componentComplete();
+
+    // signal will be fired now
+    QTRY_COMPARE(contactIdSpyA.count(), 1);
+ 
+    QCOMPARE(watcherA.contactId(), contactA.id().toString());
+
+    ContactWatcher watcherB;
+    QSignalSpy contactIdSpyB(&watcherB, SIGNAL(contactIdChanged()));
+
+    // mark as complete
+    watcherB.componentComplete();
+
+    // try to match contact B
+    watcherB.setIdentifier(contactIdentifierB);
+
+    // signal will be fired now
+    QTRY_COMPARE(contactIdSpyB.count(), 1);
+ 
+    QCOMPARE(watcherB.contactId(), contactB.id().toString());
 }
 
 QContact ContactWatcherTest::createContact(const QString &firstName,

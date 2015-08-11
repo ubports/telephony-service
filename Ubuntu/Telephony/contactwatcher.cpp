@@ -278,8 +278,34 @@ void ContactWatcher::onResultsAvailable()
 {
     QContactFetchRequest *request = qobject_cast<QContactFetchRequest*>(sender());
     if (request && request->contacts().size() > 0) {
-        // use the first match
-        QContact contact = request->contacts().at(0);
+        QContact contact;
+        // iterate over all contacts
+        Q_FOREACH(const QString &field, mAddressableFields) {
+            if (!contact.isEmpty()) {
+                break;
+            }
+            if (field == "tel") {
+                Q_FOREACH(const QContact &resultContact, request->contacts()) {
+                    Q_FOREACH(const QContactPhoneNumber phoneNumber, resultContact.details(QContactDetail::TypePhoneNumber)) {
+                        if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mIdentifier) > PhoneUtils::NO_MATCH) {
+                            contact = resultContact;
+                            break;
+                        }
+                    }
+                    if (!contact.isEmpty()) {
+                        break;
+                    }
+                }
+                if (!contact.isEmpty()) {
+                    break;
+                }
+            } else {
+                // FIXME: add proper support for non-phonenumber ids
+                contact = request->contacts().at(0);
+                break;
+            }
+        }
+
         if (contact.id() != mContactId) {
             mContactId = contact.id();
             Q_EMIT contactIdChanged();
@@ -301,7 +327,7 @@ void ContactWatcher::onResultsAvailable()
         Q_FOREACH(const QString &field, mAddressableFields) {
             if (field == "tel") {
                 Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
-                    if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mIdentifier)) {
+                    if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mIdentifier) > PhoneUtils::NO_MATCH) {
                         mDetailProperties["type"] = (int)QContactDetail::TypePhoneNumber;
                         mDetailProperties["phoneNumberSubTypes"] = wrapIntList(phoneNumber.subTypes());
                         mDetailProperties["phoneNumberContexts"] = wrapIntList(phoneNumber.contexts());
