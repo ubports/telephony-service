@@ -15,16 +15,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2015-07-09 05:59+0000\n"
-"X-Generator: Launchpad (build 17608)\n"
+"X-Launchpad-Export-Date: 2015-08-04 05:41+0000\n"
+"X-Generator: Launchpad (build 17656)\n"
 
-#: indicator/messagingmenu.cpp:256
+#: indicator/messagingmenu.cpp:293
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "ئالمىغان تېلېفون %1"
 
-#: indicator/messagingmenu.cpp:308
+#: indicator/messagingmenu.cpp:390
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -50,81 +50,81 @@ msgstr "بۈگۈن <b>%1</b> دانە تېكىست ئۇچۇرى قوبۇل قى�
 msgid "<b>%1</b> text messages sent today"
 msgstr "بۈگۈن <b>%1</b> دانە تېكىست ئۇچۇرى ئەۋەتىلدى"
 
-#: approver/approver.cpp:463
+#: approver/approver.cpp:486
 msgid "Accept"
 msgstr "قوشۇل"
 
-#: indicator/messagingmenu.cpp:199
+#: indicator/messagingmenu.cpp:230
 msgid "Call back"
 msgstr ""
 
-#: approver/approver.cpp:429
+#: approver/approver.cpp:449
 msgid "Caller number is not available"
 msgstr "تېلېفون نومۇرى يوق"
 
-#: approver/approver.cpp:426
+#: approver/approver.cpp:446
 #, qt-format
 msgid "Calling from %1"
 msgstr "تېلېفون %1 دىن كەلدى"
 
-#: approver/approver.cpp:422
+#: approver/approver.cpp:442
 msgid "Calling from private number"
 msgstr "شەخسىي نومۇردىن تېلېفون كەلدى"
 
-#: approver/approver.cpp:424
+#: approver/approver.cpp:444
 msgid "Calling from unknown number"
 msgstr "ناتونۇش تېلېفون كەلدى"
 
-#: indicator/ussdindicator.cpp:104
+#: indicator/ussdindicator.cpp:142
 msgid "Cancel"
 msgstr "ئەمەلدىن قالدۇر"
 
-#: indicator/textchannelobserver.cpp:207
+#: indicator/textchannelobserver.cpp:226
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "ئايروپىلان ھالىتىنى ئاكتىپسىزلاڭ ۋە ئۇچۇر پروگراممىسىدا قايتا سىناپ كۆرۈڭ."
 
-#: approver/approver.cpp:485
+#: approver/approver.cpp:508
 msgid "Decline"
 msgstr "قوشۇلما"
 
-#: approver/approver.cpp:476
+#: approver/approver.cpp:499
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:462
+#: approver/approver.cpp:485
 msgid "Hold + Answer"
 msgstr "ساقلىتىپ قويۇپ جاۋاب بەر"
 
-#: indicator/messagingmenu.cpp:204
+#: indicator/messagingmenu.cpp:235
 msgid "I missed your call - can you call me now?"
 msgstr "تېلېفونىڭىزنى ئالالماي قالدىم، ھازىر تېلېفون قىلالامسىز؟"
 
-#: indicator/messagingmenu.cpp:207
+#: indicator/messagingmenu.cpp:238
 msgid "I'll be 20 minutes late."
 msgstr "مەن 20 مىنۇت كېچىكىمەن."
 
-#: approver/approver.cpp:89
+#: approver/approver.cpp:91
 msgid "I'm busy at the moment. I'll call later."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:206
+#: indicator/messagingmenu.cpp:237
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "ھازىر ئالدىراش. كېيىن تېلېفون قىلاي."
 
-#: approver/approver.cpp:90
+#: approver/approver.cpp:92
 msgid "I'm running late, on my way now."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:205
+#: indicator/messagingmenu.cpp:236
 msgid "I'm running late. I'm on my way."
 msgstr "كېچىكىپ قالدىم. ھازىر يولدا."
 
-#: approver/approver.cpp:493
+#: approver/approver.cpp:516
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:393 indicator/textchannelobserver.cpp:440
+#: indicator/textchannelobserver.cpp:447 indicator/textchannelobserver.cpp:503
 #, qt-format
 msgid "Message from %1"
 msgstr "%1 دىن كەلگەن ئۇچۇر"
@@ -145,7 +145,7 @@ msgstr "بۈگۈن ھېچقانداق تېكىست ئۇچۇرى كەلمىدى"
 msgid "No text messages sent today"
 msgstr "بۈگۈن ھېچقانداق تېكىست ئۇچۇرى ئەۋەتىلمىدى"
 
-#: indicator/ussdindicator.cpp:79 indicator/textchannelobserver.cpp:270
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "تامام"
 
@@ -153,23 +153,23 @@ msgstr "تامام"
 msgid "Phone Calls"
 msgstr "تېلېفونلار"
 
-#: approver/approver.cpp:91
+#: approver/approver.cpp:93
 msgid "Please call me back later."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:539
+#: indicator/textchannelobserver.cpp:625
 msgid "Please, select a SIM card:"
 msgstr "بىر سىم كارتىسى تاللاڭ:"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:136
+#: Ubuntu/Telephony/contactwatcher.cpp:179
 msgid "Private Number"
 msgstr "شەخسىي نومۇر"
 
-#: indicator/messagingmenu.cpp:259
+#: indicator/messagingmenu.cpp:296
 msgid "Private number"
 msgstr "شەخسىي نومۇر"
 
-#: indicator/ussdindicator.cpp:82
+#: indicator/ussdindicator.cpp:119
 msgid "Reply"
 msgstr "جاۋاب قايتۇر"
 
@@ -182,15 +182,15 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:276
+#: indicator/textchannelobserver.cpp:308
 msgid "Save"
 msgstr "ساقلا"
 
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:214
+#: indicator/messagingmenu.cpp:172 indicator/messagingmenu.cpp:245
 msgid "Send"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:208
+#: indicator/messagingmenu.cpp:239
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "كەچۈرۈڭ، ئالدىراشچىلىقىم تۈگىمىدى. كېيىن تېلېفون قىلاي."
 
@@ -199,7 +199,7 @@ msgstr "كەچۈرۈڭ، ئالدىراشچىلىقىم تۈگىمىدى. كېي
 msgid "Spent <b>%1</b> minutes in calls today"
 msgstr "بۈگۈن تېلېفونغا <b>%1</b> مىنۇت سەرپ قىلىندى"
 
-#: indicator/messagingmenu.cpp:55 indicator/messagingmenu.cpp:59
+#: indicator/messagingmenu.cpp:56 indicator/messagingmenu.cpp:60
 msgid "Telephony Service"
 msgstr "تېلېفون مۇلازىمىتى"
 
@@ -207,42 +207,42 @@ msgstr "تېلېفون مۇلازىمىتى"
 msgid "Telephony Service Approver"
 msgstr "Telephony Service Approver"
 
-#: indicator/main.cpp:50
+#: indicator/main.cpp:51
 msgid "Telephony Service Indicator"
 msgstr "Telephony Service Indicator"
 
-#: indicator/textchannelobserver.cpp:215
+#: indicator/textchannelobserver.cpp:235
 msgid "The message could not be sent"
 msgstr "ئۇچۇرنى ئەۋەتكىلى بولمىدى"
 
-#: indicator/textchannelobserver.cpp:210
+#: indicator/textchannelobserver.cpp:229
 msgid "Try again from the messaging application."
 msgstr "ئۇچۇر پروگراممىسىدا قايتا سىناپ كۆرۈڭ."
 
-#: Ubuntu/Telephony/contactwatcher.cpp:138
+#: Ubuntu/Telephony/contactwatcher.cpp:181
 msgid "Unknown Number"
 msgstr "ناتونۇش نومۇر"
 
-#: approver/approver.cpp:61
+#: approver/approver.cpp:63
 msgid "Unknown caller"
 msgstr "ناتونۇش تېلېفون"
 
-#: indicator/messagingmenu.cpp:263
+#: indicator/messagingmenu.cpp:300
 msgid "Unknown number"
 msgstr "نامەلۇم نومۇر"
 
-#: indicator/textchannelobserver.cpp:205
+#: indicator/textchannelobserver.cpp:224
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "سىم كارتىڭىزنى قۇلۇپسىزلاڭ ۋە ئۇچۇر پروگراممىسىدا قايتا سىناپ كۆرۈڭ."
 
-#: indicator/textchannelobserver.cpp:227 indicator/textchannelobserver.cpp:411
+#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:467
 msgid "View message"
 msgstr "ئۇچۇر كۆرسەت"
 
-#: indicator/messagingmenu.cpp:313
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail"
 msgstr "ئۈنخەت"
 
-#: indicator/messagingmenu.cpp:305
+#: indicator/messagingmenu.cpp:387
 msgid "Voicemail messages"
 msgstr "ئۈنخەتلەر"
