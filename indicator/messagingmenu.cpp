@@ -392,7 +392,13 @@ void MessagingMenu::showVoicemailEntry(AccountEntry *account)
     GIcon *icon = g_themed_icon_new("indicator-call");
 
     QString accountLabel(C::gettext("Voicemail"));
-    if (TelepathyHelper::instance()->activeAccounts().size() > 1) {
+    int phoneAccountsCount = 0;
+    Q_FOREACH(const AccountEntry *account, TelepathyHelper::instance()->activeAccounts()) {
+        if (account->type() == AccountEntry::PhoneAccount) {
+            phoneAccountsCount++;
+        }
+    }
+    if (phoneAccountsCount > 1) {
         accountLabel += " - " + account->displayName();
     }
 
