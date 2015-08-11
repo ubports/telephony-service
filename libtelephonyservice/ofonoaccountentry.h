@@ -36,6 +36,7 @@ class OfonoAccountEntry : public AccountEntry
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
     Q_PROPERTY(bool simLocked READ simLocked NOTIFY simLockedChanged)
     Q_PROPERTY(QString serial READ serial NOTIFY serialChanged)
+    Q_PROPERTY(QString countryCode READ countryCode NOTIFY countryCodeChanged)
     Q_PROPERTY(USSDManager* ussdManager READ ussdManager CONSTANT)
     friend class AccountEntryFactory;
 
@@ -45,6 +46,7 @@ public:
     uint voicemailCount() const;
     bool voicemailIndicator() const;
     QString networkName() const;
+    QString countryCode() const;
     bool emergencyCallsAvailable() const;
     bool simLocked() const;
     QString serial() const;
@@ -63,12 +65,14 @@ Q_SIGNALS:
     void voicemailCountChanged();
     void voicemailIndicatorChanged();
     void networkNameChanged();
+    void countryCodeChanged();
     void emergencyCallsAvailableChanged();
     void simLockedChanged();
     void serialChanged();
 
 private Q_SLOTS:
     void onEmergencyNumbersChanged(const QStringList &numbers);
+    void onCountryCodeChanged(const QString &countryCode);
     void onVoicemailNumberChanged(const QString &number);
     void onVoicemailCountChanged(uint count);
     void onVoicemailIndicatorChanged(bool visible);
@@ -81,6 +85,7 @@ protected:
 
 private:
     QStringList mEmergencyNumbers;
+    QString mCountryCode;
     QString mVoicemailNumber;
     uint mVoicemailCount;
     bool mVoicemailIndicator;

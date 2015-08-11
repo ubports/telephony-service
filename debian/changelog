@@ -1,3 +1,38 @@
+telephony-service (0.1+15.10.20150810.1-0ubuntu1) wily; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Check contact results on the client side. Phone comparison in the
+    server side is not reliable. (LP: #1476833)
+  * Use libphonenumber for phone number validation, normalization and
+    comparison. (LP: #1471545, #1444883, #1334860)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 10 Aug 2015 22:45:07 +0000
+
+telephony-service (0.1+15.10.20150727-0ubuntu2~gcc5.1) wily; urgency=medium
+
+  * No change upload built with GCC 5.
+
+ -- Matthias Klose <doko@ubuntu.com>  Thu, 30 Jul 2015 11:51:41 +0200
+
+telephony-service (0.1+15.10.20150727-0ubuntu1) wily; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk. added: po/cy.po
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure outgoing calls are not set as accepted by the approver.
+    (LP: #1476826)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 27 Jul 2015 19:38:59 +0000
+
+telephony-service (0.1+15.10.20150717-0ubuntu1) wily; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Specify the domain when translating unknown and private number
+    strings. (LP: #1470938)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Fri, 17 Jul 2015 18:20:41 +0000
+
 telephony-service (0.1+15.10.20150709-0ubuntu1) wily; urgency=medium
 
   [ Gustavo Pichorim Boiko ]
