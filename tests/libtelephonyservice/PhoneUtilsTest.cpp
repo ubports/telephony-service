@@ -21,6 +21,7 @@
 
 #include "phoneutils.h"
 
+Q_DECLARE_METATYPE(PhoneUtils::PhoneNumberMatchType)
 
 class PhoneUtilsTest : public QObject
 {
@@ -42,8 +43,6 @@ void PhoneUtilsTest::testIsPhoneNumber_data()
     QTest::newRow("number with dash") << "1234-5678" << true;
     QTest::newRow("number with area code") << "(123)12345678" << true;
     QTest::newRow("number with extension") << "12345678#123" << true;
-    QTest::newRow("number with comma") << "33333333,1,1" << true;
-    QTest::newRow("number with semicolon") << "33333333;1" << true;
     QTest::newRow("number with slash") << "+421 2/123 456 78" << true;
     QTest::newRow("short/emergency number") << "190" << true;
     QTest::newRow("non phone numbers") << "abcdefg" << false;
@@ -62,23 +61,21 @@ void PhoneUtilsTest::testComparePhoneNumbers_data()
 {
     QTest::addColumn<QString>("number1");
     QTest::addColumn<QString>("number2");
-    QTest::addColumn<bool>("expectedResult");
+    QTest::addColumn<PhoneUtils::PhoneNumberMatchType>("expectedResult");
 
-    QTest::newRow("string equal") << "12345678" << "12345678" << true;
-    QTest::newRow("number with dash") << "1234-5678" << "12345678" << true;
-    QTest::newRow("number with area code") << "12312345678" << "12345678" << true;
-    QTest::newRow("number with extension") << "12345678#123" << "12345678" << false;
-    QTest::newRow("both numbers with extension") << "(123)12345678#1" << "12345678#1" << true;
-    QTest::newRow("numbers with different extension") << "1234567#1" << "1234567#2" << false;
-    QTest::newRow("number with comma") << "33333333,1,1" << "33333333" << true;
-    QTest::newRow("both numbers with comma") << "22222222,1" << "22222222,2,1" << true;
-    QTest::newRow("number with semicolon") << "33333333;1" << "33333333" << true;
-    QTest::newRow("both numbers with semicolon") << "22222222;1" << "22222222;2" << true;
-    QTest::newRow("short/emergency numbers") << "190" << "190" << true;
-    QTest::newRow("different numbers") << "12345678" << "1234567" << false;
-    QTest::newRow("both non phone numbers") << "abcdefg" << "abcdefg" << true;
-    QTest::newRow("different non phone numbers") << "abcdefg" << "bcdefg" << false;
-    QTest::newRow("phone number and custom string") << "abc12345678" << "12345678" << false;
+    QTest::newRow("string equal") << "12345678" << "12345678" << PhoneUtils::NSN_MATCH;
+    QTest::newRow("number with dash") << "1234-5678" << "12345678" << PhoneUtils::NSN_MATCH;
+    QTest::newRow("number with area code") << "1231234567" << "1234567" << PhoneUtils::SHORT_NSN_MATCH;
+    QTest::newRow("number with extension") << "12345678#123" << "12345678" << PhoneUtils::SHORT_NSN_MATCH;
+    QTest::newRow("both numbers with extension") << "(123)12345678#1" << "12345678#1" << PhoneUtils::SHORT_NSN_MATCH;
+    QTest::newRow("numbers with different extension") << "1234567#1" << "1234567#2" << PhoneUtils::NO_MATCH;
+    QTest::newRow("short/emergency numbers") << "190" << "190" << PhoneUtils::EXACT_MATCH;
+    QTest::newRow("different short/emergency numbers") << "911" << "11" << PhoneUtils::NO_MATCH;
+    QTest::newRow("different numbers") << "12345678" << "1234567" << PhoneUtils::NO_MATCH;
+    QTest::newRow("both non phone numbers") << "abcdefg" << "abcdefg" << PhoneUtils::EXACT_MATCH;
+    QTest::newRow("different non phone numbers") << "abcdefg" << "bcdefg" << PhoneUtils::INVALID_NUMBER;
+    QTest::newRow("phone number and custom string") << "abc12345678" << "12345678" << PhoneUtils::NSN_MATCH;
+    QTest::newRow("phone number with slash") << "+421 2/123 456 78" << "212345678" << PhoneUtils::NSN_MATCH;
     // FIXME: check what other cases we need to test here"
 }
 
@@ -86,9 +83,9 @@ void PhoneUtilsTest::testComparePhoneNumbers()
 {
     QFETCH(QString, number1);
     QFETCH(QString, number2);
-    QFETCH(bool, expectedResult);
+    QFETCH(PhoneUtils::PhoneNumberMatchType, expectedResult);
 
-    bool result = PhoneUtils::comparePhoneNumbers(number1, number2);
+    PhoneUtils::PhoneNumberMatchType result = PhoneUtils::comparePhoneNumbers(number1, number2);
     QCOMPARE(result, expectedResult);
 }
 

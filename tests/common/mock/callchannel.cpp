@@ -89,17 +89,19 @@ void MockCallChannel::init()
     mIncoming = mState == "incoming" || mState == "waiting";
 
     identifiers[mTargetHandle] = mPhoneNumber;
+
     reason.actor =  0;
     reason.reason = Tp::CallStateChangeReasonProgressMade;
     reason.message = "";
     reason.DBusReason = "";
+
     if (mIncoming) {
         memberFlags[mTargetHandle] = 0;
     } else {
         memberFlags[mTargetHandle] = Tp::CallMemberFlagRinging;
     }
 
-    mCallChannel->setCallState(Tp::CallStateInitialising, 0, reason, stateDetails);
+    setCallState("initialising");
 
     mCallContent = Tp::BaseCallContent::create(baseChannel()->dbusConnection(), baseChannel().data(), "audio", Tp::MediaStreamTypeAudio, Tp::MediaStreamDirectionNone);
 
@@ -112,7 +114,7 @@ void MockCallChannel::init()
 
     mCallChannel->setMembersFlags(memberFlags, identifiers, Tp::UIntList(), reason);
 
-    mCallChannel->setCallState(Tp::CallStateInitialised, 0, reason, stateDetails);
+    setCallState("initialised");
     QObject::connect(mBaseChannel.data(), SIGNAL(closed()), this, SLOT(deleteLater()));
 }
 
@@ -178,9 +180,6 @@ Tp::CallState MockCallChannel::callState() const
 
 MockCallChannel::~MockCallChannel()
 {
-    qDebug() << "call channel closed";
-    // TODO - for some reason the object is not being removed
-    mConnection->dbusConnection().unregisterObject(mBaseChannel->objectPath(), QDBusConnection::UnregisterTree);
 }
 
 Tp::BaseChannelPtr MockCallChannel::baseChannel()
@@ -226,6 +225,12 @@ void MockCallChannel::setCallState(const QString &state)
     } else if (state == "waiting") {
         mIncoming = true;
         qDebug() << "waiting";
+    } else if (state == "initialising") {
+        reason.reason = Tp::CallStateChangeReasonProgressMade;
+        mCallChannel->setCallState(Tp::CallStateInitialising, 0, reason, stateDetails);
+    } else if (state == "initialised") {
+        reason.reason = Tp::CallStateChangeReasonProgressMade;
+        mCallChannel->setCallState(Tp::CallStateInitialised, 0, reason, stateDetails);
     }
 
     mState = state;

@@ -89,6 +89,7 @@ public:
 
     QStringList emergencyNumbers(Tp::DBusError *error);
     void setEmergencyNumbers(const QStringList &emergencyNumbers);
+    void setCountryCode(const QString &countryCode);
 
     bool voicemailIndicator(Tp::DBusError *error);
     void setVoicemailIndicator(bool visible);
@@ -155,6 +156,7 @@ private:
     MockConferenceCallChannel *mConferenceCall;
 
     QStringList mEmergencyNumbers;
+    QString mCountryCode;
     int mVoicemailCount;
     bool mVoicemailIndicator;
     QString mVoicemailNumber;

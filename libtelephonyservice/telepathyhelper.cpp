@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2015 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -221,16 +221,6 @@ QDBusInterface *TelepathyHelper::approverInterface() const
 
 bool TelepathyHelper::ready() const
 {
-    if (QCoreApplication::applicationName() != "telephony-service-handler" &&
-        mAccounts.isEmpty() &&
-        !GreeterContacts::instance()->isGreeterMode()) {
-        // get the status from the handler
-        QDBusReply<bool> reply = handlerInterface()->call("IsReady");
-        if (reply.isValid()) {
-            return reply.value();
-        }
-    }
-
     return mReady;
 }
 
