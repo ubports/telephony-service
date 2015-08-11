@@ -203,6 +203,8 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
                     } else {
                         fileData = attachmentFile.readAll();
                     }
+                } else {
+                    fileData = attachmentFile.readAll();
                 }
             } else {
                 fileData = attachmentFile.readAll();
