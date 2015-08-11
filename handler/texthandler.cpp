@@ -200,32 +200,25 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
                         QBuffer buffer(&fileData);
                         buffer.open(QIODevice::WriteOnly);
                         scaledImage.scaled(640, 640, Qt::KeepAspectRatio).save(&buffer, "jpg");
-                    } else {
-                        fileData = attachmentFile.readAll();
                     }
-                } else {
-                    fileData = attachmentFile.readAll();
                 }
-            } else {
-                fileData = attachmentFile.readAll();
             }
         } else if (attachment.contentType.startsWith("text/plain")) {
             if (isMMS) {
                 hasText = true;
                 parts += QString(SMIL_TEXT_PART).arg(attachment.id);
             }
-            fileData = attachmentFile.readAll();
         } else if (attachment.contentType.startsWith("text/vcard") ||
                    attachment.contentType.startsWith("text/x-vcard")) {
-            fileData = attachmentFile.readAll();
         } else if (isMMS) {
             // for MMS we just support the contentTypes above
             if (temporaryFiles) {
                 attachmentFile.remove();
             }
             continue;
-        } else {
-            // if this is not an MMS, simply add the attachment and try to send it.
+        }
+
+        if (fileData.isEmpty()) {
             fileData = attachmentFile.readAll();
         }
 
