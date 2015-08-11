@@ -47,6 +47,7 @@ public:
 
     // emergency numbers stuff
     void SetEmergencyNumbers(const QStringList &numbers);
+    void SetCountryCode(const QString &countryCode);
 
     // USSD stuff
     QString Serial();

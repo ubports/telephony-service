@@ -75,6 +75,12 @@
             ]]></dox:d>
             <arg name="numbers" type="as" direction="in"/>
         </method>
+        <method name="SetCountryCode">
+            <dox:d><![CDATA[
+                Set country code 
+            ]]></dox:d>
+            <arg name="countrCode" type="s" direction="in"/>
+        </method>
         <method name="Serial">
             <dox:d><![CDATA[
                 Get the USSD serial
