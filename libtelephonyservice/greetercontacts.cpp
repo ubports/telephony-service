@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2015 Canonical, Ltd.
  *
  * Authors:
  *  Michael Terry <michael.terry@canonical.com>
@@ -38,13 +38,10 @@
 
 QTCONTACTS_USE_NAMESPACE
 
-GreeterContacts *GreeterContacts::mInstance = nullptr;
-
 GreeterContacts *GreeterContacts::instance()
 {
-    if (!mInstance)
-        mInstance = new GreeterContacts();
-    return mInstance;
+    static GreeterContacts *self = new GreeterContacts();
+    return self;
 }
 
 GreeterContacts::GreeterContacts(QObject *parent)
@@ -104,9 +101,6 @@ GreeterContacts::GreeterContacts(QObject *parent)
 
 GreeterContacts::~GreeterContacts()
 {
-    if (mInstance == this) {
-        mInstance = nullptr;
-    }
 }
 
 bool GreeterContacts::greeterActive() const
@@ -121,61 +115,75 @@ bool GreeterContacts::isGreeterMode()
 
 void GreeterContacts::setContactFilter(const QContactFilter &filter)
 {
+    mMutex.lock();
     mFilter = filter;
     signalIfNeeded();
+    mMutex.unlock();
 }
 
 bool GreeterContacts::silentMode()
 {
+    mMutex.lock();
     if (!mSilentMode.isValid()) {
         mSilentMode = getUserValue("com.ubuntu.touch.AccountsService.Sound", "SilentMode");
     }
+    mMutex.unlock();
     return mSilentMode.toBool();
 }
 
 QString GreeterContacts::incomingCallSound()
 {
+    mMutex.lock();
     if (!mIncomingCallSound.isValid()) {
         mIncomingCallSound = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallSound");
     }
+    mMutex.unlock();
     return mIncomingCallSound.toString();
 }
 
 QString GreeterContacts::incomingMessageSound()
 {
+    mMutex.lock();
     if (!mIncomingMessageSound.isValid()) {
         mIncomingMessageSound = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageSound");
     }
+    mMutex.unlock();
     return mIncomingMessageSound.toString();
 }
 
 bool GreeterContacts::incomingCallVibrate()
 {
+    mMutex.lock();
     if (silentMode()) {
         return getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrateSilentMode").toBool();
     }
     if (!mIncomingCallVibrate.isValid()) {
         mIncomingCallVibrate = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrate");
     }
+    mMutex.unlock();
     return mIncomingCallVibrate.toBool();
 }
 
 bool GreeterContacts::incomingMessageVibrate()
 {
+    mMutex.lock();
     if (silentMode()) {
         return getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrateSilentMode").toBool();
     }
     if (!mIncomingMessageVibrate.isValid()) {
         mIncomingMessageVibrate = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrate");
     }
+    mMutex.unlock();
     return mIncomingMessageVibrate.toBool();
 }
 
 bool GreeterContacts::dialpadSoundsEnabled()
 {
+    mMutex.lock();
     if (!mDialpadSoundsEnabled.isValid()) {
         mDialpadSoundsEnabled = getUserValue("com.ubuntu.touch.AccountsService.Sound", "DialpadSoundsEnabled");
     }
+    mMutex.unlock();
     return mDialpadSoundsEnabled.toBool();
 }
 
@@ -427,9 +435,11 @@ QContact GreeterContacts::mapToContact(const QVariantMap &map)
 
 void GreeterContacts::showGreeter()
 {
+    mMutex.lock();
     QDBusInterface iface("com.canonical.UnityGreeter",
                          "/",
                          "com.canonical.UnityGreeter",
                          QDBusConnection::sessionBus());
     iface.call("ShowGreeter");
+    mMutex.unlock();
 }
