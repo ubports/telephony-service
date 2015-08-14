@@ -150,10 +150,11 @@ QString GreeterContacts::incomingMessageSound()
 
 bool GreeterContacts::incomingCallVibrate()
 {
-    QMutexLocker locker(&mMutex);
     if (silentMode()) {
+        QMutexLocker locker(&mMutex);
         return getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrateSilentMode").toBool();
     }
+    QMutexLocker locker(&mMutex);
     if (!mIncomingCallVibrate.isValid()) {
         mIncomingCallVibrate = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrate");
     }
@@ -162,10 +163,11 @@ bool GreeterContacts::incomingCallVibrate()
 
 bool GreeterContacts::incomingMessageVibrate()
 {
-    QMutexLocker locker(&mMutex);
     if (silentMode()) {
+        QMutexLocker locker(&mMutex);
         return getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrateSilentMode").toBool();
     }
+    QMutexLocker locker(&mMutex);
     if (!mIncomingMessageVibrate.isValid()) {
         mIncomingMessageVibrate = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrate");
     }
