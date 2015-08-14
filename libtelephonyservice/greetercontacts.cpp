@@ -34,6 +34,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QMutexLocker>
 #include <unistd.h>
 
 QTCONTACTS_USE_NAMESPACE
@@ -115,75 +116,68 @@ bool GreeterContacts::isGreeterMode()
 
 void GreeterContacts::setContactFilter(const QContactFilter &filter)
 {
-    mMutex.lock();
+    QMutexLocker locker(&mMutex);
     mFilter = filter;
     signalIfNeeded();
-    mMutex.unlock();
 }
 
 bool GreeterContacts::silentMode()
 {
-    mMutex.lock();
+    QMutexLocker locker(&mMutex);
     if (!mSilentMode.isValid()) {
         mSilentMode = getUserValue("com.ubuntu.touch.AccountsService.Sound", "SilentMode");
     }
-    mMutex.unlock();
     return mSilentMode.toBool();
 }
 
 QString GreeterContacts::incomingCallSound()
 {
-    mMutex.lock();
+    QMutexLocker locker(&mMutex);
     if (!mIncomingCallSound.isValid()) {
         mIncomingCallSound = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallSound");
     }
-    mMutex.unlock();
     return mIncomingCallSound.toString();
 }
 
 QString GreeterContacts::incomingMessageSound()
 {
-    mMutex.lock();
+    QMutexLocker locker(&mMutex);
     if (!mIncomingMessageSound.isValid()) {
         mIncomingMessageSound = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageSound");
     }
-    mMutex.unlock();
     return mIncomingMessageSound.toString();
 }
 
 bool GreeterContacts::incomingCallVibrate()
 {
-    mMutex.lock();
+    QMutexLocker locker(&mMutex);
     if (silentMode()) {
         return getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrateSilentMode").toBool();
     }
     if (!mIncomingCallVibrate.isValid()) {
         mIncomingCallVibrate = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingCallVibrate");
     }
-    mMutex.unlock();
     return mIncomingCallVibrate.toBool();
 }
 
 bool GreeterContacts::incomingMessageVibrate()
 {
-    mMutex.lock();
+    QMutexLocker locker(&mMutex);
     if (silentMode()) {
         return getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrateSilentMode").toBool();
     }
     if (!mIncomingMessageVibrate.isValid()) {
         mIncomingMessageVibrate = getUserValue("com.ubuntu.touch.AccountsService.Sound", "IncomingMessageVibrate");
     }
-    mMutex.unlock();
     return mIncomingMessageVibrate.toBool();
 }
 
 bool GreeterContacts::dialpadSoundsEnabled()
 {
-    mMutex.lock();
+    QMutexLocker locker(&mMutex);
     if (!mDialpadSoundsEnabled.isValid()) {
         mDialpadSoundsEnabled = getUserValue("com.ubuntu.touch.AccountsService.Sound", "DialpadSoundsEnabled");
     }
-    mMutex.unlock();
     return mDialpadSoundsEnabled.toBool();
 }
 
@@ -435,11 +429,10 @@ QContact GreeterContacts::mapToContact(const QVariantMap &map)
 
 void GreeterContacts::showGreeter()
 {
-    mMutex.lock();
+    QMutexLocker locker(&mMutex);
     QDBusInterface iface("com.canonical.UnityGreeter",
                          "/",
                          "com.canonical.UnityGreeter",
                          QDBusConnection::sessionBus());
     iface.call("ShowGreeter");
-    mMutex.unlock();
 }
