@@ -1,3 +1,10 @@
+telephony-service (0.1+15.10.20150814-0ubuntu1) wily; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Make GreeterContacts thread safe. (LP: #1471338)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Fri, 14 Aug 2015 20:38:56 +0000
+
 telephony-service (0.1+15.10.20150810.1-0ubuntu1) wily; urgency=medium
 
   [ Tiago Salem Herrmann ]
