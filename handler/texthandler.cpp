@@ -305,33 +305,34 @@ void TextHandler::sendMessage(const QString &accountId, const QStringList &recip
         return;
     }
 
-    Tp::TextChannelPtr channel = existingChat(sortedRecipients, account->accountId());
-    if (channel.isNull()) {
+    QList<Tp::TextChannelPtr> channels = existingChannels(recipients, account->accountId());
+    if (channels.isEmpty()) {
         mPendingMessages.append(pendingMessage);
         startChat(sortedRecipients, account->accountId());
         return;
     }
 
-    connect(channel->send(buildMessage(pendingMessage)),
+    connect(channels.last()->send(buildMessage(pendingMessage)),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
 void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId)
 {
-    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
-    if (channel.isNull()) {
+    QList<Tp::TextChannelPtr> channels = existingChannels(recipients, accountId);
+    if (channels.isEmpty()) {
         return;
     }
 
     QList<Tp::ReceivedMessage> messagesToAck;
-    Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
-        if (messageIds.contains(message.messageToken())) {
-            messagesToAck.append(message);
+    Q_FOREACH(const Tp::TextChannelPtr &channel, channels) {
+        Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
+            if (messageIds.contains(message.messageToken())) {
+                messagesToAck.append(message);
+            }
         }
+        channel->acknowledge(messagesToAck);
     }
-
-    channel->acknowledge(messagesToAck);
 }
 
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
@@ -341,7 +342,6 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
         return;
     }
     QString accountId = account->accountId();
-    QStringList recipients;
     mChannels.append(channel);
 
     // check for pending messages for this channel
@@ -349,18 +349,16 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
         return;
     }
 
-    Q_FOREACH(const Tp::ContactPtr &channelContact, channel->groupContacts(false)) {
-        recipients << channelContact->id();
-    }
-
     QList<PendingMessage>::iterator it = mPendingMessages.begin();
     while (it != mPendingMessages.end()) {
-        // FIXME: we can't trust recipients for group chats in regular IM accounts
-        if (it->accountId == accountId && existingChat(it->recipients, accountId) == channel) {
-            sendMessage(it->accountId, it->recipients, it->message, it->attachments, it->properties);
-            it = mPendingMessages.erase(it);
-        } else {
-            ++it;
+        Q_FOREACH(const Tp::TextChannelPtr &existingChannel, existingChannels(it->recipients, it->accountId)) {
+            if (existingChannel == channel) {
+                // FIXME: we can't trust recipients for group chats in regular IM accounts
+                sendMessage(it->accountId, it->recipients, it->message, it->attachments, it->properties);
+                it = mPendingMessages.erase(it);
+             } else {
+                ++it;
+             }
         }
     }
 }
@@ -379,9 +377,9 @@ void TextHandler::onMessageSent(Tp::PendingOperation *op)
     }
 }
 
-Tp::TextChannelPtr TextHandler::existingChat(const QStringList &targetIds, const QString &accountId)
+QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QStringList &targetIds, const QString &accountId)
 {
-    Tp::TextChannelPtr channel;
+    QList<Tp::TextChannelPtr> channels;
 
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
@@ -398,10 +396,10 @@ Tp::TextChannelPtr TextHandler::existingChat(const QStringList &targetIds, const
             }
         }
         if (count == targetIds.size()) {
-            return channel;
+            channels.append(channel);
         }
     }
-    return channel;
+    return channels;
 }
 
 void TextHandler::onContactsAvailable(Tp::PendingOperation *op)

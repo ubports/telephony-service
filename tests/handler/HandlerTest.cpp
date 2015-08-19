@@ -19,6 +19,7 @@
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
 #include "telepathytest.h"
+#include "chatmanager.h"
 #include "handlercontroller.h"
 #include "mockcontroller.h"
 #include "approver.h"
@@ -40,6 +41,7 @@ private Q_SLOTS:
     void testCallProperties();
     void testConferenceCall();
     void testSendMessage();
+    void testAcknowledgeMessage();
     void testActiveCallIndicator();
     void testNotApprovedChannels();
 
@@ -281,6 +283,40 @@ void HandlerTest::testSendMessage()
     QCOMPARE(sentMessage, message);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
+}
+
+void HandlerTest::testAcknowledgeMessage()
+{
+    // if we register the observer before this test, other tests fail
+    TelepathyHelper::instance()->registerChannelObserver();
+    QString recipient("84376666");
+    QString recipient2("+554184376666");
+    QString message("Hello, world!");
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+
+    // first send a message to a certain number so the handler request one channel
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+    TRY_COMPARE(messageSentSpy.count(), 1);
+
+    QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
+
+    // now receive a message from a very similar number so CM creates another
+    // channel and the handler needs to deal with both
+    QVariantMap properties;
+    properties["Sender"] = recipient2;
+    properties["Recipients"] = (QStringList() << recipient2);
+    mMockController->PlaceIncomingMessage(message, properties);
+
+    TRY_COMPARE(messageReceivedSpy.count(), 1);
+    QString receivedMessageId = messageReceivedSpy.first()[3].toString();
+
+    // then acknoledge the message that arrived in the second channel and make sure handler
+    // does the right thing
+    QSignalSpy messageReadSpy(mMockController, SIGNAL(MessageRead(QString)));
+    ChatManager::instance()->acknowledgeMessage(properties["Recipients"].toStringList(), receivedMessageId, mTpAccount->uniqueIdentifier());
+
+    TRY_COMPARE(messageReadSpy.count(), 1);
+    QCOMPARE(messageReadSpy.first()[0].toString(), receivedMessageId);
 }
 
 void HandlerTest::testActiveCallIndicator()
