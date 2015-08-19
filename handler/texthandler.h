@@ -49,7 +49,7 @@ protected Q_SLOTS:
     void onConnectedChanged();
 
 protected:
-    Tp::TextChannelPtr existingChat(const QStringList &targetIds, const QString &accountId);
+    QList<Tp::TextChannelPtr> existingChannels(const QStringList &targetIds, const QString &accountId);
 
 private:
     explicit TextHandler(QObject *parent = 0);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2015 Canonical, Ltd.
  *
  * This file is part of telephony-service.
  *
@@ -34,6 +34,13 @@
 Q_DECLARE_METATYPE(QtContacts::QContact) // for QVariant's benefit
 
 QTCONTACTS_USE_NAMESPACE
+
+class GreeterContactsWrapper : public GreeterContacts
+{
+    Q_OBJECT
+public:
+    GreeterContactsWrapper() : GreeterContacts() {}
+};
 
 class GreeterContactsTest : public QObject
 {
@@ -286,7 +293,7 @@ void GreeterContactsTest::waitForInitialQuery()
 
 void GreeterContactsTest::makeGreeterContacts()
 {
-    mGreeterContacts = GreeterContacts::instance();
+    mGreeterContacts = new GreeterContactsWrapper();
     mSpy = new QSignalSpy(mGreeterContacts, SIGNAL(contactUpdated(QtContacts::QContact)));
 }
 
