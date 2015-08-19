@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2015 Canonical, Ltd.
  *
  * Authors:
  *  Michael Terry <michael.terry@canonical.com>
@@ -26,6 +26,7 @@
 #include <QContactFilter>
 #include <QDBusMessage>
 #include <QObject>
+#include <QMutex>
 
 class QDBusPendingCallWatcher;
 
@@ -77,9 +78,10 @@ private Q_SLOTS:
     void accountsGetUsersReply(QDBusPendingCallWatcher *watcher);
     void accountsGetContactReply(QDBusPendingCallWatcher *watcher);
 
-private:
+protected:
     GreeterContacts(QObject *parent = 0);
 
+private:
     void queryEntry();
     void queryContact(const QString &user);
     void updateActiveUser(const QString &username);
@@ -100,8 +102,7 @@ private:
 
     QtContacts::QContactFilter mFilter;
     QMap<QString, QVariantMap> mContacts;
-
-    static GreeterContacts *mInstance;
+    QMutex mMutex;
 };
 
 #endif // GREETERCONTACTS_H
