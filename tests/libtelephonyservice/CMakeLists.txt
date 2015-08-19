@@ -26,6 +26,15 @@ generate_test(GreeterContactsTest USE_DBUS
 set_target_properties(GreeterContactsTest PROPERTIES COMPILE_DEFINITIONS "AS_BUSNAME=sessionBus;CMAKE_SOURCE_DIR=\"${CMAKE_SOURCE_DIR}\"")
 add_dependencies(GreeterContactsTest GreeterContactsTestServerExe)
 
+generate_test(GreeterContactsThreadTest USE_DBUS
+              SOURCES GreeterContactsThreadTest.cpp ${LIBTELEPHONYSERVICE_DIR}/greetercontacts.cpp
+              QT5_MODULES Contacts Core DBus Test
+              ENVIRONMENT XDG_SESSION_CLASS=greeter XDG_GREETER_DATA_DIR=${CMAKE_BINARY_DIR}/Testing/Temporary
+              TASKS --task ${CMAKE_CURRENT_BINARY_DIR}/GreeterContactsTestServerExe --task-name server --ignore-return
+              WAIT_FOR org.freedesktop.Accounts)
+set_target_properties(GreeterContactsThreadTest PROPERTIES COMPILE_DEFINITIONS "AS_BUSNAME=sessionBus;CMAKE_SOURCE_DIR=\"${CMAKE_SOURCE_DIR}\"")
+add_dependencies(GreeterContactsThreadTest GreeterContactsTestServerExe)
+
 generate_test(ToneGeneratorTest USE_DBUS
               SOURCES ToneGeneratorTest.cpp ${LIBTELEPHONYSERVICE_DIR}/tonegenerator.cpp
               QT5_MODULES Core DBus Test

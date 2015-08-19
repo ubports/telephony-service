@@ -93,7 +93,6 @@ void TextHandler::onConnectedChanged()
                 startChat(recipients, accountId);
             }
         }
-
     }
 }
 
@@ -222,8 +221,8 @@ void TextHandler::sendMMS(const QStringList &recipients, const AttachmentList &a
         return;
     }
 
-    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
-    if (channel.isNull()) {
+    QList<Tp::TextChannelPtr> channels = existingChannels(recipients, accountId);
+    if (channels.isEmpty()) {
         mPendingMMSs[accountId][recipients].append(attachments);
         startChat(recipients, accountId);
         return;
@@ -231,7 +230,7 @@ void TextHandler::sendMMS(const QStringList &recipients, const AttachmentList &a
 
     Tp::MessagePartList message = buildMMS(attachments);
 
-    connect(channel->send(message),
+    connect(channels.last()->send(message),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
@@ -247,8 +246,8 @@ void TextHandler::sendSilentMessage(const QStringList &recipients, const QString
         mPendingSilentMessages[accountId][recipients].append(message);
         return;
     }
-    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
-    if (channel.isNull()) {
+    QList<Tp::TextChannelPtr> channels = existingChannels(recipients, accountId);
+    if (channels.isEmpty()) {
         mPendingSilentMessages[accountId][recipients].append(message);
         startChat(recipients, accountId);
         return;
@@ -264,7 +263,7 @@ void TextHandler::sendSilentMessage(const QStringList &recipients, const QString
     body["content-type"] = QDBusVariant("text/plain");
     fullMessage << header << body;
 
-    connect(channel->send(fullMessage),
+    connect(channels.last()->send(fullMessage),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
@@ -300,33 +299,34 @@ void TextHandler::sendMessage(const QStringList &recipients, const QString &mess
         return;
     }
 
-    Tp::TextChannelPtr channel = existingChat(recipients, account->accountId());
-    if (channel.isNull()) {
+    QList<Tp::TextChannelPtr> channels = existingChannels(recipients, account->accountId());
+    if (channels.isEmpty()) {
         mPendingMessages[account->accountId()][recipients].append(message);
         startChat(recipients, account->accountId());
         return;
     }
 
-    connect(channel->send(message),
+    connect(channels.last()->send(message),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onMessageSent(Tp::PendingOperation*)));
 }
 
 void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId)
 {
-    Tp::TextChannelPtr channel = existingChat(recipients, accountId);
-    if (channel.isNull()) {
+    QList<Tp::TextChannelPtr> channels = existingChannels(recipients, accountId);
+    if (channels.isEmpty()) {
         return;
     }
 
     QList<Tp::ReceivedMessage> messagesToAck;
-    Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
-        if (messageIds.contains(message.messageToken())) {
-            messagesToAck.append(message);
+    Q_FOREACH(const Tp::TextChannelPtr &channel, channels) {
+        Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
+            if (messageIds.contains(message.messageToken())) {
+                messagesToAck.append(message);
+            }
         }
+        channel->acknowledge(messagesToAck);
     }
-
-    channel->acknowledge(messagesToAck);
 }
 
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
@@ -353,36 +353,54 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
     QMap<QStringList, QStringList> &pendingMessages = mPendingMessages[accountId];
     QMap<QStringList, QStringList>::iterator it = pendingMessages.begin();
     while (it != pendingMessages.end()) {
-        if (existingChat(it.key(), accountId) == channel) {
-            Q_FOREACH(const QString &message, it.value()) {
-                sendMessage(recipients, message, accountId);
+        bool found = false;
+        Q_FOREACH(const Tp::TextChannelPtr &existingChannel, existingChannels(it.key(), accountId)) {
+            if (existingChannel == channel) {
+                Q_FOREACH(const QString &message, it.value()) {
+                    sendMessage(recipients, message, accountId);
+                }
+                it = pendingMessages.erase(it);
+                found = true;
+                break;
             }
-            it = pendingMessages.erase(it);
-        } else {
+        }
+        if (!found) {
             ++it;
         }
     }
     QMap<QStringList, QList<AttachmentList>> &pendingMMSs = mPendingMMSs[accountId];
     QMap<QStringList, QList<AttachmentList>>::iterator it2 = pendingMMSs.begin();
     while (it2 != pendingMMSs.end()) {
-        if (existingChat(it2.key(), accountId) == channel) {
-            Q_FOREACH(const AttachmentList &attachments, it2.value()) {
-                sendMMS(recipients, attachments, accountId);
+        bool found = false;
+        Q_FOREACH(const Tp::TextChannelPtr &existingChannel, existingChannels(it2.key(), accountId)) {
+            if (existingChannel == channel) {
+                Q_FOREACH(const AttachmentList &attachments, it2.value()) {
+                    sendMMS(recipients, attachments, accountId);
+                }
+                it2 = pendingMMSs.erase(it2);
+                found = true;
+                break;
             }
-            it2 = pendingMMSs.erase(it2);
-        } else {
+        }
+        if (!found) {
             ++it2;
         }
     }
     QMap<QStringList, QStringList> &pendingSilentMessages = mPendingSilentMessages[accountId];
     QMap<QStringList, QStringList>::iterator it3 = pendingSilentMessages.begin();
     while (it3 != pendingSilentMessages.end()) {
-        if (existingChat(it3.key(), accountId) == channel) {
-            Q_FOREACH(const QString &message, it3.value()) {
-                sendSilentMessage(recipients, message, accountId);
+        bool found = false;
+        Q_FOREACH(const Tp::TextChannelPtr &existingChannel, existingChannels(it3.key(), accountId)) {
+            if (existingChannel == channel) {
+                Q_FOREACH(const QString &message, it3.value()) {
+                    sendSilentMessage(recipients, message, accountId);
+                }
+                it3 = pendingSilentMessages.erase(it3);
+                found = true;
+                break;
             }
-            it3 = pendingSilentMessages.erase(it3);
-        } else {
+        }
+        if (!found) {
             ++it3;
         }
     }
@@ -402,9 +420,9 @@ void TextHandler::onMessageSent(Tp::PendingOperation *op)
     }
 }
 
-Tp::TextChannelPtr TextHandler::existingChat(const QStringList &targetIds, const QString &accountId)
+QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QStringList &targetIds, const QString &accountId)
 {
-    Tp::TextChannelPtr channel;
+    QList<Tp::TextChannelPtr> channels;
 
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
@@ -421,10 +439,10 @@ Tp::TextChannelPtr TextHandler::existingChat(const QStringList &targetIds, const
             }
         }
         if (count == targetIds.size()) {
-            return channel;
+            channels.append(channel);
         }
     }
-    return channel;
+    return channels;
 }
 
 void TextHandler::onContactsAvailable(Tp::PendingOperation *op)
