@@ -318,14 +318,11 @@ void HandlerTest::testAcknowledgeMessage()
 
     TRY_COMPARE(messageReadSpy.count(), 1);
     QCOMPARE(messageReadSpy.first()[0].toString(), receivedMessageId);
-
-    TelepathyHelper::instance()->unregisterChannelObserver();
 }
 
 void HandlerTest::testAcknowledgeAllMessages()
 {
-    // if we register the observer before this test, other tests fail
-    TelepathyHelper::instance()->registerChannelObserver();
+    // FIXME: we assume the observer is already registered from the test above
     QString recipient("98437666");
     QString recipient2("+554198437666");
     QString message("Hello, world! %1");
