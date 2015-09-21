@@ -346,7 +346,7 @@ void HandlerTest::testAcknowledgeAllMessages()
 
     TRY_COMPARE(messageReceivedSpy.count(), messageCount);
 
-    // then acknoledge the messages that arrived in the second channel and make sure handler
+    // then acknowledge the messages that arrived in the second channel and make sure handler
     // does the right thing
     QSignalSpy messageReadSpy(mMockController, SIGNAL(MessageRead(QString)));
     ChatManager::instance()->acknowledgeAllMessages(properties["Recipients"].toStringList(), mTpAccount->uniqueIdentifier());

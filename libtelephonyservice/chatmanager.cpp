@@ -207,7 +207,7 @@ void ChatManager::acknowledgeMessage(const QStringList &recipients, const QStrin
 void ChatManager::acknowledgeAllMessages(const QStringList &recipients, const QString &accountId)
 {
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("AcknowledgeAllMessages", recipients, accountId);
+    phoneAppHandler->asyncCall("AcknowledgeAllMessages", recipients, accountId);
 }
 
 void ChatManager::onAckTimerTriggered()
