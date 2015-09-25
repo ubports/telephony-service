@@ -114,6 +114,11 @@ void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringL
     TextHandler::instance()->acknowledgeMessages(numbers, messageIds, accountId);
 }
 
+void HandlerDBus::AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId)
+{
+    TextHandler::instance()->acknowledgeAllMessages(numbers, accountId);
+}
+
 void HandlerDBus::StartCall(const QString &number, const QString &accountId)
 {
     CallHandler::instance()->startCall(number, accountId);
