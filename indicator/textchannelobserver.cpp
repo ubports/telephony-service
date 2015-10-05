@@ -432,6 +432,9 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     if (alias.isEmpty()) {
         alias = telepathyContact->alias();
+        if (alias == "x-ofono-unknown") {
+            alias = C::gettext("Unknown number");
+        }
     }
     if (avatar.isEmpty()) {
         avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();

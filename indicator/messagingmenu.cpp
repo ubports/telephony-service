@@ -150,7 +150,9 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
         }
 
         if (participantIds.size() > 1) {
+            displayLabel = QString::fromUtf8(C::gettext("Message to group from %1")).arg(displayLabel);
             icon = g_themed_icon_new("contact-group");
+            avatar = g_icon_to_string(icon);
         }
 
         if (avatar.isEmpty()) {
