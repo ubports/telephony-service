@@ -53,6 +53,8 @@ ContactWatcher::ContactWatcher(QObject *parent) :
     connect(ContactUtils::sharedManager(),
             SIGNAL(contactsRemoved(QList<QContactId>)),
             SLOT(onContactsRemoved(QList<QContactId>)));
+
+    connect(this, SIGNAL(contactIdChanged()), SIGNAL(isUnknownChanged()));
 }
 
 ContactWatcher::~ContactWatcher()
@@ -65,8 +67,9 @@ ContactWatcher::~ContactWatcher()
 
 void ContactWatcher::startSearching()
 {
-    if (!mCompleted || mIdentifier.isEmpty()) {
-        // componenty is not ready yet or no identifier given
+    if (!mCompleted || mIdentifier.isEmpty() || !mInteractive) {
+        // componenty is not ready yet or no identifier given,
+        // or the number is not interactive and thus doesn't need contact info at all
         return;
     }
 
@@ -112,6 +115,14 @@ void ContactWatcher::startSearching()
     mRequest->start();
 }
 
+void ContactWatcher::clear()
+{
+    setAlias(QString::null);
+    setContactId(QString::null);
+    setAvatar(QString::null);
+    setDetailProperties(QVariantMap());
+}
+
 QVariantList ContactWatcher::wrapIntList(const QList<int> &list)
 {
     QVariantList resultList;
@@ -132,12 +143,21 @@ QList<int> ContactWatcher::unwrapIntList(const QVariantList &list)
 
 QString ContactWatcher::contactId() const
 {
-    QString id = mContactId.toString();
-    if (id == QStringLiteral("qtcontacts:::")) {
-        return QString();
-    } else {
-        return id;
+    return mContactId;
+}
+
+void ContactWatcher::setContactId(const QString &id)
+{
+    if (id == mContactId) {
+        return;
     }
+
+    if (id == QStringLiteral("qtcontacts:::")) {
+        mContactId = QString::null;
+    } else {
+        mContactId = id;
+    }
+    Q_EMIT contactIdChanged();
 }
 
 QString ContactWatcher::avatar() const
@@ -145,9 +165,27 @@ QString ContactWatcher::avatar() const
     return mAvatar;
 }
 
+void ContactWatcher::setAvatar(const QString &avatar)
+{
+    if (avatar == mAvatar) {
+        return;
+    }
+    mAvatar = avatar;
+    Q_EMIT avatarChanged();
+}
+
 QString ContactWatcher::alias() const
 {
     return mAlias;
+}
+
+void ContactWatcher::setAlias(const QString &alias)
+{
+    if (alias == mAlias) {
+        return;
+    }
+    mAlias = alias;
+    Q_EMIT aliasChanged();
 }
 
 QString ContactWatcher::identifier() const
@@ -170,22 +208,16 @@ void ContactWatcher::setIdentifier(const QString &identifier)
     Q_EMIT identifierChanged();
 
     if (mIdentifier.isEmpty() || isPrivate || isUnknown) {
-        mAlias.clear();
-        mContactId = QContactId();
-        mAvatar.clear();
-        mDetailProperties.clear();
-
+        QString alias;
         if (isPrivate) {
-            mAlias = C::dgettext("telephony-service", "Private Number");
+            alias = C::dgettext("telephony-service", "Private Number");
         } else if (isUnknown) {
-            mAlias = C::dgettext("telephony-service", "Unknown Number");
+            alias = C::dgettext("telephony-service", "Unknown Number");
         }
-
-        Q_EMIT contactIdChanged();
-        Q_EMIT avatarChanged();
-        Q_EMIT aliasChanged();
-        Q_EMIT detailPropertiesChanged();
-        Q_EMIT isUnknownChanged();
+        setAlias(alias);
+        setContactId(QString::null);
+        setAvatar(QString::null);
+        setDetailProperties(QVariantMap());
     } else {
         startSearching();
     }
@@ -199,6 +231,15 @@ void ContactWatcher::setIdentifier(const QString &identifier)
 QVariantMap ContactWatcher::detailProperties() const
 {
     return mDetailProperties;
+}
+
+void ContactWatcher::setDetailProperties(const QVariantMap &properties)
+{
+    if (properties == mDetailProperties) {
+        return;
+    }
+    mDetailProperties = properties;
+    Q_EMIT detailPropertiesChanged();
 }
 
 bool ContactWatcher::isUnknown() const
@@ -258,19 +299,13 @@ void ContactWatcher::onContactsChanged(QList<QContactId> ids)
 
 void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
 {
-    // if the current contact got removed, clear it before trying to search for a new one
-    if (ids.contains(mContactId)) {
-        mAlias.clear();
-        mContactId = QContactId();
-        mAvatar.clear();
-        mDetailProperties.clear();
-        Q_EMIT contactIdChanged();
-        Q_EMIT avatarChanged();
-        Q_EMIT aliasChanged();
-        Q_EMIT detailPropertiesChanged();
-        Q_EMIT isUnknownChanged();
+    Q_FOREACH(const QContactId &id, ids) {
+        if (id.toString() == mContactId) {
+            clear();
 
-        startSearching();
+            startSearching();
+            break;
+        }
     }
 }
 
@@ -306,32 +341,18 @@ void ContactWatcher::onResultsAvailable()
             }
         }
 
-        if (contact.id() != mContactId) {
-            mContactId = contact.id();
-            Q_EMIT contactIdChanged();
-        }
+        setContactId(contact.id().toString());
+        setAvatar(contact.detail<QContactAvatar>().imageUrl().toString());
+        setAlias(ContactUtils::formatContactName(contact));
 
-        QString newAvatar = contact.detail<QContactAvatar>().imageUrl().toString();
-        if (newAvatar != mAvatar) {
-            mAvatar = newAvatar;
-            Q_EMIT avatarChanged();
-        }
-
-        QString newAlias = ContactUtils::formatContactName(contact);
-        if (newAlias != mAlias) {
-            mAlias = newAlias;
-            Q_EMIT aliasChanged();
-            Q_EMIT isUnknownChanged();
-        }
-
+        QVariantMap detailProperties;
         Q_FOREACH(const QString &field, mAddressableFields) {
             if (field == "tel") {
                 Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
                     if (PhoneUtils::comparePhoneNumbers(phoneNumber.number(), mIdentifier) > PhoneUtils::NO_MATCH) {
-                        mDetailProperties["type"] = (int)QContactDetail::TypePhoneNumber;
-                        mDetailProperties["phoneNumberSubTypes"] = wrapIntList(phoneNumber.subTypes());
-                        mDetailProperties["phoneNumberContexts"] = wrapIntList(phoneNumber.contexts());
-                        Q_EMIT detailPropertiesChanged();
+                        detailProperties["type"] = (int)QContactDetail::TypePhoneNumber;
+                        detailProperties["phoneNumberSubTypes"] = wrapIntList(phoneNumber.subTypes());
+                        detailProperties["phoneNumberContexts"] = wrapIntList(phoneNumber.contexts());
                         break;
                     }
                 }
@@ -339,6 +360,7 @@ void ContactWatcher::onResultsAvailable()
                 // FIXME: add proper support for more fields
             }
         }
+        setDetailProperties(detailProperties);
     }
 }
 
@@ -351,16 +373,7 @@ void ContactWatcher::onRequestStateChanged(QContactAbstractRequest::State state)
 
         // if we got no results and we had a contact previously, we need to clear the data
         if (request->contacts().isEmpty() && !mContactId.isNull()) {
-            mAlias.clear();
-            mContactId = QContactId();
-            mAvatar.clear();
-            mDetailProperties.clear();
-
-            Q_EMIT contactIdChanged();
-            Q_EMIT avatarChanged();
-            Q_EMIT aliasChanged();
-            Q_EMIT detailPropertiesChanged();
-            Q_EMIT isUnknownChanged();
+            clear();
         }
     }
 }
