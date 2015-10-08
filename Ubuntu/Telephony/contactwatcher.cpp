@@ -207,6 +207,11 @@ void ContactWatcher::setIdentifier(const QString &identifier)
     mIdentifier = identifier;
     Q_EMIT identifierChanged();
 
+    if (isInteractive != mInteractive) {
+        mInteractive = isInteractive;
+        Q_EMIT interactiveChanged();
+    }
+
     if (mIdentifier.isEmpty() || isPrivate || isUnknown) {
         QString alias;
         if (isPrivate) {
@@ -220,11 +225,6 @@ void ContactWatcher::setIdentifier(const QString &identifier)
         setDetailProperties(QVariantMap());
     } else {
         startSearching();
-    }
-
-    if (isInteractive != mInteractive) {
-        mInteractive = isInteractive;
-        Q_EMIT interactiveChanged();
     }
 }
 
