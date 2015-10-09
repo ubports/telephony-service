@@ -42,6 +42,7 @@ private Q_SLOTS:
     void testConferenceCall();
     void testSendMessage();
     void testAcknowledgeMessage();
+    void testAcknowledgeAllMessages();
     void testActiveCallIndicator();
     void testNotApprovedChannels();
 
@@ -317,6 +318,40 @@ void HandlerTest::testAcknowledgeMessage()
 
     TRY_COMPARE(messageReadSpy.count(), 1);
     QCOMPARE(messageReadSpy.first()[0].toString(), receivedMessageId);
+}
+
+void HandlerTest::testAcknowledgeAllMessages()
+{
+    // FIXME: we assume the observer is already registered from the test above
+    QString recipient("98437666");
+    QString recipient2("+554198437666");
+    QString message("Hello, world! %1");
+    int messageCount = 10;
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+
+    // first send a message to a certain number so the handler request one channel
+    HandlerController::instance()->sendMessage(recipient, message, mTpAccount->uniqueIdentifier());
+    TRY_COMPARE(messageSentSpy.count(), 1);
+
+    QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
+
+    // now receive some messages from a very similar number so CM creates another
+    // channel and the handler needs to deal with both
+    QVariantMap properties;
+    properties["Sender"] = recipient2;
+    properties["Recipients"] = (QStringList() << recipient2);
+    for (int i = 0; i < messageCount; ++i) {
+        mMockController->PlaceIncomingMessage(message.arg(QString::number(i)), properties);
+    }
+
+    TRY_COMPARE(messageReceivedSpy.count(), messageCount);
+
+    // then acknowledge the messages that arrived in the second channel and make sure handler
+    // does the right thing
+    QSignalSpy messageReadSpy(mMockController, SIGNAL(MessageRead(QString)));
+    ChatManager::instance()->acknowledgeAllMessages(properties["Recipients"].toStringList(), mTpAccount->uniqueIdentifier());
+
+    TRY_COMPARE(messageReadSpy.count(), messageCount);
 }
 
 void HandlerTest::testActiveCallIndicator()
