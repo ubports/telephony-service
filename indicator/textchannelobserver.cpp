@@ -432,7 +432,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
 
     if (alias.isEmpty()) {
         alias = telepathyContact->alias();
-        if (alias == "x-ofono-unknown") {
+        if (alias == OFONO_UNKNOWN_NUMBER) {
             alias = C::gettext("Unknown number");
         }
     }
