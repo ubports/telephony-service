@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-08-19 05:55+0000\n"
-"X-Generator: Launchpad (build 17690)\n"
+"X-Launchpad-Export-Date: 2015-10-03 05:39+0000\n"
+"X-Generator: Launchpad (build 17783)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -83,8 +83,7 @@ msgstr "Cancelar"
 
 #: indicator/textchannelobserver.cpp:226
 msgid "Deactivate flight mode and try again from the messaging application."
-msgstr ""
-"Desative o modo avião e tente novamente através da app das mensagens."
+msgstr "Desative o modo avião e tente novamente através da app de mensagens."
 
 #: approver/approver.cpp:508
 msgid "Decline"
@@ -120,7 +119,7 @@ msgstr "Estou atrasado, já estou a ir."
 
 #: indicator/messagingmenu.cpp:236
 msgid "I'm running late. I'm on my way."
-msgstr "Estou atrasado. Estou a caminho."
+msgstr "Estou atrasado. Vou a caminho."
 
 #: approver/approver.cpp:516
 msgid "Message & decline"
@@ -147,7 +146,7 @@ msgstr "Sem mensagens de texto recebidas hoje"
 msgid "No text messages sent today"
 msgstr "Sem mensagens de texto enviadas hoje"
 
-#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
 msgid "Ok"
 msgstr "Ok"
 
@@ -157,7 +156,7 @@ msgstr "Chamadas telefónicas"
 
 #: approver/approver.cpp:93
 msgid "Please call me back later."
-msgstr "Por favor, telefona-me mais tarde."
+msgstr "Por favor, telefone mais tarde."
 
 #: indicator/textchannelobserver.cpp:625
 msgid "Please, select a SIM card:"
@@ -169,7 +168,7 @@ msgstr "Número Privado"
 
 #: indicator/messagingmenu.cpp:296
 msgid "Private number"
-msgstr "Número privado"
+msgstr "Número Privado"
 
 #: indicator/ussdindicator.cpp:119
 msgid "Reply"
@@ -219,7 +218,7 @@ msgstr "A mensagem não foi enviada"
 
 #: indicator/textchannelobserver.cpp:229
 msgid "Try again from the messaging application."
-msgstr "Tente novamente através da app das mensagens."
+msgstr "Tente novamente através da app de mensagens."
 
 #: Ubuntu/Telephony/contactwatcher.cpp:181
 msgid "Unknown Number"
@@ -236,7 +235,7 @@ msgstr "Número desconhecido"
 #: indicator/textchannelobserver.cpp:224
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
-"Desbloqueie o seu cartão SIM e tente novamente através da app das mensagens."
+"Desbloqueie o seu cartão SIM e tente novamente através da app de mensagens."
 
 #: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:467
 msgid "View message"

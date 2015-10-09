@@ -61,7 +61,8 @@ public Q_SLOTS:
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
 
-    void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId = QString::null);
+    void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId);
+    void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
 
 private Q_SLOTS:
     void onChannelObserverUnregistered();

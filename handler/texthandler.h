@@ -42,6 +42,7 @@ public Q_SLOTS:
     void sendSilentMessage(const QStringList &recipients, const QString &message, const QString &accountId);
     void sendMMS(const QStringList &recipients, const AttachmentList &attachments, const QString &accountId);
     void acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId);
+    void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);

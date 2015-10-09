@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2014-08-30 10:03+0000\n"
-"Last-Translator: Данило Шеган <Unknown>\n"
+"PO-Revision-Date: 2015-09-06 14:56+0000\n"
+"Last-Translator: Bojan Bogdanović <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2015-08-19 05:55+0000\n"
-"X-Generator: Launchpad (build 17690)\n"
+"X-Launchpad-Export-Date: 2015-10-03 05:40+0000\n"
+"X-Generator: Launchpad (build 17783)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -61,7 +61,7 @@ msgstr "Прихвати"
 
 #: indicator/messagingmenu.cpp:230
 msgid "Call back"
-msgstr ""
+msgstr "Позови назад"
 
 #: approver/approver.cpp:449
 msgid "Caller number is not available"
@@ -94,7 +94,7 @@ msgstr "Одбиј"
 
 #: approver/approver.cpp:499
 msgid "End + Answer"
-msgstr ""
+msgstr "Заврши + Одговори"
 
 #: approver/approver.cpp:485
 msgid "Hold + Answer"
@@ -110,15 +110,15 @@ msgstr "Касним 20 минута."
 
 #: approver/approver.cpp:91
 msgid "I'm busy at the moment. I'll call later."
-msgstr ""
+msgstr "Тренутно сам заузет. Назваћу вас касније."
 
 #: indicator/messagingmenu.cpp:237
 msgid "I'm busy at the moment. I'll call you later."
-msgstr "Тренутно сам заузет. Зовем те касније."
+msgstr "Тренутно сам заузет. Зовем вас касније."
 
 #: approver/approver.cpp:92
 msgid "I'm running late, on my way now."
-msgstr ""
+msgstr "Касним, на путу сам."
 
 #: indicator/messagingmenu.cpp:236
 msgid "I'm running late. I'm on my way."
@@ -126,7 +126,7 @@ msgstr "Касним. На путу сам."
 
 #: approver/approver.cpp:516
 msgid "Message & decline"
-msgstr ""
+msgstr "Порука & одбиј"
 
 #: indicator/textchannelobserver.cpp:447 indicator/textchannelobserver.cpp:503
 #, qt-format
@@ -149,7 +149,7 @@ msgstr "Данас нема примљених порука"
 msgid "No text messages sent today"
 msgstr "Данас није било послатих порука"
 
-#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
 msgid "Ok"
 msgstr "У реду"
 
@@ -159,7 +159,7 @@ msgstr "Телефонски позиви"
 
 #: approver/approver.cpp:93
 msgid "Please call me back later."
-msgstr ""
+msgstr "Молим, назовите ме касније."
 
 #: indicator/textchannelobserver.cpp:625
 msgid "Please, select a SIM card:"
@@ -192,11 +192,11 @@ msgstr "Сачувај"
 
 #: indicator/messagingmenu.cpp:172 indicator/messagingmenu.cpp:245
 msgid "Send"
-msgstr ""
+msgstr "Пошаљи"
 
 #: indicator/messagingmenu.cpp:239
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr "Извини, и даље сам заузет. Зваћу те касније."
+msgstr "Извини, и даље сам заузет. Назваћу Вас касније."
 
 #: indicator/metrics.cpp:50
 #, qt-format
