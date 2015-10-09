@@ -323,6 +323,18 @@ void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStri
     }
 }
 
+void TextHandler::acknowledgeAllMessages(const QStringList &recipients, const QString &accountId)
+{
+    QList<Tp::TextChannelPtr> channels = existingChannels(recipients, accountId);
+    if (channels.isEmpty()) {
+        return;
+    }
+
+    Q_FOREACH(const Tp::TextChannelPtr &channel, channels) {
+        channel->acknowledge(channel->messageQueue());
+    }
+}
+
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());

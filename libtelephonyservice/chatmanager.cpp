@@ -204,6 +204,12 @@ void ChatManager::acknowledgeMessage(const QStringList &recipients, const QStrin
     mMessagesToAck[account->accountId()][recipients].append(messageId);
 }
 
+void ChatManager::acknowledgeAllMessages(const QStringList &recipients, const QString &accountId)
+{
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->asyncCall("AcknowledgeAllMessages", recipients, accountId);
+}
+
 void ChatManager::onAckTimerTriggered()
 {
     // ack all pending messages
