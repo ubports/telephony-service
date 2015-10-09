@@ -113,6 +113,11 @@ void HandlerDBus::StartChatRoom(const QString &accountId, const QVariantMap &pro
     TextHandler::instance()->startChatRoom(accountId, properties);
 }
 
+void HandlerDBus::AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId)
+{
+    TextHandler::instance()->acknowledgeAllMessages(numbers, accountId);
+}
+
 void HandlerDBus::StartCall(const QString &number, const QString &accountId)
 {
     CallHandler::instance()->startCall(number, accountId);

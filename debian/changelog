@@ -1,3 +1,14 @@
+telephony-service (0.1+15.10.20150925-0ubuntu1) wily; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+
+  [ Gustavo Pichorim Boiko ]
+  * Make it possible to acknowledge all pending messages of a given
+    conversation at once. (LP: #1488498)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 25 Sep 2015 13:06:14 +0000
+
 telephony-service (0.1+15.10.20150818-0ubuntu1) wily; urgency=medium
 
   [ CI Train Bot ]

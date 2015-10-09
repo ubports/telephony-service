@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-08-19 05:55+0000\n"
-"X-Generator: Launchpad (build 17690)\n"
+"X-Launchpad-Export-Date: 2015-10-03 05:39+0000\n"
+"X-Generator: Launchpad (build 17783)\n"
 "Language: he\n"
 
 #: indicator/messagingmenu.cpp:293
@@ -108,7 +108,7 @@ msgstr "אאחר ב־20 דקות."
 
 #: approver/approver.cpp:91
 msgid "I'm busy at the moment. I'll call later."
-msgstr ""
+msgstr "אין לי אפשרות לענות, אתקשר מאוחר יותר."
 
 #: indicator/messagingmenu.cpp:237
 msgid "I'm busy at the moment. I'll call you later."
@@ -116,7 +116,7 @@ msgstr "אין לי אפשרות לענות כרגע. אתקשר מאוחר יו
 
 #: approver/approver.cpp:92
 msgid "I'm running late, on my way now."
-msgstr ""
+msgstr "באיחור, בדרך."
 
 #: indicator/messagingmenu.cpp:236
 msgid "I'm running late. I'm on my way."
@@ -124,7 +124,7 @@ msgstr "אאחר. אני בדרך."
 
 #: approver/approver.cpp:516
 msgid "Message & decline"
-msgstr ""
+msgstr "הודעה ודחייה"
 
 #: indicator/textchannelobserver.cpp:447 indicator/textchannelobserver.cpp:503
 #, qt-format
@@ -147,7 +147,7 @@ msgstr "לא התקבלו הודעות היום"
 msgid "No text messages sent today"
 msgstr "לא נשלחו הודעות היום"
 
-#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
 msgid "Ok"
 msgstr "אישור"
 
@@ -157,7 +157,7 @@ msgstr "שיחות טלפון"
 
 #: approver/approver.cpp:93
 msgid "Please call me back later."
-msgstr ""
+msgstr "נא להתקשר אלי מאוחר יותר."
 
 #: indicator/textchannelobserver.cpp:625
 msgid "Please, select a SIM card:"
@@ -235,7 +235,7 @@ msgstr "מספר לא ידוע"
 
 #: indicator/textchannelobserver.cpp:224
 msgid "Unlock your sim card and try again from the messaging application."
-msgstr ""
+msgstr "ניתן לשחרר את נעילת ה־SIM שלך ולנסות שוב דרך יישום ההודעות."
 
 #: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:467
 msgid "View message"

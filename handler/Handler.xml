@@ -46,6 +46,13 @@
             <arg name="properties" type="a{sv}" direction="in"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
         </method>
+        <method name="AcknowledgeAllMessages">
+            <dox:d><![CDATA[
+                Request all messages messages from the given numbers to be acknowledged
+            ]]></dox:d>
+            <arg name="numbers" type="as" direction="in"/>
+            <arg name="accountId" type="s" direction="in"/>
+        </method>
         <!-- Call Related -->
         <method name="StartCall">
             <dox:d><![CDATA[
