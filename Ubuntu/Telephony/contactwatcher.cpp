@@ -123,6 +123,17 @@ void ContactWatcher::clear()
     setDetailProperties(QVariantMap());
 }
 
+void ContactWatcher::updateAlias()
+{
+    if (mIdentifier.isEmpty()) {
+        setAlias(QString::null);
+    } else if (mIdentifier.startsWith("x-ofono-private")) {
+        setAlias(C::dgettext("telephony-service", "Private Number"));
+    } else if (mIdentifier.startsWith("x-ofono-unknown")) {
+        setAlias(C::dgettext("telephony-service", "Unknown Number"));
+    }
+}
+
 QVariantList ContactWatcher::wrapIntList(const QList<int> &list)
 {
     QVariantList resultList;
@@ -213,13 +224,7 @@ void ContactWatcher::setIdentifier(const QString &identifier)
     }
 
     if (mIdentifier.isEmpty() || isPrivate || isUnknown) {
-        QString alias;
-        if (isPrivate) {
-            alias = C::dgettext("telephony-service", "Private Number");
-        } else if (isUnknown) {
-            alias = C::dgettext("telephony-service", "Unknown Number");
-        }
-        setAlias(alias);
+        updateAlias();
         setContactId(QString::null);
         setAvatar(QString::null);
         setDetailProperties(QVariantMap());
@@ -276,6 +281,7 @@ void ContactWatcher::classBegin()
 void ContactWatcher::componentComplete()
 {
     mCompleted = true;
+    updateAlias();
     startSearching();
 }
 

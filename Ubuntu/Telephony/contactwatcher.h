@@ -96,6 +96,7 @@ protected Q_SLOTS:
 private:
     void startSearching();
     void clear();
+    void updateAlias();
 
     QContactFetchRequest *mRequest;
     QString mContactId;
