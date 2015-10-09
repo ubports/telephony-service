@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-08-19 05:55+0000\n"
-"X-Generator: Launchpad (build 17690)\n"
+"X-Launchpad-Export-Date: 2015-10-03 05:39+0000\n"
+"X-Generator: Launchpad (build 17783)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -146,7 +146,7 @@ msgstr "Necun messages de texto recipite hodie"
 msgid "No text messages sent today"
 msgstr "Necun messages de texto expedite hodie"
 
-#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
 msgid "Ok"
 msgstr "OK"
 

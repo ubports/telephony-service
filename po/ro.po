@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2015-08-19 05:55+0000\n"
-"X-Generator: Launchpad (build 17690)\n"
+"X-Launchpad-Export-Date: 2015-10-03 05:39+0000\n"
+"X-Generator: Launchpad (build 17783)\n"
 
 #: indicator/messagingmenu.cpp:293
 #, qt-format
@@ -150,7 +150,7 @@ msgstr "Niciun mesaj text primit astăzi"
 msgid "No text messages sent today"
 msgstr "Niciun mesaj text trimis astăzi"
 
-#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
 msgid "Ok"
 msgstr "În regulă"
 
