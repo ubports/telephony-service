@@ -127,9 +127,9 @@ void ContactWatcher::updateAlias()
 {
     if (mIdentifier.isEmpty()) {
         setAlias(QString::null);
-    } else if (mIdentifier.startsWith("x-ofono-private")) {
+    } else if (mIdentifier.startsWith(OFONO_PRIVATE_NUMBER)) {
         setAlias(C::dgettext("telephony-service", "Private Number"));
-    } else if (mIdentifier.startsWith("x-ofono-unknown")) {
+    } else if (mIdentifier.startsWith(OFONO_UNKNOWN_NUMBER)) {
         setAlias(C::dgettext("telephony-service", "Unknown Number"));
     }
 }
