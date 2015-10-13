@@ -68,7 +68,7 @@ ContactWatcher::~ContactWatcher()
 void ContactWatcher::startSearching()
 {
     if (!mCompleted || mIdentifier.isEmpty() || !mInteractive) {
-        // componenty is not ready yet or no identifier given,
+        // component is not ready yet or no identifier given,
         // or the number is not interactive and thus doesn't need contact info at all
         return;
     }
