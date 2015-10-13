@@ -25,6 +25,9 @@
 #include <QContactManager>
 #include <QContact>
 
+#define OFONO_UNKNOWN_NUMBER "x-ofono-unknown"
+#define OFONO_PRIVATE_NUMBER "x-ofono-private"
+
 QTCONTACTS_USE_NAMESPACE
 
 namespace ContactUtils

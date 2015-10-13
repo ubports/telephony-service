@@ -211,8 +211,8 @@ void ContactWatcher::setIdentifier(const QString &identifier)
     }
 
     // FIXME: ofono stuff, maybe move somewhere else?
-    const bool isPrivate = identifier.startsWith("x-ofono-private");
-    const bool isUnknown = identifier.startsWith("x-ofono-unknown");
+    const bool isPrivate = identifier.startsWith(OFONO_PRIVATE_NUMBER);
+    const bool isUnknown = identifier.startsWith(OFONO_UNKNOWN_NUMBER);
     const bool isInteractive = !identifier.isEmpty() && !isPrivate && !isUnknown;
 
     mIdentifier = identifier;
