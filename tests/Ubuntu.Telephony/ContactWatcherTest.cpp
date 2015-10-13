@@ -356,8 +356,8 @@ void ContactWatcherTest::testInteractiveProperty_data()
     QTest::addColumn<bool>("interactive");
 
     QTest::newRow("valid phone number") << "98765432" << 1 << true;
-    QTest::newRow("ofono private phone number") << "x-ofono-private" << 0 << false;
-    QTest::newRow("ofono unknown number") << "x-ofono-unknown" << 0 << false;
+    QTest::newRow("ofono private phone number") << OFONO_PRIVATE_NUMBER << 0 << false;
+    QTest::newRow("ofono unknown number") << OFONO_UNKNOWN_NUMBER << 0 << false;
     QTest::newRow("empty phone number") << "" << 0 << false;
 }
 
