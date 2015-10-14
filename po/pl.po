@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2015-04-27 14:47+0000\n"
-"Last-Translator: GTriderXC <gtriderxc@yahoo.com>\n"
+"PO-Revision-Date: 2015-10-13 12:06+0000\n"
+"Last-Translator: Bartosz Kosiorek <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2015-10-03 05:39+0000\n"
-"X-Generator: Launchpad (build 17783)\n"
+"X-Launchpad-Export-Date: 2015-10-14 05:58+0000\n"
+"X-Generator: Launchpad (build 17812)\n"
 "Language: pl\n"
 
 #: indicator/messagingmenu.cpp:293
@@ -79,7 +79,7 @@ msgstr "Połączenie z numerem prywatnym"
 
 #: approver/approver.cpp:444
 msgid "Calling from unknown number"
-msgstr "Połączenie z nieznanego numeru"
+msgstr "Połączenie z nieznanym numerem"
 
 #: indicator/ussdindicator.cpp:142
 msgid "Cancel"
@@ -97,7 +97,7 @@ msgstr "Odrzuć"
 
 #: approver/approver.cpp:499
 msgid "End + Answer"
-msgstr "Zakończ + Odbierz"
+msgstr "Zakończ i odbierz"
 
 #: approver/approver.cpp:485
 msgid "Hold + Answer"
@@ -113,7 +113,7 @@ msgstr "Spóźnię się 20 minut."
 
 #: approver/approver.cpp:91
 msgid "I'm busy at the moment. I'll call later."
-msgstr "Jestem zajęty w tym momencie. Zadzwonie później."
+msgstr "Jestem zajęty w tym momencie. Zadzwonię później."
 
 #: indicator/messagingmenu.cpp:237
 msgid "I'm busy at the moment. I'll call you later."
@@ -138,19 +138,19 @@ msgstr "Wiadomość od %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr "Dziś nie wykonano połączeń."
+msgstr "Dziś nie wykonano połączeń"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr "Dziś nie odebrano połączeń."
+msgstr "Dziś nie odebrano połączeń"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr "Dziś nie otrzymano wiadomości."
+msgstr "Dziś nie otrzymano wiadomości"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr "Dziś nie wysyłano wiadomości."
+msgstr "Dziś nie wysyłano wiadomości"
 
 #: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:302
 msgid "Ok"
