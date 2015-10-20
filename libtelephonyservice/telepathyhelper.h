@@ -147,6 +147,7 @@ private:
     AccountEntry *mDefaultCallAccount;
     AccountEntry *mDefaultMessagingAccount;
     ChannelObserver *mChannelObserver;
+    Tp::AbstractClientPtr mChannelObserverPtr;
     bool mFirstTime;
     bool mConnected;
     bool mMmsGroupChat;
