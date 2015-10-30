@@ -199,8 +199,10 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
                     if (!scaledImage.isNull()) {
                         QBuffer buffer(&fileData);
                         buffer.open(QIODevice::WriteOnly);
-                        scaledImage.scaled(640, 640, Qt::KeepAspectRatio).save(&buffer, "jpg");
+                        scaledImage.scaled(640, 640, Qt::KeepAspectRatio, Qt::SmoothTransformation).save(&buffer, "jpg");
                     }
+                } else {
+                    fileData = attachmentFile.readAll();
                 }
             }
         } else if (attachment.contentType.startsWith("text/plain")) {
