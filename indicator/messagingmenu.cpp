@@ -139,7 +139,9 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
         QString subTitle;
         QUrl avatar;
 
-        if (request->contacts().size() > 0) {
+        if (senderId == OFONO_UNKNOWN_NUMBER) {
+            displayLabel = C::gettext("Unknown number");
+        } else if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
             displayLabel = ContactUtils::formatContactName(contact);
             avatar = contact.detail<QContactAvatar>().imageUrl();
@@ -150,7 +152,8 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
         }
 
         if (participantIds.size() > 1) {
-            icon = g_themed_icon_new("contact-group");
+            displayLabel = QString::fromUtf8(C::gettext("Message to group from %1")).arg(displayLabel);
+            avatar = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/contact-group.svg");
         }
 
         if (avatar.isEmpty()) {
@@ -224,7 +227,7 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
                                                                call.timestamp.toMSecsSinceEpoch() * 1000);  // the value is expected to be in microseconds
 
     call.messageId = messaging_menu_message_get_id(message);
-    if (call.targetId != "x-ofono-private" && call.targetId != "x-ofono-unknown") {
+    if (call.targetId != OFONO_PRIVATE_NUMBER && call.targetId != OFONO_UNKNOWN_NUMBER) {
         messaging_menu_message_add_action(message,
                                           "callBack",
                                           C::gettext("Call back"), // label
@@ -292,11 +295,11 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
     QString text;
     text = QString::fromUtf8(C::ngettext("%1 missed call", "%1 missed calls", call.count)).arg(call.count);
 
-    if (targetId.startsWith("x-ofono-private")) {
+    if (targetId.startsWith(OFONO_PRIVATE_NUMBER)) {
         call.contactAlias = C::gettext("Private number");
         addCallToMessagingMenu(call, text);
         return;
-    } else if (targetId.startsWith("x-ofono-unknown")) {
+    } else if (targetId.startsWith(OFONO_UNKNOWN_NUMBER)) {
         call.contactAlias = C::gettext("Unknown number");
         addCallToMessagingMenu(call, text);
         return;

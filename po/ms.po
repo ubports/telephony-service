@@ -15,17 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-08-19 05:55+0000\n"
-"X-Generator: Launchpad (build 17690)\n"
+"X-Launchpad-Export-Date: 2015-10-24 05:59+0000\n"
+"X-Generator: Launchpad (build 17812)\n"
 
-#: indicator/messagingmenu.cpp:293
+#: indicator/messagingmenu.cpp:296
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 panggilan terlepas"
 msgstr[1] "%1 panggilan terlepas"
 
-#: indicator/messagingmenu.cpp:390
+#: indicator/messagingmenu.cpp:393
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -52,19 +52,19 @@ msgstr "Mesej teks <b>%1</b> diterima hari ini"
 msgid "<b>%1</b> text messages sent today"
 msgstr "Mesej teks <b>%1</b> dihantar hari ini"
 
-#: approver/approver.cpp:486
+#: approver/approver.cpp:489
 msgid "Accept"
 msgstr "Terima"
 
-#: indicator/messagingmenu.cpp:230
+#: indicator/messagingmenu.cpp:233
 msgid "Call back"
 msgstr "Panggilan semula"
 
-#: approver/approver.cpp:449
+#: approver/approver.cpp:451
 msgid "Caller number is not available"
 msgstr "Nombor pemanggil tidak tersedia"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:448
 #, qt-format
 msgid "Calling from %1"
 msgstr "Panggilan daripada %1"
@@ -73,7 +73,7 @@ msgstr "Panggilan daripada %1"
 msgid "Calling from private number"
 msgstr "Panggilan dari nombor persendirian"
 
-#: approver/approver.cpp:444
+#: approver/approver.cpp:445
 msgid "Calling from unknown number"
 msgstr "Panggilan dari nombor tidak diketahui"
 
@@ -85,23 +85,23 @@ msgstr "Batal"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "Nyahaktifkan mod penerbangan dan cuba lagi dari aplikasi pemesejan."
 
-#: approver/approver.cpp:508
+#: approver/approver.cpp:511
 msgid "Decline"
 msgstr "Tolak"
 
-#: approver/approver.cpp:499
+#: approver/approver.cpp:502
 msgid "End + Answer"
 msgstr "Tamat + Jawab"
 
-#: approver/approver.cpp:485
+#: approver/approver.cpp:488
 msgid "Hold + Answer"
 msgstr "Tangguh + Jawab"
 
-#: indicator/messagingmenu.cpp:235
+#: indicator/messagingmenu.cpp:238
 msgid "I missed your call - can you call me now?"
 msgstr "Saya terlepas panggilan anda - boleh anda telefon saya sekarang?"
 
-#: indicator/messagingmenu.cpp:238
+#: indicator/messagingmenu.cpp:241
 msgid "I'll be 20 minutes late."
 msgstr "Saya akan terlambat 20 minit."
 
@@ -109,7 +109,7 @@ msgstr "Saya akan terlambat 20 minit."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Saya sibuk pada masa ini. Saya akan menghubungi kemudian."
 
-#: indicator/messagingmenu.cpp:237
+#: indicator/messagingmenu.cpp:240
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Saya sibuk buat masa ini. Saya akan telefon anda kemudian."
 
@@ -117,15 +117,15 @@ msgstr "Saya sibuk buat masa ini. Saya akan telefon anda kemudian."
 msgid "I'm running late, on my way now."
 msgstr "Saya terlambat, dalam perjalanan sekarang."
 
-#: indicator/messagingmenu.cpp:236
+#: indicator/messagingmenu.cpp:239
 msgid "I'm running late. I'm on my way."
 msgstr "Saya terlewat. Saya masih dalam perjalanan."
 
-#: approver/approver.cpp:516
+#: approver/approver.cpp:519
 msgid "Message & decline"
 msgstr "Mesej & abai"
 
-#: indicator/textchannelobserver.cpp:447 indicator/textchannelobserver.cpp:503
+#: indicator/textchannelobserver.cpp:450 indicator/textchannelobserver.cpp:506
 #, qt-format
 msgid "Message from %1"
 msgstr "Mesej daripada %1"
@@ -158,15 +158,15 @@ msgstr "Panggilan Telefon"
 msgid "Please call me back later."
 msgstr "Sila hubungi saya semula."
 
-#: indicator/textchannelobserver.cpp:625
+#: indicator/textchannelobserver.cpp:628
 msgid "Please, select a SIM card:"
 msgstr "Sila, pilih satu kad SIM:"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:179
+#: Ubuntu/Telephony/contactwatcher.cpp:131
 msgid "Private Number"
 msgstr "Nombor Persendirian"
 
-#: indicator/messagingmenu.cpp:296
+#: indicator/messagingmenu.cpp:299
 msgid "Private number"
 msgstr "Nombor persendirian"
 
@@ -187,11 +187,11 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Simpan"
 
-#: indicator/messagingmenu.cpp:172 indicator/messagingmenu.cpp:245
+#: indicator/messagingmenu.cpp:175 indicator/messagingmenu.cpp:248
 msgid "Send"
 msgstr "Hantar"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:242
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Maaf, Saya masih sibuk. Saya akan telefon anda nanti."
 
@@ -220,7 +220,7 @@ msgstr "Mesej tidak dapat dihantar"
 msgid "Try again from the messaging application."
 msgstr "Cuba lagi menerusi aplikasi pemesejan."
 
-#: Ubuntu/Telephony/contactwatcher.cpp:181
+#: Ubuntu/Telephony/contactwatcher.cpp:133
 msgid "Unknown Number"
 msgstr "Nombor Tidak Diketahui"
 
@@ -228,7 +228,8 @@ msgstr "Nombor Tidak Diketahui"
 msgid "Unknown caller"
 msgstr "Pemanggil tidak diketahui"
 
-#: indicator/messagingmenu.cpp:300
+#: indicator/textchannelobserver.cpp:436 indicator/messagingmenu.cpp:143
+#: indicator/messagingmenu.cpp:303
 msgid "Unknown number"
 msgstr "Nombor tidak diketahui"
 
@@ -236,14 +237,14 @@ msgstr "Nombor tidak diketahui"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Nyahsekat kad sim anda dan cuba lagi melalui aplikasi pemesejan."
 
-#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:467
+#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:470
 msgid "View message"
 msgstr "Lihat mesej"
 
-#: indicator/messagingmenu.cpp:395
+#: indicator/messagingmenu.cpp:398
 msgid "Voicemail"
 msgstr "Mel bersuara"
 
-#: indicator/messagingmenu.cpp:387
+#: indicator/messagingmenu.cpp:390
 msgid "Voicemail messages"
 msgstr "Mesej mel bersuara"
