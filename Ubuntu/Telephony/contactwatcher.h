@@ -36,14 +36,14 @@ class ContactWatcher : public QObject, public QQmlParserStatus
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
 
-    Q_PROPERTY(QString contactId READ contactId NOTIFY contactIdChanged)
-    Q_PROPERTY(QString avatar READ avatar NOTIFY avatarChanged)
-    Q_PROPERTY(QString alias READ alias NOTIFY aliasChanged)
+    Q_PROPERTY(QString contactId READ contactId WRITE setContactId NOTIFY contactIdChanged)
+    Q_PROPERTY(QString avatar READ avatar WRITE setAvatar NOTIFY avatarChanged)
+    Q_PROPERTY(QString alias READ alias WRITE setAlias NOTIFY aliasChanged)
     Q_PROPERTY(QString identifier READ identifier WRITE setIdentifier NOTIFY identifierChanged)
     Q_PROPERTY(QString phoneNumber READ identifier WRITE setIdentifier NOTIFY identifierChanged)
     // The details property changes according to the detail type.
     // One property is always present on the map though, the "detailType" property.
-    Q_PROPERTY(QVariantMap detailProperties READ detailProperties NOTIFY detailPropertiesChanged)
+    Q_PROPERTY(QVariantMap detailProperties READ detailProperties WRITE setDetailProperties NOTIFY detailPropertiesChanged)
     Q_PROPERTY(bool isUnknown READ isUnknown NOTIFY isUnknownChanged)
     Q_PROPERTY(bool interactive READ interactive NOTIFY interactiveChanged)
     Q_PROPERTY(QStringList addressableFields READ addressableFields WRITE setAddressableFields NOTIFY addressableFieldsChanged)
@@ -53,11 +53,15 @@ public:
     ~ContactWatcher();
 
     QString contactId() const;
+    void setContactId(const QString &id);
     QString avatar() const;
+    void setAvatar(const QString &avatar);
     QString alias() const;
+    void setAlias(const QString &alias);
     QString identifier() const;
     void setIdentifier(const QString &identifier);
     QVariantMap detailProperties() const;
+    void setDetailProperties(const QVariantMap &properties);
     bool isUnknown() const;
     bool interactive() const;
 
@@ -91,9 +95,11 @@ protected Q_SLOTS:
 
 private:
     void startSearching();
+    void clear();
+    void updateAlias();
 
     QContactFetchRequest *mRequest;
-    QContactId mContactId;
+    QString mContactId;
     QString mAvatar;
     QString mAlias;
     QString mIdentifier;
