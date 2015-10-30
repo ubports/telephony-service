@@ -69,20 +69,17 @@ bool ToneGenerator::startEventTone(uint key)
 
 void ToneGenerator::playDTMFTone(uint key)
 {
-    if (!mDTMFPlaybackTimer) {
-        mDTMFPlaybackTimer = new QTimer(this);
-        mDTMFPlaybackTimer->setSingleShot(true);
-        connect(mDTMFPlaybackTimer, SIGNAL(timeout()), this, SLOT(stopDTMFTone()));
-    }
-    if (mDTMFPlaybackTimer->isActive()) {
-        qDebug() << "Already playing a tone, ignore.";
-        return;
-    }
     if (key > 11) {
         qDebug() << "Invalid DTMF tone, ignore.";
         return;
     }
+
     if (startEventTone(key)) {
+        if (!mDTMFPlaybackTimer) {
+            mDTMFPlaybackTimer = new QTimer(this);
+            mDTMFPlaybackTimer->setSingleShot(true);
+            connect(mDTMFPlaybackTimer, SIGNAL(timeout()), this, SLOT(stopDTMFTone()));
+        }
         mDTMFPlaybackTimer->start(DTMF_LOCAL_PLAYBACK_DURATION);
     }
 }
@@ -103,7 +100,6 @@ void ToneGenerator::stopDTMFTone()
     if (mDTMFPlaybackTimer) {
         mDTMFPlaybackTimer->stop();
     }
-
 }
 
 void ToneGenerator::playWaitingTone()
@@ -112,7 +108,7 @@ void ToneGenerator::playWaitingTone()
         stopTone();
     }
 
-    if (startEventTone((uint)79)) {
+    if (startEventTone(WAITING_TONE)) {
         mWaitingPlaybackTimer->start(WAITING_PLAYBACK_DURATION);
     }
 }
@@ -125,6 +121,6 @@ void ToneGenerator::stopWaitingTone()
 
 void ToneGenerator::playCallEndedTone()
 {
-    startEventTone((uint)257);
+    startEventTone(CALL_ENDED_TONE);
     QTimer::singleShot(2000, this, SLOT(stopTone()));
 }

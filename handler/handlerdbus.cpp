@@ -38,6 +38,12 @@ HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent), mCallIndicatorVisib
     connect(CallHandler::instance(),
             SIGNAL(callPropertiesChanged(QString,QVariantMap)),
             SIGNAL(CallPropertiesChanged(QString,QVariantMap)));
+    connect(CallHandler::instance(),
+            SIGNAL(callHoldingFailed(QString)),
+            SIGNAL(CallHoldingFailed(QString)));
+    connect(CallHandler::instance(),
+            SIGNAL(conferenceCallRequestFinished(bool)),
+            SIGNAL(ConferenceCallRequestFinished(bool)));
 }
 
 HandlerDBus::~HandlerDBus()
@@ -106,6 +112,11 @@ void HandlerDBus::SendMMS(const QStringList &numbers, const AttachmentList &atta
 void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId)
 {
     TextHandler::instance()->acknowledgeMessages(numbers, messageIds, accountId);
+}
+
+void HandlerDBus::AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId)
+{
+    TextHandler::instance()->acknowledgeAllMessages(numbers, accountId);
 }
 
 void HandlerDBus::StartCall(const QString &number, const QString &accountId)

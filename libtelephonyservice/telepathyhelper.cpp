@@ -22,10 +22,13 @@
 
 #include "telepathyhelper.h"
 #include "accountentry.h"
+#include "ofonoaccountentry.h"
+#include "accountentryfactory.h"
 #include "chatmanager.h"
 #include "callmanager.h"
 #include "config.h"
 #include "greetercontacts.h"
+#include "protocolmanager.h"
 
 #include "qgsettings.h"
 
@@ -35,6 +38,11 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/PendingAccount>
 
+template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStringList &key2) 
+{ 
+    return key1.size() > key2.size();  // sort by operator> !
+}
+
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mDefaultCallAccount(NULL),
@@ -43,13 +51,15 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
       mFirstTime(true),
       mConnected(false),
       mHandlerInterface(0),
-      mDefaultSimSettings(new QGSettings("com.ubuntu.phone")),
+      mPhoneSettings(new QGSettings("com.ubuntu.phone")),
+      mApproverInterface(0),
       mFlightModeInterface("org.freedesktop.URfkill",
                            "/org/freedesktop/URfkill",
                            "org.freedesktop.URfkill",
                            QDBusConnection::systemBus())
 {
-    mAccountFeatures << Tp::Account::FeatureCore;
+    mAccountFeatures << Tp::Account::FeatureCore
+                     << Tp::Account::FeatureProtocolInfo;
     mContactFeatures << Tp::Contact::FeatureAlias
                      << Tp::Contact::FeatureAvatarData
                      << Tp::Contact::FeatureAvatarToken
@@ -77,13 +87,15 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
     connect(this, SIGNAL(accountReady()), SIGNAL(setupReady()));
-    connect(mDefaultSimSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
+    connect(mPhoneSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
     connect(&mFlightModeInterface, SIGNAL(FlightModeChanged(bool)), this, SIGNAL(flightModeChanged()));
+
+    mMmsGroupChat = mPhoneSettings->get("mmsGroupChatEnabled").value<bool>(); 
 }
 
 TelepathyHelper::~TelepathyHelper()
 {
-    mDefaultSimSettings->deleteLater();
+    mPhoneSettings->deleteLater();
 }
 
 TelepathyHelper *TelepathyHelper::instance()
@@ -111,6 +123,16 @@ QStringList TelepathyHelper::accountIds()
     return ids;
 }
 
+void TelepathyHelper::setMmsGroupChat(bool enable)
+{
+    mPhoneSettings->set("mmsGroupChatEnabled", enable);
+}
+
+bool TelepathyHelper::mmsGroupChat()
+{
+    return mMmsGroupChat;
+}
+
 bool TelepathyHelper::flightMode()
 {
     QDBusReply<bool> reply = mFlightModeInterface.call("IsFlightMode");
@@ -134,16 +156,27 @@ QList<AccountEntry*> TelepathyHelper::activeAccounts() const
 {
     QList<AccountEntry*> activeAccountList;
     Q_FOREACH(AccountEntry *account, mAccounts) {
-        if (!account->account()->connection().isNull() &&
-            !account->account()->connection()->selfContact().isNull()) {
-            Tp::ContactPtr contact = account->account()->connection()->selfContact();
-            if (!contact->actualFeatures().contains(Tp::Contact::FeatureSimplePresence) ||
-                account->account()->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline) {
-                activeAccountList << account;
-            }
+        if (account->active() && account->type() != AccountEntry::MultimediaAccount) {
+            activeAccountList << account;
         }
     }
     return activeAccountList;
+}
+
+QList<AccountEntry*> TelepathyHelper::phoneAccounts() const
+{
+    QList<AccountEntry*> accountList;
+    Q_FOREACH(AccountEntry *account, mAccounts) {
+        if (account->type() == AccountEntry::PhoneAccount) {
+            accountList << account;
+        }
+    }
+    return accountList;
+}
+
+QQmlListProperty<AccountEntry> TelepathyHelper::qmlPhoneAccounts()
+{
+    return QQmlListProperty<AccountEntry>(this, 0, phoneAccountsCount, phoneAccountAt);
 }
 
 QQmlListProperty<AccountEntry> TelepathyHelper::qmlAccounts()
@@ -173,6 +206,18 @@ QDBusInterface *TelepathyHelper::handlerInterface() const
                                                const_cast<TelepathyHelper*>(this));
     }
     return mHandlerInterface;
+}
+
+QDBusInterface *TelepathyHelper::approverInterface() const
+{
+    if (!mApproverInterface) {
+        mApproverInterface = new QDBusInterface("org.freedesktop.Telepathy.Client.TelephonyServiceApprover",
+                                               "/com/canonical/Approver",
+                                               "com.canonical.TelephonyServiceApprover",
+                                               QDBusConnection::sessionBus(),
+                                               const_cast<TelepathyHelper*>(this));
+    }
+    return mApproverInterface;
 }
 
 bool TelepathyHelper::connected() const
@@ -219,24 +264,10 @@ void TelepathyHelper::registerChannelObserver(const QString &observerName)
 
 void TelepathyHelper::unregisterChannelObserver()
 {
-    Tp::AbstractClientPtr clientPtr(mChannelObserver);
-    if (clientPtr) {
-        mClientRegistrar->unregisterClient(clientPtr);
-    }
+    unregisterClient(mChannelObserver);
     mChannelObserver->deleteLater();
     mChannelObserver = NULL;
     Q_EMIT channelObserverUnregistered();
-}
-
-QStringList TelepathyHelper::supportedProtocols() const
-{
-    QStringList protocols;
-    protocols << "ufa"
-              << "tel"
-              << "ofono"
-              << "sip"
-              << "mock"; // used for tests
-    return protocols;
 }
 
 void TelepathyHelper::setupAccountEntry(AccountEntry *entry)
@@ -245,8 +276,21 @@ void TelepathyHelper::setupAccountEntry(AccountEntry *entry)
             SIGNAL(connectedChanged()),
             SLOT(updateConnectedStatus()));
     connect(entry,
+            SIGNAL(connectedChanged()),
+            SIGNAL(activeAccountsChanged()));
+    connect(entry,
             SIGNAL(accountReady()),
             SLOT(onAccountReady()));
+    connect(entry,
+            SIGNAL(removed()),
+            SLOT(onAccountRemoved()));
+
+    OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(entry);
+    if (ofonoAccount) {
+        connect(ofonoAccount,
+                SIGNAL(emergencyCallsAvailableChanged()),
+                SIGNAL(emergencyCallsAvailableChanged()));
+    }
 }
 
 bool TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
@@ -273,6 +317,15 @@ bool TelepathyHelper::registerClient(Tp::AbstractClient *client, QString name)
     }
 
     return succeeded;
+}
+
+bool TelepathyHelper::unregisterClient(Tp::AbstractClient *client)
+{
+    Tp::AbstractClientPtr clientPtr(client);
+    if (clientPtr) {
+        return mClientRegistrar->unregisterClient(clientPtr);
+    }
+    return false;
 }
 
 AccountEntry *TelepathyHelper::accountForConnection(const Tp::ConnectionPtr &connection) const
@@ -311,10 +364,22 @@ Tp::ChannelClassSpec TelepathyHelper::audioConferenceSpec()
     return spec;
 }
 
+int TelepathyHelper::phoneAccountsCount(QQmlListProperty<AccountEntry> *p)
+{
+    Q_UNUSED(p)
+    return TelepathyHelper::instance()->phoneAccounts().count();
+}
+
 int TelepathyHelper::accountsCount(QQmlListProperty<AccountEntry> *p)
 {
     Q_UNUSED(p)
     return TelepathyHelper::instance()->accounts().count();
+}
+
+AccountEntry *TelepathyHelper::phoneAccountAt(QQmlListProperty<AccountEntry> *p, int index)
+{
+    Q_UNUSED(p)
+    return TelepathyHelper::instance()->phoneAccounts()[index];
 }
 
 AccountEntry *TelepathyHelper::accountAt(QQmlListProperty<AccountEntry> *p, int index)
@@ -333,6 +398,53 @@ AccountEntry *TelepathyHelper::activeAccountAt(QQmlListProperty<AccountEntry> *p
     return TelepathyHelper::instance()->activeAccounts()[index];
 }
 
+void TelepathyHelper::onAccountRemoved()
+{
+    AccountEntry *account = qobject_cast<AccountEntry*>(sender());
+    if (!account) {
+        return;
+    }
+    mAccounts.removeAll(account);
+
+    updateConnectedStatus();
+
+    Q_EMIT accountIdsChanged();
+    Q_EMIT accountsChanged();
+    Q_EMIT phoneAccountsChanged();
+    Q_EMIT activeAccountsChanged();
+    onSettingsChanged("defaultSimForMessages");
+    onSettingsChanged("defaultSimForCalls");
+}
+
+void TelepathyHelper::onNewAccount(const Tp::AccountPtr &account)
+{
+    AccountEntry *accountEntry = AccountEntryFactory::createEntry(account, this);
+    setupAccountEntry(accountEntry);
+    mAccounts.append(accountEntry);
+
+    QMap<QString, AccountEntry *> sortedOfonoAccounts;
+    QMap<QString, AccountEntry *> sortedOtherAccounts;
+    Q_FOREACH(AccountEntry *account, mAccounts) {
+        QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
+        if (modemObjName.isEmpty()) {
+            sortedOtherAccounts[account->accountId()] = account;
+        } else {
+            sortedOfonoAccounts[modemObjName] = account;
+        }
+    }
+    mAccounts = QList<AccountEntry*>() << sortedOfonoAccounts.values() <<  sortedOtherAccounts.values() ;
+
+    updateConnectedStatus();
+
+    Q_EMIT accountIdsChanged();
+    Q_EMIT accountsChanged();
+    Q_EMIT phoneAccountsChanged();
+    Q_EMIT activeAccountsChanged();
+    onSettingsChanged("defaultSimForMessages");
+    onSettingsChanged("defaultSimForCalls");
+    Q_EMIT accountAdded(accountEntry);
+}
+
 void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
 {
     // if the account manager ready job returns an error, just fail silently
@@ -341,37 +453,29 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
         return;
     }
 
+    // handle dynamic account adding and removing
+    connect(mAccountManager.data(), SIGNAL(newAccount(const Tp::AccountPtr &)), SLOT(onNewAccount(const Tp::AccountPtr &)));
+
     Tp::AccountSetPtr accountSet;
-    QMap<QString, AccountEntry *> orderedAccounts;
     // try to find an account of the one of supported protocols
-    Q_FOREACH(const QString &protocol, supportedProtocols()) {
+    Q_FOREACH(const QString &protocol, ProtocolManager::instance()->protocolNames()) {
         accountSet = mAccountManager->accountsByProtocol(protocol);
         Q_FOREACH(const Tp::AccountPtr &account, accountSet->accounts()) {
-            QString modemObjName = account->parameters().value("modem-objpath").toString();
-            AccountEntry *accountEntry = new AccountEntry(account, this);
-            connect(accountEntry,
-                    SIGNAL(connectedChanged()),
-                    SIGNAL(activeAccountsChanged()));
-            connect(accountEntry,
-                    SIGNAL(emergencyCallsAvailableChanged()),
-                    SIGNAL(emergencyCallsAvailableChanged()));
-            setupAccountEntry(accountEntry);
-            orderedAccounts[modemObjName] = accountEntry;
+            onNewAccount(account);
         }
     }
-    mAccounts = orderedAccounts.values();
 
     if (mAccounts.count() == 0) {
+        mFirstTime = false;
         Q_EMIT setupReady();
         return;
     }
-
-    // FIXME: handle dynamic account adding and removing
 
     updateConnectedStatus();
 
     Q_EMIT accountIdsChanged();
     Q_EMIT accountsChanged();
+    Q_EMIT phoneAccountsChanged();
     Q_EMIT activeAccountsChanged();
     onSettingsChanged("defaultSimForMessages");
     onSettingsChanged("defaultSimForCalls");
@@ -424,17 +528,19 @@ void TelepathyHelper::setDefaultAccount(AccountType type, AccountEntry* account)
     QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
     if (!modemObjName.isEmpty()) {
         if (type == Call) {
-            mDefaultSimSettings->set("defaultSimForCalls", modemObjName);
+            mPhoneSettings->set("defaultSimForCalls", modemObjName);
         } else if (type == Messaging) {
-            mDefaultSimSettings->set("defaultSimForMessages", modemObjName);
+            mPhoneSettings->set("defaultSimForMessages", modemObjName);
         }
     }
 }
 
 bool TelepathyHelper::emergencyCallsAvailable() const
 {
+    // FIXME: this is really ofono specific, so maybe move somewhere else?
     Q_FOREACH(const AccountEntry *account, mAccounts) {
-        if (account->emergencyCallsAvailable()) {
+        const OfonoAccountEntry *ofonoAccount = qobject_cast<const OfonoAccountEntry*>(account);
+        if (ofonoAccount && ofonoAccount->emergencyCallsAvailable()) {
             return true;
         }
     }
@@ -444,7 +550,7 @@ bool TelepathyHelper::emergencyCallsAvailable() const
 void TelepathyHelper::onSettingsChanged(const QString &key)
 {
     if (key == "defaultSimForMessages") {
-        QString defaultSim = mDefaultSimSettings->get("defaultSimForMessages").value<QString>(); 
+        QString defaultSim = mPhoneSettings->get("defaultSimForMessages").value<QString>(); 
         if (defaultSim == "ask") {
             mDefaultMessagingAccount = NULL;
             Q_EMIT defaultMessagingAccountChanged();
@@ -462,7 +568,7 @@ void TelepathyHelper::onSettingsChanged(const QString &key)
         mDefaultMessagingAccount = NULL;
         Q_EMIT defaultMessagingAccountChanged();
     } else if (key == "defaultSimForCalls") {
-        QString defaultSim = mDefaultSimSettings->get("defaultSimForCalls").value<QString>(); 
+        QString defaultSim = mPhoneSettings->get("defaultSimForCalls").value<QString>(); 
         if (defaultSim == "ask") {
             mDefaultCallAccount = NULL;
             Q_EMIT defaultCallAccountChanged();
@@ -479,6 +585,9 @@ void TelepathyHelper::onSettingsChanged(const QString &key)
         }
         mDefaultCallAccount = NULL;
         Q_EMIT defaultCallAccountChanged();
+    } else if (key == "mmsGroupChatEnabled") {
+        mMmsGroupChat = mPhoneSettings->get("mmsGroupChatEnabled").value<bool>(); 
+        Q_EMIT mmsGroupChatChanged();
     }
 }
 

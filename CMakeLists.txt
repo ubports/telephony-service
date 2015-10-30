@@ -9,25 +9,11 @@ include(GNUInstallDirs)
 include(CheckIncludeFileCXX)
 include(CheckIncludeFile)
 
-include(EnableCoverageReport)
-#####################################################################
-# Enable code coverage calculation with gcov/gcovr/lcov
-# Usage:
-#  * Switch build type to coverage (use ccmake or cmake-gui)
-#  * Invoke make, make test, make coverage
-#  * Find html report in subdir coveragereport
-#  * Find xml report feasible for jenkins in coverage.xml
-#####################################################################
-IF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
-  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage -fprofile-arcs" )
-  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ftest-coverage -fprofile-arcs" )
-  SET(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -coverage" )
-  SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -coverage" )
-  ENABLE_COVERAGE_REPORT(TARGETS ${PHONE_APP})
-ENDIF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
-
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
+
+# just to make debug easier, print the system processor
+message(STATUS "System processor: ${CMAKE_SYSTEM_PROCESSOR}")
 
 # Check if should build using ubuntu platform api
 check_include_file_cxx("ubuntu/application/init.h" USE_UBUNTU_PLATFORM_API)
@@ -35,8 +21,6 @@ check_include_file_cxx("ubuntu/application/init.h" USE_UBUNTU_PLATFORM_API)
 if (USE_UBUNTU_PLATFORM_API)
     add_definitions(-DUSE_UBUNTU_PLATFORM_API)
 endif (USE_UBUNTU_PLATFORM_API)
-
-find_program(DBUS_RUNNER dbus-test-runner)
 
 set(TELEPHONY_SERVICE_DIR ${CMAKE_INSTALL_DATADIR}/telephony-service)
 
@@ -66,6 +50,11 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+# sbuild/cross-compilation fallback:
+if (QT_INSTALL_QML STREQUAL "")
+    set(QT_INSTALL_QML ${CMAKE_INSTALL_LIBDIR}/qt5/qml)
+endif()
+
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
 pkg_check_modules(TP_QT5_FS REQUIRED TelepathyQt5Farstream)
@@ -85,6 +74,14 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
+# generate a macro to make it easier to enable coverage support on targets
+function(ENABLE_COVERAGE)
+    get_directory_property(COVERAGE_TARGETS DIRECTORY ${CMAKE_SOURCE_DIR} COVERAGE_TARGETS)
+    list(APPEND COVERAGE_TARGETS ${ARGN})
+    MESSAGE(STATUS "Enabling coverage report for target(s): ${ARGN}")
+    set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY COVERAGE_TARGETS ${COVERAGE_TARGETS})
+endfunction()
+
 enable_testing()
 
 add_definitions(-std=c++11)
@@ -102,3 +99,24 @@ add_subdirectory(indicator)
 add_subdirectory(tools)
 add_subdirectory(icons)
 add_subdirectory(po)
+add_subdirectory(tests)
+add_subdirectory(protocols)
+
+include(EnableCoverageReport)
+#####################################################################
+# Enable code coverage calculation with gcov/gcovr/lcov
+# Usage:
+#  * Switch build type to coverage (use ccmake or cmake-gui)
+#  * Invoke make, make test, make coverage
+#  * Find html report in subdir coveragereport
+#  * Find xml report feasible for jenkins in coverage.xml
+#####################################################################
+IF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
+  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftest-coverage -fprofile-arcs" )
+  SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ftest-coverage -fprofile-arcs" )
+  SET(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -coverage" )
+  SET(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -coverage" )
+  GET_DIRECTORY_PROPERTY(COVERAGE_TARGETS DIRECTORY ${CMAKE_SOURCE_DIR} COVERAGE_TARGETS)
+  ENABLE_COVERAGE_REPORT(TARGETS ${COVERAGE_TARGETS})
+ENDIF(CMAKE_BUILD_TYPE MATCHES [cC][oO][vV][eE][rR][aA][gG][eE])
+

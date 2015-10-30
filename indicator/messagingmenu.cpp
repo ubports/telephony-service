@@ -27,6 +27,7 @@
 #include "messagingmenu.h"
 #include "telepathyhelper.h"
 #include "accountentry.h"
+#include "ofonoaccountentry.h"
 #include <QContactAvatar>
 #include <QContactFetchRequest>
 #include <QContactFilter>
@@ -61,9 +62,9 @@ MessagingMenu::MessagingMenu(QObject *parent) :
     g_object_unref(icon);
 }
 
-void MessagingMenu::addFlashMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text) {
+void MessagingMenu::addFlashMessage(const QString &senderId, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text) {
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
-    QString contactAlias = phoneNumber;
+    QString contactAlias = senderId;
     GFile *file = g_file_new_for_uri(iconPath.toString().toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
  
@@ -90,7 +91,8 @@ void MessagingMenu::addFlashMessage(const QString &phoneNumber, const QString &m
  
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::flashMessageActivateCallback), this);
     QVariantMap details;
-    details["phoneNumber"] = phoneNumber;
+    details["senderId"] = senderId;
+    details["accountId"] = accountId;
     details["messageId"] = messageId;
     details["timestamp"] = timestamp;
     details["text"] = text;
@@ -103,28 +105,43 @@ void MessagingMenu::addFlashMessage(const QString &phoneNumber, const QString &m
  
 }
 
-void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messageId, const QDateTime &timestamp, const QString &text)
+void MessagingMenu::addMessage(const QString &senderId, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text)
 {
     // try to get a contact for that phone number
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
-    QString contactAlias = phoneNumber;
+    QString contactAlias = senderId;
+
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account) {
+        return;
+    }
+
+    // FIXME: for accounts not based on phone number, we need to match other fields.
+    // Right now we don't even bother trying to match contact data
 
     // try to match the contact info
     QContactFetchRequest *request = new QContactFetchRequest(this);
-    request->setFilter(QContactPhoneNumber::match(phoneNumber));
+    request->setFilter(QContactPhoneNumber::match(senderId));
 
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged,
-                     [request, phoneNumber, messageId, text, timestamp, iconPath, contactAlias, this]() {
+                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this]() {
+
+        GFile *file = NULL;
+        GIcon *icon = NULL;
+
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
             return;
         }
 
         QString displayLabel;
+        QString subTitle;
         QUrl avatar;
 
-        if (request->contacts().size() > 0) {
+        if (senderId == OFONO_UNKNOWN_NUMBER) {
+            displayLabel = C::gettext("Unknown number");
+        } else if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
             displayLabel = ContactUtils::formatContactName(contact);
             avatar = contact.detail<QContactAvatar>().imageUrl();
@@ -134,16 +151,23 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
             displayLabel = contactAlias;
         }
 
+        if (participantIds.size() > 1) {
+            displayLabel = QString::fromUtf8(C::gettext("Message to group from %1")).arg(displayLabel);
+            avatar = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/contact-group.svg");
+        }
+
         if (avatar.isEmpty()) {
             avatar = iconPath;
         }
 
-        GFile *file = g_file_new_for_uri(avatar.toString().toUtf8().data());
-        GIcon *icon = g_file_icon_new(file);
+        if (!icon) {
+            file = g_file_new_for_uri(avatar.toString().toUtf8().data());
+            icon = g_file_icon_new(file);
+        }
         MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
                                                                    icon,
                                                                    displayLabel.toUtf8().data(),
-                                                                   NULL,
+                                                                   subTitle.toUtf8().data(),
                                                                    text.toUtf8().data(),
                                                                    timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
         messaging_menu_message_add_action(message,
@@ -156,18 +180,28 @@ void MessagingMenu::addMessage(const QString &phoneNumber, const QString &messag
 
         // save the phone number to use in the actions
         QVariantMap details;
-        details["phoneNumber"] = phoneNumber;
+        details["senderId"] = senderId;
+        details["accountId"] = accountId;
+        details["participantIds"] = participantIds;
  
         mMessages[messageId] = details;
         messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
 
-        g_object_unref(file);
+        if (file) {
+            g_object_unref(file);
+        }
         g_object_unref(icon);
         g_object_unref(message);
     });
 
-    request->setManager(ContactUtils::sharedManager());
-    request->start();
+    // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
+    if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
+        request->setManager(ContactUtils::sharedManager());
+        request->start();
+    } else {
+        // just emit the signal to pretend we did a contact search
+        Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
+    }
 }
 
 void MessagingMenu::removeMessage(const QString &messageId)
@@ -185,7 +219,7 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
     GVariant *messages = NULL;
     GFile *file = g_file_new_for_uri(call.contactIcon.toString().toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
-    MessagingMenuMessage *message = messaging_menu_message_new(call.number.toUtf8().data(),
+    MessagingMenuMessage *message = messaging_menu_message_new(call.targetId.toUtf8().data(),
                                                                icon,
                                                                call.contactAlias.toUtf8().data(),
                                                                NULL,
@@ -193,7 +227,7 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
                                                                call.timestamp.toMSecsSinceEpoch() * 1000);  // the value is expected to be in microseconds
 
     call.messageId = messaging_menu_message_get_id(message);
-    if (call.number != "x-ofono-private" && call.number != "x-ofono-unknown") {
+    if (call.targetId != OFONO_PRIVATE_NUMBER && call.targetId != OFONO_UNKNOWN_NUMBER) {
         messaging_menu_message_add_action(message,
                                           "callBack",
                                           C::gettext("Call back"), // label
@@ -220,18 +254,23 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
     messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
     mCalls.append(call);
 
-    g_variant_unref(messages);
     g_object_unref(file);
     g_object_unref(icon);
     g_object_unref(message);
 }
 
-void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timestamp)
+void MessagingMenu::addCall(const QString &targetId, const QString &accountId, const QDateTime &timestamp)
 {
     Call call;
     bool found = false;
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account) {
+        return;
+    }
+
     Q_FOREACH(Call callMessage, mCalls) {
-        if (PhoneUtils::comparePhoneNumbers(callMessage.number, phoneNumber)) {
+        // FIXME: we need a better strategy to group calls from different accounts
+        if (account->compareIds(callMessage.targetId, targetId)) {
             call = callMessage;
             found = true;
             mCalls.removeOne(callMessage);
@@ -243,9 +282,10 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     }
 
     if (!found) {
-        call.contactAlias = phoneNumber;
+        call.contactAlias = targetId;
+        call.accountId = accountId;
         call.contactIcon = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
-        call.number = phoneNumber;
+        call.targetId = targetId;
         call.count = 0;
     }
 
@@ -255,27 +295,34 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
     QString text;
     text = QString::fromUtf8(C::ngettext("%1 missed call", "%1 missed calls", call.count)).arg(call.count);
 
-    if (phoneNumber.startsWith("x-ofono-private")) {
+    if (targetId.startsWith(OFONO_PRIVATE_NUMBER)) {
         call.contactAlias = C::gettext("Private number");
         addCallToMessagingMenu(call, text);
         return;
-    } else if (phoneNumber.startsWith("x-ofono-unknown")) {
+    } else if (targetId.startsWith(OFONO_UNKNOWN_NUMBER)) {
         call.contactAlias = C::gettext("Unknown number");
         addCallToMessagingMenu(call, text);
         return;
     }
 
+    // FIXME: we need to match other fields for accounts not based on phone numbers.
+    // For now we are not even trying to match contact data
+
     // try to match the contact info
     QContactFetchRequest *request = new QContactFetchRequest(this);
-    request->setFilter(QContactPhoneNumber::match(phoneNumber));
+    request->setFilter(QContactPhoneNumber::match(targetId));
 
+    //FIXME: on arm64 the connect() statement below fails at runtime with the following output:
+    //QObject::connect: signal not found in QtContacts::QContactFetchRequest
+    // so we just disable it
+#ifndef __aarch64__
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, call, text, this]() {
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
             return;
         }
-
+#endif
         Call newCall = call;
         if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
@@ -291,19 +338,57 @@ void MessagingMenu::addCall(const QString &phoneNumber, const QDateTime &timesta
             }
         }
         addCallToMessagingMenu(newCall, text);
+#ifndef __aarch64__
     });
 
-    request->setManager(ContactUtils::sharedManager());
-    request->start();
+
+    // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
+    if (account->type() == AccountEntry::PhoneAccount) {
+        request->setManager(ContactUtils::sharedManager());
+        request->start();
+    } else {
+        // just emit the signal to pretend we did a contact search
+        Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
+    }
+#endif
+}
+
+void MessagingMenu::removeCall(const QString &targetId, const QString &accountId)
+{
+    Call call;
+    bool found = false;
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account) {
+        qWarning() << "Account not found for id" << accountId;
+        return;
+    }
+
+    Q_FOREACH(Call callMessage, mCalls) {
+        // FIXME: we need a better strategy to group calls from different accounts
+        if (account->compareIds(callMessage.targetId, targetId)) {
+            call = callMessage;
+            found = true;
+            mCalls.removeOne(callMessage);
+
+            // remove the previous entry and add a new one increasing the missed call count
+            messaging_menu_app_remove_message_by_id(mCallsApp, callMessage.messageId.toUtf8().data());
+            break;
+        }
+    }
 }
 
 void MessagingMenu::showVoicemailEntry(AccountEntry *account)
 {
+    OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(account);
+    if (!ofonoAccount) {
+        return;
+    }
+
     messaging_menu_app_remove_message_by_id(mCallsApp, account->accountId().toUtf8().data());
     mVoicemailIds.removeAll(account->accountId());
 
     QString messageBody = C::gettext("Voicemail messages");
-    uint count = account->voicemailCount();
+    uint count = ofonoAccount->voicemailCount();
     if (count != 0) {
         messageBody = QString::fromUtf8(C::ngettext("%1 voicemail message", "%1 voicemail messages", count)).arg(count);
     }
@@ -323,7 +408,7 @@ void MessagingMenu::showVoicemailEntry(AccountEntry *account)
                                                                QDateTime::currentDateTime().toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
     messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
-    mVoicemailIds.append(account->accountId());
+    mVoicemailIds.append(ofonoAccount->accountId());
 
     g_object_unref(icon);
     g_object_unref(message);
@@ -376,25 +461,36 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
 
 void MessagingMenu::sendMessageReply(const QString &messageId, const QString &reply)
 {
-    QString phoneNumber = mMessages[messageId]["phoneNumber"].toString();
-    Q_EMIT replyReceived(phoneNumber, reply);
+    QVariantMap message = mMessages[messageId];
+    QString senderId = message["senderId"].toString();
+    QString accountId = message["accountId"].toString();
+    QStringList participantIds = message["participantIds"].toStringList();
+    QStringList recipients;
+    if (!senderId.isEmpty()) {
+        recipients << senderId;
+    }
+    recipients << participantIds;
+    recipients.removeDuplicates();
+    Q_EMIT replyReceived(recipients, accountId, reply);
 
-    Q_EMIT messageRead(phoneNumber, messageId);
+    Q_EMIT messageRead(recipients, accountId, messageId);
 }
 
 void MessagingMenu::saveFlashMessage(const QString &messageId)
 {
     QVariantMap details = mMessages[messageId];
-    // TODO: handle dual sim
-    History::Thread thread = History::Manager::instance()->threadForParticipants(TelepathyHelper::instance()->accountIds()[0],
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(details["accountId"].toString());
+    bool phoneNumberBased = account && (account->type() == AccountEntry::PhoneAccount);
+    History::Thread thread = History::Manager::instance()->threadForParticipants(details["accountId"].toString(),
                                                                                  History::EventTypeText,
-                                                                                 QStringList() << details["phoneNumber"].toString(),
-                                                                                 History::MatchPhoneNumber,
+                                                                                 QStringList() << details["senderId"].toString(),
+                                                                                 phoneNumberBased ? History::MatchPhoneNumber :
+                                                                                                    History::MatchCaseSensitive,
                                                                                  true);
-    History::TextEvent textEvent(TelepathyHelper::instance()->accountIds()[0], 
+    History::TextEvent textEvent(details["accountId"].toString(),
                                  thread.threadId(), 
                                  details["messageId"].toString(), 
-                                 details["phoneNumber"].toString(),
+                                 details["senderId"].toString(),
                                  details["timestamp"].toDateTime(),
                                  false,
                                  details["text"].toString(),
@@ -407,36 +503,52 @@ void MessagingMenu::saveFlashMessage(const QString &messageId)
 
 void MessagingMenu::showMessage(const QString &messageId)
 {
-    QString phoneNumber = mMessages[messageId]["phoneNumber"].toString();
-    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(phoneNumber))));
+    QVariantMap message = mMessages[messageId];
+    QString senderId = message["senderId"].toString();
+    QStringList participantIds = message["participantIds"].toStringList();
+    QStringList recipients;
+    if (!senderId.isEmpty()) {
+        recipients << senderId;
+    }
+    recipients << participantIds;
+    recipients.removeDuplicates();
+ 
+    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
 }
 
 void MessagingMenu::callBack(const QString &messageId)
 {
-    QString phoneNumber = callFromMessageId(messageId).number;
-    qDebug() << "TelephonyService/MessagingMenu: Calling back" << phoneNumber;
-    ApplicationUtils::openUrl(QString("tel:///%1").arg(QString(QUrl::toPercentEncoding(phoneNumber))));
+    Call call = callFromMessageId(messageId);
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(call.accountId);
+    if (!account) {
+        qWarning() << "Could not find the account originating the call";
+    }
+    qDebug() << "TelephonyService/MessagingMenu: Calling back" << call.targetId;
+    // FIXME: support accounts not based on phone numbers
+    if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
+        ApplicationUtils::openUrl(QString("tel:///%1").arg(QString(QUrl::toPercentEncoding(call.targetId))));
+    }
 }
 
 void MessagingMenu::replyWithMessage(const QString &messageId, const QString &reply)
 {
-    QString phoneNumber = callFromMessageId(messageId).number;
-    qDebug() << "TelephonyService/MessagingMenu: Replying to call" << phoneNumber << "with text" << reply;
-    Q_EMIT replyReceived(phoneNumber, reply);
+    Call call = callFromMessageId(messageId);
+    qDebug() << "TelephonyService/MessagingMenu: Replying to call" << call.targetId << "with text" << reply;
+    Q_EMIT replyReceived(QStringList() << call.targetId, call.accountId, reply);
 }
 
 void MessagingMenu::callVoicemail(const QString &messageId)
 {
     QString voicemailNumber;
-    Q_FOREACH(AccountEntry *accountEntry, TelepathyHelper::instance()->accounts()) {
-        if (!accountEntry->voicemailNumber().isEmpty() && messageId == accountEntry->accountId()) {
-            voicemailNumber = accountEntry->voicemailNumber();
-            break;
-        }
+    // get the corresponding account
+    OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(TelepathyHelper::instance()->accountForId(messageId));
+    if (ofonoAccount) {
+        voicemailNumber = ofonoAccount->voicemailNumber();
     }
 
     qDebug() << "TelephonyService/MessagingMenu: Calling voicemail for messageId" << messageId;
     if (!voicemailNumber.isEmpty()) {
+        // FIXME: we need to specify which account to use
         ApplicationUtils::openUrl(QUrl(QString("tel:///%1").arg(voicemailNumber)));
     }
 }

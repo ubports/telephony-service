@@ -40,7 +40,7 @@ public:
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
-    void startCall(const QString &id, const QString &accountId);
+    void startCall(const QString &targetId, const QString &accountId);
     void hangUpCall(const QString &objectPath);
     void setHold(const QString &objectPath, bool hold);
     void setMuted(const QString &objectPath, bool muted);
@@ -54,8 +54,11 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void callPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
+    void conferenceCallRequestFinished(bool succeeded);
+    void callHoldingFailed(const QString &objectPath);
 
 protected:
+    Tp::CallChannelPtr existingCall(const QString &targetId);
     Tp::CallChannelPtr callFromObjectPath(const QString &objectPath);
 
 protected Q_SLOTS:
@@ -70,6 +73,7 @@ private:
     QMap<QString, Tp::ContactPtr> mContacts;
     QList<Tp::CallChannelPtr> mCallChannels;
     QMap<Tp::PendingOperation*,Tp::CallChannelPtr> mClosingChannels;
+    bool mHangupRequested;
 };
 
 #endif // CALLHANDLER_H

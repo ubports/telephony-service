@@ -24,6 +24,7 @@
 
 #include "applicationutils.h"
 #include "callchannelobserver.h"
+#include "indicatordbus.h"
 #include "metrics.h"
 #include "telepathyhelper.h"
 #include "textchannelobserver.h"
@@ -67,22 +68,31 @@ int main(int argc, char **argv)
     VoiceMailIndicator voiceMailIndicator;
     Q_UNUSED(voiceMailIndicator);
 
-    // register the observer
-    TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceIndicator");
-
-    // Connect the textObserver and the callObserver to the channel observer in TelepathyHelper
-    CallChannelObserver *callObserver = new CallChannelObserver();
-    TextChannelObserver *textObserver = new TextChannelObserver();
-    QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
-                     textObserver, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
-    QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
-                     callObserver, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
-
+    // create the dbus object and connect its signals
     USSDIndicator ussdIndicator;
-    Q_UNUSED(ussdIndicator);
+    IndicatorDBus dbus;
+    QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
+                     &ussdIndicator, SLOT(clear()));
+
+    // register the observer
+    QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, [&]() {
+        TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceIndicator");
+
+        // Connect the textObserver and the callObserver to the channel observer in TelepathyHelper
+        CallChannelObserver *callObserver = new CallChannelObserver();
+        TextChannelObserver *textObserver = new TextChannelObserver();
+        QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
+                         textObserver, SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+        QObject::connect(TelepathyHelper::instance()->channelObserver(), SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+                         callObserver, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+        QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
+                         textObserver, SLOT(clearNotifications()));
+    });
 
     // instanciate the metrics helper
     Metrics::instance();
+
+    dbus.connectToBus();
 
     return app.exec();
 }

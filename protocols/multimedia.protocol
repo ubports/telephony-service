@@ -1,0 +1,4 @@
+[Protocol]
+Name=multimedia
+Features=text
+FallbackProtocol=ofono

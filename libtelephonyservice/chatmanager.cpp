@@ -26,6 +26,7 @@
 #include "dbustypes.h"
 #include "accountentry.h"
 
+#include <TelepathyQt/Contact>
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 #include <QDBusArgument>
@@ -70,14 +71,14 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
-void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &message, const QVariant &attachments, const QString &accountId)
+void ChatManager::sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId)
 {
     AttachmentList newAttachments;
-    AccountEntry *account;
-    if (accountId.isNull()) {
+    AccountEntry *account = NULL;
+    if (accountId.isNull() || accountId.isEmpty()) {
         account = TelepathyHelper::instance()->defaultMessagingAccount();
-        if (!account) {
-            account = TelepathyHelper::instance()->accounts()[0];
+        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
+            account = TelepathyHelper::instance()->activeAccounts()[0];
         }
     } else {
         account = TelepathyHelper::instance()->accountForId(accountId);
@@ -109,16 +110,21 @@ void ChatManager::sendMMS(const QStringList &phoneNumbers, const QString &messag
     }
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMMS", phoneNumbers, QVariant::fromValue(newAttachments), account->accountId());
+    phoneAppHandler->call("SendMMS", recipients, QVariant::fromValue(newAttachments), account->accountId());
 }
 
-void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &message, const QString &accountId)
+void ChatManager::sendMessage(const QStringList &recipients, const QString &message, const QString &accountId)
 {
-    AccountEntry *account;
+    // FIXME: this probably should be handle internally by telepathy-ofono
+    if (recipients.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()) {
+        sendMMS(recipients, message, QVariant(), accountId);
+        return;
+    }
+    AccountEntry *account = NULL;
     if (accountId.isNull() || accountId.isEmpty()) {
         account = TelepathyHelper::instance()->defaultMessagingAccount();
-        if (!account) {
-            account = TelepathyHelper::instance()->accounts()[0];
+        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
+            account = TelepathyHelper::instance()->activeAccounts()[0];
         }
     } else {
         account = TelepathyHelper::instance()->accountForId(accountId);
@@ -129,12 +135,11 @@ void ChatManager::sendMessage(const QStringList &phoneNumbers, const QString &me
     }
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMessage", phoneNumbers, message, account->accountId());
+    phoneAppHandler->call("SendMessage", recipients, message, account->accountId());
 }
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
-    QString id = channel->targetContact()->id();
     mChannels.append(channel);
 
     connect(channel.data(),
@@ -143,11 +148,6 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
     connect(channel.data(),
             SIGNAL(messageSent(Tp::Message,Tp::MessageSendingFlags,QString)),
             SLOT(onMessageSent(Tp::Message,Tp::MessageSendingFlags,QString)));
-    connect(channel.data(),
-            SIGNAL(pendingMessageRemoved(const Tp::ReceivedMessage&)),
-            SLOT(onPendingMessageRemoved(const Tp::ReceivedMessage&)));
-
-    Q_EMIT unreadMessagesChanged(id);
 
     Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
         onMessageReceived(message);
@@ -163,13 +163,6 @@ void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
     }
 
     Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken(), true);
-    Q_EMIT unreadMessagesChanged(message.sender()->id());
-}
-
-void ChatManager::onPendingMessageRemoved(const Tp::ReceivedMessage &message)
-{
-    // emit the signal saying the unread messages for a specific number has changed
-    Q_EMIT unreadMessagesChanged(message.sender()->id());
 }
 
 void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message)
@@ -182,52 +175,39 @@ void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::Messag
         return;
     }
 
-    Q_EMIT messageSent(channel->targetContact()->id(), sentMessage.text());
-}
-
-Tp::TextChannelPtr ChatManager::existingChat(const QStringList &phoneNumbers, const QString &accountId)
-{
-    Tp::TextChannelPtr channel;
-
-    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
-        AccountEntry *channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
-        int count = 0;
-        if (!channelAccount || channelAccount->accountId() != accountId
-                || channel->groupContacts(false).size() != phoneNumbers.size()) {
-            continue;
-        }
-        Q_FOREACH(const QString &phoneNumberNew, phoneNumbers) {
-            Q_FOREACH(const Tp::ContactPtr &phoneNumberOld, channel->groupContacts(false)) {
-                if (PhoneUtils::comparePhoneNumbers(phoneNumberOld->id(), phoneNumberNew)) {
-                    count++;
-                }
-            }
-        }
-        if (count == phoneNumbers.size()) {
-            return channel;
-        }
-
+    QStringList recipients;
+    Q_FOREACH(const Tp::ContactPtr &contact, channel->groupContacts(false)) {
+        recipients << contact->id();
     }
 
-    return channel;
+    Q_EMIT messageSent(recipients, sentMessage.text());
 }
 
-void ChatManager::acknowledgeMessage(const QString &phoneNumber, const QString &messageId, const QString &accountId)
+void ChatManager::acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId)
 {
-    AccountEntry *account;
-    if (accountId.isNull()) {
-        account = TelepathyHelper::instance()->accounts()[0];
+    AccountEntry *account = NULL;
+    if (accountId.isNull() || accountId.isEmpty()) {
+        account = TelepathyHelper::instance()->defaultMessagingAccount();
+        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
+            account = TelepathyHelper::instance()->activeAccounts()[0];
+        }
     } else {
         account = TelepathyHelper::instance()->accountForId(accountId);
     }
 
     if (!account) {
-        mMessagesToAck[accountId][phoneNumber].append(messageId);
+        mMessagesToAck[accountId][recipients].append(messageId);
         return;
     }
 
     mMessagesAckTimer.start();
-    mMessagesToAck[account->accountId()][phoneNumber].append(messageId);
+    mMessagesToAck[account->accountId()][recipients].append(messageId);
+}
+
+void ChatManager::acknowledgeAllMessages(const QStringList &recipients, const QString &accountId)
+{
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->asyncCall("AcknowledgeAllMessages", recipients, accountId);
 }
 
 void ChatManager::onAckTimerTriggered()
@@ -235,12 +215,12 @@ void ChatManager::onAckTimerTriggered()
     // ack all pending messages
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
 
-    QMap<QString, QMap<QString,QStringList> >::const_iterator it = mMessagesToAck.constBegin();
+    QMap<QString, QMap<QStringList,QStringList> >::const_iterator it = mMessagesToAck.constBegin();
     while (it != mMessagesToAck.constEnd()) {
         QString accountId = it.key();
-        QMap<QString, QStringList>::const_iterator it2 = it.value().constBegin();
+        QMap<QStringList, QStringList>::const_iterator it2 = it.value().constBegin();
         while (it2 != it.value().constEnd()) {
-            phoneAppHandler->call("AcknowledgeMessages", QStringList() << it2.key(), it2.value(), accountId);
+            phoneAppHandler->call("AcknowledgeMessages", it2.key(), it2.value(), accountId);
             ++it2;
         }
         ++it;

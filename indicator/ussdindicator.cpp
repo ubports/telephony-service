@@ -27,52 +27,89 @@ namespace C {
 #include <libnotify/notify.h>
 #include "ringtone.h"
 #include "ussdindicator.h"
+#include "ofonoaccountentry.h"
+#include "telepathyhelper.h"
 
 USSDIndicator::USSDIndicator(QObject *parent)
 : QObject(parent),
+  m_notificationId(-1),
   m_menuRequest(true),
   m_menuNotification(false),
   m_notifications("org.freedesktop.Notifications",
                   "/org/freedesktop/Notifications", QDBusConnection::sessionBus())
 {
-    connect(USSDManager::instance(), SIGNAL(notificationReceived(const QString &)), SLOT(onNotificationReceived(const QString &)));
-    connect(USSDManager::instance(), SIGNAL(requestReceived(const QString &)), SLOT(onRequestReceived(const QString &)));
-    connect(USSDManager::instance(), SIGNAL(initiateUSSDComplete(const QString &)), SLOT(onInitiateUSSDComplete(const QString &)));
-    connect(USSDManager::instance(), SIGNAL(respondComplete(bool, const QString &)), SLOT(onRespondComplete(bool, const QString &)));
-    connect(USSDManager::instance(), SIGNAL(stateChanged(const QString &)), SLOT(onStateChanged(const QString &)));
-
+    setupAccounts();
+    connect(TelepathyHelper::instance(), SIGNAL(accountsChanged()), this, SLOT(setupAccounts()));
     connect(&m_notifications, SIGNAL(ActionInvoked(uint, const QString &)), this, SLOT(actionInvoked(uint, const QString &)));
     connect(&m_notifications, SIGNAL(NotificationClosed(uint, uint)), this, SLOT(notificationClosed(uint, uint)));
 }
 
+void USSDIndicator::setupAccounts()
+{
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(account);
+        if (!ofonoAccount) {
+            continue;
+        }
+        
+        connect(ofonoAccount->ussdManager(), SIGNAL(notificationReceived(const QString &)), SLOT(onNotificationReceived(const QString &)), Qt::UniqueConnection);
+        connect(ofonoAccount->ussdManager(), SIGNAL(requestReceived(const QString &)), SLOT(onRequestReceived(const QString &)), Qt::UniqueConnection);
+        connect(ofonoAccount->ussdManager(), SIGNAL(initiateUSSDComplete(const QString &)), SLOT(onInitiateUSSDComplete(const QString &)), Qt::UniqueConnection);
+        connect(ofonoAccount->ussdManager(), SIGNAL(respondComplete(bool, const QString &)), SLOT(onRespondComplete(bool, const QString &)), Qt::UniqueConnection);
+        connect(ofonoAccount->ussdManager(), SIGNAL(stateChanged(const QString &)), SLOT(onStateChanged(const QString &)), Qt::UniqueConnection);
+    }
+}
+
 void USSDIndicator::onNotificationReceived(const QString &message)
 {
-    showUSSDNotification(message, false);
+    USSDManager *ussdManager = qobject_cast<USSDManager*>(sender());
+    if (!ussdManager) {
+        return;
+    }
+    showUSSDNotification(message, false, ussdManager);
 }
 
 void USSDIndicator::onRequestReceived(const QString &message)
 {
-    showUSSDNotification(message, true);
+    USSDManager *ussdManager = qobject_cast<USSDManager*>(sender());
+    if (!ussdManager) {
+        return;
+    }
+    showUSSDNotification(message, true, ussdManager);
 }
 
 void USSDIndicator::onInitiateUSSDComplete(const QString &ussdResp)
 {
-    showUSSDNotification(ussdResp, (USSDManager::instance()->state() == "user-response"));
+    USSDManager *ussdManager = qobject_cast<USSDManager*>(sender());
+    if (!ussdManager) {
+        return;
+    }
+    showUSSDNotification(ussdResp, (ussdManager->state() == "user-response"), ussdManager);
 }
 
 void USSDIndicator::onRespondComplete(bool success, const QString &ussdResp)
 {
+    USSDManager *ussdManager = qobject_cast<USSDManager*>(sender());
+    if (!ussdManager) {
+        return;
+    }
     if (success) {
-        showUSSDNotification(ussdResp, (USSDManager::instance()->state() == "user-response"));
+        showUSSDNotification(ussdResp, (ussdManager->state() == "user-response"), ussdManager);
     }
 }
 
 void USSDIndicator::onStateChanged(const QString &state)
 {
-    // TODO: check if we should close notifications when the state is idle
+    if (m_notificationId == -1) {
+        return;
+    }
+
+    if (state == "idle") {
+        m_notifications.CloseNotification(m_notificationId);
+    }
 }
 
-void USSDIndicator::showUSSDNotification(const QString &message, bool replyRequired)
+void USSDIndicator::showUSSDNotification(const QString &message, bool replyRequired, USSDManager *ussdManager)
 {
     USSDMenu *menu = replyRequired ? &m_menuRequest : &m_menuNotification;
     QString actionId = "ok_id";
@@ -86,6 +123,7 @@ void USSDIndicator::showUSSDNotification(const QString &message, bool replyRequi
     QVariantMap notificationHints;
     notificationHints["x-canonical-snap-decisions"] = "true";
     notificationHints["x-canonical-private-button-tint"] = "true";
+    notificationHints["x-canonical-snap-decisions-timeout"] = -1;
 
     QVariantMap menuModelActions;
     menuModelActions["notifications"] = menu->actionPath();
@@ -102,7 +140,7 @@ void USSDIndicator::showUSSDNotification(const QString &message, bool replyRequi
                         "", message,
                         QStringList() << actionId << actionLabel << "cancel_id"
                                         << C::gettext("Cancel"), notificationHints, 0);
-
+    mUSSDRequests[m_notificationId] = ussdManager;
 
     Ringtone::instance()->playIncomingMessageSound();
 }
@@ -113,12 +151,17 @@ void USSDIndicator::actionInvoked(uint id, const QString &actionKey)
         return;
     }
 
-    m_notificationId = 0;
+    USSDManager *ussdManager = mUSSDRequests.take(id);
+    if (!ussdManager) {
+        return;
+    }
+
+    m_notificationId = -1;
 
     if (actionKey == "reply_id") {
-        USSDManager::instance()->respond(m_menuRequest.response(), USSDManager::instance()->activeAccountId());
+        ussdManager->respond(m_menuRequest.response());
     } else if (actionKey == "cancel_id") {
-        USSDManager::instance()->cancel(USSDManager::instance()->activeAccountId());
+        ussdManager->cancel();
     }
     m_menuRequest.clearResponse();
 }
@@ -127,6 +170,18 @@ void USSDIndicator::notificationClosed(uint id, uint reason) {
     if (id != m_notificationId) {
         return;
     }
-    m_notifications.CloseNotification(m_notificationId);
-    m_notificationId = 0;
+    m_notificationId = -1;
+}
+
+void USSDIndicator::clear()
+{
+    if (m_notificationId != -1) {
+        USSDManager *ussdManager = mUSSDRequests.take(m_notificationId);
+        if (ussdManager) {
+            ussdManager->cancel();
+        }
+
+        m_notifications.CloseNotification(m_notificationId);
+        m_notificationId = -1;
+    }
 }

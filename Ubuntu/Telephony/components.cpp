@@ -24,12 +24,14 @@
 #include "telepathyhelper.h"
 #include "callentry.h"
 #include "callmanager.h"
+#include "callnotification.h"
 #include "ussdmanager.h"
 #include "channelobserver.h"
 #include "chatmanager.h"
 #include "contactwatcher.h"
 #include "greetercontacts.h"
 #include "phoneutils.h"
+#include "protocolmanager.h"
 #include "accountentry.h"
 #include "audiooutput.h"
 
@@ -54,8 +56,9 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     mRootContext->setContextProperty("telepathyHelper", TelepathyHelper::instance());
     mRootContext->setContextProperty("chatManager", ChatManager::instance());
     mRootContext->setContextProperty("callManager", CallManager::instance());
-    mRootContext->setContextProperty("ussdManager", USSDManager::instance());
     mRootContext->setContextProperty("greeter", GreeterContacts::instance());
+    mRootContext->setContextProperty("callNotification", CallNotification::instance());
+    mRootContext->setContextProperty("protocolManager", ProtocolManager::instance());
 
 }
 
@@ -66,6 +69,8 @@ void Components::registerTypes(const char *uri)
     qmlRegisterUncreatableType<CallEntry>(uri, 0, 1, "CallEntry", "Objects of this type are created in CallManager and made available to QML for usage");
     qmlRegisterUncreatableType<AudioOutput>(uri, 0, 1, "AudioOutput", "Objects of this type are created in CallEntry and made available to QML for usage");
     qmlRegisterUncreatableType<AccountEntry>(uri, 0, 1, "AccountEntry", "Objects of this type are created in TelepathyHelper and made available to QML");
+    qmlRegisterUncreatableType<USSDManager>(uri, 0, 1, "USSDManager", "Objects of this type are created in AccountEntry and made available to QML");
+    qmlRegisterUncreatableType<Protocol>(uri, 0, 1, "ProtocolManager", "Objects of this type are created in ProtocolManager and made available to QML");
     qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");
     qmlRegisterType<PhoneUtils>(uri, 0, 1, "PhoneUtils");
 }

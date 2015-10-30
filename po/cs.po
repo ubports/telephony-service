@@ -1,0 +1,254 @@
+# Czech translation for telephony-service
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the telephony-service package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: telephony-service\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-16 15:24-0200\n"
+"PO-Revision-Date: 2015-05-11 16:39+0000\n"
+"Last-Translator: Vojtěch Daněk <vdanek@outlook.com>\n"
+"Language-Team: Czech <cs@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2015-10-24 05:59+0000\n"
+"X-Generator: Launchpad (build 17812)\n"
+"Language: cs\n"
+
+#: indicator/messagingmenu.cpp:296
+#, qt-format
+msgid "%1 missed call"
+msgid_plural "%1 missed calls"
+msgstr[0] "%1 zmeškaný hovor"
+msgstr[1] "%1 zmeškané hovory"
+msgstr[2] "%1 zmeškaných hovorů"
+
+#: indicator/messagingmenu.cpp:393
+#, qt-format
+msgid "%1 voicemail message"
+msgid_plural "%1 voicemail messages"
+msgstr[0] "%1 hlasová zpráva"
+msgstr[1] "%1 hlasové zprávy"
+msgstr[2] "%1 hlasových zpráv"
+
+#: indicator/metrics.cpp:48
+#, qt-format
+msgid "<b>%1</b> calls made today"
+msgstr "<b>%1</b> dnešních hovorů"
+
+#: indicator/metrics.cpp:46
+#, qt-format
+msgid "<b>%1</b> calls received today"
+msgstr "<b>%1</b> dnes přijatých hovorů"
+
+#: indicator/metrics.cpp:44
+#, qt-format
+msgid "<b>%1</b> text messages received today"
+msgstr "<b>%1</b> dnes přijatých textových zpráv"
+
+#: indicator/metrics.cpp:42
+#, qt-format
+msgid "<b>%1</b> text messages sent today"
+msgstr "<b>%1</b> dnes odeslaných textových zpráv"
+
+#: approver/approver.cpp:489
+msgid "Accept"
+msgstr "Vzít"
+
+#: indicator/messagingmenu.cpp:233
+msgid "Call back"
+msgstr "Zavolat zpět"
+
+#: approver/approver.cpp:451
+msgid "Caller number is not available"
+msgstr "Číslo volajícího není dostupné"
+
+#: approver/approver.cpp:448
+#, qt-format
+msgid "Calling from %1"
+msgstr "Volání z %1"
+
+#: approver/approver.cpp:442
+msgid "Calling from private number"
+msgstr "Volání ze soukromého čísla"
+
+#: approver/approver.cpp:445
+msgid "Calling from unknown number"
+msgstr "Volání z neznámého čísla"
+
+#: indicator/ussdindicator.cpp:142
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: indicator/textchannelobserver.cpp:226
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr "Deaktivujte režim letadla a zkuste zprávu odeslat znovu."
+
+#: approver/approver.cpp:511
+msgid "Decline"
+msgstr "Odmítnout"
+
+#: approver/approver.cpp:502
+msgid "End + Answer"
+msgstr "Ukončit + Odpověď"
+
+#: approver/approver.cpp:488
+msgid "Hold + Answer"
+msgstr "Podržet + Odpověď"
+
+#: indicator/messagingmenu.cpp:238
+msgid "I missed your call - can you call me now?"
+msgstr "Zmeškal jsem Tvůj hovor. Můžeš mi zavolat nyní?"
+
+#: indicator/messagingmenu.cpp:241
+msgid "I'll be 20 minutes late."
+msgstr "Budu mít 20 minut zpoždění."
+
+#: approver/approver.cpp:91
+msgid "I'm busy at the moment. I'll call later."
+msgstr "Momentálně jsem zaneprázdněný. Zavolám později."
+
+#: indicator/messagingmenu.cpp:240
+msgid "I'm busy at the moment. I'll call you later."
+msgstr "Momentálně jsem zaneprázdněný. Zavolám Ti později."
+
+#: approver/approver.cpp:92
+msgid "I'm running late, on my way now."
+msgstr "Mám zpoždění, jsem na cestě."
+
+#: indicator/messagingmenu.cpp:239
+msgid "I'm running late. I'm on my way."
+msgstr "Mám zpoždění. Už jsem na cestě."
+
+#: approver/approver.cpp:519
+msgid "Message & decline"
+msgstr "Zpráva & odmítnout"
+
+#: indicator/textchannelobserver.cpp:450 indicator/textchannelobserver.cpp:506
+#, qt-format
+msgid "Message from %1"
+msgstr "Zpráva od %1"
+
+#: indicator/metrics.cpp:49 indicator/metrics.cpp:51
+msgid "No calls made today"
+msgstr "Dnes nebyly uskutečněny žádné hovory"
+
+#: indicator/metrics.cpp:47
+msgid "No calls received today"
+msgstr "Dnes nebyly přijaty žádné hovory"
+
+#: indicator/metrics.cpp:45
+msgid "No text messages received today"
+msgstr "Dnes nebyly přijaty žádné textové zprávy"
+
+#: indicator/metrics.cpp:43
+msgid "No text messages sent today"
+msgstr "Dnes nebyly odeslány žádné textové zprávy"
+
+#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
+msgid "Ok"
+msgstr "Ok"
+
+#: indicator/telephony-service-call.desktop.in:3
+msgid "Phone Calls"
+msgstr "Telefonní hovory"
+
+#: approver/approver.cpp:93
+msgid "Please call me back later."
+msgstr "Prosím, zavolete mi později."
+
+#: indicator/textchannelobserver.cpp:628
+msgid "Please, select a SIM card:"
+msgstr "Prosím, vložte SIM kartu:"
+
+#: Ubuntu/Telephony/contactwatcher.cpp:131
+msgid "Private Number"
+msgstr "Soukromé číslo"
+
+#: indicator/messagingmenu.cpp:299
+msgid "Private number"
+msgstr "Soukromé číslo"
+
+#: indicator/ussdindicator.cpp:119
+msgid "Reply"
+msgstr "Odpověď"
+
+#: handler/displaynamesettings.cpp:34
+#, qt-format
+msgid "SIM %1"
+msgstr "SIM %1"
+
+#: indicator/telephony-service-sms.desktop.in:3
+msgid "SMS"
+msgstr "SMS"
+
+#: indicator/textchannelobserver.cpp:308
+msgid "Save"
+msgstr "Uložit"
+
+#: indicator/messagingmenu.cpp:175 indicator/messagingmenu.cpp:248
+msgid "Send"
+msgstr "Odeslat"
+
+#: indicator/messagingmenu.cpp:242
+msgid "Sorry, I'm still busy. I'll call you later."
+msgstr "Omlouvám se, stále jsem zaneprázdněn. Zavolám Vám později."
+
+#: indicator/metrics.cpp:50
+#, qt-format
+msgid "Spent <b>%1</b> minutes in calls today"
+msgstr "Dnes jste telefonoval <b>%1</b> minut."
+
+#: indicator/messagingmenu.cpp:56 indicator/messagingmenu.cpp:60
+msgid "Telephony Service"
+msgstr "Telefonní servis"
+
+#: approver/main.cpp:46
+msgid "Telephony Service Approver"
+msgstr "Potvrzení telefonního servisu"
+
+#: indicator/main.cpp:51
+msgid "Telephony Service Indicator"
+msgstr "Indikátor telefonního servisu"
+
+#: indicator/textchannelobserver.cpp:235
+msgid "The message could not be sent"
+msgstr "Zpráva nemohla být odeslána"
+
+#: indicator/textchannelobserver.cpp:229
+msgid "Try again from the messaging application."
+msgstr "Zkuste znovu z aplikace zpráv."
+
+#: Ubuntu/Telephony/contactwatcher.cpp:133
+msgid "Unknown Number"
+msgstr "Neznámé číslo"
+
+#: approver/approver.cpp:63
+msgid "Unknown caller"
+msgstr "Neznámý volající"
+
+#: indicator/textchannelobserver.cpp:436 indicator/messagingmenu.cpp:143
+#: indicator/messagingmenu.cpp:303
+msgid "Unknown number"
+msgstr "Neznámé číslo"
+
+#: indicator/textchannelobserver.cpp:224
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr ""
+"Odemkněte svou sim kartu a zkuste zprávu odeslat znovu z aplikace zpráv."
+
+#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:470
+msgid "View message"
+msgstr "Zobrazit zprávu"
+
+#: indicator/messagingmenu.cpp:398
+msgid "Voicemail"
+msgstr "Hlasová zpráva"
+
+#: indicator/messagingmenu.cpp:390
+msgid "Voicemail messages"
+msgstr "Hlasové zprávy"

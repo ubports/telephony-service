@@ -48,6 +48,7 @@ class CallEntry : public QObject
                NOTIFY voicemailChanged)
     Q_PROPERTY(AccountEntry *account READ account)
 
+    // FIXME: replace this by a more generic identifier to support accounts not based on phone numbers
     // this property is only filled for 1-1 calls
     Q_PROPERTY(QString phoneNumber
                READ phoneNumber
@@ -135,6 +136,7 @@ public:
 protected Q_SLOTS:
     void onCallStateChanged(Tp::CallState state);
     void onCallFlagsChanged(Tp::CallFlags flags);
+    void onCallLocalHoldStateChanged(Tp::LocalHoldState state, Tp::LocalHoldStateReason reason);
     void onMutedChanged(uint state);
     void onCallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
     void onAudioOutputsChanged(const AudioOutputDBusList &outputs);
@@ -144,6 +146,9 @@ protected Q_SLOTS:
     void onConferenceChannelMerged(const Tp::ChannelPtr &channel);
     void onConferenceChannelRemoved(const Tp::ChannelPtr &channel, const Tp::Channel::GroupMemberChangeDetails &details);
     void onInternalCallEnded();
+
+    // handler error notification
+    void onCallHoldingFailed(const QString &objectPath);
 
 protected:
     void setupCallChannel();
@@ -166,6 +171,7 @@ Q_SIGNALS:
     void elapsedTimeChanged();
     void activeAudioOutputChanged();
     void audioOutputsChanged();
+    void callHoldingFailed();
     
 private:
     void refreshProperties();

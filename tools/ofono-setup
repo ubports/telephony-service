@@ -1,39 +1,129 @@
 #!/bin/sh
 
-# do not wait for a network connection to launch the connection managers
+get_telepathy_ofono_accounts()
+{
+    mc-tool list | grep "^ofono/ofono/" | sort
+}
+
+check_mission_control_running() {
+    # "mc-tool list" returns failure when no accounts are found, so we 
+    # check if mission control is running via dbus directly
+    dbus-send --print-reply --reply-timeout=2000 --session --dest=org.freedesktop.Telepathy.AccountManager /org/freedesktop/Telepathy/AccountManager org.freedesktop.DBus.Properties.GetAll string:org.freedesktop.Telepathy.AccountManager | grep ValidAccounts 2>&1 > /dev/null
+}
+
+get_modem_objpath_for_account() {
+    echo "$(mc-tool show $1 | sed -n 's,.*modem-objpath = \(.*\)$,\1,p')"
+}
+
+existing_account_for_modem_objpath() {
+    modem_obj_path=$1
+    for account in $EXISTING_OFONO_ACCOUNTS; do
+        if [ "$(get_modem_objpath_for_account $account)" = "$modem_obj_path" ]; then
+           echo "$account"
+        fi
+    done
+}
+
+retries=0
+# make sure telepathy is correctly running before we setup the accounts
+while ! check_mission_control_running; do
+    retries=$((retries+1))
+    echo "can't connect to mission-control via dbus, retrying $retries"
+    if [ "$retries" -eq "10" ]; then
+        echo "maximum retries reached, aborting"
+        exit 1
+    fi
+    sleep 1
+done
+
+# FIXME mission control for some reason does not start tp-ofono if there is no connection
+# even if always-dispatch is true on the account, this workaround fixes the problem
 dconf write /org/gnome/empathy/use-conn false 2>&1 > /dev/null
+# do not wait for a network connection to launch the connection managers
+dconf write /org/gnome/empathy/use-conn true 2>&1 > /dev/null
 
-# check if there is a tp-ofono account already
-# for now assume that if there is at least one account, the system is properly configured.
-mc-tool show ofono/ofono/account0 2>&1 > /dev/null
+EXISTING_OFONO_ACCOUNTS=$(get_telepathy_ofono_accounts)
 
-# if there is not, create accounts and enable them
-if [ $? -eq 1 ]; then
-        # get the modems from ofono and sort them alphabetically
-        MODEMS=`/usr/share/ofono/scripts/list-modems | grep --binary-files=text "^\[" | sed 's,^\[ \(.*\) \],\1,g' | sort`
-        INDEX=0
-        # get the translated default sim card name from the telephony-service po files.
-        SIM_NAME=$(gettext -d telephony-service "SIM %1")
-        GSETTINGS_ARRAY="{"
+# iterate over all accounts to find duplicates
+for account in $EXISTING_OFONO_ACCOUNTS; do
+    remove=0
+    modem_obj_path=$(get_modem_objpath_for_account $account)
+    if [ -e $modem_obj_path ]; then
+        # skip accounts with empty modem-objpath if any
+        echo "account with empty modem-objpath found, removing it: $account"
+        mc-tool remove $account 2>&1 > /dev/null 
+        continue
+    fi
+    for account2 in $EXISTING_OFONO_ACCOUNTS; do
+        # ignore if same account and set flag to remove next ones
+        if [ "$account" = "$account2" ]; then
+            remove=1
+            continue;
+        fi
+        # check if this account was not removed already by this loop
+        mc-tool show $account2 2>&1 > /dev/null
+        if [ $? = 1 ]; then
+            continue
+        fi
+        # check if modem-objpath is repeated
+        if [ "$(get_modem_objpath_for_account $account2)" = "$modem_obj_path" ]; then
+            echo "found duplicate account: $account2 modem: $modem_obj_path"
+            mc-tool remove $account2 2>&1 > /dev/null
+        fi
+    done
+done
 
-        # and for each modem found create a telepathy account
-        for modem in $MODEMS; do
+# refresh account list after duplicates are removed
+EXISTING_OFONO_ACCOUNTS=$(get_telepathy_ofono_accounts)
+EXISTING_OFONO_ACCOUNTS_COUNT=$(get_telepathy_ofono_accounts | wc -l)
+MODEM_COUNT=0
+
+# check if there is at least one modem
+if [ "$(getprop rild.libpath '')" != "" ]; then
+    MODEM_COUNT=$(getprop ril.num_slots 1)
+fi
+
+if [ "$MODEM_COUNT" != "$EXISTING_OFONO_ACCOUNTS_COUNT" ]; then
+    echo "modem count: $MODEM_COUNT"
+    echo "existing ofono accounts: $EXISTING_OFONO_ACCOUNTS_COUNT"
+    GSETTINGS_ARRAY="{"
+
+    LAST_MODEM_INDEX="`expr $MODEM_COUNT - 1`"
+    # check if all modems belong to at least one existing account
+    for INDEX in $(seq 0 $LAST_MODEM_INDEX); do
+        MODEM_OBJPATH=/ril_$INDEX
+
+        # get previous name from gsettings if any
+        EXISTING_NAME=$(python3 -c "array=$(gsettings get com.ubuntu.phone sim-names); print (array[\"$MODEM_OBJPATH\"])")
+        if [ -n "$EXISTING_NAME" ]; then
+            NAME=$EXISTING_NAME
+        else
+            SIM_NAME=$(gettext -d telephony-service "SIM %1")
+            # replace the %1 with the actual index
+            NAME=$(echo $SIM_NAME | sed "s/%1$/$(($INDEX+1))/")
+        fi
+ 
+        if [ "" = "$(existing_account_for_modem_objpath $MODEM_OBJPATH)" ]; then
+            echo "no account found for modem $MODEM_OBJPATH"
             ACCOUNT="account$INDEX"
             echo "creating ofono/ofono/$ACCOUNT"
-            mc-tool add ofono/ofono $ACCOUNT string:modem-objpath=$modem
+            mc-tool add ofono/ofono $ACCOUNT string:modem-objpath=$MODEM_OBJPATH
             echo "enabling ofono/ofono/$ACCOUNT"
             mc-tool enable ofono/ofono/$ACCOUNT
             mc-tool auto-connect ofono/ofono/$ACCOUNT
-            INDEX=$((INDEX+1))
-            # replace the %1 with the actual index
-            NAME=$(echo $SIM_NAME | sed "s/%1$/$INDEX/")
+            mc-tool display ofono/ofono/$ACCOUNT "$NAME"
             # append this entry to the gsettings array
-            GSETTINGS_ARRAY="$GSETTINGS_ARRAY '$modem': '$NAME',"
-        done
-        # remove the last "," if present
-        GSETTINGS_ARRAY="$(echo $GSETTINGS_ARRAY | sed 's/,$//g')}"
-        # set names in gsettings
-        gsettings set com.ubuntu.phone sim-names "$GSETTINGS_ARRAY"
+            GSETTINGS_ARRAY="$GSETTINGS_ARRAY '$MODEM_OBJPATH': '$NAME',"
+        else
+            echo "account found for modem $MODEM_OBJPATH"
+            # this account already exists, just take the name from gsettings
+            GSETTINGS_ARRAY="$GSETTINGS_ARRAY '$MODEM_OBJPATH': '$NAME',"
+        fi
+    done
+    # remove the last "," if present
+    GSETTINGS_ARRAY="$(echo $GSETTINGS_ARRAY | sed 's/,$//g')}"
+    # set names in gsettings
+    gsettings set com.ubuntu.phone sim-names "$GSETTINGS_ARRAY"
+else
+    echo "sanity check passed"
 fi
-
-echo 'ofono accounts initialized'

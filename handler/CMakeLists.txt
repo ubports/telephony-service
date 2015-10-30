@@ -34,6 +34,8 @@ target_link_libraries(telephony-service-handler
     telephonyservice
     )
 
+enable_coverage(telephony-service-handler)
+
 configure_file(com.canonical.TelephonyServiceHandler.service.in com.canonical.TelephonyServiceHandler.service)
 configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceHandler.service.in org.freedesktop.Telepathy.Client.TelephonyServiceHandler.service)
 
@@ -41,9 +43,3 @@ install(TARGETS telephony-service-handler RUNTIME DESTINATION ${CMAKE_INSTALL_BI
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceHandler.service DESTINATION share/dbus-1/services)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/com.canonical.TelephonyServiceHandler.service DESTINATION share/dbus-1/services)
 install(FILES TelephonyServiceHandler.client DESTINATION share/telepathy/clients)
-
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "ppc*")
-    message(STATUS "Tests disabled on ppc")
-else()
-    add_subdirectory(tests)
-endif()

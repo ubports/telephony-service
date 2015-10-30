@@ -59,6 +59,7 @@ public Q_SLOTS:
     Q_NOREPLY void SendSilentMessage(const QStringList &number, const QString &message, const QString &accountId);
     Q_NOREPLY void SendMMS(const QStringList &numbers, const AttachmentList &attachments, const QString &accountId);
     Q_NOREPLY void AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId);
+    Q_NOREPLY void AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId);
 
     // call related
     Q_NOREPLY void StartCall(const QString &number, const QString &accountId);
@@ -77,6 +78,8 @@ Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);
     void CallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
     void CallIndicatorVisibleChanged(bool visible);
+    void ConferenceCallRequestFinished(bool succeeded);
+    void CallHoldingFailed(const QString &objectPath);
 
 private:
     bool mCallIndicatorVisible;

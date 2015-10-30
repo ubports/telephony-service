@@ -20,6 +20,7 @@
  */
 
 #include "channelobserver.h"
+#include "protocolmanager.h"
 #include "telepathyhelper.h"
 #include <TelepathyQt/CallChannel>
 #include <TelepathyQt/ChannelClassSpecList>
@@ -38,6 +39,7 @@ Tp::ChannelClassSpecList ChannelObserver::channelFilters() const
     specList << TelepathyHelper::audioConferenceSpec();
     specList << Tp::ChannelClassSpec::audioCall();
     specList << Tp::ChannelClassSpec::textChat();
+    specList << Tp::ChannelClassSpec::unnamedTextChat();
 
     return specList;
 }
@@ -50,11 +52,15 @@ void ChannelObserver::observeChannels(const Tp::MethodInvocationContextPtr<> &co
                                       const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
                                       const Tp::AbstractClientObserver::ObserverInfo &observerInfo)
 {
-    Q_UNUSED(account)
     Q_UNUSED(connection)
     Q_UNUSED(dispatchOperation)
     Q_UNUSED(requestsSatisfied)
     Q_UNUSED(observerInfo)
+
+    if (!ProtocolManager::instance()->isProtocolSupported(account->protocolName())) {
+        context->setFinishedWithError(TP_QT_ERROR_NOT_CAPABLE, "The account for this request is not supported.");
+        return;
+    }
 
     Q_FOREACH (Tp::ChannelPtr channel, channels) {
         mContexts[channel.data()] = context;

@@ -61,6 +61,7 @@ public:
     Q_INVOKABLE void mergeCalls(CallEntry *firstCall, CallEntry *secondCall);
     Q_INVOKABLE void splitCall(CallEntry *callEntry);
     Q_INVOKABLE void playTone(const QString &key);
+    Q_INVOKABLE bool handleMediaKey(bool doubleClick);
 
     CallEntry *foregroundCall() const;
     CallEntry *backgroundCall() const;
@@ -91,12 +92,14 @@ Q_SIGNALS:
     void voicemailNumberChanged();
     void emergencyNumbersChanged();
     void callIndicatorVisibleChanged(bool visible);
+    void conferenceRequestFailed();
 
 public Q_SLOTS:
     void onCallChannelAvailable(Tp::CallChannelPtr channel);
     void onChannelObserverUnregistered();
     void onCallEnded();
     void onCallIndicatorVisibleChanged(bool visible);
+    void onConferenceCallRequestFinished(bool succeeded);
 
 private:
     explicit CallManager(QObject *parent = 0);

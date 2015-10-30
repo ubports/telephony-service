@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2015 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -25,6 +25,7 @@
 #include <QObject>
 #include <TelepathyQt/Account>
 
+class Protocol;
 
 typedef struct {
     QString busName;
@@ -34,65 +35,70 @@ typedef struct {
 class AccountEntry : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(AccountType type READ type CONSTANT)
     Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
+    Q_PROPERTY(bool active READ active NOTIFY activeChanged)
     Q_PROPERTY(QString displayName READ displayName WRITE setDisplayName NOTIFY displayNameChanged)
+    Q_PROPERTY(QString status READ status NOTIFY statusChanged)
+    Q_PROPERTY(QString statusMessage READ statusMessage NOTIFY statusMessageChanged)
+    Q_PROPERTY(QString selfContactId READ selfContactId NOTIFY selfContactIdChanged)
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
-    Q_PROPERTY(QStringList emergencyNumbers READ emergencyNumbers NOTIFY emergencyNumbersChanged)
-    Q_PROPERTY(QString voicemailNumber READ voicemailNumber NOTIFY voicemailNumberChanged)
-    Q_PROPERTY(uint voicemailCount READ voicemailCount NOTIFY voicemailCountChanged)
-    Q_PROPERTY(bool voicemailIndicator READ voicemailIndicator NOTIFY voicemailIndicatorChanged)
-    Q_PROPERTY(QString networkName READ networkName NOTIFY networkNameChanged)
-    Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
-    Q_PROPERTY(bool simLocked READ simLocked NOTIFY simLockedChanged)
+    Q_PROPERTY(QStringList addressableVCardFields READ addressableVCardFields NOTIFY addressableVCardFieldsChanged)
+    Q_PROPERTY(Protocol* protocolInfo READ protocolInfo CONSTANT)
+    Q_ENUMS(AccountType)
+    friend class AccountEntryFactory;
 
 public:
-    explicit AccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
+    enum AccountType {
+        PhoneAccount,
+        MultimediaAccount,
+        GenericAccount
+    };
+
+    bool ready() const;
     QString accountId() const;
+    bool active() const;
     QString displayName() const;
-    QString networkName() const;
-    bool simLocked() const;
+    QString status() const;
+    QString statusMessage() const;
+    QString selfContactId() const;
     void setDisplayName(const QString &name);
-    bool connected() const;
-    QStringList emergencyNumbers() const;
-    QString voicemailNumber() const;
-    uint voicemailCount() const;
-    bool voicemailIndicator() const;
+    virtual bool connected() const;
     Tp::AccountPtr account() const;
-    bool emergencyCallsAvailable() const;
+    virtual AccountType type() const;
+    virtual QStringList addressableVCardFields() const;
+
+    virtual bool compareIds(const QString &first, const QString &second) const;
+
+    Protocol *protocolInfo() const;
 
 Q_SIGNALS:
     void accountReady();
     void accountIdChanged();
+    void activeChanged();
     void displayNameChanged();
-    void networkNameChanged();
-    void simLockedChanged();
+    void statusChanged();
+    void statusMessageChanged();
+    void selfContactIdChanged();
     void connectedChanged();
-    void emergencyNumbersChanged();
-    void voicemailNumberChanged();
-    void voicemailCountChanged();
-    void voicemailIndicatorChanged();
-    void emergencyCallsAvailableChanged();
+    void addressableVCardFieldsChanged();
+    void removed();
 
 protected Q_SLOTS:
-    void initialize();
-    void ensureEnabled();
-    void ensureConnected();
-    void watchSelfContactPresence();
+    virtual void initialize();
+    virtual void ensureEnabled();
+    virtual void ensureConnected();
+    virtual void watchSelfContactPresence();
+    virtual void onConnectionChanged();
+    virtual void onSelfHandleChanged(uint handle);
 
-private Q_SLOTS:
-    void onConnectionChanged();
-    void onEmergencyNumbersChanged(const QStringList &numbers);
-    void onVoicemailNumberChanged(const QString &number);
-    void onVoicemailCountChanged(uint count);
-    void onVoicemailIndicatorChanged(bool visible);
+protected:
+    explicit AccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
 
-private:
     Tp::AccountPtr mAccount;
-    QStringList mEmergencyNumbers;
-    QString mVoicemailNumber;
-    uint mVoicemailCount;
-    bool mVoicemailIndicator;
     ConnectionInfo mConnectionInfo;
+    bool mReady;
+    Protocol *mProtocol;
 };
 
 #endif // ACCOUNTENTRY_H

@@ -1,0 +1,261 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+    <dox:d><![CDATA[
+      @mainpage
+
+      An interface to the history service
+    ]]></dox:d>
+    <interface name="com.canonical.MockConnection" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+        <dox:d>
+          An interface to the fake connection manager
+        </dox:d>
+        <method name="PlaceIncomingMessage">
+            <dox:d><![CDATA[
+                Simulates an incoming message
+            ]]></dox:d>
+            <arg name="message" type="s" direction="in"/>
+            <arg name="properties" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+        </method>
+        <method name="PlaceCall">
+            <dox:d><![CDATA[
+                Simulates an incoming call
+            ]]></dox:d>
+            <arg name="properties" type="a{sv}" direction="in"/>
+            <arg name="objectpath" type="s" direction="out"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
+        </method>
+        <method name="HangupCall">
+            <dox:d><![CDATA[
+                Terminates an existing call
+            ]]></dox:d>
+            <arg name="callerId" type="s" direction="in"/>
+        </method>
+        <method name="SetCallState">
+            <dox:d><![CDATA[
+                Change the call state
+            ]]></dox:d>
+            <arg name="phoneNumber" type="s" direction="in"/>
+            <arg name="status" type="s" direction="in"/>
+        </method>
+        <method name="SetOnline">
+            <dox:d><![CDATA[
+                Set the account online/offline
+            ]]></dox:d>
+            <arg name="online" type="b" direction="in"/>
+        </method>
+        <method name="SetPresence">
+            <dox:d><![CDATA[
+                Set the requested presence
+            ]]></dox:d>
+            <arg name="status" type="s" direction="in"/>
+            <arg name="statusMessage" type="s" direction="in"/>
+        </method>
+        <method name="SetVoicemailIndicator">
+            <dox:d><![CDATA[
+                Set the voicemail indicator on/off
+            ]]></dox:d>
+            <arg name="active" type="b" direction="in"/>
+        </method>
+        <method name="SetVoicemailNumber">
+            <dox:d><![CDATA[
+                Set the voicemail number
+            ]]></dox:d>
+            <arg name="number" type="s" direction="in"/>
+        </method>
+        <method name="SetVoicemailCount">
+            <dox:d><![CDATA[
+                Set the voicemail count
+            ]]></dox:d>
+            <arg name="count" type="i" direction="in"/>
+        </method>
+        <method name="SetEmergencyNumbers">
+            <dox:d><![CDATA[
+                Set the emergency numbers
+            ]]></dox:d>
+            <arg name="numbers" type="as" direction="in"/>
+        </method>
+        <method name="SetCountryCode">
+            <dox:d><![CDATA[
+                Set country code 
+            ]]></dox:d>
+            <arg name="countrCode" type="s" direction="in"/>
+        </method>
+        <method name="Serial">
+            <dox:d><![CDATA[
+                Get the USSD serial
+            ]]></dox:d>
+            <arg name="value" type="s" direction="out"/>
+        </method>
+        <method name="TriggerUSSDNotificationReceived">
+            <dox:d><![CDATA[
+                Trigger USSD method NotificationReceived
+            ]]></dox:d>
+            <arg name="message" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDRequestReceived">
+            <dox:d><![CDATA[
+                Trigger USSD method RequestReceived
+            ]]></dox:d>
+            <arg name="message" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDInitiateUSSDComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method InitiateUSSDComplete
+            ]]></dox:d>
+            <arg name="ussdResp" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDRespondComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method RespondComplete
+            ]]></dox:d>
+            <arg name="success" type="b" direction="in"/>
+            <arg name="ussdResp" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDBarringComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method BarringComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="cbService" type="s" direction="in"/>
+            <arg name="cbMap" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QVariantMap"/>
+        </method>
+        <method name="TriggerUSSDForwardingComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method ForwardingComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="cfService" type="s" direction="in"/>
+            <arg name="cfMap" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QVariantMap"/>
+        </method>
+        <method name="TriggerUSSDWaitingComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method WaitingComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="cwMap" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+        </method>
+        <method name="TriggerUSSDCallingLinePresentationComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method CallingLinePresentationComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="status" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDConnectedLinePresentationComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method ConnectedLinePresentationComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="status" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDCallingLineRestrictionComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method CallingLineRestrictionComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="status" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDConnectedLineRestrictionComplete">
+            <dox:d><![CDATA[
+                Trigger USSD method ConnectedLineRestrictionComplete
+            ]]></dox:d>
+            <arg name="ssOp" type="s" direction="in"/>
+            <arg name="status" type="s" direction="in"/>
+        </method>
+        <method name="TriggerUSSDInitiateFailed">
+            <dox:d><![CDATA[
+                Trigger USSD method InitiateFailed
+            ]]></dox:d>
+        </method>
+        <method name="TriggerUSSDStateChanged">
+            <dox:d><![CDATA[
+                Trigger USSD method StateChanged
+            ]]></dox:d>
+            <arg name="state" type="s" direction="in"/>
+        </method>
+        <signal name="MessageRead">
+            <dox:d><![CDATA[
+                A message was acknowledged
+            ]]></dox:d>
+            <arg name="messageId" type="s"/>
+        </signal>
+        <signal name="MessageSent">
+            <dox:d><![CDATA[
+                A message was sent from the client.
+            ]]></dox:d>
+            <arg name="message" type="s"/>
+            <arg name="properties" type="a{sv}"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+        </signal>
+        <signal name="CallReceived">
+            <dox:d><![CDATA[
+                A call was made from the client
+            ]]></dox:d>
+            <arg name="callerId" type="s"/>
+        </signal>
+        <signal name="CallEnded">
+            <dox:d><![CDATA[
+                A call was ended
+            ]]></dox:d>
+            <arg name="callerId" type="s"/>
+        </signal>
+        <signal name="CallStateChanged">
+            <dox:d><![CDATA[
+                The state of a call has changed
+            ]]></dox:d>
+            <arg name="callerId" type="s"/>
+            <arg name="objectPath" type="s"/>
+            <arg name="state" type="s"/>
+        </signal>
+        <signal name="ConferenceCreated">
+            <dox:d><![CDATA[
+                A new conference call was created
+            ]]></dox:d>
+            <arg name="objectPath" type="s"/>
+        </signal>
+        <signal name="ChannelMerged">
+            <dox:d><![CDATA[
+                A channel was merged in the existing conference
+            ]]></dox:d>
+            <arg name="objectPath" type="s"/>
+        </signal>
+        <signal name="ChannelSplitted">
+            <dox:d><![CDATA[
+                A channel was splitted from the conference
+            ]]></dox:d>
+            <arg name="objectPath" type="s"/>
+        </signal>
+        <signal name="USSDInitiateCalled">
+            <dox:d><![CDATA[
+                USSDInitiate was called
+            ]]></dox:d>
+            <arg name="command" type="s"/>
+        </signal>
+        <signal name="USSDRespondCalled">
+            <dox:d><![CDATA[
+                USSDRespond was called
+            ]]></dox:d>
+            <arg name="reply" type="s"/>
+        </signal>
+        <signal name="USSDCancelCalled">
+            <dox:d><![CDATA[
+                USSDInitiate was called
+            ]]></dox:d>
+        </signal>
+        <signal name="Disconnected">
+            <dox:d><![CDATA[
+                The account was disconnected
+            ]]></dox:d>
+        </signal>
+        <signal name="Destroyed">
+            <dox:d><![CDATA[
+                The connection object was destroyed
+            ]]></dox:d>
+        </signal>
+    </interface>
+</node>

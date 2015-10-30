@@ -1,3 +1,373 @@
+telephony-service (0.1+15.10.20151013-0ubuntu1) wily; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Make it possible to set all fields in the contact matcher. Some
+    components (like HistoryService's events and threads) provide a
+    cached contact match value and are just interested in watching for
+    changes.
+  * Use smooth scaling when resizing image files to send via MMS.
+
+  [ Tiago Salem Herrmann ]
+  * Convert x-ofono-unknown to "Unknown contact" Set proper icon for
+    group chats in messaging-menu
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Tue, 13 Oct 2015 20:36:15 +0000
+
+telephony-service (0.1+15.10.20150925-0ubuntu1) wily; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+
+  [ Gustavo Pichorim Boiko ]
+  * Make it possible to acknowledge all pending messages of a given
+    conversation at once. (LP: #1488498)
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 25 Sep 2015 13:06:14 +0000
+
+telephony-service (0.1+15.10.20150818-0ubuntu1) wily; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ Tiago Salem Herrmann ]
+  * Change existingChat() to existingChannels(). (LP: #1482401,
+    #1347906)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Tue, 18 Aug 2015 13:35:42 +0000
+
+telephony-service (0.1+15.10.20150814-0ubuntu1) wily; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Make GreeterContacts thread safe. (LP: #1471338)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Fri, 14 Aug 2015 20:38:56 +0000
+
+telephony-service (0.1+15.10.20150810.1-0ubuntu1) wily; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Check contact results on the client side. Phone comparison in the
+    server side is not reliable. (LP: #1476833)
+  * Use libphonenumber for phone number validation, normalization and
+    comparison. (LP: #1471545, #1444883, #1334860)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 10 Aug 2015 22:45:07 +0000
+
+telephony-service (0.1+15.10.20150727-0ubuntu2~gcc5.1) wily; urgency=medium
+
+  * No change upload built with GCC 5.
+
+ -- Matthias Klose <doko@ubuntu.com>  Thu, 30 Jul 2015 11:51:41 +0200
+
+telephony-service (0.1+15.10.20150727-0ubuntu1) wily; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk. added: po/cy.po
+
+  [ Gustavo Pichorim Boiko ]
+  * Make sure outgoing calls are not set as accepted by the approver.
+    (LP: #1476826)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 27 Jul 2015 19:38:59 +0000
+
+telephony-service (0.1+15.10.20150717-0ubuntu1) wily; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Specify the domain when translating unknown and private number
+    strings. (LP: #1470938)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Fri, 17 Jul 2015 18:20:41 +0000
+
+telephony-service (0.1+15.10.20150709-0ubuntu1) wily; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Sync the fixes that were released in OTA5: (LP: #1384274, #1433068,
+    #1412709, #1427286, #1453004)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 09 Jul 2015 13:46:05 +0000
+
+telephony-service (0.1+15.10.20150706.1-0ubuntu1) wily; urgency=medium
+
+  [ Alberto Aguirre ]
+  * No change rebuid against platform-api 3
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 06 Jul 2015 22:06:19 +0000
+
+telephony-service (0.1+15.10.20150701-0ubuntu1) wily; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ Tiago Salem Herrmann ]
+  * Update to telepathy-qt 0.9.6.1
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Wed, 01 Jul 2015 14:16:47 +0000
+
+telephony-service (0.1+15.10.20150617-0ubuntu1) wily; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+
+  [ Gustavo Pichorim Boiko ]
+  * Make it possible to specify the list of supported protocols
+    dynamically by installing .protocol files in /usr/share/telephony-
+    service/protocols
+
+  [ Tiago Salem Herrmann ]
+  * Add multimedia connection manager support
+  * Remove slashes when normalizing phone numbers. (LP: #1462090)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Wed, 17 Jun 2015 20:39:47 +0000
+
+telephony-service (0.1+15.10.20150608.4-0ubuntu1) wily; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Make it possible to remove call notifications from the messaging
+    menu (LP: #1455408)
+
+  [ Tiago Salem Herrmann ]
+  * Fix TelepathyHelperTest and HandlerTest.
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 08 Jun 2015 23:04:10 +0000
+
+telephony-service (0.1+15.04.20150521.1-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk. added: po/cs.po
+
+  [ Tiago Salem Herrmann ]
+  * Properly move ringtone calls to a separate thread.
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 21 May 2015 18:45:49 +0000
+
+telephony-service (0.1+15.04.20150511.1-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ Gustavo Pichorim Boiko ]
+  * Fix voicemail detection on CallEntry. (LP: #1449710)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 11 May 2015 13:47:20 +0000
+
+telephony-service (0.1+15.04.20150430.1-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ Gustavo Pichorim Boiko ]
+  * Add an initial set of tests to make sure USSD is working.
+  * Make it possible to clear the notifications. This is intended to be
+    used by application tests.
+
+  [ Tiago Salem Herrmann ]
+  * Add an USSDManager instance to each OfonoAccountEntry. (LP:
+    #1438273)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 30 Apr 2015 15:55:24 +0000
+
+telephony-service (0.1+15.04.20150421-0ubuntu1) vivid; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Add unit tests for the ToneGenerator class. added:
+    tests/libtelephonyservice/ToneGeneratorMock.cpp
+    tests/libtelephonyservice/ToneGeneratorTest.cpp
+
+  [ You-Sheng Yang ]
+  * Class ToneGenerator creates a oneshot timer to keep track of when to
+    send a StopTone req after successfully sending a StartEventTone one.
+    However, when playDTMFTone() is called the second time within the
+    timeout interval (0.2s), it's currently completely ignored and no
+    tone will ever be generated. As a result, when someone presses
+    dialpad buttons very quickly, some of them sound missed because not
+    each of them is accompanied by a DTMF tone. (LP: #1403600)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Tue, 21 Apr 2015 13:07:12 +0000
+
+telephony-service (0.1+15.04.20150416.2-0ubuntu1) vivid; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Another attempt to fix the failures that happen only on jenkins.
+
+  [ Tiago Salem Herrmann ]
+  * Add sanity check to ofono-setup. (LP: #1439566)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Thu, 16 Apr 2015 16:47:13 +0000
+
+telephony-service (0.1+15.04.20150414-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk.
+
+  [ Gustavo Pichorim Boiko ]
+  * Expose the account type to QML. (LP: #1439718)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Tue, 14 Apr 2015 17:37:11 +0000
+
+telephony-service (0.1+15.04.20150330.1-0ubuntu1) vivid; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Move all tests to root/tests to make it easier to share components
+    Add tests to existing components Add tests to make sure supporting
+    non-phone based accounts works Fix problems found while writing the
+    tests. Fix coverage reports removed: handler/tests/dbus-test-
+    wrapper.sh.in handler/tests/telepathyhelper.cpp
+    handler/tests/telepathyhelper.h added:
+    cmake/modules/GenerateTest.cmake tests/ tests/CMakeLists.txt
+    tests/common/ tests/common/CMakeLists.txt tests/common/dbus-
+    services/ tests/common/dbus-services/CMakeLists.txt
+    tests/common/dbus-session.conf.in
+    tests/common/mock/emergencymodeiface.cpp
+    tests/common/mock/emergencymodeiface.h
+    tests/common/mock/ussdiface.cpp tests/common/mock/ussdiface.h
+    tests/common/mock/voicemailiface.cpp
+    tests/common/mock/voicemailiface.h tests/common/telepathytest.cpp
+    tests/common/telepathytest.h
+    tests/libtelephonyservice/AccountEntryFactoryTest.cpp
+    tests/libtelephonyservice/AccountEntryTest.cpp
+    tests/libtelephonyservice/ChatManagerTest.cpp
+    tests/libtelephonyservice/OfonoAccountEntryTest.cpp
+    tests/libtelephonyservice/TelepathyHelperTest.cpp renamed:
+    Ubuntu/Telephony/tests/ => tests/Ubuntu.Telephony/ handler/tests/ =>
+    tests/handler/ handler/tests/mock/ => tests/common/mock/
+    handler/tests/mockcontroller.cpp => tests/common/mockcontroller.cpp
+    handler/tests/mockcontroller.h => tests/common/mockcontroller.h
+    libtelephonyservice/tests/ => tests/libtelephonyservice/
+  * Support accounts not based on phone numbers.
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Mon, 30 Mar 2015 20:56:48 +0000
+
+telephony-service (0.1+15.04.20150227-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+
+  [ Tiago Salem Herrmann ]
+  * Check if default sim is active before sending messages. (LP:
+    #1423942)
+  * Do not create instance of GreeterContacts to avoid dealock with
+    unity. (LP: #1426399)
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Fri, 27 Feb 2015 15:28:57 +0000
+
+telephony-service (0.1+15.04.20150217-0ubuntu1) vivid; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Don't remove the call channel if hangup() does not succeed.
+
+ -- CI Train Bot <ci-train-bot@canonical.com>  Tue, 17 Feb 2015 17:24:10 +0000
+
+telephony-service (0.1+15.04.20150211-0ubuntu1) vivid; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Ignore accounts not explicitly supported for now. (LP: #1340758)
+
+  [ Tiago Salem Herrmann ]
+  * Initialize variables to avoid randomly showing the voicemail
+    indicator for telepathy accounts that do not support the voicemail
+    interface.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 11 Feb 2015 18:18:25 +0000
+
+telephony-service (0.1+15.04.20150205.1-0ubuntu1) vivid; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Avoid using ofono to get the list of modems in ofono-setup. (LP:
+    #1413316)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 05 Feb 2015 20:22:09 +0000
+
+telephony-service (0.1+15.04.20150205-0ubuntu1) vivid; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Add initial MMS group chat support. (LP: #1415458)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Thu, 05 Feb 2015 12:19:35 +0000
+
+telephony-service (0.1+15.04.20150203-0ubuntu1) vivid; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Gustavo Pichorim Boiko ]
+  * Move the serial to be a property on account entry, and make sure it
+    is read even when the account is not connected.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 03 Feb 2015 18:45:35 +0000
+
+telephony-service (0.1+15.04.20150124-0ubuntu1) vivid; urgency=low
+
+  [ Gustavo Pichorim Boiko ]
+  * Notify errors when creating conference calls and putting calls on
+    hold. (LP: #1410365)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Sat, 24 Jan 2015 02:03:16 +0000
+
+telephony-service (0.1+15.04.20150120.2-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Invoke LiveCall view when answering incoming calls. (LP: #1410961)
+  * Silence incoming calls when power button is pressed. (LP: #1376240)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Tue, 20 Jan 2015 16:53:13 +0000
+
+telephony-service (0.1+15.04.20150116-0ubuntu1) vivid; urgency=low
+
+  [ Tiago Salem Herrmann ]
+  * Expose HandleMediaKey(bool doubleClick) to DBus. (LP: #1398427)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 16 Jan 2015 10:28:07 +0000
+
+telephony-service (0.1+15.04.20150109-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Check if the account exists before accessing the pointer. (LP:
+    #1408029)
+  * Only register telepathy clients and observers after TelepathyHelper
+    is ready. (LP: #1408103)
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 09 Jan 2015 13:44:26 +0000
+
+telephony-service (0.1+15.04.20141219-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Tiago Salem Herrmann ]
+  * Dynamically add and remove telepathy accounts.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 19 Dec 2014 15:25:02 +0000
+
+telephony-service (0.1+15.04.20141212-0ubuntu1) vivid; urgency=low
+
+  [ CI Train Bot ]
+  * Resync trunk
+
+  [ Renato Araujo Oliveira Filho ]
+  * Added support for [',', ';', '+', '*', '#'] on phone number fields.
+    (LP: #1399011, #1372548)
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Fri, 12 Dec 2014 20:34:51 +0000
+
+telephony-service (0.1+15.04.20141210-0ubuntu1) vivid; urgency=low
+
+  [ Ubuntu daily release ]
+  * New rebuild forced
+
+  [ Tiago Salem Herrmann ]
+  * Only set voicemail is the phone number is not empty. (LP: #1398431)
+  * Use dbus-send to get the list of modems from ofono.
+
+ -- Ubuntu daily release <ps-jenkins@lists.canonical.com>  Wed, 10 Dec 2014 18:01:56 +0000
+
 telephony-service (0.1+15.04.20141121.1-0ubuntu1) vivid; urgency=low
 
   [ Alexandre Abreu ]

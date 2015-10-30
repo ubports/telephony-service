@@ -21,6 +21,8 @@
  */
 
 #include "handler.h"
+#include "accountentry.h"
+#include "protocolmanager.h"
 #include "telepathyhelper.h"
 
 #include <TelepathyQt/MethodInvocationContext>
@@ -47,13 +49,19 @@ void Handler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
                              const QDateTime &userActionTime,
                              const Tp::AbstractClientHandler::HandlerInfo &handlerInfo)
 {
-    Q_UNUSED(account)
     Q_UNUSED(connection)
     Q_UNUSED(requestsSatisfied)
     Q_UNUSED(userActionTime)
     Q_UNUSED(handlerInfo)
 
+    if (!ProtocolManager::instance()->isProtocolSupported(account->protocolName())) {
+        context->setFinishedWithError(TP_QT_ERROR_NOT_CAPABLE, "The account for this request is not supported.");
+        return;
+    }
+
+
     Q_FOREACH(const Tp::ChannelPtr channel, channels) {
+        mContexts[channel.data()] = context;
         Tp::TextChannelPtr textChannel = Tp::TextChannelPtr::dynamicCast(channel);
         if (textChannel) {
             Tp::PendingReady *pr = textChannel->becomeReady(Tp::Features()
@@ -83,7 +91,6 @@ void Handler::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
         }
 
     }
-    context->setFinished();
 }
 
 Tp::ChannelClassSpecList Handler::channelFilters()
@@ -92,6 +99,7 @@ Tp::ChannelClassSpecList Handler::channelFilters()
     specList << TelepathyHelper::audioConferenceSpec();
     specList << Tp::ChannelClassSpec::audioCall();
     specList << Tp::ChannelClassSpec::textChat();
+    specList << Tp::ChannelClassSpec::unnamedTextChat();
 
     QVariantMap props;
     props[TP_QT_IFACE_CHANNEL_TYPE_CALL + ".InitialAudio"] = true;
@@ -127,6 +135,10 @@ void Handler::onTextChannelReady(Tp::PendingOperation *op)
     }
 
     mReadyRequests.remove(pr);
+    Tp::MethodInvocationContextPtr<> context = mContexts.take(textChannel.data());
+    if (context) {
+        context->setFinished();
+    }
 
     Q_EMIT textChannelAvailable(textChannel);
 }
@@ -140,15 +152,37 @@ void Handler::onCallChannelReady(Tp::PendingOperation *op)
         return;
     }
 
-    Tp::ChannelPtr channel = mReadyRequests[pr];
+    Tp::ChannelPtr channel = mReadyRequests.take(pr);
     Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
+    Tp::MethodInvocationContextPtr<> context = mContexts.take(channel.data());
 
     if(!callChannel) {
+        if (context) {
+            context->setFinishedWithError(TP_QT_ERROR_CONFUSED, "Channel was not a call channel");
+        }
         qCritical() << "The saved channel is not a Tp::CallChannel";
         return;
     }
 
-    mReadyRequests.remove(pr);
+    // if the call is neither Accepted nor Active, it means it got dispatched directly to the handler without passing
+    // through any approver. For phone calls, this would mean calls getting auto-accepted which is not desirable
+    // so we return an error here
+    bool incoming = false;
+    AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(callChannel->connection());
+    if (accountEntry) {
+        incoming = callChannel->initiatorContact() != accountEntry->account()->connection()->selfContact();
+    }
+    if (incoming && callChannel->callState() != Tp::CallStateAccepted && callChannel->callState() != Tp::CallStateActive) {
+        qWarning() << "Available channel was not approved by telephony-service-approver, ignoring it.";
+        if (context) {
+            context->setFinishedWithError(TP_QT_ERROR_NOT_CAPABLE, "Only channels approved and accepted by telephony-service-approver are supported");
+        }
+        return;
+    }
+
+    if (context) {
+        context->setFinished();
+    }
 
     Q_EMIT callChannelAvailable(callChannel);
 }

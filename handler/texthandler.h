@@ -33,14 +33,15 @@ class TextHandler : public QObject
     Q_OBJECT
 public:
     static TextHandler *instance();
-    void startChat(const QStringList &phoneNumber, const QString &accountId);
+    void startChat(const QStringList &recipients, const QString &accountId);
     void startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts);
 
 public Q_SLOTS:
-    void sendMessage(const QStringList &phoneNumber, const QString &message, const QString &accountId);
-    void sendSilentMessage(const QStringList &phoneNumber, const QString &message, const QString &accountId);
-    void sendMMS(const QStringList &phoneNumbers, const AttachmentList &attachments, const QString &accountId);
-    void acknowledgeMessages(const QStringList &phoneNumber, const QStringList &messageIds, const QString &accountId);
+    void sendMessage(const QStringList &recipients, const QString &message, const QString &accountId);
+    void sendSilentMessage(const QStringList &recipients, const QString &message, const QString &accountId);
+    void sendMMS(const QStringList &recipients, const AttachmentList &attachments, const QString &accountId);
+    void acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId);
+    void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
@@ -49,7 +50,7 @@ protected Q_SLOTS:
     void onConnectedChanged();
 
 protected:
-    Tp::TextChannelPtr existingChat(const QStringList &phoneNumber, const QString &accountId);
+    QList<Tp::TextChannelPtr> existingChannels(const QStringList &targetIds, const QString &accountId);
 
 private:
     explicit TextHandler(QObject *parent = 0);

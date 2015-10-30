@@ -48,3 +48,12 @@ inline QString ubuntuPhonePluginPath() {
         return QString("@CMAKE_SOURCE_DIR@/");
     }
 }
+
+inline QString protocolsDir() {
+    QString directory = qgetenv("TELEPHONY_SERVICE_PROTOCOLS_DIR");
+    if (directory.isEmpty()) {
+        directory = telephonyServiceDir() + "/protocols";
+    }
+
+    return directory;
+}

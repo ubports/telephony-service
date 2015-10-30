@@ -24,6 +24,7 @@
 #include "callmanager.h"
 #include "telepathyhelper.h"
 #include "accountentry.h"
+#include "ofonoaccountentry.h"
 
 #include <QDBusReply>
 #include <QTime>
@@ -72,8 +73,14 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
             SIGNAL(CallPropertiesChanged(QString, QVariantMap)),
             SLOT(onCallPropertiesChanged(QString,QVariantMap)));
 
-    if (mAccount) {
-        setVoicemail(phoneNumber() == mAccount->voicemailNumber());
+    connect(TelepathyHelper::instance()->handlerInterface(),
+            SIGNAL(CallHoldingFailed(QString)),
+            SLOT(onCallHoldingFailed(QString)));
+
+    // in case the account is an ofono account, we can check the voicemail number
+    OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(mAccount);
+    if (ofonoAccount && !ofonoAccount->voicemailNumber().isEmpty()) {
+        setVoicemail(phoneNumber() == ofonoAccount->voicemailNumber());
     }
 
     Q_EMIT incomingChanged();
@@ -153,6 +160,16 @@ void CallEntry::onInternalCallEnded()
     entry->deleteLater();
 }
 
+void CallEntry::onCallHoldingFailed(const QString &objectPath)
+{
+    if (objectPath != mChannel->objectPath()) {
+        return;
+    }
+
+    // make sure we get the hold state again
+    Q_EMIT heldChanged();
+}
+
 void CallEntry::setupCallChannel()
 {
     connect(mChannel.data(),
@@ -163,7 +180,7 @@ void CallEntry::setupCallChannel()
             SLOT(onCallFlagsChanged(Tp::CallFlags)));
     connect(mChannel.data(),
             SIGNAL(localHoldStateChanged(Tp::LocalHoldState,Tp::LocalHoldStateReason)),
-            SIGNAL(heldChanged()));
+            SLOT(onCallLocalHoldStateChanged(Tp::LocalHoldState,Tp::LocalHoldStateReason)));
 
     mLocalMuteState = mMuteInterface.property("LocalMuteState") == 1;
     connect(&mMuteInterface,
@@ -278,7 +295,7 @@ bool CallEntry::ringing() const
 
 QString CallEntry::phoneNumber() const
 {
-    if (mChannel->isConference() || !mChannel->actualFeatures().contains(Tp::CallChannel::FeatureCore)) {
+    if (mChannel->isConference() || !mChannel->actualFeatures().contains(Tp::CallChannel::FeatureCore) || mChannel->targetContact().isNull()) {
         return "";
     }
     return mChannel->targetContact()->id();
@@ -437,6 +454,14 @@ void CallEntry::onCallFlagsChanged(Tp::CallFlags flags)
     Q_UNUSED(flags)
 
     Q_EMIT ringingChanged();
+}
+
+void CallEntry::onCallLocalHoldStateChanged(Tp::LocalHoldState state, Tp::LocalHoldStateReason reason)
+{
+    if (reason == Tp::LocalHoldStateReasonResourceNotAvailable) {
+        Q_EMIT callHoldingFailed();
+    }
+    Q_EMIT heldChanged();
 }
 
 void CallEntry::setVoicemail(bool voicemail)

@@ -1,0 +1,4 @@
+[Protocol]
+Name=ofono
+Features=text,voice
+FallbackProtocol=

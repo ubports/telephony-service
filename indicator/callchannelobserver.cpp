@@ -73,7 +73,7 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
         // add the missed call to the messaging menu
         if (missed) {
             // FIXME: handle conf call
-            MessagingMenu::instance()->addCall(channel->targetContact()->id(), QDateTime::currentDateTime());
+            MessagingMenu::instance()->addCall(channel->targetContact()->id(), accountEntry->accountId(), QDateTime::currentDateTime());
         } else {
             // and show a notification
             // FIXME: handle conf call

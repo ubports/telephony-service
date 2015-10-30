@@ -31,7 +31,10 @@
 #include "ringtone.h"
 #include "callmanager.h"
 #include "callentry.h"
+#include "protocolmanager.h"
 #include "tonegenerator.h"
+#include "telepathyhelper.h"
+#include "accountentry.h"
 
 #include <QContactAvatar>
 #include <QContactDisplayLabel>
@@ -54,24 +57,33 @@ namespace C {
 
 Approver::Approver()
 : Tp::AbstractClientApprover(channelFilters()),
-  mPendingSnapDecision(NULL)
+  mPendingSnapDecision(NULL),
+  mSettleTimer(new QTimer(this))
 {
     mDefaultTitle = C::gettext("Unknown caller");
     mDefaultIcon = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
 
-    ApproverDBus *dbus = new ApproverDBus();
+    ApproverDBus *dbus = new ApproverDBus(this);
     connect(dbus,
             SIGNAL(acceptCallRequested()),
             SLOT(onAcceptCallRequested()));
     connect(dbus,
             SIGNAL(rejectCallRequested()),
             SLOT(onRejectCallRequested()));
+
     dbus->connectToBus();
 
     if (GreeterContacts::isGreeterMode()) {
         connect(GreeterContacts::instance(), SIGNAL(contactUpdated(QtContacts::QContact)),
                 this, SLOT(updateNotification(QtContacts::QContact)));
     }
+
+    QDBusConnection::systemBus().connect("com.canonical.Unity.Screen",
+                                         "/com/canonical/Unity/Screen",
+                                         "com.canonical.Unity.Screen",
+                                         "DisplayPowerStateChange",
+                                         this, SLOT(onUnityStateChanged(int,int)));
+
     // WORKAROUND: we need to use a timer as the qtubuntu sensors backend does not support setPeriod()
     mVibrateTimer.setInterval(4000);
     connect(&mVibrateTimer, SIGNAL(timeout()), &mVibrateEffect, SLOT(start()));
@@ -79,6 +91,33 @@ Approver::Approver()
     mRejectActions["rejectMessage1"] = C::gettext("I'm busy at the moment. I'll call later.");
     mRejectActions["rejectMessage2"] = C::gettext("I'm running late, on my way now.");
     mRejectActions["rejectMessage3"] = C::gettext("Please call me back later.");
+
+    mSettleTimer->setInterval(500);
+    mSettleTimer->setSingleShot(true);
+    connect(mSettleTimer, SIGNAL(timeout()), this, SLOT(onSettleTimerTimeout()));
+    mSettleTimer->start();
+}
+
+void Approver::onSettleTimerTimeout()
+{
+    mSettleTimer->deleteLater();
+    mSettleTimer = NULL;
+}
+
+void Approver::onUnityStateChanged(int state, int reason)
+{
+    if (!mPendingSnapDecision) {
+        return;
+    }
+
+    // state == 0 is power off
+    // reason == 2 is power key
+    if (state == 0 && reason == 2) {
+        Ringtone::instance()->stopIncomingCallSound();
+        mVibrateTimer.stop();
+        mVibrateEffect.setDuration(1);
+        mVibrateEffect.start();
+    }
 }
 
 Approver::~Approver()
@@ -109,6 +148,11 @@ Tp::ChannelDispatchOperationPtr Approver::dispatchOperation(Tp::PendingOperation
 void Approver::addDispatchOperation(const Tp::MethodInvocationContextPtr<> &context,
                                         const Tp::ChannelDispatchOperationPtr &dispatchOperation)
 {
+    if (!ProtocolManager::instance()->isProtocolSupported(dispatchOperation->account()->protocolName())) {
+        context->setFinishedWithError(TP_QT_ERROR_NOT_CAPABLE, "The account for this request is not supported.");
+        return;
+    }
+
     bool willHandle = false;
 
     QList<Tp::ChannelPtr> channels = dispatchOperation->channels();
@@ -258,9 +302,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         return;
     }
 
-    bool isIncoming = channel->initiatorContact() != dispatchOp->connection()->selfContact();
-
-    if (isIncoming && !callChannel->isRequested() && callChannel->callState() == Tp::CallStateInitialised) {
+    if (isIncoming(channel) && !callChannel->isRequested() && callChannel->callState() == Tp::CallStateInitialised) {
         callChannel->setRinging();
     } else {
         onApproved(dispatchOp);
@@ -279,13 +321,19 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         showSnapDecision(dispatchOp, channel);
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
     } else {
+        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(callChannel->connection());
+        if (!account) {
+            qCritical() << "Call exists with no account for connection";
+            return;
+        }
+
         // try to match the contact info
         QContactFetchRequest *request = new QContactFetchRequest(this);
         request->setFilter(QContactPhoneNumber::match(contact->id()));
 
         // lambda function to update the notification
-        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, dispatchOp, channel]() {
-            if (!request || request->state() != QContactAbstractRequest::FinishedState) {
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, dispatchOp, channel](QContactAbstractRequest::State state) {
+            if (!request || state != QContactAbstractRequest::FinishedState) {
                 return;
             }
 
@@ -299,12 +347,17 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
                 // Also notify greeter via AccountsService
                 GreeterContacts::emitContact(contact);
             }
-
             showSnapDecision(dispatchOp, channel, contact);
         });
 
-        request->setManager(ContactUtils::sharedManager());
-        request->start();
+        // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
+        if (account->type() == AccountEntry::PhoneAccount) {
+            request->setManager(ContactUtils::sharedManager());
+            request->start();
+        } else {
+            // just emit the signal to pretend we did a contact search
+            Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
+        }
     }
 }
 
@@ -312,11 +365,13 @@ void Approver::onApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
 {
     closeSnapDecision();
 
+    acceptCallChannels(dispatchOp);
+
     // forward the channel to the handler
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
 
     // and then launch the dialer-app
-    ApplicationUtils::openUrl(QUrl("application:///dialer-app.desktop"));
+    ApplicationUtils::openUrl(QUrl("dialer:///?view=liveCall"));
 
     mDispatchOps.removeAll(dispatchOp);
 }
@@ -329,6 +384,8 @@ void Approver::onHangUpAndApproved(Tp::ChannelDispatchOperationPtr dispatchOp)
     if (CallManager::instance()->foregroundCall()) {
         CallManager::instance()->foregroundCall()->endCall();
     }
+
+    acceptCallChannels(dispatchOp);
 
     // forward the channel to the handler
     dispatchOp->handleWith(TELEPHONY_SERVICE_HANDLER);
@@ -355,8 +412,8 @@ void Approver::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
 void Approver::onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const char *action)
 {
     if (mRejectActions.contains(action)) {
-        QString phoneNumber = dispatchOp->channels().first()->targetContact()->id();
-        ChatManager::instance()->sendMessage(QStringList() << phoneNumber, mRejectActions[action],
+        QString targetId = dispatchOp->channels().first()->targetContact()->id();
+        ChatManager::instance()->sendMessage(QStringList() << targetId, mRejectActions[action],
                                              dispatchOp->account()->uniqueIdentifier());
     }
 
@@ -378,18 +435,21 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     data->self = this;
     data->dispatchOp = dispatchOperation;
     data->channel = channel;
-    bool unknownNumber = telepathyContact->id().startsWith("x-ofono-") || telepathyContact->id().isEmpty();
+    bool unknownNumber = false;
 
     if (!telepathyContact->id().isEmpty()) {
-        if (telepathyContact->id().startsWith("x-ofono-private")) {
+        if (telepathyContact->id().startsWith(OFONO_PRIVATE_NUMBER)) {
             mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
-        } else if (telepathyContact->id().startsWith("x-ofono-unknown")) {
+            unknownNumber = true;
+        } else if (telepathyContact->id().startsWith(OFONO_UNKNOWN_NUMBER)) {
             mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
+            unknownNumber = true;
         } else {
             mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(telepathyContact->id());
         }
     } else {
         mCachedBody = C::gettext("Caller number is not available");
+        unknownNumber = true;
     }
 
     QString displayLabel;
@@ -421,6 +481,9 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     notify_notification_set_hint_string(notification,
                                         "x-canonical-secondary-icon",
                                         "incoming-call");
+    notify_notification_set_hint_int32(notification,
+                                        "x-canonical-snap-decisions-timeout",
+                                        -1);
 
     QString acceptTitle = hasCalls ? C::gettext("Hold + Answer") :
                                      C::gettext("Accept");
@@ -479,7 +542,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
         return false;
     }
 
-    if (CallManager::instance()->hasCalls()) {
+    if (hasCalls) {
         ToneGenerator::instance()->playWaitingTone();
     } else {
         // play a ringtone
@@ -493,6 +556,17 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     }
 
     return true;
+}
+
+void Approver::acceptCallChannels(const Tp::ChannelDispatchOperationPtr dispatchOp)
+{
+    // accept all channels
+    Q_FOREACH(Tp::ChannelPtr channel, dispatchOp->channels()) {
+        Tp::CallChannelPtr callChannel = Tp::CallChannelPtr::dynamicCast(channel);
+        if (callChannel && isIncoming(callChannel) && callChannel->callState() != Tp::CallStateActive) {
+            callChannel->accept();
+        }
+    }
 }
 
 Tp::ChannelDispatchOperationPtr Approver::dispatchOperationForIncomingCall()
@@ -516,6 +590,11 @@ Tp::ChannelDispatchOperationPtr Approver::dispatchOperationForIncomingCall()
     }
 
     return callDispatchOp;
+}
+
+bool Approver::isIncoming(const Tp::ChannelPtr &channel)
+{
+   return channel->initiatorContact() != channel->connection()->selfContact();
 }
 
 void Approver::processChannels()
@@ -660,6 +739,43 @@ void Approver::onRejectCallRequested()
     Tp::ChannelDispatchOperationPtr callDispatchOp = dispatchOperationForIncomingCall();
     if (!callDispatchOp.isNull()) {
         onRejected(callDispatchOp);
+    }
+}
+
+bool Approver::handleMediaKey(bool doubleClick)
+{
+    Q_UNUSED(doubleClick)
+
+    // hasCalls gets the value from handler, so even if CallManager isn't ready right now, we know
+    // if the event will be handled later
+    bool accepted = mPendingSnapDecision || CallManager::instance()->hasCalls();
+
+    // FIXME: Telepathy-qt does not let us know if existing channels are being recovered, 
+    // so if this is the first run, call this method again when mSettleTimer is done
+    if (mSettleTimer) {
+        QObject::connect(mSettleTimer, &QTimer::timeout, [=]() {
+            handleMediaKey(doubleClick);
+        });
+        return accepted;
+    }
+
+    // postpone this to avoid blocking dbus method callers
+    QMetaObject::invokeMethod(this, "processHandleMediaKey", Qt::QueuedConnection, Q_ARG(bool, doubleClick));
+    return accepted;
+}
+
+void Approver::processHandleMediaKey(bool doubleClick)
+{
+    Q_UNUSED(doubleClick)
+
+    if (mPendingSnapDecision) {
+        onAcceptCallRequested();
+    } else if (CallManager::instance()->hasCalls()) {
+        // if there is no incoming call, we have to hangup the current active call
+        CallEntry *call =  CallManager::instance()->foregroundCall();
+        if (call) {
+            call->endCall();
+        }
     }
 }
 

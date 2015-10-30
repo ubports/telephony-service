@@ -32,19 +32,28 @@ approver/approveradaptor.*
 handler/handleradaptor.*
 indicator/*.desktop
 indicator/*.service
+indicator/NotificationsInterface.*
+indicator/indicatoradaptor.*
 
 Testing
-Ubuntu/Telephony/tests/*Test
 Ubuntu/Telephony/qmldir
-libtelephonyservice/tests/*Test
 CTestTestfile.cmake
 test_*.xml
+cmake_uninstall.cmake
 
 coverage*
 
 po/*.gmo
 
-handler/tests/HandlerTest
-handler/tests/dbus-test-wrapper.sh
-handler/tests/mock/mockconnectionadaptor.*
-handler/tests/mock/telepathy-mock
+tests/*/*Test
+tests/common/dbus-test-wrapper.sh
+tests/common/NotificationsMock
+tests/common/MockConnectionInterface.*
+tests/common/mock/mockconnectionadaptor.*
+tests/common/mock/telepathy-mock
+tests/common/dbus-session.conf
+tests/common/dbus-services/*
+tests/Ubuntu.Telephony/ContactWatcherTest
+tests/libtelephonyservice/GreeterContactsTestExe
+tests/libtelephonyservice/GreeterContactsTestServerExe
+tests/libtelephonyservice/*Mock

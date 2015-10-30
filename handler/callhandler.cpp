@@ -28,6 +28,7 @@
 #include "greetercontacts.h"
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
+#include <TelepathyQt/PendingChannelRequest>
 
 #define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
 #define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
@@ -86,11 +87,12 @@ bool CallHandler::hasCalls() const
 }
 
 CallHandler::CallHandler(QObject *parent)
-: QObject(parent)
+: QObject(parent),
+  mHangupRequested(false)
 {
 }
 
-void CallHandler::startCall(const QString &id, const QString &accountId)
+void CallHandler::startCall(const QString &targetId, const QString &accountId)
 {
     // Request the contact to start audio call
     AccountEntry *accountEntry = TelepathyHelper::instance()->accountForId(accountId);
@@ -103,7 +105,7 @@ void CallHandler::startCall(const QString &id, const QString &accountId)
         return;
     }
 
-    connect(connection->contactManager()->contactsForIdentifiers(QStringList() << id),
+    connect(connection->contactManager()->contactsForIdentifiers(QStringList() << targetId),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
@@ -129,7 +131,12 @@ void CallHandler::setHold(const QString &objectPath, bool hold)
         return;
     }
 
-    channel->requestHold(hold);
+    Tp::PendingOperation *op = channel->requestHold(hold);
+    connect(op, &Tp::PendingOperation::finished, [this, objectPath, op] {
+        if (op->isError()) {
+            Q_EMIT callHoldingFailed(objectPath);
+        }
+    });
 }
 
 void CallHandler::setMuted(const QString &objectPath, bool muted)
@@ -170,7 +177,8 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
      * play locally (via tone generator) only if we are on a call, or if this is 
      * dialpad sounds
      */
-    if (GreeterContacts::instance()->dialpadSoundsEnabled() && objectPath.isEmpty()
+    if (GreeterContacts::instance()->dialpadSoundsEnabled() && 
+        !GreeterContacts::instance()->silentMode() && objectPath.isEmpty()
         || !objectPath.isEmpty()) {
         ToneGenerator::instance()->playDTMFTone((uint)event);
     }
@@ -224,7 +232,11 @@ void CallHandler::createConferenceCall(const QStringList &objectPaths)
     }
 
     // there is no need to check the pending request. The new channel will arrive at some point.
-    accountEntry->account()->createConferenceCall(calls, QStringList(), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    Tp::PendingChannelRequest *pcr = accountEntry->account()->createConferenceCall(calls, QStringList(), QDateTime::currentDateTime(),
+                                                                                   TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    connect(pcr, &Tp::PendingChannelRequest::finished, [this, pcr] {
+        Q_EMIT conferenceCallRequestFinished(!pcr->isError());
+    });
 }
 
 void CallHandler::mergeCall(const QString &conferenceObjectPath, const QString &callObjectPath)
@@ -253,8 +265,6 @@ void CallHandler::splitCall(const QString &objectPath)
 
 void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
-    channel->accept();
-
     QDBusInterface callChannelIface(channel->busName(), channel->objectPath(), DBUS_PROPERTIES_IFACE);
     QDBusMessage reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE);
     QVariantList args = reply.arguments();
@@ -311,7 +321,9 @@ void CallHandler::onCallHangupFinished(Tp::PendingOperation *op)
     // if you request it to be closed, the CallStateEnded will never be reached and the UI
     // and logging will be broken.
     Tp::CallChannelPtr channel = mClosingChannels.take(op);
-    mCallChannels.removeAll(channel);
+    if (mCallChannels.count() == 1) {
+        mHangupRequested = true;
+    }
 }
 
 void CallHandler::onCallChannelInvalidated()
@@ -324,9 +336,10 @@ void CallHandler::onCallChannelInvalidated()
 
     mCallChannels.removeAll(channel);
 
-    if (mCallChannels.isEmpty()) {
+    if (mCallChannels.isEmpty() && !mHangupRequested) {
         ToneGenerator::instance()->playCallEndedTone();
     }
+    mHangupRequested = false;
 }
 
 void CallHandler::onCallStateChanged(Tp::CallState state)
@@ -342,6 +355,28 @@ void CallHandler::onCallStateChanged(Tp::CallState state)
         Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
         break;
     }
+}
+
+Tp::CallChannelPtr CallHandler::existingCall(const QString &targetId)
+{
+    Tp::CallChannelPtr channel;
+    Q_FOREACH(const Tp::CallChannelPtr &ch, mCallChannels) {
+        if (ch->isConference()) {
+            continue;
+        }
+
+        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(ch->connection());
+        if (!account) {
+            continue;
+        }
+
+        if (account->compareIds(ch->targetContact()->id(), targetId)) {
+            channel = ch;
+            break;
+        }
+    }
+
+    return channel;
 }
 
 Tp::CallChannelPtr CallHandler::callFromObjectPath(const QString &objectPath)

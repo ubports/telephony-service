@@ -56,9 +56,12 @@ public:
     bool showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOperation,
                           const Tp::ChannelPtr channel,
                           const QContact &contact = QContact());
+    void acceptCallChannels(const Tp::ChannelDispatchOperationPtr dispatchOp);
+    bool handleMediaKey(bool doubleClick);
 
 protected:
     Tp::ChannelDispatchOperationPtr dispatchOperationForIncomingCall();
+    bool isIncoming(const Tp::ChannelPtr &channel);
 
 private Q_SLOTS:
     void processChannels();
@@ -71,6 +74,9 @@ private Q_SLOTS:
     void onAcceptCallRequested();
     void onRejectCallRequested();
     void updateNotification(const QtContacts::QContact &contact);
+    void onUnityStateChanged(int state, int reason);
+    void onSettleTimerTimeout();
+    void processHandleMediaKey(bool doubleClick);
 
 private:
     QList<Tp::ChannelDispatchOperationPtr> mDispatchOps;
@@ -81,6 +87,7 @@ private:
     QString mCachedBody;
     QFeedbackHapticsEffect mVibrateEffect;
     QTimer mVibrateTimer;
+    QTimer *mSettleTimer;
     QMap<QString,QString> mRejectActions;
 };
 

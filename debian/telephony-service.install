@@ -8,11 +8,12 @@ usr/share/icons/hicolor/*/apps/telephony-service*.png
 usr/share/icons/ubuntu-mono-dark/status/*/indicator-call.svg
 usr/share/icons/ubuntu-mono-light/status/*/indicator-call.svg
 usr/share/locale/*/LC_MESSAGES/telephony-service.mo
-usr/share/notify-osd/icons/gnome/scalable/status/notification-group-call.svg
-usr/share/notify-osd/icons/gnome/scalable/status/notification-unavailable-image-call.svg
-usr/share/notify-osd/icons/gnome/scalable/status/notification-unknown-call.svg
+usr/share/notify-osd/icons/Humanity/scalable/status/notification-group-call.svg
+usr/share/notify-osd/icons/Humanity/scalable/status/notification-unavailable-image-call.svg
+usr/share/notify-osd/icons/Humanity/scalable/status/notification-unknown-call.svg
 usr/share/polkit-1/actions/*TelephonyService*.policy
 usr/share/telepathy/clients/TelephonyService*.client
 usr/share/telephony-service/assets/*
+usr/share/telephony-service/protocols/*
 var/lib/polkit-1/localauthority/10-vendor.d/*TelephonyService*.pkla
 upstart/telephony-service-indicator.conf /usr/share/upstart/sessions
