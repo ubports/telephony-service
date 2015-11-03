@@ -50,6 +50,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
       mDefaultMessagingAccount(NULL),
       mChannelObserver(0),
       mReady(false),
+      mChannelObserverPtr(NULL),
       mHandlerInterface(0),
       mPhoneSettings(new QGSettings("com.ubuntu.phone")),
       mApproverInterface(0),
@@ -233,10 +234,11 @@ void TelepathyHelper::registerChannelObserver(const QString &observerName)
     }
 
     if (mChannelObserver) {
-        mChannelObserver->deleteLater();
+        unregisterClient(mChannelObserver);
     }
 
     mChannelObserver = new ChannelObserver(this);
+    mChannelObserverPtr = Tp::AbstractClientPtr(mChannelObserver);
     if (registerClient(mChannelObserver, name)) {
         // messages
         connect(mChannelObserver, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
@@ -254,6 +256,7 @@ void TelepathyHelper::unregisterChannelObserver()
 {
     unregisterClient(mChannelObserver);
     mChannelObserver->deleteLater();
+    mChannelObserverPtr.reset();
     mChannelObserver = NULL;
     Q_EMIT channelObserverUnregistered();
 }

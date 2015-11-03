@@ -146,6 +146,7 @@ private:
     AccountEntry *mDefaultMessagingAccount;
     ChannelObserver *mChannelObserver;
     bool mReady;
+    Tp::AbstractClientPtr mChannelObserverPtr;
     bool mMmsGroupChat;
     mutable QDBusInterface *mHandlerInterface;
     QGSettings *mPhoneSettings;
