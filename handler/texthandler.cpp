@@ -370,6 +370,7 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
                 // FIXME: we can't trust recipients for group chats in regular IM accounts
                 sendMessage(it->accountId, it->recipients, it->message, it->attachments, it->properties);
                 it = mPendingMessages.erase(it);
+                break;
              } else {
                 ++it;
              }
