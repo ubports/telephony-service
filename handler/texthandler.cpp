@@ -365,15 +365,18 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 
     QList<PendingMessage>::iterator it = mPendingMessages.begin();
     while (it != mPendingMessages.end()) {
+        bool found = false;
         Q_FOREACH(const Tp::TextChannelPtr &existingChannel, existingChannels(it->recipients, it->accountId)) {
             if (existingChannel == channel) {
                 // FIXME: we can't trust recipients for group chats in regular IM accounts
                 sendMessage(it->accountId, it->recipients, it->message, it->attachments, it->properties);
                 it = mPendingMessages.erase(it);
+                found = true;
                 break;
-             } else {
-                ++it;
-             }
+            }
+        }
+        if (!found) {
+            ++it;
         }
     }
 }
