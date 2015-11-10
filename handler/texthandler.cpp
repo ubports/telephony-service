@@ -402,10 +402,24 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QStringList &targe
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
         AccountEntry *channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
-        if (!channelAccount || channel->groupContacts(false).size() != targetIds.size()
-            || channelAccount->accountId() != accountId) {
+
+        if (!channelAccount || channelAccount->accountId() != accountId) {
             continue;
         }
+
+        // this is a special case. We have to check if we are looking for a channel open with our self contact
+        bool channelToSelfContact = channel->groupContacts(true).size() == 1 && targetIds.size() == 1 &&
+                          channel->targetHandleType() == Tp::HandleTypeContact &&
+                          channel->targetId() == channelAccount->selfContactId();
+        if (channelToSelfContact) {
+            channels.append(channel);
+            continue;
+        }
+
+        if (channel->groupContacts(false).size() != targetIds.size()) {
+            continue;
+        }
+
         Q_FOREACH(const QString &targetId, targetIds) {
             Q_FOREACH(const Tp::ContactPtr &channelContact, channel->groupContacts(false)) {
                 if (channelAccount->compareIds(channelContact->id(), targetId)) {
