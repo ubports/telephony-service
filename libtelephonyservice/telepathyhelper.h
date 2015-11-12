@@ -123,6 +123,7 @@ public Q_SLOTS:
     Q_INVOKABLE void unregisterChannelObserver();
 
 protected:
+    explicit TelepathyHelper(QObject *parent = 0);
     void setupAccountEntry(AccountEntry *entry);
 
 private Q_SLOTS:
@@ -133,7 +134,6 @@ private Q_SLOTS:
     void onSettingsChanged(const QString&);
 
 private:
-    explicit TelepathyHelper(QObject *parent = 0);
     Tp::AccountManagerPtr mAccountManager;
     Tp::Features mAccountManagerFeatures;
     Tp::Features mAccountFeatures;
