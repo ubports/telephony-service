@@ -28,16 +28,24 @@
 PresenceRequest::PresenceRequest(QObject *parent) :
     QObject(parent), mCompleted(false)
 {
+    connect(TelepathyHelper::instance(), SIGNAL(accountAdded(AccountEntry*)), SLOT(onAccountAdded(AccountEntry*)));
 }
 
 PresenceRequest::~PresenceRequest()
 {
 }
 
+void PresenceRequest::onAccountAdded(AccountEntry *account)
+{
+    if (account->accountId() == mAccountId) {
+        startPresenceRequest();
+    }
+}
+
 void PresenceRequest::startPresenceRequest()
 {
     if (!mCompleted || mIdentifier.isEmpty() || mAccountId.isEmpty()) {
-        // componenty is not ready yet
+        // component is not ready yet
         return;
     }
 

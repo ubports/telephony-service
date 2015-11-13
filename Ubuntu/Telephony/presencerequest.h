@@ -75,6 +75,7 @@ private Q_SLOTS:
     void startPresenceRequest();
     void onPresenceChanged();
     void onContactReceived(Tp::PendingOperation *op);
+    void onAccountAdded(AccountEntry *account);
 
 Q_SIGNALS:
     void identifierChanged();
