@@ -32,15 +32,15 @@ namespace C {
 // FIXME: port to libqmenumodel if possible
 AuthHandler::AuthHandler(QObject *parent)
 : QObject(parent),
-  m_menuNotification("authentication", false),
-  m_notifications("org.freedesktop.Notifications",
+  mMenuNotification("authentication", false),
+  mNotifications("org.freedesktop.Notifications",
                   "/org/freedesktop/Notifications", QDBusConnection::sessionBus())
 {
     setupAccounts();
     connect(TelepathyHelper::instance(), SIGNAL(setupReady()), this, SLOT(setupAccounts()));
     connect(TelepathyHelper::instance(), SIGNAL(accountsChanged()), this, SLOT(setupAccounts()));
-    connect(&m_notifications, SIGNAL(ActionInvoked(uint, const QString &)), this, SLOT(actionInvoked(uint, const QString &)));
-    connect(&m_notifications, SIGNAL(NotificationClosed(uint, uint)), this, SLOT(notificationClosed(uint, uint)));
+    connect(&mNotifications, SIGNAL(ActionInvoked(uint, const QString &)), this, SLOT(actionInvoked(uint, const QString &)));
+    connect(&mNotifications, SIGNAL(NotificationClosed(uint, uint)), this, SLOT(notificationClosed(uint, uint)));
 
     connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, [&]() {
         Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
@@ -86,7 +86,7 @@ void AuthHandler::processStatusChange(AccountEntry *account, Tp::ConnectionStatu
         return;
     }
 
-    NotificationMenu *menu = &m_menuNotification;
+    NotificationMenu *menu = &mMenuNotification;
     QString yesActionId = "yes_id";
     QString yesActionLabel = C::gettext("Yes");
 
@@ -111,7 +111,7 @@ void AuthHandler::processStatusChange(AccountEntry *account, Tp::ConnectionStatu
 
     notificationHints["x-canonical-private-menu-model"] = menuModelPaths;
 
-    uint notificationId = m_notifications.Notify("telephony-service-indicator",
+    uint notificationId = mNotifications.Notify("telephony-service-indicator",
                         0, "", title, message, actions, notificationHints, 0);
     mAuthFailureRequests[notificationId] = account;
 }
@@ -133,7 +133,7 @@ void AuthHandler::notificationClosed(uint id, uint reason) {
     if (!mAuthFailureRequests.keys().contains(id)) {
         return;
     }
-    m_notifications.CloseNotification(id);
+    mNotifications.CloseNotification(id);
     mAuthFailureRequests.remove(id);
 }
 
@@ -141,6 +141,6 @@ void AuthHandler::clear()
 {
     Q_FOREACH (uint id, mAuthFailureRequests.keys()) {
         mAuthFailureRequests.remove(id);
-        m_notifications.CloseNotification(id);
+        mNotifications.CloseNotification(id);
     }
 }
