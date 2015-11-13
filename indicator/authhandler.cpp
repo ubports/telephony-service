@@ -29,6 +29,7 @@ namespace C {
 #include "authhandler.h"
 #include "telepathyhelper.h"
 
+// FIXME: port to libqmenumodel if possible
 AuthHandler::AuthHandler(QObject *parent)
 : QObject(parent),
   m_menuNotification("authentication", false),
