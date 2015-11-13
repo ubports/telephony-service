@@ -12,4 +12,9 @@ include_directories(
 
 generate_telepathy_test(MessagingMenuTest
               SOURCES MessagingMenuTest.cpp messagingmenumock.cpp ${CMAKE_SOURCE_DIR}/indicator/messagingmenu.cpp
-              LIBRARIES  ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest ${HISTORY_LIBRARIES})
+              LIBRARIES ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest ${HISTORY_LIBRARIES})
+generate_test(NotificationMenuTest
+              SOURCES NotificationMenuTest.cpp ${CMAKE_SOURCE_DIR}/indicator/notificationmenu.cpp
+              LIBRARIES ${NOTIFY_LIBRARIES}
+              QT5_MODULES Core DBus Test
+              USE_DBUS TRUE)

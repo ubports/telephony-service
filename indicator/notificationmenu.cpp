@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2015 Canonical, Ltd.
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -44,7 +44,8 @@ public:
         }
 
 	GDBusConnection *m_connection;
-	QString m_busName;
+    QString m_id;
+    QString m_busName;
 	QString m_actionPath;
 	QString m_menuPath;
 	unsigned int m_exportedActionGroupId;
@@ -53,9 +54,10 @@ public:
 };
 
 NotificationMenu::NotificationMenu(const QString &id, bool needsResponse, bool password) :
-		p(new NotificationMenuPriv()) {
+        p(new NotificationMenuPriv()) {
 	int exportrev;
 
+    p->m_id = id;
 	p->m_busName = QString::fromUtf8(
 			g_dbus_connection_get_unique_name(p->m_connection));
 
@@ -119,7 +121,12 @@ NotificationMenu::~NotificationMenu() {
 	g_dbus_connection_unexport_action_group(p->m_connection,
 			p->m_exportedActionGroupId);
 	g_dbus_connection_unexport_menu_model(p->m_connection,
-			p->m_exportedMenuModelId);
+                                          p->m_exportedMenuModelId);
+}
+
+const QString &NotificationMenu::id() const
+{
+    return p->m_id;
 }
 
 const QString & NotificationMenu::busName() const {

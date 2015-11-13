@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2015 Canonical, Ltd.
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -29,6 +29,7 @@ class NotificationMenu {
 public:
 	NotificationMenu(const QString &id, bool needsResponse = false, bool password = false);
 	virtual ~NotificationMenu();
+    const QString & id() const;
 	const QString & busName() const;
 	const QString & response() const;
 	const QString & actionPath() const;
