@@ -44,24 +44,31 @@ typedef struct {
     QList<QVariantMap> entries;
 } Menu;
 
-Q_DECLARE_METATYPE(Menu)
 Q_DECLARE_METATYPE(QList<Menu>)
 
 QDBusArgument &operator<<(QDBusArgument &argument, const QList<Menu> &menuList)
 {
-    qDebug() << "<<Argument type:" << argument.currentSignature() << argument.currentType();
+    qDebug() << "BLABLA1";
     argument.beginArray();
     Q_FOREACH(const Menu &menu, menuList) {
-        qDebug() << "Argument type:" << argument.currentSignature() << argument.currentType();
+        qDebug() << "BLABLA2";
+        argument.beginStructure();
         argument << menu.group;
         argument << menu.number;
+        qDebug() << "BLABLA3";
         argument.beginArray();
         Q_FOREACH(const QVariantMap &entry, menu.entries) {
             argument << entry;
         }
+        qDebug() << "BLABLA4";
         argument.endArray();
+        qDebug() << "BLABLA5";
+        argument.endStructure();
+        qDebug() << "BLABLA6";
     }
+    qDebug() << "BLABLA7";
     argument.endArray();
+    qDebug() << "BLABLA8";
     return argument;
 }
 
@@ -70,6 +77,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, QList<Menu> &menu
     qDebug() << ">>Argument type:" << argument.currentSignature() << argument.currentType();
     argument.beginArray();
     while (!argument.atEnd()) {
+        argument.beginStructure();
         qDebug() << "Argument type:" << argument.currentSignature() << argument.currentType();
         Menu menu;
         argument >> menu.group;
@@ -81,6 +89,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, QList<Menu> &menu
             menu.entries << entry;
         }
         argument.endArray();
+        argument.endStructure();
         menuList << menu;
     }
     argument.endArray();
@@ -89,6 +98,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, QList<Menu> &menu
 
 void NotificationMenuTest::initTestCase()
 {
+    qRegisterMetaType<QList<Menu>>();
     qDBusRegisterMetaType<QList<Menu>>();
 }
 
