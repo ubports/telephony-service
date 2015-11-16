@@ -41,7 +41,7 @@ public:
 			GVariant *variant, gpointer userData) {
 		NotificationMenuPriv *self(reinterpret_cast<NotificationMenuPriv*>(userData));
 		self->m_response = QString::fromUtf8(g_variant_get_string(variant, 0));
-		}
+	}
 
 	GDBusConnection *m_connection;
 	QString m_id;
