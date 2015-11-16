@@ -38,67 +38,46 @@ private:
     bool isRegistered(const QString &service);
 };
 
-typedef struct {
+struct Menu {
     uint group;
     uint number;
     QList<QVariantMap> entries;
-} Menu;
+};
 
-Q_DECLARE_METATYPE(QList<Menu>)
+Q_DECLARE_METATYPE(Menu)
 
-QDBusArgument &operator<<(QDBusArgument &argument, const QList<Menu> &menuList)
+QDBusArgument &operator<<(QDBusArgument &argument, const Menu &menu)
 {
-    qDebug() << "BLABLA1";
+    argument.beginStructure();
+    argument << menu.group;
+    argument << menu.number;
     argument.beginArray();
-    Q_FOREACH(const Menu &menu, menuList) {
-        qDebug() << "BLABLA2";
-        argument.beginStructure();
-        argument << menu.group;
-        argument << menu.number;
-        qDebug() << "BLABLA3";
-        argument.beginArray();
-        Q_FOREACH(const QVariantMap &entry, menu.entries) {
-            argument << entry;
-        }
-        qDebug() << "BLABLA4";
-        argument.endArray();
-        qDebug() << "BLABLA5";
-        argument.endStructure();
-        qDebug() << "BLABLA6";
+    Q_FOREACH(const QVariantMap &entry, menu.entries) {
+        argument << entry;
     }
-    qDebug() << "BLABLA7";
     argument.endArray();
-    qDebug() << "BLABLA8";
+    argument.endStructure();
     return argument;
 }
 
-const QDBusArgument &operator>>(const QDBusArgument &argument, QList<Menu> &menuList)
+const QDBusArgument &operator>>(const QDBusArgument &argument, Menu &menu)
 {
-    qDebug() << ">>Argument type:" << argument.currentSignature() << argument.currentType();
+    argument.beginStructure();
+    argument >> menu.group;
+    argument >> menu.number;
     argument.beginArray();
     while (!argument.atEnd()) {
-        argument.beginStructure();
-        qDebug() << "Argument type:" << argument.currentSignature() << argument.currentType();
-        Menu menu;
-        argument >> menu.group;
-        argument >> menu.number;
-        argument.beginArray();
-        while (!argument.atEnd()) {
-            QVariantMap entry;
-            argument >> entry;
-            menu.entries << entry;
-        }
-        argument.endArray();
-        argument.endStructure();
-        menuList << menu;
+        QVariantMap entry;
+        argument >> entry;
+        menu.entries << entry;
     }
     argument.endArray();
+    argument.endStructure();
     return argument;
 }
 
 void NotificationMenuTest::initTestCase()
 {
-    qRegisterMetaType<QList<Menu>>();
     qDBusRegisterMetaType<QList<Menu>>();
 }
 
@@ -132,18 +111,22 @@ void NotificationMenuTest::testResponseMenu()
     QVERIFY(isRegistered(menu.busName()));
     QDBusInterface menuInterface(menu.busName(), menu.menuPath(), "org.gtk.Menus");
     QVERIFY(menuInterface.isValid());
-    qDebug() << "BLABLA going to call";
 
     QDBusPendingReply<QList<Menu>> menuReply = menuInterface.asyncCall("Start", QVariant::fromValue(QList<uint>() << 0));
     QTRY_VERIFY(menuReply.isFinished());
     QVERIFY(menuReply.isValid());
 
-    qDebug() << "BLABLA going to get the reply";
     // parse the reply
     QList<Menu> menus = menuReply.value();
-    qDebug()<< "Got reply.";
+    QCOMPARE(menus.count(), 1);
+    Menu &theMenu = menus.first();
+    QCOMPARE(theMenu.entries.count(), 1);
+    QVariantMap entry = theMenu.entries.first();
 
-    qDebug() << menus.count();
+    // check the properties
+    QCOMPARE(entry["action"].toString(), QString("notifications.%1").arg(id));
+    QCOMPARE(entry["x-canonical-type"].toString(), QString("com.canonical.snapdecision.textfield"));
+    QCOMPARE(entry["x-echo-mode-password"].toBool(), false);
 
     QDBusInterface actionInterface(menu.busName(), menu.actionPath(), "org.gtk.Actions");
     QVERIFY(actionInterface.isValid());
@@ -160,7 +143,39 @@ void NotificationMenuTest::testResponseMenu()
 
 void NotificationMenuTest::testPasswordMenu()
 {
+    QString id("password");
+    NotificationMenu menu(id, true, true);
+    QVERIFY(isRegistered(menu.busName()));
+    QDBusInterface menuInterface(menu.busName(), menu.menuPath(), "org.gtk.Menus");
+    QVERIFY(menuInterface.isValid());
 
+    QDBusPendingReply<QList<Menu>> menuReply = menuInterface.asyncCall("Start", QVariant::fromValue(QList<uint>() << 0));
+    QTRY_VERIFY(menuReply.isFinished());
+    QVERIFY(menuReply.isValid());
+
+    // parse the reply
+    QList<Menu> menus = menuReply.value();
+    QCOMPARE(menus.count(), 1);
+    Menu &theMenu = menus.first();
+    QCOMPARE(theMenu.entries.count(), 1);
+    QVariantMap entry = theMenu.entries.first();
+
+    // check the properties
+    QCOMPARE(entry["action"].toString(), QString("notifications.%1").arg(id));
+    QCOMPARE(entry["x-canonical-type"].toString(), QString("com.canonical.snapdecision.textfield"));
+    QCOMPARE(entry["x-echo-mode-password"].toBool(), true);
+
+    QDBusInterface actionInterface(menu.busName(), menu.actionPath(), "org.gtk.Actions");
+    QVERIFY(actionInterface.isValid());
+
+    QDBusPendingReply<QStringList> listReply = actionInterface.asyncCall("List");
+    QTRY_VERIFY(listReply.isFinished());
+    QVERIFY(listReply.isValid());
+
+    // check that the actions contains the required id
+    QStringList actionsList = listReply.value();
+    QCOMPARE(actionsList.count(), 1);
+    QCOMPARE(actionsList.first(), id);
 }
 
 bool NotificationMenuTest::isRegistered(const QString &service)
