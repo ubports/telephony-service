@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2015 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -59,8 +59,8 @@ void PresenceRequest::startPresenceRequest()
     Tp::ContactManagerPtr contactManager = account->account()->connection()->contactManager();
     Tp::PendingContacts *pendingContact = contactManager->contactsForIdentifiers(QStringList() << mIdentifier);
     connect(pendingContact,
-                SIGNAL(finished(Tp::PendingOperation*)),
-                SLOT(onContactReceived(Tp::PendingOperation*)));
+            SIGNAL(finished(Tp::PendingOperation*)),
+            SLOT(onContactReceived(Tp::PendingOperation*)));
 }
 
 void PresenceRequest::onContactReceived(Tp::PendingOperation *op)
