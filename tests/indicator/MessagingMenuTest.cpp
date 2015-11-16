@@ -23,6 +23,7 @@
 #include "messagingmenu.h"
 #include "messagingmenumock.h"
 #include "telepathyhelper.h"
+#include "mockcontroller.h"
 
 class MessagingMenuTest : public TelepathyTest
 {
@@ -34,8 +35,12 @@ private Q_SLOTS:
     void cleanup();
     void testCallNotificationAdded();
     void testCallNotificationRemoved();
+    void testTextMessagesNotificationAdded();
 private:
-    Tp::AccountPtr mAccount;
+    Tp::AccountPtr mOfonoAccount;
+    Tp::AccountPtr mMultimediaAccount;
+    MockController *mOfonoMockController;
+    MockController *mMultimediaMockController;
 };
 
 void MessagingMenuTest::initTestCase()
@@ -49,8 +54,15 @@ void MessagingMenuTest::initTestCase()
     ContactUtils::sharedManager("memory");
 
     QSignalSpy accountAddedSpy(TelepathyHelper::instance(), SIGNAL(accountAdded(AccountEntry*)));
-    mAccount = addAccount("mock", "ofono", "theAccount");
+    mOfonoAccount = addAccount("mock", "ofono", "theOfonoAccount");
     QTRY_COMPARE(accountAddedSpy.count(), 1);
+    accountAddedSpy.clear();
+    mOfonoMockController = new MockController("ofono", this);
+
+    mMultimediaAccount = addAccount("mock", "multimedia", "theMultimediaAccount");
+    QTRY_COMPARE(accountAddedSpy.count(), 1);
+
+    mMultimediaMockController = new MockController("multimedia", this);
 }
 
 void MessagingMenuTest::cleanupTestCase()
@@ -67,7 +79,7 @@ void MessagingMenuTest::testCallNotificationAdded()
 {
     QString caller("12345");
     QSignalSpy messageAddedSpy(MessagingMenuMock::instance(), SIGNAL(messageAdded(QString,QString,QString,bool)));
-    MessagingMenu::instance()->addCall(caller, mAccount->uniqueIdentifier(), QDateTime::currentDateTime());
+    MessagingMenu::instance()->addCall(caller, mOfonoAccount->uniqueIdentifier(), QDateTime::currentDateTime());
     QTRY_COMPARE(messageAddedSpy.count(), 1);
     QCOMPARE(messageAddedSpy.first()[1].toString(), caller);
 }
@@ -76,10 +88,31 @@ void MessagingMenuTest::testCallNotificationRemoved()
 {
     QString caller("2345678");
     QSignalSpy messageRemovedSpy(MessagingMenuMock::instance(), SIGNAL(messageRemoved(QString,QString)));
-    MessagingMenu::instance()->addCall(caller, mAccount->uniqueIdentifier(), QDateTime::currentDateTime());
-    MessagingMenu::instance()->removeCall(caller, mAccount->uniqueIdentifier());
+    MessagingMenu::instance()->addCall(caller, mOfonoAccount->uniqueIdentifier(), QDateTime::currentDateTime());
+    MessagingMenu::instance()->removeCall(caller, mOfonoAccount->uniqueIdentifier());
     QCOMPARE(messageRemovedSpy.count(), 1);
     QCOMPARE(messageRemovedSpy.first()[1].toString(), caller);
+}
+
+void MessagingMenuTest::testTextMessagesNotificationAdded()
+{
+    QDBusInterface notificationsMock("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications");
+    QSignalSpy notificationSpy(&notificationsMock, SIGNAL(MockNotificationReceived(QString, uint, QString, QString, QString, QStringList, QVariantMap, int)));
+
+    QVariantMap properties;
+    properties["Sender"] = "12345";
+    properties["Recipients"] = (QStringList() << "12345");
+    QStringList messages;
+    messages << "Hi there" << "How are you" << "Always look on the bright side of life";
+    Q_FOREACH(const QString &message, messages) {
+        mMultimediaMockController->PlaceIncomingMessage(message, properties);
+    }
+
+    Q_FOREACH(const QString &message, messages) {
+        mOfonoMockController->PlaceIncomingMessage(message, properties);
+    }
+
+    TRY_COMPARE(notificationSpy.count(), 6);
 }
 
 QTEST_MAIN(MessagingMenuTest)

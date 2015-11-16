@@ -1,6 +1,7 @@
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../common
+    ${CMAKE_BINARY_DIR}/tests/common
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_SOURCE_DIR}/indicator
@@ -12,4 +13,8 @@ include_directories(
 
 generate_telepathy_test(MessagingMenuTest
               SOURCES MessagingMenuTest.cpp messagingmenumock.cpp ${CMAKE_SOURCE_DIR}/indicator/messagingmenu.cpp
-              LIBRARIES  ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest ${HISTORY_LIBRARIES})
+              LIBRARIES  ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest ${HISTORY_LIBRARIES}
+              TASKS --task ${CMAKE_BINARY_DIR}/indicator/telephony-service-indicator
+                    --task-name telephony-service-indicator
+                    --wait-for com.canonical.TelephonyServiceHandler
+                    --ignore-return)
