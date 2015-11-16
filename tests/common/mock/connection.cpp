@@ -273,6 +273,11 @@ void MockConnection::setOnline(bool online)
     simplePresenceIface->setPresences(presences);
 }
 
+void MockConnection::simulateAuthFailure()
+{
+    setStatus(Tp::ConnectionStatusDisconnected, Tp::ConnectionStatusReasonAuthenticationFailed);
+}
+
 uint MockConnection::newHandle(const QString &identifier)
 {
     static int handleCount = 0;

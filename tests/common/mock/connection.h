@@ -61,6 +61,7 @@ public:
     uint setPresenceFail(const QString& status, const QString& statusMessage, Tp::DBusError *error);
     void connect(Tp::DBusError *error);
     void setOnline(bool online);
+    void simulateAuthFailure();
 
     Tp::BaseConnectionRequestsInterfacePtr requestsIface;
     Tp::BaseConnectionSimplePresenceInterfacePtr simplePresenceIface;

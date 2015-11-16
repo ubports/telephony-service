@@ -51,6 +51,11 @@
             <arg name="status" type="s" direction="in"/>
             <arg name="statusMessage" type="s" direction="in"/>
         </method>
+        <method name="SimulateAuthFailure">
+            <dox:d><![CDATA[
+                Simulate an authentication failure
+            ]]></dox:d>
+        </method>
         <method name="SetVoicemailIndicator">
             <dox:d><![CDATA[
                 Set the voicemail indicator on/off
