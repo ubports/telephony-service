@@ -121,6 +121,7 @@ void TextHandler::startChatRoom(const QString &accountId, const QVariantMap &pro
 {
     Q_UNUSED(accountId)
     Q_UNUSED(properties)
+    // FIXME: implement
 }
 
 void TextHandler::startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts)
