@@ -21,6 +21,7 @@
 #include <QDBusInterface>
 #include <QDBusReply>
 #include <QDBusConnectionInterface>
+#include <QDBusMetaType>
 #include "notificationmenu.h"
 
 class NotificationMenuTest : public QObject
@@ -28,6 +29,7 @@ class NotificationMenuTest : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
+    void initTestCase();
     void testRegularMenu();
     void testResponseMenu();
     void testPasswordMenu();
@@ -36,7 +38,59 @@ private:
     bool isRegistered(const QString &service);
 };
 
+typedef struct {
+    uint group;
+    uint number;
+    QList<QVariantMap> entries;
+} Menu;
 
+Q_DECLARE_METATYPE(Menu)
+Q_DECLARE_METATYPE(QList<Menu>)
+
+QDBusArgument &operator<<(QDBusArgument &argument, const QList<Menu> &menuList)
+{
+    qDebug() << "<<Argument type:" << argument.currentSignature() << argument.currentType();
+    argument.beginArray();
+    Q_FOREACH(const Menu &menu, menuList) {
+        qDebug() << "Argument type:" << argument.currentSignature() << argument.currentType();
+        argument << menu.group;
+        argument << menu.number;
+        argument.beginArray();
+        Q_FOREACH(const QVariantMap &entry, menu.entries) {
+            argument << entry;
+        }
+        argument.endArray();
+    }
+    argument.endArray();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, QList<Menu> &menuList)
+{
+    qDebug() << ">>Argument type:" << argument.currentSignature() << argument.currentType();
+    argument.beginArray();
+    while (!argument.atEnd()) {
+        qDebug() << "Argument type:" << argument.currentSignature() << argument.currentType();
+        Menu menu;
+        argument >> menu.group;
+        argument >> menu.number;
+        argument.beginArray();
+        while (!argument.atEnd()) {
+            QVariantMap entry;
+            argument >> entry;
+            menu.entries << entry;
+        }
+        argument.endArray();
+        menuList << menu;
+    }
+    argument.endArray();
+    return argument;
+}
+
+void NotificationMenuTest::initTestCase()
+{
+    qDBusRegisterMetaType<QList<Menu>>();
+}
 
 void NotificationMenuTest::testRegularMenu()
 {
@@ -68,30 +122,18 @@ void NotificationMenuTest::testResponseMenu()
     QVERIFY(isRegistered(menu.busName()));
     QDBusInterface menuInterface(menu.busName(), menu.menuPath(), "org.gtk.Menus");
     QVERIFY(menuInterface.isValid());
+    qDebug() << "BLABLA going to call";
 
-    QDBusPendingReply<QDBusArgument> menuReply = menuInterface.asyncCall("Start", QVariant::fromValue(QList<uint>() << 0));
+    QDBusPendingReply<QList<Menu>> menuReply = menuInterface.asyncCall("Start", QVariant::fromValue(QList<uint>() << 0));
     QTRY_VERIFY(menuReply.isFinished());
     QVERIFY(menuReply.isValid());
 
+    qDebug() << "BLABLA going to get the reply";
     // parse the reply
-    const QDBusArgument argument(menuReply.value());
+    QList<Menu> menus = menuReply.value();
+    qDebug()<< "Got reply.";
 
-    argument.beginArray();
-    while (!argument.atEnd()) {
-        uint group, number;
-        argument >> group;
-        argument >> number;
-        argument.beginArray();
-        QList<QVariantMap> entries;
-        while (!argument.atEnd()) {
-            QVariantMap entry;
-            argument >> entry;
-            entries << entry;
-        }
-        argument.endArray();
-    }
-    argument.endArray();
-
+    qDebug() << menus.count();
 
     QDBusInterface actionInterface(menu.busName(), menu.actionPath(), "org.gtk.Actions");
     QVERIFY(actionInterface.isValid());
