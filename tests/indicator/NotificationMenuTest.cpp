@@ -33,6 +33,7 @@ private Q_SLOTS:
     void testRegularMenu();
     void testResponseMenu();
     void testPasswordMenu();
+    void testResponseValue();
 
 private:
     bool isRegistered(const QString &service);
@@ -176,6 +177,28 @@ void NotificationMenuTest::testPasswordMenu()
     QStringList actionsList = listReply.value();
     QCOMPARE(actionsList.count(), 1);
     QCOMPARE(actionsList.first(), id);
+}
+
+void NotificationMenuTest::testResponseValue()
+{
+    QString id("responsevalue");
+    QString response("theresponse");
+    NotificationMenu menu(id, true, false);
+    QVERIFY(isRegistered(menu.busName()));
+
+    // check that the response is empty by default
+    QVERIFY(menu.response().isEmpty());
+    QDBusInterface actionInterface(menu.busName(), menu.actionPath(), "org.gtk.Actions");
+    QVERIFY(actionInterface.isValid());
+
+    QDBusPendingCall pendingCall = actionInterface.asyncCall("SetState", id, QVariant::fromValue(QDBusVariant(response)), QVariantMap());
+    QDBusPendingCallWatcher watcher(pendingCall);
+    QTRY_VERIFY(watcher.isFinished());
+    QCOMPARE(menu.response(), response);
+
+    // now clear the response and check it is cleared
+    menu.clearResponse();
+    QVERIFY(menu.response().isEmpty());
 }
 
 bool NotificationMenuTest::isRegistered(const QString &service)

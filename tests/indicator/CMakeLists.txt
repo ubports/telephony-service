@@ -17,5 +17,4 @@ generate_test(NotificationMenuTest
               SOURCES NotificationMenuTest.cpp ${CMAKE_SOURCE_DIR}/indicator/notificationmenu.cpp
               LIBRARIES ${NOTIFY_LIBRARIES}
               QT5_MODULES Core DBus Test
-              #TASKS --task dbus-monitor
               USE_DBUS TRUE)
