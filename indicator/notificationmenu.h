@@ -29,7 +29,7 @@ class NotificationMenu {
 public:
 	NotificationMenu(const QString &id, bool needsResponse = false, bool password = false);
 	virtual ~NotificationMenu();
-    const QString & id() const;
+	const QString & id() const;
 	const QString & busName() const;
 	const QString & response() const;
 	const QString & actionPath() const;

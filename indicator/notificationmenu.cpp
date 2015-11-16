@@ -41,11 +41,11 @@ public:
 			GVariant *variant, gpointer userData) {
 		NotificationMenuPriv *self(reinterpret_cast<NotificationMenuPriv*>(userData));
 		self->m_response = QString::fromUtf8(g_variant_get_string(variant, 0));
-        }
+		}
 
 	GDBusConnection *m_connection;
-    QString m_id;
-    QString m_busName;
+	QString m_id;
+	QString m_busName;
 	QString m_actionPath;
 	QString m_menuPath;
 	unsigned int m_exportedActionGroupId;
@@ -54,10 +54,10 @@ public:
 };
 
 NotificationMenu::NotificationMenu(const QString &id, bool needsResponse, bool password) :
-        p(new NotificationMenuPriv()) {
+		p(new NotificationMenuPriv()) {
 	int exportrev;
 
-    p->m_id = id;
+	p->m_id = id;
 	p->m_busName = QString::fromUtf8(
 			g_dbus_connection_get_unique_name(p->m_connection));
 
@@ -65,13 +65,13 @@ NotificationMenu::NotificationMenu(const QString &id, bool needsResponse, bool p
 	GMenu *menu(g_menu_new());
 
 	GMenuItem *item(g_menu_item_new("", QString("notifications.%1").arg(id).toLatin1().data()));
-        if (needsResponse) {
-            g_menu_item_set_attribute_value(item, "x-canonical-type",
-                            g_variant_new_string("com.canonical.snapdecision.textfield"));
-            g_menu_item_set_attribute_value(item, "x-echo-mode-password",
-                            g_variant_new_boolean(password));
-            g_menu_append_item(menu, item);
-        }
+	if (needsResponse) {
+		g_menu_item_set_attribute_value(item, "x-canonical-type",
+			g_variant_new_string("com.canonical.snapdecision.textfield"));
+		g_menu_item_set_attribute_value(item, "x-echo-mode-password",
+			g_variant_new_boolean(password));
+		g_menu_append_item(menu, item);
+	}
 
 	// actions
 	GActionGroup *actions(G_ACTION_GROUP(g_simple_action_group_new()));
@@ -121,12 +121,11 @@ NotificationMenu::~NotificationMenu() {
 	g_dbus_connection_unexport_action_group(p->m_connection,
 			p->m_exportedActionGroupId);
 	g_dbus_connection_unexport_menu_model(p->m_connection,
-                                          p->m_exportedMenuModelId);
+			p->m_exportedMenuModelId);
 }
 
-const QString &NotificationMenu::id() const
-{
-    return p->m_id;
+const QString &NotificationMenu::id() const {
+	return p->m_id;
 }
 
 const QString & NotificationMenu::busName() const {
