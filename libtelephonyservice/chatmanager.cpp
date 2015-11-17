@@ -343,14 +343,15 @@ ChatEntry *ChatManager::chatEntryForChatRoom(const QString &accountId, const QVa
     Q_UNUSED(accountId)
     Q_UNUSED(properties)
     Q_UNUSED(create)
+    // FIXME: implement
 }
 
 QQmlListProperty<ChatEntry> ChatManager::chats()
 {
-    return QQmlListProperty<ChatEntry>(this, 0, chatsCount, chatAt);
+    return QQmlListProperty<ChatEntry>(this, 0, chatCount, chatAt);
 }
 
-int ChatManager::chatsCount(QQmlListProperty<ChatEntry> *p)
+int ChatManager::chatCount(QQmlListProperty<ChatEntry> *p)
 {
     return ChatManager::instance()->chatEntries().count();
 }

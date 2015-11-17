@@ -45,7 +45,7 @@ public:
     Q_INVOKABLE ChatEntry *chatEntryForChatRoom(const QString &accountId, const QVariantMap &properties, bool create);
 
     QQmlListProperty<ChatEntry> chats();
-    static int chatsCount(QQmlListProperty<ChatEntry> *p);
+    static int chatCount(QQmlListProperty<ChatEntry> *p);
     static ChatEntry* chatAt(QQmlListProperty<ChatEntry> *p, int index);
 
 Q_SIGNALS:
