@@ -1,3 +1,10 @@
+telephony-service (0.1+16.04.20151103-0ubuntu1) xenial; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Enable cross compiling.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 03 Nov 2015 14:26:55 +0000
+
 telephony-service (0.1+16.04.20151029.2-0ubuntu1) xenial; urgency=medium
 
   [ CI Train Bot ]

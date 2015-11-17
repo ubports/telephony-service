@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2015-10-24 05:59+0000\n"
-"X-Generator: Launchpad (build 17812)\n"
+"X-Launchpad-Export-Date: 2015-11-06 05:38+0000\n"
+"X-Generator: Launchpad (build 17838)\n"
 "Language: fi\n"
 
 #: indicator/messagingmenu.cpp:296
@@ -36,22 +36,22 @@ msgstr[1] "%1 vastaajaviestiä"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr "<b>%1</b> soitettua puhelua tänään"
+msgstr "Soitettuja puheluita tänään <b>%1</b>"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr "<b>%1</b> vastaanotettua puhelua tänään"
+msgstr "Vastaanotettuja puheluita tänään <b>%1</b>"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr "<b>%1</b> vastaanotettu tekstiviesti tänään"
+msgstr "Vastaanotettuja tekstiviestejä tänään <b>%1</b>"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr "<b>%1</b> lähetetty tekstiviesti tänään"
+msgstr "Lähetettyjä tekstiviestejä tänään <b>%1</b>"
 
 #: approver/approver.cpp:489
 msgid "Accept"
