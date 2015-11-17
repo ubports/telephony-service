@@ -43,7 +43,7 @@ class TextHandler : public QObject
 public:
     static TextHandler *instance();
     void startChat(const QStringList &recipients, const QString &accountId);
-    void startChatRoom(const QString &accountId, const QVariantMap &properties);
+    void startChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties);
     void startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts);
 
 public Q_SLOTS:

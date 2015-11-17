@@ -280,6 +280,12 @@ ChatEntry *ChatManager::chatEntryForParticipants(const QString &accountId, const
         return NULL;
     }
 
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+
+    if (!account) {
+        return NULL;
+    }
+
     Q_FOREACH (ChatEntry *chatEntry, mChatEntries) {
         int participantCount = 0;
         Tp::Contacts contacts = chatEntry->channel()->groupContacts(false);
@@ -288,6 +294,15 @@ ChatEntry *ChatManager::chatEntryForParticipants(const QString &accountId, const
         }
         // iterate over participants
         Q_FOREACH (const Tp::ContactPtr &contact, contacts) {
+            if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
+                Q_FOREACH(const QString &participant, participants) {
+                    if (PhoneUtils::comparePhoneNumbers(participant, contact->id()) > PhoneUtils::NO_MATCH) {
+                        participantCount++;
+                        break;
+                    }
+                }
+                continue;
+            }
             if (participants.contains(contact->id())) {
                 participantCount++;
             } else {
@@ -311,14 +326,15 @@ ChatEntry *ChatManager::chatEntryForChatRoom(const QString &accountId, const QVa
     Q_UNUSED(accountId)
     Q_UNUSED(properties)
     Q_UNUSED(create)
+    // FIXME: implement
 }
 
 QQmlListProperty<ChatEntry> ChatManager::chats()
 {
-    return QQmlListProperty<ChatEntry>(this, 0, chatsCount, chatAt);
+    return QQmlListProperty<ChatEntry>(this, 0, chatCount, chatAt);
 }
 
-int ChatManager::chatsCount(QQmlListProperty<ChatEntry> *p)
+int ChatManager::chatCount(QQmlListProperty<ChatEntry> *p)
 {
     return ChatManager::instance()->chatEntries().count();
 }

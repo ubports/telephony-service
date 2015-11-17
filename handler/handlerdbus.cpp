@@ -108,9 +108,9 @@ void HandlerDBus::StartChat(const QString &accountId, const QStringList &partici
     TextHandler::instance()->startChat(participants, accountId);
 }
 
-void HandlerDBus::StartChatRoom(const QString &accountId, const QVariantMap &properties)
+void HandlerDBus::StartChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties)
 {
-    TextHandler::instance()->startChatRoom(accountId, properties);
+    TextHandler::instance()->startChatRoom(accountId, initialParticipants, properties);
 }
 
 void HandlerDBus::AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId)

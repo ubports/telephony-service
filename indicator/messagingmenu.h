@@ -52,7 +52,7 @@ public:
     static MessagingMenu *instance();
     virtual ~MessagingMenu();
 
-    void addMessage(const QString &senderId, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text);
+    void addMessage(const QString &senderId, const QString &contactAlias, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text);
     void addFlashMessage(const QString &senderId, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text);
     void removeMessage(const QString &messageId);
 
