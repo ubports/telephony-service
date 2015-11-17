@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2015 Canonical, Ltd.
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -17,33 +17,34 @@
  * Author: Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  */
 
-#include "ussdmenu.h"
+#include "notificationmenu.h"
 #include <gio/gio.h>
 
 #include <QString>
 #include <QDebug>
 
-static const QString USSD_ACTION_PATH("/action/%1");
-static const QString USSD_MENU_PATH("/menu/%1");
+static const QString ACTION_PATH("/action/%1");
+static const QString MENU_PATH("/menu/%1");
 
-class USSDMenuPriv {
+class NotificationMenuPriv {
 public:
-	USSDMenuPriv() :
+	NotificationMenuPriv() :
 			m_connection(g_bus_get_sync(G_BUS_TYPE_SESSION, NULL,
 			NULL)), m_exportedActionGroupId(0), m_exportedMenuModelId(0) {
 	}
 
-	~USSDMenuPriv() {
+	~NotificationMenuPriv() {
 		g_object_unref(m_connection);
 	}
 
 	static void responseChangedCallback(GAction *responseAction,
 			GVariant *variant, gpointer userData) {
-		USSDMenuPriv *self(reinterpret_cast<USSDMenuPriv*>(userData));
+		NotificationMenuPriv *self(reinterpret_cast<NotificationMenuPriv*>(userData));
 		self->m_response = QString::fromUtf8(g_variant_get_string(variant, 0));
-        }
+	}
 
 	GDBusConnection *m_connection;
+	QString m_id;
 	QString m_busName;
 	QString m_actionPath;
 	QString m_menuPath;
@@ -52,36 +53,37 @@ public:
 	QString m_response;
 };
 
-USSDMenu::USSDMenu(bool needsResponse) :
-		p(new USSDMenuPriv()) {
+NotificationMenu::NotificationMenu(const QString &id, bool needsResponse, bool password) :
+		p(new NotificationMenuPriv()) {
 	int exportrev;
 
+	p->m_id = id;
 	p->m_busName = QString::fromUtf8(
 			g_dbus_connection_get_unique_name(p->m_connection));
 
 	// menu
 	GMenu *menu(g_menu_new());
 
-	GMenuItem *ussdItem(g_menu_item_new("", "notifications.ussd"));
-        if (needsResponse) {
-            g_menu_item_set_attribute_value(ussdItem, "x-canonical-type",
-                            g_variant_new_string("com.canonical.snapdecision.textfield"));
-            g_menu_item_set_attribute_value(ussdItem, "x-echo-mode-password",
-                            g_variant_new_boolean(false));
-            g_menu_append_item(menu, ussdItem);
-        }
+	GMenuItem *item(g_menu_item_new("", QString("notifications.%1").arg(id).toLatin1().data()));
+	if (needsResponse) {
+		g_menu_item_set_attribute_value(item, "x-canonical-type",
+			g_variant_new_string("com.canonical.snapdecision.textfield"));
+		g_menu_item_set_attribute_value(item, "x-echo-mode-password",
+			g_variant_new_boolean(password));
+		g_menu_append_item(menu, item);
+	}
 
 	// actions
 	GActionGroup *actions(G_ACTION_GROUP(g_simple_action_group_new()));
-	GAction *ussdAction(G_ACTION(
-			g_simple_action_new_stateful("ussd", G_VARIANT_TYPE_STRING,
+	GAction *action(G_ACTION(
+			g_simple_action_new_stateful(id.toLatin1().data(), G_VARIANT_TYPE_STRING,
 					g_variant_new_string(""))));
 
-	g_signal_connect(G_OBJECT(ussdAction), "change-state",
-			G_CALLBACK(USSDMenuPriv::responseChangedCallback),
+	g_signal_connect(G_OBJECT(action), "change-state",
+			G_CALLBACK(NotificationMenuPriv::responseChangedCallback),
 			reinterpret_cast<gpointer>(p.data()));
 
-	g_action_map_add_action(G_ACTION_MAP(actions), ussdAction);
+	g_action_map_add_action(G_ACTION_MAP(actions), action);
 
 	/* Export the actions group.  If we can't get a name, keep trying to
 	   use increasing numbers.  There is possible races on fast import/exports.
@@ -89,7 +91,7 @@ USSDMenu::USSDMenu(bool needsResponse) :
 	exportrev = 0;
 	do {
 		exportrev++;
-		p->m_actionPath = USSD_ACTION_PATH.arg(exportrev);
+		p->m_actionPath = ACTION_PATH.arg(exportrev);
 		p->m_exportedActionGroupId = g_dbus_connection_export_action_group(
 				p->m_connection, p->m_actionPath.toUtf8().data(), actions, NULL);
 	} while (p->m_exportedActionGroupId == 0 && exportrev < 128);
@@ -100,7 +102,7 @@ USSDMenu::USSDMenu(bool needsResponse) :
 	exportrev = 0;
 	do {
 		exportrev++;
-		p->m_menuPath = USSD_MENU_PATH.arg(exportrev);
+		p->m_menuPath = MENU_PATH.arg(exportrev);
 		p->m_exportedMenuModelId = g_dbus_connection_export_menu_model(
 				p->m_connection, p->m_menuPath.toUtf8().data(),
 				G_MENU_MODEL(menu), NULL);
@@ -109,35 +111,39 @@ USSDMenu::USSDMenu(bool needsResponse) :
 	/* Unref the objects as a reference is maintained by the fact that they're
 	   exported onto the bus. */
 	g_object_unref(menu);
-	g_object_unref(ussdItem);
+	g_object_unref(item);
 
 	g_object_unref(actions);
-	g_object_unref(ussdAction);
+	g_object_unref(action);
 }
 
-USSDMenu::~USSDMenu() {
+NotificationMenu::~NotificationMenu() {
 	g_dbus_connection_unexport_action_group(p->m_connection,
 			p->m_exportedActionGroupId);
 	g_dbus_connection_unexport_menu_model(p->m_connection,
 			p->m_exportedMenuModelId);
 }
 
-const QString & USSDMenu::busName() const {
+const QString &NotificationMenu::id() const {
+	return p->m_id;
+}
+
+const QString & NotificationMenu::busName() const {
 	return p->m_busName;
 }
 
-const QString & USSDMenu::response() const {
+const QString & NotificationMenu::response() const {
 	return p->m_response;
 }
 
-const QString & USSDMenu::actionPath() const {
+const QString & NotificationMenu::actionPath() const {
 	return p->m_actionPath;
 }
 
-const QString & USSDMenu::menuPath() const {
+const QString & NotificationMenu::menuPath() const {
 	return p->m_menuPath;
 }
 
-void USSDMenu::clearResponse() {
+void NotificationMenu::clearResponse() {
 	p->m_response.clear();
 }

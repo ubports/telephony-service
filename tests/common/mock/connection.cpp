@@ -249,7 +249,11 @@ Tp::ContactAttributesMap MockConnection::getContactAttributes(const Tp::UIntList
     Q_FOREACH(uint handle, handles) {
         attributes[TP_QT_IFACE_CONNECTION+"/contact-id"] = inspectHandles(Tp::HandleTypeContact, Tp::UIntList() << handle, error).at(0);
         if (ifaces.contains(TP_QT_IFACE_CONNECTION_INTERFACE_SIMPLE_PRESENCE)) {
-            attributes[TP_QT_IFACE_CONNECTION_INTERFACE_SIMPLE_PRESENCE+"/presence"] = QVariant::fromValue(mSelfPresence);
+            if (handle == selfHandle()) {
+                attributes[TP_QT_IFACE_CONNECTION_INTERFACE_SIMPLE_PRESENCE+"/presence"] = QVariant::fromValue(mSelfPresence);
+            } else if (mPresences.contains(handle)) {
+                attributes[TP_QT_IFACE_CONNECTION_INTERFACE_SIMPLE_PRESENCE+"/presence"] = QVariant::fromValue(mPresences[handle]);
+            }
         }
         attributesMap[handle] = attributes;
     }
@@ -271,6 +275,11 @@ void MockConnection::setOnline(bool online)
     }
     presences[selfHandle()] = mSelfPresence;
     simplePresenceIface->setPresences(presences);
+}
+
+void MockConnection::simulateAuthFailure()
+{
+    setStatus(Tp::ConnectionStatusDisconnected, Tp::ConnectionStatusReasonAuthenticationFailed);
 }
 
 uint MockConnection::newHandle(const QString &identifier)
@@ -681,4 +690,18 @@ void MockConnection::setCallState(const QString &phoneNumber, const QString &sta
     }
 
     mCallChannels[phoneNumber]->setCallState(state);
+}
+
+void MockConnection::setContactPresence(const QString &id, int presenceType, const QString &status, const QString &statusMessage)
+{
+    Tp::SimpleContactPresences presences;
+    Tp::SimplePresence presence;
+    presence.status = status;
+    presence.statusMessage = statusMessage;
+    presence.type = (Tp::ConnectionPresenceType)presenceType;
+
+    uint handle = ensureHandle(id);
+    presences[handle] = presence;
+    mPresences[handle] = presence;
+    simplePresenceIface->setPresences(presences);
 }

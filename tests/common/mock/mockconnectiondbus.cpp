@@ -128,6 +128,17 @@ void MockConnectionDBus::SetPresence(const QString &status, const QString &statu
     mConnection->setPresence(status, statusMessage, &error);
 }
 
+void MockConnectionDBus::SetContactPresence(const QString &id, int presenceType, const QString &status, const QString &statusMessage)
+{
+    qDebug() << __PRETTY_FUNCTION__ << id << presenceType << status << statusMessage;
+    mConnection->setContactPresence(id, presenceType, status, statusMessage);
+}
+
+void MockConnectionDBus::SimulateAuthFailure()
+{
+    mConnection->simulateAuthFailure();
+}
+
 void MockConnectionDBus::SetVoicemailIndicator(bool active)
 {
     qDebug() << __PRETTY_FUNCTION__ << active;
