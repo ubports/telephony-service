@@ -56,8 +56,9 @@
                 Start a chat room with the given properties
             ]]></dox:d>
             <arg name="accountId" type="s" direction="in"/>
+            <arg name="initialParticipants" type="as" direction="in"/>
             <arg name="properties" type="a{sv}" direction="in"/>
-            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QVariantMap"/>
         </method>
         <method name="AcknowledgeAllMessages">
             <dox:d><![CDATA[

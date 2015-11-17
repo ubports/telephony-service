@@ -117,9 +117,10 @@ void TextHandler::startChat(const QStringList &recipients, const QString &accoun
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
 
-void TextHandler::startChatRoom(const QString &accountId, const QVariantMap &properties)
+void TextHandler::startChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties)
 {
     Q_UNUSED(accountId)
+    Q_UNUSED(initialParticipants)
     Q_UNUSED(properties)
     // FIXME: implement
 }
