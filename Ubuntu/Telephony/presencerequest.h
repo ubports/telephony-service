@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2015 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
