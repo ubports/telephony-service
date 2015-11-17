@@ -15,7 +15,7 @@ include_directories(
 generate_telepathy_test(MessagingMenuTest
               SOURCES MessagingMenuTest.cpp messagingmenumock.cpp ${CMAKE_SOURCE_DIR}/indicator/messagingmenu.cpp
               LIBRARIES  ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest ${HISTORY_LIBRARIES}
-              TASKS --task ${CMAKE_BINARY_DIR}/indicator/telephony-service-indicator
+              TASKS --task ${CMAKE_BINARY_DIR}/indicator/telephony-service-indicator -p -platform -p offscreen
                     --task-name telephony-service-indicator
                     --wait-for com.canonical.TelephonyServiceHandler
                     --ignore-return)
