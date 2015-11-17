@@ -33,7 +33,6 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
 add_custom_target(uninstall "${CMAKE_COMMAND}"
                   -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
 
-find_package(Qt5Core)
 find_package(Qt5Contacts)
 find_package(Qt5DBus)
 #find_package(Qt5Gui)
@@ -44,15 +43,27 @@ find_package(Qt5Test)
 find_package(Qt5Feedback)
 find_package(LibPhoneNumber REQUIRED)
 
-execute_process(
-    COMMAND qmake -query QT_INSTALL_QML
-    OUTPUT_VARIABLE QT_INSTALL_QML
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+include(qt5)
 
-# sbuild/cross-compilation fallback:
-if (QT_INSTALL_QML STREQUAL "")
-    set(QT_INSTALL_QML ${CMAKE_INSTALL_LIBDIR}/qt5/qml)
+if(NOT CMAKE_CROSSCOMPILING)
+    find_program(QMAKE_EXECUTABLE qmake)
+    if(QMAKE_EXECUTABLE STREQUAL "QMAKE_EXECUTABLE-NOTFOUND")
+        message(FATAL_ERROR "qmake not found")
+    endif()
+    execute_process(
+        COMMAND ${QMAKE_EXECUTABLE} -query QT_INSTALL_QML
+        RESULT_VARIABLE RESULT
+        OUTPUT_VARIABLE QT_INSTALL_QML
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if(NOT RESULT EQUAL 0)
+        message(FATAL_ERROR "Failed to determine QT_INSTALL_QML from qmake")
+    endif()
+else()
+    # qmake isn't multi-arch aware as it installs arch-specific mkspec files
+    # in to /usr/share, so we can't use it here (we'd need a qmake binary
+    # for the host arch using data for the target arch)
+    set(QT_INSTALL_QML "/usr/lib/${CMAKE_LIBRARY_ARCHITECTURE}/qt5/qml")
 endif()
 
 find_package(PkgConfig REQUIRED)
