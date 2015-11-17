@@ -62,6 +62,7 @@ public:
     void setContactPresence(const QString &id, int presenceType, const QString &status = QString(), const QString &statusMessage = QString());
     void connect(Tp::DBusError *error);
     void setOnline(bool online);
+    void simulateAuthFailure();
 
     Tp::BaseConnectionRequestsInterfacePtr requestsIface;
     Tp::BaseConnectionSimplePresenceInterfacePtr simplePresenceIface;

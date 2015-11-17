@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2015 Canonical, Ltd.
  *
  * This program is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License version 3, as published
@@ -17,25 +17,26 @@
  * Author: Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  */
 
-#ifndef USSDMENU_H_
-#define USSDMENU_H_
+#ifndef NOTIFICATIONMENU_H_
+#define NOTIFICATIONMENU_H_
 
 #include <QString>
 #include <QScopedPointer>
 
-class USSDMenuPriv;
+class NotificationMenuPriv;
 
-class USSDMenu {
+class NotificationMenu {
 public:
-	USSDMenu(bool needsResponse = false);
-	virtual ~USSDMenu();
+	NotificationMenu(const QString &id, bool needsResponse = false, bool password = false);
+	virtual ~NotificationMenu();
+	const QString & id() const;
 	const QString & busName() const;
 	const QString & response() const;
 	const QString & actionPath() const;
 	const QString & menuPath() const;
 	void clearResponse();
 protected:
-	QScopedPointer<USSDMenuPriv> p;
+	QScopedPointer<NotificationMenuPriv> p;
 };
 
-#endif /* USSDMENU_H_ */
+#endif /* NOTIFICATIONMENU_H_ */

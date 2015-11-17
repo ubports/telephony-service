@@ -1,3 +1,15 @@
+telephony-service (0.1+16.04.20151029.2-0ubuntu1) xenial; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+  * Resync trunk. added: po/hr.po
+
+  [ Tiago Salem Herrmann ]
+  * Keep reference of observer pointer so it doesn't get deleted. (LP:
+    #1484300)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Thu, 29 Oct 2015 19:15:54 +0000
+
 telephony-service (0.1+15.10.20151013-0ubuntu1) wily; urgency=medium
 
   [ Gustavo Pichorim Boiko ]

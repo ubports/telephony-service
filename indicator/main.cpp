@@ -30,6 +30,7 @@
 #include "textchannelobserver.h"
 #include "voicemailindicator.h"
 #include "ussdindicator.h"
+#include "authhandler.h"
 #include <QCoreApplication>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/AbstractClient>
@@ -70,9 +71,12 @@ int main(int argc, char **argv)
 
     // create the dbus object and connect its signals
     USSDIndicator ussdIndicator;
+    AuthHandler authHandler;
     IndicatorDBus dbus;
     QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
                      &ussdIndicator, SLOT(clear()));
+    QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
+                     &authHandler, SLOT(clear()));
 
     // register the observer
     QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, [&]() {
