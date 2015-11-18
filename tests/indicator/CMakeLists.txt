@@ -18,8 +18,7 @@ generate_telepathy_test(MessagingMenuTest
               TASKS --task xvfb-run -p -a -p ${CMAKE_BINARY_DIR}/indicator/telephony-service-indicator
                     --task-name telephony-service-indicator
                     --wait-for com.canonical.TelephonyServiceHandler
-                    --ignore-return
-                    --task dbus-monitor --ignore-return)
+                    --ignore-return)
 
 qt5_add_dbus_interface(
         qt_SRCS
