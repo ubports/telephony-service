@@ -340,14 +340,12 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
 
 void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
 {
-    qDebug() << "TextChannelObserver::triggerNotificationForMessage 5";
     Tp::ContactPtr contact = message.sender();
     if (GreeterContacts::isGreeterMode()) { // we're in the greeter's session
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
         // in greeter mode we show the notification right away as the contact data might not be received
         showNotificationForMessage(message, accountId, participantIds);
     } else {
-        qDebug() << "TextChannelObserver::triggerNotificationForMessage 6";
         AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
         if (!account) {
             return;
@@ -358,7 +356,6 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
         request->setFilter(QContactPhoneNumber::match(contact->id()));
 
         QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, accountId, participantIds, message](QContactAbstractRequest::State newState) {
-            qDebug() << "TextChannelObserver::triggerNotificationForMessage 8";
             // only process the results after the finished state is reached
             if (newState != QContactAbstractRequest::FinishedState) {
                 return;
@@ -378,11 +375,9 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
 
         // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
         if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
-            qDebug() << "TextChannelObserver::triggerNotificationForMessage 7";
             request->setManager(ContactUtils::sharedManager());
             request->start();
         } else {
-            qDebug() << "TextChannelObserver::triggerNotificationForMessage 71";
             // just emit the signal to pretend we did a contact search
             Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
         }
@@ -391,7 +386,6 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds, const QContact &contact)
 {
-    qDebug() << "TextChannelObserver::showNotificationForMessage 9";
     Tp::ContactPtr telepathyContact = message.sender();
     QString messageText = message.text();
 
@@ -543,7 +537,6 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
 
 void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
 {
-    qDebug() << "TextChannelObserver::onTextChannelAvailable 1";
     connect(textChannel.data(),
             SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
             SLOT(onTextChannelInvalidated()));
@@ -588,7 +581,6 @@ void TextChannelObserver::onTextChannelInvalidated()
 
 void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &message, const Tp::TextChannelPtr &textChannel)
 {
-    qDebug() << "TextChannelObserver::processMessageReceived 1";
     if (textChannel.isNull()) {
         qDebug() << "TextChannelObserver::processMessageReceived: no text channel";
         return;
@@ -598,13 +590,11 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
     if (!account) {
         return;
     }
-    qDebug() << "TextChannelObserver::processMessageReceived 2";
 
     if (!account->account()->connection().isNull() && 
             message.sender()->handle().at(0) == account->account()->connection()->selfHandle()) {
         return;
     }
-    qDebug() << "TextChannelObserver::processMessageReceived 3";
     
     // do not place notification items for scrollback messages
     if (mFlashChannels.contains(textChannel) && !message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
@@ -618,7 +608,6 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
     }
 
     if (!message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
-        qDebug() << "TextChannelObserver::processMessageReceived 4";
         QTimer *timer = new QTimer(this);
         timer->setInterval(1500);
         timer->setSingleShot(true);
