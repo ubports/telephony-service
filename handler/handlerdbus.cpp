@@ -114,6 +114,16 @@ void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringL
     TextHandler::instance()->acknowledgeMessages(numbers, messageIds, accountId);
 }
 
+void HandlerDBus::StartChat(const QString &accountId, const QStringList &participants)
+{
+    TextHandler::instance()->startChat(participants, accountId);
+}
+
+void HandlerDBus::StartChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties)
+{
+    TextHandler::instance()->startChatRoom(accountId, initialParticipants, properties);
+}
+
 void HandlerDBus::AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId)
 {
     TextHandler::instance()->acknowledgeAllMessages(numbers, accountId);

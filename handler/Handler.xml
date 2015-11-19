@@ -44,6 +44,22 @@
             <arg name="messageIds" type="as" direction="in"/>
             <arg name="accountId" type="s" direction="in"/>
         </method>
+        <method name="StartChat">
+            <dox:d><![CDATA[
+                Start a chat with the given participants
+            ]]></dox:d>
+            <arg name="accountId" type="s" direction="in"/>
+            <arg name="participants" type="as" direction="in"/>
+        </method>
+        <method name="StartChatRoom">
+            <dox:d><![CDATA[
+                Start a chat room with the given properties
+            ]]></dox:d>
+            <arg name="accountId" type="s" direction="in"/>
+            <arg name="initialParticipants" type="as" direction="in"/>
+            <arg name="properties" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QVariantMap"/>
+        </method>
         <method name="AcknowledgeAllMessages">
             <dox:d><![CDATA[
                 Request all messages messages from the given numbers to be acknowledged
@@ -51,8 +67,6 @@
             <arg name="numbers" type="as" direction="in"/>
             <arg name="accountId" type="s" direction="in"/>
         </method>
-
-
         <!-- Call Related -->
         <method name="StartCall">
             <dox:d><![CDATA[

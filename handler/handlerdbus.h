@@ -59,6 +59,8 @@ public Q_SLOTS:
     Q_NOREPLY void SendSilentMessage(const QStringList &number, const QString &message, const QString &accountId);
     Q_NOREPLY void SendMMS(const QStringList &numbers, const AttachmentList &attachments, const QString &accountId);
     Q_NOREPLY void AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId);
+    Q_NOREPLY void StartChat(const QString &accountId, const QStringList &participants);
+    Q_NOREPLY void StartChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties);
     Q_NOREPLY void AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId);
 
     // call related

@@ -97,6 +97,11 @@ void MockConnectionDBus::PlaceIncomingMessage(const QString &message, const QVar
     mConnection->placeIncomingMessage(message, properties);
 }
 
+void MockConnectionDBus::ChangeChatState(const QStringList &participants, const QString &userId, int state)
+{
+    mConnection->changeChatState(participants, userId, state);
+}
+
 QString MockConnectionDBus::PlaceCall(const QVariantMap &properties)
 {
     qDebug() << __PRETTY_FUNCTION__ << properties;
