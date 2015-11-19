@@ -39,6 +39,7 @@ public:
     void SetCallState(const QString &phoneNumber, const QString &state);
     void SetOnline(bool online);
     void SetPresence(const QString &status, const QString &statusMessage);
+    void SetContactPresence(const QString &id, int presenceType, const QString &status, const QString &statusMessage);
     void SimulateAuthFailure();
 
     // voicemail stuff

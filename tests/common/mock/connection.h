@@ -59,6 +59,7 @@ public:
     Tp::ContactAttributesMap getContactAttributes(const Tp::UIntList &handles, const QStringList &ifaces, Tp::DBusError *error);
     uint setPresence(const QString& status, const QString& statusMessage, Tp::DBusError *error);
     uint setPresenceFail(const QString& status, const QString& statusMessage, Tp::DBusError *error);
+    void setContactPresence(const QString &id, int presenceType, const QString &status = QString(), const QString &statusMessage = QString());
     void connect(Tp::DBusError *error);
     void setOnline(bool online);
     void simulateAuthFailure();
@@ -151,6 +152,7 @@ private:
 
     QStringList mModems;
     Tp::SimplePresence mSelfPresence;
+    Tp::SimpleContactPresences mPresences;
 
     MockConnectionDBus *mDBus;
     QStringList mIncomingCalls;
