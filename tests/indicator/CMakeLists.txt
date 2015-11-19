@@ -12,9 +12,16 @@ include_directories(
     ${GSETTINGS_QT_INCLUDE_DIRS}
     )
 
-generate_telepathy_test(MessagingMenuTest
-              SOURCES MessagingMenuTest.cpp messagingmenumock.cpp ${CMAKE_SOURCE_DIR}/indicator/messagingmenu.cpp
-              LIBRARIES ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest ${HISTORY_LIBRARIES})
+if (NOT ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "aarch64"))
+    generate_telepathy_test(MessagingMenuTest
+                            SOURCES MessagingMenuTest.cpp messagingmenumock.cpp ${CMAKE_SOURCE_DIR}/indicator/messagingmenu.cpp
+                            LIBRARIES ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest ${HISTORY_LIBRARIES}
+                            TASKS --task xvfb-run -p -a -p ${CMAKE_BINARY_DIR}/indicator/telephony-service-indicator
+                                   --task-name telephony-service-indicator
+                                   --wait-for com.canonical.TelephonyServiceHandler
+                                   --ignore-return)
+endif()
+
 qt5_add_dbus_interface(
         qt_SRCS
         "${DATA_DIR}/org.freedesktop.Notifications.xml"

@@ -29,7 +29,11 @@ namespace ContactUtils
 
 QContactManager *sharedManager(const QString &engine)
 {
-    static QContactManager *instance = new QContactManager(engine);
+    QString finalEngine = engine;
+    if (!qgetenv("TELEPHONY_SERVICE_TEST").isEmpty()) {
+        finalEngine = "memory";
+    }
+    static QContactManager *instance = new QContactManager(finalEngine);
     return instance;
 }
 
