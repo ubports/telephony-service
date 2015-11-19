@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2015 Canonical, Ltd.
  *
  * Authors:
  *  Olivier Tilloy <olivier.tilloy@canonical.com>
@@ -27,10 +27,13 @@
 #include <QtDBus/QDBusConnectionInterface>
 #include <QtDBus/QDBusReply>
 
+static bool canRunUninstalled = true;
+
 inline bool isRunningInstalled() {
     static bool installed = (QCoreApplication::applicationDirPath() ==
                              QDir(("@CMAKE_INSTALL_PREFIX@/@CMAKE_INSTALL_BINDIR@")).canonicalPath());
-    return installed;
+
+    return installed || !canRunUninstalled;
 }
 
 inline QString telephonyServiceDir() {

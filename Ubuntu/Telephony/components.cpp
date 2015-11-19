@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2015 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -21,6 +21,7 @@
  */
 
 #include "components.h"
+#include "config.h"
 #include "telepathyhelper.h"
 #include "callentry.h"
 #include "chatentry.h"
@@ -46,6 +47,11 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     Q_ASSERT(engine);
 
     Q_UNUSED(uri);
+
+    // if we allow config.h to look for stuff in uninstalled paths, applications
+    // that use this plugin will try to look for protocol info in the wrong path
+    // and fail to find them.
+    canRunUninstalled = false;
 
     // Initialize telepathy types
     Tp::registerTypes();
