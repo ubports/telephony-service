@@ -40,9 +40,8 @@ void RingtoneWorker::playIncomingCallSound()
         return;
     }
 
-    if (mCallAudioPlayer) {
-        return;
-    }
+    // force delete all media player instances
+    stopIncomingCallSound();
 
     // pick up the new ringtone in case it changed in the meantime
     mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
