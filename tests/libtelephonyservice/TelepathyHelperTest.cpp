@@ -37,7 +37,6 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-    void testConnected();
     void testAccounts();
     void testPhoneAccounts();
     void testAccountSorting();
@@ -88,38 +87,6 @@ void TelepathyHelperTest::cleanup()
 
     mGenericController->deleteLater();
     mPhoneController->deleteLater();
-}
-
-void TelepathyHelperTest::testConnected()
-{
-    QSignalSpy connectedChangedSpy(TelepathyHelper::instance(), SIGNAL(connectedChanged()));
-
-    // check that the default status is connected (always true for mock accounts)
-    QVERIFY(TelepathyHelper::instance()->connected());
-
-    // set one of the accounts offline and check that the connected status stays true
-    mGenericController->SetOnline(false);
-    QTest::qWait(1000);
-    QCOMPARE(connectedChangedSpy.count(), 0);
-    QVERIFY(TelepathyHelper::instance()->connected());
-
-    // and set the other account as offline too. This time connected needs to change to false
-    mPhoneController->SetOnline(false);
-    TRY_COMPARE(connectedChangedSpy.count(), 1);
-    QVERIFY(!TelepathyHelper::instance()->connected());
-
-    // now set one of the accounts back online
-    connectedChangedSpy.clear();
-    mPhoneController->SetOnline(true);
-    TRY_COMPARE(connectedChangedSpy.count(), 1);
-    QVERIFY(TelepathyHelper::instance()->connected());
-
-    // and the other one just in case
-    connectedChangedSpy.clear();
-    mGenericController->SetOnline(true);
-    QTest::qWait(1000);
-    QCOMPARE(connectedChangedSpy.count(), 0);
-    QVERIFY(TelepathyHelper::instance()->connected());
 }
 
 void TelepathyHelperTest::testAccounts()

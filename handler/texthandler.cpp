@@ -58,13 +58,13 @@ TextHandler::TextHandler(QObject *parent)
 
     // track when the account becomes available
     connect(TelepathyHelper::instance(),
-            SIGNAL(connectedChanged()),
+            SIGNAL(setupReady()),
             SLOT(onConnectedChanged()));
 }
 
 void TextHandler::onConnectedChanged()
 {
-    if (!TelepathyHelper::instance()->connected()) {
+    if (!TelepathyHelper::instance()->ready()) {
         return;
     }
 

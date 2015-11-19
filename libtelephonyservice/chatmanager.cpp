@@ -55,12 +55,12 @@ ChatManager::ChatManager(QObject *parent)
     mMessagesAckTimer.setInterval(1000);
     mMessagesAckTimer.setSingleShot(true);
     connect(&mMessagesAckTimer, SIGNAL(timeout()), SLOT(onAckTimerTriggered()));
-    connect(TelepathyHelper::instance(), SIGNAL(connectedChanged()), SLOT(onConnectedChanged()));
+    connect(TelepathyHelper::instance(), SIGNAL(setupReady()), SLOT(onConnectedChanged()));
 }
 
 void ChatManager::onConnectedChanged()
 {
-    if (TelepathyHelper::instance()->connected()) {
+    if (TelepathyHelper::instance()->ready()) {
         onAckTimerTriggered();
     }
 }

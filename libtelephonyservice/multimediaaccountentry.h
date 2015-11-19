@@ -39,7 +39,7 @@ public:
 
 private Q_SLOTS:
     // reimplemented from AccountEntry
-    void onConnectionChanged();
+    void onConnectionChanged(Tp::ConnectionPtr connection);
 
 protected:
     explicit MultimediaAccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
