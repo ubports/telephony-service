@@ -113,6 +113,11 @@ QString MockTextChannel::sendMessage(const Tp::MessagePartList& message, uint fl
     QString id = QString("sentmessage%1").arg(serial++);
     QString messageText = body["content"].variant().toString();
     QVariantMap properties;
+    QMap<QString, QDBusVariant>::const_iterator it = header.constBegin();
+    while (it != header.constEnd()) {
+        properties[it.key()] = it.value().variant().toString();
+        it++;
+    }
     properties["SentTime"] = QDateTime::currentDateTime().toString(Qt::ISODate);
     properties["Recipients"] = mRecipients;
     properties["Id"] = id;

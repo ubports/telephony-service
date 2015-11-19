@@ -95,71 +95,54 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
-void ChatManager::sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId)
+void ChatManager::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const QVariant &attachments, const QVariantMap &properties)
 {
-    AttachmentList newAttachments;
-    AccountEntry *account = NULL;
-    if (accountId.isNull() || accountId.isEmpty()) {
-        account = TelepathyHelper::instance()->defaultMessagingAccount();
-        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
-            account = TelepathyHelper::instance()->activeAccounts()[0];
-        }
-    } else {
-        account = TelepathyHelper::instance()->accountForId(accountId);
-    }
-
-    Q_FOREACH (const QVariant &attachment, attachments.toList()) {
-        AttachmentStruct newAttachment;
-        QVariantList list = attachment.toList();
-        newAttachment.id = list.at(0).toString();
-        newAttachment.contentType = list.at(1).toString();
-        newAttachment.filePath = list.at(2).toString();
-        newAttachments << newAttachment;
-    }
-
-    if (!message.isEmpty()) {
-        AttachmentStruct textAttachment;
-        QTemporaryFile textFile("/tmp/XXXXX");
-        textFile.setAutoRemove(false);
-        if (!textFile.open()) {
-            // FIXME: return error
-            return;
-        }
-        textFile.write(message.toUtf8().data());
-        textFile.close();
-        textAttachment.id = "text_0.txt";
-        textAttachment.contentType = "text/plain;charset=UTF-8";
-        textAttachment.filePath = textFile.fileName();
-        newAttachments << textAttachment;
-    }
-
-    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMMS", recipients, QVariant::fromValue(newAttachments), account->accountId());
-}
-
-void ChatManager::sendMessage(const QStringList &recipients, const QString &message, const QString &accountId)
-{
-    // FIXME: this probably should be handle internally by telepathy-ofono
-    if (recipients.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()) {
-        sendMMS(recipients, message, QVariant(), accountId);
-        return;
-    }
-    AccountEntry *account = NULL;
-    if (accountId.isNull() || accountId.isEmpty()) {
-        account = TelepathyHelper::instance()->defaultMessagingAccount();
-        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
-            account = TelepathyHelper::instance()->activeAccounts()[0];
-        }
-    } else {
-        account = TelepathyHelper::instance()->accountForId(accountId);
-    }
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
 
     if (!account) {
         return;
     }
 
+    // check if files should be copied to a temporary location before passing them to handler
+    bool tmpFiles = (properties.contains("x-canonical-tmp-files") && properties["x-canonical-tmp-files"].toBool());
+
+    AttachmentList newAttachments;
+    Q_FOREACH (const QVariant &attachment, attachments.toList()) {
+        AttachmentStruct newAttachment;
+        QVariantList list = attachment.toList();
+        newAttachment.id = list.at(0).toString();
+        newAttachment.contentType = list.at(1).toString();
+
+        if (tmpFiles) {
+            // we can't give the original path to handler, as it might be removed
+            // from history database by the time it tries to read the file,
+            // so we duplicate the file and the handler will remove it
+            QTemporaryFile tmpFile("/tmp/XXXXX");
+            tmpFile.setAutoRemove(false);
+            if (!tmpFile.open()) {
+                qWarning() << "Unable to create a temporary file";
+                return;
+            }
+            QFile originalFile(list.at(2).toString());
+            if (!originalFile.open(QIODevice::ReadOnly)) {
+                qWarning() << "Attachment file not found";
+                return;
+            }
+            if (tmpFile.write(originalFile.readAll()) == -1) {
+                qWarning() << "Failed to write attachment to a temporary file";
+                return;
+            }
+            newAttachment.filePath = tmpFile.fileName();
+            tmpFile.close();
+            originalFile.close();
+        } else {
+            newAttachment.filePath = list.at(2).toString();
+        }
+        newAttachments << newAttachment;
+    }
+
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMessage", recipients, message, account->accountId());
+    phoneAppHandler->call("SendMessage", account->accountId(), recipients, message, QVariant::fromValue(newAttachments), properties);
 }
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)

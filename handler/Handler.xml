@@ -13,28 +13,15 @@
         <!-- Messages Related -->
         <method name="SendMessage">
             <dox:d><![CDATA[
-               Request to send a message to a phone number
+               Request to send a message to one or multiple recipients
             ]]></dox:d>
-            <arg name="numbers" type="as" direction="in"/>
-            <arg name="message" type="s" direction="in"/>
             <arg name="accountId" type="s" direction="in"/>
-        </method>
-        <method name="SendSilentMessage">
-            <dox:d><![CDATA[
-               Request to send a message to a phone number and bypass the history-service
-            ]]></dox:d>
-            <arg name="numbers" type="as" direction="in"/>
+            <arg name="recipients" type="as" direction="in"/>
             <arg name="message" type="s" direction="in"/>
-            <arg name="accountId" type="s" direction="in"/>
-        </method>
-        <method name="SendMMS">
-            <dox:d><![CDATA[
-               Request to send a MMS to a phone number
-            ]]></dox:d>
-            <arg name="numbers" type="as" direction="in"/>
             <arg name="attachments" type="a(sss)" direction="in"/>
-            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="AttachmentList"/>
-            <arg name="accountId" type="s" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In3" value="AttachmentList"/>
+            <arg name="properties" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In4" value="QVariantMap"/>
         </method>
         <method name="AcknowledgeMessages">
             <dox:d><![CDATA[

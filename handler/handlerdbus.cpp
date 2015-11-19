@@ -93,20 +93,9 @@ bool HandlerDBus::connectToBus()
     return true;
 }
 
-void HandlerDBus::SendMessage(const QStringList &numbers, const QString &message, const QString &accountId)
+void HandlerDBus::SendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    TextHandler::instance()->sendMessage(numbers, message, accountId);
-}
-
-void HandlerDBus::SendSilentMessage(const QStringList &numbers, const QString &message, const QString &accountId)
-{
-    TextHandler::instance()->sendSilentMessage(numbers, message, accountId);
-}
-
-void HandlerDBus::SendMMS(const QStringList &numbers, const AttachmentList &attachments, const QString &accountId)
-{
-
-    TextHandler::instance()->sendMMS(numbers, attachments, accountId);
+    TextHandler::instance()->sendMessage(accountId, recipients, message, attachments, properties);
 }
 
 void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId)

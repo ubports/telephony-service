@@ -277,7 +277,7 @@ void HandlerTest::testSendMessage()
     QString message("Hello, world!");
     QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
     // FIXME: add support for multiple accounts
-    HandlerController::instance()->sendMessage(recipient, message, mTpAccount->uniqueIdentifier());
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentSpy.count(), 1);
     QString sentMessage = messageSentSpy.first().first().toString();
     QVariantMap messageProperties = messageSentSpy.first().last().value<QVariantMap>();
@@ -296,7 +296,7 @@ void HandlerTest::testAcknowledgeMessage()
     QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
 
     // first send a message to a certain number so the handler request one channel
-    HandlerController::instance()->sendMessage(recipient, message, mTpAccount->uniqueIdentifier());
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentSpy.count(), 1);
 
     QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
@@ -330,7 +330,7 @@ void HandlerTest::testAcknowledgeAllMessages()
     QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
 
     // first send a message to a certain number so the handler request one channel
-    HandlerController::instance()->sendMessage(recipient, message, mTpAccount->uniqueIdentifier());
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentSpy.count(), 1);
 
     QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
