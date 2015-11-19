@@ -1,11 +1,12 @@
 
 set(qt_SRCS
+    authhandler.cpp
     callchannelobserver.cpp
     messagingmenu.cpp
     metrics.cpp
     textchannelobserver.cpp
     ussdindicator.cpp
-    ussdmenu.cpp
+    notificationmenu.cpp
     voicemailindicator.cpp
     indicatordbus.cpp
     )
