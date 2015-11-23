@@ -164,6 +164,17 @@ QList<AccountEntry*> TelepathyHelper::activeAccounts() const
     return activeAccountList;
 }
 
+bool TelepathyHelper::multiplePhoneAccounts() const
+{
+    int count = 0;
+    Q_FOREACH(AccountEntry *account, phoneAccounts()) {
+        if (account->active()) {
+            count++;
+        }
+    }
+    return (count > 1);
+}
+
 QList<AccountEntry*> TelepathyHelper::phoneAccounts() const
 {
     QList<AccountEntry*> accountList;

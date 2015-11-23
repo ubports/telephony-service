@@ -436,16 +436,38 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     data->dispatchOp = dispatchOperation;
     data->channel = channel;
     bool unknownNumber = false;
+    bool multiplePhoneAccounts = TelepathyHelper::instance()->multiplePhoneAccounts();
+
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    if (!account) {
+        qCritical() << "Call exists with no account for connection";
+        return false;
+    }
 
     if (!telepathyContact->id().isEmpty()) {
         if (telepathyContact->id().startsWith(OFONO_PRIVATE_NUMBER)) {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
+            if (multiplePhoneAccounts) {
+                // %1 here is the sim card label
+                mCachedBody = QString::fromUtf8(C::gettext("Calling from private number on %2")).arg(account->displayName());
+            } else {
+                mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
+            }
             unknownNumber = true;
         } else if (telepathyContact->id().startsWith(OFONO_UNKNOWN_NUMBER)) {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
+            if (multiplePhoneAccounts) {
+                // %1 here is the sim card label
+                mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number on %2")).arg(account->displayName());
+            } else {
+                mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
+            }
             unknownNumber = true;
         } else {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(telepathyContact->id());
+            if (multiplePhoneAccounts) {
+                // %1 here is the actual phone number and %2 is the sim card label
+                mCachedBody = QString::fromUtf8(C::gettext("Calling from %1 on %2")).arg(telepathyContact->id()).arg(account->displayName());
+            } else {
+                mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(telepathyContact->id());
+            }
         }
     } else {
         mCachedBody = C::gettext("Caller number is not available");
