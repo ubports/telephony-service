@@ -105,11 +105,10 @@ void MessagingMenu::addFlashMessage(const QString &senderId, const QString &acco
  
 }
 
-void MessagingMenu::addMessage(const QString &senderId, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text)
+void MessagingMenu::addMessage(const QString &senderId, const QString &contactAlias, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text)
 {
     // try to get a contact for that phone number
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
-    QString contactAlias = senderId;
 
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
@@ -125,13 +124,13 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
 
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged,
-                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this]() {
+                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this](QContactAbstractRequest::State newState) {
 
         GFile *file = NULL;
         GIcon *icon = NULL;
 
         // only process the results after the finished state is reached
-        if (request->state() != QContactAbstractRequest::FinishedState) {
+        if (newState != QContactAbstractRequest::FinishedState) {
             return;
         }
 
@@ -507,6 +506,7 @@ void MessagingMenu::showMessage(const QString &messageId)
 {
     QVariantMap message = mMessages[messageId];
     QString senderId = message["senderId"].toString();
+    QString accountId = message["accountId"].toString();
     QStringList participantIds = message["participantIds"].toStringList();
     QStringList recipients;
     if (!senderId.isEmpty()) {
@@ -514,8 +514,14 @@ void MessagingMenu::showMessage(const QString &messageId)
     }
     recipients << participantIds;
     recipients.removeDuplicates();
+
+    QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (account && account->type() == AccountEntry::GenericAccount) {
+        url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
+    }
  
-    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+    ApplicationUtils::openUrl(url);
 }
 
 void MessagingMenu::callBack(const QString &messageId)

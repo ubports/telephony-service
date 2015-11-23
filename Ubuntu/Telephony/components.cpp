@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2015 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -21,8 +21,10 @@
  */
 
 #include "components.h"
+#include "config.h"
 #include "telepathyhelper.h"
 #include "callentry.h"
+#include "chatentry.h"
 #include "callmanager.h"
 #include "callnotification.h"
 #include "ussdmanager.h"
@@ -31,6 +33,7 @@
 #include "contactwatcher.h"
 #include "greetercontacts.h"
 #include "phoneutils.h"
+#include "presencerequest.h"
 #include "protocolmanager.h"
 #include "accountentry.h"
 #include "audiooutput.h"
@@ -44,6 +47,11 @@ void Components::initializeEngine(QQmlEngine *engine, const char *uri)
     Q_ASSERT(engine);
 
     Q_UNUSED(uri);
+
+    // if we allow config.h to look for stuff in uninstalled paths, applications
+    // that use this plugin will try to look for protocol info in the wrong path
+    // and fail to find them.
+    canRunUninstalled = false;
 
     // Initialize telepathy types
     Tp::registerTypes();
@@ -67,10 +75,13 @@ void Components::registerTypes(const char *uri)
     // @uri Telephony
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
     qmlRegisterUncreatableType<CallEntry>(uri, 0, 1, "CallEntry", "Objects of this type are created in CallManager and made available to QML for usage");
+    qmlRegisterUncreatableType<ChatEntry>(uri, 0, 1, "ChatEntry", "Objects of this type are created in ChatManager and made available to QML for usage");
+    qmlRegisterUncreatableType<ContactChatState>(uri, 0, 1, "ContactChatState", "Objects of this type are created in ChatEntry and made available to QML");
     qmlRegisterUncreatableType<AudioOutput>(uri, 0, 1, "AudioOutput", "Objects of this type are created in CallEntry and made available to QML for usage");
     qmlRegisterUncreatableType<AccountEntry>(uri, 0, 1, "AccountEntry", "Objects of this type are created in TelepathyHelper and made available to QML");
     qmlRegisterUncreatableType<USSDManager>(uri, 0, 1, "USSDManager", "Objects of this type are created in AccountEntry and made available to QML");
     qmlRegisterUncreatableType<Protocol>(uri, 0, 1, "ProtocolManager", "Objects of this type are created in ProtocolManager and made available to QML");
     qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");
+    qmlRegisterType<PresenceRequest>(uri, 0, 1, "PresenceRequest");
     qmlRegisterType<PhoneUtils>(uri, 0, 1, "PhoneUtils");
 }

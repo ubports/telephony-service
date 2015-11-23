@@ -97,6 +97,11 @@ void MockConnectionDBus::PlaceIncomingMessage(const QString &message, const QVar
     mConnection->placeIncomingMessage(message, properties);
 }
 
+void MockConnectionDBus::ChangeChatState(const QStringList &participants, const QString &userId, int state)
+{
+    mConnection->changeChatState(participants, userId, state);
+}
+
 QString MockConnectionDBus::PlaceCall(const QVariantMap &properties)
 {
     qDebug() << __PRETTY_FUNCTION__ << properties;
@@ -126,6 +131,17 @@ void MockConnectionDBus::SetPresence(const QString &status, const QString &statu
     qDebug() << __PRETTY_FUNCTION__ << status << statusMessage;
     Tp::DBusError error;
     mConnection->setPresence(status, statusMessage, &error);
+}
+
+void MockConnectionDBus::SetContactPresence(const QString &id, int presenceType, const QString &status, const QString &statusMessage)
+{
+    qDebug() << __PRETTY_FUNCTION__ << id << presenceType << status << statusMessage;
+    mConnection->setContactPresence(id, presenceType, status, statusMessage);
+}
+
+void MockConnectionDBus::SimulateAuthFailure()
+{
+    mConnection->simulateAuthFailure();
 }
 
 void MockConnectionDBus::SetVoicemailIndicator(bool active)

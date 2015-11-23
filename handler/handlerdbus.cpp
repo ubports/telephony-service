@@ -65,9 +65,9 @@ QStringList HandlerDBus::AccountIds()
     return TelepathyHelper::instance()->accountIds();
 }
 
-bool HandlerDBus::IsConnected()
+bool HandlerDBus::IsReady()
 {
-    return TelepathyHelper::instance()->connected();
+    return TelepathyHelper::instance()->ready();
 }
 
 bool HandlerDBus::callIndicatorVisible() const
@@ -93,25 +93,24 @@ bool HandlerDBus::connectToBus()
     return true;
 }
 
-void HandlerDBus::SendMessage(const QStringList &numbers, const QString &message, const QString &accountId)
+void HandlerDBus::SendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    TextHandler::instance()->sendMessage(numbers, message, accountId);
-}
-
-void HandlerDBus::SendSilentMessage(const QStringList &numbers, const QString &message, const QString &accountId)
-{
-    TextHandler::instance()->sendSilentMessage(numbers, message, accountId);
-}
-
-void HandlerDBus::SendMMS(const QStringList &numbers, const AttachmentList &attachments, const QString &accountId)
-{
-
-    TextHandler::instance()->sendMMS(numbers, attachments, accountId);
+    TextHandler::instance()->sendMessage(accountId, recipients, message, attachments, properties);
 }
 
 void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId)
 {
     TextHandler::instance()->acknowledgeMessages(numbers, messageIds, accountId);
+}
+
+void HandlerDBus::StartChat(const QString &accountId, const QStringList &participants)
+{
+    TextHandler::instance()->startChat(participants, accountId);
+}
+
+void HandlerDBus::StartChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties)
+{
+    TextHandler::instance()->startChatRoom(accountId, initialParticipants, properties);
 }
 
 void HandlerDBus::AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId)

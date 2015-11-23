@@ -57,19 +57,18 @@ public:
 
     bool ready() const;
     QString accountId() const;
-    bool active() const;
     QString displayName() const;
     QString status() const;
     QString statusMessage() const;
     QString selfContactId() const;
     void setDisplayName(const QString &name);
-    virtual bool connected() const;
     Tp::AccountPtr account() const;
     virtual AccountType type() const;
     virtual QStringList addressableVCardFields() const;
-
     virtual bool compareIds(const QString &first, const QString &second) const;
-
+    virtual bool active() const;
+    virtual bool connected() const;
+ 
     Protocol *protocolInfo() const;
 
     static void addAccountLabel(const QString &accountId, QString &text);
@@ -85,14 +84,13 @@ Q_SIGNALS:
     void connectedChanged();
     void addressableVCardFieldsChanged();
     void removed();
+    void connectionStatusChanged(Tp::ConnectionStatus status);
 
 protected Q_SLOTS:
     virtual void initialize();
-    virtual void ensureEnabled();
-    virtual void ensureConnected();
     virtual void watchSelfContactPresence();
-    virtual void onConnectionChanged();
-    virtual void onSelfHandleChanged(uint handle);
+    virtual void onConnectionChanged(Tp::ConnectionPtr connection);
+    virtual void onSelfContactChanged();
 
 protected:
     explicit AccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);

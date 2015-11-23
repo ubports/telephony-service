@@ -73,6 +73,9 @@ MockTextChannel::MockTextChannel(MockConnection *conn, QStringList recipients, u
     mMessagesIface->setSendMessageCallback(Tp::memFun(this,&MockTextChannel::sendMessage));
     baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mMessagesIface));
 
+    mChatStateIface = Tp::BaseChannelChatStateInterface::create();
+    baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mChatStateIface));
+
     // group stuff
     mGroupIface = Tp::BaseChannelGroupInterface::create(Tp::ChannelGroupFlagCanAdd, conn->selfHandle());
     mGroupIface->setAddMembersCallback(Tp::memFun(this,&MockTextChannel::onAddMembers));
@@ -110,6 +113,11 @@ QString MockTextChannel::sendMessage(const Tp::MessagePartList& message, uint fl
     QString id = QString("sentmessage%1").arg(serial++);
     QString messageText = body["content"].variant().toString();
     QVariantMap properties;
+    QMap<QString, QDBusVariant>::const_iterator it = header.constBegin();
+    while (it != header.constEnd()) {
+        properties[it.key()] = it.value().variant().toString();
+        it++;
+    }
     properties["SentTime"] = QDateTime::currentDateTime().toString(Qt::ISODate);
     properties["Recipients"] = mRecipients;
     properties["Id"] = id;
@@ -259,4 +267,9 @@ void MockTextChannel::onRemoveMembers(const Tp::UIntList &handles, const QString
         mMembers.removeAll(handle);
     }
     mGroupIface->removeMembers(handles);
+}
+
+void MockTextChannel::changeChatState(const QString &userId, int state)
+{
+    Q_EMIT mChatStateIface->chatStateChanged(mConnection->ensureHandle(userId), state);
 }

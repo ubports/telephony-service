@@ -34,11 +34,14 @@ public:
 
     bool connectToBus();
     void PlaceIncomingMessage(const QString &message, const QVariantMap &properties);
+    void ChangeChatState(const QStringList &participants, const QString &userId, int state);
     QString PlaceCall(const QVariantMap &properties);
     void HangupCall(const QString &callerId);
     void SetCallState(const QString &phoneNumber, const QString &state);
     void SetOnline(bool online);
     void SetPresence(const QString &status, const QString &statusMessage);
+    void SetContactPresence(const QString &id, int presenceType, const QString &status, const QString &statusMessage);
+    void SimulateAuthFailure();
 
     // voicemail stuff
     void SetVoicemailIndicator(bool active);

@@ -19,6 +19,7 @@
 
 #include <QStringList>
 #include "handlercontroller.h"
+#include <QDBusMetaType>
 #include <QDBusReply>
 #include <QDebug>
 
@@ -36,6 +37,9 @@ HandlerController::HandlerController(QObject *parent) :
     QObject(parent),
     mHandlerInterface(HANDLER_SERVICE, HANDLER_OBJECT, HANDLER_INTERFACE)
 {
+    qDBusRegisterMetaType<AttachmentStruct>();
+    qDBusRegisterMetaType<AttachmentList>();
+
     connect(&mHandlerInterface,
             SIGNAL(CallPropertiesChanged(QString, QVariantMap)),
             SIGNAL(callPropertiesChanged(QString, QVariantMap)));
@@ -120,9 +124,9 @@ void HandlerController::splitCall(const QString &objectPath)
     mHandlerInterface.call("SplitCall", objectPath);
 }
 
-void HandlerController::sendMessage(const QString &number, const QString &message, const QString &accountId)
+void HandlerController::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    mHandlerInterface.call("SendMessage", QStringList() << number, message, accountId);
+    mHandlerInterface.call("SendMessage", accountId, recipients, message, QVariant::fromValue(attachments), properties);
 }
 
 void HandlerController::acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId)

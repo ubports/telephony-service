@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Canonical, Ltd.
+ * Copyright (C) 2015 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -19,29 +19,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef USSDINDICATOR_H
-#define USSDINDICATOR_H
+#ifndef AUTHHANDLER_H
+#define AUTHHANDLER_H
 
 #include <QDBusInterface>
 #include <QVariantMap>
 #include "indicator/NotificationsInterface.h"
-#include "ussdmanager.h"
+#include "accountentry.h"
 #include "notificationmenu.h"
-#include "ofonoaccountentry.h"
 
-class USSDIndicator : public QObject
+class AuthHandler : public QObject
 {
     Q_OBJECT
 public:
-    explicit USSDIndicator(QObject *parent = 0);
-    void showUSSDNotification(const QString &message, bool replyRequired, USSDManager *ussdManager);
+    explicit AuthHandler(QObject *parent = 0);
 
 public Q_SLOTS:
-    void onNotificationReceived(const QString &message);
-    void onRequestReceived(const QString &message);
-    void onInitiateUSSDComplete(const QString &ussdResp);
-    void onRespondComplete(bool success, const QString &ussdResp);
-    void onStateChanged(const QString &state);
+    void onConnectionStatusChanged(Tp::ConnectionStatus status);
     void actionInvoked(uint id, const QString &actionKey);
     void notificationClosed(uint id, uint reason);
     void clear();
@@ -49,13 +43,11 @@ private Q_SLOTS:
     void setupAccounts();
 
 private:
-    unsigned int m_notificationId;
-    NotificationMenu m_menuRequest;
-    NotificationMenu m_menuNotification;
-    QString mPendingMessage;
-    org::freedesktop::Notifications m_notifications;
-    QMap<int, USSDManager*> mUSSDRequests;
-    QList<OfonoAccountEntry*> mAccounts;
+    void processStatusChange(AccountEntry *account, Tp::ConnectionStatus status);
+    NotificationMenu mMenuNotification;
+    org::freedesktop::Notifications mNotifications;
+    QMap<uint, AccountEntry*> mAuthFailureRequests;
+    QStringList mIgnoredAccounts;
 };
 
-#endif // USSDINDICATOR_H
+#endif // AUTHHANDLER_H

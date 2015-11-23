@@ -98,13 +98,13 @@ void OfonoAccountEntryTest::testConnected()
     QSignalSpy connectedChangedSpy(mAccount, SIGNAL(connectedChanged()));
 
     // now set the account offline and see if the active flag changes correctly
-    mMockController->SetPresence("away", "away");
+    mMockController->SetOnline(false);
     TRY_VERIFY(connectedChangedSpy.count() > 0);
     TRY_VERIFY(!mAccount->connected());
 
     // now re-enable the account and check that the entry is updated
     connectedChangedSpy.clear();
-    mMockController->SetPresence("available", "online");
+    mMockController->SetOnline(true);
     // because of the way the mock was implemented, sometimes this can return two connectedChanged() signals.
     TRY_VERIFY(connectedChangedSpy.count() > 0);
     TRY_VERIFY(mAccount->connected());
@@ -132,10 +132,10 @@ void OfonoAccountEntryTest::testCompareIds()
 
 void OfonoAccountEntryTest::testEmergencyNumbers()
 {
-    QSignalSpy emergencyNumbersChangedSpy(mAccount, SIGNAL(emergencyNumbersChanged()));
-
     // check that the list is not empty at startup
-    QVERIFY(!mAccount->emergencyNumbers().isEmpty());
+    QTRY_VERIFY(!mAccount->emergencyNumbers().isEmpty());
+
+    QSignalSpy emergencyNumbersChangedSpy(mAccount, SIGNAL(emergencyNumbersChanged()));
 
     QStringList numbers;
     numbers << "111" << "190" << "911";
@@ -154,8 +154,10 @@ void OfonoAccountEntryTest::testCountryCode()
     QSignalSpy countryCodeChangedSpy(mAccount, SIGNAL(countryCodeChanged()));
 
     // check that the countryCode is not empty at startup
-    QVERIFY(!mAccount->countryCode().isEmpty());
+    QTRY_VERIFY(!mAccount->countryCode().isEmpty());
     QCOMPARE(mAccount->countryCode(), QString("US"));
+
+    countryCodeChangedSpy.clear();
 
     QString countryCode("BR");
     mMockController->SetCountryCode("BR");
