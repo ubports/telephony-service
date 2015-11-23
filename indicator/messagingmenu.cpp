@@ -156,6 +156,8 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
             avatar = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/contact-group.svg");
         }
 
+        AccountEntry::addAccountLabel(accountId, displayLabel);
+
         if (avatar.isEmpty()) {
             avatar = iconPath;
         }
@@ -270,7 +272,7 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
 
     Q_FOREACH(Call callMessage, mCalls) {
         // FIXME: we need a better strategy to group calls from different accounts
-        if (account->compareIds(callMessage.targetId, targetId)) {
+        if (account->compareIds(callMessage.targetId, targetId) && callMessage.accountId == accountId) {
             call = callMessage;
             found = true;
             mCalls.removeOne(callMessage);
@@ -294,6 +296,8 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
 
     QString text;
     text = QString::fromUtf8(C::ngettext("%1 missed call", "%1 missed calls", call.count)).arg(call.count);
+
+    AccountEntry::addAccountLabel(accountId, text);
 
     if (targetId.startsWith(OFONO_PRIVATE_NUMBER)) {
         call.contactAlias = C::gettext("Private number");
@@ -365,7 +369,7 @@ void MessagingMenu::removeCall(const QString &targetId, const QString &accountId
 
     Q_FOREACH(Call callMessage, mCalls) {
         // FIXME: we need a better strategy to group calls from different accounts
-        if (account->compareIds(callMessage.targetId, targetId)) {
+        if (account->compareIds(callMessage.targetId, targetId) && callMessage.accountId == accountId) {
             call = callMessage;
             found = true;
             mCalls.removeOne(callMessage);
@@ -396,9 +400,7 @@ void MessagingMenu::showVoicemailEntry(AccountEntry *account)
     GIcon *icon = g_themed_icon_new("indicator-call");
 
     QString accountLabel(C::gettext("Voicemail"));
-    if (TelepathyHelper::instance()->activeAccounts().size() > 1) {
-        accountLabel += " - " + account->displayName();
-    }
+    AccountEntry::addAccountLabel(account->accountId(), accountLabel);
 
     MessagingMenuMessage *message = messaging_menu_message_new(account->accountId().toUtf8().data(),
                                                                icon,

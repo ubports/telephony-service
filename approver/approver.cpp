@@ -473,6 +473,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
         mCachedBody = C::gettext("Caller number is not available");
         unknownNumber = true;
     }
+    AccountEntry::addAccountLabel(account->accountId(), mCachedBody);
 
     QString displayLabel;
     QString icon;

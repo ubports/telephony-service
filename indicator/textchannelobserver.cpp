@@ -449,6 +449,9 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     } else {
         title = QString::fromUtf8(C::gettext("Message from %1")).arg(alias);
     }
+
+    AccountEntry::addAccountLabel(accountId, title);
+
     // show the notification
     NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
                                                                messageText.toStdString().c_str(),

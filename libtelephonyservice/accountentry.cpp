@@ -23,6 +23,7 @@
 #include <QTimer>
 #include "accountentry.h"
 #include "protocolmanager.h"
+#include "telepathyhelper.h"
 
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
     QObject(parent), mAccount(account), mReady(false), mProtocol(0)
@@ -238,4 +239,13 @@ void AccountEntry::onConnectionChanged()
 
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
+}
+
+void AccountEntry::addAccountLabel(const QString &accountId, QString &text)
+{
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (account && account->type() == AccountEntry::PhoneAccount &&
+            TelepathyHelper::instance()->multiplePhoneAccounts()) {
+        text += QString(" - [%1]").arg(account->displayName());
+    }
 }
