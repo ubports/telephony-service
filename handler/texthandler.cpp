@@ -144,7 +144,7 @@ void TextHandler::startChat(const Tp::AccountPtr &account, const Tp::Contacts &c
     // start chatting to the contacts
     Q_FOREACH(Tp::ContactPtr contact, contacts) {
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
-        mContacts[contact->id()] = contact;
+        mContacts[account->uniqueIdentifier()][contact->id()] = contact;
     }
 }
 
@@ -305,7 +305,18 @@ void TextHandler::sendMessage(const QString &accountId, const QStringList &recip
                 // TODO: we have to find the multimedia account that matches the same phone number, 
                 // but for now we just pick any multimedia connected account
                 if (newAccount->type() == AccountEntry::MultimediaAccount) {
-                    if (newAccount->connected()) {
+                    // FIXME: the fallback implementation needs to be changed to use protocol info and create a map of
+                    // accounts. Also, it needs to check connection capabilities to determine if we can send message
+                    // to offline contacts.
+                    QString recipient = recipients[0];
+                    bool shouldFallback = false;
+                    // FIXME we should be comparing phonenumbers here
+                    if (!shouldFallback && mContacts.contains(newAccount->accountId()) && mContacts[newAccount->accountId()].contains(recipient)) {
+                        Tp::Presence presence = mContacts[newAccount->accountId()][recipient]->presence();
+                        shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
+                            presence.type() == Tp::ConnectionPresenceTypeOffline);
+                    }
+                    if (newAccount->connected() && shouldFallback) {
                         account = newAccount;
                         break;
                     }

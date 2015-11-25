@@ -65,7 +65,7 @@ private:
     Tp::MessagePartList buildMessage(const PendingMessage &pendingMessage);
 
     QList<Tp::TextChannelPtr> mChannels;
-    QMap<QString, Tp::ContactPtr> mContacts;
+    QMap<QString, QMap<QString, Tp::ContactPtr> > mContacts;
     QList<PendingMessage> mPendingMessages;
 };
 
