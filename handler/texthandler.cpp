@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2015 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -32,11 +33,15 @@
 
 #define SMIL_TEXT_REGION "<region id=\"Text\" width=\"100%\" height=\"100%\" fit=\"scroll\" />"
 #define SMIL_IMAGE_REGION "<region id=\"Image\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
+#define SMIL_AUDIO_REGION "<region id=\"Audio\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
 #define SMIL_TEXT_PART "<par dur=\"3s\">\
        <text src=\"cid:%1\" region=\"Text\" />\
      </par>"
 #define SMIL_IMAGE_PART "<par dur=\"5000ms\">\
        <img src=\"cid:%1\" region=\"Image\" />\
+     </par>"
+#define SMIL_AUDIO_PART "<par>\
+       <audio src=\"cid:%1\" region=\"Audio\" />\
      </par>"
 
 #define SMIL_FILE "<smil>\
@@ -148,7 +153,7 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
     Tp::MessagePartList message;
     Tp::MessagePart header;
     QString smil, regions, parts;
-    bool hasImage = false, hasText = false, isMMS = false;
+    bool hasImage = false, hasText = false, hasAudio = false, isMMS = false;
 
     AccountEntry *account = TelepathyHelper::instance()->accountForId(pendingMessage.accountId);
     if (!account) {
@@ -207,6 +212,11 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
                     fileData = attachmentFile.readAll();
                 }
             }
+        } else if (attachment.contentType.startsWith("audio/")) {
+            if (isMMS) {
+                hasAudio = true;
+                parts += QString(SMIL_AUDIO_PART).arg(attachment.id);
+            }
         } else if (attachment.contentType.startsWith("text/plain")) {
             if (isMMS) {
                 hasText = true;
@@ -228,6 +238,10 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
 
         if (temporaryFiles) {
             attachmentFile.remove();
+        }
+
+        if (hasAudio) {
+            regions += QString(SMIL_AUDIO_REGION);
         }
 
         if (hasText) {
