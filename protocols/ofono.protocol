@@ -2,3 +2,4 @@
 Name=ofono
 Features=text,voice
 FallbackProtocol=
+BackgroundFile=/usr/share/telephony-service/assets/message_watermark.png

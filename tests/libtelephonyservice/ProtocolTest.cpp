@@ -27,8 +27,8 @@ class TestProtocol : public Protocol
 {
     Q_OBJECT
 public:
-    TestProtocol(const QString &name, Protocol::Features features, const QString &fallbackProtocol, QObject *parent = 0)
-     : Protocol(name, features, fallbackProtocol, parent) { }
+    TestProtocol(const QString &name, Protocol::Features features, const QString &fallbackProtocol, const QString &backgroundFile, const QString &icon, const QString &serviceName = QString::null, QObject *parent = 0)
+     : Protocol(name, features, fallbackProtocol, backgroundFile, icon, serviceName, parent) { }
 };
 
 class ProtocolTest : public QObject
@@ -45,11 +45,17 @@ void ProtocolTest::testBasicInfo()
     QString name("foobar");
     Protocol::Features features(Protocol::TextChats);
     QString fallbackProtocol("theFallback");
+    QString backgroundImage("/tmp/background.png");
+    QString icon("/tmp/icon.png");
+    QString serviceName("The service");
 
-    TestProtocol protocol(name, features, fallbackProtocol, this);
+    TestProtocol protocol(name, features, fallbackProtocol, backgroundImage, icon, serviceName, this);
     QCOMPARE(protocol.name(), name);
     QCOMPARE(protocol.features(), features);
     QCOMPARE(protocol.fallbackProtocol(), fallbackProtocol);
+    QCOMPARE(protocol.backgroundImage(), backgroundImage);
+    QCOMPARE(protocol.icon(), icon);
+    QCOMPARE(protocol.serviceName(), serviceName);
     QCOMPARE(protocol.parent(), this);
 }
 
@@ -65,6 +71,9 @@ void ProtocolTest::testFromFile()
     QCOMPARE(protocol->name(), QString("foo"));
     QCOMPARE(protocol->features(), Protocol::Features(Protocol::TextChats | Protocol::VoiceCalls));
     QCOMPARE(protocol->fallbackProtocol(), QString("bar"));
+    QCOMPARE(protocol->backgroundImage(), QString("/tmp/background.png"));
+    QCOMPARE(protocol->icon(), QString("/tmp/icon.png"));
+    QCOMPARE(protocol->serviceName(), QString("The Service"));
 }
 
 QTEST_MAIN(ProtocolTest)
