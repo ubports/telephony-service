@@ -313,8 +313,8 @@ void HandlerTest::testSendMessageWithAttachments()
     TRY_COMPARE(messageSentSpy.count(), 1);
     outputFile.close();
 
-    QString sentMessage = messageSentSpy.first().first().toString();
-    QVariantMap messageProperties = messageSentSpy.first().last().value<QVariantMap>();
+    QString sentMessage = messageSentSpy.first()[0].toString();
+    QVariantMap messageProperties = messageSentSpy.first()[2].value<QVariantMap>();
     QCOMPARE(sentMessage, message);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
