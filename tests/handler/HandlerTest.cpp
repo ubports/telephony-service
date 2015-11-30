@@ -306,7 +306,8 @@ void HandlerTest::testSendMessageWithAttachments()
     QString recipient("22222222");
     QString message("Hello, world!");
     QSignalSpy messageSentSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
-    QTemporaryFile outputFile(QDir::temp().absoluteFilePath("audioXXXXXX.ogg"));
+
+    QTemporaryFile outputFile("audioXXXXXX.ogg");
     outputFile.open();
     AttachmentStruct attachment{"id", "audio/ogg", outputFile.fileName()};
     HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message, AttachmentList() << attachment);
