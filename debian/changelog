@@ -1,3 +1,13 @@
+telephony-service (0.1+16.04.20151202.1-0ubuntu1) xenial; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+
+  [ Tiago Salem Herrmann ]
+  * Support new audio role api. (LP: #1493851)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 02 Dec 2015 21:38:51 +0000
+
 telephony-service (0.1+16.04.20151119-0ubuntu1) xenial; urgency=medium
 
   [ Gustavo Pichorim Boiko ]
