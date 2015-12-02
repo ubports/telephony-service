@@ -16,10 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2015-11-06 05:38+0000\n"
-"X-Generator: Launchpad (build 17838)\n"
+"X-Launchpad-Export-Date: 2015-11-27 05:38+0000\n"
+"X-Generator: Launchpad (build 17850)\n"
 
-#: indicator/messagingmenu.cpp:296
+#: indicator/messagingmenu.cpp:295
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -27,7 +27,7 @@ msgstr[0] "%1 пропуштен позив"
 msgstr[1] "%1 пропуштена позива"
 msgstr[2] "%1 пропуштених позива"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:392
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -55,28 +55,28 @@ msgstr "Данас је примљено <b>%1</b> текстуалних пор
 msgid "<b>%1</b> text messages sent today"
 msgstr "Данас је послато <b>%1</b> текстуалних порука"
 
-#: approver/approver.cpp:489
+#: approver/approver.cpp:490
 msgid "Accept"
 msgstr "Прихвати"
 
-#: indicator/messagingmenu.cpp:233
+#: indicator/messagingmenu.cpp:232
 msgid "Call back"
 msgstr "Позови назад"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:452
 msgid "Caller number is not available"
 msgstr "Број позиваоца није доступан"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:449
 #, qt-format
 msgid "Calling from %1"
 msgstr "Зове са %1"
 
-#: approver/approver.cpp:442
+#: approver/approver.cpp:443
 msgid "Calling from private number"
 msgstr "Позив са сакривеног броја"
 
-#: approver/approver.cpp:445
+#: approver/approver.cpp:446
 msgid "Calling from unknown number"
 msgstr "Позив са непознатог броја"
 
@@ -84,27 +84,27 @@ msgstr "Позив са непознатог броја"
 msgid "Cancel"
 msgstr "Откажи"
 
-#: indicator/textchannelobserver.cpp:226
+#: indicator/textchannelobserver.cpp:236
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "Искључите режим у авиону и покушајте поново из програма за поруке."
 
-#: approver/approver.cpp:511
+#: approver/approver.cpp:512
 msgid "Decline"
 msgstr "Одбиј"
 
-#: approver/approver.cpp:502
+#: approver/approver.cpp:503
 msgid "End + Answer"
 msgstr "Заврши + Одговори"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:489
 msgid "Hold + Answer"
 msgstr "Задржи и одговори"
 
-#: indicator/messagingmenu.cpp:238
+#: indicator/messagingmenu.cpp:237
 msgid "I missed your call - can you call me now?"
 msgstr "Пропустио сам твој позив — можеш ли ме сада позвати?"
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:240
 msgid "I'll be 20 minutes late."
 msgstr "Касним 20 минута."
 
@@ -112,7 +112,7 @@ msgstr "Касним 20 минута."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Тренутно сам заузет. Назваћу вас касније."
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:239
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Тренутно сам заузет. Зовем вас касније."
 
@@ -120,15 +120,15 @@ msgstr "Тренутно сам заузет. Зовем вас касније."
 msgid "I'm running late, on my way now."
 msgstr "Касним, на путу сам."
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:238
 msgid "I'm running late. I'm on my way."
 msgstr "Касним. На путу сам."
 
-#: approver/approver.cpp:519
+#: approver/approver.cpp:520
 msgid "Message & decline"
 msgstr "Порука & одбиј"
 
-#: indicator/textchannelobserver.cpp:450 indicator/textchannelobserver.cpp:506
+#: indicator/textchannelobserver.cpp:459 indicator/textchannelobserver.cpp:515
 #, qt-format
 msgid "Message from %1"
 msgstr "Порука од %1"
@@ -149,7 +149,7 @@ msgstr "Данас нема примљених порука"
 msgid "No text messages sent today"
 msgstr "Данас није било послатих порука"
 
-#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:312
 msgid "Ok"
 msgstr "У реду"
 
@@ -161,7 +161,7 @@ msgstr "Телефонски позиви"
 msgid "Please call me back later."
 msgstr "Молим, назовите ме касније."
 
-#: indicator/textchannelobserver.cpp:628
+#: indicator/textchannelobserver.cpp:649
 msgid "Please, select a SIM card:"
 msgstr "Изаберите СИМ картицу:"
 
@@ -169,7 +169,7 @@ msgstr "Изаберите СИМ картицу:"
 msgid "Private Number"
 msgstr "Сакривени број"
 
-#: indicator/messagingmenu.cpp:299
+#: indicator/messagingmenu.cpp:298
 msgid "Private number"
 msgstr "Сакривени број"
 
@@ -186,15 +186,15 @@ msgstr "СИМ %1"
 msgid "SMS"
 msgstr "СМС"
 
-#: indicator/textchannelobserver.cpp:308
+#: indicator/textchannelobserver.cpp:318
 msgid "Save"
 msgstr "Сачувај"
 
-#: indicator/messagingmenu.cpp:175 indicator/messagingmenu.cpp:248
+#: indicator/messagingmenu.cpp:174 indicator/messagingmenu.cpp:247
 msgid "Send"
 msgstr "Пошаљи"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:241
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Извини, и даље сам заузет. Назваћу Вас касније."
 
@@ -211,15 +211,15 @@ msgstr "Услуга телефонирања"
 msgid "Telephony Service Approver"
 msgstr "Одобравање услуге телефонирања"
 
-#: indicator/main.cpp:51
+#: indicator/main.cpp:52
 msgid "Telephony Service Indicator"
 msgstr "Индикатор услуге телефонирања"
 
-#: indicator/textchannelobserver.cpp:235
+#: indicator/textchannelobserver.cpp:245
 msgid "The message could not be sent"
 msgstr "Не могу да пошаљем поруку"
 
-#: indicator/textchannelobserver.cpp:229
+#: indicator/textchannelobserver.cpp:239
 msgid "Try again from the messaging application."
 msgstr "Покушајте поново из програма за поруке."
 
@@ -231,23 +231,23 @@ msgstr "Непознат број"
 msgid "Unknown caller"
 msgstr "Непознат позивалац"
 
-#: indicator/textchannelobserver.cpp:436 indicator/messagingmenu.cpp:143
-#: indicator/messagingmenu.cpp:303
+#: indicator/messagingmenu.cpp:142 indicator/messagingmenu.cpp:302
+#: indicator/textchannelobserver.cpp:445
 msgid "Unknown number"
 msgstr "Непознат број"
 
-#: indicator/textchannelobserver.cpp:224
+#: indicator/textchannelobserver.cpp:234
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Откључајте сим картицу и покушајте поново из програма за поруке."
 
-#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:470
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:479
 msgid "View message"
 msgstr "Погледај поруку"
 
-#: indicator/messagingmenu.cpp:398
+#: indicator/messagingmenu.cpp:397
 msgid "Voicemail"
 msgstr "Говорна пошта"
 
-#: indicator/messagingmenu.cpp:390
+#: indicator/messagingmenu.cpp:389
 msgid "Voicemail messages"
 msgstr "Поруке говорне поште"
