@@ -456,7 +456,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         avatar = g_icon_to_string(icon);
         g_object_unref(icon);
     } else {
-        title = QString::fromUtf8(C::gettext("Message from %1")).arg(alias);
+        title = alias;
     }
 
     AccountEntry::addAccountLabel(accountId, title);
