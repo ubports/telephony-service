@@ -448,7 +448,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
 
     if (account->type() == AccountEntry::PhoneAccount &&
             TelepathyHelper::instance()->multiplePhoneAccounts()) {
-        mCachedBody = QString::fromUtf8(C::gettext("To %1")).arg(account->displayName());
+        mCachedBody = QString::fromUtf8(C::gettext("To [%1]")).arg(account->displayName());
         mCachedBody += "\n";
     }
 
