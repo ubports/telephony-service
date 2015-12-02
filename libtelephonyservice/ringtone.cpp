@@ -49,7 +49,7 @@ void RingtoneWorker::playIncomingCallSound()
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
     mCallAudioPlayer->setAudioRole(QMediaPlayer::AlertRole);
 #else
-    mCallAudioPlayer->setAudioRole(QMediaPlayer::RingtoneRole);
+    mCallAudioPlayer->setAudioRole(QAudio::RingtoneRole);
 #endif
     mCallAudioPlayer->setPlaylist(&mCallAudioPlaylist);
     mCallAudioPlayer->play();
@@ -81,7 +81,7 @@ void RingtoneWorker::playIncomingMessageSound()
 #if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
         mMessageAudioPlayer->setAudioRole(QMediaPlayer::AlertRole);
 #else
-        mMessageAudioPlayer->setAudioRole(QMediaPlayer::NotificationRole);
+        mMessageAudioPlayer->setAudioRole(QAudio::NotificationRole);
 #endif
     }
 
