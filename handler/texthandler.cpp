@@ -329,7 +329,7 @@ void TextHandler::sendMessage(const QString &accountId, const QStringList &recip
                 if (!newAccount->connected()) {
                     continue;
                 }
-                QList<Tp::TextChannelPtr> channels = existingChannels(recipients, accountId);
+                QList<Tp::TextChannelPtr> channels = existingChannels(recipients, newAccount->accountId());
                 // check if we have a channel for this contact already
                 if (!channels.isEmpty()) {
                     // if the contact is known, force fallback to this account
