@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2015 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -33,6 +34,7 @@
 #define SMIL_TEXT_REGION "<region id=\"Text\" width=\"100%\" height=\"100%\" fit=\"scroll\" />"
 #define SMIL_IMAGE_REGION "<region id=\"Image\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
 #define SMIL_VIDEO_REGION "<region id=\"Video\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
+#define SMIL_AUDIO_REGION "<region id=\"Audio\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
 #define SMIL_TEXT_PART "<par dur=\"3s\">\
        <text src=\"cid:%1\" region=\"Text\" />\
      </par>"
@@ -41,6 +43,9 @@
      </par>"
 #define SMIL_VIDEO_PART "<par>\
        <video src=\"cid:%1\" region=\"Video\" />\
+     </par>"
+#define SMIL_AUDIO_PART "<par>\
+       <audio src=\"cid:%1\" region=\"Audio\" />\
      </par>"
 
 #define SMIL_FILE "<smil>\
@@ -143,7 +148,7 @@ void TextHandler::startChat(const Tp::AccountPtr &account, const Tp::Contacts &c
     // start chatting to the contacts
     Q_FOREACH(Tp::ContactPtr contact, contacts) {
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
-        mContacts[contact->id()] = contact;
+        mContacts[account->uniqueIdentifier()][contact->id()] = contact;
     }
 }
 
@@ -152,7 +157,7 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
     Tp::MessagePartList message;
     Tp::MessagePart header;
     QString smil, regions, parts;
-    bool hasImage = false, hasText = false, hasVideo = false, isMMS = false;
+    bool hasImage = false, hasText = false, hasVideo = false, hasAudio = false, isMMS = false;
 
     AccountEntry *account = TelepathyHelper::instance()->accountForId(pendingMessage.accountId);
     if (!account) {
@@ -216,6 +221,11 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
                 hasVideo = true;
                 parts += QString(SMIL_VIDEO_PART).arg(attachment.id);
             }
+        } else if (attachment.contentType.startsWith("audio/")) {
+            if (isMMS) {
+                hasAudio = true;
+                parts += QString(SMIL_AUDIO_PART).arg(attachment.id);
+            }
         } else if (attachment.contentType.startsWith("text/plain")) {
             if (isMMS) {
                 hasText = true;
@@ -242,6 +252,11 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
         if (hasVideo) {
             regions += QString(SMIL_VIDEO_REGION);
         }
+
+        if (hasAudio) {
+            regions += QString(SMIL_AUDIO_REGION);
+        }
+
         if (hasText) {
             regions += QString(SMIL_TEXT_REGION);
         }
@@ -303,7 +318,18 @@ void TextHandler::sendMessage(const QString &accountId, const QStringList &recip
                 // TODO: we have to find the multimedia account that matches the same phone number, 
                 // but for now we just pick any multimedia connected account
                 if (newAccount->type() == AccountEntry::MultimediaAccount) {
-                    if (newAccount->connected()) {
+                    // FIXME: the fallback implementation needs to be changed to use protocol info and create a map of
+                    // accounts. Also, it needs to check connection capabilities to determine if we can send message
+                    // to offline contacts.
+                    QString recipient = recipients[0];
+                    bool shouldFallback = false;
+                    // FIXME we should be comparing phonenumbers here
+                    if (!shouldFallback && mContacts.contains(newAccount->accountId()) && mContacts[newAccount->accountId()].contains(recipient)) {
+                        Tp::Presence presence = mContacts[newAccount->accountId()][recipient]->presence();
+                        shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
+                            presence.type() == Tp::ConnectionPresenceTypeOffline);
+                    }
+                    if (newAccount->connected() && shouldFallback) {
                         account = newAccount;
                         break;
                     }

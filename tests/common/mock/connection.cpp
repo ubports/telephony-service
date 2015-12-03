@@ -371,7 +371,7 @@ Tp::BaseChannelPtr MockConnection::createTextChannel(uint targetHandleType,
     MockTextChannel *channel = new MockTextChannel(this, recipients, targetHandle);
     QObject::connect(channel, SIGNAL(messageRead(QString)), SLOT(onMessageRead(QString)));
     QObject::connect(channel, SIGNAL(destroyed()), SLOT(onTextChannelClosed()));
-    QObject::connect(channel, SIGNAL(messageSent(QString,QVariantMap)), SIGNAL(messageSent(QString,QVariantMap)));
+    QObject::connect(channel, SIGNAL(messageSent(QString,QVariantList,QVariantMap)), SIGNAL(messageSent(QString,QVariantList,QVariantMap)));
     qDebug() << channel;
     mTextChannels << channel;
     return channel->baseChannel();
