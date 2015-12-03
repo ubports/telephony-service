@@ -32,11 +32,15 @@
 
 #define SMIL_TEXT_REGION "<region id=\"Text\" width=\"100%\" height=\"100%\" fit=\"scroll\" />"
 #define SMIL_IMAGE_REGION "<region id=\"Image\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
+#define SMIL_VIDEO_REGION "<region id=\"Video\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
 #define SMIL_TEXT_PART "<par dur=\"3s\">\
        <text src=\"cid:%1\" region=\"Text\" />\
      </par>"
 #define SMIL_IMAGE_PART "<par dur=\"5000ms\">\
        <img src=\"cid:%1\" region=\"Image\" />\
+     </par>"
+#define SMIL_VIDEO_PART "<par>\
+       <video src=\"cid:%1\" region=\"Video\" />\
      </par>"
 
 #define SMIL_FILE "<smil>\
@@ -148,7 +152,7 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
     Tp::MessagePartList message;
     Tp::MessagePart header;
     QString smil, regions, parts;
-    bool hasImage = false, hasText = false, isMMS = false;
+    bool hasImage = false, hasText = false, hasVideo = false; isMMS = false;
 
     AccountEntry *account = TelepathyHelper::instance()->accountForId(pendingMessage.accountId);
     if (!account) {
@@ -207,6 +211,11 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
                     fileData = attachmentFile.readAll();
                 }
             }
+        } else if (attachment.contentType.startsWith("video/")) {
+            if (isMMS) {
+                hasVideo = true;
+                parts += QString(SMIL_VIDEO_PART).arg(attachment.id);
+            }}
         } else if (attachment.contentType.startsWith("text/plain")) {
             if (isMMS) {
                 hasText = true;
@@ -230,6 +239,9 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
             attachmentFile.remove();
         }
 
+        if (hasVideo) {
+            regions += QString(SMIL_VIDEO_REGION);
+        }
         if (hasText) {
             regions += QString(SMIL_TEXT_REGION);
         }
