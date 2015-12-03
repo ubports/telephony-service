@@ -152,7 +152,7 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
     Tp::MessagePartList message;
     Tp::MessagePart header;
     QString smil, regions, parts;
-    bool hasImage = false, hasText = false, hasVideo = false; isMMS = false;
+    bool hasImage = false, hasText = false, hasVideo = false, isMMS = false;
 
     AccountEntry *account = TelepathyHelper::instance()->accountForId(pendingMessage.accountId);
     if (!account) {
