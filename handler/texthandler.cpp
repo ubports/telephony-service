@@ -309,39 +309,48 @@ void TextHandler::sendMessage(const QString &accountId, const QStringList &recip
         return;
     }
 
-    // check if the message should be sent via multimedia account
-    if (account->type() == AccountEntry::PhoneAccount) {
-        // we just use fallback to 1-1 chats
-        if (recipients.size() == 1) {
+    // keep recipient list always sorted to be able to compare
+    QStringList sortedRecipients = recipients;
+    sortedRecipients.sort();
+    PendingMessage pendingMessage = {account->accountId(), sortedRecipients, message, attachments, properties};
 
-            Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
-                // TODO: we have to find the multimedia account that matches the same phone number, 
-                // but for now we just pick any multimedia connected account
-                if (newAccount->type() == AccountEntry::MultimediaAccount) {
-                    // FIXME: the fallback implementation needs to be changed to use protocol info and create a map of
-                    // accounts. Also, it needs to check connection capabilities to determine if we can send message
-                    // to offline contacts.
-                    QString recipient = recipients[0];
-                    bool shouldFallback = false;
-                    // FIXME we should be comparing phonenumbers here
-                    if (!shouldFallback && mContacts.contains(newAccount->accountId()) && mContacts[newAccount->accountId()].contains(recipient)) {
-                        Tp::Presence presence = mContacts[newAccount->accountId()][recipient]->presence();
-                        shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
-                            presence.type() == Tp::ConnectionPresenceTypeOffline);
-                    }
-                    if (newAccount->connected() && shouldFallback) {
-                        account = newAccount;
-                        break;
-                    }
+    // check if the message should be sent via multimedia account
+    // we just use fallback to 1-1 chats
+    if (account->type() == AccountEntry::PhoneAccount && recipients.size() == 1) {
+        Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
+            // TODO: we have to find the multimedia account that matches the same phone number, 
+            // but for now we just pick any multimedia connected account
+            if (newAccount->type() == AccountEntry::MultimediaAccount) {
+                // FIXME: the fallback implementation needs to be changed to use protocol info and create a map of
+                // accounts. Also, it needs to check connection capabilities to determine if we can send message
+                // to offline contacts.
+                bool shouldFallback = false;
+                // if the account is offline, dont fallback to this account
+                if (!newAccount->connected()) {
+                    continue;
+                }
+                QList<Tp::TextChannelPtr> channels = existingChannels(recipients, accountId);
+                // check if we have a channel for this contact already
+                if (!channels.isEmpty()) {
+                    // if the contact is known, force fallback to this account
+                    Tp::Presence presence = channels.first()->targetContact()->presence();
+                    shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
+                        presence.type() == Tp::ConnectionPresenceTypeOffline);
+                } else {
+                    pendingMessage.accountId = newAccount->accountId();
+                    // request a new channel for this message in this multimedia account
+                    mPendingMessages.append(pendingMessage);
+                    startChat(recipients, newAccount->accountId());
+                    return;
+                }
+                if (shouldFallback) {
+                    account = newAccount;
+                    break;
                 }
             }
         }
     }
 
-    // keep recipient list always sorted to be able to compare
-    QStringList sortedRecipients = recipients;
-    sortedRecipients.sort();
-    PendingMessage pendingMessage = {account->accountId(), sortedRecipients, message, attachments, properties};
     if (!account->connected()) {
         mPendingMessages.append(pendingMessage);
         return;
@@ -389,12 +398,26 @@ void TextHandler::acknowledgeAllMessages(const QStringList &recipients, const QS
     }
 }
 
+void TextHandler::onTextChannelInvalidated()
+{
+    Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
+    mChannels.removeAll(textChannel);
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(textChannel->connection());
+    if (account) {
+       mContacts.remove(account->accountId());
+    }
+}
+
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
     if (!account) {
         return;
     }
+    connect(channel.data(),
+            SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
+            SLOT(onTextChannelInvalidated()));
+
     QString accountId = account->accountId();
     mChannels.append(channel);
 
