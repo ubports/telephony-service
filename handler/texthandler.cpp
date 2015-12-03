@@ -215,7 +215,7 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
             if (isMMS) {
                 hasVideo = true;
                 parts += QString(SMIL_VIDEO_PART).arg(attachment.id);
-            }}
+            }
         } else if (attachment.contentType.startsWith("text/plain")) {
             if (isMMS) {
                 hasText = true;
