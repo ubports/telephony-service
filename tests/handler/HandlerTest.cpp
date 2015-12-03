@@ -305,7 +305,7 @@ void HandlerTest::testSendMessageWithAttachments()
 {
     QString recipient("22222222");
     QString message("Hello, world!");
-    QSignalSpy messageSentSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+    QSignalSpy messageSentSpy(mMultimediaMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
     QTemporaryFile outputFile("audioXXXXXX.ogg");
     outputFile.open();
@@ -447,7 +447,6 @@ void HandlerTest::testMultimediaFallback()
 {
     QString recipient("22222222");
     QString message("Hello, world!");
-    HandlerController::instance()->startChat(mMultimediaTpAccount->uniqueIdentifier(), QStringList() << recipient);
     mMultimediaMockController->SetContactPresence(recipient, Tp::ConnectionPresenceTypeAvailable, "available", "");
     // We have to make sure the handler already has the new state
     QTest::qWait(1000);
