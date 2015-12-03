@@ -53,6 +53,7 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
+    void onTextChannelInvalidated();
     void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageSent(Tp::PendingOperation *op);
     void onConnectedChanged();
