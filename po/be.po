@@ -1,0 +1,253 @@
+# Belarusian translation for telephony-service
+# Copyright (c) 2015 Rosetta Contributors and Canonical Ltd 2015
+# This file is distributed under the same license as the telephony-service package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: telephony-service\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-16 15:24-0200\n"
+"PO-Revision-Date: 2015-12-06 09:36+0000\n"
+"Last-Translator: XiveZ <kyrsant2008@list.ru>\n"
+"Language-Team: Belarusian <be@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Launchpad-Export-Date: 2015-12-07 05:37+0000\n"
+"X-Generator: Launchpad (build 17862)\n"
+
+#: indicator/messagingmenu.cpp:295
+#, qt-format
+msgid "%1 missed call"
+msgid_plural "%1 missed calls"
+msgstr[0] "%1 прапушчаны выклік"
+msgstr[1] "%1 прапушчаныя выклікі"
+msgstr[2] "%1 прапушчаных выклікаў"
+
+#: indicator/messagingmenu.cpp:392
+#, qt-format
+msgid "%1 voicemail message"
+msgid_plural "%1 voicemail messages"
+msgstr[0] "%1 галасавое паведамленьне"
+msgstr[1] "%1 галасавых паведамленьня"
+msgstr[2] "%1 галасавых паведамленьняў"
+
+#: indicator/metrics.cpp:48
+#, qt-format
+msgid "<b>%1</b> calls made today"
+msgstr "<b>%1</b> зыходных выклікаў сёньня"
+
+#: indicator/metrics.cpp:46
+#, qt-format
+msgid "<b>%1</b> calls received today"
+msgstr "<b>%1</b> уваходных выклікаў сёньня"
+
+#: indicator/metrics.cpp:44
+#, qt-format
+msgid "<b>%1</b> text messages received today"
+msgstr "<b>%1</b> атрымана паведамленьняў сёньня"
+
+#: indicator/metrics.cpp:42
+#, qt-format
+msgid "<b>%1</b> text messages sent today"
+msgstr "<b>%1</b> дасланана паведамленьняў сёньня"
+
+#: approver/approver.cpp:490
+msgid "Accept"
+msgstr "Пацьвердзіць"
+
+#: indicator/messagingmenu.cpp:232
+msgid "Call back"
+msgstr "Патэлефанаваць"
+
+#: approver/approver.cpp:452
+msgid "Caller number is not available"
+msgstr "Нумар абаненту не дасяжны"
+
+#: approver/approver.cpp:449
+#, qt-format
+msgid "Calling from %1"
+msgstr "Выклік ад %1"
+
+#: approver/approver.cpp:443
+msgid "Calling from private number"
+msgstr "Прыватны нумар"
+
+#: approver/approver.cpp:446
+msgid "Calling from unknown number"
+msgstr "Невядомы нумар"
+
+#: indicator/ussdindicator.cpp:142
+msgid "Cancel"
+msgstr "Скасаваць"
+
+#: indicator/textchannelobserver.cpp:236
+msgid "Deactivate flight mode and try again from the messaging application."
+msgstr "Адключыце рэжым \"Лёту\" і паспрабуйце зноўку."
+
+#: approver/approver.cpp:512
+msgid "Decline"
+msgstr "Адхіліць"
+
+#: approver/approver.cpp:503
+msgid "End + Answer"
+msgstr "Скончыць + Адказаць"
+
+#: approver/approver.cpp:489
+msgid "Hold + Answer"
+msgstr "Утрымліваць + Адказаць"
+
+#: indicator/messagingmenu.cpp:237
+msgid "I missed your call - can you call me now?"
+msgstr "Я прапусціў вашае тэлефанаваньне - вы можаце патэлефанаваць зараз?"
+
+#: indicator/messagingmenu.cpp:240
+msgid "I'll be 20 minutes late."
+msgstr "Я спазнюся на 20 хвілін."
+
+#: approver/approver.cpp:91
+msgid "I'm busy at the moment. I'll call later."
+msgstr "У дадзены момант я заняты. Патэлефаную пазьней."
+
+#: indicator/messagingmenu.cpp:239
+msgid "I'm busy at the moment. I'll call you later."
+msgstr "У дадзены момант часу я заняты. Патэлефаную крыху пазьней."
+
+#: approver/approver.cpp:92
+msgid "I'm running late, on my way now."
+msgstr "Затрымваюся, але еду ж."
+
+#: indicator/messagingmenu.cpp:238
+msgid "I'm running late. I'm on my way."
+msgstr "Я спазьняюся. Я ўжо ў дарозе."
+
+#: approver/approver.cpp:520
+msgid "Message & decline"
+msgstr "Даслаць і адхіліць"
+
+#: indicator/textchannelobserver.cpp:459 indicator/textchannelobserver.cpp:515
+#, qt-format
+msgid "Message from %1"
+msgstr "Паведамленьне ад %1"
+
+#: indicator/metrics.cpp:49 indicator/metrics.cpp:51
+msgid "No calls made today"
+msgstr "Няма зыходных на сёньня"
+
+#: indicator/metrics.cpp:47
+msgid "No calls received today"
+msgstr "Няма атрыманых паведамленьняў на сёньня"
+
+#: indicator/metrics.cpp:45
+msgid "No text messages received today"
+msgstr "Няма атрыманых паведамленняў сёння"
+
+#: indicator/metrics.cpp:43
+msgid "No text messages sent today"
+msgstr "Няма дасланых паведамленьняў на сёньня"
+
+#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+msgid "Ok"
+msgstr "Добра"
+
+#: indicator/telephony-service-call.desktop.in:3
+msgid "Phone Calls"
+msgstr "Выклікі"
+
+#: approver/approver.cpp:93
+msgid "Please call me back later."
+msgstr "Калі ласка, ператэлефануеце мне пазьней."
+
+#: indicator/textchannelobserver.cpp:649
+msgid "Please, select a SIM card:"
+msgstr "Калі ласка, абярыце SIM картку:"
+
+#: Ubuntu/Telephony/contactwatcher.cpp:131
+msgid "Private Number"
+msgstr "Прыватны нумар"
+
+#: indicator/messagingmenu.cpp:298
+msgid "Private number"
+msgstr "Нумар схаваны"
+
+#: indicator/ussdindicator.cpp:119
+msgid "Reply"
+msgstr "Адказаць"
+
+#: handler/displaynamesettings.cpp:34
+#, qt-format
+msgid "SIM %1"
+msgstr "SIM %1"
+
+#: indicator/telephony-service-sms.desktop.in:3
+msgid "SMS"
+msgstr "SMS"
+
+#: indicator/textchannelobserver.cpp:318
+msgid "Save"
+msgstr "Захаваць"
+
+#: indicator/messagingmenu.cpp:174 indicator/messagingmenu.cpp:247
+msgid "Send"
+msgstr "Даслаць"
+
+#: indicator/messagingmenu.cpp:241
+msgid "Sorry, I'm still busy. I'll call you later."
+msgstr "Прабач, але я ўсё яшчэ заняты. Я патэлефаную табе пазьней"
+
+#: indicator/metrics.cpp:50
+#, qt-format
+msgid "Spent <b>%1</b> minutes in calls today"
+msgstr "Працягласць выклікаў на сёньня: <b>%1b> хвілін"
+
+#: indicator/messagingmenu.cpp:56 indicator/messagingmenu.cpp:60
+msgid "Telephony Service"
+msgstr "Тэлефонныя сервісы"
+
+#: approver/main.cpp:46
+msgid "Telephony Service Approver"
+msgstr "Сэрвісы тэлефанаваньня пацьверджаны"
+
+#: indicator/main.cpp:52
+msgid "Telephony Service Indicator"
+msgstr "Індыкатар службы тэлефанаваньня"
+
+#: indicator/textchannelobserver.cpp:245
+msgid "The message could not be sent"
+msgstr "Гэтае паведамленьне не можа быць даслана"
+
+#: indicator/textchannelobserver.cpp:239
+msgid "Try again from the messaging application."
+msgstr "Паспрабуйце даслаць паведамленьне зноўку."
+
+#: Ubuntu/Telephony/contactwatcher.cpp:133
+msgid "Unknown Number"
+msgstr "Невядомы нумар"
+
+#: approver/approver.cpp:63
+msgid "Unknown caller"
+msgstr "Невядомы выклік"
+
+#: indicator/textchannelobserver.cpp:445 indicator/messagingmenu.cpp:142
+#: indicator/messagingmenu.cpp:302
+msgid "Unknown number"
+msgstr "Невядомы нумар"
+
+#: indicator/textchannelobserver.cpp:234
+msgid "Unlock your sim card and try again from the messaging application."
+msgstr "Разблакуйце SIM-картку і паспрабуйце даслаць паведамленьне зноўку."
+
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:479
+msgid "View message"
+msgstr "Паказаць паведамленьне"
+
+#: indicator/messagingmenu.cpp:397
+msgid "Voicemail"
+msgstr "Галасавая пошта"
+
+#: indicator/messagingmenu.cpp:389
+msgid "Voicemail messages"
+msgstr "Галасавыя паведамленні"
