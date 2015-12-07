@@ -88,6 +88,7 @@ public:
     Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
     bool emergencyCallsAvailable() const;
     Q_INVOKABLE void unlockSimCards() const;
+    bool multiplePhoneAccounts() const;
 
     bool registerClient(Tp::AbstractClient *client, QString name);
     bool unregisterClient(Tp::AbstractClient *client);
