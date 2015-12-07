@@ -73,6 +73,11 @@ bool HandlerController::callIndicatorVisible()
     return map["CallIndicatorVisible"].toBool();
 }
 
+void HandlerController::startChat(const QString &accountId, const QStringList &recipients)
+{
+    mHandlerInterface.call("StartChat", accountId, recipients);
+}
+
 void HandlerController::startCall(const QString &number, const QString &accountId)
 {
     mHandlerInterface.call("StartCall", number, accountId);

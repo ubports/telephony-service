@@ -32,8 +32,8 @@ MockConnectionDBus::MockConnectionDBus(MockConnection *parent) :
             SIGNAL(messageRead(QString)),
             SIGNAL(MessageRead(QString)));
     connect(mConnection,
-            SIGNAL(messageSent(QString,QVariantMap)),
-            SIGNAL(MessageSent(QString,QVariantMap)));
+            SIGNAL(messageSent(QString,QVariantList,QVariantMap)),
+            SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
     connect(mConnection,
             SIGNAL(callReceived(QString)),
             SIGNAL(CallReceived(QString)));
