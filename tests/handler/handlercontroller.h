@@ -51,7 +51,7 @@ public Q_SLOTS:
     void splitCall(const QString &objectPath);
 
     // messaging methods
-    void sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments = AttachmentList(), const QVariantMap &properties = QVariantMap());
+    QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments = AttachmentList(), const QVariantMap &properties = QVariantMap());
     void acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId);
 
     // active call indicator

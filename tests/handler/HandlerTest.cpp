@@ -454,7 +454,8 @@ void HandlerTest::testMultimediaFallback()
     QSignalSpy messageSentOfonoSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
     QSignalSpy messageSentMultimediaSpy(mMultimediaMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
-    HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+    QString accountId = HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+    QCOMPARE(accountId, mMultimediaTpAccount->uniqueIdentifier());
     TRY_COMPARE(messageSentMultimediaSpy.count(), 1);
     QCOMPARE(messageSentOfonoSpy.count(), 0);
     QString sentMessage = messageSentMultimediaSpy.first().first().toString();

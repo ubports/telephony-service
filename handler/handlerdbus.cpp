@@ -93,9 +93,9 @@ bool HandlerDBus::connectToBus()
     return true;
 }
 
-void HandlerDBus::SendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
+QString HandlerDBus::SendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    TextHandler::instance()->sendMessage(accountId, recipients, message, attachments, properties);
+    return TextHandler::instance()->sendMessage(accountId, recipients, message, attachments, properties);
 }
 
 void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId)

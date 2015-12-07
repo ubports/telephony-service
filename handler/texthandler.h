@@ -47,7 +47,7 @@ public:
     void startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts);
 
 public Q_SLOTS:
-    void sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
+    QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
     void acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId);
     void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
 

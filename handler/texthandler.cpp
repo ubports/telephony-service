@@ -301,12 +301,12 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
     return message;
 }
 
-void TextHandler::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
+QString TextHandler::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
         // account does not exist
-        return;
+        return QString();
     }
 
     // keep recipient list always sorted to be able to compare
@@ -341,7 +341,7 @@ void TextHandler::sendMessage(const QString &accountId, const QStringList &recip
                     // request a new channel for this message in this multimedia account
                     mPendingMessages.append(pendingMessage);
                     startChat(recipients, newAccount->accountId());
-                    return;
+                    return newAccount->accountId();
                 }
                 if (shouldFallback) {
                     account = newAccount;
@@ -353,19 +353,21 @@ void TextHandler::sendMessage(const QString &accountId, const QStringList &recip
 
     if (!account->connected()) {
         mPendingMessages.append(pendingMessage);
-        return;
+        return account->accountId();
     }
 
     QList<Tp::TextChannelPtr> channels = existingChannels(recipients, account->accountId());
     if (channels.isEmpty()) {
         mPendingMessages.append(pendingMessage);
         startChat(sortedRecipients, account->accountId());
-        return;
+        return account->accountId();
     }
 
     connect(channels.last()->send(buildMessage(pendingMessage)),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onMessageSent(Tp::PendingOperation*)));
+
+    return account->accountId();
 }
 
 void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId)
