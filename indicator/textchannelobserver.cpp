@@ -404,6 +404,41 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         }
     }
 
+    // if messageText is empty, search for attachments
+    if (messageText.isEmpty()) {
+        int imageCount = 0;
+        int videoCount = 0;
+        int contactCount = 0;
+        int audioCount = 0;
+        int attachmentCount = 0;
+        Q_FOREACH(const Tp::MessagePart &part, messageParts) {
+            QString contentType = part["content-type"].variant().toString();
+            if (contentType.startsWith("image/")) {
+                imageCount++;
+            } else if (contentType.startsWith("video/")) {
+                videoCount++;
+            } else if (contentType.startsWith("audio/")) {
+                audioCount++;
+            } else if (contentType.startsWith("text/vcard") ||
+                      contentType.startsWith("text/x-vcard")) {
+                contactCount++;
+            }
+        }
+        attachmentCount = imageCount + videoCount + contactCount;
+
+        if (imageCount > 0 && attachmentCount == imageCount) {
+            messageText = QString::fromUtf8(C::ngettext("Attachment: %1 image", "Attachments: %1 images", imageCount)).arg(imageCount);
+        } else if (videoCount > 0 && attachmentCount == videoCount) {
+            messageText = QString::fromUtf8(C::ngettext("Attachment: %1 video", "Attachments: %1 videos", videoCount)).arg(videoCount);
+        } else if (contactCount > 0 && attachmentCount == contactCount) {
+            messageText = QString::fromUtf8(C::ngettext("Attachment: %1 contact", "Attachments: %1 contacts", contactCount)).arg(contactCount);
+        } else if (audioCount > 0 && attachmentCount == audioCount) {
+            messageText = QString::fromUtf8(C::ngettext("Attachment: %1 audio clip", "Attachments: %1 audio clips", audioCount)).arg(audioCount);
+        } else if (attachmentCount > 0) {
+            messageText = QString::fromUtf8(C::ngettext("Attachment: %1 file", "Attachments: %1 files", attachmentCount)).arg(attachmentCount);
+        }
+    }
+
     // WORKAROUND: powerd can't decide when to wake up the screen on incoming mms's
     // (or other telepathy accounts) as the download of the attachments is made by 
     // another daemon, so we wake up the screen here.
@@ -456,8 +491,11 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         avatar = g_icon_to_string(icon);
         g_object_unref(icon);
     } else {
-        title = QString::fromUtf8(C::gettext("Message from %1")).arg(alias);
+        title = alias;
     }
+
+    AccountEntry::addAccountLabel(accountId, title);
+
     // show the notification
     NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
                                                                messageText.toStdString().c_str(),

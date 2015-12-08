@@ -46,7 +46,11 @@ void RingtoneWorker::playIncomingCallSound()
     // pick up the new ringtone in case it changed in the meantime
     mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
     mCallAudioPlayer = new QMediaPlayer(this);
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
     mCallAudioPlayer->setAudioRole(QMediaPlayer::AlertRole);
+#else
+    mCallAudioPlayer->setAudioRole(QAudio::RingtoneRole);
+#endif
     mCallAudioPlayer->setPlaylist(&mCallAudioPlaylist);
     mCallAudioPlayer->play();
 }
@@ -74,7 +78,11 @@ void RingtoneWorker::playIncomingMessageSound()
 
     if (!mMessageAudioPlayer) {
         mMessageAudioPlayer = new QMediaPlayer(this);
+#if QT_VERSION < QT_VERSION_CHECK(5, 5, 0)
         mMessageAudioPlayer->setAudioRole(QMediaPlayer::AlertRole);
+#else
+        mMessageAudioPlayer->setAudioRole(QAudio::NotificationRole);
+#endif
     }
 
     // WORKAROUND: there is a bug in qmediaplayer/(media-hub?) that never goes into Stopped mode.
