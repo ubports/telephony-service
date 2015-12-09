@@ -1,3 +1,16 @@
+telephony-service (0.1+16.04.20151207-0ubuntu1) xenial; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+  * Resync trunk. added: po/be.po
+
+  [ Tiago Salem Herrmann ]
+  * Fill notifications with attachments info when no text is received.
+    (LP: #1517654)
+  * Improve notifications on multi-sim devices. (LP: #1487528, #1460301)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 07 Dec 2015 17:55:49 +0000
+
 telephony-service (0.1+16.04.20151202.1-0ubuntu1) xenial; urgency=medium
 
   [ CI Train Bot ]
