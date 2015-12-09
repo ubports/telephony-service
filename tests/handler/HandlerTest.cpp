@@ -305,7 +305,7 @@ void HandlerTest::testSendMessageWithAttachments()
 {
     QString recipient("22222222");
     QString message("Hello, world!");
-    QSignalSpy messageSentSpy(mMultimediaMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+    QSignalSpy messageSentSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
     QTemporaryFile outputFile("audioXXXXXX.ogg");
     outputFile.open();

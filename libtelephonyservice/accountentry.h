@@ -71,6 +71,8 @@ public:
  
     Protocol *protocolInfo() const;
 
+    static void addAccountLabel(const QString &accountId, QString &text);
+
 Q_SIGNALS:
     void accountReady();
     void accountIdChanged();
