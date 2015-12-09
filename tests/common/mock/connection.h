@@ -110,7 +110,7 @@ public:
 
 Q_SIGNALS:
     void messageRead(const QString &messageId);
-    void messageSent(const QString &message, const QVariantMap &info);
+    void messageSent(const QString &message, const QVariantList &attachments, const QVariantMap &info);
     void callReceived(const QString &callerId);
     void callEnded(const QString &callerId);
     void callStateChanged(const QString &callerId, const QString &objectPath, const QString &state);

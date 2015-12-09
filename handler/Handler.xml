@@ -19,6 +19,7 @@
             <arg name="recipients" type="as" direction="in"/>
             <arg name="message" type="s" direction="in"/>
             <arg name="attachments" type="a(sss)" direction="in"/>
+            <arg name="accountIdOut" type="s" direction="out"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In3" value="AttachmentList"/>
             <arg name="properties" type="a{sv}" direction="in"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In4" value="QVariantMap"/>

@@ -73,6 +73,11 @@ bool HandlerController::callIndicatorVisible()
     return map["CallIndicatorVisible"].toBool();
 }
 
+void HandlerController::startChat(const QString &accountId, const QStringList &recipients)
+{
+    mHandlerInterface.call("StartChat", accountId, recipients);
+}
+
 void HandlerController::startCall(const QString &number, const QString &accountId)
 {
     mHandlerInterface.call("StartCall", number, accountId);
@@ -124,9 +129,13 @@ void HandlerController::splitCall(const QString &objectPath)
     mHandlerInterface.call("SplitCall", objectPath);
 }
 
-void HandlerController::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
+QString HandlerController::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    mHandlerInterface.call("SendMessage", accountId, recipients, message, QVariant::fromValue(attachments), properties);
+    QDBusReply<QString> reply = mHandlerInterface.call("SendMessage", accountId, recipients, message, QVariant::fromValue(attachments), properties);
+    if (reply.isValid()) {
+        return reply.value();
+    }
+    return QString();
 }
 
 void HandlerController::acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId)

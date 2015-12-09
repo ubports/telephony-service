@@ -95,12 +95,12 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
-void ChatManager::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const QVariant &attachments, const QVariantMap &properties)
+QString ChatManager::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const QVariant &attachments, const QVariantMap &properties)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
 
     if (!account) {
-        return;
+        return QString();
     }
 
     // check if files should be copied to a temporary location before passing them to handler
@@ -121,16 +121,16 @@ void ChatManager::sendMessage(const QString &accountId, const QStringList &recip
             tmpFile.setAutoRemove(false);
             if (!tmpFile.open()) {
                 qWarning() << "Unable to create a temporary file";
-                return;
+                return QString();
             }
             QFile originalFile(list.at(2).toString());
             if (!originalFile.open(QIODevice::ReadOnly)) {
                 qWarning() << "Attachment file not found";
-                return;
+                return QString();
             }
             if (tmpFile.write(originalFile.readAll()) == -1) {
                 qWarning() << "Failed to write attachment to a temporary file";
-                return;
+                return QString();
             }
             newAttachment.filePath = tmpFile.fileName();
             tmpFile.close();
@@ -142,7 +142,11 @@ void ChatManager::sendMessage(const QString &accountId, const QStringList &recip
     }
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->call("SendMessage", account->accountId(), recipients, message, QVariant::fromValue(newAttachments), properties);
+    QDBusReply<QString> reply = phoneAppHandler->call("SendMessage", account->accountId(), recipients, message, QVariant::fromValue(newAttachments), properties);
+    if (reply.isValid()) {
+        return reply.value();
+    }
+    return QString();
 }
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)

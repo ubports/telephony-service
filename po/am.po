@@ -15,17 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2015-11-06 05:38+0000\n"
-"X-Generator: Launchpad (build 17838)\n"
+"X-Launchpad-Export-Date: 2015-11-27 05:38+0000\n"
+"X-Generator: Launchpad (build 17850)\n"
 
-#: indicator/messagingmenu.cpp:296
+#: indicator/messagingmenu.cpp:295
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 ያልተመለሰ ጥሪ"
 msgstr[1] "%1 ያልተመለሱ ጥሪዎች"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:392
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -52,28 +52,28 @@ msgstr "<b>%1</b> ዛሬ የተቀበሉዋቸው የ ጽሁፍ መልእክቶ�
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> ዛሬ የላኩዋቸው የ ጽሁፍ መልእክቶች"
 
-#: approver/approver.cpp:489
+#: approver/approver.cpp:490
 msgid "Accept"
 msgstr "ተቀብያለሁ"
 
-#: indicator/messagingmenu.cpp:233
+#: indicator/messagingmenu.cpp:232
 msgid "Call back"
 msgstr "መልሶ መደወያ"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:452
 msgid "Caller number is not available"
 msgstr "የደዋዩ ቁጥር አልተገኘም"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:449
 #, qt-format
 msgid "Calling from %1"
 msgstr "ደዋይ ከ %1"
 
-#: approver/approver.cpp:442
+#: approver/approver.cpp:443
 msgid "Calling from private number"
 msgstr "ደዋይ ከ ግል ቁጥር"
 
-#: approver/approver.cpp:445
+#: approver/approver.cpp:446
 msgid "Calling from unknown number"
 msgstr "ደዋይ ካልታወቀ ቁጥር"
 
@@ -81,27 +81,27 @@ msgstr "ደዋይ ካልታወቀ ቁጥር"
 msgid "Cancel"
 msgstr "መሰረዣ"
 
-#: indicator/textchannelobserver.cpp:226
+#: indicator/textchannelobserver.cpp:236
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "የበረራ ዘዴን ያሰናክሉ እና በ መልእክት መላኪያ መተግበሪያ እንደገና ይሞክሩ"
 
-#: approver/approver.cpp:511
+#: approver/approver.cpp:512
 msgid "Decline"
 msgstr "አልቀበልም"
 
-#: approver/approver.cpp:502
+#: approver/approver.cpp:503
 msgid "End + Answer"
 msgstr "መጨረሻ + መመለሻ"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:489
 msgid "Hold + Answer"
 msgstr "ይጠብቁ + መመለሻ"
 
-#: indicator/messagingmenu.cpp:238
+#: indicator/messagingmenu.cpp:237
 msgid "I missed your call - can you call me now?"
 msgstr "ጥሪው አምልጧኛል - አሁን ሊደውሉልኝ ይችላሉ?"
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:240
 msgid "I'll be 20 minutes late."
 msgstr "20 ደቂቆች እዘገያለሁ"
 
@@ -109,7 +109,7 @@ msgstr "20 ደቂቆች እዘገያለሁ"
 msgid "I'm busy at the moment. I'll call later."
 msgstr "ለጊዜው በ ስራ ላይ ነኝ: በኋላ እደውላለሁ"
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:239
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "አሁን በስራ ላይ ነኝ: በኋላ እደውላለሁ"
 
@@ -117,15 +117,15 @@ msgstr "አሁን በስራ ላይ ነኝ: በኋላ እደውላለሁ"
 msgid "I'm running late, on my way now."
 msgstr "እዘገያለሁ ነገር ግን እየመጣሁ ነው"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:238
 msgid "I'm running late. I'm on my way."
 msgstr "እየመጣሁ ነው: ነገር ግን እዘገያለሁ"
 
-#: approver/approver.cpp:519
+#: approver/approver.cpp:520
 msgid "Message & decline"
 msgstr "መልእክት & አልተቀበሉም"
 
-#: indicator/textchannelobserver.cpp:450 indicator/textchannelobserver.cpp:506
+#: indicator/textchannelobserver.cpp:459 indicator/textchannelobserver.cpp:515
 #, qt-format
 msgid "Message from %1"
 msgstr "መልእክት ከ %1"
@@ -146,7 +146,7 @@ msgstr "ዛሬ ምንም የ ጽሁፍ መልእክቶች አልተቀበሉም"
 msgid "No text messages sent today"
 msgstr "ዛሬ ምንም የ ጽሁፍ መልእክቶች አልላኩም"
 
-#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:312
 msgid "Ok"
 msgstr "እሺ"
 
@@ -158,7 +158,7 @@ msgstr "የስልክ ጥሪዎች"
 msgid "Please call me back later."
 msgstr "እባክዎን ትንሽ ቆይተው እንደገና ይደውሉ"
 
-#: indicator/textchannelobserver.cpp:628
+#: indicator/textchannelobserver.cpp:649
 msgid "Please, select a SIM card:"
 msgstr "እባክዎን ይምረጡየ SIM ካርድ:"
 
@@ -166,7 +166,7 @@ msgstr "እባክዎን ይምረጡየ SIM ካርድ:"
 msgid "Private Number"
 msgstr "የግል ቁጥር"
 
-#: indicator/messagingmenu.cpp:299
+#: indicator/messagingmenu.cpp:298
 msgid "Private number"
 msgstr "የ ግል ቁጥር"
 
@@ -183,15 +183,15 @@ msgstr "ሲም %1"
 msgid "SMS"
 msgstr "ኤስ ኤም ኤስ"
 
-#: indicator/textchannelobserver.cpp:308
+#: indicator/textchannelobserver.cpp:318
 msgid "Save"
 msgstr "ማስቀመጫ"
 
-#: indicator/messagingmenu.cpp:175 indicator/messagingmenu.cpp:248
+#: indicator/messagingmenu.cpp:174 indicator/messagingmenu.cpp:247
 msgid "Send"
 msgstr "መላኪያ"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:241
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "አዝናለሁ: አሁንም በስራ ላይ ነኝ: በኋላ እደውላለሁ"
 
@@ -208,15 +208,15 @@ msgstr "የ ቴሌፎን ግልጋሎት"
 msgid "Telephony Service Approver"
 msgstr "የ ቴሌፎን ግልጋሎት አቅራቢ"
 
-#: indicator/main.cpp:51
+#: indicator/main.cpp:52
 msgid "Telephony Service Indicator"
 msgstr "የ ቴሌፎን ግልጋሎት ጠቋሚ"
 
-#: indicator/textchannelobserver.cpp:235
+#: indicator/textchannelobserver.cpp:245
 msgid "The message could not be sent"
 msgstr "መልእክቱን መላክ አልተቻለም"
 
-#: indicator/textchannelobserver.cpp:229
+#: indicator/textchannelobserver.cpp:239
 msgid "Try again from the messaging application."
 msgstr "በ መልእክት መላኪያ መተግበሪያ እንደገና ይሞክሩ"
 
@@ -228,23 +228,23 @@ msgstr "ያልታወቀ ቁጥር"
 msgid "Unknown caller"
 msgstr "ያልታወቀ ደዋይ"
 
-#: indicator/textchannelobserver.cpp:436 indicator/messagingmenu.cpp:143
-#: indicator/messagingmenu.cpp:303
+#: indicator/messagingmenu.cpp:142 indicator/messagingmenu.cpp:302
+#: indicator/textchannelobserver.cpp:445
 msgid "Unknown number"
 msgstr "ያልታወቀ ቁጥር"
 
-#: indicator/textchannelobserver.cpp:224
+#: indicator/textchannelobserver.cpp:234
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "የ እርስዎን ሲም ካርድ ይክፈቱ እና በ መልእክት መላኪያ መተግበሪያ እንደገና ይሞክሩ"
 
-#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:470
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:479
 msgid "View message"
 msgstr "መልእክት መመልከቻ"
 
-#: indicator/messagingmenu.cpp:398
+#: indicator/messagingmenu.cpp:397
 msgid "Voicemail"
 msgstr "የ መልእክት ሳጥን"
 
-#: indicator/messagingmenu.cpp:390
+#: indicator/messagingmenu.cpp:389
 msgid "Voicemail messages"
 msgstr "የ ድምፅ መልእክቶች ሳጥን"

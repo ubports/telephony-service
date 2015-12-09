@@ -101,14 +101,14 @@ void ChatManagerTest::testSendMessage()
     qSort(recipients);
 
     MockController *controller = accountId.startsWith("mock/mock") ? mGenericMockController : mPhoneMockController;
-    QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
     QSignalSpy messageSentSpy(ChatManager::instance(), SIGNAL(messageSent(QStringList,QString)));
 
     ChatManager::instance()->sendMessage(accountId, recipients, message);
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
     QString messageText = controllerMessageSentSpy.first()[0].toString();
-    QVariantMap messageProperties = controllerMessageSentSpy.first()[1].toMap();
+    QVariantMap messageProperties = controllerMessageSentSpy.first()[2].toMap();
     QStringList messageRecipients = messageProperties["Recipients"].toStringList();
     qSort(messageRecipients);
     QCOMPARE(messageText, message);
@@ -218,7 +218,7 @@ void ChatManagerTest::testSendMessageWithAttachments()
 
     MockController *controller = accountId.startsWith("mock/mock") ? mGenericMockController : mPhoneMockController;
 
-    QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
     QVariantList attachmentList;
     QVariantList attachment;
@@ -230,7 +230,7 @@ void ChatManagerTest::testSendMessageWithAttachments()
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
     QString messageText = controllerMessageSentSpy.first()[0].toString();
-    QVariantMap messageProperties = controllerMessageSentSpy.first()[1].toMap();
+    QVariantMap messageProperties = controllerMessageSentSpy.first()[2].toMap();
     QStringList messageRecipients = messageProperties["Recipients"].toStringList();
     qSort(messageRecipients);
     QCOMPARE(messageText, message);

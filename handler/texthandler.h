@@ -47,12 +47,13 @@ public:
     void startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts);
 
 public Q_SLOTS:
-    void sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
+    QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
     void acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId);
     void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
+    void onTextChannelInvalidated();
     void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageSent(Tp::PendingOperation *op);
     void onConnectedChanged();
@@ -65,7 +66,7 @@ private:
     Tp::MessagePartList buildMessage(const PendingMessage &pendingMessage);
 
     QList<Tp::TextChannelPtr> mChannels;
-    QMap<QString, Tp::ContactPtr> mContacts;
+    QMap<QString, QMap<QString, Tp::ContactPtr> > mContacts;
     QList<PendingMessage> mPendingMessages;
 };
 
