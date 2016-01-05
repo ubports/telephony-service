@@ -448,7 +448,6 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
 
     if (account->type() == AccountEntry::PhoneAccount &&
             TelepathyHelper::instance()->multiplePhoneAccounts()) {
-        // TRANSLATORS: %1 here is replaced by the sim card label a call was received on
         mCachedBody = QString::fromUtf8(C::gettext("On [%1]")).arg(account->displayName());
         mCachedBody += "\n";
         if (!telepathyContact->id().isEmpty()) {
