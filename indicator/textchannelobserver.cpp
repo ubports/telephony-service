@@ -392,7 +392,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
 
     Tp::MessagePartList messageParts = message.parts();
-    bool mms = message.header()["mms"].variant().toBool();
+    bool mms = message.header()["x-canonical-mms"].variant().toBool();
     if (mms) {
         // remove header
         messageParts.pop_front();
