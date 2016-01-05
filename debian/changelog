@@ -1,3 +1,14 @@
+telephony-service (0.1+16.04.20160105-0ubuntu1) xenial; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk. added: po/ne.po
+
+  [ Tiago Salem Herrmann ]
+  * Update mms flag so telephony-service-indicator can correctly manage
+    attachments. (LP: #1529903)
+
+ -- Bill Filler <ci-train-bot@canonical.com>  Tue, 05 Jan 2016 17:18:22 +0000
+
 telephony-service (0.1+16.04.20151207-0ubuntu1) xenial; urgency=medium
 
   [ CI Train Bot ]
