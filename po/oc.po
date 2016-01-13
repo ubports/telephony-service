@@ -15,17 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2015-11-27 05:38+0000\n"
-"X-Generator: Launchpad (build 17850)\n"
+"X-Launchpad-Export-Date: 2016-01-13 05:51+0000\n"
+"X-Generator: Launchpad (build 17886)\n"
 
-#: indicator/messagingmenu.cpp:295
+#: indicator/messagingmenu.cpp:297
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 sonada mancada"
 msgstr[1] "%1 sonadas mancadas"
 
-#: indicator/messagingmenu.cpp:392
+#: indicator/messagingmenu.cpp:396
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -52,28 +52,28 @@ msgstr "<b>%1</b> SMS recebuts uèi"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> SMS mandats uèi"
 
-#: approver/approver.cpp:490
+#: approver/approver.cpp:518
 msgid "Accept"
 msgstr "Acceptar"
 
-#: indicator/messagingmenu.cpp:232
+#: indicator/messagingmenu.cpp:234
 msgid "Call back"
 msgstr ""
 
-#: approver/approver.cpp:452
+#: approver/approver.cpp:464 approver/approver.cpp:479
 msgid "Caller number is not available"
 msgstr "Lo numèro de sonada es pas disponible"
 
-#: approver/approver.cpp:449
+#: approver/approver.cpp:476
 #, qt-format
 msgid "Calling from %1"
 msgstr "Sonada dempuèi %1"
 
-#: approver/approver.cpp:443
+#: approver/approver.cpp:470
 msgid "Calling from private number"
 msgstr "Sonada dempuèi un numèro privat"
 
-#: approver/approver.cpp:446
+#: approver/approver.cpp:473
 msgid "Calling from unknown number"
 msgstr "Sonada dempuèi un numèro desconegut"
 
@@ -85,23 +85,23 @@ msgstr "Anullar"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 
-#: approver/approver.cpp:512
+#: approver/approver.cpp:540
 msgid "Decline"
 msgstr "Refusar"
 
-#: approver/approver.cpp:503
+#: approver/approver.cpp:531
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:489
+#: approver/approver.cpp:517
 msgid "Hold + Answer"
 msgstr "Demorar en linha + Respondre"
 
-#: indicator/messagingmenu.cpp:237
+#: indicator/messagingmenu.cpp:239
 msgid "I missed your call - can you call me now?"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:242
 msgid "I'll be 20 minutes late."
 msgstr "Serai tardièr de 20 minutas."
 
@@ -109,7 +109,7 @@ msgstr "Serai tardièr de 20 minutas."
 msgid "I'm busy at the moment. I'll call later."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:241
 msgid "I'm busy at the moment. I'll call you later."
 msgstr ""
 
@@ -117,15 +117,15 @@ msgstr ""
 msgid "I'm running late, on my way now."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:238
+#: indicator/messagingmenu.cpp:240
 msgid "I'm running late. I'm on my way."
 msgstr "Soi tardièr. Soi en camin."
 
-#: approver/approver.cpp:520
+#: approver/approver.cpp:548
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:459 indicator/textchannelobserver.cpp:515
+#: indicator/textchannelobserver.cpp:553
 #, qt-format
 msgid "Message from %1"
 msgstr "Messatge de %1"
@@ -158,7 +158,7 @@ msgstr "Sonadas telefonicas"
 msgid "Please call me back later."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:649
+#: indicator/textchannelobserver.cpp:687
 msgid "Please, select a SIM card:"
 msgstr "Causissètz una carta SIM :"
 
@@ -166,7 +166,7 @@ msgstr "Causissètz una carta SIM :"
 msgid "Private Number"
 msgstr "Numèro privat"
 
-#: indicator/messagingmenu.cpp:298
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:302
 msgid "Private number"
 msgstr "Numèro privat"
 
@@ -187,11 +187,11 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Enregistrar"
 
-#: indicator/messagingmenu.cpp:174 indicator/messagingmenu.cpp:247
+#: indicator/messagingmenu.cpp:176 indicator/messagingmenu.cpp:249
 msgid "Send"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:243
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "O planhi, soi encara ocupat. Vos rapelarai pus tard."
 
@@ -228,8 +228,8 @@ msgstr "Numèro desconegut"
 msgid "Unknown caller"
 msgstr "Sonaire desconegut"
 
-#: indicator/messagingmenu.cpp:142 indicator/messagingmenu.cpp:302
-#: indicator/textchannelobserver.cpp:445
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:142
+#: indicator/messagingmenu.cpp:306 indicator/textchannelobserver.cpp:480
 msgid "Unknown number"
 msgstr "Numèro desconegut"
 
@@ -237,14 +237,14 @@ msgstr "Numèro desconegut"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:479
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:517
 msgid "View message"
 msgstr "Veire lo messatge"
 
-#: indicator/messagingmenu.cpp:397
+#: indicator/messagingmenu.cpp:401
 msgid "Voicemail"
 msgstr "Messatjariá Vocala"
 
-#: indicator/messagingmenu.cpp:389
+#: indicator/messagingmenu.cpp:393
 msgid "Voicemail messages"
 msgstr ""
