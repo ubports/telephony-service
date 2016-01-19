@@ -44,7 +44,6 @@ public Q_SLOTS:
     void hangUpCall(const QString &objectPath);
     void setHold(const QString &objectPath, bool hold);
     void setMuted(const QString &objectPath, bool muted);
-    void setActiveAudioOutput(const QString &objectPath, const QString &id);
     void sendDTMF(const QString &objectPath, const QString &key);
 
     // conference call related

@@ -243,7 +243,6 @@ void TelepathyHelper::registerChannelObserver(const QString &observerName)
     if (name.isEmpty()) {
         name = "TelephonyPluginObserver";
     }
-
     if (mChannelObserver) {
         unregisterClient(mChannelObserver);
     }
@@ -251,13 +250,16 @@ void TelepathyHelper::registerChannelObserver(const QString &observerName)
     mChannelObserver = new ChannelObserver(this);
     mChannelObserverPtr = Tp::AbstractClientPtr(mChannelObserver);
     if (registerClient(mChannelObserver, name)) {
-        // messages
-        connect(mChannelObserver, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
-                ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
+        // we don't connect managers in handler, as they query the handler and cause a deadlock
+        if (QCoreApplication::applicationName() != "telephony-service-handler") {
+            // messages
+            connect(mChannelObserver, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
+                    ChatManager::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
 
-        // calls
-        connect(mChannelObserver, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
-                CallManager::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+            // calls
+            connect(mChannelObserver, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
+                    CallManager::instance(), SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
+        }
 
         Q_EMIT channelObserverCreated(mChannelObserver);
     }

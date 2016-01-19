@@ -1,20 +1,30 @@
 
 set(qt_SRCS
+    audioroutemanager.cpp
     callhandler.cpp
     displaynamesettings.cpp
     handler.cpp
     handlerdbus.cpp
+    powerdaudiomodemediator.cpp
+    powerddbus.cpp
+    qpulseaudioengine.cpp
     texthandler.cpp
     )
 
 set(handler_SRCS main.cpp ${qt_SRCS})
 qt5_add_dbus_adaptor(handler_SRCS Handler.xml handler/handlerdbus.h HandlerDBus)
 
+if (PULSEAUDIO_FOUND)
+    add_definitions(-DUSE_PULSEAUDIO)
+    set(USE_PULSEAUDIO ON)
+endif (PULSEAUDIO_FOUND)
+
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
     ${GSETTINGS_QT_INCLUDE_DIRS}
+    ${PULSEAUDIO_INCLUDE_DIRS}
     )
 
 add_executable(telephony-service-handler ${handler_SRCS} ${handler_HDRS})
@@ -24,6 +34,7 @@ target_link_libraries(telephony-service-handler
     ${TP_QT5_LIBRARIES}
     ${GSETTINGS_QT_LDFLAGS}
     telephonyservice
+    ${PULSEAUDIO_LIBRARIES}
     )
 
 enable_coverage(telephony-service-handler)

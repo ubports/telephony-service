@@ -20,6 +20,7 @@
  */
 
 #include "applicationutils.h"
+#include "audioroutemanager.h"
 #include "callhandler.h"
 #include "displaynamesettings.h"
 #include "handler.h"
@@ -31,6 +32,9 @@
 #include <TelepathyQt/AbstractClient>
 #include <TelepathyQt/AccountManager>
 #include <TelepathyQt/Contact>
+#include <TelepathyQt/CallChannel>
+
+Q_DECLARE_METATYPE(Tp::CallChannelPtr)
 
 int main(int argc, char **argv)
 {
@@ -38,6 +42,12 @@ int main(int argc, char **argv)
     QCoreApplication::setApplicationName("telephony-service-handler");
 
     Tp::registerTypes();
+    qRegisterMetaType<Tp::CallChannelPtr>();
+    qRegisterMetaType<AudioOutputDBus>();
+    qRegisterMetaType<AudioOutputDBusList>();
+
+    qDBusRegisterMetaType<AudioOutputDBus>();
+    qDBusRegisterMetaType<AudioOutputDBusList>();
 
     // check if there is already an instance of the handler running
     if (ApplicationUtils::checkApplicationRunning(TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler")) {
@@ -45,9 +55,11 @@ int main(int argc, char **argv)
         return 1;
     }
 
+    HandlerDBus dbus;
     Handler *handler = new Handler();
-    QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, [handler]() {
+    QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, [&]() {
         TelepathyHelper::instance()->registerClient(handler, "TelephonyServiceHandler");
+        dbus.connectToBus();
     });
  
     QObject::connect(handler, SIGNAL(callChannelAvailable(Tp::CallChannelPtr)),
@@ -55,10 +67,6 @@ int main(int argc, char **argv)
     QObject::connect(handler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
                      TextHandler::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
 
-    HandlerDBus dbus;
-
-    QObject::connect(TelepathyHelper::instance(), SIGNAL(setupReady()),
-                     &dbus, SLOT(connectToBus()));
 
     // instanciate the display name settings singleton, it will work by itself
     DisplayNameSettings::instance();

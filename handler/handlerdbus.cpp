@@ -21,6 +21,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "audiooutput.h"
+#include "audioroutemanager.h"
 #include "callhandler.h"
 #include "handlerdbus.h"
 #include "handleradaptor.h"
@@ -44,6 +46,13 @@ HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent), mCallIndicatorVisib
     connect(CallHandler::instance(),
             SIGNAL(conferenceCallRequestFinished(bool)),
             SIGNAL(ConferenceCallRequestFinished(bool)));
+    connect(AudioRouteManager::instance(),
+            SIGNAL(audioOutputsChanged(AudioOutputDBusList)),
+            SIGNAL(AudioOutputsChanged(AudioOutputDBusList)));
+    connect(AudioRouteManager::instance(),
+            SIGNAL(activeAudioOutputChanged(QString)),
+            SIGNAL(ActiveAudioOutputChanged(QString)));
+
 }
 
 HandlerDBus::~HandlerDBus()
@@ -79,6 +88,21 @@ void HandlerDBus::setCallIndicatorVisible(bool visible)
 {
     mCallIndicatorVisible = visible;
     Q_EMIT CallIndicatorVisibleChanged(visible);
+}
+
+void HandlerDBus::setActiveAudioOutput(const QString &id)
+{
+    AudioRouteManager::instance()->setActiveAudioOutput(id);
+}
+
+QString HandlerDBus::activeAudioOutput() const
+{
+    return AudioRouteManager::instance()->activeAudioOutput();
+}
+
+AudioOutputDBusList HandlerDBus::AudioOutputs() const
+{
+    return AudioRouteManager::instance()->audioOutputs();
 }
 
 bool HandlerDBus::connectToBus()
@@ -136,11 +160,6 @@ void HandlerDBus::SetHold(const QString &objectPath, bool hold)
 void HandlerDBus::SetMuted(const QString &objectPath, bool muted)
 {
     CallHandler::instance()->setMuted(objectPath, muted);
-}
-
-void HandlerDBus::SetActiveAudioOutput(const QString &objectPath, const QString &id)
-{
-    CallHandler::instance()->setActiveAudioOutput(objectPath, id);
 }
 
 void HandlerDBus::SendDTMF(const QString &objectPath, const QString &key)

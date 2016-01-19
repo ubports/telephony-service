@@ -73,6 +73,7 @@ pkg_check_modules(MESSAGING_MENU REQUIRED messaging-menu)
 pkg_check_modules(UserMetrics REQUIRED libusermetricsinput-1)
 pkg_check_modules(HISTORY REQUIRED history-service)
 pkg_check_modules(GSETTINGS_QT REQUIRED gsettings-qt)
+pkg_check_modules(PULSEAUDIO libpulse)
 
 add_definitions(-DQT_NO_KEYWORDS)
 

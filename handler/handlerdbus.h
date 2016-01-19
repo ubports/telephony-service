@@ -28,6 +28,7 @@
 #include <QtDBus/QDBusContext>
 #include "chatmanager.h"
 #include "dbustypes.h"
+#include "audiooutput.h"
 
 /**
  * DBus interface for the phone approver
@@ -40,6 +41,11 @@ class HandlerDBus : public QObject, protected QDBusContext
                WRITE setCallIndicatorVisible
                NOTIFY CallIndicatorVisibleChanged)
 
+    Q_PROPERTY(QString ActiveAudioOutput
+               READ activeAudioOutput
+               WRITE setActiveAudioOutput
+               NOTIFY ActiveAudioOutputChanged)
+
 public:
     HandlerDBus(QObject* parent=0);
     ~HandlerDBus();
@@ -50,6 +56,8 @@ public:
     bool IsReady();
     bool callIndicatorVisible() const;
     void setCallIndicatorVisible(bool visible);
+    QString activeAudioOutput() const;
+    void setActiveAudioOutput(const QString &id);
 
 public Q_SLOTS:
     bool connectToBus();
@@ -66,13 +74,13 @@ public Q_SLOTS:
     Q_NOREPLY void HangUpCall(const QString &objectPath);
     Q_NOREPLY void SetHold(const QString &objectPath, bool hold);
     Q_NOREPLY void SetMuted(const QString &objectPath, bool muted);
-    Q_NOREPLY void SetActiveAudioOutput(const QString &objectPath, const QString &id);
     Q_NOREPLY void SendDTMF(const QString &objectPath, const QString &key);
 
     // conference call related
     Q_NOREPLY void CreateConferenceCall(const QStringList &objectPaths);
     Q_NOREPLY void MergeCall(const QString &conferenceObjectPath, const QString &callObjectPath);
     Q_NOREPLY void SplitCall(const QString &objectPath);
+    AudioOutputDBusList AudioOutputs() const;
 
 Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);
@@ -80,6 +88,8 @@ Q_SIGNALS:
     void CallIndicatorVisibleChanged(bool visible);
     void ConferenceCallRequestFinished(bool succeeded);
     void CallHoldingFailed(const QString &objectPath);
+    void ActiveAudioOutputChanged(const QString &id);
+    void AudioOutputsChanged(const AudioOutputDBusList &audioOutputs);
 
 private:
     bool mCallIndicatorVisible;

@@ -38,29 +38,12 @@
 #define PROPERTY_AUDIO_OUTPUTS "AudioOutputs"
 #define PROPERTY_ACTIVE_AUDIO_OUTPUT "ActiveAudioOutput"
 
-QDBusArgument &operator<<(QDBusArgument &argument, const AudioOutputDBus &output)
-{
-    argument.beginStructure();
-    argument << output.id << output.type << output.name;
-    argument.endStructure();
-    return argument;
-}
-
-const QDBusArgument &operator>>(const QDBusArgument &argument, AudioOutputDBus &output)
-{
-    argument.beginStructure();
-    argument >> output.id >> output.type >> output.name;
-    argument.endStructure();
-    return argument;
-}
-
 CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     QObject(parent),
     mChannel(channel),
     mVoicemail(false),
     mLocalMuteState(false),
-    mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE),
-    mAudioOutputsInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE)
+    mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE)
 {
     qDBusRegisterMetaType<AudioOutputDBus>();
     qDBusRegisterMetaType<AudioOutputDBusList>();
@@ -77,11 +60,27 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
             SIGNAL(CallHoldingFailed(QString)),
             SLOT(onCallHoldingFailed(QString)));
 
+    connect(TelepathyHelper::instance()->handlerInterface(),
+            SIGNAL(ActiveAudioOutputChanged(QString)),
+            SLOT(onActiveAudioOutputChanged(QString)));
+
+    connect(TelepathyHelper::instance()->handlerInterface(),
+            SIGNAL(AudioOutputsChanged(AudioOutputDBusList)),
+            SLOT(onAudioOutputsChanged(AudioOutputDBusList)));
+
     // in case the account is an ofono account, we can check the voicemail number
     OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(mAccount);
     if (ofonoAccount && !ofonoAccount->voicemailNumber().isEmpty()) {
         setVoicemail(phoneNumber() == ofonoAccount->voicemailNumber());
     }
+
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+
+    AudioOutputDBusList audioOutputList = qdbus_cast<AudioOutputDBusList>(phoneAppHandler->property(PROPERTY_AUDIO_OUTPUTS));
+    onAudioOutputsChanged(audioOutputList);
+
+    QString activeAudioOutput = phoneAppHandler->property(PROPERTY_ACTIVE_AUDIO_OUTPUT).toString();
+    onActiveAudioOutputChanged(activeAudioOutput);
 
     Q_EMIT incomingChanged();
 }
@@ -105,7 +104,8 @@ QString CallEntry::activeAudioOutput() const
 
 void CallEntry::setActiveAudioOutput(const QString &id)
 {
-    mAudioOutputsInterface.call("SetActiveAudioOutput", id);
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->setProperty("ActiveAudioOutput", id);
 }
 
 void CallEntry::onActiveAudioOutputChanged(const QString &id)
@@ -198,13 +198,6 @@ void CallEntry::setupCallChannel()
 
     refreshProperties();
 
-    QDBusConnection::sessionBus().connect(mChannel->busName(), mChannel->objectPath(),
-                                          CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE,
-                                          "AudioOutputsChanged",
-                                          this,
-                                          SLOT(onAudioOutputsChanged(AudioOutputDBusList)));
-    connect(&mAudioOutputsInterface, SIGNAL(ActiveAudioOutputChanged(QString)), SLOT(onActiveAudioOutputChanged(QString)));
-
     onCallStateChanged(mChannel->callState());
 
     Q_EMIT heldChanged();
@@ -248,30 +241,18 @@ void CallEntry::timerEvent(QTimerEvent *event)
 
 void CallEntry::refreshProperties()
 {
-     QDBusInterface callChannelIface(mChannel->busName(), mChannel->objectPath(), DBUS_PROPERTIES_IFACE);
+    QDBusInterface callChannelIface(mChannel->busName(), mChannel->objectPath(), DBUS_PROPERTIES_IFACE);
 
-     QDBusMessage reply = callChannelIface.call("GetAll", TELEPATHY_CALL_IFACE);
-     QVariantList args = reply.arguments();
-     QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
+    QDBusMessage reply = callChannelIface.call("GetAll", TELEPATHY_CALL_IFACE);
+    QVariantList args = reply.arguments();
+    QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
 
-     reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE);
-     args = reply.arguments();
-     QMap<QString, QVariant> map2 = qdbus_cast<QMap<QString, QVariant> >(args[0]);
-
-     mProperties.clear();
-     QMapIterator<QString, QVariant> i(map);
-     while(i.hasNext()) {
-         i.next();
-         mProperties[i.key()] = i.value();
-     }
-     QMapIterator<QString, QVariant> i2(map2);
-     while(i2.hasNext()) {
-         i2.next();
-         mProperties[i2.key()] = i2.value();
-     }
-
-     onAudioOutputsChanged(qdbus_cast<AudioOutputDBusList>(mProperties[PROPERTY_AUDIO_OUTPUTS]));
-     onActiveAudioOutputChanged(mProperties[PROPERTY_ACTIVE_AUDIO_OUTPUT].toString());
+    mProperties.clear();
+    QMapIterator<QString, QVariant> i(map);
+    while(i.hasNext()) {
+        i.next();
+        mProperties[i.key()] = i.value();
+    }
 }
 
 bool CallEntry::dialing() const
