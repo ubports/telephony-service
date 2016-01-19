@@ -45,6 +45,9 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
     mLocalMuteState(false),
     mMuteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE)
 {
+    qRegisterMetaType<AudioOutputDBus>();
+    qRegisterMetaType<AudioOutputDBusList>();
+
     qDBusRegisterMetaType<AudioOutputDBus>();
     qDBusRegisterMetaType<AudioOutputDBusList>();
 
@@ -64,9 +67,12 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
             SIGNAL(ActiveAudioOutputChanged(QString)),
             SLOT(onActiveAudioOutputChanged(QString)));
 
-    connect(TelepathyHelper::instance()->handlerInterface(),
-            SIGNAL(AudioOutputsChanged(AudioOutputDBusList)),
-            SLOT(onAudioOutputsChanged(AudioOutputDBusList)));
+    QDBusConnection::sessionBus().connect(TelepathyHelper::instance()->handlerInterface()->service(),
+                                          TelepathyHelper::instance()->handlerInterface()->path(),
+                                          TelepathyHelper::instance()->handlerInterface()->interface(),
+                                          "AudioOutputsChanged",
+                                          this,
+                                          SLOT(onAudioOutputsChanged(AudioOutputDBusList)));
 
     // in case the account is an ofono account, we can check the voicemail number
     OfonoAccountEntry *ofonoAccount = qobject_cast<OfonoAccountEntry*>(mAccount);
@@ -76,7 +82,8 @@ CallEntry::CallEntry(const Tp::CallChannelPtr &channel, QObject *parent) :
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
 
-    AudioOutputDBusList audioOutputList = qdbus_cast<AudioOutputDBusList>(phoneAppHandler->property(PROPERTY_AUDIO_OUTPUTS));
+    QDBusMessage reply = phoneAppHandler->call(PROPERTY_AUDIO_OUTPUTS);
+    AudioOutputDBusList audioOutputList = qdbus_cast<AudioOutputDBusList>(reply.arguments().first());
     onAudioOutputsChanged(audioOutputList);
 
     QString activeAudioOutput = phoneAppHandler->property(PROPERTY_ACTIVE_AUDIO_OUTPUT).toString();
