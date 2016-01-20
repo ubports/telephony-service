@@ -20,7 +20,6 @@
  */
 
 #include "applicationutils.h"
-#include "audioroutemanager.h"
 #include "callhandler.h"
 #include "displaynamesettings.h"
 #include "handler.h"
