@@ -22,7 +22,9 @@
 #ifndef AUDIOROUTEMANAGER_H
 #define AUDIOROUTEMANAGER_H
 
+#ifdef USE_PULSEAUDIO
 #include "qpulseaudioengine.h"
+#endif
 #include "audiooutput.h"
 #include "powerdaudiomodemediator.h"
 #include "powerddbus.h"
