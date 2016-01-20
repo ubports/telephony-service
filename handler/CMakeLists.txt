@@ -1,3 +1,8 @@
+if (PULSEAUDIO_FOUND)
+    add_definitions(-DUSE_PULSEAUDIO)
+    set(USE_PULSEAUDIO ON)
+    set(QPULSEAUDIOENGINE_CPP qpulseaudioengine.cpp)
+endif (PULSEAUDIO_FOUND)
 
 set(qt_SRCS
     audioroutemanager.cpp
@@ -7,17 +12,12 @@ set(qt_SRCS
     handlerdbus.cpp
     powerdaudiomodemediator.cpp
     powerddbus.cpp
-    qpulseaudioengine.cpp
     texthandler.cpp
+    ${QPULSEAUDIOENGINE_CPP}
     )
 
 set(handler_SRCS main.cpp ${qt_SRCS})
 qt5_add_dbus_adaptor(handler_SRCS Handler.xml handler/handlerdbus.h HandlerDBus)
-
-if (PULSEAUDIO_FOUND)
-    add_definitions(-DUSE_PULSEAUDIO)
-    set(USE_PULSEAUDIO ON)
-endif (PULSEAUDIO_FOUND)
 
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
