@@ -53,6 +53,7 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
+    void onTextChannelInvalidated();
     void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageSent(Tp::PendingOperation *op);
     void onConnectedChanged();
@@ -65,7 +66,7 @@ private:
     Tp::MessagePartList buildMessage(const PendingMessage &pendingMessage);
 
     QList<Tp::TextChannelPtr> mChannels;
-    QMap<QString, Tp::ContactPtr> mContacts;
+    QMap<QString, QMap<QString, Tp::ContactPtr> > mContacts;
     QList<PendingMessage> mPendingMessages;
 };
 

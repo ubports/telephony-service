@@ -144,7 +144,7 @@ void TextHandler::startChat(const Tp::AccountPtr &account, const Tp::Contacts &c
     // start chatting to the contacts
     Q_FOREACH(Tp::ContactPtr contact, contacts) {
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
-        mContacts[contact->id()] = contact;
+        mContacts[account->uniqueIdentifier()][contact->id()] = contact;
     }
 }
 
@@ -297,19 +297,45 @@ void TextHandler::sendMessage(const QString &accountId, const QStringList &recip
     }
 
     // check if the message should be sent via multimedia account
-    if (account->type() == AccountEntry::PhoneAccount) {
-        // we just use fallback to 1-1 chats
-        if (recipients.size() == 1) {
-
-            Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
-                // TODO: we have to find the multimedia account that matches the same phone number, 
-                // but for now we just pick any multimedia connected account
-                if (newAccount->type() == AccountEntry::MultimediaAccount) {
-                    if (newAccount->connected()) {
-                        account = newAccount;
-                        break;
-                    }
+    // we just use fallback to 1-1 chats
+    if (account->type() == AccountEntry::PhoneAccount && recipients.size() == 1) {
+        Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
+            // TODO: we have to find the multimedia account that matches the same phone number, 
+            // but for now we just pick any multimedia connected account
+            if (newAccount->type() != AccountEntry::MultimediaAccount) {
+                continue;
+            }
+            // FIXME: the fallback implementation needs to be changed to use protocol info and create a map of
+            // accounts. Also, it needs to check connection capabilities to determine if we can send message
+            // to offline contacts.
+            bool shouldFallback = false;
+            // if the account is offline, dont fallback to this account
+            if (!newAccount->connected()) {
+                continue;
+            }
+            QList<Tp::TextChannelPtr> channels = existingChannels(recipients, newAccount->accountId());
+            // check if we have a channel for this contact already and get the contact pointer from there,
+            // this way we avoid doing the while(op->isFinished()) all the time
+            if (!channels.isEmpty()) {
+                // if the contact is known, force fallback to this account
+                Tp::Presence presence = channels.first()->targetContact()->presence();
+                shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
+                    presence.type() == Tp::ConnectionPresenceTypeOffline);
+            } else {
+                Tp::PendingOperation *op = newAccount->account()->connection()->contactManager()->contactsForIdentifiers(recipients);
+                while (!op->isFinished()) {
+                    qApp->processEvents();
                 }
+                Tp::PendingContacts *pc = qobject_cast<Tp::PendingContacts*>(op);
+                if (pc) {
+                    Tp::Presence presence = pc->contacts().first()->presence();
+                    shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
+                        presence.type() == Tp::ConnectionPresenceTypeOffline);
+                }
+            }
+            if (shouldFallback) {
+                account = newAccount;
+                break;
             }
         }
     }
@@ -318,6 +344,7 @@ void TextHandler::sendMessage(const QString &accountId, const QStringList &recip
     QStringList sortedRecipients = recipients;
     sortedRecipients.sort();
     PendingMessage pendingMessage = {account->accountId(), sortedRecipients, message, attachments, properties};
+
     if (!account->connected()) {
         mPendingMessages.append(pendingMessage);
         return;
@@ -365,12 +392,26 @@ void TextHandler::acknowledgeAllMessages(const QStringList &recipients, const QS
     }
 }
 
+void TextHandler::onTextChannelInvalidated()
+{
+    Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
+    mChannels.removeAll(textChannel);
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(textChannel->connection());
+    if (account) {
+       mContacts.remove(account->accountId());
+    }
+}
+
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
     if (!account) {
         return;
     }
+    connect(channel.data(),
+            SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
+            SLOT(onTextChannelInvalidated()));
+
     QString accountId = account->accountId();
     mChannels.append(channel);
 
