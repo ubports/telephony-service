@@ -1,3 +1,23 @@
+telephony-service (0.1+16.04.20160122-0ubuntu1) xenial; urgency=medium
+
+  [ Arthur Mello ]
+  * Enable video support for mms
+
+  [ Gustavo Pichorim Boiko ]
+  * Enable audio support for mms.
+  * Expose extra information about the protocols we support.
+  * Make it possible to send messages to "multimedia" accounts and
+    fallback to ofono accounts when not possible.
+  * Remove protocol files that are not supposed to be shipped.
+
+  [ Tiago Salem Herrmann ]
+  * Add test for account fallback.
+  * Add tests for sending messages with attachments
+  * Make sendMessage() return the actual accountId used to send the
+    message.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 22 Jan 2016 02:58:04 +0000
+
 telephony-service (0.1+16.04.20160105-0ubuntu1) xenial; urgency=medium
 
   [ CI Train Bot ]
