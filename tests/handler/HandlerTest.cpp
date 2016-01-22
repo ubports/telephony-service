@@ -45,6 +45,7 @@ private Q_SLOTS:
     void testAcknowledgeAllMessages();
     void testActiveCallIndicator();
     void testNotApprovedChannels();
+    void testMultimediaFallback();
 
 private:
     void registerApprover();
@@ -53,6 +54,11 @@ private:
     Approver *mApprover;
     MockController *mMockController;
     Tp::AccountPtr mTpAccount;
+    MockController *mMultimediaMockController;
+    Tp::AccountPtr mMultimediaTpAccount;
+    MockController *mOfonoMockController;
+    Tp::AccountPtr mOfonoTpAccount;
+
 };
 
 void HandlerTest::initTestCase()
@@ -71,12 +77,20 @@ void HandlerTest::init()
 
     // and create the mock controller
     mMockController = new MockController("mock", this);
+
+    mOfonoTpAccount = addAccount("mock", "ofono", "the account");
+    mOfonoMockController = new MockController("ofono", this);
+
+    mMultimediaTpAccount = addAccount("mock", "multimedia", "the account");
+    mMultimediaMockController = new MockController("multimedia", this);
 }
 
 void HandlerTest::cleanup()
 {
     doCleanup();
     mMockController->deleteLater();
+    mMultimediaMockController->deleteLater();
+    mOfonoMockController->deleteLater();
 }
 
 void HandlerTest::testMakingCalls()
@@ -401,6 +415,44 @@ void HandlerTest::testNotApprovedChannels()
     QCOMPARE(callStateSpy.last()[0].toString(), callerId);
     QCOMPARE(callStateSpy.last()[1].toString(), objectPath);
     QCOMPARE(callStateSpy.last()[2].toString(), QString("initialised"));
+}
+
+void HandlerTest::testMultimediaFallback()
+{
+    QString recipient("22222222");
+    QString message("Hello, world!");
+    HandlerController::instance()->startChat(mMultimediaTpAccount->uniqueIdentifier(), QStringList() << recipient);
+    mMultimediaMockController->SetContactPresence(recipient, Tp::ConnectionPresenceTypeAvailable, "available", "");
+    // We have to make sure the handler already has the new state
+    QTest::qWait(1000);
+
+    QSignalSpy messageSentOfonoSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy messageSentMultimediaSpy(mMultimediaMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+
+    HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+    TRY_COMPARE(messageSentMultimediaSpy.count(), 1);
+    QCOMPARE(messageSentOfonoSpy.count(), 0);
+    QString sentMessage = messageSentMultimediaSpy.first().first().toString();
+    QVariantMap messageProperties = messageSentMultimediaSpy.first().last().value<QVariantMap>();
+    QCOMPARE(sentMessage, message);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
+
+    messageSentMultimediaSpy.clear();
+    messageSentOfonoSpy.clear();
+
+    mMultimediaMockController->SetContactPresence(recipient, Tp::ConnectionPresenceTypeUnknown, "offline", "");
+    // We have to make sure the handler already has the new state
+    QTest::qWait(1000);
+    HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+    TRY_COMPARE(messageSentOfonoSpy.count(), 1);
+    QCOMPARE(messageSentMultimediaSpy.count(), 0);
+
+    sentMessage = messageSentOfonoSpy.first().first().toString();
+    messageProperties = messageSentOfonoSpy.first().last().value<QVariantMap>();
+    QCOMPARE(sentMessage, message);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
 }
 
 void HandlerTest::registerApprover()
