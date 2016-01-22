@@ -105,13 +105,12 @@ void MockTextChannel::messageAcknowledged(const QString &id)
 QString MockTextChannel::sendMessage(const Tp::MessagePartList& message, uint flags, Tp::DBusError* error)
 {
     Tp::MessagePart header = message.at(0);
-    Tp::MessagePart body = message.at(1);
 
     static int serial = 0;
 
     // FIXME: check what other data we need to emit in the signal
     QString id = QString("sentmessage%1").arg(serial++);
-    QString messageText = body["content"].variant().toString();
+    QString messageText;
     QVariantMap properties;
     QMap<QString, QDBusVariant>::const_iterator it = header.constBegin();
     while (it != header.constEnd()) {
@@ -122,7 +121,24 @@ QString MockTextChannel::sendMessage(const Tp::MessagePartList& message, uint fl
     properties["Recipients"] = mRecipients;
     properties["Id"] = id;
 
-    Q_EMIT messageSent(messageText, properties);
+    QVariantList attachments;
+    Tp::MessagePartList messageList = message;
+    messageList.pop_front();
+    Q_FOREACH(const Tp::MessagePart& messagePart, messageList) {
+        QVariantMap attachment;
+        if (messagePart.contains("content-type") && messagePart["content-type"].variant().toString().startsWith("text/")) {
+            messageText = messagePart["content"].variant().toString();
+            continue;
+        }
+        QMap<QString, QDBusVariant>::const_iterator it = messagePart.constBegin();
+        while (it != messagePart.constEnd()) {
+            attachment[it.key()] = it.value().variant().toString();
+            it++;
+        }
+        attachments << attachment;
+    }
+
+    Q_EMIT messageSent(messageText, attachments, properties);
 
     QTimer *deliveryReportTimer = new QTimer(this);
     deliveryReportTimer->setSingleShot(true);

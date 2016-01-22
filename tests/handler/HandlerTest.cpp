@@ -41,6 +41,7 @@ private Q_SLOTS:
     void testCallProperties();
     void testConferenceCall();
     void testSendMessage();
+    void testSendMessageWithAttachments();
     void testAcknowledgeMessage();
     void testAcknowledgeAllMessages();
     void testActiveCallIndicator();
@@ -289,7 +290,7 @@ void HandlerTest::testSendMessage()
 {
     QString recipient("22222222");
     QString message("Hello, world!");
-    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
     // FIXME: add support for multiple accounts
     HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentSpy.count(), 1);
@@ -300,6 +301,31 @@ void HandlerTest::testSendMessage()
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
 }
 
+void HandlerTest::testSendMessageWithAttachments()
+{
+    QString recipient("22222222");
+    QString message("Hello, world!");
+    QSignalSpy messageSentSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+
+    QTemporaryFile outputFile("audioXXXXXX.ogg");
+    outputFile.open();
+    AttachmentStruct attachment{"id", "audio/ogg", outputFile.fileName()};
+    HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message, AttachmentList() << attachment);
+    TRY_COMPARE(messageSentSpy.count(), 1);
+    outputFile.close();
+
+    QString sentMessage = messageSentSpy.first()[0].toString();
+    QVariantMap messageProperties = messageSentSpy.first()[2].value<QVariantMap>();
+    QCOMPARE(sentMessage, message);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
+    
+    QVariantList messageAttachments = qdbus_cast<QVariantList>(messageSentSpy.first()[1]);
+    QVariantMap firstAttachment = qdbus_cast<QVariantMap>(messageAttachments.first());
+    QCOMPARE(firstAttachment["content-type"].toString(), QString("audio/ogg"));
+    QCOMPARE(firstAttachment["identifier"].toString(), QString("id"));
+}
+
 void HandlerTest::testAcknowledgeMessage()
 {
     // if we register the observer before this test, other tests fail
@@ -307,7 +333,7 @@ void HandlerTest::testAcknowledgeMessage()
     QString recipient("84376666");
     QString recipient2("+554184376666");
     QString message("Hello, world!");
-    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
     // first send a message to a certain number so the handler request one channel
     HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
@@ -341,7 +367,7 @@ void HandlerTest::testAcknowledgeAllMessages()
     QString recipient2("+554198437666");
     QString message("Hello, world! %1");
     int messageCount = 10;
-    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
     // first send a message to a certain number so the handler request one channel
     HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
@@ -421,13 +447,12 @@ void HandlerTest::testMultimediaFallback()
 {
     QString recipient("22222222");
     QString message("Hello, world!");
-    HandlerController::instance()->startChat(mMultimediaTpAccount->uniqueIdentifier(), QStringList() << recipient);
     mMultimediaMockController->SetContactPresence(recipient, Tp::ConnectionPresenceTypeAvailable, "available", "");
     // We have to make sure the handler already has the new state
     QTest::qWait(1000);
 
-    QSignalSpy messageSentOfonoSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantMap)));
-    QSignalSpy messageSentMultimediaSpy(mMultimediaMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy messageSentOfonoSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+    QSignalSpy messageSentMultimediaSpy(mMultimediaMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
     HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentMultimediaSpy.count(), 1);
