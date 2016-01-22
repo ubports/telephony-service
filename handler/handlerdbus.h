@@ -55,7 +55,7 @@ public Q_SLOTS:
     bool connectToBus();
 
     // messages related
-    Q_NOREPLY void SendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
+    QString SendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
     Q_NOREPLY void AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId);
     Q_NOREPLY void StartChat(const QString &accountId, const QStringList &participants);
     Q_NOREPLY void StartChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties);
