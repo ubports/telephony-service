@@ -3,6 +3,7 @@
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -36,6 +37,16 @@ class Protocol : public QObject
 
     /// @brief the fallback protocol to be used for operations that support it (mainly text features)
     Q_PROPERTY(QString fallbackProtocol READ fallbackProtocol CONSTANT)
+
+    /// @brief the file path for the image that represents this protocol
+    Q_PROPERTY(QString backgroundImage READ backgroundImage CONSTANT)
+
+    /// @brief the file path for the image that represents this protocol
+    Q_PROPERTY(QString icon READ icon CONSTANT)
+
+    /// @brief the title that represents this protocol
+    Q_PROPERTY(QString serviceName READ serviceName CONSTANT)
+
 public:
     enum Feature {
         TextChats = 0x1,
@@ -46,18 +57,24 @@ public:
     QString name() const;
     Features features() const;
     QString fallbackProtocol() const;
+    QString backgroundImage() const;
+    QString icon() const;
+    QString serviceName() const;
 
     static Protocol *fromFile(const QString &fileName);
 
     friend class ProtocolManager;
 
 protected:
-    explicit Protocol(const QString &name, Features features, const QString &fallbackProtocol = QString::null, QObject *parent = 0);
+    explicit Protocol(const QString &name, Features features, const QString &fallbackProtocol = QString::null, const QString &backgroundImage = QString::null, const QString &icon = QString::null, const QString &serviceName = QString::null, QObject *parent = 0);
 
 private:
     QString mName;
     Features mFeatures;
     QString mFallbackProtocol;
+    QString mBackgroundImage;
+    QString mIcon;
+    QString mServiceName;
 };
 
 typedef QList<Protocol*> Protocols;
