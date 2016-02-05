@@ -53,6 +53,13 @@ public:
     bool incomingMessageVibrate();
     bool incomingCallVibrate();
     bool dialpadSoundsEnabled();
+    QString defaultSimForCalls();
+    QString defaultSimForMessages();
+    bool mmsGroupChatEnabled();
+
+    void setDefaultSimForCalls(const QString &objPath);
+    void setDefaultSimForMessages(const QString &objPath);
+    void setMmsGroupChatEnabled(bool enabled);
 
     static bool isGreeterMode();
 
@@ -68,6 +75,7 @@ public:
 Q_SIGNALS:
     void contactUpdated(const QtContacts::QContact &contact);
     void greeterActiveChanged();
+    void phoneSettingsChanged(const QString &key);
 
 private Q_SLOTS:
     void greeterListPropertiesChanged(const QString &interface, const QVariantMap &changed, const QStringList &invalidated);
@@ -98,6 +106,9 @@ private:
     QVariant mIncomingCallVibrate;
     QVariant mIncomingMessageVibrate;
     QVariant mDialpadSoundsEnabled;
+    QVariant mDefaultSimForCalls;
+    QVariant mDefaultSimForMessages;
+    QVariant mMmsGroupChatEnabled;
     bool mGreeterActive;
 
     QtContacts::QContactFilter mFilter;

@@ -183,6 +183,33 @@ bool GreeterContacts::dialpadSoundsEnabled()
     return mDialpadSoundsEnabled.toBool();
 }
 
+bool GreeterContacts::mmsGroupChatEnabled()
+{
+    QMutexLocker locker(&mMutex);
+    if (!mMmsGroupChatEnabled.isValid()) {
+        mMmsGroupChatEnabled = getUserValue("com.ubuntu.touch.AccountsService.Phone", "MmsGroupChatEnabled");
+    }
+    return mMmsGroupChatEnabled.toBool();
+}
+
+QString GreeterContacts::defaultSimForCalls()
+{
+    QMutexLocker locker(&mMutex);
+    if (!mDefaultSimForCalls.isValid()) {
+        mDefaultSimForCalls = getUserValue("com.ubuntu.touch.AccountsService.Phone", "DefaultSimForCalls");
+    }
+    return mDefaultSimForCalls.toString();
+}
+
+QString GreeterContacts::defaultSimForMessages()
+{
+    QMutexLocker locker(&mMutex);
+    if (!mDefaultSimForMessages.isValid()) {
+        mDefaultSimForMessages = getUserValue("com.ubuntu.touch.AccountsService.Phone", "DefaultSimForMessages");
+    }
+    return mDefaultSimForMessages.toString();
+}
+
 void GreeterContacts::greeterListPropertiesChanged(const QString &interface,
                                                const QVariantMap &changed,
                                                const QStringList &invalidated)
@@ -204,6 +231,36 @@ void GreeterContacts::greeterPropertiesChanged(const QString &interface, const Q
             Q_EMIT greeterActiveChanged();
         }
     }
+}
+
+void GreeterContacts::setMmsGroupChatEnabled(bool enabled)
+{
+    QString uid = QString::number(getuid());
+    QDBusInterface iface("org.freedesktop.Accounts",
+                         "/org/freedesktop/Accounts/User" + uid,
+                         "org.freedesktop.DBus.Properties",
+                         QDBusConnection::AS_BUSNAME());
+    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "MmsGroupChatEnabled", enabled);
+}
+
+void GreeterContacts::setDefaultSimForMessages(const QString &objPath)
+{
+    QString uid = QString::number(getuid());
+    QDBusInterface iface("org.freedesktop.Accounts",
+                         "/org/freedesktop/Accounts/User" + uid,
+                         "org.freedesktop.DBus.Properties",
+                         QDBusConnection::AS_BUSNAME());
+    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "DefaultSimForMessages", objPath);
+}
+
+void GreeterContacts::setDefaultSimForCalls(const QString &objPath)
+{
+    QString uid = QString::number(getuid());
+    QDBusInterface iface("org.freedesktop.Accounts",
+                         "/org/freedesktop/Accounts/User" + uid,
+                         "org.freedesktop.DBus.Properties",
+                         QDBusConnection::AS_BUSNAME());
+    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "DefaultSimForCalls", objPath);
 }
 
 QVariant GreeterContacts::getUserValue(const QString &interface, const QString &propName)
@@ -253,6 +310,17 @@ void GreeterContacts::accountsPropertiesChanged(const QString &interface,
         checkUpdatedValue(changed, invalidated, "IncomingMessageVibrate", mIncomingMessageVibrate);
         checkUpdatedValue(changed, invalidated, "IncomingCallVibrate", mIncomingCallVibrate);
         checkUpdatedValue(changed, invalidated, "DialpadSoundsEnabled", mDialpadSoundsEnabled);
+    } else if (interface == "com.ubuntu.touch.AccountsService.Phone" &&
+               message.path() == mActiveUser) {
+        checkUpdatedValue(changed, invalidated, "DefaultSimForCalls", mDefaultSimForCalls);
+        checkUpdatedValue(changed, invalidated, "DefaultSimForMessages", mDefaultSimForMessages);
+        checkUpdatedValue(changed, invalidated, "MmsGroupChatEnabled", mMmsGroupChatEnabled);
+        Q_FOREACH(const QString &key, changed.keys()) {
+            Q_EMIT phoneSettingsChanged(key);
+        }
+        Q_FOREACH(const QString &key, invalidated) {
+            Q_EMIT phoneSettingsChanged(key);
+        }
     }
 }
 
@@ -328,6 +396,9 @@ void GreeterContacts::updateActiveUser(const QString &username)
         mIncomingCallVibrate = QVariant();
         mIncomingMessageVibrate = QVariant();
         mDialpadSoundsEnabled = QVariant();
+        mMmsGroupChatEnabled = QVariant();
+        mDefaultSimForCalls = QVariant();
+        mDefaultSimForMessages = QVariant();
         signalIfNeeded();
     }
 }

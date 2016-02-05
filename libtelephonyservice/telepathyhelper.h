@@ -132,7 +132,7 @@ private Q_SLOTS:
     void onAccountReady();
     void onNewAccount(const Tp::AccountPtr &account);
     void onAccountRemoved();
-    void onSettingsChanged(const QString&);
+    void onPhoneSettingsChanged(const QString&);
 
 private:
     Tp::AccountManagerPtr mAccountManager;
@@ -150,7 +150,6 @@ private:
     Tp::AbstractClientPtr mChannelObserverPtr;
     bool mMmsGroupChat;
     mutable QDBusInterface *mHandlerInterface;
-    QGSettings *mPhoneSettings;
     mutable QDBusInterface *mApproverInterface;
     QDBusInterface mFlightModeInterface;
 };
