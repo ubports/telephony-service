@@ -329,7 +329,6 @@ void HandlerTest::testSendMessageWithAttachments()
 
 void HandlerTest::testSendMessageOwnNumber()
 {
-    // if we register the observer before this test, other tests fail
     QString recipient("84376666");
     QString message("Hello, world!");
     QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
@@ -342,6 +341,7 @@ void HandlerTest::testSendMessageOwnNumber()
 
     messageSentSpy.clear();
 
+    // then send to another number and check if old channels are not reused
     HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentSpy.count(), 1);
     messageProperties = messageSentSpy.first()[2].value<QVariantMap>();
