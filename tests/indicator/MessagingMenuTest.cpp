@@ -36,6 +36,7 @@ private Q_SLOTS:
     void testCallNotificationAdded();
     void testCallNotificationRemoved();
     void testTextMessagesNotificationAdded();
+    void testTextMessagesNotificationFromOwnNumber();
 private:
     Tp::AccountPtr mOfonoAccount;
     Tp::AccountPtr mMultimediaAccount;
@@ -114,6 +115,23 @@ void MessagingMenuTest::testTextMessagesNotificationAdded()
 
     TRY_COMPARE(notificationSpy.count(), 6);
 }
+
+void MessagingMenuTest::testTextMessagesNotificationFromOwnNumber()
+{
+    QDBusInterface notificationsMock("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications");
+    QSignalSpy notificationSpy(&notificationsMock, SIGNAL(MockNotificationReceived(QString, uint, QString, QString, QString, QStringList, QVariantMap, int)));
+
+    QVariantMap properties;
+    properties["Sender"] = "11112222";
+    properties["Recipients"] = (QStringList() << "11112222");
+    QStringList messages;
+    messages << "Hi there" << "How are you" << "Always look on the bright side of life";
+    Q_FOREACH(const QString &message, messages) {
+        mOfonoMockController->PlaceIncomingMessage(message, properties);
+    }
+    TRY_COMPARE(notificationSpy.count(), 3);
+}
+
 
 QTEST_MAIN(MessagingMenuTest)
 #include "MessagingMenuTest.moc"
