@@ -38,7 +38,7 @@ MockConnection::MockConnection(const QDBusConnection &dbusConnection,
     Tp::BaseConnection(dbusConnection, cmName, protocolName, parameters),
     mConferenceCall(0), mVoicemailIndicator(false), mVoicemailCount(0)
 {
-    setSelfHandle(newHandle("<SelfHandle>"));
+    setSelfHandle(newHandle("11112222"));
 
     setConnectCallback(Tp::memFun(this,&MockConnection::connect));
     setInspectHandlesCallback(Tp::memFun(this,&MockConnection::inspectHandles));

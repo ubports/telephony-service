@@ -479,10 +479,12 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QStringList &targe
             continue;
         }
 
-        // this is a special case. We have to check if we are looking for a channel open with our self contact
+        // this is a special case. We have to check if we are looking for a channel open with our self contact.
         bool channelToSelfContact = channel->groupContacts(true).size() == 1 && targetIds.size() == 1 &&
                           channel->targetHandleType() == Tp::HandleTypeContact &&
-                          channel->targetId() == channelAccount->selfContactId();
+                          channelAccount->compareIds(channel->targetId(), channelAccount->selfContactId()) &&
+                          channelAccount->compareIds(targetIds.first(), channel->targetId()); // make sure we compare the recipient with the channel
+
         if (channelToSelfContact) {
             channels.append(channel);
             continue;
