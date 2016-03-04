@@ -122,6 +122,13 @@ void MessagingMenu::addMessage(const QString &senderId, const QString &contactAl
     QContactFetchRequest *request = new QContactFetchRequest(this);
     request->setFilter(QContactPhoneNumber::match(senderId));
 
+    QVariantMap details;
+    details["senderId"] = senderId;
+    details["accountId"] = accountId;
+    details["participantIds"] = participantIds;
+ 
+    mMessages[messageId] = details;
+
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged,
                      [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this](QContactAbstractRequest::State newState) {
@@ -130,7 +137,9 @@ void MessagingMenu::addMessage(const QString &senderId, const QString &contactAl
         GIcon *icon = NULL;
 
         // only process the results after the finished state is reached
-        if (newState != QContactAbstractRequest::FinishedState) {
+        // also, if the ack happens before contacts service return the request we have to
+        // simply skip this
+        if (newState != QContactAbstractRequest::FinishedState || !mMessages.contains(messageId)) {
             return;
         }
 
@@ -179,13 +188,6 @@ void MessagingMenu::addMessage(const QString &senderId, const QString &contactAl
                                           );
         g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::messageActivateCallback), this);
 
-        // save the phone number to use in the actions
-        QVariantMap details;
-        details["senderId"] = senderId;
-        details["accountId"] = accountId;
-        details["participantIds"] = participantIds;
- 
-        mMessages[messageId] = details;
         messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
 
         if (file) {
