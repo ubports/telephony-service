@@ -54,7 +54,7 @@ ChatManager::ChatManager(QObject *parent)
     qDBusRegisterMetaType<AttachmentList>();
     qDBusRegisterMetaType<AttachmentStruct>();
     // wait one second for other acknowledge calls before acknowledging messages to avoid many round trips
-    mMessagesAckTimer.setInterval(1000);
+    mMessagesAckTimer.setInterval(400);
     mMessagesAckTimer.setSingleShot(true);
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
     connect(TelepathyHelper::instance(), SIGNAL(setupReady()), SLOT(onTelepathyReady()));
