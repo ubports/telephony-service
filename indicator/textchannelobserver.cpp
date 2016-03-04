@@ -357,7 +357,8 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
 
         QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, accountId, participantIds, message](QContactAbstractRequest::State newState) {
             // only process the results after the finished state is reached
-            if (newState != QContactAbstractRequest::FinishedState) {
+            QByteArray token(message.messageToken().toUtf8());
+            if (newState != QContactAbstractRequest::FinishedState || mUnreadMessages.contains(token.toHex())) {
                 return;
             }
 
