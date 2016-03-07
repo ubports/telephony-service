@@ -341,6 +341,13 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
 void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
 {
     Tp::ContactPtr contact = message.sender();
+
+    QByteArray token(message.messageToken().toUtf8());
+    if (!mUnreadMessages.contains(token)) {
+        Ringtone::instance()->playIncomingMessageSound();
+        return;
+    }
+
     if (GreeterContacts::isGreeterMode()) { // we're in the greeter's session
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
         // in greeter mode we show the notification right away as the contact data might not be received
