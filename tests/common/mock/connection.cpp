@@ -488,7 +488,7 @@ void MockConnection::placeIncomingMessage(const QString &message, const QVariant
         Tp::DBusError error;
         QVariantMap request;
         bool yours;
-        uint handle = newHandle(sender);
+        uint handle = ensureHandle(sender);
         request[TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType")] = TP_QT_IFACE_CHANNEL_TYPE_TEXT;
         request[TP_QT_IFACE_CHANNEL + QLatin1String(".InitiatorHandle")] = handle;
         request[TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType")] = Tp::HandleTypeContact;

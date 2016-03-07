@@ -629,8 +629,11 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
         return;
     }
 
+    // we do not notify messages sent by ourselves on other devices, unless we
+    // are dealing with phone accounts: #1547462
     if (!account->account()->connection().isNull() && 
-            message.sender()->handle().at(0) == account->account()->connection()->selfHandle()) {
+            message.sender()->handle().at(0) == account->account()->connection()->selfHandle() &&
+            account->type() != AccountEntry::PhoneAccount) {
         return;
     }
     
