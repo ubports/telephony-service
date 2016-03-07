@@ -1,3 +1,14 @@
+telephony-service (0.1+16.04.20160307-0ubuntu1) xenial; urgency=medium
+
+  * Compare target id to check if this is a channel to the self contact.
+    (LP: #1546369)
+  * Display notifications for sms's where sender phone number matches
+    the sim card phone number that received the message. (LP: #1547462)
+  * Only add notifications to messaging-menu if ack didn't happen in the
+    meantime.
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 07 Mar 2016 20:13:48 +0000
+
 telephony-service (0.1+16.04.20160122-0ubuntu1) xenial; urgency=medium
 
   [ Arthur Mello ]
