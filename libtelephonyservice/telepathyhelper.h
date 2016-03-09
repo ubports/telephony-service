@@ -40,7 +40,6 @@
 template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStringList &key2);
 
 class AccountEntry;
-class QGSettings;
 
 class TelepathyHelper : public QObject
 {
@@ -55,6 +54,7 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(bool flightMode READ flightMode WRITE setFlightMode NOTIFY flightModeChanged)
     Q_PROPERTY(bool mmsGroupChat READ mmsGroupChat WRITE setMmsGroupChat NOTIFY mmsGroupChatChanged)
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
+    Q_PROPERTY(QVariantMap simNames READ simNames NOTIFY simNamesChanged)
     Q_ENUMS(AccountType)
 public:
     enum AccountType {
@@ -78,6 +78,7 @@ public:
     AccountEntry *defaultCallAccount() const;
 
     bool mmsGroupChat();
+    QVariantMap simNames() const;
     void setMmsGroupChat(bool value);
     bool flightMode();
     void setFlightMode(bool value);
@@ -118,6 +119,7 @@ Q_SIGNALS:
     void flightModeChanged();
     void emergencyCallsAvailableChanged();
     void mmsGroupChatChanged();
+    void simNamesChanged();
 
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);
@@ -149,6 +151,7 @@ private:
     bool mReady;
     Tp::AbstractClientPtr mChannelObserverPtr;
     bool mMmsGroupChat;
+    QVariantMap mSimNames;
     mutable QDBusInterface *mHandlerInterface;
     mutable QDBusInterface *mApproverInterface;
     QDBusInterface mFlightModeInterface;

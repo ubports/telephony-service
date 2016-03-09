@@ -210,6 +210,15 @@ QString GreeterContacts::defaultSimForMessages()
     return mDefaultSimForMessages.toString();
 }
 
+QVariantMap GreeterContacts::simNames()
+{
+    QMutexLocker locker(&mMutex);
+    if (!mSimNames.isValid()) {
+        mSimNames = getUserValue("com.ubuntu.touch.AccountsService.Phone", "SimNames");
+    }
+    return mSimNames.toMap();
+}
+
 void GreeterContacts::greeterListPropertiesChanged(const QString &interface,
                                                const QVariantMap &changed,
                                                const QStringList &invalidated)
@@ -315,6 +324,7 @@ void GreeterContacts::accountsPropertiesChanged(const QString &interface,
         checkUpdatedValue(changed, invalidated, "DefaultSimForCalls", mDefaultSimForCalls);
         checkUpdatedValue(changed, invalidated, "DefaultSimForMessages", mDefaultSimForMessages);
         checkUpdatedValue(changed, invalidated, "MmsGroupChatEnabled", mMmsGroupChatEnabled);
+        checkUpdatedValue(changed, invalidated, "SimNames", mSimNames);
         Q_FOREACH(const QString &key, changed.keys()) {
             Q_EMIT phoneSettingsChanged(key);
         }

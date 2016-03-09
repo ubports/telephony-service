@@ -499,6 +499,11 @@ AccountEntry *TelepathyHelper::defaultCallAccount() const
     return mDefaultCallAccount;
 }
 
+QVariantMap TelepathyHelper::simNames() const
+{
+    return mSimNames;
+}
+
 void TelepathyHelper::setDefaultAccount(AccountType type, AccountEntry* account)
 {
     if (!account) {
@@ -565,9 +570,12 @@ void TelepathyHelper::onPhoneSettingsChanged(const QString &key)
         }
         mDefaultCallAccount = NULL;
         Q_EMIT defaultCallAccountChanged();
-    } else if (key == "mmsGroupChatEnabled") {
+    } else if (key == "MmsGroupChatEnabled") {
         mMmsGroupChat = GreeterContacts::instance()->mmsGroupChatEnabled(); 
         Q_EMIT mmsGroupChatChanged();
+    } else if (key == "SimNames") {
+        mSimNames = GreeterContacts::instance()->simNames();
+        Q_EMIT simNamesChanged();
     }
 }
 

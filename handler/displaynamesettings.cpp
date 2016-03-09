@@ -21,27 +21,29 @@
 
 #include "displaynamesettings.h"
 #include "accountentry.h"
+#include "greetercontacts.h"
 #include "telepathyhelper.h"
 
 namespace C {
 #include <libintl.h>
 }
 
-#define DUAL_SIM_NAMES_KEY "simNames"
+#define DUAL_SIM_NAMES_KEY "SimNames"
 
 // do not remove the following line.
 // it is used by the the ofono-setup script when creating new accounts
 #define SIM_DEFAULT_NAME C::gettext("SIM %1")
 
 DisplayNameSettings::DisplayNameSettings(QObject *parent) :
-    QObject(parent),
-    mSimNameSettings("com.ubuntu.phone")
+    QObject(parent)
 {
     connect(TelepathyHelper::instance(),
             SIGNAL(accountsChanged()),
             SLOT(onAccountsChanged()));
 
-    connect(&mSimNameSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
+    connect(GreeterContacts::instance(),
+            SIGNAL(phoneSettingsChanged(QString)),
+            SLOT(onSettingsChanged(QString)));
 
     // force update during startup
     onSettingsChanged(DUAL_SIM_NAMES_KEY);
@@ -50,7 +52,7 @@ DisplayNameSettings::DisplayNameSettings(QObject *parent) :
 void DisplayNameSettings::onSettingsChanged(const QString &key)
 {
     if (key == DUAL_SIM_NAMES_KEY) {
-        QVariantMap values = mSimNameSettings.get(DUAL_SIM_NAMES_KEY).value<QVariantMap>();
+        QVariantMap values = GreeterContacts::instance()->simNames();
         for(QVariantMap::const_iterator iter = values.begin(); iter != values.end(); ++iter) {
             mAccountNames[iter.key()] = iter.value().toString();
         }

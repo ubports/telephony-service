@@ -56,6 +56,7 @@ public:
     QString defaultSimForCalls();
     QString defaultSimForMessages();
     bool mmsGroupChatEnabled();
+    QVariantMap simNames();
 
     void setDefaultSimForCalls(const QString &objPath);
     void setDefaultSimForMessages(const QString &objPath);
@@ -109,6 +110,7 @@ private:
     QVariant mDefaultSimForCalls;
     QVariant mDefaultSimForMessages;
     QVariant mMmsGroupChatEnabled;
+    QVariant mSimNames;
     bool mGreeterActive;
 
     QtContacts::QContactFilter mFilter;
