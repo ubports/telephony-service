@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2015 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -32,11 +33,19 @@
 
 #define SMIL_TEXT_REGION "<region id=\"Text\" width=\"100%\" height=\"100%\" fit=\"scroll\" />"
 #define SMIL_IMAGE_REGION "<region id=\"Image\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
+#define SMIL_VIDEO_REGION "<region id=\"Video\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
+#define SMIL_AUDIO_REGION "<region id=\"Audio\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
 #define SMIL_TEXT_PART "<par dur=\"3s\">\
        <text src=\"cid:%1\" region=\"Text\" />\
      </par>"
 #define SMIL_IMAGE_PART "<par dur=\"5000ms\">\
        <img src=\"cid:%1\" region=\"Image\" />\
+     </par>"
+#define SMIL_VIDEO_PART "<par>\
+       <video src=\"cid:%1\" region=\"Video\" />\
+     </par>"
+#define SMIL_AUDIO_PART "<par>\
+       <audio src=\"cid:%1\" region=\"Audio\" />\
      </par>"
 
 #define SMIL_FILE "<smil>\
@@ -139,7 +148,7 @@ void TextHandler::startChat(const Tp::AccountPtr &account, const Tp::Contacts &c
     // start chatting to the contacts
     Q_FOREACH(Tp::ContactPtr contact, contacts) {
         // hold the ContactPtr to make sure its refcounting stays bigger than 0
-        mContacts[contact->id()] = contact;
+        mContacts[account->uniqueIdentifier()][contact->id()] = contact;
     }
 }
 
@@ -148,7 +157,7 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
     Tp::MessagePartList message;
     Tp::MessagePart header;
     QString smil, regions, parts;
-    bool hasImage = false, hasText = false, isMMS = false;
+    bool hasImage = false, hasText = false, hasVideo = false, hasAudio = false, isMMS = false;
 
     AccountEntry *account = TelepathyHelper::instance()->accountForId(pendingMessage.accountId);
     if (!account) {
@@ -207,6 +216,16 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
                     fileData = attachmentFile.readAll();
                 }
             }
+        } else if (attachment.contentType.startsWith("video/")) {
+            if (isMMS) {
+                hasVideo = true;
+                parts += QString(SMIL_VIDEO_PART).arg(attachment.id);
+            }
+        } else if (attachment.contentType.startsWith("audio/")) {
+            if (isMMS) {
+                hasAudio = true;
+                parts += QString(SMIL_AUDIO_PART).arg(attachment.id);
+            }
         } else if (attachment.contentType.startsWith("text/plain")) {
             if (isMMS) {
                 hasText = true;
@@ -228,6 +247,14 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
 
         if (temporaryFiles) {
             attachmentFile.remove();
+        }
+
+        if (hasVideo) {
+            regions += QString(SMIL_VIDEO_REGION);
+        }
+
+        if (hasAudio) {
+            regions += QString(SMIL_AUDIO_REGION);
         }
 
         if (hasText) {
@@ -274,28 +301,54 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
     return message;
 }
 
-void TextHandler::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
+QString TextHandler::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
         // account does not exist
-        return;
+        return QString();
     }
 
     // check if the message should be sent via multimedia account
-    if (account->type() == AccountEntry::PhoneAccount) {
-        // we just use fallback to 1-1 chats
-        if (recipients.size() == 1) {
-
-            Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
-                // TODO: we have to find the multimedia account that matches the same phone number, 
-                // but for now we just pick any multimedia connected account
-                if (newAccount->type() == AccountEntry::MultimediaAccount) {
-                    if (newAccount->connected()) {
-                        account = newAccount;
-                        break;
-                    }
+    // we just use fallback to 1-1 chats
+    if (account->type() == AccountEntry::PhoneAccount && recipients.size() == 1) {
+        Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
+            // TODO: we have to find the multimedia account that matches the same phone number, 
+            // but for now we just pick any multimedia connected account
+            if (newAccount->type() != AccountEntry::MultimediaAccount) {
+                continue;
+            }
+            // FIXME: the fallback implementation needs to be changed to use protocol info and create a map of
+            // accounts. Also, it needs to check connection capabilities to determine if we can send message
+            // to offline contacts.
+            bool shouldFallback = false;
+            // if the account is offline, dont fallback to this account
+            if (!newAccount->connected()) {
+                continue;
+            }
+            QList<Tp::TextChannelPtr> channels = existingChannels(recipients, newAccount->accountId());
+            // check if we have a channel for this contact already and get the contact pointer from there,
+            // this way we avoid doing the while(op->isFinished()) all the time
+            if (!channels.isEmpty()) {
+                // if the contact is known, force fallback to this account
+                Tp::Presence presence = channels.first()->targetContact()->presence();
+                shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
+                    presence.type() == Tp::ConnectionPresenceTypeOffline);
+            } else {
+                Tp::PendingOperation *op = newAccount->account()->connection()->contactManager()->contactsForIdentifiers(recipients);
+                while (!op->isFinished()) {
+                    qApp->processEvents();
                 }
+                Tp::PendingContacts *pc = qobject_cast<Tp::PendingContacts*>(op);
+                if (pc) {
+                    Tp::Presence presence = pc->contacts().first()->presence();
+                    shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
+                        presence.type() == Tp::ConnectionPresenceTypeOffline);
+                }
+            }
+            if (shouldFallback) {
+                account = newAccount;
+                break;
             }
         }
     }
@@ -304,21 +357,24 @@ void TextHandler::sendMessage(const QString &accountId, const QStringList &recip
     QStringList sortedRecipients = recipients;
     sortedRecipients.sort();
     PendingMessage pendingMessage = {account->accountId(), sortedRecipients, message, attachments, properties};
+
     if (!account->connected()) {
         mPendingMessages.append(pendingMessage);
-        return;
+        return account->accountId();
     }
 
     QList<Tp::TextChannelPtr> channels = existingChannels(recipients, account->accountId());
     if (channels.isEmpty()) {
         mPendingMessages.append(pendingMessage);
         startChat(sortedRecipients, account->accountId());
-        return;
+        return account->accountId();
     }
 
     connect(channels.last()->send(buildMessage(pendingMessage)),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onMessageSent(Tp::PendingOperation*)));
+
+    return account->accountId();
 }
 
 void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId)
@@ -351,12 +407,26 @@ void TextHandler::acknowledgeAllMessages(const QStringList &recipients, const QS
     }
 }
 
+void TextHandler::onTextChannelInvalidated()
+{
+    Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
+    mChannels.removeAll(textChannel);
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(textChannel->connection());
+    if (account) {
+       mContacts.remove(account->accountId());
+    }
+}
+
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
     if (!account) {
         return;
     }
+    connect(channel.data(),
+            SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
+            SLOT(onTextChannelInvalidated()));
+
     QString accountId = account->accountId();
     mChannels.append(channel);
 

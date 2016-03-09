@@ -210,9 +210,12 @@
                 A message was sent from the client.
             ]]></dox:d>
             <arg name="message" type="s"/>
+            <arg name="attachments" type="av"/>
             <arg name="properties" type="a{sv}"/>
-            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
-            <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantList"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantList"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QVariantMap"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out2" value="QVariantMap"/>
         </signal>
         <signal name="CallReceived">
             <dox:d><![CDATA[

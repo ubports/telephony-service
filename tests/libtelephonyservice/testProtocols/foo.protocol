@@ -2,3 +2,6 @@
 Name=foo
 Features=text,voice
 FallbackProtocol=bar
+BackgroundImage=/tmp/background.png
+Icon=/tmp/icon.png
+ServiceName=The Service
