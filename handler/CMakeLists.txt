@@ -14,7 +14,6 @@ include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${GSETTINGS_QT_INCLUDE_DIRS}
     )
 
 add_executable(telephony-service-handler ${handler_SRCS} ${handler_HDRS})
@@ -22,7 +21,6 @@ qt5_use_modules(telephony-service-handler Contacts Core DBus Qml)
 
 target_link_libraries(telephony-service-handler
     ${TP_QT5_LIBRARIES}
-    ${GSETTINGS_QT_LDFLAGS}
     telephonyservice
     )
 
