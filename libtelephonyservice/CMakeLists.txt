@@ -25,7 +25,6 @@ set(library_SRCS
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${NOTIFY_INCLUDE_DIRS}
-    ${GSETTINGS_QT_INCLUDE_DIRS}
     ${LibPhoneNumber_INCLUDE_DIRS}
     )
 
@@ -39,8 +38,7 @@ target_link_libraries(telephonyservice
                       ${TP_QT5_LIBRARIES}
                       ${UBUNTU_APP_LIB}
                       ${NOTIFY_LIBRARIES}
-                      ${LibPhoneNumber_LIBRARIES}
-                      ${GSETTINGS_QT_LDFLAGS})
+                      ${LibPhoneNumber_LIBRARIES})
 
 qt5_use_modules(telephonyservice Contacts Core DBus Feedback Multimedia Qml Quick)
 
