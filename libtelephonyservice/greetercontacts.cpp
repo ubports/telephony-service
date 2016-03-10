@@ -213,8 +213,17 @@ QString GreeterContacts::defaultSimForMessages()
 QVariantMap GreeterContacts::simNames()
 {
     QMutexLocker locker(&mMutex);
+    QVariantMap namesAsVariantMap;
     if (!mSimNames.isValid()) {
-        mSimNames = getUserValue("com.ubuntu.touch.AccountsService.Phone", "SimNames");
+        QVariant value = getUserValue("com.ubuntu.touch.AccountsService.Phone", "SimNames");
+        // the signature is a{ss} instead of a{sv}
+        QMap<QString, QString> names = qdbus_cast<QMap<QString, QString> >(value);
+        QMapIterator<QString, QString> i(names);
+        while (i.hasNext()) {
+            i.next();
+            namesAsVariantMap[i.key()] = i.value();
+        }
+        mSimNames = namesAsVariantMap;
     }
     return mSimNames.toMap();
 }
@@ -249,7 +258,7 @@ void GreeterContacts::setMmsGroupChatEnabled(bool enabled)
                          "/org/freedesktop/Accounts/User" + uid,
                          "org.freedesktop.DBus.Properties",
                          QDBusConnection::AS_BUSNAME());
-    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "MmsGroupChatEnabled", enabled);
+    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "MmsGroupChatEnabled", QVariant::fromValue(QDBusVariant(enabled)));
 }
 
 void GreeterContacts::setDefaultSimForMessages(const QString &objPath)
@@ -259,7 +268,7 @@ void GreeterContacts::setDefaultSimForMessages(const QString &objPath)
                          "/org/freedesktop/Accounts/User" + uid,
                          "org.freedesktop.DBus.Properties",
                          QDBusConnection::AS_BUSNAME());
-    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "DefaultSimForMessages", objPath);
+    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "DefaultSimForMessages", QVariant::fromValue(QDBusVariant(objPath)));
 }
 
 void GreeterContacts::setDefaultSimForCalls(const QString &objPath)
@@ -269,7 +278,7 @@ void GreeterContacts::setDefaultSimForCalls(const QString &objPath)
                          "/org/freedesktop/Accounts/User" + uid,
                          "org.freedesktop.DBus.Properties",
                          QDBusConnection::AS_BUSNAME());
-    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "DefaultSimForCalls", objPath);
+    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "DefaultSimForCalls", QVariant::fromValue(QDBusVariant(objPath)));
 }
 
 QVariant GreeterContacts::getUserValue(const QString &interface, const QString &propName)
@@ -409,6 +418,7 @@ void GreeterContacts::updateActiveUser(const QString &username)
         mMmsGroupChatEnabled = QVariant();
         mDefaultSimForCalls = QVariant();
         mDefaultSimForMessages = QVariant();
+        mSimNames = QVariant();
         signalIfNeeded();
     }
 }
