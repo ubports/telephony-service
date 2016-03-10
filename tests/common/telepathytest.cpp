@@ -24,7 +24,7 @@
 #include "telepathyhelper.h"
 #include "accountentry.h"
 
-TelepathyTest::TelepathyTest() : mPhoneSettings("com.ubuntu.phone")
+TelepathyTest::TelepathyTest()
 {
 
 }

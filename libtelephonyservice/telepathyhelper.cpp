@@ -30,8 +30,6 @@
 #include "greetercontacts.h"
 #include "protocolmanager.h"
 
-#include "qgsettings.h"
-
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ChannelClassSpec>
 #include <TelepathyQt/ClientRegistrar>
