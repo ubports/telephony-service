@@ -15,16 +15,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2016-02-13 05:37+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-03-15 06:08+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 
-#: indicator/messagingmenu.cpp:297
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1件の不在着信"
 
-#: indicator/messagingmenu.cpp:396
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -54,7 +54,7 @@ msgstr "本日、<b>%1</b>件のメッセージ送信"
 msgid "Accept"
 msgstr "応答"
 
-#: indicator/messagingmenu.cpp:234
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr ""
 
@@ -95,11 +95,11 @@ msgstr ""
 msgid "Hold + Answer"
 msgstr "保留して応答"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr "電話をとれませんでした。今からかけてもらっていいですか？"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "20分ぐらい遅れます。"
 
@@ -107,7 +107,7 @@ msgstr "20分ぐらい遅れます。"
 msgid "I'm busy at the moment. I'll call later."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "今忙しいので、あとで電話します。"
 
@@ -115,7 +115,7 @@ msgstr "今忙しいので、あとで電話します。"
 msgid "I'm running late, on my way now."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "遅れています。今向かっているところです。"
 
@@ -123,7 +123,7 @@ msgstr "遅れています。今向かっているところです。"
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:553
+#: indicator/textchannelobserver.cpp:560
 #, qt-format
 msgid "Message from %1"
 msgstr "%1からのメッセージ"
@@ -156,7 +156,7 @@ msgstr "電話"
 msgid "Please call me back later."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:687
+#: indicator/textchannelobserver.cpp:697
 msgid "Please, select a SIM card:"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgstr ""
 msgid "Private Number"
 msgstr "内線番号"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:302
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "内線番号"
 
@@ -185,11 +185,11 @@ msgstr "SMS"
 msgid "Save"
 msgstr "保存"
 
-#: indicator/messagingmenu.cpp:176 indicator/messagingmenu.cpp:249
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "すみません、まだ忙しいので、あとからかけなおします。"
 
@@ -226,8 +226,8 @@ msgstr "非通知番号"
 msgid "Unknown caller"
 msgstr "不明な発信者"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:142
-#: indicator/messagingmenu.cpp:306 indicator/textchannelobserver.cpp:480
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
 msgid "Unknown number"
 msgstr "不明な番号"
 
@@ -235,14 +235,14 @@ msgstr "不明な番号"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:517
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
 msgid "View message"
 msgstr "メッセージを表示する"
 
-#: indicator/messagingmenu.cpp:401
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr "ボイスメール"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "ボイスメールメッセージ"

@@ -16,11 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2016-02-13 05:37+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-03-15 06:08+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 "Language: gd\n"
 
-#: indicator/messagingmenu.cpp:297
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -29,7 +29,7 @@ msgstr[1] "Chaill thu %1 ghairm"
 msgstr[2] "Chaill thu %1 gairmean"
 msgstr[3] "Chaill thu %1 gairm"
 
-#: indicator/messagingmenu.cpp:396
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -62,7 +62,7 @@ msgstr "Chaidh <b>%1</b> teachdaireachdan a chur an-diugh"
 msgid "Accept"
 msgstr "Freagair"
 
-#: indicator/messagingmenu.cpp:234
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "Fònaig air ais"
 
@@ -105,11 +105,11 @@ msgstr "Crìochnaich + Freagair"
 msgid "Hold + Answer"
 msgstr "Cum ⁊ freagair"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr "Chaill mi do ghairm - an cuir thu fòn air ais thugam an-dràsta?"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "Bidh mi fadalach 20 mionaidean"
 
@@ -117,7 +117,7 @@ msgstr "Bidh mi fadalach 20 mionaidean"
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Tha mi trang an-dràsta fhèin. Bruidhnidh mi riut an ceann greis."
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Tha mi trang an-dràsta fhèin. Cuiridh mi fòn air ais thugad."
 
@@ -125,7 +125,7 @@ msgstr "Tha mi trang an-dràsta fhèin. Cuiridh mi fòn air ais thugad."
 msgid "I'm running late, on my way now."
 msgstr "Tha mi fadalach ach air an t-slighe a-nis."
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "Tha mi fadalach ach air an t-slighe."
 
@@ -133,7 +133,7 @@ msgstr "Tha mi fadalach ach air an t-slighe."
 msgid "Message & decline"
 msgstr "Teachdaireachd ⁊ diùlt"
 
-#: indicator/textchannelobserver.cpp:553
+#: indicator/textchannelobserver.cpp:560
 #, qt-format
 msgid "Message from %1"
 msgstr "Teachdaireachd o %1"
@@ -166,7 +166,7 @@ msgstr "Gairmean fòn"
 msgid "Please call me back later."
 msgstr "Saoil an cuir thu fòn air ais thugam an ceann greis?"
 
-#: indicator/textchannelobserver.cpp:687
+#: indicator/textchannelobserver.cpp:697
 msgid "Please, select a SIM card:"
 msgstr "Tagh cairt SIM:"
 
@@ -174,7 +174,7 @@ msgstr "Tagh cairt SIM:"
 msgid "Private Number"
 msgstr "Àireamh phrìobhaideach"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:302
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "Àireamh phrìobhaideach"
 
@@ -195,11 +195,11 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Sàbhail"
 
-#: indicator/messagingmenu.cpp:176 indicator/messagingmenu.cpp:249
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr "Cuir"
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr ""
 "Tha mi duilich, tha mi trang fhathast. Cuiridh mi fòn air ais thugad as a "
@@ -238,8 +238,8 @@ msgstr "Àireamh nach aithne dhuinn"
 msgid "Unknown caller"
 msgstr "Chan eil fhios cò tha fònadh"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:142
-#: indicator/messagingmenu.cpp:306 indicator/textchannelobserver.cpp:480
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
 msgid "Unknown number"
 msgstr "Àireamh nach aithne dhuinn"
 
@@ -249,14 +249,14 @@ msgstr ""
 "Thoir a' ghlas far na cairt SIM agad is feuch ris a-rithist o aplacaid nan "
 "teachdaireachdan."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:517
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
 msgid "View message"
 msgstr "Seall an teachdaireachd"
 
-#: indicator/messagingmenu.cpp:401
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr "Post-gutha"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "Teachdaireachdan gutha"

@@ -15,16 +15,16 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2016-02-13 05:37+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-03-15 06:08+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 
-#: indicator/messagingmenu.cpp:297
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "ខកខាន​ទទួល %1"
 
-#: indicator/messagingmenu.cpp:396
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -54,7 +54,7 @@ msgstr "ថ្ងៃនេះ​បាន​ផ្ញើ​សារ <b>%1</b>"
 msgid "Accept"
 msgstr "ព្រម​ទទួល"
 
-#: indicator/messagingmenu.cpp:234
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr ""
 
@@ -95,12 +95,12 @@ msgstr ""
 msgid "Hold + Answer"
 msgstr "ចុច​ជាប់ + ឆ្លើយ"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr ""
 "ខ្ញុំមិន​បាន​ទទួលការ​ហៅ​របស់​អ្នក- តើ​អ្នក​អាច​ហៅ​មក​ខ្ញុំ​ឥឡូវ​បាន​ទេ?"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "ខ្ញុំ​នឹង​យឺត ២០នាទី។"
 
@@ -108,7 +108,7 @@ msgstr "ខ្ញុំ​នឹង​យឺត ២០នាទី។"
 msgid "I'm busy at the moment. I'll call later."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "ខ្ញុំ​រវល់​ណាស់​ពេល​នេះ។ ខ្ញុំ​នឹង​ហៅ​អ្នក​ពេល​ក្រោយ។"
 
@@ -116,7 +116,7 @@ msgstr "ខ្ញុំ​រវល់​ណាស់​ពេល​នេះ។
 msgid "I'm running late, on my way now."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "ខ្ញុំ​យឺត​ហើយ។ ខ្ញុំ​នៅ​តាម​ផ្លូវ។"
 
@@ -124,7 +124,7 @@ msgstr "ខ្ញុំ​យឺត​ហើយ។ ខ្ញុំ​នៅ​�
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:553
+#: indicator/textchannelobserver.cpp:560
 #, qt-format
 msgid "Message from %1"
 msgstr "សារ​ពី %1"
@@ -157,7 +157,7 @@ msgstr "ការ​ហៅ​ទូរស័ព្ទ"
 msgid "Please call me back later."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:687
+#: indicator/textchannelobserver.cpp:697
 msgid "Please, select a SIM card:"
 msgstr "សូមជ្រើសស៊ី​ម​កាត ៖"
 
@@ -165,7 +165,7 @@ msgstr "សូមជ្រើសស៊ី​ម​កាត ៖"
 msgid "Private Number"
 msgstr "លេខ​ឯកជន"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:302
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "លេខ​ឯកជន"
 
@@ -186,11 +186,11 @@ msgstr "សារ SMS"
 msgid "Save"
 msgstr "រក្សា​ទុក"
 
-#: indicator/messagingmenu.cpp:176 indicator/messagingmenu.cpp:249
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "សូម​ទោស ខ្ញុំ​កំពុង​រវល់។ ខ្ញុំ​នឹង​ហៅ​ទៅ​អ្នក​ពេល​ក្រោយ។"
 
@@ -227,8 +227,8 @@ msgstr "មិន​ស្គាល់​លេខ"
 msgid "Unknown caller"
 msgstr "មិន​ស្គាល់​អ្នក​ហៅ"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:142
-#: indicator/messagingmenu.cpp:306 indicator/textchannelobserver.cpp:480
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
 msgid "Unknown number"
 msgstr "មិន​ស្គាល់​លេខ"
 
@@ -236,14 +236,14 @@ msgstr "មិន​ស្គាល់​លេខ"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:517
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
 msgid "View message"
 msgstr "មើល​សារ"
 
-#: indicator/messagingmenu.cpp:401
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "សារ​ជា​សំឡេង"

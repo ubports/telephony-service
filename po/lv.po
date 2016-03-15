@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2016-02-13 05:37+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-03-15 06:08+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 "Language: lv\n"
 
-#: indicator/messagingmenu.cpp:297
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -28,7 +28,7 @@ msgstr[0] "%1 neatbildēts zvans"
 msgstr[1] "%1 neatbildēti zvanu"
 msgstr[2] "%1 neatbildētu zvanu"
 
-#: indicator/messagingmenu.cpp:396
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -60,7 +60,7 @@ msgstr "Šodien nosūtītas <b>%1</b> īsziņas"
 msgid "Accept"
 msgstr "Piekrist"
 
-#: indicator/messagingmenu.cpp:234
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "Atzvans"
 
@@ -102,11 +102,11 @@ msgstr "Beigt + atbildēt"
 msgid "Hold + Answer"
 msgstr "Aizturēt + atbildēt"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr "Es palaidu garām tavu zvanu - vai vari man piezvanīt tagad?"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "Es nokavēšu 20 minūtes."
 
@@ -114,7 +114,7 @@ msgstr "Es nokavēšu 20 minūtes."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Pašlaik esmu aizņemts. Piezvanīšu vēlāk."
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Pašlaik esmu aizņemts. Piezvanīšu jums vēlāk."
 
@@ -122,7 +122,7 @@ msgstr "Pašlaik esmu aizņemts. Piezvanīšu jums vēlāk."
 msgid "I'm running late, on my way now."
 msgstr "Esmu aizkavējies, jau esmu ceļā."
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "Es esmu aizkavējies. Es tūlīt būšu."
 
@@ -130,7 +130,7 @@ msgstr "Es esmu aizkavējies. Es tūlīt būšu."
 msgid "Message & decline"
 msgstr "Sūtīt īsziņu un noraidīt"
 
-#: indicator/textchannelobserver.cpp:553
+#: indicator/textchannelobserver.cpp:560
 #, qt-format
 msgid "Message from %1"
 msgstr "Īsziņa no %1"
@@ -163,7 +163,7 @@ msgstr "Tālruņa zvani"
 msgid "Please call me back later."
 msgstr "Lūdzu, atzvaniet man vēlāk."
 
-#: indicator/textchannelobserver.cpp:687
+#: indicator/textchannelobserver.cpp:697
 msgid "Please, select a SIM card:"
 msgstr "Lūdzu, ievietojiet SIM karti:"
 
@@ -171,7 +171,7 @@ msgstr "Lūdzu, ievietojiet SIM karti:"
 msgid "Private Number"
 msgstr "Privāts numurs"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:302
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "Privāts numurs"
 
@@ -192,11 +192,11 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Saglabāt"
 
-#: indicator/messagingmenu.cpp:176 indicator/messagingmenu.cpp:249
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr "Sūtīt"
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Piedod, es vēl esmu aizņemts. Es tev piezvanīšu vēlāk."
 
@@ -233,8 +233,8 @@ msgstr "Nezināms numurs"
 msgid "Unknown caller"
 msgstr "Nezināms zvanītājs"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:142
-#: indicator/messagingmenu.cpp:306 indicator/textchannelobserver.cpp:480
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
 msgid "Unknown number"
 msgstr "Nezināms numurs"
 
@@ -242,14 +242,14 @@ msgstr "Nezināms numurs"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Atbloķējiet savu SIM karti un mēģiniet vēlreiz no īsziņu lietotnes."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:517
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
 msgid "View message"
 msgstr "Skatīt īsziņu"
 
-#: indicator/messagingmenu.cpp:401
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr "Balss pasts"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "Balss pasta ziņojumi"
