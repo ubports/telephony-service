@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # this script is used to migrate existing settings from gsettings to accounts service
 
 import dbus
