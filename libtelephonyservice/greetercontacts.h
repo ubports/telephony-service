@@ -61,6 +61,7 @@ public:
     void setDefaultSimForCalls(const QString &objPath);
     void setDefaultSimForMessages(const QString &objPath);
     void setMmsGroupChatEnabled(bool enabled);
+    void setSimNames(const QVariantMap &simNames);
 
     static bool isGreeterMode();
 

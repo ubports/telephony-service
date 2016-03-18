@@ -28,6 +28,7 @@
 #include <QContactName>
 #include <QContactPhoneNumber>
 #include <QDBusInterface>
+#include <QDBusMetaType>
 #include <QDBusPendingCall>
 #include <QDBusPendingReply>
 #include <QDBusReply>
@@ -51,6 +52,7 @@ GreeterContacts::GreeterContacts(QObject *parent)
   mFilter(QContactInvalidFilter()),
   mContacts()
 {
+    qDBusRegisterMetaType<QMap<QString, QString> >();
     // Watch for changes
     QDBusConnection connection = QDBusConnection::AS_BUSNAME();
     connection.connect("org.freedesktop.Accounts",
@@ -279,6 +281,24 @@ void GreeterContacts::setDefaultSimForCalls(const QString &objPath)
                          "org.freedesktop.DBus.Properties",
                          QDBusConnection::AS_BUSNAME());
     iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "DefaultSimForCalls", QVariant::fromValue(QDBusVariant(objPath)));
+}
+
+void GreeterContacts::setSimNames(const QVariantMap &simNames)
+{
+    QMap<QString, QString> newSimNames;
+
+    QMapIterator<QString, QVariant> i(simNames);
+    while (i.hasNext()) {
+        i.next();
+        newSimNames[i.key()] = i.value().toString();
+    }
+
+    QString uid = QString::number(getuid());
+    QDBusInterface iface("org.freedesktop.Accounts",
+                         "/org/freedesktop/Accounts/User" + uid,
+                         "org.freedesktop.DBus.Properties",
+                         QDBusConnection::AS_BUSNAME());
+    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "SimNames", QVariant::fromValue(QDBusVariant(QVariant::fromValue(newSimNames))));
 }
 
 QVariant GreeterContacts::getUserValue(const QString &interface, const QString &propName)
