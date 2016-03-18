@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -44,6 +44,24 @@ DisplayNameSettings::DisplayNameSettings(QObject *parent) :
     connect(GreeterContacts::instance(),
             SIGNAL(phoneSettingsChanged(QString)),
             SLOT(onSettingsChanged(QString)));
+
+    QVariantMap newSimNames;
+    QVariantMap values = GreeterContacts::instance()->simNames();
+    // if there are no sim names at this point, we have to fallback to the default names.
+    // it means the migration script did not find anything on gsettings to be migrated,
+    // so this is likely to be a first fresh boot
+    if (values.isEmpty()) {
+        int index = 1;
+        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->phoneAccounts()) {
+            QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
+            QString newSimName = QString(SIM_DEFAULT_NAME).arg(index++);
+            account->setDisplayName(newSimName);
+            newSimNames[modemObjName] = newSimName;
+        }
+        if (!newSimNames.isEmpty()) {
+            GreeterContacts::instance()->setSimNames(newSimNames);
+        }
+    }
 
     // force update during startup
     onSettingsChanged(DUAL_SIM_NAMES_KEY);

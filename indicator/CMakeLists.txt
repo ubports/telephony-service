@@ -2,6 +2,7 @@
 set(qt_SRCS
     authhandler.cpp
     callchannelobserver.cpp
+    displaynamesettings.cpp
     messagingmenu.cpp
     metrics.cpp
     textchannelobserver.cpp
