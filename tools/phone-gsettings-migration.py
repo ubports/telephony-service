@@ -3,11 +3,12 @@
 
 import dbus
 import sys
+import os
 from gi.repository import Gio
 
 dict = {}
 
-proxy = dbus.SystemBus().get_object('org.freedesktop.Accounts','/org/freedesktop/Accounts/User32011')
+proxy = dbus.SystemBus().get_object('org.freedesktop.Accounts','/org/freedesktop/Accounts/User%d' % os.getuid())
 properties_manager = dbus.Interface(proxy, 'org.freedesktop.DBus.Properties')
 currentSimNames = properties_manager.Get('com.ubuntu.touch.AccountsService.Phone', 'SimNames')
 
