@@ -1,3 +1,10 @@
+telephony-service (0.1+16.04.20160321.2-0ubuntu1) xenial; urgency=medium
+
+  [ Jim Hodapp ]
+  * Make sure the sound preview uses the correct audioRole API.
+
+ -- Timo Jyrinki <timo.jyrinki@canonical.com>  Mon, 21 Mar 2016 20:11:11 +0000
+
 telephony-service (0.1+16.04.20160307-0ubuntu1) xenial; urgency=medium
 
   * Compare target id to check if this is a channel to the self contact.
