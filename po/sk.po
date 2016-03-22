@@ -8,18 +8,18 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2015-01-16 15:24-0200\n"
-"PO-Revision-Date: 2016-03-04 09:59+0000\n"
+"PO-Revision-Date: 2016-03-14 09:55+0000\n"
 "Last-Translator: P_E_T_O <Unknown>\n"
 "Language-Team: Slovak <sk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Launchpad-Export-Date: 2016-03-05 06:18+0000\n"
-"X-Generator: Launchpad (build 17936)\n"
+"X-Launchpad-Export-Date: 2016-03-15 06:08+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 "Language: sk\n"
 
-#: indicator/messagingmenu.cpp:297
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -27,7 +27,7 @@ msgstr[0] "%1 zmeškaných hovorov"
 msgstr[1] "%1 zmeškaný hovor"
 msgstr[2] "%1 zmeškané hovory"
 
-#: indicator/messagingmenu.cpp:396
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -38,28 +38,28 @@ msgstr[2] "%1 hlasové správy"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr ""
+msgstr "Počet dnešných hovorov: <b>%1</b>"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr ""
+msgstr "Počet dnešných prijatých hovorov: <b>%1</b>"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr ""
+msgstr "Počet dnešných prijatých správ: <b>%1</b>"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr ""
+msgstr "Počet dnešných odoslaných správ: <b>%1</b>"
 
 #: approver/approver.cpp:518
 msgid "Accept"
 msgstr "Prijať"
 
-#: indicator/messagingmenu.cpp:234
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "Zavolať naspäť"
 
@@ -100,11 +100,11 @@ msgstr "Ukončiť + Odpovedať"
 msgid "Hold + Answer"
 msgstr "Podržať + Odpovedať"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr "Zmeškal som Váš hovor - môžete mi zavolať?"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "Budem meškať 20 minút."
 
@@ -112,7 +112,7 @@ msgstr "Budem meškať 20 minút."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Som zaneprázdnený. Zavolám neskôr."
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Som zaneprázdnený. Zavolám neskôr."
 
@@ -120,7 +120,7 @@ msgstr "Som zaneprázdnený. Zavolám neskôr."
 msgid "I'm running late, on my way now."
 msgstr "Budem meškať, som na ceste."
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "Budem meškať. Som na ceste."
 
@@ -128,7 +128,7 @@ msgstr "Budem meškať. Som na ceste."
 msgid "Message & decline"
 msgstr "Odmietnuť so správou"
 
-#: indicator/textchannelobserver.cpp:553
+#: indicator/textchannelobserver.cpp:560
 #, qt-format
 msgid "Message from %1"
 msgstr "Správa od %1"
@@ -161,7 +161,7 @@ msgstr "Hovory"
 msgid "Please call me back later."
 msgstr "Prosím, zavolajte neskôr."
 
-#: indicator/textchannelobserver.cpp:687
+#: indicator/textchannelobserver.cpp:697
 msgid "Please, select a SIM card:"
 msgstr "Prosím, vyberte SIM kartu:"
 
@@ -169,7 +169,7 @@ msgstr "Prosím, vyberte SIM kartu:"
 msgid "Private Number"
 msgstr "Súkromné číslo"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:302
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "Súkromné číslo"
 
@@ -190,18 +190,18 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Uložiť"
 
-#: indicator/messagingmenu.cpp:176 indicator/messagingmenu.cpp:249
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr "Poslať"
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Prepáčte, som stále zaneprázdnený. Zavolám neskôr."
 
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr ""
+msgstr "Dnes strávených minút v hovore: <b>%1</b>"
 
 #: indicator/messagingmenu.cpp:56 indicator/messagingmenu.cpp:60
 msgid "Telephony Service"
@@ -231,8 +231,8 @@ msgstr "Neznáme číslo"
 msgid "Unknown caller"
 msgstr "Neznámy volajúci"
 
-#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:480
-#: indicator/messagingmenu.cpp:142 indicator/messagingmenu.cpp:306
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
 msgid "Unknown number"
 msgstr "Neznáme číslo"
 
@@ -240,14 +240,14 @@ msgstr "Neznáme číslo"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Odomknite SIM kartu a skúste to znova z aplikácie Správy."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:517
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
 msgid "View message"
 msgstr "Zobraziť správu"
 
-#: indicator/messagingmenu.cpp:401
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr "Hlasová schránka"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "Správy hlasovej schránky"

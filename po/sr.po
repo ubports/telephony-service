@@ -16,10 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2016-03-05 06:18+0000\n"
-"X-Generator: Launchpad (build 17936)\n"
+"X-Launchpad-Export-Date: 2016-03-15 06:08+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 
-#: indicator/messagingmenu.cpp:297
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -27,7 +27,7 @@ msgstr[0] "%1 пропуштен позив"
 msgstr[1] "%1 пропуштена позива"
 msgstr[2] "%1 пропуштених позива"
 
-#: indicator/messagingmenu.cpp:396
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -59,7 +59,7 @@ msgstr "Данас је послато <b>%1</b> текстуалних пору
 msgid "Accept"
 msgstr "Прихвати"
 
-#: indicator/messagingmenu.cpp:234
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "Узврати позив"
 
@@ -100,11 +100,11 @@ msgstr "Заврши и Одговори"
 msgid "Hold + Answer"
 msgstr "Задржи и одговори"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr "Пропустио сам твој позив — можеш ли ме сада позвати?"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "Касним 20 минута."
 
@@ -112,7 +112,7 @@ msgstr "Касним 20 минута."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Тренутно сам заузет. Назваћу касније."
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Тренутно сам заузет. Назваћу вас касније."
 
@@ -120,7 +120,7 @@ msgstr "Тренутно сам заузет. Назваћу вас касниј
 msgid "I'm running late, on my way now."
 msgstr "Касним, на путу сам."
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "Касним. На путу сам."
 
@@ -128,7 +128,7 @@ msgstr "Касним. На путу сам."
 msgid "Message & decline"
 msgstr "Поручи и одбиј"
 
-#: indicator/textchannelobserver.cpp:553
+#: indicator/textchannelobserver.cpp:560
 #, qt-format
 msgid "Message from %1"
 msgstr "Поруку шаље %1"
@@ -161,7 +161,7 @@ msgstr "Телефонски позиви"
 msgid "Please call me back later."
 msgstr "Назовите ме касније."
 
-#: indicator/textchannelobserver.cpp:687
+#: indicator/textchannelobserver.cpp:697
 msgid "Please, select a SIM card:"
 msgstr "Изаберите СИМ картицу:"
 
@@ -169,7 +169,7 @@ msgstr "Изаберите СИМ картицу:"
 msgid "Private Number"
 msgstr "Скривени број"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:302
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "Скривени број"
 
@@ -190,11 +190,11 @@ msgstr "СМС"
 msgid "Save"
 msgstr "Сачувај"
 
-#: indicator/messagingmenu.cpp:176 indicator/messagingmenu.cpp:249
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr "Пошаљи"
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Извините, и даље сам заузет. Назваћу вас касније."
 
@@ -231,8 +231,8 @@ msgstr "Непознат број"
 msgid "Unknown caller"
 msgstr "Непознат позивалац"
 
-#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:480
-#: indicator/messagingmenu.cpp:142 indicator/messagingmenu.cpp:306
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
 msgid "Unknown number"
 msgstr "Непознат број"
 
@@ -240,14 +240,14 @@ msgstr "Непознат број"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Откључајте сим картицу и покушајте поново из програма за поруке."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:517
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
 msgid "View message"
 msgstr "Погледај поруку"
 
-#: indicator/messagingmenu.cpp:401
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr "Говорна пошта"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "Поруке говорне поште"

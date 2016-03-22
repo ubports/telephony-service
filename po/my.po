@@ -15,17 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2016-02-13 05:37+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-03-15 06:08+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 "Language: my\n"
 
-#: indicator/messagingmenu.cpp:297
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 လွတ်သွားသောခေါ်ဆိုမှု့"
 
-#: indicator/messagingmenu.cpp:396
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -55,7 +55,7 @@ msgstr ""
 msgid "Accept"
 msgstr "လက်ခံ"
 
-#: indicator/messagingmenu.cpp:234
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr ""
 
@@ -96,11 +96,11 @@ msgstr ""
 msgid "Hold + Answer"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr "ကျွန်ုပ်သင်၏ခေါ်ဆိုမှု့ကိုမကိုင်မိပါ။ အခုပြန်လည်ခေါ်ဆိုနိုင်သလား။"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "ကျွန်ုပ် မိနစ် ၂၀ နောက်ကျမည်"
 
@@ -108,7 +108,7 @@ msgstr "ကျွန်ုပ် မိနစ် ၂၀ နောက်ကျမ
 msgid "I'm busy at the moment. I'll call later."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "ကျွန်ုပ်ယခုအလုပ်များနေသည်။နောက်မှ ပြန်လည်ခေါ်ဆိုလိုက်မည်"
 
@@ -116,7 +116,7 @@ msgstr "ကျွန်ုပ်ယခုအလုပ်များနေသည
 msgid "I'm running late, on my way now."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "ကျွန်ုပ်သွားတာနောက်ကျနေပြီ။လမ်းတွင်ရောက်နေပြီ။"
 
@@ -124,7 +124,7 @@ msgstr "ကျွန်ုပ်သွားတာနောက်ကျနေပ
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:553
+#: indicator/textchannelobserver.cpp:560
 #, qt-format
 msgid "Message from %1"
 msgstr ""
@@ -157,7 +157,7 @@ msgstr "ဖုန်းခေါ်ဆိုမည်"
 msgid "Please call me back later."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:687
+#: indicator/textchannelobserver.cpp:697
 msgid "Please, select a SIM card:"
 msgstr ""
 
@@ -165,7 +165,7 @@ msgstr ""
 msgid "Private Number"
 msgstr ""
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:302
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr ""
 
@@ -186,11 +186,11 @@ msgstr "စာတိုပို့စနစ်"
 msgid "Save"
 msgstr "သိမ်းမည်"
 
-#: indicator/messagingmenu.cpp:176 indicator/messagingmenu.cpp:249
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "ဆောရီး၊ အလုပ်များနေသေးသည်။ နောက်မှပြန်ခေါ်လိုက်မည်"
 
@@ -227,8 +227,8 @@ msgstr ""
 msgid "Unknown caller"
 msgstr "မသိသောခေါ်ဆိုသူ"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:142
-#: indicator/messagingmenu.cpp:306 indicator/textchannelobserver.cpp:480
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
 msgid "Unknown number"
 msgstr ""
 
@@ -236,14 +236,14 @@ msgstr ""
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:517
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
 msgid "View message"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:401
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "အသံနှင့်စာများ"

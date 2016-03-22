@@ -42,6 +42,7 @@ private Q_SLOTS:
     void testConferenceCall();
     void testSendMessage();
     void testSendMessageWithAttachments();
+    void testSendMessageOwnNumber();
     void testAcknowledgeMessage();
     void testAcknowledgeAllMessages();
     void testActiveCallIndicator();
@@ -324,6 +325,27 @@ void HandlerTest::testSendMessageWithAttachments()
     QVariantMap firstAttachment = qdbus_cast<QVariantMap>(messageAttachments.first());
     QCOMPARE(firstAttachment["content-type"].toString(), QString("audio/ogg"));
     QCOMPARE(firstAttachment["identifier"].toString(), QString("id"));
+}
+
+void HandlerTest::testSendMessageOwnNumber()
+{
+    QString recipient("84376666");
+    QString message("Hello, world!");
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+
+    // first send a message to our own number
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << mTpAccount->connection()->selfContact()->id(), message);
+    TRY_COMPARE(messageSentSpy.count(), 1);
+    QVariantMap messageProperties = messageSentSpy.first()[2].value<QVariantMap>();
+    QCOMPARE(messageProperties["Recipients"].toStringList().first(), mTpAccount->connection()->selfContact()->id());
+
+    messageSentSpy.clear();
+
+    // then send to another number and check if old channels are not reused
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+    TRY_COMPARE(messageSentSpy.count(), 1);
+    messageProperties = messageSentSpy.first()[2].value<QVariantMap>();
+    QCOMPARE(messageProperties["Recipients"].toStringList().first(), recipient);
 }
 
 void HandlerTest::testAcknowledgeMessage()

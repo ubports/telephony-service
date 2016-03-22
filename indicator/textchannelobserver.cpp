@@ -341,6 +341,13 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
 void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
 {
     Tp::ContactPtr contact = message.sender();
+
+    QByteArray token(message.messageToken().toUtf8());
+    if (!mUnreadMessages.contains(token)) {
+        Ringtone::instance()->playIncomingMessageSound();
+        return;
+    }
+
     if (GreeterContacts::isGreeterMode()) { // we're in the greeter's session
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
         // in greeter mode we show the notification right away as the contact data might not be received
@@ -629,8 +636,11 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
         return;
     }
 
+    // we do not notify messages sent by ourselves on other devices, unless we
+    // are dealing with phone accounts: #1547462
     if (!account->account()->connection().isNull() && 
-            message.sender()->handle().at(0) == account->account()->connection()->selfHandle()) {
+            message.sender()->handle().at(0) == account->account()->connection()->selfHandle() &&
+            account->type() != AccountEntry::PhoneAccount) {
         return;
     }
     

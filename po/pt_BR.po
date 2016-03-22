@@ -15,18 +15,18 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2016-02-13 05:37+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-03-15 06:08+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 "Language: pt_BR\n"
 
-#: indicator/messagingmenu.cpp:297
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 chamada perdida"
 msgstr[1] "%1 chamadas perdidas"
 
-#: indicator/messagingmenu.cpp:396
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -57,7 +57,7 @@ msgstr "<b>%1</b> mensagens enviadas hoje"
 msgid "Accept"
 msgstr "Aceitar"
 
-#: indicator/messagingmenu.cpp:234
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "Ligar de volta"
 
@@ -99,11 +99,11 @@ msgstr "Responder e finalizar"
 msgid "Hold + Answer"
 msgstr "Segurar + Responder"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr "Eu perdi sua ligação - você pode me ligar agora?"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "Vou chegar 20 minutos atrasado."
 
@@ -111,7 +111,7 @@ msgstr "Vou chegar 20 minutos atrasado."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Eu estou ocupado no momento. Vou ligar mais tarde."
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Estou ocupado no momento. Te ligo mais tarde."
 
@@ -119,7 +119,7 @@ msgstr "Estou ocupado no momento. Te ligo mais tarde."
 msgid "I'm running late, on my way now."
 msgstr "Estou atrasado, a caminho agora."
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "Eu estou atrasado. Eu estou a caminho."
 
@@ -127,7 +127,7 @@ msgstr "Eu estou atrasado. Eu estou a caminho."
 msgid "Message & decline"
 msgstr "Mensagem & Recusar"
 
-#: indicator/textchannelobserver.cpp:553
+#: indicator/textchannelobserver.cpp:560
 #, qt-format
 msgid "Message from %1"
 msgstr "Mensagem de %1"
@@ -160,7 +160,7 @@ msgstr "Chamadas telefônicas"
 msgid "Please call me back later."
 msgstr "Por favor, me ligue de volta mais tarde."
 
-#: indicator/textchannelobserver.cpp:687
+#: indicator/textchannelobserver.cpp:697
 msgid "Please, select a SIM card:"
 msgstr "Por favor, selecione um cartão SIM:"
 
@@ -168,7 +168,7 @@ msgstr "Por favor, selecione um cartão SIM:"
 msgid "Private Number"
 msgstr "Número privado"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:302
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "Número privado"
 
@@ -189,11 +189,11 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Salvar"
 
-#: indicator/messagingmenu.cpp:176 indicator/messagingmenu.cpp:249
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr "Enviar"
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Desculpe, ainda estou ocupado. Te ligo mais tarde."
 
@@ -230,8 +230,8 @@ msgstr "Número desconhecido"
 msgid "Unknown caller"
 msgstr "Contato desconhecido"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:142
-#: indicator/messagingmenu.cpp:306 indicator/textchannelobserver.cpp:480
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
 msgid "Unknown number"
 msgstr "Número desconhecido"
 
@@ -241,14 +241,14 @@ msgstr ""
 "Desbloquear o cartão SIM e tentar novamente a partir do aplicativo de "
 "mensagens."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:517
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
 msgid "View message"
 msgstr "Ver mensagem"
 
-#: indicator/messagingmenu.cpp:401
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr "Correio de voz"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "Mensagens do correio de voz"

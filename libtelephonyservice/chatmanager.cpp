@@ -54,7 +54,7 @@ ChatManager::ChatManager(QObject *parent)
     qDBusRegisterMetaType<AttachmentList>();
     qDBusRegisterMetaType<AttachmentStruct>();
     // wait one second for other acknowledge calls before acknowledging messages to avoid many round trips
-    mMessagesAckTimer.setInterval(1000);
+    mMessagesAckTimer.setInterval(25);
     mMessagesAckTimer.setSingleShot(true);
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
     connect(TelepathyHelper::instance(), SIGNAL(setupReady()), SLOT(onTelepathyReady()));
@@ -264,7 +264,7 @@ void ChatManager::onAckTimerTriggered()
         QString accountId = it.key();
         QMap<QStringList, QStringList>::const_iterator it2 = it.value().constBegin();
         while (it2 != it.value().constEnd()) {
-            phoneAppHandler->call("AcknowledgeMessages", it2.key(), it2.value(), accountId);
+            phoneAppHandler->asyncCall("AcknowledgeMessages", it2.key(), it2.value(), accountId);
             ++it2;
         }
         ++it;

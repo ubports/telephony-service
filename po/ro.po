@@ -16,10 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n == 1 ? 0: (((n % 100 > 19) || ((n % 100 "
 "== 0) && (n != 0))) ? 2: 1));\n"
-"X-Launchpad-Export-Date: 2016-02-13 05:37+0000\n"
-"X-Generator: Launchpad (build 17925)\n"
+"X-Launchpad-Export-Date: 2016-03-15 06:08+0000\n"
+"X-Generator: Launchpad (build 17939)\n"
 
-#: indicator/messagingmenu.cpp:297
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -27,7 +27,7 @@ msgstr[0] "%1 apel pierdut"
 msgstr[1] "%1 apeluri pierdute"
 msgstr[2] "%1 de apeluri pierdute"
 
-#: indicator/messagingmenu.cpp:396
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -59,7 +59,7 @@ msgstr "<b>%1</b> mesaje text trimise astăzi"
 msgid "Accept"
 msgstr "Accept"
 
-#: indicator/messagingmenu.cpp:234
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "Apelează inapoi"
 
@@ -101,11 +101,11 @@ msgstr "Sfârșit + Răspuns"
 msgid "Hold + Answer"
 msgstr "Reține + Răspunde"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr "Am pierdut apelul dumneavoastră - Vă pot suna acum?"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "Voi întârzia 20 de minute."
 
@@ -113,7 +113,7 @@ msgstr "Voi întârzia 20 de minute."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Momentan sunt ocupat. Vă sun mai târziu."
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Acum sunt ocupat. Voi suna mai târziu."
 
@@ -121,7 +121,7 @@ msgstr "Acum sunt ocupat. Voi suna mai târziu."
 msgid "I'm running late, on my way now."
 msgstr "Sunt înîntârziere, sunt pe drum acum."
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "Sunt în întârziere. Sunt deja pe drum."
 
@@ -129,7 +129,7 @@ msgstr "Sunt în întârziere. Sunt deja pe drum."
 msgid "Message & decline"
 msgstr "Mesaj & respingere"
 
-#: indicator/textchannelobserver.cpp:553
+#: indicator/textchannelobserver.cpp:560
 #, qt-format
 msgid "Message from %1"
 msgstr "Mesaj de la %1"
@@ -162,7 +162,7 @@ msgstr "Apeluri telefonice"
 msgid "Please call me back later."
 msgstr "Vă rog să mă sunați înapoi mai târziu."
 
-#: indicator/textchannelobserver.cpp:687
+#: indicator/textchannelobserver.cpp:697
 msgid "Please, select a SIM card:"
 msgstr "Selectați un card SIM:"
 
@@ -170,7 +170,7 @@ msgstr "Selectați un card SIM:"
 msgid "Private Number"
 msgstr "Număr privat"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:302
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "Număr privat"
 
@@ -191,11 +191,11 @@ msgstr "SMS"
 msgid "Save"
 msgstr "Salvează"
 
-#: indicator/messagingmenu.cpp:176 indicator/messagingmenu.cpp:249
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr "Trimiteți"
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Îmi pare rău, sunt în continuare ocupat. Voi suna mai târziu."
 
@@ -232,8 +232,8 @@ msgstr "Număr necunoscut"
 msgid "Unknown caller"
 msgstr "Apelant necunoscut"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:142
-#: indicator/messagingmenu.cpp:306 indicator/textchannelobserver.cpp:480
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
 msgid "Unknown number"
 msgstr "Număr necunoscut"
 
@@ -242,14 +242,14 @@ msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Deblocați cartela SIM și încercați din nou din aplicația de mesagerie."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:517
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
 msgid "View message"
 msgstr "Vizualizare mesaj"
 
-#: indicator/messagingmenu.cpp:401
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr "Mesagerie vocală"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "Mesaje vocale"
