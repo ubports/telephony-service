@@ -374,9 +374,10 @@ void HandlerTest::testAcknowledgeMessage()
     TRY_COMPARE(messageReceivedSpy.count(), 1);
     QString receivedMessageId = messageReceivedSpy.first()[3].toString();
 
-    // then acknoledge the message that arrived in the second channel and make sure handler
+    // then acknowledge the message that arrived in the second channel and make sure handler
     // does the right thing
     QSignalSpy messageReadSpy(mMockController, SIGNAL(MessageRead(QString)));
+    QTest::qWait(1000);
     ChatManager::instance()->acknowledgeMessage(properties["Recipients"].toStringList(), receivedMessageId, mTpAccount->uniqueIdentifier());
 
     TRY_COMPARE(messageReadSpy.count(), 1);
