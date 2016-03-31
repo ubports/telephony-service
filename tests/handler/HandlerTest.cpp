@@ -152,7 +152,7 @@ void HandlerTest::testCallHold()
 
     QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
 
-    QTest::qWait(1000);
+    TRY_VERIFY(HandlerController::instance()->hasCalls());
     // set the call on hold
     HandlerController::instance()->setHold(objectPath, true);
     TRY_COMPARE(callStateSpy.count(), 1);
@@ -413,6 +413,7 @@ void HandlerTest::testAcknowledgeAllMessages()
 
     // then acknowledge the messages that arrived in the second channel and make sure handler
     // does the right thing
+    QTest::qWait(1000);
     QSignalSpy messageReadSpy(mMockController, SIGNAL(MessageRead(QString)));
     ChatManager::instance()->acknowledgeAllMessages(properties["Recipients"].toStringList(), mTpAccount->uniqueIdentifier());
 
