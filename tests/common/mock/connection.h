@@ -63,6 +63,7 @@ public:
     void connect(Tp::DBusError *error);
     void setOnline(bool online);
     void simulateAuthFailure();
+    void simulateDisconnect();
 
     Tp::BaseConnectionRequestsInterfacePtr requestsIface;
     Tp::BaseConnectionSimplePresenceInterfacePtr simplePresenceIface;

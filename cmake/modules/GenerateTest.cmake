@@ -131,7 +131,7 @@ function(generate_telepathy_test TESTNAME)
     if (NOT DEFINED ARG_WAIT_FOR)
         set(ARG_WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceHandler)
     endif (NOT DEFINED ARG_WAIT_FOR)
-    generate_test(${TESTNAME} ${ARGN}
+    generate_test(${TESTNAME} ${ARG_UNPARSED_ARGUMENTS}
                   TASKS ${TASKS}
                   LIBRARIES ${ARG_LIBRARIES} 
                   QT5_MODULES ${ARG_QT5_MODULES} 

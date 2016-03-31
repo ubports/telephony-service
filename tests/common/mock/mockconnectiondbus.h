@@ -42,6 +42,7 @@ public:
     void SetPresence(const QString &status, const QString &statusMessage);
     void SetContactPresence(const QString &id, int presenceType, const QString &status, const QString &statusMessage);
     void SimulateAuthFailure();
+    void SimulateDisconnect();
 
     // voicemail stuff
     void SetVoicemailIndicator(bool active);

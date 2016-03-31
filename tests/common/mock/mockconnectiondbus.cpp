@@ -144,6 +144,11 @@ void MockConnectionDBus::SimulateAuthFailure()
     mConnection->simulateAuthFailure();
 }
 
+void MockConnectionDBus::SimulateDisconnect()
+{
+    mConnection->simulateDisconnect();
+}
+
 void MockConnectionDBus::SetVoicemailIndicator(bool active)
 {
     qDebug() << __PRETTY_FUNCTION__ << active;

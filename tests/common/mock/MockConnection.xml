@@ -59,6 +59,11 @@
             <arg name="status" type="s" direction="in"/>
             <arg name="statusMessage" type="s" direction="in"/>
         </method>
+        <method name="SimulateDisconnect">
+            <dox:d><![CDATA[
+                Simulate disconnection
+            ]]></dox:d>
+        </method>
         <method name="SimulateAuthFailure">
             <dox:d><![CDATA[
                 Simulate an authentication failure
