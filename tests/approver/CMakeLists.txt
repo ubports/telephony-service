@@ -11,6 +11,6 @@ include_directories(
 if (NOT ("${CMAKE_SYSTEM_PROCESSOR}" STREQUAL "aarch64"))
     generate_telepathy_test(ApproverTest
                             SOURCES ApproverTest.cpp approvercontroller.cpp
-			    NEW_TASKS --task ${CMAKE_BINARY_DIR}/approver/telephony-service-approver --task-name telephony-service-approver --wait-for com.canonical.TelephonyServiceHandler --ignore-return
+                            TASKS --task ${CMAKE_BINARY_DIR}/approver/telephony-service-approver --task-name telephony-service-approver --wait-for com.canonical.TelephonyServiceHandler --ignore-return
                             WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceApprover)
 endif()

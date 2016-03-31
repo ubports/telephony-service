@@ -25,7 +25,7 @@ find_program(DBUS_RUNNER dbus-test-runner)
 function(generate_test TESTNAME)
     set(options USE_DBUS USE_UI)
     set(oneValueArgs TIMEOUT WORKING_DIRECTORY QML_TEST WAIT_FOR)
-    set(multiValueArgs NEW_TASKS LIBRARIES QT5_MODULES SOURCES ENVIRONMENT)
+    set(multiValueArgs TASKS LIBRARIES QT5_MODULES SOURCES ENVIRONMENT)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     MESSAGE(STATUS "Adding test: ${TESTNAME}")
@@ -88,7 +88,7 @@ function(generate_test TESTNAME)
             endif ()
 
             add_test(${TESTNAME} ${DBUS_RUNNER} --keep-env --dbus-config=${CMAKE_BINARY_DIR}/tests/common/dbus-session.conf --max-wait=${ARG_TIMEOUT}
-                                                ${ARG_NEW_TASKS} --task ${TEST_COMMAND} --task-name ${TESTNAME})
+                                                ${ARG_TASKS} --task ${TEST_COMMAND} --task-name ${TESTNAME})
         else ()
             add_test(${TESTNAME} ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -o -,txt -o ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml,xunitxml)
         endif()
@@ -108,7 +108,7 @@ endfunction(generate_test)
 function(generate_telepathy_test TESTNAME)
     set(options "")
     set(oneValueArgs WAIT_FOR)
-    set(multiValueArgs NEW_TASKS LIBRARIES QT5_MODULES)
+    set(multiValueArgs TASKS LIBRARIES QT5_MODULES)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     set(TASKS --task gnome-keyring-daemon -p -r -p -d --task-name gnome-keyring --ignore-return
@@ -119,7 +119,7 @@ function(generate_telepathy_test TESTNAME)
               --task ${CMAKE_BINARY_DIR}/tests/common/mock/telepathy-mock --task-name telepathy-mock --wait-for org.freedesktop.Telepathy.MissionControl5 --ignore-return
               # FIXME: maybe it would be better to decide whether to run the handler in a per-test basis?
               --task ${CMAKE_BINARY_DIR}/handler/telephony-service-handler --task-name telephony-service-handler --wait-for org.freedesktop.Telepathy.ConnectionManager.mock --ignore-return
-	      ${ARGS_NEW_TASKS})
+              ${ARG_TASKS})
 
     if (NOT DEFINED ARG_LIBRARIES)
         set(ARG_LIBRARIES ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest)
@@ -132,7 +132,7 @@ function(generate_telepathy_test TESTNAME)
         set(ARG_WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceHandler)
     endif (NOT DEFINED ARG_WAIT_FOR)
     generate_test(${TESTNAME} ${ARGN}
-                  NEW_TASKS ${TASKS}
+                  TASKS ${TASKS}
                   LIBRARIES ${ARG_LIBRARIES} 
                   QT5_MODULES ${ARG_QT5_MODULES} 
                   USE_DBUS USE_UI 
