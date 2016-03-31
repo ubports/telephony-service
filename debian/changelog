@@ -1,3 +1,11 @@
+telephony-service (0.1+16.04.20160331.4-0ubuntu1) xenial; urgency=medium
+
+  * Do not change power mode on incoming MMS'. This is done by unity
+    now. (LP: #1562923)
+  * Fix duplicate tasks launched during tests
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Thu, 31 Mar 2016 22:17:43 +0000
+
 telephony-service (0.1+16.04.20160321.2-0ubuntu1) xenial; urgency=medium
 
   [ Jim Hodapp ]
