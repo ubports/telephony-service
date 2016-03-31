@@ -277,6 +277,11 @@ void MockConnection::setOnline(bool online)
     simplePresenceIface->setPresences(presences);
 }
 
+void MockConnection::simulateDisconnect()
+{
+    setStatus(Tp::ConnectionStatusDisconnected, Tp::ConnectionStatusReasonRequested);
+}
+
 void MockConnection::simulateAuthFailure()
 {
     setStatus(Tp::ConnectionStatusDisconnected, Tp::ConnectionStatusReasonAuthenticationFailed);

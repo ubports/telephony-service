@@ -127,6 +127,7 @@ void HandlerTest::testHangUpCall()
 
     // and finally request the hangup
     QSignalSpy callEndedSpy(mMockController, SIGNAL(CallEnded(QString)));
+    TRY_VERIFY(HandlerController::instance()->hasCalls());
     HandlerController::instance()->hangUpCall(objectPath);
     TRY_COMPARE(callEndedSpy.count(), 1);
 }
