@@ -152,6 +152,7 @@ void HandlerTest::testCallHold()
 
     QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
 
+    QTest::qWait(1000);
     // set the call on hold
     HandlerController::instance()->setHold(objectPath, true);
     TRY_COMPARE(callStateSpy.count(), 1);

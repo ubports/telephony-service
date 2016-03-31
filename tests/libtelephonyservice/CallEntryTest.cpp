@@ -116,6 +116,7 @@ void CallEntryTest::testIsVoicemail()
     CallEntry *callEntry = new CallEntry(mCallChannel);
     QCOMPARE(callEntry->isVoicemail(), isVoicemail);
 
+    TRY_VERIFY(CallManager::instance()->hasCalls());
     callEntry->endCall();
     callEntry->deleteLater();
 }
