@@ -505,7 +505,12 @@ void MockConnection::placeIncomingMessage(const QString &message, const QVariant
         }
     }
 
-    channel->messageReceived(message, info);
+    QVariantMap newInfo = info;
+    if (!newInfo.contains("SentTime")) {
+        newInfo["SentTime"] = QDateTime::currentDateTime().toString(Qt::ISODate);
+    }
+
+    channel->messageReceived(message, newInfo);
 }
 
 void MockConnection::onTextChannelClosed()
