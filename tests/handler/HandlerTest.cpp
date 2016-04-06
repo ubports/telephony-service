@@ -184,6 +184,8 @@ void HandlerTest::testCallProperties()
     mApprover->acceptCall();
 
     waitForCallActive(callerId);
+    
+    TRY_VERIFY(HandlerController::instance()->hasCalls());
 
     // wait until the call properties are changed
     TRY_VERIFY(handlerCallPropertiesSpy.count() > 0);
