@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2016-03-29 05:40+0000\n"
-"X-Generator: Launchpad (build 17967)\n"
+"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
+"X-Generator: Launchpad (build 17990)\n"
 "Language: gd\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -133,7 +133,7 @@ msgstr "Tha mi fadalach ach air an t-slighe."
 msgid "Message & decline"
 msgstr "Teachdaireachd ⁊ diùlt"
 
-#: indicator/textchannelobserver.cpp:560
+#: indicator/textchannelobserver.cpp:545
 #, qt-format
 msgid "Message from %1"
 msgstr "Teachdaireachd o %1"
@@ -166,7 +166,7 @@ msgstr "Gairmean fòn"
 msgid "Please call me back later."
 msgstr "Saoil an cuir thu fòn air ais thugam an ceann greis?"
 
-#: indicator/textchannelobserver.cpp:697
+#: indicator/textchannelobserver.cpp:682
 msgid "Please, select a SIM card:"
 msgstr "Tagh cairt SIM:"
 
@@ -239,7 +239,7 @@ msgid "Unknown caller"
 msgstr "Chan eil fhios cò tha fònadh"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr "Àireamh nach aithne dhuinn"
 
@@ -249,7 +249,7 @@ msgstr ""
 "Thoir a' ghlas far na cairt SIM agad is feuch ris a-rithist o aplacaid nan "
 "teachdaireachdan."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
 msgid "View message"
 msgstr "Seall an teachdaireachd"
 

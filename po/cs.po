@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2016-03-29 05:40+0000\n"
-"X-Generator: Launchpad (build 17967)\n"
+"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
+"X-Generator: Launchpad (build 17990)\n"
 "Language: cs\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -128,7 +128,7 @@ msgstr "Mám zpoždění. Už jsem na cestě."
 msgid "Message & decline"
 msgstr "Zpráva & odmítnout"
 
-#: indicator/textchannelobserver.cpp:560
+#: indicator/textchannelobserver.cpp:545
 #, qt-format
 msgid "Message from %1"
 msgstr "Zpráva od %1"
@@ -161,7 +161,7 @@ msgstr "Telefonní hovory"
 msgid "Please call me back later."
 msgstr "Prosím, zavolete mi později."
 
-#: indicator/textchannelobserver.cpp:697
+#: indicator/textchannelobserver.cpp:682
 msgid "Please, select a SIM card:"
 msgstr "Prosím, vložte SIM kartu:"
 
@@ -232,7 +232,7 @@ msgid "Unknown caller"
 msgstr "Neznámý volající"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr "Neznámé číslo"
 
@@ -241,7 +241,7 @@ msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Odemkněte svou sim kartu a zkuste zprávu odeslat znovu z aplikace zpráv."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
 msgid "View message"
 msgstr "Zobrazit zprávu"
 

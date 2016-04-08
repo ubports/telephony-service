@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2016-03-29 05:40+0000\n"
-"X-Generator: Launchpad (build 17967)\n"
+"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
+"X-Generator: Launchpad (build 17990)\n"
 "Language: ru\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -129,7 +129,7 @@ msgstr "Я опаздываю. Я уже в пути."
 msgid "Message & decline"
 msgstr "Сообщение и отклонить"
 
-#: indicator/textchannelobserver.cpp:560
+#: indicator/textchannelobserver.cpp:545
 #, qt-format
 msgid "Message from %1"
 msgstr "Сообщение от %1"
@@ -162,7 +162,7 @@ msgstr "Вызовы"
 msgid "Please call me back later."
 msgstr "Пожалуйста, перезвоните мне позже."
 
-#: indicator/textchannelobserver.cpp:697
+#: indicator/textchannelobserver.cpp:682
 msgid "Please, select a SIM card:"
 msgstr "Укажите SIM-карту:"
 
@@ -233,7 +233,7 @@ msgid "Unknown caller"
 msgstr "Неизвестный вызов"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr "Неизвестный номер"
 
@@ -241,7 +241,7 @@ msgstr "Неизвестный номер"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Разблокируйте SIM-карту и попробуйте отправить сообщение снова."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
 msgid "View message"
 msgstr "Показать сообщение"
 

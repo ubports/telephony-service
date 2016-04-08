@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2016-03-29 05:40+0000\n"
-"X-Generator: Launchpad (build 17967)\n"
+"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
+"X-Generator: Launchpad (build 17990)\n"
 "Language: fi\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -128,7 +128,7 @@ msgstr "Olen myöhässä, mutta silti tulossa."
 msgid "Message & decline"
 msgstr "Viesti + hylkää"
 
-#: indicator/textchannelobserver.cpp:560
+#: indicator/textchannelobserver.cpp:545
 #, qt-format
 msgid "Message from %1"
 msgstr "Viesti (%1)"
@@ -161,7 +161,7 @@ msgstr "Puhelut"
 msgid "Please call me back later."
 msgstr "Soita minulle uudelleen myöhemmin."
 
-#: indicator/textchannelobserver.cpp:697
+#: indicator/textchannelobserver.cpp:682
 msgid "Please, select a SIM card:"
 msgstr "Aseta SIM-kortti:"
 
@@ -232,7 +232,7 @@ msgid "Unknown caller"
 msgstr "Tuntematon soittaja"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr "Tuntematon numero"
 
@@ -242,7 +242,7 @@ msgstr ""
 "Avaa SIM-kortin lukitus ja yritä lähettää viesti uudelleen "
 "viestisovelluksesta."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
 msgid "View message"
 msgstr "Näytä viesti"
 

@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2016-03-29 05:40+0000\n"
-"X-Generator: Launchpad (build 17967)\n"
+"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
+"X-Generator: Launchpad (build 17990)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -57,7 +57,7 @@ msgstr "<b>%1</b> tekstualnih poruka poslanih danas"
 
 #: approver/approver.cpp:518
 msgid "Accept"
-msgstr ""
+msgstr "Prihvati"
 
 #: indicator/messagingmenu.cpp:236
 msgid "Call back"
@@ -128,10 +128,10 @@ msgstr "Kasnim. Na putu sam."
 msgid "Message & decline"
 msgstr "Poruka & odbijanje"
 
-#: indicator/textchannelobserver.cpp:560
+#: indicator/textchannelobserver.cpp:545
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "Poruka od %1"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
@@ -151,17 +151,17 @@ msgstr "Nema poslanih poruka danas"
 
 #: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
 msgid "Ok"
-msgstr ""
+msgstr "U redu"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
-msgstr ""
+msgstr "Telefonski pozivi"
 
 #: approver/approver.cpp:93
 msgid "Please call me back later."
 msgstr "Molim te nazovi me kasnije."
 
-#: indicator/textchannelobserver.cpp:697
+#: indicator/textchannelobserver.cpp:682
 msgid "Please, select a SIM card:"
 msgstr "Molim, odaberi SIM karticu:"
 
@@ -171,16 +171,16 @@ msgstr "Privatni Broj"
 
 #: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
-msgstr ""
+msgstr "Skriven broj"
 
 #: indicator/ussdindicator.cpp:119
 msgid "Reply"
-msgstr ""
+msgstr "Odgovori"
 
 #: handler/displaynamesettings.cpp:34
 #, qt-format
 msgid "SIM %1"
-msgstr ""
+msgstr "SIM %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
@@ -188,11 +188,11 @@ msgstr ""
 
 #: indicator/textchannelobserver.cpp:318
 msgid "Save"
-msgstr ""
+msgstr "Snimi"
 
 #: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
-msgstr ""
+msgstr "Šalji"
 
 #: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
@@ -232,22 +232,22 @@ msgid "Unknown caller"
 msgstr "Nepoznat pozivalac"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
-msgstr ""
+msgstr "Nepoznat broj"
 
 #: indicator/textchannelobserver.cpp:234
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Otključaj svoju sim karticu i pokušaj ponovo iz aplikacije za poruke."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
 msgid "View message"
 msgstr "Vidi poruku"
 
 #: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
-msgstr ""
+msgstr "Govorna pošta"
 
 #: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"

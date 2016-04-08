@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2016-03-29 05:40+0000\n"
-"X-Generator: Launchpad (build 17967)\n"
+"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
+"X-Generator: Launchpad (build 17990)\n"
 "Language: my\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -124,7 +124,7 @@ msgstr "ကျွန်ုပ်သွားတာနောက်ကျနေပ
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:560
+#: indicator/textchannelobserver.cpp:545
 #, qt-format
 msgid "Message from %1"
 msgstr ""
@@ -157,7 +157,7 @@ msgstr "ဖုန်းခေါ်ဆိုမည်"
 msgid "Please call me back later."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:697
+#: indicator/textchannelobserver.cpp:682
 msgid "Please, select a SIM card:"
 msgstr ""
 
@@ -228,7 +228,7 @@ msgid "Unknown caller"
 msgstr "မသိသောခေါ်ဆိုသူ"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr ""
 
@@ -236,7 +236,7 @@ msgstr ""
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
 msgid "View message"
 msgstr ""
 

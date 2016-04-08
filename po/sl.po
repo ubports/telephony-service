@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || "
 "n%100==4 ? 3 : 0);\n"
-"X-Launchpad-Export-Date: 2016-03-29 05:40+0000\n"
-"X-Generator: Launchpad (build 17967)\n"
+"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
+"X-Generator: Launchpad (build 17990)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -131,7 +131,7 @@ msgstr "Zamujam. Sem že na poti."
 msgid "Message & decline"
 msgstr "Sporoči in zavrni"
 
-#: indicator/textchannelobserver.cpp:560
+#: indicator/textchannelobserver.cpp:545
 #, qt-format
 msgid "Message from %1"
 msgstr "Sporočilo od %1"
@@ -164,7 +164,7 @@ msgstr "Telefonski klici"
 msgid "Please call me back later."
 msgstr "Kasneje me prosim pokliči nazaj."
 
-#: indicator/textchannelobserver.cpp:697
+#: indicator/textchannelobserver.cpp:682
 msgid "Please, select a SIM card:"
 msgstr "Izberite kartico SIM:"
 
@@ -235,7 +235,7 @@ msgid "Unknown caller"
 msgstr "Neznan klicatelj"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:487
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr "Neznana številka"
 
@@ -243,7 +243,7 @@ msgstr "Neznana številka"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Odklenite kartico sim ter poskusite znova iz programa za sporočanje."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:524
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
 msgid "View message"
 msgstr "Ogled sporočila"
 
