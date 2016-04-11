@@ -1,5 +1,6 @@
 usr/bin/*telephony-service*
 usr/bin/ofono-setup
+usr/bin/phone-gsettings-migration.py
 usr/share/accountsservice/interfaces/*TelephonyService*.xml
 usr/share/applications/telephony-service*.desktop
 usr/share/dbus-1/interfaces/*TelephonyService*.xml

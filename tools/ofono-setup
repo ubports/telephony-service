@@ -36,6 +36,9 @@ while ! check_mission_control_running; do
     sleep 1
 done
 
+# migrate gsettings to accounts service
+/usr/bin/phone-gsettings-migration.py
+
 # FIXME mission control for some reason does not start tp-ofono if there is no connection
 # even if always-dispatch is true on the account, this workaround fixes the problem
 dconf write /org/gnome/empathy/use-conn false 2>&1 > /dev/null

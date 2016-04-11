@@ -51,7 +51,7 @@ void ChatManagerTest::initTestCase()
 {
     initialize();
     // set to false so group chat messages are not sent as MMS
-    mPhoneSettings.set("mmsGroupChatEnabled", false);
+    TelepathyHelper::instance()->setMmsGroupChat(false);
     TelepathyHelper::instance()->registerChannelObserver();
 
     // just give telepathy some time to register the observer

@@ -30,8 +30,6 @@
 #include "greetercontacts.h"
 #include "protocolmanager.h"
 
-#include "qgsettings.h"
-
 #include <TelepathyQt/AccountSet>
 #include <TelepathyQt/ChannelClassSpec>
 #include <TelepathyQt/ClientRegistrar>
@@ -52,7 +50,6 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
       mReady(false),
       mChannelObserverPtr(NULL),
       mHandlerInterface(0),
-      mPhoneSettings(new QGSettings("com.ubuntu.phone")),
       mApproverInterface(0),
       mFlightModeInterface("org.freedesktop.URfkill",
                            "/org/freedesktop/URfkill",
@@ -87,15 +84,14 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
             SLOT(onAccountManagerReady(Tp::PendingOperation*)));
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
-    connect(mPhoneSettings, SIGNAL(changed(QString)), this, SLOT(onSettingsChanged(QString)));
+    connect(GreeterContacts::instance(), SIGNAL(phoneSettingsChanged(QString)), this, SLOT(onPhoneSettingsChanged(QString)));
     connect(&mFlightModeInterface, SIGNAL(FlightModeChanged(bool)), this, SIGNAL(flightModeChanged()));
 
-    mMmsGroupChat = mPhoneSettings->get("mmsGroupChatEnabled").value<bool>(); 
+    mMmsGroupChat = GreeterContacts::instance()->mmsGroupChatEnabled(); 
 }
 
 TelepathyHelper::~TelepathyHelper()
 {
-    mPhoneSettings->deleteLater();
 }
 
 TelepathyHelper *TelepathyHelper::instance()
@@ -125,7 +121,7 @@ QStringList TelepathyHelper::accountIds()
 
 void TelepathyHelper::setMmsGroupChat(bool enable)
 {
-    mPhoneSettings->set("mmsGroupChatEnabled", enable);
+    GreeterContacts::instance()->setMmsGroupChatEnabled(enable);
 }
 
 bool TelepathyHelper::mmsGroupChat()
@@ -409,8 +405,8 @@ void TelepathyHelper::onAccountRemoved()
     Q_EMIT accountsChanged();
     Q_EMIT phoneAccountsChanged();
     Q_EMIT activeAccountsChanged();
-    onSettingsChanged("defaultSimForMessages");
-    onSettingsChanged("defaultSimForCalls");
+    onPhoneSettingsChanged("DefaultSimForMessages");
+    onPhoneSettingsChanged("DefaultSimForCalls");
 }
 
 void TelepathyHelper::onNewAccount(const Tp::AccountPtr &account)
@@ -435,8 +431,8 @@ void TelepathyHelper::onNewAccount(const Tp::AccountPtr &account)
     Q_EMIT accountsChanged();
     Q_EMIT phoneAccountsChanged();
     Q_EMIT activeAccountsChanged();
-    onSettingsChanged("defaultSimForMessages");
-    onSettingsChanged("defaultSimForCalls");
+    onPhoneSettingsChanged("DefaultSimForMessages");
+    onPhoneSettingsChanged("DefaultSimForCalls");
     Q_EMIT accountAdded(accountEntry);
 }
 
@@ -473,8 +469,8 @@ void TelepathyHelper::onAccountManagerReady(Tp::PendingOperation *op)
     Q_EMIT accountsChanged();
     Q_EMIT phoneAccountsChanged();
     Q_EMIT activeAccountsChanged();
-    onSettingsChanged("defaultSimForMessages");
-    onSettingsChanged("defaultSimForCalls");
+    onPhoneSettingsChanged("DefaultSimForMessages");
+    onPhoneSettingsChanged("DefaultSimForCalls");
 }
 
 void TelepathyHelper::onAccountReady()
@@ -501,6 +497,11 @@ AccountEntry *TelepathyHelper::defaultCallAccount() const
     return mDefaultCallAccount;
 }
 
+QVariantMap TelepathyHelper::simNames() const
+{
+    return mSimNames;
+}
+
 void TelepathyHelper::setDefaultAccount(AccountType type, AccountEntry* account)
 {
     if (!account) {
@@ -510,9 +511,9 @@ void TelepathyHelper::setDefaultAccount(AccountType type, AccountEntry* account)
     QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
     if (!modemObjName.isEmpty()) {
         if (type == Call) {
-            mPhoneSettings->set("defaultSimForCalls", modemObjName);
+            GreeterContacts::instance()->setDefaultSimForCalls(modemObjName);
         } else if (type == Messaging) {
-            mPhoneSettings->set("defaultSimForMessages", modemObjName);
+            GreeterContacts::instance()->setDefaultSimForMessages(modemObjName);
         }
     }
 }
@@ -529,10 +530,10 @@ bool TelepathyHelper::emergencyCallsAvailable() const
     return false;
 }
 
-void TelepathyHelper::onSettingsChanged(const QString &key)
+void TelepathyHelper::onPhoneSettingsChanged(const QString &key)
 {
-    if (key == "defaultSimForMessages") {
-        QString defaultSim = mPhoneSettings->get("defaultSimForMessages").value<QString>(); 
+    if (key == "DefaultSimForMessages") {
+        QString defaultSim = GreeterContacts::instance()->defaultSimForMessages();
         if (defaultSim == "ask") {
             mDefaultMessagingAccount = NULL;
             Q_EMIT defaultMessagingAccountChanged();
@@ -549,8 +550,8 @@ void TelepathyHelper::onSettingsChanged(const QString &key)
         }
         mDefaultMessagingAccount = NULL;
         Q_EMIT defaultMessagingAccountChanged();
-    } else if (key == "defaultSimForCalls") {
-        QString defaultSim = mPhoneSettings->get("defaultSimForCalls").value<QString>(); 
+    } else if (key == "DefaultSimForCalls") {
+        QString defaultSim = GreeterContacts::instance()->defaultSimForCalls();
         if (defaultSim == "ask") {
             mDefaultCallAccount = NULL;
             Q_EMIT defaultCallAccountChanged();
@@ -567,9 +568,12 @@ void TelepathyHelper::onSettingsChanged(const QString &key)
         }
         mDefaultCallAccount = NULL;
         Q_EMIT defaultCallAccountChanged();
-    } else if (key == "mmsGroupChatEnabled") {
-        mMmsGroupChat = mPhoneSettings->get("mmsGroupChatEnabled").value<bool>(); 
+    } else if (key == "MmsGroupChatEnabled") {
+        mMmsGroupChat = GreeterContacts::instance()->mmsGroupChatEnabled(); 
         Q_EMIT mmsGroupChatChanged();
+    } else if (key == "SimNames") {
+        mSimNames = GreeterContacts::instance()->simNames();
+        Q_EMIT simNamesChanged();
     }
 }
 

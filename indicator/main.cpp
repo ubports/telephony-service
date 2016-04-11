@@ -24,6 +24,7 @@
 
 #include "applicationutils.h"
 #include "callchannelobserver.h"
+#include "displaynamesettings.h"
 #include "indicatordbus.h"
 #include "metrics.h"
 #include "telepathyhelper.h"
@@ -91,6 +92,9 @@ int main(int argc, char **argv)
                          callObserver, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
         QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
                          textObserver, SLOT(clearNotifications()));
+
+        // instanciate the display name settings singleton, it will work by itself
+        DisplayNameSettings::instance();
     });
 
     // instanciate the metrics helper
