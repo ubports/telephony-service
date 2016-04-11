@@ -1,3 +1,12 @@
+telephony-service (0.1+16.04.20160411-0ubuntu1) xenial; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Fix HandlerTest flaky test.
+  * Initial work moving properties from gsettings to accounts service.
+    (LP: #1418040)
+
+ -- Alfonso Sanchez-Beato <alfonso.sanchez-beato@canonical.com>  Mon, 11 Apr 2016 17:38:50 +0000
+
 telephony-service (0.1+16.04.20160331.4-0ubuntu1) xenial; urgency=medium
 
   * Do not change power mode on incoming MMS'. This is done by unity
