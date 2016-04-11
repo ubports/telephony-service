@@ -21,7 +21,7 @@ print("Migrating gsettings to Accounts Service")
 gsettings = Gio.Settings.new('com.ubuntu.phone')
 currentSimNames = gsettings.get_value("sim-names")
 currentDefaultSimForCalls = gsettings.get_string("default-sim-for-calls")
-currentDefaultSimForMessages = gsettings.get_string("default-sim-for-calls")
+currentDefaultSimForMessages = gsettings.get_string("default-sim-for-messages")
 currentMmsGroupChatEnabled = gsettings.get_boolean("mms-group-chat-enabled")
 
 properties_manager.Set('com.ubuntu.touch.AccountsService.Phone', 'SimNames', dbus.Dictionary(currentSimNames))
