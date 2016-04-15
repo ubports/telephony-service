@@ -1,4 +1,12 @@
 #!/usr/bin/python3
+# Copyright 2016 Canonical
+#
+# This file is part of telephony-service.
+#
+# telephony-service is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 3, as published
+# by the Free Software Foundation.
+
 # this script is used to migrate existing settings from gsettings to accounts service
 
 import dbus
