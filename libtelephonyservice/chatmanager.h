@@ -39,9 +39,8 @@ class ChatManager : public QObject
 public:
     static ChatManager *instance();
 
-    Q_INVOKABLE QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
-    Q_INVOKABLE ChatEntry *chatEntryForParticipants(const QString &accountId, const QStringList &participants, bool create = false);
-    Q_INVOKABLE ChatEntry *chatEntryForChatRoom(const QString &accountId, const QVariantMap &properties, bool create);
+    Q_INVOKABLE QString sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
+    Q_INVOKABLE ChatEntry *chatEntryForProperties(const QString &accountId, const QVariantMap &properties, bool create = false);
 
     QQmlListProperty<ChatEntry> chats();
     static int chatCount(QQmlListProperty<ChatEntry> *p);

@@ -96,11 +96,13 @@ void ChatEntryTest::testContactChatState()
     MockController *mockController = accountId.startsWith("mock/mock") ? mGenericMockController : mMultimediaMockController;
 
     QSignalSpy chatEntryCreatedSpy(ChatManager::instance(), SIGNAL(chatEntryCreated(QString, QStringList,ChatEntry *)));
-    ChatEntry *entry = ChatManager::instance()->chatEntryForParticipants(accountId, participants, true);
+    QVariantMap properties;
+    properties["Participants"] = participants;
+    ChatEntry *entry = ChatManager::instance()->chatEntryForProperties(accountId, properties, true);
     QVERIFY(entry == NULL);
     QTRY_COMPARE(chatEntryCreatedSpy.count(), 1);
 
-    entry = ChatManager::instance()->chatEntryForParticipants(accountId, participants, false);
+    entry = ChatManager::instance()->chatEntryForProperties(accountId, properties, false);
     QVERIFY(entry != NULL);
     QList<QVariant> arguments = chatEntryCreatedSpy.takeFirst();
     QCOMPARE(accountId, arguments.at(0).toString());

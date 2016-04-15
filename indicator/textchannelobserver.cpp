@@ -277,7 +277,9 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
         return;
     }
 
-    ChatManager::instance()->sendMessage(account->accountId(), recipients, text);
+    QVariantMap properties;
+    properties["Participants"] = recipients;
+    ChatManager::instance()->sendMessage(account->accountId(), text, QVariantMap(), properties);
 }
 
 void TextChannelObserver::clearNotifications()

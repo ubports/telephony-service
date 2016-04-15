@@ -93,9 +93,9 @@ bool HandlerDBus::connectToBus()
     return true;
 }
 
-QString HandlerDBus::SendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
+QString HandlerDBus::SendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    return TextHandler::instance()->sendMessage(accountId, recipients, message, attachments, properties);
+    return TextHandler::instance()->sendMessage(accountId, message, attachments, properties);
 }
 
 void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId)
@@ -103,14 +103,9 @@ void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringL
     TextHandler::instance()->acknowledgeMessages(numbers, messageIds, accountId);
 }
 
-void HandlerDBus::StartChat(const QString &accountId, const QStringList &participants)
+void HandlerDBus::StartChat(const QString &accountId, const QVariantMap &properties)
 {
-    TextHandler::instance()->startChat(participants, accountId);
-}
-
-void HandlerDBus::StartChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties)
-{
-    TextHandler::instance()->startChatRoom(accountId, initialParticipants, properties);
+    TextHandler::instance()->startChat(accountId, properties);
 }
 
 void HandlerDBus::AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId)

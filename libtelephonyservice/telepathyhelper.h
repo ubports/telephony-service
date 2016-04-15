@@ -56,10 +56,17 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
     Q_PROPERTY(QVariantMap simNames READ simNames NOTIFY simNamesChanged)
     Q_ENUMS(AccountType)
+    Q_ENUMS(ChatType)
 public:
     enum AccountType {
         Call,
         Messaging
+    };
+
+    enum ChatType {
+        ChatTypeNone = Tp::HandleTypeNone,
+        ChatTypeContact = Tp::HandleTypeContact,
+        ChatTypeRoom = Tp::HandleTypeRoom
     };
 
     ~TelepathyHelper();

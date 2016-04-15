@@ -104,7 +104,9 @@ void ChatManagerTest::testSendMessage()
     QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
     QSignalSpy messageSentSpy(ChatManager::instance(), SIGNAL(messageSent(QStringList,QString)));
 
-    ChatManager::instance()->sendMessage(accountId, recipients, message);
+    QVariantMap properties;
+    properties["Participants"] = recipients;
+    ChatManager::instance()->sendMessage(accountId, message, QVariantMap(), properties);
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
     QString messageText = controllerMessageSentSpy.first()[0].toString();
@@ -182,11 +184,14 @@ void ChatManagerTest::testChatEntry()
     QStringList recipients;
     recipients << "user@domain.com" << "user2@domain.com";
     QSignalSpy chatEntryCreatedSpy(ChatManager::instance(), SIGNAL(chatEntryCreated(QString, QStringList,ChatEntry *)));
-    ChatEntry *entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", recipients, true);
+    QVariantMap properties;
+    properties["Participants"] = recipients;
+
+    ChatEntry *entry = ChatManager::instance()->chatEntryForProperties("mock/mock/account0", properties, true);
     QVERIFY(entry == NULL);
     QTRY_COMPARE(chatEntryCreatedSpy.count(), 1);
 
-    entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", recipients, false);
+    entry = ChatManager::instance()->chatEntryForProperties("mock/mock/account0", properties, false);
     QVERIFY(entry != NULL);
     QList<QVariant> arguments = chatEntryCreatedSpy.takeFirst();
     QCOMPARE(QString("mock/mock/account0"), arguments.at(0).toString());
@@ -226,7 +231,9 @@ void ChatManagerTest::testSendMessageWithAttachments()
     attachmentList << QVariant::fromValue(attachment);
     QVariant attachments = QVariant::fromValue(attachmentList);
 
-    ChatManager::instance()->sendMessage(accountId, recipients, message, attachments);
+    QVariantMap properties;
+    properties["Participants"] = recipients;
+    ChatManager::instance()->sendMessage(accountId, message, attachments, properties);
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
     QString messageText = controllerMessageSentSpy.first()[0].toString();

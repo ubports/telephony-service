@@ -83,6 +83,7 @@ public:
     QQmlListProperty<ContactChatState> chatStates();
     QStringList participants();
     ChatType chatType();
+    QString chatId();
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
 

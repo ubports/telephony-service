@@ -95,7 +95,7 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
-QString ChatManager::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const QVariant &attachments, const QVariantMap &properties)
+QString ChatManager::sendMessage(const QString &accountId, const QString &message, const QVariant &attachments, const QVariantMap &properties)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
 
@@ -103,8 +103,15 @@ QString ChatManager::sendMessage(const QString &accountId, const QStringList &re
         return QString();
     }
 
+    QVariantMap propMap = properties;
+
     // check if files should be copied to a temporary location before passing them to handler
     bool tmpFiles = (properties.contains("x-canonical-tmp-files") && properties["x-canonical-tmp-files"].toBool());
+
+    // participants coming from qml are variants
+    if (properties.contains("Participants")) {
+        propMap["Participants"] = properties["Participants"].toStringList();
+    }
 
     AttachmentList newAttachments;
     Q_FOREACH (const QVariant &attachment, attachments.toList()) {
@@ -142,7 +149,7 @@ QString ChatManager::sendMessage(const QString &accountId, const QStringList &re
     }
 
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    QDBusReply<QString> reply = phoneAppHandler->call("SendMessage", account->accountId(), recipients, message, QVariant::fromValue(newAttachments), properties);
+    QDBusReply<QString> reply = phoneAppHandler->call("SendMessage", account->accountId(), message, QVariant::fromValue(newAttachments), propMap);
     if (reply.isValid()) {
         return reply.value();
     }
@@ -164,7 +171,7 @@ void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
     connect(channel.data(),
             SIGNAL(messageSent(Tp::Message,Tp::MessageSendingFlags,QString)),
             SLOT(onMessageSent(Tp::Message,Tp::MessageSendingFlags,QString)));
-     connect(channel.data(),
+    connect(channel.data(),
             SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
             SLOT(onChannelInvalidated()));
 
@@ -278,8 +285,17 @@ QList<ChatEntry*> ChatManager::chatEntries() const
     return mChatEntries;
 }
 
-ChatEntry *ChatManager::chatEntryForParticipants(const QString &accountId, const QStringList &participants, bool create)
+ChatEntry *ChatManager::chatEntryForProperties(const QString &accountId, const QVariantMap &properties, bool create)
 {
+    QVariantMap propMap = properties;
+
+    // participants coming from qml are variants
+    if (properties.contains("Participants")) {
+        propMap["Participants"] = properties["Participants"].toStringList();
+    }
+
+    QStringList participants = propMap["Participants"].toStringList();
+
     if (participants.count() == 0 || accountId.isEmpty()) {
         return NULL;
     }
@@ -320,17 +336,9 @@ ChatEntry *ChatManager::chatEntryForParticipants(const QString &accountId, const
 
     if (create) {
         QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-        phoneAppHandler->call("StartChat", accountId, participants);
+        phoneAppHandler->call("StartChat", accountId, properties);
     }
     return NULL;
-}
-
-ChatEntry *ChatManager::chatEntryForChatRoom(const QString &accountId, const QVariantMap &properties, bool create)
-{
-    Q_UNUSED(accountId)
-    Q_UNUSED(properties)
-    Q_UNUSED(create)
-    // FIXME: implement
 }
 
 QQmlListProperty<ChatEntry> ChatManager::chats()

@@ -75,7 +75,11 @@ bool HandlerController::callIndicatorVisible()
 
 void HandlerController::startChat(const QString &accountId, const QStringList &recipients)
 {
-    mHandlerInterface.call("StartChat", accountId, recipients);
+    // TODO CHANGE SIGNATURE of this method
+    QVariantMap properties;
+    properties["Participants"] = recipients;
+
+    mHandlerInterface.call("StartChat", accountId, properties);
 }
 
 void HandlerController::startCall(const QString &number, const QString &accountId)
@@ -131,7 +135,10 @@ void HandlerController::splitCall(const QString &objectPath)
 
 QString HandlerController::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    QDBusReply<QString> reply = mHandlerInterface.call("SendMessage", accountId, recipients, message, QVariant::fromValue(attachments), properties);
+    // TODO CHANGE SIGNATURE of this method
+    QVariantMap props = properties;
+    props["Participants"] = recipients;
+    QDBusReply<QString> reply = mHandlerInterface.call("SendMessage", accountId, message, QVariant::fromValue(attachments), props);
     if (reply.isValid()) {
         return reply.value();
     }

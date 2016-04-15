@@ -58,6 +58,14 @@ ChatEntry::~ChatEntry()
     }
 }
 
+QString ChatEntry::chatId()
+{
+    if (mChannel) {
+        return mChannel->targetId();
+    }
+    return QString();
+}
+
 void ChatEntry::onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state)
 {
     if (mChatStates.contains(contact->id())) {

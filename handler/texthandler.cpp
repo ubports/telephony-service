@@ -93,7 +93,7 @@ void TextHandler::onConnectedChanged()
             }
             bool found = false;
             // avoid adding twice the same list of participants
-            Q_FOREACH(const QStringList &recipients, recipientsList) {
+/*            Q_FOREACH(const QStringList &recipients, recipientsList) {
                 if (recipients == pendingMessage.recipients) {
                     found = true;
                     break;
@@ -101,10 +101,9 @@ void TextHandler::onConnectedChanged()
             }
             if (!found) {
                 recipientsList << pendingMessage.recipients;
-            }
-        }
-        Q_FOREACH(const QStringList& recipients, recipientsList) {
-            startChat(recipients, accountId);
+            }*/
+            // TODO AVOID CALLING TWICE FOR SAME CHANNEL
+            startChat(accountId, pendingMessage.properties);
         }
     }
 }
@@ -115,41 +114,55 @@ TextHandler *TextHandler::instance()
     return handler;
 }
 
-void TextHandler::startChat(const QStringList &recipients, const QString &accountId)
+void TextHandler::startChat(const QString &accountId, const QVariantMap &properties)
 {
     // Request the contact to start chatting to
     // FIXME: make it possible to select which account to use, for now, pick the first one
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
-    if (!account->connected()) {
+    if (!account || !account->connected()) {
         qCritical() << "The selected account does not have a connection. AccountId:" << accountId;
         return;
     }
 
-    connect(account->account()->connection()->contactManager()->contactsForIdentifiers(recipients),
-            SIGNAL(finished(Tp::PendingOperation*)),
-            SLOT(onContactsAvailable(Tp::PendingOperation*)));
+    switch(properties["ChatType"].toUInt()) {
+    case Tp::HandleTypeNone:
+    case Tp::HandleTypeContact:
+        startTextChat(account->account(), properties);
+        break;
+    case Tp::HandleTypeRoom:
+        startTextChatroom(account->account(), properties);
+        break;
+    default:
+        qCritical() << "Chat type not supported";
+    }
 }
 
-void TextHandler::startChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties)
+void TextHandler::startTextChat(const Tp::AccountPtr &account, const QVariantMap &properties)
 {
-    Q_UNUSED(accountId)
-    Q_UNUSED(initialParticipants)
-    Q_UNUSED(properties)
-    // FIXME: implement
+    QStringList participants = properties["Participants"].toStringList();
+    switch(participants.size()) {
+    case 0:
+        qCritical() << "Error: No participant list provided";
+        break;
+    case 1:
+        account->ensureTextChat(participants[0], QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+        break;
+    default:
+        account->createConferenceTextChat(QList<Tp::ChannelPtr>(), participants, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    }
 }
 
-void TextHandler::startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts)
+void TextHandler::startTextChatroom(const Tp::AccountPtr &account, const QVariantMap &properties)
 {
-    if (contacts.size() == 1) {
-        account->ensureTextChat(contacts.values()[0], QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
-    } else {
-        account->createConferenceTextChat(QList<Tp::ChannelPtr>(), contacts.toList(), QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
-    }
-    // start chatting to the contacts
-    Q_FOREACH(Tp::ContactPtr contact, contacts) {
-        // hold the ContactPtr to make sure its refcounting stays bigger than 0
-        mContacts[account->uniqueIdentifier()][contact->id()] = contact;
-    }
+    QStringList initialInviteeIDs = properties["InitialParticipants"].toStringList();
+    QString roomName = properties["RoomName"].toString();
+    QString server = properties["Server"].toString();
+    QString creator = properties["Creator"].toString();
+
+    QVariantMap request;
+
+    // TODO PARSE properties and check what we need to do here. initialParticipants, title
+    account->ensureTextChatroom(roomName, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler", request);
 }
 
 Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessage)
@@ -178,7 +191,7 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
     if (account->type() == AccountEntry::PhoneAccount) {
         isMMS = (pendingMessage.attachments.size() > 0 ||
                  (header.contains("x-canonical-mms") && header["x-canonical-mms"].variant().toBool()) ||
-                 (pendingMessage.recipients.size() > 1 && TelepathyHelper::instance()->mmsGroupChat()));
+                 (pendingMessage.properties["Participants"].toStringList().size() > 1 && TelepathyHelper::instance()->mmsGroupChat()));
         if (isMMS) {
             header["x-canonical-mms"] = QDBusVariant(true);
         }
@@ -186,6 +199,9 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
 
     // this flag should not be in the message header, it's only useful for the handler
     header.remove("x-canonical-tmp-files");
+    header.remove("ChatType");
+    header.remove("RoomName");
+    header.remove("Participants");
 
     header["message-type"] = QDBusVariant(0);
     message << header;
@@ -301,8 +317,9 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
     return message;
 }
 
-QString TextHandler::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
+QString TextHandler::sendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
+    QStringList participants = properties["Participants"].toStringList();
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
         // account does not exist
@@ -311,7 +328,7 @@ QString TextHandler::sendMessage(const QString &accountId, const QStringList &re
 
     // check if the message should be sent via multimedia account
     // we just use fallback to 1-1 chats
-    if (account->type() == AccountEntry::PhoneAccount && recipients.size() == 1) {
+    if (account->type() == AccountEntry::PhoneAccount && participants.size() == 1) {
         Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
             // TODO: we have to find the multimedia account that matches the same phone number, 
             // but for now we just pick any multimedia connected account
@@ -326,7 +343,7 @@ QString TextHandler::sendMessage(const QString &accountId, const QStringList &re
             if (!newAccount->connected()) {
                 continue;
             }
-            QList<Tp::TextChannelPtr> channels = existingChannels(recipients, newAccount->accountId());
+            QList<Tp::TextChannelPtr> channels = existingChannels(newAccount->accountId(), properties);
             // check if we have a channel for this contact already and get the contact pointer from there,
             // this way we avoid doing the while(op->isFinished()) all the time
             if (!channels.isEmpty()) {
@@ -335,7 +352,7 @@ QString TextHandler::sendMessage(const QString &accountId, const QStringList &re
                 shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
                     presence.type() == Tp::ConnectionPresenceTypeOffline);
             } else {
-                Tp::PendingOperation *op = newAccount->account()->connection()->contactManager()->contactsForIdentifiers(recipients);
+                Tp::PendingOperation *op = newAccount->account()->connection()->contactManager()->contactsForIdentifiers(participants);
                 while (!op->isFinished()) {
                     qApp->processEvents();
                 }
@@ -354,19 +371,18 @@ QString TextHandler::sendMessage(const QString &accountId, const QStringList &re
     }
 
     // keep recipient list always sorted to be able to compare
-    QStringList sortedRecipients = recipients;
-    sortedRecipients.sort();
-    PendingMessage pendingMessage = {account->accountId(), sortedRecipients, message, attachments, properties};
+    participants.sort();
+    PendingMessage pendingMessage = {account->accountId(), message, attachments, properties};
 
     if (!account->connected()) {
         mPendingMessages.append(pendingMessage);
         return account->accountId();
     }
 
-    QList<Tp::TextChannelPtr> channels = existingChannels(recipients, account->accountId());
+    QList<Tp::TextChannelPtr> channels = existingChannels(account->accountId(), properties);
     if (channels.isEmpty()) {
         mPendingMessages.append(pendingMessage);
-        startChat(sortedRecipients, account->accountId());
+        startChat(account->accountId(), pendingMessage.properties);
         return account->accountId();
     }
 
@@ -379,7 +395,10 @@ QString TextHandler::sendMessage(const QString &accountId, const QStringList &re
 
 void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId)
 {
-    QList<Tp::TextChannelPtr> channels = existingChannels(recipients, accountId);
+    QVariantMap properties;
+    properties["Participants"] = recipients;
+
+    QList<Tp::TextChannelPtr> channels = existingChannels(accountId, properties);
     if (channels.isEmpty()) {
         return;
     }
@@ -397,7 +416,9 @@ void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStri
 
 void TextHandler::acknowledgeAllMessages(const QStringList &recipients, const QString &accountId)
 {
-    QList<Tp::TextChannelPtr> channels = existingChannels(recipients, accountId);
+    QVariantMap properties;
+    properties["Participants"] = recipients;
+    QList<Tp::TextChannelPtr> channels = existingChannels(accountId, properties);
     if (channels.isEmpty()) {
         return;
     }
@@ -411,14 +432,11 @@ void TextHandler::onTextChannelInvalidated()
 {
     Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));
     mChannels.removeAll(textChannel);
-    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(textChannel->connection());
-    if (account) {
-       mContacts.remove(account->accountId());
-    }
 }
 
 void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
+    qDebug() << "TextHandler::onTextChannelAvailable" << channel;
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
     if (!account) {
         return;
@@ -438,10 +456,10 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
     QList<PendingMessage>::iterator it = mPendingMessages.begin();
     while (it != mPendingMessages.end()) {
         bool found = false;
-        Q_FOREACH(const Tp::TextChannelPtr &existingChannel, existingChannels(it->recipients, it->accountId)) {
+        Q_FOREACH(const Tp::TextChannelPtr &existingChannel, existingChannels(it->accountId, it->properties)) {
             if (existingChannel == channel) {
                 // FIXME: we can't trust recipients for group chats in regular IM accounts
-                sendMessage(it->accountId, it->recipients, it->message, it->attachments, it->properties);
+                sendMessage(it->accountId, it->message, it->attachments, it->properties);
                 it = mPendingMessages.erase(it);
                 found = true;
                 break;
@@ -467,15 +485,25 @@ void TextHandler::onMessageSent(Tp::PendingOperation *op)
     }
 }
 
-QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QStringList &targetIds, const QString &accountId)
+QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId, const QVariantMap &properties)
 {
     QList<Tp::TextChannelPtr> channels;
+    QStringList targetIds = properties["Participants"].toStringList();
+    int chatType = properties["ChatType"].toUInt();
+    QString roomName = properties["RoomName"].toString();
 
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
         AccountEntry *channelAccount = TelepathyHelper::instance()->accountForConnection(channel->connection());
 
         if (!channelAccount || channelAccount->accountId() != accountId) {
+            continue;
+        }
+
+        if (chatType == 2 && !roomName.isEmpty()) {
+            if (channel->targetHandleType() == chatType && roomName == channel->targetId()) {
+                channels.append(channel);
+            }
             continue;
         }
 
@@ -507,17 +535,3 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QStringList &targe
     }
     return channels;
 }
-
-void TextHandler::onContactsAvailable(Tp::PendingOperation *op)
-{
-    Tp::PendingContacts *pc = qobject_cast<Tp::PendingContacts*>(op);
-
-    if (!pc) {
-        qCritical() << "The pending object is not a Tp::PendingContacts";
-        return;
-    }
-    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(pc->manager()->connection());
-    startChat(account->account(), pc->contacts().toSet());
-}
-
-
