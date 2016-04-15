@@ -1,3 +1,10 @@
+telephony-service (0.1+16.04.20160415.1-0ubuntu1) xenial; urgency=medium
+
+  * do not set SimNames if it's empty use a config file to avoid running
+    the script instead of an account service property
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 15 Apr 2016 21:21:41 +0000
+
 telephony-service (0.1+16.04.20160411-0ubuntu1) xenial; urgency=medium
 
   [ Tiago Salem Herrmann ]
