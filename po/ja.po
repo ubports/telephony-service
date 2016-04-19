@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
-"X-Generator: Launchpad (build 17990)\n"
+"X-Launchpad-Export-Date: 2016-04-19 04:59+0000\n"
+"X-Generator: Launchpad (build 17995)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -172,7 +172,7 @@ msgstr "内線番号"
 msgid "Reply"
 msgstr "返信"
 
-#: handler/displaynamesettings.cpp:34
+#: indicator/displaynamesettings.cpp:35
 #, qt-format
 msgid "SIM %1"
 msgstr "SIM %1"
@@ -206,7 +206,7 @@ msgstr "Telephony Service"
 msgid "Telephony Service Approver"
 msgstr "Telephony Service Approver"
 
-#: indicator/main.cpp:52
+#: indicator/main.cpp:53
 msgid "Telephony Service Indicator"
 msgstr "Telephony Service Indicator"
 
@@ -226,8 +226,8 @@ msgstr "非通知番号"
 msgid "Unknown caller"
 msgstr "不明な発信者"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "不明な番号"
 

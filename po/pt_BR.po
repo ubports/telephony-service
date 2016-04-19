@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
-"X-Generator: Launchpad (build 17990)\n"
+"X-Launchpad-Export-Date: 2016-04-19 04:59+0000\n"
+"X-Generator: Launchpad (build 17995)\n"
 "Language: pt_BR\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -176,7 +176,7 @@ msgstr "Número privado"
 msgid "Reply"
 msgstr "Responder"
 
-#: handler/displaynamesettings.cpp:34
+#: indicator/displaynamesettings.cpp:35
 #, qt-format
 msgid "SIM %1"
 msgstr "SIM %1"
@@ -210,7 +210,7 @@ msgstr "Serviço de telefonia"
 msgid "Telephony Service Approver"
 msgstr "Aprovador do serviço de telefonia"
 
-#: indicator/main.cpp:52
+#: indicator/main.cpp:53
 msgid "Telephony Service Indicator"
 msgstr "Indicador do serviço de telefonia"
 
@@ -230,8 +230,8 @@ msgstr "Número desconhecido"
 msgid "Unknown caller"
 msgstr "Contato desconhecido"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "Número desconhecido"
 
