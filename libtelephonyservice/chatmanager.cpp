@@ -308,6 +308,16 @@ ChatEntry *ChatManager::chatEntryForProperties(const QString &accountId, const Q
 
     Q_FOREACH (ChatEntry *chatEntry, mChatEntries) {
         int participantCount = 0;
+
+        if (properties["ChatType"].toInt() == 2) {
+            QString roomId = propMap["RoomName"].toString();
+            qDebug() << roomId;
+            if (!roomId.isEmpty() && chatEntry->chatType() == 2 && roomId == chatEntry->chatId()) {
+                return chatEntry;
+            }
+            continue;
+        }
+
         Tp::Contacts contacts = chatEntry->channel()->groupContacts(false);
         if (participants.count() != contacts.count()) {
             continue;

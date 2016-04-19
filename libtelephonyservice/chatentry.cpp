@@ -31,7 +31,10 @@ Q_DECLARE_METATYPE(ContactChatStates)
 
 ChatEntry::ChatEntry(const Tp::TextChannelPtr &channel, QObject *parent) :
     QObject(parent),
-    mChannel(channel)
+    mChannel(channel),
+    roomInterface(NULL),
+    roomConfigInterface(NULL),
+    subjectInterface(NULL)
 {
     qRegisterMetaType<ContactChatStates>();
     mAccount = TelepathyHelper::instance()->accountForConnection(mChannel->connection());
@@ -40,10 +43,52 @@ ChatEntry::ChatEntry(const Tp::TextChannelPtr &channel, QObject *parent) :
         mChatStates[contact->id()] = state;
     }
 
+    roomInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomInterface>();
+    roomConfigInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomConfigInterface>();
+    subjectInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceSubjectInterface>();
+
+    if (roomInterface) {
+        roomInterface->setMonitorProperties(true);
+        connect(roomInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
+                               SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
+    }
+    if (roomConfigInterface) {
+        roomConfigInterface->setMonitorProperties(true);
+        connect(roomConfigInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
+                                     SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
+    }
+    if (subjectInterface) {
+        subjectInterface->setMonitorProperties(true);
+        connect(subjectInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
+                                  SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
+    }
+
     connect(channel.data(), SIGNAL(chatStateChanged(const Tp::ContactPtr &, Tp::ChannelChatState)),
                             this, SLOT(onChatStateChanged(const Tp::ContactPtr &,Tp::ChannelChatState)));
     connect(channel.data(), SIGNAL(groupMembersChanged(const Tp::Contacts &, const Tp::Contacts &, const Tp::Contacts &,
             const Tp::Contacts &, const Tp::Channel::GroupMemberChangeDetails &)), this, SIGNAL(participantsChanged()));
+}
+
+void ChatEntry::onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated)
+{
+    if (changed.contains("RoomName")) {
+        mRoomName = changed["RoomName"].toString();
+        Q_EMIT roomNameChanged();
+    }
+    if (changed.contains("Title")) {
+        mTitle = changed["Title"].toString();
+        Q_EMIT titleChanged();
+    }
+}
+
+QString ChatEntry::roomName()
+{
+    return mRoomName;
+}
+
+QString ChatEntry::title()
+{
+    return mTitle;
 }
 
 ChatEntry::~ChatEntry()
@@ -55,6 +100,16 @@ ChatEntry::~ChatEntry()
     while (it.hasNext()) {
         it.next();
         delete it.value();
+    }
+
+    if (roomInterface) {
+        roomInterface->deleteLater();
+    }
+    if (roomConfigInterface) {
+        roomConfigInterface->deleteLater();
+    }
+    if (subjectInterface) {
+        subjectInterface->deleteLater();
     }
 }
 

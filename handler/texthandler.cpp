@@ -490,6 +490,9 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId
     QList<Tp::TextChannelPtr> channels;
     QStringList targetIds = properties["Participants"].toStringList();
     int chatType = properties["ChatType"].toUInt();
+    if (chatType == 0 && targetIds.size() == 1) {
+        chatType = 1;
+    }
     QString roomName = properties["RoomName"].toString();
 
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
@@ -500,8 +503,12 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId
             continue;
         }
 
-        if (chatType == 2 && !roomName.isEmpty()) {
-            if (channel->targetHandleType() == chatType && roomName == channel->targetId()) {
+        if (chatType != channel->targetHandleType()) {
+            continue;
+        }
+
+        if (chatType == 2) {
+            if (!roomName.isEmpty() && channel->targetHandleType() == chatType && roomName == channel->targetId()) {
                 channels.append(channel);
             }
             continue;
