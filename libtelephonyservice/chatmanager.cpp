@@ -311,7 +311,6 @@ ChatEntry *ChatManager::chatEntryForProperties(const QString &accountId, const Q
 
         if (properties["ChatType"].toInt() == 2) {
             QString roomId = propMap["RoomName"].toString();
-            qDebug() << roomId;
             if (!roomId.isEmpty() && chatEntry->chatType() == 2 && roomId == chatEntry->chatId()) {
                 return chatEntry;
             }
