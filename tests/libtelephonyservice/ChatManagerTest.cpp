@@ -105,7 +105,7 @@ void ChatManagerTest::testSendMessage()
     QSignalSpy messageSentSpy(ChatManager::instance(), SIGNAL(messageSent(QStringList,QString)));
 
     QVariantMap properties;
-    properties["Participants"] = recipients;
+    properties["participantIds"] = recipients;
     ChatManager::instance()->sendMessage(accountId, message, QVariantMap(), properties);
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
@@ -185,7 +185,7 @@ void ChatManagerTest::testChatEntry()
     recipients << "user@domain.com" << "user2@domain.com";
     QSignalSpy chatEntryCreatedSpy(ChatManager::instance(), SIGNAL(chatEntryCreated(QString, QStringList,ChatEntry *)));
     QVariantMap properties;
-    properties["Participants"] = recipients;
+    properties["participantIds"] = recipients;
 
     ChatEntry *entry = ChatManager::instance()->chatEntryForProperties("mock/mock/account0", properties, true);
     QVERIFY(entry == NULL);
@@ -232,7 +232,7 @@ void ChatManagerTest::testSendMessageWithAttachments()
     QVariant attachments = QVariant::fromValue(attachmentList);
 
     QVariantMap properties;
-    properties["Participants"] = recipients;
+    properties["participantIds"] = recipients;
     ChatManager::instance()->sendMessage(accountId, message, attachments, properties);
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);

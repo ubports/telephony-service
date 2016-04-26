@@ -124,7 +124,7 @@ void TextHandler::startChat(const QString &accountId, const QVariantMap &propert
         return;
     }
 
-    switch(properties["ChatType"].toUInt()) {
+    switch(properties["chatType"].toUInt()) {
     case Tp::HandleTypeNone:
     case Tp::HandleTypeContact:
         startTextChat(account->account(), properties);
@@ -139,7 +139,7 @@ void TextHandler::startChat(const QString &accountId, const QVariantMap &propert
 
 void TextHandler::startTextChat(const Tp::AccountPtr &account, const QVariantMap &properties)
 {
-    QStringList participants = properties["Participants"].toStringList();
+    QStringList participants = properties["participantIds"].toStringList();
     switch(participants.size()) {
     case 0:
         qCritical() << "Error: No participant list provided";
@@ -155,14 +155,14 @@ void TextHandler::startTextChat(const Tp::AccountPtr &account, const QVariantMap
 void TextHandler::startTextChatroom(const Tp::AccountPtr &account, const QVariantMap &properties)
 {
     QStringList initialInviteeIDs = properties["InitialParticipants"].toStringList();
-    QString roomName = properties["RoomName"].toString();
+    QString roomId = properties["threadId"].toString();
     QString server = properties["Server"].toString();
     QString creator = properties["Creator"].toString();
 
     QVariantMap request;
 
     // TODO PARSE properties and check what we need to do here. initialParticipants, title
-    account->ensureTextChatroom(roomName, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler", request);
+    account->ensureTextChatroom(roomId, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler", request);
 }
 
 Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessage)
@@ -191,7 +191,7 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
     if (account->type() == AccountEntry::PhoneAccount) {
         isMMS = (pendingMessage.attachments.size() > 0 ||
                  (header.contains("x-canonical-mms") && header["x-canonical-mms"].variant().toBool()) ||
-                 (pendingMessage.properties["Participants"].toStringList().size() > 1 && TelepathyHelper::instance()->mmsGroupChat()));
+                 (pendingMessage.properties["participantIds"].toStringList().size() > 1 && TelepathyHelper::instance()->mmsGroupChat()));
         if (isMMS) {
             header["x-canonical-mms"] = QDBusVariant(true);
         }
@@ -199,9 +199,9 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
 
     // this flag should not be in the message header, it's only useful for the handler
     header.remove("x-canonical-tmp-files");
-    header.remove("ChatType");
-    header.remove("RoomName");
-    header.remove("Participants");
+    header.remove("chatType");
+    header.remove("threadId");
+    header.remove("participantIds");
 
     header["message-type"] = QDBusVariant(0);
     message << header;
@@ -319,7 +319,7 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
 
 QString TextHandler::sendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    QStringList participants = properties["Participants"].toStringList();
+    QStringList participants = properties["participantIds"].toStringList();
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
         // account does not exist
@@ -396,7 +396,7 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
 void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId)
 {
     QVariantMap properties;
-    properties["Participants"] = recipients;
+    properties["participantIds"] = recipients;
 
     QList<Tp::TextChannelPtr> channels = existingChannels(accountId, properties);
     if (channels.isEmpty()) {
@@ -417,7 +417,7 @@ void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStri
 void TextHandler::acknowledgeAllMessages(const QStringList &recipients, const QString &accountId)
 {
     QVariantMap properties;
-    properties["Participants"] = recipients;
+    properties["participantIds"] = recipients;
     QList<Tp::TextChannelPtr> channels = existingChannels(accountId, properties);
     if (channels.isEmpty()) {
         return;
@@ -488,12 +488,12 @@ void TextHandler::onMessageSent(Tp::PendingOperation *op)
 QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId, const QVariantMap &properties)
 {
     QList<Tp::TextChannelPtr> channels;
-    QStringList targetIds = properties["Participants"].toStringList();
-    int chatType = properties["ChatType"].toUInt();
+    QStringList targetIds = properties["participantIds"].toStringList();
+    int chatType = properties["chatType"].toUInt();
     if (chatType == 0 && targetIds.size() == 1) {
         chatType = 1;
     }
-    QString roomName = properties["RoomName"].toString();
+    QString roomId = properties["threadId"].toString();
 
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
@@ -508,7 +508,7 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId
         }
 
         if (chatType == 2) {
-            if (!roomName.isEmpty() && channel->targetHandleType() == chatType && roomName == channel->targetId()) {
+            if (!roomId.isEmpty() && channel->targetHandleType() == chatType && roomId == channel->targetId()) {
                 channels.append(channel);
             }
             continue;

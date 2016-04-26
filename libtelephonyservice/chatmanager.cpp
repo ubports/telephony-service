@@ -109,8 +109,8 @@ QString ChatManager::sendMessage(const QString &accountId, const QString &messag
     bool tmpFiles = (properties.contains("x-canonical-tmp-files") && properties["x-canonical-tmp-files"].toBool());
 
     // participants coming from qml are variants
-    if (properties.contains("Participants")) {
-        propMap["Participants"] = properties["Participants"].toStringList();
+    if (properties.contains("participantIds")) {
+        propMap["participantIds"] = properties["participantIds"].toStringList();
     }
 
     AttachmentList newAttachments;
@@ -288,15 +288,32 @@ QList<ChatEntry*> ChatManager::chatEntries() const
 ChatEntry *ChatManager::chatEntryForProperties(const QString &accountId, const QVariantMap &properties, bool create)
 {
     QVariantMap propMap = properties;
+    int chatType = 0;
 
     // participants coming from qml are variants
-    if (properties.contains("Participants")) {
-        propMap["Participants"] = properties["Participants"].toStringList();
+    if (properties.contains("participantIds")) {
+        propMap["participantIds"] = properties["participantIds"].toStringList();
     }
 
-    QStringList participants = propMap["Participants"].toStringList();
+    QStringList participants = propMap["participantIds"].toStringList();
+    if (participants.isEmpty() && propMap.contains("participants")) {
+        // try to generate list of participants from "participants"
+        Q_FOREACH(const QVariant &participantMap, propMap["participants"].toList()) {
+            if (participantMap.toMap().contains("identifier")) {
+                participants << participantMap.toMap()["identifier"].toString();
+            }
+        }
+    }
 
-    if (participants.count() == 0 || accountId.isEmpty()) {
+    if (properties.contains("chatType")) {
+        chatType = properties["chatType"].toInt();
+    } else {
+        if (participants.length() == 1) {
+            chatType = 1;
+        }
+    }
+
+    if ((participants.count() == 0 && chatType == 1)  || accountId.isEmpty()) {
         return NULL;
     }
 
@@ -309,8 +326,8 @@ ChatEntry *ChatManager::chatEntryForProperties(const QString &accountId, const Q
     Q_FOREACH (ChatEntry *chatEntry, mChatEntries) {
         int participantCount = 0;
 
-        if (properties["ChatType"].toInt() == 2) {
-            QString roomId = propMap["RoomName"].toString();
+        if (chatType == 2) {
+            QString roomId = propMap["threadId"].toString();
             if (!roomId.isEmpty() && chatEntry->chatType() == 2 && roomId == chatEntry->chatId()) {
                 return chatEntry;
             }

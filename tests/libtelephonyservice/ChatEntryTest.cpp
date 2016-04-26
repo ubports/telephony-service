@@ -97,7 +97,7 @@ void ChatEntryTest::testContactChatState()
 
     QSignalSpy chatEntryCreatedSpy(ChatManager::instance(), SIGNAL(chatEntryCreated(QString, QStringList,ChatEntry *)));
     QVariantMap properties;
-    properties["Participants"] = participants;
+    properties["participantIds"] = participants;
     ChatEntry *entry = ChatManager::instance()->chatEntryForProperties(accountId, properties, true);
     QVERIFY(entry == NULL);
     QTRY_COMPARE(chatEntryCreatedSpy.count(), 1);

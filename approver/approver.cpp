@@ -413,10 +413,10 @@ void Approver::onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const
 {
     if (mRejectActions.contains(action)) {
         QVariantMap properties;
-        properties["Participants"] = QStringList() << dispatchOp->channels().first()->targetContact()->id();
+        properties["participantIds"] = QStringList() << dispatchOp->channels().first()->targetContact()->id();
         ChatManager::instance()->sendMessage(dispatchOp->account()->uniqueIdentifier(),
                                              mRejectActions[action],
-                                             QVariantMap(),
+                                             QVariantMap(), // attachments
                                              properties);
     }
 

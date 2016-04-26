@@ -278,7 +278,7 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
     }
 
     QVariantMap properties;
-    properties["Participants"] = recipients;
+    properties["participantIds"] = recipients;
     ChatManager::instance()->sendMessage(account->accountId(), text, QVariantMap(), properties);
 }
 

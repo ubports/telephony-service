@@ -77,7 +77,7 @@ void HandlerController::startChat(const QString &accountId, const QStringList &r
 {
     // TODO CHANGE SIGNATURE of this method
     QVariantMap properties;
-    properties["Participants"] = recipients;
+    properties["participantIds"] = recipients;
 
     mHandlerInterface.call("StartChat", accountId, properties);
 }
@@ -137,7 +137,7 @@ QString HandlerController::sendMessage(const QString &accountId, const QStringLi
 {
     // TODO CHANGE SIGNATURE of this method
     QVariantMap props = properties;
-    props["Participants"] = recipients;
+    props["participantIds"] = recipients;
     QDBusReply<QString> reply = mHandlerInterface.call("SendMessage", accountId, message, QVariant::fromValue(attachments), props);
     if (reply.isValid()) {
         return reply.value();

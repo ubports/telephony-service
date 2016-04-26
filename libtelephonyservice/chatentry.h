@@ -56,6 +56,7 @@ class ChatEntry : public QObject
     Q_PROPERTY(ChatType chatType READ chatType CONSTANT)
     Q_PROPERTY(QStringList participants READ participants NOTIFY participantsChanged)
     Q_PROPERTY(QString roomName READ roomName NOTIFY roomNameChanged)
+    Q_PROPERTY(QString chatId READ chatId CONSTANT)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates
                READ chatStates
