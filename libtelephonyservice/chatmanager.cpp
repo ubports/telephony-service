@@ -362,7 +362,7 @@ ChatEntry *ChatManager::chatEntryForProperties(const QString &accountId, const Q
 
     if (create) {
         QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-        phoneAppHandler->call("StartChat", accountId, properties);
+        phoneAppHandler->call("StartChat", accountId, propMap);
     }
     return NULL;
 }

@@ -458,7 +458,6 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
         bool found = false;
         Q_FOREACH(const Tp::TextChannelPtr &existingChannel, existingChannels(it->accountId, it->properties)) {
             if (existingChannel == channel) {
-                // FIXME: we can't trust recipients for group chats in regular IM accounts
                 sendMessage(it->accountId, it->message, it->attachments, it->properties);
                 it = mPendingMessages.erase(it);
                 found = true;
