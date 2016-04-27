@@ -290,18 +290,24 @@ ChatEntry *ChatManager::chatEntryForProperties(const QString &accountId, const Q
     QVariantMap propMap = properties;
     int chatType = 0;
 
+    QStringList participants;
     // participants coming from qml are variants
     if (properties.contains("participantIds")) {
-        propMap["participantIds"] = properties["participantIds"].toStringList();
+        participants = properties["participantIds"].toStringList();
+        if (!participants.isEmpty()) {
+            propMap["participantIds"] = participants;
+        }
     }
 
-    QStringList participants = propMap["participantIds"].toStringList();
     if (participants.isEmpty() && propMap.contains("participants")) {
         // try to generate list of participants from "participants"
         Q_FOREACH(const QVariant &participantMap, propMap["participants"].toList()) {
             if (participantMap.toMap().contains("identifier")) {
                 participants << participantMap.toMap()["identifier"].toString();
             }
+        }
+        if (!participants.isEmpty()) {
+            propMap["participantIds"] = participants;
         }
     }
 
