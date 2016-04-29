@@ -31,6 +31,7 @@
 #include <TelepathyQt/ConnectionManager>
 #include <TelepathyQt/Types>
 #include "channelobserver.h"
+#include "accountentry.h"
 
 #define CANONICAL_TELEPHONY_VOICEMAIL_IFACE "com.canonical.Telephony.Voicemail"
 #define CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE "com.canonical.Telephony.AudioOutputs"
@@ -94,6 +95,7 @@ public:
     AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
     Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
     Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
+    Q_INVOKABLE QList<AccountEntry*> accountsForType(int type);
     bool emergencyCallsAvailable() const;
     Q_INVOKABLE void unlockSimCards() const;
     bool multiplePhoneAccounts() const;

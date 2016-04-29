@@ -56,6 +56,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
                            "org.freedesktop.URfkill",
                            QDBusConnection::systemBus())
 {
+    qRegisterMetaType<QList<AccountEntry*> >();
     mAccountFeatures << Tp::Account::FeatureCore
                      << Tp::Account::FeatureProtocolInfo;
     mContactFeatures << Tp::Contact::FeatureAlias
@@ -585,3 +586,14 @@ void TelepathyHelper::unlockSimCards() const
     connectivityIface.asyncCall("UnlockAllModems");
 }
 
+
+QList<AccountEntry*> TelepathyHelper::accountsForType(int type)
+{
+    QList<AccountEntry*> accounts;
+    Q_FOREACH(AccountEntry *account, mAccounts) {
+        if (account->type() == (AccountEntry::AccountType)type) {
+            accounts << account;
+        }
+    }
+    return accounts;
+}
