@@ -319,7 +319,6 @@ Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessa
 
 QString TextHandler::sendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    QStringList participants = properties["participantIds"].toStringList();
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
         // account does not exist
@@ -328,7 +327,7 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
 
     // check if the message should be sent via multimedia account
     // we just use fallback to 1-1 chats
-    if (account->type() == AccountEntry::PhoneAccount && participants.size() == 1) {
+    if (account->type() == AccountEntry::PhoneAccount) {
         Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
             // TODO: we have to find the multimedia account that matches the same phone number, 
             // but for now we just pick any multimedia connected account
@@ -338,7 +337,7 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
             // FIXME: the fallback implementation needs to be changed to use protocol info and create a map of
             // accounts. Also, it needs to check connection capabilities to determine if we can send message
             // to offline contacts.
-            bool shouldFallback = false;
+            bool shouldFallback = true;
             // if the account is offline, dont fallback to this account
             if (!newAccount->connected()) {
                 continue;
@@ -348,19 +347,30 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
             // this way we avoid doing the while(op->isFinished()) all the time
             if (!channels.isEmpty()) {
                 // if the contact is known, force fallback to this account
-                Tp::Presence presence = channels.first()->targetContact()->presence();
-                shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
-                    presence.type() == Tp::ConnectionPresenceTypeOffline);
+                Q_FOREACH(const Tp::ContactPtr &contact, channels.first()->groupContacts(false)) {
+                    Tp::Presence presence = contact->presence();
+                    shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
+                                      presence.type() == Tp::ConnectionPresenceTypeOffline);
+                    if (!shouldFallback) {
+                        break;
+                    }
+                }
             } else {
+                QStringList participants = properties["participantIds"].toStringList();
                 Tp::PendingOperation *op = newAccount->account()->connection()->contactManager()->contactsForIdentifiers(participants);
                 while (!op->isFinished()) {
                     qApp->processEvents();
                 }
                 Tp::PendingContacts *pc = qobject_cast<Tp::PendingContacts*>(op);
                 if (pc) {
-                    Tp::Presence presence = pc->contacts().first()->presence();
-                    shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
-                        presence.type() == Tp::ConnectionPresenceTypeOffline);
+                    Q_FOREACH(const Tp::ContactPtr &contact, pc->contacts()) {
+                        Tp::Presence presence = contact->presence();
+                        shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
+                                          presence.type() == Tp::ConnectionPresenceTypeOffline);
+                        if (!shouldFallback) {
+                            break;
+                        }
+                    }
                 }
             }
             if (shouldFallback) {
@@ -371,7 +381,6 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
     }
 
     // keep recipient list always sorted to be able to compare
-    participants.sort();
     PendingMessage pendingMessage = {account->accountId(), message, attachments, properties};
 
     if (!account->connected()) {
