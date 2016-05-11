@@ -154,14 +154,17 @@ void TextHandler::startTextChat(const Tp::AccountPtr &account, const QVariantMap
 
 void TextHandler::startTextChatroom(const Tp::AccountPtr &account, const QVariantMap &properties)
 {
-    QStringList initialInviteeIDs = properties["InitialParticipants"].toStringList();
+    QStringList initialInviteeIDs = properties["participantIds"].toStringList();
     QString roomId = properties["threadId"].toString();
     QString server = properties["Server"].toString();
     QString creator = properties["Creator"].toString();
 
-    QVariantMap request;
+    if (roomId.isEmpty()) {
+        account->createConferenceTextChat(QList<Tp::ChannelPtr>(), initialInviteeIDs, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+        return;
+    }
 
-    // TODO PARSE properties and check what we need to do here. initialParticipants, title
+    QVariantMap request;
     account->ensureTextChatroom(roomId, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler", request);
 }
 
