@@ -154,18 +154,29 @@ void TextHandler::startTextChat(const Tp::AccountPtr &account, const QVariantMap
 
 void TextHandler::startTextChatroom(const Tp::AccountPtr &account, const QVariantMap &properties)
 {
-    QStringList initialInviteeIDs = properties["participantIds"].toStringList();
-    QString roomId = properties["threadId"].toString();
-    QString server = properties["Server"].toString();
-    QString creator = properties["Creator"].toString();
+    QString roomName = properties["threadId"].toString();
 
-    if (roomId.isEmpty()) {
-        account->createConferenceTextChat(QList<Tp::ChannelPtr>(), initialInviteeIDs, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    // these properties are still not used
+    //QString server = properties["Server"].toString();
+    //QString creator = properties["Creator"].toString();
+
+    QVariantMap request;
+    if (roomName.isEmpty()) {
+        request.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType"), TP_QT_IFACE_CHANNEL_TYPE_TEXT);
+        request.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType"), (uint) Tp::HandleTypeNone);
+        QStringList initialInviteeIDs = properties["participantIds"].toStringList();
+        if (!initialInviteeIDs.isEmpty()) {
+            request.insert(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeIDs"), initialInviteeIDs);
+        }
+        // the presence of RoomName indicates the returned channel must be of type Room
+        request.insert(TP_QT_IFACE_CHANNEL_INTERFACE_ROOM + QLatin1String(".RoomName"), QString());
+
+        // TODO use the instance returned by createChanne() to track when the channel creation is finished
+        account->createChannel(request, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
         return;
     }
 
-    QVariantMap request;
-    account->ensureTextChatroom(roomId, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler", request);
+    account->ensureTextChatroom(roomName, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler", request);
 }
 
 Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessage)
