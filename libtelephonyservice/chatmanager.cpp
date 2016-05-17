@@ -213,6 +213,10 @@ void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
         return;
     }
 
+    if (!message.sender()) {
+        return;
+    }
+
     Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken(), true);
 }
 
