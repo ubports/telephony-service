@@ -343,6 +343,9 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
 void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
 {
     Tp::ContactPtr contact = message.sender();
+    if (!contact) {
+        return;
+    }
 
     QByteArray token(message.messageToken().toUtf8());
     if (!mUnreadMessages.contains(token)) {
