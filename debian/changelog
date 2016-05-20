@@ -1,3 +1,13 @@
+telephony-service (0.1+16.10.20160520-0ubuntu1) yakkety; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk. added: po/sq.po
+
+  [ Renato Araujo Oliveira Filho ]
+  * Update PhonNumber components to use the new SDK 1.3
+
+ -- Renato Araujo Oliveira Filho <renato.filho@canonical.com>  Fri, 20 May 2016 14:23:59 +0000
+
 telephony-service (0.1+16.04.20160415.1-0ubuntu1) xenial; urgency=medium
 
   * do not set SimNames if it's empty use a config file to avoid running
