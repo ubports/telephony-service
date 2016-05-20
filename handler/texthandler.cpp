@@ -30,6 +30,7 @@
 #include <QImage>
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
+#include <TelepathyQt/PendingChannelRequest>
 
 #define SMIL_TEXT_REGION "<region id=\"Text\" width=\"100%\" height=\"100%\" fit=\"scroll\" />"
 #define SMIL_IMAGE_REGION "<region id=\"Image\" width=\"100%\" height=\"100%\" fit=\"meet\" />"
@@ -152,7 +153,7 @@ void TextHandler::startTextChat(const Tp::AccountPtr &account, const QVariantMap
     }
 }
 
-void TextHandler::startTextChatroom(const Tp::AccountPtr &account, const QVariantMap &properties)
+Tp::TextChannelPtr TextHandler::startTextChatroom(const Tp::AccountPtr &account, const QVariantMap &properties)
 {
     QString roomName = properties["threadId"].toString();
 
@@ -161,6 +162,7 @@ void TextHandler::startTextChatroom(const Tp::AccountPtr &account, const QVarian
     //QString creator = properties["Creator"].toString();
 
     QVariantMap request;
+    Tp::PendingChannelRequest *op = NULL;
     if (roomName.isEmpty()) {
         request.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType"), TP_QT_IFACE_CHANNEL_TYPE_TEXT);
         request.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType"), (uint) Tp::HandleTypeNone);
@@ -172,11 +174,20 @@ void TextHandler::startTextChatroom(const Tp::AccountPtr &account, const QVarian
         request.insert(TP_QT_IFACE_CHANNEL_INTERFACE_ROOM + QLatin1String(".RoomName"), QString());
 
         // TODO use the instance returned by createChanne() to track when the channel creation is finished
-        account->createChannel(request, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
-        return;
+        op = account->createChannel(request, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
+    } else {
+
+        op = account->ensureTextChatroom(roomName, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler", request);
     }
 
-    account->ensureTextChatroom(roomName, QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler", request);
+    if (!op) { 
+        return Tp::TextChannelPtr();
+    }
+    while (!op->isFinished()) {
+        qApp->processEvents();
+    }
+    Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(op->channelRequest()->channel().data()));
+    return textChannel;
 }
 
 Tp::MessagePartList TextHandler::buildMessage(const PendingMessage &pendingMessage)
@@ -404,9 +415,37 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
 
     QList<Tp::TextChannelPtr> channels = existingChannels(account->accountId(), properties);
     if (channels.isEmpty()) {
-        mPendingMessages.append(pendingMessage);
-        startChat(account->accountId(), pendingMessage.properties);
-        return account->accountId();
+        // temporary
+        switch(properties["chatType"].toUInt()) {
+        case Tp::HandleTypeNone:
+        case Tp::HandleTypeContact:
+            mPendingMessages.append(pendingMessage);
+            startTextChat(account->account(), pendingMessage.properties);
+            return account->accountId();
+        case Tp::HandleTypeRoom: {
+            channels << startTextChatroom(account->account(), pendingMessage.properties);
+            qDebug() << "channel returned" << channels.last();
+       
+            // multimedia fails if we send the message right away
+            QTimer *timer = new QTimer(this);
+            timer->setInterval(3000);
+            timer->setSingleShot(true);
+            QObject::connect(timer, &QTimer::timeout, [=]() {
+                qDebug() << "sending message" << channels.last();
+                connect(channels.last()->send(buildMessage(pendingMessage)),
+                        SIGNAL(finished(Tp::PendingOperation*)),
+                        SLOT(onMessageSent(Tp::PendingOperation*)));
+
+                timer->deleteLater();
+            });
+            timer->start();
+            return account->accountId();
+            break;
+        }
+        }
+
+        //startChat(account->accountId(), pendingMessage.properties);
+        //return account->accountId();
     }
 
     connect(channels.last()->send(buildMessage(pendingMessage)),

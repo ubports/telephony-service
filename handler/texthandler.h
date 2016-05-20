@@ -43,7 +43,7 @@ public:
     static TextHandler *instance();
     void startChat(const QString &accountId, const QVariantMap &properties);
     void startTextChat(const Tp::AccountPtr &account, const QVariantMap &properties);
-    void startTextChatroom(const Tp::AccountPtr &account, const QVariantMap &properties);
+    Tp::TextChannelPtr startTextChatroom(const Tp::AccountPtr &account, const QVariantMap &properties);
 
 public Q_SLOTS:
     QString sendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
