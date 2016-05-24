@@ -59,8 +59,9 @@
  </smil>"
 
 MessageSendingJob::MessageSendingJob(TextHandler *textHandler, PendingMessage message)
-: MessageJob(textHandler), mMessage(message), mFinished(false)
+: MessageJob(textHandler), mTextHandler(textHandler), mMessage(message), mFinished(false)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     static ulong count = 0;
     // just to avoid overflowing
     if (count == ULONG_MAX) {
@@ -71,26 +72,31 @@ MessageSendingJob::MessageSendingJob(TextHandler *textHandler, PendingMessage me
 
 MessageSendingJob::~MessageSendingJob()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     HandlerDBus::instance()->unregisterObject(mObjectPath);
 }
 
 QString MessageSendingJob::accountId() const
 {
+    qDebug() << __PRETTY_FUNCTION__;
     return mAccountId;
 }
 
 QString MessageSendingJob::channelObjectPath() const
 {
+    qDebug() << __PRETTY_FUNCTION__;
     return mChannelObjectPath;
 }
 
 QString MessageSendingJob::objectPath() const
 {
+    qDebug() << __PRETTY_FUNCTION__;
     return mObjectPath;
 }
 
 void MessageSendingJob::startJob()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     qDebug() << "Getting account for id:" << mMessage.accountId;
     AccountEntry *account = TelepathyHelper::instance()->accountForId(mMessage.accountId);
     if (!account) {
@@ -171,6 +177,7 @@ void MessageSendingJob::startJob()
 
 void MessageSendingJob::findOrCreateChannel()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     // now that we know what account to use, find existing channels or request a new one
     QList<Tp::TextChannelPtr> channels = mTextHandler->existingChannels(mAccount->accountId(), mMessage.properties);
     if (channels.isEmpty()) {
@@ -186,6 +193,7 @@ void MessageSendingJob::findOrCreateChannel()
             sendMessage();
         });
         job->startJob();
+        return;
     }
 
     mTextChannel = channels.last();
@@ -194,6 +202,7 @@ void MessageSendingJob::findOrCreateChannel()
 
 void MessageSendingJob::sendMessage()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Tp::PendingSendMessage *op = mTextChannel->send(buildMessage(mMessage));
     connect(op, &Tp::PendingOperation::finished, [this, op]() {
         if (op->isError()) {
@@ -210,18 +219,21 @@ void MessageSendingJob::sendMessage()
 
 void MessageSendingJob::setAccountId(const QString &accountId)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     mAccountId = accountId;
     Q_EMIT accountIdChanged();
 }
 
 void MessageSendingJob::setChannelObjectPath(const QString &objectPath)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     mChannelObjectPath = objectPath;
     Q_EMIT channelObjectPathChanged();
 }
 
 Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendingMessage)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Tp::MessagePartList message;
     Tp::MessagePart header;
     QString smil, regions, parts;

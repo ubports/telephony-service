@@ -26,12 +26,14 @@
 #include <TelepathyQt/PendingChannelRequest>
 
 ChatStartingJob::ChatStartingJob(TextHandler *textHandler, const QString &accountId, const QVariantMap &properties)
-: MessageJob(textHandler), mAccountId(accountId), mProperties(properties)
+: MessageJob(textHandler), mTextHandler(textHandler), mAccountId(accountId), mProperties(properties)
 {
+    qDebug() << __PRETTY_FUNCTION__;
 }
 
 void ChatStartingJob::startJob()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     setStatus(Running);
 
     // Request the contact to start chatting to
@@ -59,12 +61,13 @@ void ChatStartingJob::startJob()
 
 void ChatStartingJob::startTextChat(const Tp::AccountPtr &account, const QVariantMap &properties)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Tp::PendingChannelRequest *op = NULL;
     QStringList participants = properties["participantIds"].toStringList();
     switch(participants.size()) {
     case 0:
         qCritical() << "Error: No participant list provided";
-        return;
+        break;
     case 1:
         op = account->ensureTextChat(participants[0], QDateTime::currentDateTime(), TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler");
         break;
@@ -78,12 +81,14 @@ void ChatStartingJob::startTextChat(const Tp::AccountPtr &account, const QVarian
         return;
     }
 
+    qDebug() << "BLABLA starting operation";
     connect(op, &Tp::PendingOperation::finished,
             this, &ChatStartingJob::onChannelRequestFinished);
 }
 
 void ChatStartingJob::startTextChatRoom(const Tp::AccountPtr &account, const QVariantMap &properties)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     QString roomName = properties["threadId"].toString();
 
     // these properties are still not used
@@ -119,17 +124,20 @@ void ChatStartingJob::startTextChatRoom(const Tp::AccountPtr &account, const QVa
 
 Tp::TextChannelPtr ChatStartingJob::textChannel() const
 {
+    qDebug() << __PRETTY_FUNCTION__;
     return mTextChannel;
 }
 
 void ChatStartingJob::setTextChannel(Tp::TextChannelPtr channel)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     mTextChannel = channel;
     Q_EMIT textChannelChanged();
 }
 
 void ChatStartingJob::onChannelRequestFinished(Tp::PendingOperation *op)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Status status;
     if (op->isError()) {
         status = Failed;

@@ -39,47 +39,6 @@ TextHandler::TextHandler(QObject *parent)
     qDBusRegisterMetaType<AttachmentStruct>();
     qDBusRegisterMetaType<AttachmentList>();
     qRegisterMetaType<PendingMessage>();
-
-    // track when the account becomes available
-    connect(TelepathyHelper::instance(),
-            SIGNAL(setupReady()),
-            SLOT(onConnectedChanged()));
-}
-
-void TextHandler::onConnectedChanged()
-{
-    if (!TelepathyHelper::instance()->ready()) {
-        return;
-    }
-
-    // now check which accounts are connected
-    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
-        QString accountId = account->accountId();
-        if (!account->connected()) {
-            continue;
-        }
-        
-        // create text channels to send the pending messages
-        QList<QStringList> recipientsList;
-        Q_FOREACH(const PendingMessage &pendingMessage, mPendingMessages) {
-            if (accountId != pendingMessage.accountId) {
-                continue;
-            }
-            bool found = false;
-            // avoid adding twice the same list of participants
-/*            Q_FOREACH(const QStringList &recipients, recipientsList) {
-                if (recipients == pendingMessage.recipients) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                recipientsList << pendingMessage.recipients;
-            }*/
-            // TODO AVOID CALLING TWICE FOR SAME CHANNEL
-            startChat(accountId, pendingMessage.properties);
-        }
-    }
 }
 
 TextHandler *TextHandler::instance()
@@ -163,27 +122,6 @@ void TextHandler::onTextChannelAvailable(Tp::TextChannelPtr channel)
 
     QString accountId = account->accountId();
     mChannels.append(channel);
-
-    // check for pending messages for this channel
-    if (mPendingMessages.isEmpty()) {
-        return;
-    }
-
-    QList<PendingMessage>::iterator it = mPendingMessages.begin();
-    while (it != mPendingMessages.end()) {
-        bool found = false;
-        Q_FOREACH(const Tp::TextChannelPtr &existingChannel, existingChannels(it->accountId, it->properties)) {
-            if (existingChannel == channel) {
-                sendMessage(it->accountId, it->message, it->attachments, it->properties);
-                it = mPendingMessages.erase(it);
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            ++it;
-        }
-    }
 }
 
 QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId, const QVariantMap &properties)

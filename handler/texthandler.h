@@ -46,7 +46,6 @@ public Q_SLOTS:
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onTextChannelInvalidated();
-    void onConnectedChanged();
 
 protected:
     QList<Tp::TextChannelPtr> existingChannels(const QString &accountId, const QVariantMap &properties);
@@ -56,7 +55,6 @@ private:
 
 
     QList<Tp::TextChannelPtr> mChannels;
-    QList<PendingMessage> mPendingMessages;
 };
 
 #endif // TEXTHANDLER_H
