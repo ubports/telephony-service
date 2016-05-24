@@ -52,8 +52,6 @@ protected:
 
 private:
     explicit TextHandler(QObject *parent = 0);
-
-
     QList<Tp::TextChannelPtr> mChannels;
 };
 
