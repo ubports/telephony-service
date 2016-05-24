@@ -57,3 +57,4 @@ tests/Ubuntu.Telephony/ContactWatcherTest
 tests/libtelephonyservice/GreeterContactsTestExe
 tests/libtelephonyservice/GreeterContactsTestServerExe
 tests/libtelephonyservice/*Mock
+tests/indicator/NotificationsInterface.*

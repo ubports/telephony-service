@@ -27,14 +27,7 @@
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 #include "dbustypes.h"
-
-struct PendingMessage {
-    QString accountId;
-    QString message;
-    AttachmentList attachments;
-    QVariantMap properties;
-};
-Q_DECLARE_METATYPE(PendingMessage)
+#include "messagesendingjob.h"
 
 class TextHandler : public QObject
 {
@@ -42,8 +35,8 @@ class TextHandler : public QObject
 public:
     static TextHandler *instance();
     void startChat(const QString &accountId, const QVariantMap &properties);
-    void startTextChat(const Tp::AccountPtr &account, const QVariantMap &properties);
-    Tp::TextChannelPtr startTextChatroom(const Tp::AccountPtr &account, const QVariantMap &properties);
+
+    friend class MessageSendingJob;
 
 public Q_SLOTS:
     QString sendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
@@ -53,7 +46,6 @@ public Q_SLOTS:
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onTextChannelInvalidated();
-    void onMessageSent(Tp::PendingOperation *op);
     void onConnectedChanged();
 
 protected:
@@ -61,7 +53,7 @@ protected:
 
 private:
     explicit TextHandler(QObject *parent = 0);
-    Tp::MessagePartList buildMessage(const PendingMessage &pendingMessage);
+
 
     QList<Tp::TextChannelPtr> mChannels;
     QList<PendingMessage> mPendingMessages;

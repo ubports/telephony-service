@@ -30,7 +30,7 @@
 #include "dbustypes.h"
 
 /**
- * DBus interface for the phone approver
+ * DBus interface for the phone handler
  */
 class HandlerDBus : public QObject, protected QDBusContext
 {
@@ -50,6 +50,11 @@ public:
     bool IsReady();
     bool callIndicatorVisible() const;
     void setCallIndicatorVisible(bool visible);
+
+    QString registerObject(QObject *object, const QString &path);
+    void unregisterObject(const QString &path);
+
+    static HandlerDBus *instance();
 
 public Q_SLOTS:
     bool connectToBus();

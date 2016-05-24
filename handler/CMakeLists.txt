@@ -1,8 +1,11 @@
 
 set(qt_SRCS
     callhandler.cpp
+    chatstartingjob.cpp
     handler.cpp
     handlerdbus.cpp
+    messagejob.cpp
+    messagesendingjob.cpp
     texthandler.cpp
     )
 
