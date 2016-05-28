@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2016-04-30 05:36+0000\n"
-"X-Generator: Launchpad (build 17995)\n"
+"X-Launchpad-Export-Date: 2016-05-28 05:36+0000\n"
+"X-Generator: Launchpad (build 18053)\n"
 "Language: he\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -229,8 +229,8 @@ msgstr "מספר לא ידוע"
 msgid "Unknown caller"
 msgstr "מתקשר לא ידוע"
 
-#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr "מספר לא ידוע"
 
