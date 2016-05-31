@@ -153,14 +153,15 @@ ChatEntry::ChatType ChatEntry::chatType() const
     return mChatType;
 }
 
+void ChatEntry::setChatType(ChatEntry::ChatType type)
+{
+    mChatType = type;
+    Q_EMIT chatTypeChanged();
+}
+
 QStringList ChatEntry::participants() const
 {
     return mParticipants;
-}
-
-QQmlListProperty<ContactChatState> ChatEntry::chatStates()
-{
-    return QQmlListProperty<ContactChatState>(this, 0, chatStatesCount, chatStatesAt);
 }
 
 void ChatEntry::setParticipants(const QStringList &participants)
@@ -169,6 +170,11 @@ void ChatEntry::setParticipants(const QStringList &participants)
     Q_EMIT participantsChanged();
 
     // FIXME: we need to invalidate the existing channels & data and start fresh
+}
+
+QQmlListProperty<ContactChatState> ChatEntry::chatStates()
+{
+    return QQmlListProperty<ContactChatState>(this, 0, chatStatesCount, chatStatesAt);
 }
 
 int ChatEntry::chatStatesCount(QQmlListProperty<ContactChatState> *p)
@@ -274,10 +280,4 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     }
 
     mChannels << channel;
-}
-
-void ChatEntry::setChatType(ChatEntry::ChatType type)
-{
-    mChatType = type;
-    Q_EMIT chatTypeChanged();
 }

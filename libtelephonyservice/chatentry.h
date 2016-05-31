@@ -54,7 +54,7 @@ class ChatEntry : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
-    Q_PROPERTY(ChatType chatType READ chatType NOTIFY chatTypeChanged)
+    Q_PROPERTY(ChatType chatType READ chatType WRITE setChatType NOTIFY chatTypeChanged)
     Q_PROPERTY(QStringList participants READ participants WRITE setParticipants NOTIFY participantsChanged)
     Q_PROPERTY(QString roomName READ roomName WRITE setRoomName NOTIFY roomNameChanged)
     Q_PROPERTY(QString chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
@@ -86,6 +86,7 @@ public:
     QStringList participants() const;
     void setParticipants(const QStringList &participants);
     ChatType chatType() const;
+    void setChatType(ChatType type);
     QString chatId() const;
     void setChatId(const QString &id);
     QString roomName() const;
@@ -104,7 +105,6 @@ public:
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
     void addChannel(const Tp::TextChannelPtr &channel);
-    void setChatType(ChatType type);
 
 private Q_SLOTS:
     void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
