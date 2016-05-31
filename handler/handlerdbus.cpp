@@ -98,9 +98,9 @@ QString HandlerDBus::SendMessage(const QString &accountId, const QString &messag
     return TextHandler::instance()->sendMessage(accountId, message, attachments, properties);
 }
 
-void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId)
+void HandlerDBus::AcknowledgeMessages(const QVariantList &messages)
 {
-    TextHandler::instance()->acknowledgeMessages(numbers, messageIds, accountId);
+    TextHandler::instance()->acknowledgeMessages(messages);
 }
 
 void HandlerDBus::StartChat(const QString &accountId, const QVariantMap &properties)
@@ -108,9 +108,9 @@ void HandlerDBus::StartChat(const QString &accountId, const QVariantMap &propert
     TextHandler::instance()->startChat(accountId, properties);
 }
 
-void HandlerDBus::AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId)
+void HandlerDBus::AcknowledgeAllMessages(const QVariantMap &properties)
 {
-    TextHandler::instance()->acknowledgeAllMessages(numbers, accountId);
+    TextHandler::instance()->acknowledgeAllMessages(properties);
 }
 
 void HandlerDBus::StartCall(const QString &number, const QString &accountId)

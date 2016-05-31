@@ -47,6 +47,19 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, AttachmentStruct 
     return argument;
 }
 
+QVariantMap convertPropertiesForDBus(const QVariantMap &properties)
+{
+    QVariantMap propMap = properties;
+    // participants coming from qml are variants
+    if (properties.contains("participantIds")) {
+        QStringList participants = properties["participantIds"].toStringList();
+        if (!participants.isEmpty()) {
+            propMap["participantIds"] = participants;
+        }
+    }
+    return propMap;
+}
+
 ChatManager::ChatManager(QObject *parent)
 : QObject(parent),
   mReady(TelepathyHelper::instance()->ready())
@@ -103,15 +116,10 @@ QString ChatManager::sendMessage(const QString &accountId, const QString &messag
         return QString();
     }
 
-    QVariantMap propMap = properties;
+    QVariantMap propMap = convertPropertiesForDBus(properties);
 
     // check if files should be copied to a temporary location before passing them to handler
     bool tmpFiles = (properties.contains("x-canonical-tmp-files") && properties["x-canonical-tmp-files"].toBool());
-
-    // participants coming from qml are variants
-    if (properties.contains("participantIds")) {
-        propMap["participantIds"] = properties["participantIds"].toStringList();
-    }
 
     AttachmentList newAttachments;
     Q_FOREACH (const QVariant &attachment, attachments.toList()) {
@@ -238,31 +246,16 @@ void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::Messag
     Q_EMIT messageSent(recipients, sentMessage.text());
 }
 
-void ChatManager::acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId)
+void ChatManager::acknowledgeMessage(const QVariantMap &properties)
 {
-    AccountEntry *account = NULL;
-    if (accountId.isNull() || accountId.isEmpty()) {
-        account = TelepathyHelper::instance()->defaultMessagingAccount();
-        if (!account && !TelepathyHelper::instance()->activeAccounts().isEmpty()) {
-            account = TelepathyHelper::instance()->activeAccounts()[0];
-        }
-    } else {
-        account = TelepathyHelper::instance()->accountForId(accountId);
-    }
-
-    if (!account) {
-        mMessagesToAck[accountId][recipients].append(messageId);
-        return;
-    }
-
+    mMessagesToAck << QVariant::fromValue(convertPropertiesForDBus(properties));
     mMessagesAckTimer.start();
-    mMessagesToAck[account->accountId()][recipients].append(messageId);
 }
 
-void ChatManager::acknowledgeAllMessages(const QStringList &recipients, const QString &accountId)
+void ChatManager::acknowledgeAllMessages(const QVariantMap &properties)
 {
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->asyncCall("AcknowledgeAllMessages", recipients, accountId);
+    phoneAppHandler->asyncCall("AcknowledgeAllMessages", convertPropertiesForDBus(properties));
 }
 
 void ChatManager::onAckTimerTriggered()
@@ -270,16 +263,7 @@ void ChatManager::onAckTimerTriggered()
     // ack all pending messages
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
 
-    QMap<QString, QMap<QStringList,QStringList> >::const_iterator it = mMessagesToAck.constBegin();
-    while (it != mMessagesToAck.constEnd()) {
-        QString accountId = it.key();
-        QMap<QStringList, QStringList>::const_iterator it2 = it.value().constBegin();
-        while (it2 != it.value().constEnd()) {
-            phoneAppHandler->asyncCall("AcknowledgeMessages", it2.key(), it2.value(), accountId);
-            ++it2;
-        }
-        ++it;
-    }
+    phoneAppHandler->asyncCall("AcknowledgeMessages", mMessagesToAck);
 
     mMessagesToAck.clear();
 }

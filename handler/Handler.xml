@@ -27,9 +27,8 @@
             <dox:d><![CDATA[
                 Request messages to be acknowledged (marked as read)
             ]]></dox:d>
-            <arg name="numbers" type="as" direction="in"/>
-            <arg name="messageIds" type="as" direction="in"/>
-            <arg name="accountId" type="s" direction="in"/>
+            <arg name="messages" type="av" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantList"/>
         </method>
         <method name="StartChat">
             <dox:d><![CDATA[
@@ -43,8 +42,8 @@
             <dox:d><![CDATA[
                 Request all messages messages from the given numbers to be acknowledged
             ]]></dox:d>
-            <arg name="numbers" type="as" direction="in"/>
-            <arg name="accountId" type="s" direction="in"/>
+            <arg name="properties" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
         </method>
         <!-- Call Related -->
         <method name="StartCall">

@@ -59,8 +59,8 @@ public Q_SLOTS:
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
 
-    void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId);
-    void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
+    void acknowledgeMessage(const QVariantMap &properties);
+    void acknowledgeAllMessages(const QVariantMap &properties);
 
 private Q_SLOTS:
     void onChannelObserverUnregistered();
@@ -75,7 +75,7 @@ private:
     QList<ChatEntry*> chatEntries() const;
 
     mutable QList<ChatEntry*> mChatEntries;
-    QMap<QString, QMap<QStringList,QStringList> > mMessagesToAck;
+    QVariantList mMessagesToAck;
     QList<Tp::TextChannelPtr> mPendingChannels;
     QTimer mMessagesAckTimer;
     bool mReady;
