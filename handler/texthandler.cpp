@@ -63,32 +63,31 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
     return job->objectPath();
 }
 
-void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId)
+void TextHandler::acknowledgeMessages(const QVariantList &messages)
 {
-    QVariantMap properties;
-    properties["participantIds"] = recipients;
-
-    QList<Tp::TextChannelPtr> channels = existingChannels(accountId, properties);
-    if (channels.isEmpty()) {
-        return;
-    }
-
-    QList<Tp::ReceivedMessage> messagesToAck;
-    Q_FOREACH(const Tp::TextChannelPtr &channel, channels) {
-        Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
-            if (messageIds.contains(message.messageToken())) {
-                messagesToAck.append(message);
-            }
+    Q_FOREACH(const QVariant &message, messages) {
+        QVariantMap properties = qdbus_cast<QVariantMap>(message);
+        QList<Tp::TextChannelPtr> channels = existingChannels(properties["accountId"].toString(), properties);
+        if (channels.isEmpty()) {
+            return;
         }
-        channel->acknowledge(messagesToAck);
+
+        QList<Tp::ReceivedMessage> messagesToAck;
+        QString messageId = properties["messageId"].toString();
+        Q_FOREACH(const Tp::TextChannelPtr &channel, channels) {
+            Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
+                if (messageId == message.messageToken()) {
+                    messagesToAck.append(message);
+                }
+            }
+            channel->acknowledge(messagesToAck);
+        }
     }
 }
 
-void TextHandler::acknowledgeAllMessages(const QStringList &recipients, const QString &accountId)
+void TextHandler::acknowledgeAllMessages(const QVariantMap &properties)
 {
-    QVariantMap properties;
-    properties["participantIds"] = recipients;
-    QList<Tp::TextChannelPtr> channels = existingChannels(accountId, properties);
+    QList<Tp::TextChannelPtr> channels = existingChannels(properties["accountId"].toString(), properties);
     if (channels.isEmpty()) {
         return;
     }

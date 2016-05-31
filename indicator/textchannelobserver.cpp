@@ -727,7 +727,11 @@ void TextChannelObserver::onReplyReceived(const QStringList &recipients, const Q
 void TextChannelObserver::onMessageRead(const QStringList &recipients, const QString &accountId, const QString &encodedMessageId)
 {
     QString messageId(QByteArray::fromHex(encodedMessageId.toUtf8()));
-    ChatManager::instance()->acknowledgeMessage(recipients, messageId, accountId);
+    QVariantMap properties;
+    properties["accountId"] = accountId;
+    properties["participantIds"] = recipients;
+    properties["messageId"] = encodedMessageId;
+    ChatManager::instance()->acknowledgeMessage(properties);
 }
 
 void TextChannelObserver::onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString)

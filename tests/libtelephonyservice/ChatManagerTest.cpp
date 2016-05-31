@@ -163,8 +163,12 @@ void ChatManagerTest::testAcknowledgeMessages()
     }
 
     QSignalSpy messageReadSpy(mGenericMockController, SIGNAL(MessageRead(QString)));
+    QVariantMap ackProperties;
+    ackProperties["accountId"] = "mock/mock/account0";
+    ackProperties["participantIds"] = properties["Recipients"].toStringList();
     Q_FOREACH(const QString &messageId, messageIds) {
-        ChatManager::instance()->acknowledgeMessage(properties["Recipients"].toStringList(), messageId, "mock/mock/account0");
+        ackProperties["messageId"] = messageId;
+        ChatManager::instance()->acknowledgeMessage(ackProperties);
     }
 
     TRY_COMPARE(messageReadSpy.count(), messageIds.count());

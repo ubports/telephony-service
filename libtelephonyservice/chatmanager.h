@@ -48,8 +48,8 @@ public Q_SLOTS:
     void onChannelInvalidated();
     void onConnectedChanged();
 
-    void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId);
-    void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
+    void acknowledgeMessage(const QVariantMap &properties);
+    void acknowledgeAllMessages(const QVariantMap &properties);
 
 private Q_SLOTS:
     void onChannelObserverUnregistered();
@@ -60,7 +60,7 @@ protected Q_SLOTS:
 private:
     explicit ChatManager(QObject *parent = 0);
 
-    QMap<QString, QMap<QStringList,QStringList> > mMessagesToAck;
+    QVariantList mMessagesToAck;
     QList<Tp::TextChannelPtr> mTextChannels;
     QTimer mMessagesAckTimer;
 };

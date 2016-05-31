@@ -381,7 +381,11 @@ void HandlerTest::testAcknowledgeMessage()
     // does the right thing
     QSignalSpy messageReadSpy(mMockController, SIGNAL(MessageRead(QString)));
     QTest::qWait(1000);
-    ChatManager::instance()->acknowledgeMessage(properties["Recipients"].toStringList(), receivedMessageId, mTpAccount->uniqueIdentifier());
+    QVariantMap ackProperties;
+    ackProperties["accountId"] = mTpAccount->uniqueIdentifier();
+    ackProperties["participantIds"] = properties["Recipients"].toStringList();
+    ackProperties["messageId"] = receivedMessageId;
+    ChatManager::instance()->acknowledgeMessage(ackProperties);
 
     TRY_COMPARE(messageReadSpy.count(), 1);
     QCOMPARE(messageReadSpy.first()[0].toString(), receivedMessageId);
@@ -417,7 +421,12 @@ void HandlerTest::testAcknowledgeAllMessages()
     // does the right thing
     QTest::qWait(1000);
     QSignalSpy messageReadSpy(mMockController, SIGNAL(MessageRead(QString)));
-    ChatManager::instance()->acknowledgeAllMessages(properties["Recipients"].toStringList(), mTpAccount->uniqueIdentifier());
+
+    QVariantMap ackProperties;
+    ackProperties["accountId"] = mTpAccount->uniqueIdentifier();
+    ackProperties["participantIds"] = properties["Recipients"].toStringList();
+
+    ChatManager::instance()->acknowledgeAllMessages(ackProperties);
 
     TRY_COMPARE(messageReadSpy.count(), messageCount);
 }

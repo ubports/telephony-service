@@ -145,9 +145,9 @@ QString HandlerController::sendMessage(const QString &accountId, const QStringLi
     return QString();
 }
 
-void HandlerController::acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId)
+void HandlerController::acknowledgeMessages(const QVariantMap &properties)
 {
-    mHandlerInterface.call("AcknowledgeMessages", number, messageIds, accountId);
+    mHandlerInterface.call("AcknowledgeMessages", QVariantList() << QVariant::fromValue(properties));
 }
 
 void HandlerController::setCallIndicatorVisible(bool visible)

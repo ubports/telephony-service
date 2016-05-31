@@ -52,7 +52,7 @@ public Q_SLOTS:
 
     // messaging methods
     QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments = AttachmentList(), const QVariantMap &properties = QVariantMap());
-    void acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId);
+    void acknowledgeMessages(const QVariantMap &message);
 
     // active call indicator
     void setCallIndicatorVisible(bool visible);

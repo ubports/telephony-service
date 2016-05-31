@@ -40,8 +40,8 @@ public:
 
 public Q_SLOTS:
     QString sendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
-    void acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId);
-    void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
+    void acknowledgeMessages(const QVariantList &messages);
+    void acknowledgeAllMessages(const QVariantMap &properties);
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
