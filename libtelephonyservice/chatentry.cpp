@@ -229,6 +229,7 @@ void ChatEntry::setChannels(const QList<Tp::TextChannelPtr> &channels)
 
 void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
 {
+    qDebug() << "BLABLA adding channel" << channel->objectPath();
     if (mChannels.contains(channel)) {
         return;
     }

@@ -53,10 +53,11 @@ typedef QList<ContactChatState* > ContactChatStates;
 class ChatEntry : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
+    Q_INTERFACES(QQmlParserStatus)
     Q_PROPERTY(ChatType chatType READ chatType NOTIFY chatTypeChanged)
     Q_PROPERTY(QStringList participants READ participants WRITE setParticipants NOTIFY participantsChanged)
     Q_PROPERTY(QString roomName READ roomName WRITE setRoomName NOTIFY roomNameChanged)
-    Q_PROPERTY(QString chatId READ chatId WRITE setChatId CONSTANT)
+    Q_PROPERTY(QString chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates
                READ chatStates
