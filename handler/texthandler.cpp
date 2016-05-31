@@ -60,12 +60,7 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
     MessageSendingJob *job = new MessageSendingJob(this, pendingMessage);
     QTimer::singleShot(0, job, &MessageSendingJob::startJob);
 
-    // FIXME: just for a first stage, we synchronously wait for the job to finish and return the accountId as usual
-    while (!job->isFinished()) {
-        QCoreApplication::processEvents();
-    }
-
-    return job->accountId();
+    return job->objectPath();
 }
 
 void TextHandler::acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId)

@@ -38,7 +38,6 @@ private Q_SLOTS:
     void testSendMessageWithAttachments();
     void testMessageReceived();
     void testAcknowledgeMessages();
-    void testChatEntry();
 
 private:
     Tp::AccountPtr mGenericTpAccount;
@@ -177,26 +176,6 @@ void ChatManagerTest::testAcknowledgeMessages()
     qSort(receivedIds);
     qSort(messageIds);
     QCOMPARE(receivedIds, messageIds);
-}
-
-void ChatManagerTest::testChatEntry()
-{
-    QStringList recipients;
-    recipients << "user@domain.com" << "user2@domain.com";
-    QSignalSpy chatEntryCreatedSpy(ChatManager::instance(), SIGNAL(chatEntryCreated(QString, QStringList,ChatEntry *)));
-    QVariantMap properties;
-    properties["participantIds"] = recipients;
-
-    ChatEntry *entry = ChatManager::instance()->chatEntryForProperties("mock/mock/account0", properties, true);
-    QVERIFY(entry == NULL);
-    QTRY_COMPARE(chatEntryCreatedSpy.count(), 1);
-
-    entry = ChatManager::instance()->chatEntryForProperties("mock/mock/account0", properties, false);
-    QVERIFY(entry != NULL);
-    QList<QVariant> arguments = chatEntryCreatedSpy.takeFirst();
-    QCOMPARE(QString("mock/mock/account0"), arguments.at(0).toString());
-    QCOMPARE(recipients.toSet(), arguments.at(1).toStringList().toSet());
-    QCOMPARE(entry, arguments.at(2).value<ChatEntry*>());
 }
 
 void ChatManagerTest::testSendMessageWithAttachments_data()

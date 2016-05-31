@@ -44,6 +44,7 @@ class MessageSendingJob : public MessageJob, protected QDBusContext
 {
     Q_OBJECT
     Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
+    Q_PROPERTY(QString messageId READ messageId NOTIFY messageIdChanged)
     Q_PROPERTY(QString channelObjectPath READ channelObjectPath NOTIFY channelObjectPathChanged)
     Q_PROPERTY(QString objectPath READ objectPath CONSTANT)
 
@@ -52,13 +53,14 @@ public:
     ~MessageSendingJob();
 
     QString accountId() const;
+    QString messageId() const;
     QString channelObjectPath() const;
     QString objectPath() const;
 
 Q_SIGNALS:
     void accountIdChanged();
+    void messageIdChanged();
     void channelObjectPathChanged();
-    void messageStatusChanged();
 
 public Q_SLOTS:
     void startJob();
@@ -69,11 +71,13 @@ protected Q_SLOTS:
 
     void setAccountId(const QString &accountId);
     void setChannelObjectPath(const QString &objectPath);
+    void setMessageId(const QString &id);
 
 private:
     TextHandler *mTextHandler;
     PendingMessage mMessage;
     QString mAccountId;
+    QString mMessageId;
     AccountEntry *mAccount;
     QString mChannelObjectPath;
     Tp::TextChannelPtr mTextChannel;

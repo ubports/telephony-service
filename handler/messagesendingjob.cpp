@@ -82,6 +82,11 @@ QString MessageSendingJob::accountId() const
     return mAccountId;
 }
 
+QString MessageSendingJob::messageId() const
+{
+    return mMessageId;
+}
+
 QString MessageSendingJob::channelObjectPath() const
 {
     qDebug() << __PRETTY_FUNCTION__;
@@ -212,6 +217,7 @@ void MessageSendingJob::sendMessage()
         }
 
         setChannelObjectPath(mTextChannel->objectPath());
+        setMessageId(op->message().messageToken());
         setStatus(Finished);
         scheduleDeletion();
     });
@@ -229,6 +235,12 @@ void MessageSendingJob::setChannelObjectPath(const QString &objectPath)
     qDebug() << __PRETTY_FUNCTION__;
     mChannelObjectPath = objectPath;
     Q_EMIT channelObjectPathChanged();
+}
+
+void MessageSendingJob::setMessageId(const QString &id)
+{
+    mMessageId = id;
+    Q_EMIT messageIdChanged();
 }
 
 Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendingMessage)
