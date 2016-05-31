@@ -20,6 +20,7 @@
  */
 
 #include "chatmanager.h"
+#include "chatentry.h"
 #include "telepathyhelper.h"
 #include "phoneutils.h"
 #include "config.h"
@@ -149,10 +150,9 @@ QString ChatManager::sendMessage(const QString &accountId, const QString &messag
 
 QList<Tp::TextChannelPtr> ChatManager::channelForProperties(const QVariantMap &properties)
 {
-    // FIXME: implement
-    /*
+    QList<Tp::TextChannelPtr> channels;
     QVariantMap propMap = properties;
-    int chatType = 0;
+    ChatEntry::ChatType chatType = ChatEntry::ChatTypeNone;
 
     QStringList participants;
     // participants coming from qml are variants
@@ -176,38 +176,51 @@ QList<Tp::TextChannelPtr> ChatManager::channelForProperties(const QVariantMap &p
     }
 
     if (properties.contains("chatType")) {
-        chatType = properties["chatType"].toInt();
+        chatType = (ChatEntry::ChatType)properties["chatType"].toInt();
     } else {
         if (participants.length() == 1) {
-            chatType = 1;
+            chatType = ChatEntry::ChatTypeContact;
         }
     }
 
-    if ((participants.count() == 0 && chatType == 1)  || accountId.isEmpty()) {
-        return NULL;
+    QString accountId;
+    if (propMap.contains("accountId")) {
+        accountId = propMap["accountId"].toString();
     }
 
-    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
-
-    if (!account) {
-        return NULL;
+    if ((participants.count() == 0 && chatType == ChatEntry::ChatTypeContact)  || accountId.isEmpty()) {
+        return channels;
     }
 
-    Q_FOREACH (ChatEntry *chatEntry, mChatEntries) {
-        int participantCount = 0;
+    Q_FOREACH (Tp::TextChannelPtr channel, mTextChannels) {
+        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        if (!account) {
+            continue;
+        }
 
-        if (chatType == 2) {
-            QString roomId = propMap["threadId"].toString();
-            if (!roomId.isEmpty() && chatEntry->chatType() == 2 && roomId == chatEntry->chatId()) {
-                return chatEntry;
+        // only channels of the correct type should be returned
+        if ((ChatEntry::ChatType)channel->targetHandleType() != chatType) {
+            continue;
+        }
+
+        if (chatType == ChatEntry::ChatTypeRoom) {
+            QString chatId = propMap["threadId"].toString();
+            if (!chatId.isEmpty() && channel->targetId() == chatId) {
+                // if we are filtering by one specific accountId, make sure it matches
+                if (!accountId.isEmpty() && accountId != account->accountId()) {
+                    continue;
+                }
+
+                channels << channel;
             }
             continue;
         }
 
-        Tp::Contacts contacts = chatEntry->channel()->groupContacts(false);
+        Tp::Contacts contacts = channel->groupContacts(false);
         if (participants.count() != contacts.count()) {
             continue;
         }
+        int participantCount = 0;
         // iterate over participants
         Q_FOREACH (const Tp::ContactPtr &contact, contacts) {
             if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
@@ -226,15 +239,11 @@ QList<Tp::TextChannelPtr> ChatManager::channelForProperties(const QVariantMap &p
             }
         }
         if (participantCount == participants.count()) {
-            return chatEntry;
+            channels << channel;
         }
     }
 
-    if (create) {
-        QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-        phoneAppHandler->call("StartChat", accountId, propMap);
-    }
-    return NULL;*/
+    return channels;
 }
 
 Tp::TextChannelPtr ChatManager::channelForObjectPath(const QString &objectPath)
