@@ -151,6 +151,29 @@ QString ChatManager::sendMessage(const QString &accountId, const QString &messag
 QList<Tp::TextChannelPtr> ChatManager::channelForProperties(const QVariantMap &properties)
 {
     QList<Tp::TextChannelPtr> channels;
+
+
+    Q_FOREACH (Tp::TextChannelPtr channel, mTextChannels) {
+        if (channelMatchProperties(channel, properties)) {
+            channels << channel;
+        }
+    }
+
+    return channels;
+}
+
+Tp::TextChannelPtr ChatManager::channelForObjectPath(const QString &objectPath)
+{
+    Q_FOREACH(Tp::TextChannelPtr channel, mTextChannels) {
+        if (channel->objectPath() == objectPath) {
+            return channel;
+        }
+    }
+    return Tp::TextChannelPtr();
+}
+
+bool ChatManager::channelMatchProperties(const Tp::TextChannelPtr &channel, const QVariantMap &properties)
+{
     QVariantMap propMap = properties;
     ChatEntry::ChatType chatType = ChatEntry::ChatTypeNone;
 
@@ -189,71 +212,55 @@ QList<Tp::TextChannelPtr> ChatManager::channelForProperties(const QVariantMap &p
     }
 
     if ((participants.count() == 0 && chatType == ChatEntry::ChatTypeContact)  || accountId.isEmpty()) {
-        return channels;
+        return false;
     }
 
-    Q_FOREACH (Tp::TextChannelPtr channel, mTextChannels) {
-        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
-        if (!account) {
-            continue;
-        }
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    if (!account) {
+        return false;
+    }
 
-        // only channels of the correct type should be returned
-        if ((ChatEntry::ChatType)channel->targetHandleType() != chatType) {
-            continue;
-        }
+    // only channels of the correct type should be returned
+    if ((ChatEntry::ChatType)channel->targetHandleType() != chatType) {
+        return false;
+    }
 
-        if (chatType == ChatEntry::ChatTypeRoom) {
-            QString chatId = propMap["threadId"].toString();
-            if (!chatId.isEmpty() && channel->targetId() == chatId) {
-                // if we are filtering by one specific accountId, make sure it matches
-                if (!accountId.isEmpty() && accountId != account->accountId()) {
-                    continue;
+    if (chatType == ChatEntry::ChatTypeRoom) {
+        QString chatId = propMap["threadId"].toString();
+        if (!chatId.isEmpty() && channel->targetId() == chatId) {
+            // if we are filtering by one specific accountId, make sure it matches
+            if (!accountId.isEmpty() && accountId != account->accountId()) {
+                return false;
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    Tp::Contacts contacts = channel->groupContacts(false);
+    if (participants.count() != contacts.count()) {
+        return false;
+    }
+    int participantCount = 0;
+    // iterate over participants
+    Q_FOREACH (const Tp::ContactPtr &contact, contacts) {
+        if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
+            Q_FOREACH(const QString &participant, participants) {
+                if (PhoneUtils::comparePhoneNumbers(participant, contact->id()) > PhoneUtils::NO_MATCH) {
+                    participantCount++;
+                    break;
                 }
-
-                channels << channel;
             }
             continue;
         }
-
-        Tp::Contacts contacts = channel->groupContacts(false);
-        if (participants.count() != contacts.count()) {
-            continue;
-        }
-        int participantCount = 0;
-        // iterate over participants
-        Q_FOREACH (const Tp::ContactPtr &contact, contacts) {
-            if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
-                Q_FOREACH(const QString &participant, participants) {
-                    if (PhoneUtils::comparePhoneNumbers(participant, contact->id()) > PhoneUtils::NO_MATCH) {
-                        participantCount++;
-                        break;
-                    }
-                }
-                continue;
-            }
-            if (participants.contains(contact->id())) {
-                participantCount++;
-            } else {
-                break;
-            }
-        }
-        if (participantCount == participants.count()) {
-            channels << channel;
+        if (participants.contains(contact->id())) {
+            participantCount++;
+        } else {
+            break;
         }
     }
-
-    return channels;
-}
-
-Tp::TextChannelPtr ChatManager::channelForObjectPath(const QString &objectPath)
-{
-    Q_FOREACH(Tp::TextChannelPtr channel, mTextChannels) {
-        if (channel->objectPath() == objectPath) {
-            return channel;
-        }
-    }
-    return Tp::TextChannelPtr();
+    return (participantCount == participants.count());
 }
 
 void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)

@@ -110,7 +110,10 @@ protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
     void addChannel(const Tp::TextChannelPtr &channel);
 
+    QVariantMap generateProperties() const;
+
 private Q_SLOTS:
+    void onTextChannelAvailable(const Tp::TextChannelPtr &channel);
     void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
     void onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated);
     void onSendingMessageFinished();

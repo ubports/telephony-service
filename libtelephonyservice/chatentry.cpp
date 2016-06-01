@@ -229,19 +229,15 @@ void ChatEntry::classBegin()
 
 void ChatEntry::componentComplete()
 {
-    QVariantMap properties;
-
-    properties["participantIds"] = participants();
-    properties["chatType"] = (int)chatType();
-    properties["chatId"] = chatId();
-    properties["accountId"] = accountId();
-
-    QList<Tp::TextChannelPtr> channels = ChatManager::instance()->channelForProperties(properties);
+    QList<Tp::TextChannelPtr> channels = ChatManager::instance()->channelForProperties(generateProperties());
     if (!channels.isEmpty()) {
         setChannels(channels);
     } else {
         // FIXME: start chatting with all accounts that support typing notifications
     }
+
+    connect(ChatManager::instance(), &ChatManager::textChannelAvailable,
+            this, &ChatEntry::onTextChannelAvailable);
 }
 
 void ChatEntry::setChannels(const QList<Tp::TextChannelPtr> &channels)
@@ -298,4 +294,25 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     }
 
     mChannels << channel;
+}
+
+QVariantMap ChatEntry::generateProperties() const
+{
+    QVariantMap properties;
+
+    properties["participantIds"] = participants();
+    properties["chatType"] = (int)chatType();
+    properties["chatId"] = chatId();
+    properties["accountId"] = accountId();
+
+    return properties;
+}
+
+void ChatEntry::onTextChannelAvailable(const Tp::TextChannelPtr &channel)
+{
+    qDebug() << "BLABLA text channel available, check if match properties:" << generateProperties();
+    if (ChatManager::channelMatchProperties(channel, generateProperties())) {
+        qDebug() << "... good";
+        addChannel(channel);
+    }
 }

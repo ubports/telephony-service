@@ -39,6 +39,8 @@ public:
     QList<Tp::TextChannelPtr> channelForProperties(const QVariantMap &properties);
     Tp::TextChannelPtr channelForObjectPath(const QString &objectPath);
 
+    static bool channelMatchProperties(const Tp::TextChannelPtr &channel, const QVariantMap &properties);
+
 Q_SIGNALS:
     void textChannelAvailable(Tp::TextChannelPtr);
     void textChannelInvalidated(Tp::TextChannelPtr);
