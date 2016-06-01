@@ -81,10 +81,10 @@ void HandlerDBus::setCallIndicatorVisible(bool visible)
     Q_EMIT CallIndicatorVisibleChanged(visible);
 }
 
-QString HandlerDBus::registerObject(QObject *object, const QString &path, const QString &interface)
+QString HandlerDBus::registerObject(QObject *object, const QString &path)
 {
     QString fullPath = QString("%1/%2").arg(DBUS_OBJECT_PATH, path);
-    if (QDBusConnection::sessionBus().registerObject(fullPath, interface, object)) {
+    if (QDBusConnection::sessionBus().registerObject(fullPath, object)) {
         return fullPath;
     }
     return QString::null;

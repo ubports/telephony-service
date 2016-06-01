@@ -59,8 +59,6 @@
    </body>\
  </smil>"
 
-#define MESSAGE_SENDING_DBUS_INTERFACE "com.canonical.TelephonyServiceHandler.MessageSendingJob"
-
 MessageSendingJob::MessageSendingJob(TextHandler *textHandler, PendingMessage message)
 : MessageJob(textHandler), mTextHandler(textHandler), mMessage(message), mFinished(false), mAdaptor(new MessageSendingJobAdaptor(this))
 {
@@ -70,7 +68,7 @@ MessageSendingJob::MessageSendingJob(TextHandler *textHandler, PendingMessage me
     if (count == ULONG_MAX) {
         count = 0;
     }
-    mObjectPath = HandlerDBus::instance()->registerObject(this, QString("messagesendingjob%1").arg(count++), MESSAGE_SENDING_DBUS_INTERFACE);
+    mObjectPath = HandlerDBus::instance()->registerObject(this, QString("messagesendingjob%1").arg(count++));
 }
 
 MessageSendingJob::~MessageSendingJob()

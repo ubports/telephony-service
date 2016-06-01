@@ -51,7 +51,7 @@ public:
     bool callIndicatorVisible() const;
     void setCallIndicatorVisible(bool visible);
 
-    QString registerObject(QObject *object, const QString &path, const QString &interface);
+    QString registerObject(QObject *object, const QString &path);
     void unregisterObject(const QString &path);
 
     static HandlerDBus *instance();
