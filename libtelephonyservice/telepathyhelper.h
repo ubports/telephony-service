@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -75,7 +75,7 @@ public:
     static TelepathyHelper *instance();
     QList<AccountEntry*> accounts() const;
     QList<AccountEntry*> phoneAccounts() const;
-    QList<AccountEntry*> activeAccounts() const;
+    QList<AccountEntry*> activeAccounts(bool includeMultimedia=false) const;
     QQmlListProperty<AccountEntry> qmlAccounts();
     QQmlListProperty<AccountEntry> qmlPhoneAccounts();
     QQmlListProperty<AccountEntry> qmlActiveAccounts();

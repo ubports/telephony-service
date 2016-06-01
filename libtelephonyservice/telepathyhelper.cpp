@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2015 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -149,11 +149,14 @@ QList<AccountEntry*> TelepathyHelper::accounts() const
     return mAccounts;
 }
 
-QList<AccountEntry*> TelepathyHelper::activeAccounts() const
+QList<AccountEntry*> TelepathyHelper::activeAccounts(bool includeMultimedia) const
 {
     QList<AccountEntry*> activeAccountList;
     Q_FOREACH(AccountEntry *account, mAccounts) {
-        if (account->active() && account->type() != AccountEntry::MultimediaAccount) {
+        if (account->active()) {
+            if (account->type() == AccountEntry::MultimediaAccount && !includeMultimedia) {
+                continue;
+            }
             activeAccountList << account;
         }
     }

@@ -92,6 +92,13 @@ ChatManager *ChatManager::instance()
     return manager;
 }
 
+void ChatManager::startChat(const QString &accountId, const QVariantMap &properties)
+{
+    QVariantMap propMap = convertPropertiesForDBus(properties);
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->asyncCall("StartChat", accountId, propMap);
+}
+
 QString ChatManager::sendMessage(const QString &accountId, const QString &message, const QVariant &attachments, const QVariantMap &properties)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);

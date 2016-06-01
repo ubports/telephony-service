@@ -229,11 +229,31 @@ void ChatEntry::classBegin()
 
 void ChatEntry::componentComplete()
 {
-    QList<Tp::TextChannelPtr> channels = ChatManager::instance()->channelForProperties(generateProperties());
+    QVariantMap properties = generateProperties();
+    QList<Tp::TextChannelPtr> channels = ChatManager::instance()->channelForProperties(properties);
+    QList<AccountEntry*> accounts;
+
     if (!channels.isEmpty()) {
         setChannels(channels);
-    } else {
-        // FIXME: start chatting with all accounts that support typing notifications
+    }
+
+    // now filter out the Phone accounts from the accounts list
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->activeAccounts(true)) {
+        if (account->type() != AccountEntry::PhoneAccount) {
+            accounts << account;
+        }
+    }
+
+    // now check that we have channels for all !Phone accounts
+    // we need channels to be able to show typing notifications
+    Q_FOREACH(const Tp::TextChannelPtr &channel, channels) {
+        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        accounts.removeAll(account);
+    }
+
+    // if there is any remaining account, request to start chatting using the account
+    Q_FOREACH(AccountEntry *account, accounts) {
+        ChatManager::instance()->startChat(account->accountId(), properties);
     }
 
     connect(ChatManager::instance(), &ChatManager::textChannelAvailable,
@@ -310,9 +330,7 @@ QVariantMap ChatEntry::generateProperties() const
 
 void ChatEntry::onTextChannelAvailable(const Tp::TextChannelPtr &channel)
 {
-    qDebug() << "BLABLA text channel available, check if match properties:" << generateProperties();
     if (ChatManager::channelMatchProperties(channel, generateProperties())) {
-        qDebug() << "... good";
         addChannel(channel);
     }
 }
