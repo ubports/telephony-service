@@ -22,6 +22,7 @@
 #include <QContact>
 #include <QContactAvatar>
 #include <QContactName>
+#include <QContactDisplayLabel>
 #include <QContactPhoneNumber>
 #include <QDBusInterface>
 #include <QDBusPendingCallWatcher>
@@ -218,9 +219,11 @@ void GreeterContactsTest::testGreeterIsActive()
 QVariantMap GreeterContactsTest::makeTestMap()
 {
     QVariantMap map;
+    map.insert("DisplayLabel", QVariant(""));
     map.insert("FirstName", QVariant("First"));
     map.insert("Image", QVariant(CMAKE_SOURCE_DIR "/icons/hicolor/48x48/apps/telephony-service-call.png"));
     map.insert("LastName", QVariant("Last"));
+    map.insert("MiddleName", QVariant("Middle"));
     map.insert("PhoneNumber", QVariant("555"));
     return map;
 }
@@ -240,9 +243,14 @@ QContact GreeterContactsTest::makeTestContact(bool convertedPath)
     avatarDetail.setValue(QContactAvatar::FieldImageUrl, QUrl::fromLocalFile(imagePath));
     contact.saveDetail(&avatarDetail);
 
+    QContactDisplayLabel label;
+    label.setLabel("");
+    contact.saveDetail(&label);
+
     QContactName nameDetail;
     nameDetail.setValue(QContactName::FieldFirstName, "First");
     nameDetail.setValue(QContactName::FieldLastName, "Last");
+    nameDetail.setValue(QContactName::FieldMiddleName, "Middle");
     contact.saveDetail(&nameDetail);
 
     QContactPhoneNumber numberDetail;

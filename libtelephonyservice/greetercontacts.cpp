@@ -26,6 +26,7 @@
 #include <QContactInvalidFilter>
 #include <QContactManagerEngine>
 #include <QContactName>
+#include <QContactDisplayLabel>
 #include <QContactPhoneNumber>
 #include <QDBusInterface>
 #include <QDBusMetaType>
@@ -508,8 +509,12 @@ QVariantMap GreeterContacts::contactToMap(const QContact &contact)
     QContactAvatar avatarDetail = contact.detail<QContactAvatar>();
     map.insert("Image", avatarDetail.imageUrl().toLocalFile());
 
+    QContactDisplayLabel displayLabel = contact.detail<QContactDisplayLabel>();
+    map.insert("DisplayLabel", displayLabel.label());
+
     QContactName nameDetail = contact.detail<QContactName>();
     map.insert("FirstName", nameDetail.firstName());
+    map.insert("MiddleName", nameDetail.middleName());
     map.insert("LastName", nameDetail.lastName());
 
     QContactPhoneNumber numberDetail = contact.detail<QContactPhoneNumber>();
@@ -528,8 +533,13 @@ QContact GreeterContacts::mapToContact(const QVariantMap &map)
 
     // We only use FirstName and LastName right now in ContactUtils::formatContactName().
     // If/When we use more, we should save more detail values here.
+    QContactDisplayLabel displayLabel;
+    displayLabel.setValue(QContactDisplayLabel::FieldLabel, map.value("DisplayLabel"));
+    contact.saveDetail(&displayLabel);
+
     QContactName nameDetail;
     nameDetail.setValue(QContactName::FieldFirstName, map.value("FirstName"));
+    nameDetail.setValue(QContactName::FieldMiddleName, map.value("MiddleName"));
     nameDetail.setValue(QContactName::FieldLastName, map.value("LastName"));
     contact.saveDetail(&nameDetail);
 
