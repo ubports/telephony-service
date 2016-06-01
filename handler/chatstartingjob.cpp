@@ -29,6 +29,7 @@ ChatStartingJob::ChatStartingJob(TextHandler *textHandler, const QString &accoun
 : MessageJob(textHandler), mTextHandler(textHandler), mAccountId(accountId), mProperties(properties)
 {
     qDebug() << __PRETTY_FUNCTION__;
+    connect(this, &ChatStartingJob::textChannelChanged, &ChatStartingJob::channelObjectPathChanged);
 }
 
 void ChatStartingJob::startJob()
@@ -81,7 +82,6 @@ void ChatStartingJob::startTextChat(const Tp::AccountPtr &account, const QVarian
         return;
     }
 
-    qDebug() << "BLABLA starting operation";
     connect(op, &Tp::PendingOperation::finished,
             this, &ChatStartingJob::onChannelRequestFinished);
 }
@@ -126,6 +126,14 @@ Tp::TextChannelPtr ChatStartingJob::textChannel() const
 {
     qDebug() << __PRETTY_FUNCTION__;
     return mTextChannel;
+}
+
+QString ChatStartingJob::channelObjectPath() const
+{
+    if (mTextChannel.isNull()) {
+        return QString::null;
+    }
+    return mTextChannel->objectPath();
 }
 
 void ChatStartingJob::setTextChannel(Tp::TextChannelPtr channel)

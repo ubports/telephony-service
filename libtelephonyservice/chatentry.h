@@ -58,6 +58,7 @@ class ChatEntry : public QObject, public QQmlParserStatus
     Q_PROPERTY(QStringList participants READ participants WRITE setParticipants NOTIFY participantsChanged)
     Q_PROPERTY(QString roomName READ roomName WRITE setRoomName NOTIFY roomNameChanged)
     Q_PROPERTY(QString chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
+    Q_PROPERTY(QString accountId READ accountId WRITE setAccountId NOTIFY accountIdChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates
                READ chatStates
@@ -89,18 +90,21 @@ public:
     void setChatType(ChatType type);
     QString chatId() const;
     void setChatId(const QString &id);
+    QString accountId() const;
+    void setAccountId(const QString &id);
     QString roomName() const;
     void setRoomName(const QString &name);
     QString title() const;
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
 
-    // FIXME: void or return something?
-    void sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
-
     // QML parser status
     void classBegin();
     void componentComplete();
+
+public Q_SLOTS:
+    // FIXME: void or return something?
+    void sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
 
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
@@ -114,13 +118,14 @@ private Q_SLOTS:
 Q_SIGNALS:
     void chatTypeChanged();
     void chatIdChanged();
+    void accountIdChanged();
     void chatStatesChanged();
     void participantsChanged();
     void roomNameChanged();
     void titleChanged();
 
-    void messageSent(const QString &accountId, const QString &messageId);
-    void messageSendingFailed(const QString &accountId, const QString &messageId);
+    void messageSent(const QString &accountId, const QString &messageId, const QVariantMap &properties);
+    void messageSendingFailed(const QString &accountId, const QString &messageId, const QVariantMap &properties);
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
@@ -129,6 +134,7 @@ private:
     QString mRoomName;
     QString mTitle;
     QString mChatId;
+    QString mAccountId;
     ChatType mChatType;
     Tp::Client::ChannelInterfaceRoomInterface *roomInterface;
     Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;

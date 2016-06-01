@@ -64,10 +64,12 @@ void ChatEntry::onSendingMessageFinished()
     QString accountId = job->property("accountId").toString();
     QString messageId = job->property("messageId").toString();
     QString channelObjectPath = job->property("channelObjectPath").toString();
+    QVariantMap properties = job->property("properties").toMap();
+    qDebug() << accountId << messageId << channelObjectPath << properties;
     Tp::TextChannelPtr channel = ChatManager::instance()->channelForObjectPath(channelObjectPath);
 
     if (channel.isNull()) {
-        Q_EMIT messageSendingFailed(accountId, messageId);
+        Q_EMIT messageSendingFailed(accountId, messageId, properties);
         job->deleteLater();
         return;
     }
@@ -76,12 +78,12 @@ void ChatEntry::onSendingMessageFinished()
     addChannel(channel);
 
     if (job->property("status").toInt() == MessageJob::Failed || channel.isNull()) {
-        Q_EMIT messageSendingFailed(accountId, messageId);
+        Q_EMIT messageSendingFailed(accountId, messageId, properties);
         job->deleteLater();
         return;
     }
 
-    Q_EMIT messageSent(accountId, messageId);
+    Q_EMIT messageSent(accountId, messageId, properties);
     job->deleteLater();
 }
 
@@ -135,6 +137,19 @@ void ChatEntry::setChatId(const QString &id)
     Q_EMIT chatIdChanged();
     // FIXME: we need to invalidate the existing channels & data and start fresh
 }
+
+QString ChatEntry::accountId() const
+{
+    return mAccountId;
+}
+
+void ChatEntry::setAccountId(const QString &id)
+{
+    mAccountId = id;
+    Q_EMIT accountIdChanged();
+    // FIXME: we need to invalidate the existing channels & data and start fresh
+}
+
 
 void ChatEntry::onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state)
 {
@@ -198,12 +213,13 @@ ContactChatState *ChatEntry::chatStatesAt(QQmlListProperty<ContactChatState> *p,
 void ChatEntry::sendMessage(const QString &accountId, const QString &message, const QVariant &attachments, const QVariantMap &properties)
 {
     QString objPath = ChatManager::instance()->sendMessage(accountId, message, attachments, properties);
-    QDBusInterface *sendingJob = new QDBusInterface(TelepathyHelper::instance()->handlerInterface()->service(),
-                                                    objPath,
-                                                    TelepathyHelper::instance()->handlerInterface()->interface(),
-                                                    QDBusConnection::sessionBus(),
-                                                    this);
+    QDBusInterface *sendingJob = new QDBusInterface(TelepathyHelper::instance()->handlerInterface()->service(), objPath,
+                                                    "com.canonical.TelephonyServiceHandler.MessageSendingJob");
+    qDebug() << sendingJob->isValid();
+    sendingJob->dumpObjectInfo();
     connect(sendingJob, SIGNAL(finished()), SLOT(onSendingMessageFinished()));
+    QDBusReply<QString> reply = sendingJob->call("Introspect");
+    qDebug() << reply.value();
 }
 
 void ChatEntry::classBegin()
@@ -213,10 +229,12 @@ void ChatEntry::classBegin()
 
 void ChatEntry::componentComplete()
 {
-    // FIXME: implement
     QVariantMap properties;
 
     properties["participantIds"] = participants();
+    properties["chatType"] = (int)chatType();
+    properties["chatId"] = chatId();
+    properties["accountId"] = accountId();
 
     QList<Tp::TextChannelPtr> channels = ChatManager::instance()->channelForProperties(properties);
     if (!channels.isEmpty()) {
@@ -235,7 +253,7 @@ void ChatEntry::setChannels(const QList<Tp::TextChannelPtr> &channels)
 
 void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
 {
-    qDebug() << "BLABLA adding channel" << channel->objectPath();
+    qDebug() << "adding channel" << channel->objectPath();
     if (mChannels.contains(channel)) {
         return;
     }

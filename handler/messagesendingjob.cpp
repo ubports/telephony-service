@@ -26,6 +26,7 @@
 #include "messagesendingjob.h"
 #include "telepathyhelper.h"
 #include "texthandler.h"
+#include "messagesendingjobadaptor.h"
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 #include <QImage>
@@ -58,8 +59,10 @@
    </body>\
  </smil>"
 
+#define MESSAGE_SENDING_DBUS_INTERFACE "com.canonical.TelephonyServiceHandler.MessageSendingJob"
+
 MessageSendingJob::MessageSendingJob(TextHandler *textHandler, PendingMessage message)
-: MessageJob(textHandler), mTextHandler(textHandler), mMessage(message), mFinished(false)
+: MessageJob(textHandler), mTextHandler(textHandler), mMessage(message), mFinished(false), mAdaptor(new MessageSendingJobAdaptor(this))
 {
     qDebug() << __PRETTY_FUNCTION__;
     static ulong count = 0;
@@ -67,7 +70,7 @@ MessageSendingJob::MessageSendingJob(TextHandler *textHandler, PendingMessage me
     if (count == ULONG_MAX) {
         count = 0;
     }
-    mObjectPath = HandlerDBus::instance()->registerObject(this, QString("messagesendingjob%1").arg(count++));
+    mObjectPath = HandlerDBus::instance()->registerObject(this, QString("messagesendingjob%1").arg(count++), MESSAGE_SENDING_DBUS_INTERFACE);
 }
 
 MessageSendingJob::~MessageSendingJob()
@@ -97,6 +100,11 @@ QString MessageSendingJob::objectPath() const
 {
     qDebug() << __PRETTY_FUNCTION__;
     return mObjectPath;
+}
+
+QVariantMap MessageSendingJob::properties() const
+{
+    return mMessage.properties;
 }
 
 void MessageSendingJob::startJob()
@@ -217,7 +225,7 @@ void MessageSendingJob::sendMessage()
         }
 
         setChannelObjectPath(mTextChannel->objectPath());
-        setMessageId(op->message().messageToken());
+        setMessageId(op->sentMessageToken());
         setStatus(Finished);
         scheduleDeletion();
     });

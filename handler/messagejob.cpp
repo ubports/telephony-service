@@ -24,6 +24,7 @@
 #include <QCoreApplication>
 #include <QTime>
 #include <QTimer>
+#include <QDebug>
 
 MessageJob::MessageJob(QObject *parent)
 : QObject(parent), mStatus(Pending), mFinished(false)

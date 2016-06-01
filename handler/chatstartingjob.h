@@ -34,16 +34,19 @@ class ChatStartingJob : public MessageJob
 {
     Q_OBJECT
     Q_PROPERTY(Tp::TextChannelPtr textChannel READ textChannel NOTIFY textChannelChanged)
+    Q_PROPERTY(QString channelObjectPath READ channelObjectPath NOTIFY channelObjectPath);
 public:
     ChatStartingJob(TextHandler *textHandler, const QString &accountId, const QVariantMap &properties);
 
     Tp::TextChannelPtr textChannel() const;
+    QString channelObjectPath() const;
 
 public Q_SLOTS:
     virtual void startJob();
 
 Q_SIGNALS:
     void textChannelChanged();
+    void channelObjectPathChanged();
 
 
 protected Q_SLOTS:

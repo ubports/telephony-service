@@ -28,7 +28,7 @@
 class MessageJob : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(Status status READ status NOTIFY statusChanged)
+    Q_PROPERTY(int status READ status NOTIFY statusChanged)
     Q_PROPERTY(bool isFinished READ isFinished NOTIFY isFinishedChanged)
     Q_ENUMS(Status)
 public:

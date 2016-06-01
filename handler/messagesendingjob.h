@@ -31,6 +31,7 @@
 
 class AccountEntry;
 class TextHandler;
+class MessageSendingJobAdaptor;
 
 struct PendingMessage {
     QString accountId;
@@ -47,6 +48,7 @@ class MessageSendingJob : public MessageJob, protected QDBusContext
     Q_PROPERTY(QString messageId READ messageId NOTIFY messageIdChanged)
     Q_PROPERTY(QString channelObjectPath READ channelObjectPath NOTIFY channelObjectPathChanged)
     Q_PROPERTY(QString objectPath READ objectPath CONSTANT)
+    Q_PROPERTY(QVariantMap properties READ properties CONSTANT)
 
 public:
     explicit MessageSendingJob(TextHandler *textHandler, PendingMessage message);
@@ -56,6 +58,7 @@ public:
     QString messageId() const;
     QString channelObjectPath() const;
     QString objectPath() const;
+    QVariantMap properties() const;
 
 Q_SIGNALS:
     void accountIdChanged();
@@ -83,6 +86,7 @@ private:
     Tp::TextChannelPtr mTextChannel;
     QString mObjectPath;
     bool mFinished;
+    MessageSendingJobAdaptor *mAdaptor;
 
     Tp::MessagePartList buildMessage(const PendingMessage &pendingMessage);
 

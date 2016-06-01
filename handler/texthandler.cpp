@@ -50,7 +50,7 @@ TextHandler *TextHandler::instance()
 void TextHandler::startChat(const QString &accountId, const QVariantMap &properties)
 {
     ChatStartingJob *job = new ChatStartingJob(this, accountId, properties);
-    QTimer::singleShot(0, job, &ChatStartingJob::startJob);
+    job->startJob();
     // FIXME: do we care about the result?
 }
 
@@ -58,7 +58,7 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
 {
     PendingMessage pendingMessage = {accountId, message, attachments, properties};
     MessageSendingJob *job = new MessageSendingJob(this, pendingMessage);
-    QTimer::singleShot(0, job, &MessageSendingJob::startJob);
+    job->startJob();
 
     return job->objectPath();
 }
