@@ -30,6 +30,7 @@ handler/*.service
 approver/*.service
 approver/approveradaptor.*
 handler/handleradaptor.*
+handler/messagesendingjobadaptor.*
 indicator/*.desktop
 indicator/*.service
 indicator/NotificationsInterface.*
