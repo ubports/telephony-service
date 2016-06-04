@@ -18,6 +18,7 @@
 
 #include <QtCore/QObject>
 #include <QtTest/QtTest>
+#include <QDBusInterface>
 #include "telepathytest.h"
 #include "chatmanager.h"
 #include "handlercontroller.h"
@@ -26,6 +27,8 @@
 #include "accountentry.h"
 #include "accountentryfactory.h"
 #include "telepathyhelper.h"
+
+Q_DECLARE_METATYPE(Tp::TextChannelPtr)
 
 class HandlerTest : public TelepathyTest
 {
@@ -69,6 +72,8 @@ void HandlerTest::initTestCase()
 
     QSignalSpy setupReadySpy(TelepathyHelper::instance(), SIGNAL(setupReady()));
     TRY_COMPARE(setupReadySpy.count(), 1);
+
+    qRegisterMetaType<Tp::TextChannelPtr>();
 
     registerApprover();
 }
@@ -365,7 +370,7 @@ void HandlerTest::testAcknowledgeMessage()
     HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentSpy.count(), 1);
 
-    QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
+    QSignalSpy textChannelAvailableSpy(ChatManager::instance(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)));
 
     // now receive a message from a very similar number so CM creates another
     // channel and the handler needs to deal with both
@@ -374,8 +379,11 @@ void HandlerTest::testAcknowledgeMessage()
     properties["Recipients"] = (QStringList() << recipient2);
     mMockController->PlaceIncomingMessage(message, properties);
 
-    TRY_COMPARE(messageReceivedSpy.count(), 1);
-    QString receivedMessageId = messageReceivedSpy.first()[3].toString();
+    TRY_COMPARE(textChannelAvailableSpy.count(), 1);
+    Tp::TextChannelPtr channel = textChannelAvailableSpy.first().first().value<Tp::TextChannelPtr>();
+    QVERIFY(!channel.isNull());
+    TRY_COMPARE(channel->messageQueue().count(), 1);
+    QString receivedMessageId = channel->messageQueue().first().messageToken();
 
     // then acknowledge the message that arrived in the second channel and make sure handler
     // does the right thing
@@ -404,7 +412,7 @@ void HandlerTest::testAcknowledgeAllMessages()
     HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentSpy.count(), 1);
 
-    QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
+    QSignalSpy textChannelAvailableSpy(ChatManager::instance(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)));
 
     // now receive some messages from a very similar number so CM creates another
     // channel and the handler needs to deal with both
@@ -415,7 +423,11 @@ void HandlerTest::testAcknowledgeAllMessages()
         mMockController->PlaceIncomingMessage(message.arg(QString::number(i)), properties);
     }
 
-    TRY_COMPARE(messageReceivedSpy.count(), messageCount);
+    TRY_COMPARE(textChannelAvailableSpy.count(), 1);
+    Tp::TextChannelPtr channel = textChannelAvailableSpy.first().first().value<Tp::TextChannelPtr>();
+    QVERIFY(!channel.isNull());
+    TRY_COMPARE(channel->messageQueue().count(), messageCount);
+    QString receivedMessageId = channel->messageQueue().first().messageToken();
 
     // then acknowledge the messages that arrived in the second channel and make sure handler
     // does the right thing
@@ -491,8 +503,13 @@ void HandlerTest::testMultimediaFallback()
     QSignalSpy messageSentOfonoSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
     QSignalSpy messageSentMultimediaSpy(mMultimediaMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
-    QString accountId = HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
-    QCOMPARE(accountId, mMultimediaTpAccount->uniqueIdentifier());
+    QString jobObjectPath = HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+
+    QDBusInterface jobInterface(TelepathyHelper::instance()->handlerInterface()->service(),
+                               jobObjectPath);
+    QSignalSpy finishedSpy(&jobInterface, SIGNAL(finished()));
+    TRY_COMPARE(finishedSpy.count(), 1);
+    QCOMPARE(jobInterface.property("accountId").toString(), mMultimediaTpAccount->uniqueIdentifier());
     TRY_COMPARE(messageSentMultimediaSpy.count(), 1);
     QCOMPARE(messageSentOfonoSpy.count(), 0);
     QString sentMessage = messageSentMultimediaSpy.first().first().toString();
