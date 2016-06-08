@@ -101,6 +101,11 @@ HandlerDBus *HandlerDBus::instance()
     return self;
 }
 
+bool HandlerDBus::DestroyTextChannel(const QString &objectPath)
+{
+    return TextHandler::instance()->destroyTextChannel(objectPath);
+}
+
 bool HandlerDBus::connectToBus()
 {
     bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);

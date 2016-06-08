@@ -56,6 +56,8 @@ public:
 
     static HandlerDBus *instance();
 
+    bool DestroyTextChannel(const QString &objectPath);
+
 public Q_SLOTS:
     bool connectToBus();
 

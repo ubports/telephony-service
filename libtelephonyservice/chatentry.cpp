@@ -337,6 +337,26 @@ void ChatEntry::setChatState(ChatState state)
     mTypingTimer.start();
 }
 
+bool ChatEntry::destroyRoom()
+{
+    if (mChannels.isEmpty()) {
+        return false;
+    }
+
+    QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
+    Q_FOREACH(const Tp::TextChannelPtr channel, mChannels) {
+        if (!channel->hasInterface(TP_QT_IFACE_CHANNEL_INTERFACE_DESTROYABLE)) {
+            return false;
+        }
+
+        QDBusReply<bool> reply = handlerIface->call("DestroyTextChannel", channel->objectPath());
+        if (!reply.isValid() || !reply.value()) {
+            return false;
+        }
+    }
+    return true;
+}
+
 QVariantMap ChatEntry::generateProperties() const
 {
     QVariantMap properties;

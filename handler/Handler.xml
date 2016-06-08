@@ -45,6 +45,14 @@
             <arg name="properties" type="a{sv}" direction="in"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
         </method>
+        <method name="DestroyTextChannel">
+            <dox:d><![CDATA[
+                Destroy a text channel. Only works on channels that have the
+                Channel.Interface.Destroyable interface.
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="result" type="b" direction="out"/>
+        </method>
         <!-- Call Related -->
         <method name="StartCall">
             <dox:d><![CDATA[
