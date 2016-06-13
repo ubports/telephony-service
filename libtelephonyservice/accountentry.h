@@ -45,6 +45,7 @@ class AccountEntry : public QObject
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList addressableVCardFields READ addressableVCardFields NOTIFY addressableVCardFieldsChanged)
     Q_PROPERTY(Protocol* protocolInfo READ protocolInfo CONSTANT)
+    Q_PROPERTY(Capabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
     Q_ENUMS(AccountType)
     friend class AccountEntryFactory;
 
@@ -54,6 +55,17 @@ public:
         MultimediaAccount,
         GenericAccount
     };
+
+    enum Capability {
+        CapabilityNone                                = 0,
+        CapabilityTextChatrooms                       = 1,
+        CapabilityConferenceTextChats                 = 2,
+        CapabilityConferenceTextChatsWithInvitees     = 4,
+        CapabilityConferenceTextChatrooms             = 8,
+        CapabilityConferenceTextChatroomsWithInvitees = 16,
+        CapabilityContactSearches                     = 32
+    };
+    Q_DECLARE_FLAGS(Capabilities, Capability);
 
     bool ready() const;
     QString accountId() const;
@@ -68,6 +80,7 @@ public:
     virtual bool compareIds(const QString &first, const QString &second) const;
     virtual bool active() const;
     virtual bool connected() const;
+    Capabilities capabilities() const;
  
     Protocol *protocolInfo() const;
 
@@ -85,6 +98,7 @@ Q_SIGNALS:
     void addressableVCardFieldsChanged();
     void removed();
     void connectionStatusChanged(Tp::ConnectionStatus status);
+    void capabilitiesChanged();
 
 protected Q_SLOTS:
     virtual void initialize();
@@ -100,5 +114,7 @@ protected:
     bool mReady;
     Protocol *mProtocol;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(AccountEntry::Capabilities);
 
 #endif // ACCOUNTENTRY_H

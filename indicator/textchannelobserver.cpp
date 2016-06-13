@@ -277,7 +277,9 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
         return;
     }
 
-    ChatManager::instance()->sendMessage(account->accountId(), recipients, text);
+    QVariantMap properties;
+    properties["participantIds"] = recipients;
+    ChatManager::instance()->sendMessage(account->accountId(), text, QVariantMap(), properties);
 }
 
 void TextChannelObserver::clearNotifications()
@@ -341,6 +343,9 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
 void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
 {
     Tp::ContactPtr contact = message.sender();
+    if (!contact) {
+        return;
+    }
 
     QByteArray token(message.messageToken().toUtf8());
     if (!mUnreadMessages.contains(token)) {
@@ -624,7 +629,7 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
     // we do not notify messages sent by ourselves on other devices, unless we
     // are dealing with phone accounts: #1547462
     if (!account->account()->connection().isNull() && 
-            message.sender()->handle().at(0) == account->account()->connection()->selfHandle() &&
+            message.sender() && message.sender()->handle().at(0) == account->account()->connection()->selfHandle() &&
             account->type() != AccountEntry::PhoneAccount) {
         return;
     }
@@ -722,7 +727,11 @@ void TextChannelObserver::onReplyReceived(const QStringList &recipients, const Q
 void TextChannelObserver::onMessageRead(const QStringList &recipients, const QString &accountId, const QString &encodedMessageId)
 {
     QString messageId(QByteArray::fromHex(encodedMessageId.toUtf8()));
-    ChatManager::instance()->acknowledgeMessage(recipients, messageId, accountId);
+    QVariantMap properties;
+    properties["accountId"] = accountId;
+    properties["participantIds"] = recipients;
+    properties["messageId"] = encodedMessageId;
+    ChatManager::instance()->acknowledgeMessage(properties);
 }
 
 void TextChannelObserver::onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2015 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -56,6 +56,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
                            "org.freedesktop.URfkill",
                            QDBusConnection::systemBus())
 {
+    qRegisterMetaType<QList<AccountEntry*> >();
     mAccountFeatures << Tp::Account::FeatureCore
                      << Tp::Account::FeatureProtocolInfo;
     mContactFeatures << Tp::Contact::FeatureAlias
@@ -148,11 +149,14 @@ QList<AccountEntry*> TelepathyHelper::accounts() const
     return mAccounts;
 }
 
-QList<AccountEntry*> TelepathyHelper::activeAccounts() const
+QList<AccountEntry*> TelepathyHelper::activeAccounts(bool includeMultimedia) const
 {
     QList<AccountEntry*> activeAccountList;
     Q_FOREACH(AccountEntry *account, mAccounts) {
-        if (account->active() && account->type() != AccountEntry::MultimediaAccount) {
+        if (account->active()) {
+            if (account->type() == AccountEntry::MultimediaAccount && !includeMultimedia) {
+                continue;
+            }
             activeAccountList << account;
         }
     }
@@ -585,3 +589,14 @@ void TelepathyHelper::unlockSimCards() const
     connectivityIface.asyncCall("UnlockAllModems");
 }
 
+
+QList<AccountEntry*> TelepathyHelper::accountsForType(int type)
+{
+    QList<AccountEntry*> accounts;
+    Q_FOREACH(AccountEntry *account, mAccounts) {
+        if (account->type() == (AccountEntry::AccountType)type) {
+            accounts << account;
+        }
+    }
+    return accounts;
+}

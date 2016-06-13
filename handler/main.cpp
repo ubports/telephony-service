@@ -54,10 +54,8 @@ int main(int argc, char **argv)
     QObject::connect(handler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
                      TextHandler::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
 
-    HandlerDBus dbus;
-
     QObject::connect(TelepathyHelper::instance(), SIGNAL(setupReady()),
-                     &dbus, SLOT(connectToBus()));
+                     HandlerDBus::instance(), SLOT(connectToBus()));
 
     return app.exec();
 }
