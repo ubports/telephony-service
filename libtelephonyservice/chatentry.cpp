@@ -123,6 +123,7 @@ void ChatEntry::setTitle(const QString &title)
 
     QVariantMap properties;
     properties["Title"] = title;
+    // FIXME: we better check for the result here and maybe notify the app
     roomConfigInterface->UpdateConfiguration(properties);
 }
 
