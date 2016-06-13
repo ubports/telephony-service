@@ -115,6 +115,17 @@ QString ChatEntry::title() const
     return mTitle;
 }
 
+void ChatEntry::setTitle(const QString &title)
+{
+    if (!roomConfigInterface) {
+        return;
+    }
+
+    QVariantMap properties;
+    properties["Title"] = title;
+    roomConfigInterface->UpdateConfiguration(properties);
+}
+
 ChatEntry::~ChatEntry()
 {
     QMap<QString, ContactChatState*> tmp = mChatStates;
