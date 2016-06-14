@@ -117,7 +117,10 @@ QString ChatEntry::title() const
 
 void ChatEntry::setTitle(const QString &title)
 {
+    // FIXME: remove this debug before going into production.
+    qDebug() << __PRETTY_FUNCTION__ << "Changing group title to" << title;
     if (!roomConfigInterface) {
+        qWarning() << "Cannot change group title, no room interface found.";
         return;
     }
 
