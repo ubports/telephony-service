@@ -324,7 +324,10 @@ QVariantMap ChatEntry::generateProperties() const
     properties["chatType"] = (int)chatType();
     properties["chatId"] = chatId();
     properties["threadId"] = chatId();
-    properties["accountId"] = accountId();
+
+    if (chatType() == ChatEntry::ChatTypeRoom) {
+        properties["accountId"] = accountId();
+    }
 
     return properties;
 }
