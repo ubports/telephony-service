@@ -43,6 +43,7 @@ public Q_SLOTS:
     void acknowledgeMessages(const QVariantList &messages);
     void acknowledgeAllMessages(const QVariantMap &properties);
     bool destroyTextChannel(const QString &objectPath);
+    void changeRoomTitle(const QString &objectPath, const QString &title);
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
@@ -50,6 +51,7 @@ protected Q_SLOTS:
 
 protected:
     QList<Tp::TextChannelPtr> existingChannels(const QString &accountId, const QVariantMap &properties);
+    Tp::TextChannelPtr existingChannelFromObjectPath(const QString &objectPath);
 
 private:
     explicit TextHandler(QObject *parent = 0);

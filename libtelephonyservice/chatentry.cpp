@@ -115,6 +115,21 @@ QString ChatEntry::title() const
     return mTitle;
 }
 
+void ChatEntry::setTitle(const QString &title)
+{
+    // FIXME: remove this debug before going into production.
+    qDebug() << __PRETTY_FUNCTION__ << "Changing group title to" << title;
+    QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
+    Q_FOREACH(const Tp::TextChannelPtr channel, mChannels) {
+        if (!channel->hasInterface(TP_QT_IFACE_CHANNEL_INTERFACE_ROOM_CONFIG)) {
+            qWarning() << "Channel doesn't have the RoomConfig interface";
+            return;
+        }
+
+        handlerIface->asyncCall("ChangeRoomTitle", channel->objectPath(), title);
+    }
+}
+
 ChatEntry::~ChatEntry()
 {
     QMap<QString, ContactChatState*> tmp = mChatStates;

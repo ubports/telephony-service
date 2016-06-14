@@ -99,14 +99,7 @@ void TextHandler::acknowledgeAllMessages(const QVariantMap &properties)
 
 bool TextHandler::destroyTextChannel(const QString &objectPath)
 {
-    Tp::TextChannelPtr channelToDestroy;
-    Q_FOREACH(Tp::TextChannelPtr channel, mChannels) {
-        if (channel->objectPath() == objectPath) {
-            channelToDestroy = channel;
-            break;
-        }
-    }
-
+    Tp::TextChannelPtr channelToDestroy = existingChannelFromObjectPath(objectPath);
     if (!channelToDestroy ||
         !channelToDestroy->hasInterface(TP_QT_IFACE_CHANNEL_INTERFACE_DESTROYABLE)) {
         return false;
@@ -121,6 +114,28 @@ bool TextHandler::destroyTextChannel(const QString &objectPath)
     QDBusPendingReply<void> reply = interface->Destroy();
     reply.waitForFinished();
     return !reply.isError();
+}
+
+void TextHandler::changeRoomTitle(const QString &objectPath, const QString &title)
+{
+    qDebug() << __PRETTY_FUNCTION__;
+    Tp::TextChannelPtr channel = existingChannelFromObjectPath(objectPath);
+    if (!channel) {
+        qWarning() << "Could not find channel for object path" << objectPath;
+        return;
+    }
+
+    Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
+    roomConfigInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomConfigInterface>();
+    if (!roomConfigInterface) {
+        qWarning() << "Could not find RoomConfig interface in the channel" << objectPath;
+        return;
+    }
+
+    QVariantMap properties;
+    properties["Title"] = title;
+    // FIXME: we better check for the result here and maybe notify the app
+    roomConfigInterface->UpdateConfiguration(properties);
 }
 
 void TextHandler::onTextChannelInvalidated()
@@ -200,4 +215,14 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId
         }
     }
     return channels;
+}
+
+Tp::TextChannelPtr TextHandler::existingChannelFromObjectPath(const QString &objectPath)
+{
+    Q_FOREACH(Tp::TextChannelPtr channel, mChannels) {
+        if (channel->objectPath() == objectPath) {
+            return channel;
+        }
+    }
+    return Tp::TextChannelPtr();
 }
