@@ -30,6 +30,7 @@
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/Connection>
+#include <TelepathyQt/PendingVariantMap>
 
 Q_DECLARE_METATYPE(ContactChatStates)
 
@@ -311,6 +312,12 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     }
     if (roomConfigInterface) {
         roomConfigInterface->setMonitorProperties(true);
+        Tp::PendingVariantMap *pendingResult = roomConfigInterface->requestAllProperties();
+        connect(pendingResult, &Tp::PendingOperation::finished, [&](){
+            if (!pendingResult->isError()) {
+                onRoomPropertiesChanged(pendingResult->result(), QStringList());
+            }
+        });
         connect(roomConfigInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
                                      SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
     }
