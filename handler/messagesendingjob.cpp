@@ -217,6 +217,8 @@ void MessageSendingJob::sendMessage()
 
     Tp::MessagePartList messageParts = buildMessage(mMessage);
     Tp::PendingSendMessage *op = NULL;
+    // some protocols can't sent multipart messages, so we check here
+    // and split the parts if needed
     if (canSendMultiPartMessages()) {
         op = mTextChannel->send(messageParts);
     } else {
