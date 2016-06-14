@@ -38,6 +38,22 @@
             <arg name="properties" type="a{sv}" direction="in"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
         </method>
+        <method name="InviteParticipants">
+            <dox:d><![CDATA[
+              Invite participants to a group
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="participants" type="as" direction="in"/>
+            <arg name="message" type="s" direction="in"/>
+        </method>
+        <method name="RemoveParticipants">
+            <dox:d><![CDATA[
+                Remove participants from a group
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="participants" type="as" direction="in"/>
+            <arg name="message" type="s" direction="in"/>
+        </method>
         <method name="AcknowledgeAllMessages">
             <dox:d><![CDATA[
                 Request all messages messages from the given numbers to be acknowledged

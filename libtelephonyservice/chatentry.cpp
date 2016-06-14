@@ -390,3 +390,39 @@ void ChatEntry::onTextChannelAvailable(const Tp::TextChannelPtr &channel)
         addChannel(channel);
     }
 }
+
+void ChatEntry::inviteParticipants(const QStringList &participants, const QString &message)
+{
+    if (chatType() != ChatEntry::ChatTypeRoom || mChannels.size() != 1) {
+        Q_EMIT inviteParticipantsFailed();
+        return;
+    }
+    Tp::TextChannelPtr channel = mChannels.first();
+    if (!channel->groupCanAddContacts() || !channel->connection()) {
+        Q_EMIT inviteParticipantsFailed();
+        return;
+    }
+    QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
+    QDBusReply<bool> reply = handlerIface->call("InviteParticipants", channel->objectPath(), participants, message);
+    if (!reply.isValid()) {
+        Q_EMIT inviteParticipantsFailed();
+    }
+}
+
+void ChatEntry::removeParticipants(const QStringList &participants, const QString &message)
+{
+    if (chatType() != ChatEntry::ChatTypeRoom || mChannels.size() != 1) {
+        Q_EMIT removeParticipantsFailed();
+        return;
+    }
+    Tp::TextChannelPtr channel = mChannels.first();
+    if (!channel->groupCanAddContacts() || !channel->connection()) {
+        Q_EMIT removeParticipantsFailed();
+        return;
+    }
+    QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
+    QDBusReply<bool> reply = handlerIface->call("RemoveParticipants", channel->objectPath(), participants, message);
+    if (!reply.isValid()) {
+        Q_EMIT removeParticipantsFailed();
+    }
+}

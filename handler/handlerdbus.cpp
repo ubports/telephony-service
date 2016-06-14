@@ -101,6 +101,16 @@ HandlerDBus *HandlerDBus::instance()
     return self;
 }
 
+void HandlerDBus::InviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message)
+{
+    TextHandler::instance()->inviteParticipants(objectPath, participants, message);
+}
+
+void HandlerDBus::RemoveParticipants(const QString &objectPath, const QStringList &participants, const QString &message)
+{
+    TextHandler::instance()->removeParticipants(objectPath, participants, message);
+}
+
 bool HandlerDBus::DestroyTextChannel(const QString &objectPath)
 {
     return TextHandler::instance()->destroyTextChannel(objectPath);

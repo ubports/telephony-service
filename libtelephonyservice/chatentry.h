@@ -109,6 +109,10 @@ public Q_SLOTS:
     void setChatState(ChatState state);
 
     bool destroyRoom();
+    void inviteParticipants(const QStringList &participants, const QString &message = QString());
+    void removeParticipants(const QStringList &participants, const QString &message = QString());
+
+
 
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
@@ -131,6 +135,8 @@ Q_SIGNALS:
     void participantsChanged();
     void roomNameChanged();
     void titleChanged();
+    void inviteParticipantsFailed();
+    void removeParticipantsFailed();
 
     void messageSent(const QString &accountId, const QString &messageId, const QVariantMap &properties);
     void messageSendingFailed(const QString &accountId, const QString &messageId, const QVariantMap &properties);
