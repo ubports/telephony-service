@@ -119,15 +119,15 @@ void ChatEntry::setTitle(const QString &title)
 {
     // FIXME: remove this debug before going into production.
     qDebug() << __PRETTY_FUNCTION__ << "Changing group title to" << title;
-    if (!roomConfigInterface) {
-        qWarning() << "Cannot change group title, no room interface found.";
-        return;
-    }
+    QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
+    Q_FOREACH(const Tp::TextChannelPtr channel, mChannels) {
+        if (!channel->hasInterface(TP_QT_IFACE_CHANNEL_INTERFACE_ROOM_CONFIG)) {
+            qWarning() << "Channel doesn't have the RoomConfig interface";
+            return;
+        }
 
-    QVariantMap properties;
-    properties["Title"] = title;
-    // FIXME: we better check for the result here and maybe notify the app
-    roomConfigInterface->UpdateConfiguration(properties);
+        handlerIface->asyncCall("ChangeRoomTitle", channel->objectPath(), title);
+    }
 }
 
 ChatEntry::~ChatEntry()
