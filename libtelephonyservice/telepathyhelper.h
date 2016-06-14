@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -31,6 +31,7 @@
 #include <TelepathyQt/ConnectionManager>
 #include <TelepathyQt/Types>
 #include "channelobserver.h"
+#include "accountentry.h"
 
 #define CANONICAL_TELEPHONY_VOICEMAIL_IFACE "com.canonical.Telephony.Voicemail"
 #define CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE "com.canonical.Telephony.AudioOutputs"
@@ -56,10 +57,17 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
     Q_PROPERTY(QVariantMap simNames READ simNames NOTIFY simNamesChanged)
     Q_ENUMS(AccountType)
+    Q_ENUMS(ChatType)
 public:
     enum AccountType {
         Call,
         Messaging
+    };
+
+    enum ChatType {
+        ChatTypeNone = Tp::HandleTypeNone,
+        ChatTypeContact = Tp::HandleTypeContact,
+        ChatTypeRoom = Tp::HandleTypeRoom
     };
 
     ~TelepathyHelper();
@@ -67,7 +75,7 @@ public:
     static TelepathyHelper *instance();
     QList<AccountEntry*> accounts() const;
     QList<AccountEntry*> phoneAccounts() const;
-    QList<AccountEntry*> activeAccounts() const;
+    QList<AccountEntry*> activeAccounts(bool includeMultimedia=false) const;
     QQmlListProperty<AccountEntry> qmlAccounts();
     QQmlListProperty<AccountEntry> qmlPhoneAccounts();
     QQmlListProperty<AccountEntry> qmlActiveAccounts();
@@ -87,6 +95,7 @@ public:
     AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
     Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
     Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
+    Q_INVOKABLE QList<AccountEntry*> accountsForType(int type);
     bool emergencyCallsAvailable() const;
     Q_INVOKABLE void unlockSimCards() const;
     bool multiplePhoneAccounts() const;

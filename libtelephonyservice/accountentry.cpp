@@ -106,6 +106,38 @@ bool AccountEntry::connected() const
            mAccount->connection()->status() == Tp::ConnectionStatusConnected;
 }
 
+AccountEntry::Capabilities AccountEntry::capabilities() const
+{
+    AccountEntry::Capabilities capabilities = CapabilityNone;
+
+    if (!connected()) {
+        return capabilities;
+    }
+
+    Tp::ConnectionCapabilities tpCapabilities = mAccount->capabilities();
+
+    if (tpCapabilities.textChatrooms()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityTextChatrooms;
+    }
+    if (tpCapabilities.conferenceTextChats()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityConferenceTextChats;
+    }
+    if (tpCapabilities.conferenceTextChatsWithInvitees()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityConferenceTextChatsWithInvitees;
+    }
+    if (tpCapabilities.conferenceTextChatrooms()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityConferenceTextChatrooms;
+    }
+    if (tpCapabilities.conferenceTextChatroomsWithInvitees()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityConferenceTextChatroomsWithInvitees;
+    }
+    if (tpCapabilities.contactSearches()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityContactSearches;
+    }
+
+    return capabilities;
+}
+
 Tp::AccountPtr AccountEntry::account() const
 {
     return mAccount;
@@ -219,6 +251,7 @@ void AccountEntry::onConnectionChanged(Tp::ConnectionPtr connection)
 
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
+    Q_EMIT capabilitiesChanged();
 }
 
 void AccountEntry::addAccountLabel(const QString &accountId, QString &text)

@@ -362,7 +362,9 @@ Tp::BaseChannelPtr MockConnection::createTextChannel(uint targetHandleType,
 
     QStringList recipients;
     bool flash;
-    if (hints.contains(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles"))) {
+    if (hints.contains(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeIDs"))) {
+        recipients = qdbus_cast<QStringList>(hints[TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeIDs")]);
+    } else if (hints.contains(TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles"))) {
         recipients << inspectHandles(Tp::HandleTypeContact, qdbus_cast<Tp::UIntList>(hints[TP_QT_IFACE_CHANNEL_INTERFACE_CONFERENCE + QLatin1String(".InitialInviteeHandles")]), error);
     } else {
         recipients << mHandles.value(targetHandle);
@@ -465,10 +467,14 @@ Tp::BaseChannelPtr MockConnection::createChannel(const QVariantMap &request, Tp:
     const QString channelType = request.value(TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType")).toString();
     uint targetHandleType = request.value(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType")).toUInt();
     uint targetHandle = request.value(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandle")).toUInt();
+    QString targetId = request.value(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetID")).toString();
     qDebug() << "MockConnection::createChannel" << targetHandle;
     if (mSelfPresence.type != Tp::ConnectionPresenceTypeAvailable) {
         error->set(TP_QT_ERROR_NETWORK_ERROR, "No network available");
         return Tp::BaseChannelPtr();
+    }
+    if (!targetId.isEmpty()) {
+        targetHandle = ensureHandle(targetId);
     }
 
     if (channelType == TP_QT_IFACE_CHANNEL_TYPE_TEXT) {
