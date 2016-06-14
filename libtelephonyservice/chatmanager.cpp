@@ -229,10 +229,6 @@ bool ChatManager::channelMatchProperties(const Tp::TextChannelPtr &channel, cons
         return false;
     }
 
-    if (!accountId.isEmpty() && account->accountId() != accountId) {
-        return;
-    }
-
     // only channels of the correct type should be returned
     if ((ChatEntry::ChatType)channel->targetHandleType() != chatType) {
         return false;
