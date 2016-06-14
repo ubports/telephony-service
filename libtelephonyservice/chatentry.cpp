@@ -347,13 +347,13 @@ bool ChatEntry::destroyRoom()
     QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
     Q_FOREACH(const Tp::TextChannelPtr channel, mChannels) {
         if (!channel->hasInterface(TP_QT_IFACE_CHANNEL_INTERFACE_DESTROYABLE)) {
-            qWarning() << "Text channel doesn't have the destroyable interface"
+            qWarning() << "Text channel doesn't have the destroyable interface";
             return false;
         }
 
         QDBusReply<bool> reply = handlerIface->call("DestroyTextChannel", channel->objectPath());
         if (!reply.isValid() || !reply.value()) {
-            qWarning() << "Failed to destroy text channel."
+            qWarning() << "Failed to destroy text channel.";
             return false;
         }
     }
