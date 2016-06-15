@@ -214,7 +214,28 @@ void MessageSendingJob::findOrCreateChannel()
 void MessageSendingJob::sendMessage()
 {
     qDebug() << __PRETTY_FUNCTION__;
-    Tp::PendingSendMessage *op = mTextChannel->send(buildMessage(mMessage));
+
+    Tp::MessagePartList messageParts = buildMessage(mMessage);
+    Tp::PendingSendMessage *op = NULL;
+    // some protocols can't sent multipart messages, so we check here
+    // and split the parts if needed
+    if (canSendMultiPartMessages()) {
+        op = mTextChannel->send(messageParts);
+    } else {
+        bool messageSent = false;
+        Tp::MessagePart header = messageParts.takeFirst();
+        Q_FOREACH(const Tp::MessagePart &part, messageParts) {
+            Tp::MessagePartList newMessage;
+            newMessage << header;
+            newMessage << part;
+            Tp::PendingSendMessage *thisOp = mTextChannel->send(newMessage);
+            if (messageSent) {
+                continue;
+            }
+            messageSent = true;
+            op = thisOp;
+        }
+    }
     connect(op, &Tp::PendingOperation::finished, [this, op]() {
         if (op->isError()) {
             setStatus(Failed);
@@ -227,6 +248,24 @@ void MessageSendingJob::sendMessage()
         setStatus(Finished);
         scheduleDeletion();
     });
+}
+ 
+bool MessageSendingJob::canSendMultiPartMessages()
+{
+    if (!mAccount) {
+        return false;
+    }
+    switch (mAccount->type()) {
+    case AccountEntry::PhoneAccount:
+        return true;
+    // TODO check in telepathy if multipart is supported
+    // currently we just return false to be on the safe side
+    case AccountEntry::GenericAccount:
+    case AccountEntry::MultimediaAccount:
+    default:
+        return false;
+    }
+    return false;
 }
 
 void MessageSendingJob::setAccountId(const QString &accountId)

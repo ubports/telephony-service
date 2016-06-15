@@ -89,6 +89,7 @@ private:
     MessageSendingJobAdaptor *mAdaptor;
 
     Tp::MessagePartList buildMessage(const PendingMessage &pendingMessage);
+    bool canSendMultiPartMessages();
 
 };
 
