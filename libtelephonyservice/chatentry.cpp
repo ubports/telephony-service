@@ -313,7 +313,7 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     if (roomConfigInterface) {
         roomConfigInterface->setMonitorProperties(true);
         Tp::PendingVariantMap *pendingResult = roomConfigInterface->requestAllProperties();
-        connect(pendingResult, &Tp::PendingOperation::finished, [&](){
+        connect(pendingResult, &Tp::PendingOperation::finished, [=](){
             if (!pendingResult->isError()) {
                 onRoomPropertiesChanged(pendingResult->result(), QStringList());
             }
