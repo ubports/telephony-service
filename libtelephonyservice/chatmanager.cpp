@@ -157,6 +157,8 @@ QString ChatManager::sendMessage(const QString &accountId, const QString &messag
 
 QList<Tp::TextChannelPtr> ChatManager::channelForProperties(const QVariantMap &properties)
 {
+    // FIXME: remove before releasing
+    qDebug() << __PRETTY_FUNCTION__ << properties;
     QList<Tp::TextChannelPtr> channels;
 
 
@@ -218,7 +220,7 @@ bool ChatManager::channelMatchProperties(const Tp::TextChannelPtr &channel, cons
         accountId = propMap["accountId"].toString();
     }
 
-    if ((participants.count() == 0 && chatType == ChatEntry::ChatTypeContact)  || accountId.isEmpty()) {
+    if (participants.count() == 0 && chatType == ChatEntry::ChatTypeContact) {
         return false;
     }
 
