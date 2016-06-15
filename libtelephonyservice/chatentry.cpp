@@ -114,16 +114,6 @@ ChatEntry::~ChatEntry()
         it.next();
         delete it.value();
     }
-
-    if (roomInterface) {
-        roomInterface->deleteLater();
-    }
-    if (roomConfigInterface) {
-        roomConfigInterface->deleteLater();
-    }
-    if (subjectInterface) {
-        subjectInterface->deleteLater();
-    }
 }
 
 QString ChatEntry::chatId() const
