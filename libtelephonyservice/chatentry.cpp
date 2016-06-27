@@ -314,7 +314,6 @@ void ChatEntry::setChatState(ChatState state)
             channel->requestChatState((Tp::ChannelChatState)state);
         }
     }
-    mTypingTimer.start();
 }
 
 QVariantMap ChatEntry::generateProperties() const
