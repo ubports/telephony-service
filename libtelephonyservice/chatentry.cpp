@@ -327,6 +327,7 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
         ContactChatState *state = new ContactChatState(contact->id(), channel->chatState(contact));
         mChatStates[contact->id()] = state;
     }
+    Q_EMIT chatStatesChanged();
 
     // now fill the properties with the data from the channel
     if (chatType() != (ChatType)channel->targetHandleType()) {
