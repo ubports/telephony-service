@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
-"X-Generator: Launchpad (build 17990)\n"
+"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
+"X-Generator: Launchpad (build 18097)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -173,7 +173,7 @@ msgstr "លេខ​ឯកជន"
 msgid "Reply"
 msgstr "ឆ្លើយតប"
 
-#: handler/displaynamesettings.cpp:34
+#: indicator/displaynamesettings.cpp:35
 #, qt-format
 msgid "SIM %1"
 msgstr "ស៊ីម %1"
@@ -207,7 +207,7 @@ msgstr "សេវាកម្ម​ទូរស័ព្ទ"
 msgid "Telephony Service Approver"
 msgstr "ក្រុមហ៊ុន​អនុម័ត​សេវាកម្ម​ទូរស័ព្ទ"
 
-#: indicator/main.cpp:52
+#: indicator/main.cpp:53
 msgid "Telephony Service Indicator"
 msgstr "សូចនាករ​សេវាកម្ម​ទូរស័ព្ទ"
 
@@ -227,8 +227,8 @@ msgstr "មិន​ស្គាល់​លេខ"
 msgid "Unknown caller"
 msgstr "មិន​ស្គាល់​អ្នក​ហៅ"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "មិន​ស្គាល់​លេខ"
 
