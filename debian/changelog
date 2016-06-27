@@ -1,3 +1,27 @@
+telephony-service (0.1+16.10.20160601.1-0ubuntu1) yakkety; urgency=medium
+
+  * Contact name now checks for QContactDisplayLabel to display full
+    name when possible. (LP: #1585634)
+
+ -- Renato Araujo Oliveira Filho <renato.filho@canonical.com>  Wed, 01 Jun 2016 16:08:55 +0000
+
+telephony-service (0.1+16.10.20160520-0ubuntu1) yakkety; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk. added: po/sq.po
+
+  [ Renato Araujo Oliveira Filho ]
+  * Update PhonNumber components to use the new SDK 1.3
+
+ -- Renato Araujo Oliveira Filho <renato.filho@canonical.com>  Fri, 20 May 2016 14:23:59 +0000
+
+telephony-service (0.1+16.04.20160415.1-0ubuntu1) xenial; urgency=medium
+
+  * do not set SimNames if it's empty use a config file to avoid running
+    the script instead of an account service property
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 15 Apr 2016 21:21:41 +0000
+
 telephony-service (0.1+16.04.20160411-0ubuntu1) xenial; urgency=medium
 
   [ Tiago Salem Herrmann ]
