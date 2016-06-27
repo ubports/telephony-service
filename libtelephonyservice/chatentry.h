@@ -125,7 +125,6 @@ private Q_SLOTS:
     void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
     void onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated);
     void onSendingMessageFinished();
-    void onTypingNotificationTimeout();
 
 Q_SIGNALS:
     void chatTypeChanged();
@@ -153,7 +152,6 @@ private:
     Tp::Client::ChannelInterfaceRoomInterface *roomInterface;
     Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
     Tp::Client::ChannelInterfaceSubjectInterface *subjectInterface;
-    QTimer mTypingTimer;
 };
 
 #endif // CHATENTRY_H
