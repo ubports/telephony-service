@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
-"X-Generator: Launchpad (build 17990)\n"
+"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
+"X-Generator: Launchpad (build 18097)\n"
 "Language: fi\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -177,7 +177,7 @@ msgstr "Salainen numero"
 msgid "Reply"
 msgstr "Vastaa"
 
-#: handler/displaynamesettings.cpp:34
+#: indicator/displaynamesettings.cpp:35
 #, qt-format
 msgid "SIM %1"
 msgstr "SIM %1"
@@ -211,7 +211,7 @@ msgstr "Puhelinpalvelu"
 msgid "Telephony Service Approver"
 msgstr "Puhelinpalvelujen hyväksyjä"
 
-#: indicator/main.cpp:52
+#: indicator/main.cpp:53
 msgid "Telephony Service Indicator"
 msgstr "Puhelinpalvelujen ilmaisin"
 
@@ -231,8 +231,8 @@ msgstr "Tuntematon numero"
 msgid "Unknown caller"
 msgstr "Tuntematon soittaja"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "Tuntematon numero"
 
