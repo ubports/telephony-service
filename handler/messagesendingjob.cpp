@@ -296,8 +296,7 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
     QString smil, regions, parts;
     bool hasImage = false, hasText = false, hasVideo = false, hasAudio = false, isMMS = false;
 
-    AccountEntry *account = TelepathyHelper::instance()->accountForId(pendingMessage.accountId);
-    if (!account) {
+    if (!mAccount) {
         // account does not exist
         return Tp::MessagePartList();
     }
@@ -312,7 +311,7 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
     }
 
     // check if this message should be sent as an MMS
-    if (account->type() == AccountEntry::PhoneAccount) {
+    if (mAccount->type() == AccountEntry::PhoneAccount) {
         isMMS = (pendingMessage.attachments.size() > 0 ||
                  (header.contains("x-canonical-mms") && header["x-canonical-mms"].variant().toBool()) ||
                  (pendingMessage.properties["participantIds"].toStringList().size() > 1 && TelepathyHelper::instance()->mmsGroupChat()));
