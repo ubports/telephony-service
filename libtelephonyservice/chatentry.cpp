@@ -41,17 +41,6 @@ ChatEntry::ChatEntry(QObject *parent) :
     subjectInterface(NULL)
 {
     qRegisterMetaType<ContactChatStates>();
-    mTypingTimer.setInterval(15000);
-    connect(&mTypingTimer, SIGNAL(timeout()), SLOT(onTypingNotificationTimeout()));
-}
-
-void ChatEntry::onTypingNotificationTimeout()
-{
-    Q_FOREACH(const Tp::TextChannelPtr channel, mChannels) {
-        if (channel->hasChatStateInterface()) {
-            channel->requestChatState(Tp::ChannelChatStateActive);
-        }
-    }
 }
 
 void ChatEntry::onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated)
