@@ -32,6 +32,7 @@
 #include "chatmanager.h"
 #include "contactwatcher.h"
 #include "greetercontacts.h"
+#include "participant.h"
 #include "phoneutils.h"
 #include "presencerequest.h"
 #include "protocolmanager.h"
@@ -82,6 +83,7 @@ void Components::registerTypes(const char *uri)
     qmlRegisterUncreatableType<Protocol>(uri, 0, 1, "ProtocolManager", "Objects of this type are created in ProtocolManager and made available to QML");
     qmlRegisterType<ChatEntry>(uri, 0, 1, "ChatEntry");
     qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");
+    qmlRegisterType<Participant>(uri, 0, 1, "Participant");
     qmlRegisterType<PresenceRequest>(uri, 0, 1, "PresenceRequest");
     qmlRegisterType<PhoneUtils>(uri, 0, 1, "PhoneUtils");
 }

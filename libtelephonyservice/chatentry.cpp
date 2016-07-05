@@ -23,6 +23,7 @@
 #include "accountentry.h"
 #include "chatentry.h"
 #include "chatmanager.h"
+#include "participant.h"
 
 // FIXME: move this class to libtelephonyservice
 #include "handler/messagejob.h"
@@ -33,6 +34,7 @@
 #include <TelepathyQt/PendingVariantMap>
 
 Q_DECLARE_METATYPE(ContactChatStates)
+Q_DECLARE_METATYPE(Participant)
 
 ChatEntry::ChatEntry(QObject *parent) :
     QObject(parent),
@@ -42,6 +44,7 @@ ChatEntry::ChatEntry(QObject *parent) :
     subjectInterface(NULL)
 {
     qRegisterMetaType<ContactChatStates>();
+    qRegisterMetaType<Participant>();
 }
 
 void ChatEntry::onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated)
@@ -86,6 +89,52 @@ void ChatEntry::onSendingMessageFinished()
 
     Q_EMIT messageSent(accountId, messageId, properties);
     job->deleteLater();
+}
+
+void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
+                                      const Tp::Contacts &groupLocalPendingMembersAdded,
+                                      const Tp::Contacts &groupRemotePendingMembersAdded,
+                                      const Tp::Contacts &groupMembersRemoved,
+                                      const Tp::Channel::GroupMemberChangeDetails &details)
+{
+    Tp::TextChannel *channel(qobject_cast<Tp::TextChannel*>(sender()));
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(mAccountId);
+    if (channel) {
+        account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    }
+
+    if (!account) {
+        qWarning() << "Could not find account";
+        return;
+    }
+
+    // first look for removed members
+    Q_FOREACH(Tp::ContactPtr contact, groupMembersRemoved) {
+        Q_FOREACH(Participant *participant, mParticipants) {
+            if (account->compareIds(contact->id(), participant->identifier())) {
+                participant->deleteLater();
+                mParticipants.removeOne(participant);
+                break;
+            }
+        }
+    }
+
+    // now add the new participants
+    // FIXME: check for duplicates?
+    Q_FOREACH(Tp::ContactPtr contact, groupMembersAdded) {
+        mParticipants << new Participant(contact->id(), this);
+    }
+
+    // generate the list of participant IDs again
+    mParticipantIds.clear();
+    Q_FOREACH(Participant *participant, mParticipants) {
+        mParticipantIds << participant->identifier();
+    }
+
+    Q_EMIT participantsChanged();
+    Q_EMIT participantIdsChanged();
+
+    // FIXME: handle local and remote pending members
 }
 
 QString ChatEntry::roomName() const
@@ -180,17 +229,40 @@ void ChatEntry::setChatType(ChatEntry::ChatType type)
     Q_EMIT chatTypeChanged();
 }
 
-QStringList ChatEntry::participants() const
+QStringList ChatEntry::participantIds() const
 {
-    return mParticipants;
+    return mParticipantIds;
 }
 
-void ChatEntry::setParticipants(const QStringList &participants)
+void ChatEntry::setParticipantIds(const QStringList &participantIds)
 {
-    mParticipants = participants;
-    Q_EMIT participantsChanged();
+    mParticipantIds = participantIds;
+    Q_EMIT participantIdsChanged();
 
     // FIXME: we need to invalidate the existing channels & data and start fresh
+}
+
+QQmlListProperty<Participant> ChatEntry::participants()
+{
+    return QQmlListProperty<Participant>(this, 0, participantsCount, participantsAt);
+}
+
+int ChatEntry::participantsCount(QQmlListProperty<Participant> *p)
+{
+    ChatEntry *entry = qobject_cast<ChatEntry*>(p->object);
+    if (!entry) {
+        return 0;
+    }
+    return entry->mParticipants.count();
+}
+
+Participant *ChatEntry::participantsAt(QQmlListProperty<Participant> *p, int index)
+{
+    ChatEntry *entry = qobject_cast<ChatEntry*>(p->object);
+    if (!entry) {
+        return 0;
+    }
+    return entry->mParticipants[index];
 }
 
 QQmlListProperty<ContactChatState> ChatEntry::chatStates()
@@ -308,8 +380,22 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
 
     connect(channel.data(), SIGNAL(chatStateChanged(const Tp::ContactPtr &, Tp::ChannelChatState)),
                             this, SLOT(onChatStateChanged(const Tp::ContactPtr &,Tp::ChannelChatState)));
+
+    // FIXME: check how to handle multiple channels in a better way,
+    // for now, use the info from the last available channel
+    Q_FOREACH(Participant *participant, mParticipants) {
+        participant->deleteLater();
+    }
+    mParticipants.clear();
+    onGroupMembersChanged(channel->groupContacts(false),
+                          channel->groupLocalPendingContacts(false),
+                          channel->groupRemotePendingContacts(false),
+                          Tp::Contacts(),
+                          Tp::Channel::GroupMemberChangeDetails());
     connect(channel.data(), SIGNAL(groupMembersChanged(const Tp::Contacts &, const Tp::Contacts &, const Tp::Contacts &,
-            const Tp::Contacts &, const Tp::Channel::GroupMemberChangeDetails &)), this, SIGNAL(participantsChanged()));
+            const Tp::Contacts &, const Tp::Channel::GroupMemberChangeDetails &)),
+            this, SLOT(onGroupMembersChanged(Tp::Contacts,Tp::Contacts,Tp::Contacts,Tp::Contacts,
+                                             Tp::Channel::GroupMemberChangeDetails)));
 
     Q_FOREACH (Tp::ContactPtr contact, channel->groupContacts(false)) {
         // FIXME: we should not create new chat states for contacts already found in previous channels
@@ -365,7 +451,7 @@ QVariantMap ChatEntry::generateProperties() const
 {
     QVariantMap properties;
 
-    properties["participantIds"] = participants();
+    properties["participantIds"] = participantIds();
     properties["chatType"] = (int)chatType();
     properties["chatId"] = chatId();
     properties["threadId"] = chatId();

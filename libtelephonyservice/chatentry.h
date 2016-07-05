@@ -27,6 +27,7 @@
 #include <TelepathyQt/TextChannel>
 
 class AccountEntry;
+class Participant;
 
 class ContactChatState : public QObject
 {
@@ -55,14 +56,13 @@ class ChatEntry : public QObject, public QQmlParserStatus
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
     Q_PROPERTY(ChatType chatType READ chatType WRITE setChatType NOTIFY chatTypeChanged)
-    Q_PROPERTY(QStringList participants READ participants WRITE setParticipants NOTIFY participantsChanged)
+    Q_PROPERTY(QStringList participantIds READ participantIds WRITE setParticipantIds NOTIFY participantIdsChanged)
+    Q_PROPERTY(QQmlListProperty<Participant> participants READ participants NOTIFY participantsChanged)
     Q_PROPERTY(QString roomName READ roomName WRITE setRoomName NOTIFY roomNameChanged)
     Q_PROPERTY(QString chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(QString accountId READ accountId WRITE setAccountId NOTIFY accountIdChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
-    Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates
-               READ chatStates
-               NOTIFY chatStatesChanged)
+    Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates READ chatStates NOTIFY chatStatesChanged)
 
     Q_ENUMS(ChatType)
     Q_ENUMS(ChatState)
@@ -83,9 +83,11 @@ public:
 
     explicit ChatEntry(QObject *parent = 0);
     ~ChatEntry();
-    QQmlListProperty<ContactChatState> chatStates();
-    QStringList participants() const;
-    void setParticipants(const QStringList &participants);
+    QStringList participantIds() const;
+    void setParticipantIds(const QStringList &participantIds);
+    QQmlListProperty<Participant> participants();
+    static int participantsCount(QQmlListProperty<Participant> *p);
+    static Participant *participantsAt(QQmlListProperty<Participant> *p, int index);
     ChatType chatType() const;
     void setChatType(ChatType type);
     QString chatId() const;
@@ -96,6 +98,7 @@ public:
     void setRoomName(const QString &name);
     QString title() const;
     void setTitle(const QString & title);
+    QQmlListProperty<ContactChatState> chatStates();
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
 
@@ -109,8 +112,8 @@ public Q_SLOTS:
     void setChatState(ChatState state);
 
     bool destroyRoom();
-    void inviteParticipants(const QStringList &participants, const QString &message = QString());
-    void removeParticipants(const QStringList &participants, const QString &message = QString());
+    void inviteParticipants(const QStringList &participantIds, const QString &message = QString());
+    void removeParticipants(const QStringList &participantIds, const QString &message = QString());
 
 
 
@@ -125,12 +128,18 @@ private Q_SLOTS:
     void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
     void onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated);
     void onSendingMessageFinished();
+    void onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
+                               const Tp::Contacts &groupLocalPendingMembersAdded,
+                               const Tp::Contacts &groupRemotePendingMembersAdded,
+                               const Tp::Contacts &groupMembersRemoved,
+                               const Tp::Channel::GroupMemberChangeDetails &details);
 
 Q_SIGNALS:
     void chatTypeChanged();
     void chatIdChanged();
     void accountIdChanged();
     void chatStatesChanged();
+    void participantIdsChanged();
     void participantsChanged();
     void roomNameChanged();
     void titleChanged();
@@ -142,7 +151,8 @@ Q_SIGNALS:
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
-    QStringList mParticipants;
+    QStringList mParticipantIds;
+    QList<Participant*> mParticipants;
     QMap<QString, ContactChatState*> mChatStates;
     QString mRoomName;
     QString mTitle;
