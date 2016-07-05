@@ -122,8 +122,6 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
     Q_EMIT localPendingParticipantsChanged();
     Q_EMIT remotePendingParticipantsChanged();
     Q_EMIT participantIdsChanged();
-
-    // FIXME: handle local and remote pending members
 }
 
 QString ChatEntry::roomName() const
