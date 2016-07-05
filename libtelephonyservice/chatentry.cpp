@@ -108,22 +108,9 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
         return;
     }
 
-    // first look for removed members
-    Q_FOREACH(Tp::ContactPtr contact, groupMembersRemoved) {
-        Q_FOREACH(Participant *participant, mParticipants) {
-            if (account->compareIds(contact->id(), participant->identifier())) {
-                participant->deleteLater();
-                mParticipants.removeOne(participant);
-                break;
-            }
-        }
-    }
-
-    // now add the new participants
-    // FIXME: check for duplicates?
-    Q_FOREACH(Tp::ContactPtr contact, groupMembersAdded) {
-        mParticipants << new Participant(contact->id(), this);
-    }
+    updateParticipants(mParticipants, groupMembersAdded, groupMembersRemoved, account);
+    updateParticipants(mLocalPendingParticipants, groupLocalPendingMembersAdded, groupMembersRemoved, account);
+    updateParticipants(mRemotePendingParticipants, groupRemotePendingMembersAdded, groupMembersRemoved, account);
 
     // generate the list of participant IDs again
     mParticipantIds.clear();
@@ -132,6 +119,8 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
     }
 
     Q_EMIT participantsChanged();
+    Q_EMIT localPendingParticipantsChanged();
+    Q_EMIT remotePendingParticipantsChanged();
     Q_EMIT participantIdsChanged();
 
     // FIXME: handle local and remote pending members
@@ -244,25 +233,30 @@ void ChatEntry::setParticipantIds(const QStringList &participantIds)
 
 QQmlListProperty<Participant> ChatEntry::participants()
 {
-    return QQmlListProperty<Participant>(this, 0, participantsCount, participantsAt);
+    return QQmlListProperty<Participant>(this, &mParticipants, participantsCount, participantsAt);
+}
+
+QQmlListProperty<Participant> ChatEntry::localPendingParticipants()
+{
+    return QQmlListProperty<Participant>(this, &mLocalPendingParticipants, participantsCount, participantsAt);
+}
+
+QQmlListProperty<Participant> ChatEntry::remotePendingParticipants()
+{
+
+    return QQmlListProperty<Participant>(this, &mRemotePendingParticipants, participantsCount, participantsAt);
 }
 
 int ChatEntry::participantsCount(QQmlListProperty<Participant> *p)
 {
-    ChatEntry *entry = qobject_cast<ChatEntry*>(p->object);
-    if (!entry) {
-        return 0;
-    }
-    return entry->mParticipants.count();
+    QList<Participant*> *list = static_cast<QList<Participant*>*>(p->data);
+    return list->count();
 }
 
 Participant *ChatEntry::participantsAt(QQmlListProperty<Participant> *p, int index)
 {
-    ChatEntry *entry = qobject_cast<ChatEntry*>(p->object);
-    if (!entry) {
-        return 0;
-    }
-    return entry->mParticipants[index];
+    QList<Participant*> *list = static_cast<QList<Participant*>*>(p->data);
+    return list->at(index);
 }
 
 QQmlListProperty<ContactChatState> ChatEntry::chatStates()
@@ -386,7 +380,7 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     Q_FOREACH(Participant *participant, mParticipants) {
         participant->deleteLater();
     }
-    mParticipants.clear();
+    clearParticipants();
     onGroupMembersChanged(channel->groupContacts(false),
                           channel->groupLocalPendingContacts(false),
                           channel->groupRemotePendingContacts(false),
@@ -461,6 +455,42 @@ QVariantMap ChatEntry::generateProperties() const
     }
 
     return properties;
+}
+
+void ChatEntry::clearParticipants()
+{
+    Q_FOREACH(Participant *participant, mParticipants) {
+        participant->deleteLater();
+    }
+    Q_FOREACH(Participant *participant, mLocalPendingParticipants) {
+        participant->deleteLater();
+    }
+    Q_FOREACH(Participant *participant, mRemotePendingParticipants) {
+        participant->deleteLater();
+    }
+    mParticipants.clear();
+    mLocalPendingParticipants.clear();
+    mRemotePendingParticipants.clear();
+}
+
+void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account)
+{
+    // first look for removed members
+    Q_FOREACH(Tp::ContactPtr contact, removed) {
+        Q_FOREACH(Participant *participant, list) {
+            if (account->compareIds(contact->id(), participant->identifier())) {
+                participant->deleteLater();
+                list.removeOne(participant);
+                break;
+            }
+        }
+    }
+
+    // now add the new participants
+    // FIXME: check for duplicates?
+    Q_FOREACH(Tp::ContactPtr contact, added) {
+        list << new Participant(contact->id(), this);
+    }
 }
 
 void ChatEntry::onTextChannelAvailable(const Tp::TextChannelPtr &channel)

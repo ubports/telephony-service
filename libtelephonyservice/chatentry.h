@@ -58,6 +58,8 @@ class ChatEntry : public QObject, public QQmlParserStatus
     Q_PROPERTY(ChatType chatType READ chatType WRITE setChatType NOTIFY chatTypeChanged)
     Q_PROPERTY(QStringList participantIds READ participantIds WRITE setParticipantIds NOTIFY participantIdsChanged)
     Q_PROPERTY(QQmlListProperty<Participant> participants READ participants NOTIFY participantsChanged)
+    Q_PROPERTY(QQmlListProperty<Participant> localPendingParticipants READ localPendingParticipants NOTIFY localPendingParticipantsChanged)
+    Q_PROPERTY(QQmlListProperty<Participant> remotePendingParticipants READ remotePendingParticipants NOTIFY remotePendingParticipantsChanged)
     Q_PROPERTY(QString roomName READ roomName WRITE setRoomName NOTIFY roomNameChanged)
     Q_PROPERTY(QString chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(QString accountId READ accountId WRITE setAccountId NOTIFY accountIdChanged)
@@ -86,6 +88,8 @@ public:
     QStringList participantIds() const;
     void setParticipantIds(const QStringList &participantIds);
     QQmlListProperty<Participant> participants();
+    QQmlListProperty<Participant> localPendingParticipants();
+    QQmlListProperty<Participant> remotePendingParticipants();
     static int participantsCount(QQmlListProperty<Participant> *p);
     static Participant *participantsAt(QQmlListProperty<Participant> *p, int index);
     ChatType chatType() const;
@@ -123,6 +127,9 @@ protected:
 
     QVariantMap generateProperties() const;
 
+    void clearParticipants();
+    void updateParticipants(QList<Participant*> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account);
+
 private Q_SLOTS:
     void onTextChannelAvailable(const Tp::TextChannelPtr &channel);
     void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
@@ -141,6 +148,8 @@ Q_SIGNALS:
     void chatStatesChanged();
     void participantIdsChanged();
     void participantsChanged();
+    void localPendingParticipantsChanged();
+    void remotePendingParticipantsChanged();
     void roomNameChanged();
     void titleChanged();
     void inviteParticipantsFailed();
@@ -153,6 +162,8 @@ private:
     QList<Tp::TextChannelPtr> mChannels;
     QStringList mParticipantIds;
     QList<Participant*> mParticipants;
+    QList<Participant*> mLocalPendingParticipants;
+    QList<Participant*> mRemotePendingParticipants;
     QMap<QString, ContactChatState*> mChatStates;
     QString mRoomName;
     QString mTitle;
