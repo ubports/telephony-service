@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : n==2 ? 1 : (n != 8 && n != 11) ? "
 "2 : 3;\n"
-"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
-"X-Generator: Launchpad (build 17990)\n"
+"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
+"X-Generator: Launchpad (build 18097)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -179,7 +179,7 @@ msgstr "Rhif preifat"
 msgid "Reply"
 msgstr "Ateb"
 
-#: handler/displaynamesettings.cpp:34
+#: indicator/displaynamesettings.cpp:35
 #, qt-format
 msgid "SIM %1"
 msgstr "SIM %1"
@@ -213,7 +213,7 @@ msgstr "Gwasanaeth Teleffoni"
 msgid "Telephony Service Approver"
 msgstr "Darparwr Gwasanaeth Teleffoni"
 
-#: indicator/main.cpp:52
+#: indicator/main.cpp:53
 msgid "Telephony Service Indicator"
 msgstr "Dangosydd Gwasanaeth Teleffoni"
 
@@ -233,8 +233,8 @@ msgstr "Rhif Anhysbys"
 msgid "Unknown caller"
 msgstr "Galwr anhysbys"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "Rhif anhysbys"
 

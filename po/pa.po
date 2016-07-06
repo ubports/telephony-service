@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2016-04-08 05:44+0000\n"
-"X-Generator: Launchpad (build 17990)\n"
+"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
+"X-Generator: Launchpad (build 18097)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -174,7 +174,7 @@ msgstr "ਨਿੱਜੀ ਨੰਬਰ"
 msgid "Reply"
 msgstr "ਜਵਾਬ"
 
-#: handler/displaynamesettings.cpp:34
+#: indicator/displaynamesettings.cpp:35
 #, qt-format
 msgid "SIM %1"
 msgstr "ਸਿਮ %1"
@@ -208,7 +208,7 @@ msgstr "ਟੈਲੀਫ਼ੋਨੀ ਸੇਵਾ"
 msgid "Telephony Service Approver"
 msgstr "ਟੈਲੀਫ਼ੋਨੀ ਸੇਵਾ ਪ੍ਰਵਾਨਗੀ"
 
-#: indicator/main.cpp:52
+#: indicator/main.cpp:53
 msgid "Telephony Service Indicator"
 msgstr "ਟੈਲੀਫ਼ੋਨੀ ਸੇਵਾ ਸੂਚਕ"
 
@@ -228,8 +228,8 @@ msgstr "ਅਣਪਛਾਤਾ ਨੰਬਰ"
 msgid "Unknown caller"
 msgstr "ਅਣਪਛਾਤਾ ਕਾਲਰ"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "ਅਣਜਾਣ ਨੰਬਰ"
 
