@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2015 Canonical, Ltd.
+ * Copyright (C) 2015-2016 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
