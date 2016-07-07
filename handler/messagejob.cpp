@@ -21,18 +21,26 @@
  */
 
 #include "messagejob.h"
+#include "handlerdbus.h"
 #include <QCoreApplication>
 #include <QTime>
 #include <QTimer>
 #include <QDebug>
 
-MessageJob::MessageJob(QObject *parent)
-: QObject(parent), mStatus(Pending), mFinished(false)
+MessageJob::MessageJob(QDBusAbstractAdaptor *adaptor, QObject *parent)
+: QObject(parent), mStatus(Pending), mFinished(false), mAdaptor(adaptor)
 {
+    static ulong count = 0;
+    // just to avoid overflowing
+    if (count == ULONG_MAX) {
+        count = 0;
+    }
+    mObjectPath = HandlerDBus::instance()->registerObject(this, QString("messagejob%1").arg(count++));
 }
 
 MessageJob::~MessageJob()
 {
+    HandlerDBus::instance()->unregisterObject(mObjectPath);
 }
 
 MessageJob::Status MessageJob::status() const
@@ -43,6 +51,11 @@ MessageJob::Status MessageJob::status() const
 bool MessageJob::isFinished() const
 {
     return mFinished;
+}
+
+QString MessageJob::objectPath() const
+{
+    return mObjectPath;
 }
 
 void MessageJob::waitForFinished(int timeout)
