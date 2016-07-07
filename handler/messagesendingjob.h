@@ -24,7 +24,6 @@
 #define MESSAGESENDINGJOB_H
 
 #include <QObject>
-#include <QDBusContext>
 #include <TelepathyQt/Types>
 #include "dbustypes.h"
 #include "messagejob.h"
@@ -41,13 +40,12 @@ struct PendingMessage {
 };
 Q_DECLARE_METATYPE(PendingMessage)
 
-class MessageSendingJob : public MessageJob, protected QDBusContext
+class MessageSendingJob : public MessageJob
 {
     Q_OBJECT
     Q_PROPERTY(QString accountId READ accountId NOTIFY accountIdChanged)
     Q_PROPERTY(QString messageId READ messageId NOTIFY messageIdChanged)
     Q_PROPERTY(QString channelObjectPath READ channelObjectPath NOTIFY channelObjectPathChanged)
-    Q_PROPERTY(QString objectPath READ objectPath CONSTANT)
     Q_PROPERTY(QVariantMap properties READ properties CONSTANT)
 
 public:
@@ -57,7 +55,6 @@ public:
     QString accountId() const;
     QString messageId() const;
     QString channelObjectPath() const;
-    QString objectPath() const;
     QVariantMap properties() const;
 
 Q_SIGNALS:
@@ -84,9 +81,7 @@ private:
     AccountEntry *mAccount;
     QString mChannelObjectPath;
     Tp::TextChannelPtr mTextChannel;
-    QString mObjectPath;
     bool mFinished;
-    MessageSendingJobAdaptor *mAdaptor;
 
     Tp::MessagePartList buildMessage(const PendingMessage &pendingMessage);
     bool canSendMultiPartMessages();

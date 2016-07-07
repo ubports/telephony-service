@@ -21,15 +21,21 @@
  */
 
 #include "chatstartingjob.h"
+#include "chatstartingjobadaptor.h"
 #include "telepathyhelper.h"
 #include "texthandler.h"
 #include <TelepathyQt/PendingChannelRequest>
 
 ChatStartingJob::ChatStartingJob(TextHandler *textHandler, const QString &accountId, const QVariantMap &properties)
-: MessageJob(textHandler), mTextHandler(textHandler), mAccountId(accountId), mProperties(properties)
+: MessageJob(new ChatStartingJobAdaptor(this), textHandler), mTextHandler(textHandler), mAccountId(accountId), mProperties(properties)
 {
     qDebug() << __PRETTY_FUNCTION__;
     connect(this, &ChatStartingJob::textChannelChanged, &ChatStartingJob::channelObjectPathChanged);
+}
+
+QString ChatStartingJob::accountId()
+{
+    return mAccountId;
 }
 
 void ChatStartingJob::startJob()
