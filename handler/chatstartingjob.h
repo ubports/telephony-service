@@ -33,11 +33,13 @@ class TextHandler;
 class ChatStartingJob : public MessageJob
 {
     Q_OBJECT
+    Q_PROPERTY(QString accountId READ accountId CONSTANT)
     Q_PROPERTY(Tp::TextChannelPtr textChannel READ textChannel NOTIFY textChannelChanged)
     Q_PROPERTY(QString channelObjectPath READ channelObjectPath NOTIFY channelObjectPathChanged)
 public:
     ChatStartingJob(TextHandler *textHandler, const QString &accountId, const QVariantMap &properties);
 
+    QString accountId();
     Tp::TextChannelPtr textChannel() const;
     QString channelObjectPath() const;
 

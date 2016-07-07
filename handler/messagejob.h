@@ -24,12 +24,15 @@
 #define MESSAGEJOB_H
 
 #include <QObject>
+#include <QDBusAbstractAdaptor>
+#include <QDBusContext>
 
-class MessageJob : public QObject
+class MessageJob : public QObject, protected QDBusContext
 {
     Q_OBJECT
     Q_PROPERTY(int status READ status NOTIFY statusChanged)
     Q_PROPERTY(bool isFinished READ isFinished NOTIFY isFinishedChanged)
+    Q_PROPERTY(QString objectPath READ objectPath CONSTANT)
     Q_ENUMS(Status)
 public:
     enum Status {
@@ -40,11 +43,13 @@ public:
         Failed
     };
 
-    explicit MessageJob(QObject *parent = 0);
+    explicit MessageJob(QDBusAbstractAdaptor *adaptor, QObject *parent = 0);
     virtual ~MessageJob();
 
     Status status() const;
     bool isFinished() const;
+
+    QString objectPath() const;
 
     void waitForFinished(int timeout = 10000);
 
@@ -63,6 +68,8 @@ protected:
 private:
     Status mStatus;
     bool mFinished;
+    QString mObjectPath;
+    QDBusAbstractAdaptor *mAdaptor;
 };
 
 #endif // MESSAGEJOB_H
