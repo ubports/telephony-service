@@ -120,7 +120,7 @@ public Q_SLOTS:
     void inviteParticipants(const QStringList &participantIds, const QString &message = QString());
     void removeParticipants(const QStringList &participantIds, const QString &message = QString());
 
-
+    void startChat();
 
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
@@ -141,6 +141,7 @@ private Q_SLOTS:
                                const Tp::Contacts &groupRemotePendingMembersAdded,
                                const Tp::Contacts &groupMembersRemoved,
                                const Tp::Channel::GroupMemberChangeDetails &details);
+    void onChatStartingFinished();
 
 Q_SIGNALS:
     void chatTypeChanged();
@@ -158,6 +159,9 @@ Q_SIGNALS:
 
     void messageSent(const QString &accountId, const QString &messageId, const QVariantMap &properties);
     void messageSendingFailed(const QString &accountId, const QString &messageId, const QVariantMap &properties);
+
+    void chatReady();
+    void startChatFailed();
 
 private:
     QList<Tp::TextChannelPtr> mChannels;

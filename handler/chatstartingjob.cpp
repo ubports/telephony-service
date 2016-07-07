@@ -103,6 +103,10 @@ void ChatStartingJob::startTextChatRoom(const Tp::AccountPtr &account, const QVa
 
     QVariantMap request;
     Tp::PendingChannelRequest *op = NULL;
+
+    if (properties.contains("title")) {
+        request.insert(TP_QT_IFACE_CHANNEL_INTERFACE_ROOM_CONFIG + QLatin1String(".Title"), properties["title"].toString());
+    }
     if (roomName.isEmpty()) {
         request.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".ChannelType"), TP_QT_IFACE_CHANNEL_TYPE_TEXT);
         request.insert(TP_QT_IFACE_CHANNEL + QLatin1String(".TargetHandleType"), (uint) Tp::HandleTypeNone);

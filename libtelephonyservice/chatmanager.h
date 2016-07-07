@@ -35,7 +35,7 @@ class ChatManager : public QObject
 public:
     static ChatManager *instance();
 
-    void startChat(const QString &accountId, const QVariantMap &properties);
+    QString startChat(const QString &accountId, const QVariantMap &properties);
     QString sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
     QList<Tp::TextChannelPtr> channelForProperties(const QVariantMap &properties);
     Tp::TextChannelPtr channelForObjectPath(const QString &objectPath);
