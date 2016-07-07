@@ -22,11 +22,10 @@
 
 #include "accountentry.h"
 #include "chatstartingjob.h"
-#include "handlerdbus.h"
 #include "messagesendingjob.h"
+#include "messagesendingjobadaptor.h"
 #include "telepathyhelper.h"
 #include "texthandler.h"
-#include "messagesendingjobadaptor.h"
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 #include <QImage>
@@ -60,21 +59,13 @@
  </smil>"
 
 MessageSendingJob::MessageSendingJob(TextHandler *textHandler, PendingMessage message)
-: MessageJob(textHandler), mTextHandler(textHandler), mMessage(message), mFinished(false), mAdaptor(new MessageSendingJobAdaptor(this))
+: MessageJob(new MessageSendingJobAdaptor(this), textHandler), mTextHandler(textHandler), mMessage(message), mFinished(false)
 {
-    qDebug() << __PRETTY_FUNCTION__;
-    static ulong count = 0;
-    // just to avoid overflowing
-    if (count == ULONG_MAX) {
-        count = 0;
-    }
-    mObjectPath = HandlerDBus::instance()->registerObject(this, QString("messagesendingjob%1").arg(count++));
 }
 
 MessageSendingJob::~MessageSendingJob()
 {
     qDebug() << __PRETTY_FUNCTION__;
-    HandlerDBus::instance()->unregisterObject(mObjectPath);
 }
 
 QString MessageSendingJob::accountId() const
@@ -92,12 +83,6 @@ QString MessageSendingJob::channelObjectPath() const
 {
     qDebug() << __PRETTY_FUNCTION__;
     return mChannelObjectPath;
-}
-
-QString MessageSendingJob::objectPath() const
-{
-    qDebug() << __PRETTY_FUNCTION__;
-    return mObjectPath;
 }
 
 QVariantMap MessageSendingJob::properties() const
