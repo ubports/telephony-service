@@ -11,6 +11,7 @@ set(qt_SRCS
 
 set(handler_SRCS main.cpp ${qt_SRCS})
 qt5_add_dbus_adaptor(handler_SRCS Handler.xml handler/handlerdbus.h HandlerDBus)
+qt5_add_dbus_adaptor(handler_SRCS ChatStartingJob.xml handler/chatstartingjob.h ChatStartingJob)
 qt5_add_dbus_adaptor(handler_SRCS MessageSendingJob.xml handler/messagesendingjob.h MessageSendingJob)
 
 include_directories(
