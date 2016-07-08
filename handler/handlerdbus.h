@@ -68,7 +68,7 @@ public Q_SLOTS:
     Q_NOREPLY void ChangeRoomTitle(const QString &objectPath, const QString &title);
 
     // call related
-    Q_NOREPLY void StartCall(const QString &number, const QString &accountId);
+    QString StartCall(const QString &number, const QString &accountId);
     Q_NOREPLY void HangUpCall(const QString &objectPath);
     Q_NOREPLY void SetHold(const QString &objectPath, bool hold);
     Q_NOREPLY void SetMuted(const QString &objectPath, bool muted);

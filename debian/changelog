@@ -1,3 +1,9 @@
+telephony-service (0.1+16.10.20160601.1-0ubuntu1local~1467931989) UNRELEASED; urgency=medium
+
+  * ''
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 07 Jul 2016 19:53:09 -0300
+
 telephony-service (0.1+16.10.20160601.1-0ubuntu1) yakkety; urgency=medium
 
   * Contact name now checks for QContactDisplayLabel to display full
