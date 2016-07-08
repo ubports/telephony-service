@@ -27,10 +27,12 @@
 #include <TelepathyQt/PendingChannelRequest>
 
 ChatStartingJob::ChatStartingJob(TextHandler *textHandler, const QString &accountId, const QVariantMap &properties)
-: MessageJob(new ChatStartingJobAdaptor(this), textHandler), mTextHandler(textHandler), mAccountId(accountId), mProperties(properties)
+: MessageJob(textHandler), mTextHandler(textHandler), mAccountId(accountId), mProperties(properties)
 {
     qDebug() << __PRETTY_FUNCTION__;
     connect(this, &ChatStartingJob::textChannelChanged, &ChatStartingJob::channelObjectPathChanged);
+
+    setAdaptorAndRegister(new ChatStartingJobAdaptor(this));
 }
 
 QString ChatStartingJob::accountId()

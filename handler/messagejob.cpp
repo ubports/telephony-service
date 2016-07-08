@@ -27,20 +27,26 @@
 #include <QTimer>
 #include <QDebug>
 
-MessageJob::MessageJob(QDBusAbstractAdaptor *adaptor, QObject *parent)
-: QObject(parent), mStatus(Pending), mFinished(false), mAdaptor(adaptor)
+MessageJob::MessageJob(QObject *parent)
+: QObject(parent), mStatus(Pending), mFinished(false), mAdaptor(0)
 {
+}
+
+MessageJob::~MessageJob()
+{
+    HandlerDBus::instance()->unregisterObject(mObjectPath);
+}
+
+void MessageJob::setAdaptorAndRegister(QDBusAbstractAdaptor *adaptor)
+{
+    mAdaptor = adaptor;
+
     static ulong count = 0;
     // just to avoid overflowing
     if (count == ULONG_MAX) {
         count = 0;
     }
     mObjectPath = HandlerDBus::instance()->registerObject(this, QString("messagejob%1").arg(count++));
-}
-
-MessageJob::~MessageJob()
-{
-    HandlerDBus::instance()->unregisterObject(mObjectPath);
 }
 
 MessageJob::Status MessageJob::status() const
