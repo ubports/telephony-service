@@ -18,10 +18,10 @@
             <arg name="accountId" type="s" direction="in"/>
             <arg name="message" type="s" direction="in"/>
             <arg name="attachments" type="a(sss)" direction="in"/>
-            <arg name="accountIdOut" type="s" direction="out"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="AttachmentList"/>
             <arg name="properties" type="a{sv}" direction="in"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In3" value="QVariantMap"/>
+            <arg name="objectPath" type="s" direction="out"/>
         </method>
         <method name="AcknowledgeMessages">
             <dox:d><![CDATA[
@@ -37,6 +37,7 @@
             <arg name="accountId" type="s" direction="in"/>
             <arg name="properties" type="a{sv}" direction="in"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+            <arg name="objectPath" type="s" direction="out"/>
         </method>
         <method name="InviteParticipants">
             <dox:d><![CDATA[

@@ -47,11 +47,11 @@ TextHandler *TextHandler::instance()
     return handler;
 }
 
-void TextHandler::startChat(const QString &accountId, const QVariantMap &properties)
+QString TextHandler::startChat(const QString &accountId, const QVariantMap &properties)
 {
     ChatStartingJob *job = new ChatStartingJob(this, accountId, properties);
     job->startJob();
-    // FIXME: do we care about the result?
+    return job->objectPath();
 }
 
 QString TextHandler::sendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
