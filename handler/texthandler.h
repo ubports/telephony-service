@@ -34,7 +34,7 @@ class TextHandler : public QObject
     Q_OBJECT
 public:
     static TextHandler *instance();
-    void startChat(const QString &accountId, const QVariantMap &properties);
+    QString startChat(const QString &accountId, const QVariantMap &properties);
 
     friend class MessageSendingJob;
 
