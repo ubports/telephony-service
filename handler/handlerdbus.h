@@ -71,7 +71,7 @@ public Q_SLOTS:
  
 
     // call related
-    Q_NOREPLY void StartCall(const QString &number, const QString &accountId);
+    QString StartCall(const QString &number, const QString &accountId);
     Q_NOREPLY void HangUpCall(const QString &objectPath);
     Q_NOREPLY void SetHold(const QString &objectPath, bool hold);
     Q_NOREPLY void SetMuted(const QString &objectPath, bool muted);
