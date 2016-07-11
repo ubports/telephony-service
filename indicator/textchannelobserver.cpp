@@ -52,6 +52,7 @@ namespace C {
 
 // notification handling
 
+void openMessage(NotificationData *notificationData);
 void notification_closed(NotifyNotification *notification, QMap<NotifyNotification*, NotificationData*> *map);
 
 void sim_selection_action(NotifyNotification* notification, char *action, gpointer data)
@@ -103,32 +104,6 @@ void flash_notification_action(NotifyNotification* notification, char *action, g
     notify_notification_close(notification, &error);
 
     g_object_unref(notification);
-}
-
-void openMessage(NotificationData *notificationData)
-{
-    if (notificationData != NULL) {
-        // launch the messaging-app to show the message
-        QStringList recipients;
-        QString accountId = notificationData->accountId;
-        QStringList extraOptions;
-        if (notificationData->targetType == Tp::HandleTypeRoom) {
-            extraOptions << "chatType=" + QString::number((uint)Tp::HandleTypeRoom);
-            extraOptions << "threadId=" + QUrl::toPercentEncoding(notificationData->targetId);
-        } else {
-            if (!notificationData->senderId.isEmpty()) {
-                recipients << notificationData->senderId;
-            }
-            recipients << notificationData->participantIds;
-            recipients.removeDuplicates();
-        }
- 
-        QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
-        url += QString("?accountId=%1&").arg(QString(QUrl::toPercentEncoding(accountId)));
-        url += extraOptions.join("&");
-  
-        ApplicationUtils::openUrl(url);
-    }
 }
 
 void notification_action(NotifyNotification* notification, char *action, gpointer data)
