@@ -62,6 +62,8 @@ public:
     QString eventId;
     QString alias;
     QString message;
+    uint targetType;
+    QString targetId;
     TextChannelObserver *observer;
     QMap<NotifyNotification*, NotificationData*> *notificationList;
 };
@@ -130,17 +132,21 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
         // launch the messaging-app to show the message
         QStringList recipients;
         QString accountId = notificationData->accountId;
-        if (!notificationData->senderId.isEmpty()) {
-            recipients << notificationData->senderId;
+        QStringList extraOptions;
+        if (notificationData->targetType == Tp::HandleTypeRoom) {
+            extraOptions << "chatType=" + QString::number((uint)Tp::HandleTypeRoom);
+            extraOptions << "threadId=" + QUrl::toPercentEncoding(notificationData->targetId);
+        } else {
+            if (!notificationData->senderId.isEmpty()) {
+                recipients << notificationData->senderId;
+            }
+            recipients << notificationData->participantIds;
+            recipients.removeDuplicates();
         }
-        recipients << notificationData->participantIds;
-        recipients.removeDuplicates();
  
         QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
-        AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
-        if (account && account->type() == AccountEntry::GenericAccount) {
-            url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
-        }
+        url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
+        url += extraOptions.join("&");
   
         ApplicationUtils::openUrl(url);
 
@@ -155,6 +161,19 @@ void notification_closed(NotifyNotification *notification, QMap<NotifyNotificati
     if (data != NULL) {
         delete data;
     }
+}
+
+QVariantMap getInterfaceProperties(const Tp::AbstractInterface *interface)
+{
+    if (!interface) {
+        return QVariantMap();
+    }
+    QDBusInterface propsInterface(interface->service(), interface->path(), "org.freedesktop.DBus.Properties");
+    QDBusReply<QVariantMap> reply = propsInterface.call("GetAll", interface->interface());
+    if (!reply.isValid()) {
+        qWarning() << "Failed to fetch channel properties for interface" << interface->interface() << reply.error().message();
+    }
+    return reply.value();
 }
 
 TextChannelObserver::TextChannelObserver(QObject *parent) :
@@ -340,7 +359,7 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
     Ringtone::instance()->playIncomingMessageSound();
 }
 
-void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
+void TextChannelObserver::triggerNotificationForMessage(const Tp::TextChannelPtr channel, const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
 {
     Tp::ContactPtr contact = message.sender();
     if (!contact) {
@@ -356,7 +375,7 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
     if (GreeterContacts::isGreeterMode()) { // we're in the greeter's session
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
         // in greeter mode we show the notification right away as the contact data might not be received
-        showNotificationForMessage(message, accountId, participantIds);
+        showNotificationForMessage(channel, message, accountId, participantIds);
     } else {
         AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
         if (!account) {
@@ -367,7 +386,7 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
         QContactFetchRequest *request = new QContactFetchRequest(this);
         request->setFilter(QContactPhoneNumber::match(contact->id()));
 
-        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, accountId, participantIds, message](QContactAbstractRequest::State newState) {
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, accountId, participantIds, message, channel](QContactAbstractRequest::State newState) {
             // only process the results after the finished state is reached
             if (newState != QContactAbstractRequest::FinishedState) {
                 return;
@@ -382,7 +401,7 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
                 GreeterContacts::emitContact(contact);
             }
             // wait for the contact match request to finish before showing the notification
-            showNotificationForMessage(message, accountId, participantIds, contact);
+            showNotificationForMessage(channel, message, accountId, participantIds, contact);
         });
 
         // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
@@ -396,7 +415,7 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
     }
 }
 
-void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds, const QContact &contact)
+void TextChannelObserver::showNotificationForMessage(const Tp::TextChannelPtr channel, const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds, const QContact &contact)
 {
     Tp::ContactPtr telepathyContact = message.sender();
     QString messageText = message.text();
@@ -482,11 +501,30 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     }
 
     QString title;
-    if (participantIds.size() > 1) {
-        title = QString::fromUtf8(C::gettext("Message to group from %1")).arg(alias);
+    if (channel->targetHandleType() == Tp::HandleTypeRoom || participantIds.size() > 1) {
         GIcon *icon = g_themed_icon_new("contact-group");
         avatar = g_icon_to_string(icon);
         g_object_unref(icon);
+
+       if (channel->targetHandleType() == Tp::HandleTypeRoom) {
+           Tp::Client::ChannelInterfaceRoomInterface *roomInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomInterface>();
+           Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomConfigInterface>();
+           QVariantMap roomInterfaceProps = getInterfaceProperties(roomInterface);
+           QVariantMap roomConfigInterfaceProps = getInterfaceProperties(roomConfigInterface);
+           if (roomConfigInterfaceProps.contains("Title") && !roomConfigInterfaceProps["Title"].toString().isEmpty()) {
+               // TRANSLATORS : %1 is the group name and %2 is the recipient name
+               title = QString::fromUtf8(C::gettext("Message to %1 from %2")).arg(roomConfigInterfaceProps["Title"].toString()).arg(alias);
+           } else if (roomInterfaceProps.contains("RoomName") && !roomInterfaceProps["RoomName"].toString().isEmpty()) {
+               // TRANSLATORS : %1 is the group name and %2 is the recipient name
+               title = QString::fromUtf8(C::gettext("Message to %1 from %2")).arg(roomConfigInterfaceProps["RoomName"].toString()).arg(alias);
+           } else {
+               // TRANSLATORS : %1 is the recipient name
+               title = QString::fromUtf8(C::gettext("Message to group from %1")).arg(alias);
+           }
+       } else {
+           // TRANSLATORS : %1 is the recipient name
+           title = QString::fromUtf8(C::gettext("Message to group from %1")).arg(alias);
+       }
     } else {
         title = alias;
     }
@@ -506,6 +544,8 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     data->alias = alias;
     data->message = messageText;
     data->notificationList = &mNotifications;
+    data->targetId = channel->targetId();
+    data->targetType = channel->targetHandleType();
     mNotifications.insert(notification, data);
 
     // add the callback action
@@ -652,7 +692,7 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
         QByteArray token(message.messageToken().toUtf8());
         mUnreadMessages.append(token);
         QObject::connect(timer, &QTimer::timeout, [=]() {
-            triggerNotificationForMessage(message, account->accountId(), participantIds);
+            triggerNotificationForMessage(textChannel, message, account->accountId(), participantIds);
             Metrics::instance()->increment(Metrics::ReceivedMessages);
             timer->deleteLater();
         });
@@ -738,3 +778,5 @@ void TextChannelObserver::onMessageSent(Tp::Message, Tp::MessageSendingFlags, QS
 {
     Metrics::instance()->increment(Metrics::SentMessages);
 }
+
+
