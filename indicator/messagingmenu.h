@@ -27,6 +27,7 @@
 #include <QDBusInterface>
 #include <messaging-menu.h>
 #include "accountentry.h"
+#include <libnotify/notify.h>
 
 class Call
 {
@@ -45,6 +46,25 @@ public:
     }
 };
 
+class TextChannelObserver;
+
+class NotificationData {
+public:
+    NotificationData() : targetType(0), observer(NULL), notificationList(NULL) {}
+    QString senderId;
+    QStringList participantIds;
+    QString accountId;
+    QDateTime timestamp;
+    QString messageText;
+    QString eventId;
+    QString alias;
+    uint targetType;
+    QString targetId;
+    QString roomName;
+    TextChannelObserver *observer;
+    QMap<NotifyNotification*, NotificationData*> *notificationList;
+};
+
 class MessagingMenu : public QObject
 {
     Q_OBJECT
@@ -52,8 +72,8 @@ public:
     static MessagingMenu *instance();
     virtual ~MessagingMenu();
 
-    void addMessage(const QString &senderId, const QString &contactAlias, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text);
-    void addFlashMessage(const QString &senderId, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text);
+    void addMessage(NotificationData notificationData);
+    void addFlashMessage(NotificationData notificationData);
     void removeMessage(const QString &messageId);
 
     void addCall(const QString &targetId, const QString &accountId, const QDateTime &timestamp);
@@ -86,7 +106,7 @@ private:
 
     MessagingMenuApp *mCallsApp;
     MessagingMenuApp *mMessagesApp;
-    QMap<QString, QVariantMap> mMessages;
+    QMap<QString, NotificationData> mMessages;
     QList<Call> mCalls;
     QStringList mVoicemailIds;
     int mVoicemailCount;
