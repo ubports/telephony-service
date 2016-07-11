@@ -263,8 +263,7 @@ void MockTextChannel::addMembers(QStringList recipients)
         }
     }
 #if TP_QT_VERSION >= TP_QT_VERSION_CHECK(0, 9, 7)
-    Tp::DBusError error;
-    mGroupIface->addMembers(handles, "", &error);
+    mGroupIface->setMembers(Tp::UIntList() << mGroupIface->members() << handles, QVariantMap());
 #else
     mGroupIface->addMembers(handles, recipients);
 #endif
@@ -298,7 +297,11 @@ void MockTextChannel::onRemoveMembers(const Tp::UIntList &handles, const QString
         mMembers.removeAll(handle);
     }
 #if TP_QT_VERSION >= TP_QT_VERSION_CHECK(0, 9, 7)
-    mGroupIface->removeMembers(handles, "", 0, error);
+    Tp::UIntList members = mGroupIface->members();
+    Q_FOREACH(uint handle, handles) {
+        members.removeAll(handle);
+    }
+    mGroupIface->setMembers(members, QVariantMap());
 #else
     mGroupIface->removeMembers(handles);
 #endif
