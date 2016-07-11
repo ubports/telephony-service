@@ -47,7 +47,31 @@ namespace C {
 
 QTCONTACTS_USE_NAMESPACE
 
-void openMessage(NotificationData *notificationData);
+void openMessage(NotificationData *notificationData)
+{
+    if (notificationData != NULL) {
+        // launch the messaging-app to show the message
+        QStringList recipients;
+        QString accountId = notificationData->accountId;
+        QStringList extraOptions;
+        if (notificationData->targetType == Tp::HandleTypeRoom) {
+            extraOptions << "chatType=" + QString::number((uint)Tp::HandleTypeRoom);
+            extraOptions << "threadId=" + QUrl::toPercentEncoding(notificationData->targetId);
+        } else {
+            if (!notificationData->senderId.isEmpty()) {
+                recipients << notificationData->senderId;
+            }
+            recipients << notificationData->participantIds;
+            recipients.removeDuplicates();
+        }
+ 
+        QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+        url += QString("?accountId=%1&").arg(QString(QUrl::toPercentEncoding(accountId)));
+        url += extraOptions.join("&");
+  
+        ApplicationUtils::openUrl(url);
+    }
+}
 
 MessagingMenu::MessagingMenu(QObject *parent) :
     QObject(parent)
