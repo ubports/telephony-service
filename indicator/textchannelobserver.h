@@ -27,10 +27,9 @@
 #include <QObject>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
+#include "messagingmenu.h"
 
 QTCONTACTS_USE_NAMESPACE
-
-class NotificationData;
 
 class TextChannelObserver : public QObject
 {
