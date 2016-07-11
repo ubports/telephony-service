@@ -52,22 +52,6 @@ namespace C {
 
 // notification handling
 
-class NotificationData {
-public:
-    QString senderId;
-    QStringList participantIds;
-    QString accountId;
-    QDateTime timestamp;
-    QString text;
-    QString eventId;
-    QString alias;
-    QString message;
-    uint targetType;
-    QString targetId;
-    TextChannelObserver *observer;
-    QMap<NotifyNotification*, NotificationData*> *notificationList;
-};
-
 void notification_closed(NotifyNotification *notification, QMap<NotifyNotification*, NotificationData*> *map);
 
 void sim_selection_action(NotifyNotification* notification, char *action, gpointer data)
@@ -79,7 +63,7 @@ void sim_selection_action(NotifyNotification* notification, char *action, gpoint
         QStringList recipients;
         recipients << notificationData->participantIds;
         recipients.removeDuplicates();
-        notificationData->observer->sendMessage(recipients, notificationData->text, accountId);
+        notificationData->observer->sendMessage(recipients, notificationData->messageText, accountId);
     }
 
     notify_notification_close(notification, &error);
@@ -108,7 +92,7 @@ void flash_notification_action(NotifyNotification* notification, char *action, g
                                          notificationData->senderId,
                                          notificationData->timestamp,
                                          false,
-                                         notificationData->text,
+                                         notificationData->messageText,
                                          History::MessageTypeText);
             History::Events events;
             events.append(textEvent);
@@ -121,13 +105,8 @@ void flash_notification_action(NotifyNotification* notification, char *action, g
     g_object_unref(notification);
 }
 
-
-void notification_action(NotifyNotification* notification, char *action, gpointer data)
+void openMessage(NotificationData *notificationData)
 {
-    Q_UNUSED(notification);
-    Q_UNUSED(action);
-
-    NotificationData *notificationData = (NotificationData*) data;
     if (notificationData != NULL) {
         // launch the messaging-app to show the message
         QStringList recipients;
@@ -145,14 +124,24 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
         }
  
         QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
-        url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
+        url += QString("?accountId=%1&").arg(QString(QUrl::toPercentEncoding(accountId)));
         url += extraOptions.join("&");
   
         ApplicationUtils::openUrl(url);
-
-        notification_closed(notification, notificationData->notificationList);
     }
-    g_object_unref(notification);
+}
+
+void notification_action(NotifyNotification* notification, char *action, gpointer data)
+{
+    Q_UNUSED(notification);
+    Q_UNUSED(action);
+
+    NotificationData *notificationData = (NotificationData*) data;
+    openMessage(notificationData);
+    if (notification) {
+        notification_closed(notification, notificationData->notificationList);
+        g_object_unref(notification);
+    }
 }
 
 void notification_closed(NotifyNotification *notification, QMap<NotifyNotification*, NotificationData*> *map)
@@ -269,7 +258,7 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
         NotificationData *data = new NotificationData();
         data->participantIds = recipients;
         data->accountId = account->accountId();
-        data->message = text;
+        data->messageText = text;
         data->notificationList = &mNotifications;
         mNotifications.insert(notification, data);
 
@@ -313,8 +302,6 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
 {
     Tp::ContactPtr contact = message.sender();
     QByteArray token(message.messageToken().toUtf8());
-    MessagingMenu::instance()->addFlashMessage(contact->id(), accountId, token.toHex(), message.received(), message.text());
-
 
     // show the notification
     NotifyNotification *notification = notify_notification_new("",
@@ -324,8 +311,14 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
     data->senderId = contact->id();
     data->accountId = accountId;
     data->timestamp = message.received();
-    data->text = message.text();
+    data->messageText = message.text();
     data->eventId = message.messageToken().toUtf8();
+
+    NotificationData messagingMenuData = *data;
+    messagingMenuData.eventId = token.toHex();
+
+    MessagingMenu::instance()->addFlashMessage(messagingMenuData);
+
     mNotifications.insert(notification, data);
  
     notify_notification_add_action (notification,
@@ -480,8 +473,6 @@ void TextChannelObserver::showNotificationForMessage(const Tp::TextChannelPtr ch
         return;
     }
 
-    MessagingMenu::instance()->addMessage(telepathyContact->id(), telepathyContact->alias(), participantIds, accountId, token.toHex(), message.received(), messageText);
-
     QString alias;
     QString avatar;
 
@@ -500,6 +491,17 @@ void TextChannelObserver::showNotificationForMessage(const Tp::TextChannelPtr ch
         avatar = QUrl(telephonyServiceDir() + "assets/avatar-default@18.png").toEncoded();
     }
 
+    NotificationData messagingMenuData;
+    messagingMenuData.senderId = telepathyContact->id();
+    messagingMenuData.alias = telepathyContact->alias();
+    messagingMenuData.participantIds = participantIds;
+    messagingMenuData.accountId = accountId;
+    messagingMenuData.eventId = token.toHex();
+    messagingMenuData.timestamp = message.received();
+    messagingMenuData.messageText = messageText;
+    messagingMenuData.targetId = channel->targetId();
+    messagingMenuData.targetType = channel->targetHandleType();
+
     QString title;
     if (channel->targetHandleType() == Tp::HandleTypeRoom || participantIds.size() > 1) {
         GIcon *icon = g_themed_icon_new("contact-group");
@@ -514,9 +516,11 @@ void TextChannelObserver::showNotificationForMessage(const Tp::TextChannelPtr ch
            if (roomConfigInterfaceProps.contains("Title") && !roomConfigInterfaceProps["Title"].toString().isEmpty()) {
                // TRANSLATORS : %1 is the group name and %2 is the recipient name
                title = QString::fromUtf8(C::gettext("Message to %1 from %2")).arg(roomConfigInterfaceProps["Title"].toString()).arg(alias);
+               messagingMenuData.roomName = roomConfigInterfaceProps["Title"].toString();
            } else if (roomInterfaceProps.contains("RoomName") && !roomInterfaceProps["RoomName"].toString().isEmpty()) {
                // TRANSLATORS : %1 is the group name and %2 is the recipient name
-               title = QString::fromUtf8(C::gettext("Message to %1 from %2")).arg(roomConfigInterfaceProps["RoomName"].toString()).arg(alias);
+               title = QString::fromUtf8(C::gettext("Message to %1 from %2")).arg(roomInterfaceProps["RoomName"].toString()).arg(alias);
+               messagingMenuData.roomName = roomInterfaceProps["RoomName"].toString();
            } else {
                // TRANSLATORS : %1 is the recipient name
                title = QString::fromUtf8(C::gettext("Message to group from %1")).arg(alias);
@@ -531,6 +535,8 @@ void TextChannelObserver::showNotificationForMessage(const Tp::TextChannelPtr ch
 
     AccountEntry::addAccountLabel(accountId, title);
 
+    MessagingMenu::instance()->addMessage(messagingMenuData);
+
     // show the notification
     NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
                                                                messageText.toStdString().c_str(),
@@ -542,7 +548,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::TextChannelPtr ch
     data->senderId = telepathyContact->id();
     data->participantIds = participantIds;
     data->alias = alias;
-    data->message = messageText;
+    data->messageText = messageText;
     data->notificationList = &mNotifications;
     data->targetId = channel->targetId();
     data->targetType = channel->targetHandleType();
@@ -596,7 +602,7 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
 
                 notify_notification_update(notification,
                                            title.toStdString().c_str(),
-                                           data->message.toStdString().c_str(),
+                                           data->messageText.toStdString().c_str(),
                                            avatar.toStdString().c_str());
 
                 GError *error = NULL;
@@ -730,7 +736,7 @@ void TextChannelObserver::onReplyReceived(const QStringList &recipients, const Q
         NotificationData *data = new NotificationData();
         data->participantIds = recipients;
         data->accountId = accountId;
-        data->text = reply;
+        data->messageText = reply;
         data->observer = this;
         mNotifications.insert(notification, data);
 
