@@ -62,6 +62,8 @@ public:
     QString eventId;
     QString alias;
     QString message;
+    uint targetType;
+    QString targetId;
     TextChannelObserver *observer;
     QMap<NotifyNotification*, NotificationData*> *notificationList;
 };
@@ -130,17 +132,21 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
         // launch the messaging-app to show the message
         QStringList recipients;
         QString accountId = notificationData->accountId;
-        if (!notificationData->senderId.isEmpty()) {
-            recipients << notificationData->senderId;
+        QStringList extraOptions;
+        if (notificationData->targetType == Tp::HandleTypeRoom) {
+            extraOptions << "chatType=" + QString::number((uint)Tp::HandleTypeRoom);
+            extraOptions << "threadId=" + QUrl::toPercentEncoding(notificationData->targetId);
+        } else {
+            if (!notificationData->senderId.isEmpty()) {
+                recipients << notificationData->senderId;
+            }
+            recipients << notificationData->participantIds;
+            recipients.removeDuplicates();
         }
-        recipients << notificationData->participantIds;
-        recipients.removeDuplicates();
  
         QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
-        AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
-        if (account && account->type() == AccountEntry::GenericAccount) {
-            url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
-        }
+        url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
+        url += extraOptions.join("&");
   
         ApplicationUtils::openUrl(url);
 
@@ -538,6 +544,8 @@ void TextChannelObserver::showNotificationForMessage(const Tp::TextChannelPtr ch
     data->alias = alias;
     data->message = messageText;
     data->notificationList = &mNotifications;
+    data->targetId = channel->targetId();
+    data->targetType = channel->targetHandleType();
     mNotifications.insert(notification, data);
 
     // add the callback action
