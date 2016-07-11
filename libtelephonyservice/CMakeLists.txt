@@ -10,9 +10,11 @@ set(library_SRCS
     chatmanager.cpp
     chatentry.cpp
     contactutils.cpp
+    contactwatcher.cpp
     greetercontacts.cpp
     multimediaaccountentry.cpp
     ofonoaccountentry.cpp
+    participant.cpp
     phoneutils.cpp
     protocol.cpp
     protocolmanager.cpp
