@@ -24,25 +24,38 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QMap>
+#include <QQmlListProperty>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 #include "dbustypes.h"
+#include "chatentry.h"
 
 class ChatManager : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(QQmlListProperty<ChatEntry> chats
+                   READ chats
+                   NOTIFY chatsChanged)
 public:
     static ChatManager *instance();
 
-    Q_INVOKABLE void sendMessage(const QStringList &recipients, const QString &message, const QString &accountId = QString::null);
-    Q_INVOKABLE void sendMMS(const QStringList &recipients, const QString &message, const QVariant &attachments, const QString &accountId = QString:: null);
+    Q_INVOKABLE QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
+    Q_INVOKABLE ChatEntry *chatEntryForParticipants(const QString &accountId, const QStringList &participants, bool create = false);
+    Q_INVOKABLE ChatEntry *chatEntryForChatRoom(const QString &accountId, const QVariantMap &properties, bool create);
+
+    QQmlListProperty<ChatEntry> chats();
+    static int chatCount(QQmlListProperty<ChatEntry> *p);
+    static ChatEntry* chatAt(QQmlListProperty<ChatEntry> *p, int index);
 
 Q_SIGNALS:
     void messageReceived(const QString &sender, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
     void messageSent(const QStringList &recipients, const QString &message);
+    void chatsChanged();
+    void chatEntryCreated(QString accountId, QStringList participants, ChatEntry *chatEntry);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
+    void onChannelInvalidated();
     void onConnectedChanged();
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
@@ -50,15 +63,23 @@ public Q_SLOTS:
     void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId);
     void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
 
+private Q_SLOTS:
+    void onChannelObserverUnregistered();
+    void onTelepathyReady();
+
 protected Q_SLOTS:
     void onAckTimerTriggered();
 
 private:
     explicit ChatManager(QObject *parent = 0);
+    ChatEntry *chatEntryForChannel(const Tp::TextChannelPtr &channel);
+    QList<ChatEntry*> chatEntries() const;
 
-    QList<Tp::TextChannelPtr> mChannels;
+    mutable QList<ChatEntry*> mChatEntries;
     QMap<QString, QMap<QStringList,QStringList> > mMessagesToAck;
+    QList<Tp::TextChannelPtr> mPendingChannels;
     QTimer mMessagesAckTimer;
+    bool mReady;
 };
 
 #endif // CHATMANAGER_H

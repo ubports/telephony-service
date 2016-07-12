@@ -50,10 +50,11 @@ public:
 
 public Q_SLOTS:
     void placeDeliveryReport(const QString &messageId, const QString &status);
+    void changeChatState(const QString &userId, int state);
 
 Q_SIGNALS:
     void messageRead(const QString &id);
-    void messageSent(const QString &message, const QVariantMap &info);
+    void messageSent(const QString &message, const QVariantList &attachments, const QVariantMap &info);
 
 private:
     ~MockTextChannel();
@@ -63,6 +64,7 @@ private:
     uint mTargetHandle;
     Tp::BaseChannelMessagesInterfacePtr mMessagesIface;
     Tp::BaseChannelGroupInterfacePtr mGroupIface;
+    Tp::BaseChannelChatStateInterfacePtr mChatStateIface;
     Tp::BaseChannelTextTypePtr mTextChannel;
     uint mMessageCounter;
     Tp::UIntList mMembers;

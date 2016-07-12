@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -25,8 +25,6 @@
 #include <QObject>
 #include <QMap>
 
-#include "qgsettings.h"
-
 class DisplayNameSettings : public QObject
 {
     Q_OBJECT
@@ -38,7 +36,6 @@ private Q_SLOTS:
     void onSettingsChanged(const QString &key);
 
 private:
-    QGSettings mSimNameSettings;
     explicit DisplayNameSettings(QObject *parent = 0);
     QMap<QString,QString> mAccountNames;
 

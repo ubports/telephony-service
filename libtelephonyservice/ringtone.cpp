@@ -40,14 +40,13 @@ void RingtoneWorker::playIncomingCallSound()
         return;
     }
 
-    if (mCallAudioPlayer) {
-        return;
-    }
+    // force delete all media player instances
+    stopIncomingCallSound();
 
     // pick up the new ringtone in case it changed in the meantime
     mCallAudioPlaylist.addMedia(QUrl::fromLocalFile(GreeterContacts::instance()->incomingCallSound()));
     mCallAudioPlayer = new QMediaPlayer(this);
-    mCallAudioPlayer->setAudioRole(QMediaPlayer::AlertRole);
+    mCallAudioPlayer->setAudioRole(QAudio::RingtoneRole);
     mCallAudioPlayer->setPlaylist(&mCallAudioPlaylist);
     mCallAudioPlayer->play();
 }
@@ -75,7 +74,7 @@ void RingtoneWorker::playIncomingMessageSound()
 
     if (!mMessageAudioPlayer) {
         mMessageAudioPlayer = new QMediaPlayer(this);
-        mMessageAudioPlayer->setAudioRole(QMediaPlayer::AlertRole);
+        mMessageAudioPlayer->setAudioRole(QAudio::NotificationRole);
     }
 
     // WORKAROUND: there is a bug in qmediaplayer/(media-hub?) that never goes into Stopped mode.

@@ -21,7 +21,6 @@
 
 #include "applicationutils.h"
 #include "callhandler.h"
-#include "displaynamesettings.h"
 #include "handler.h"
 #include "handlerdbus.h"
 #include "telepathyhelper.h"
@@ -61,9 +60,6 @@ int main(int argc, char **argv)
 
     QObject::connect(TelepathyHelper::instance(), SIGNAL(setupReady()),
                      &dbus, SLOT(connectToBus()));
-
-    // instanciate the display name settings singleton, it will work by itself
-    DisplayNameSettings::instance();
 
     return app.exec();
 }

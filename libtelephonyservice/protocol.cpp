@@ -3,6 +3,7 @@
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -23,14 +24,24 @@
 #include <QFileInfo>
 #include <QSettings>
 
-Protocol::Protocol(const QString &name, Features features, const QString &fallbackProtocol, QObject *parent)
-: QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol)
+Protocol::Protocol(const QString &name, Features features, const QString &fallbackProtocol, const QString &backgroundImage, const QString &icon, const QString &serviceName, QObject *parent)
+: QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol), mBackgroundImage(backgroundImage), mIcon(icon), mServiceName(serviceName)
 {
 }
 
 QString Protocol::name() const
 {
     return mName;
+}
+
+QString Protocol::icon() const
+{
+    return mIcon;
+}
+
+QString Protocol::serviceName() const
+{
+    return mServiceName;
 }
 
 Protocol::Features Protocol::features() const
@@ -43,6 +54,11 @@ QString Protocol::fallbackProtocol() const
     return mFallbackProtocol;
 }
 
+QString Protocol::backgroundImage() const
+{
+    return mBackgroundImage;
+}
+
 Protocol *Protocol::fromFile(const QString &fileName)
 {
     QFileInfo file(fileName);
@@ -52,6 +68,7 @@ Protocol *Protocol::fromFile(const QString &fileName)
 
     QString protocolName = file.baseName();
     QSettings settings(fileName, QSettings::IniFormat);
+    settings.setIniCodec("UTF-8");
     settings.beginGroup("Protocol");
     QString name = settings.value("Name", protocolName).toString();
     QStringList featureList = settings.value("Features").toStringList();
@@ -64,6 +81,9 @@ Protocol *Protocol::fromFile(const QString &fileName)
         }
     }
     QString fallbackProtocol = settings.value("FallbackProtocol").toString();
+    QString backgroundImage = settings.value("BackgroundImage").toString();
+    QString icon = settings.value("Icon").toString();
+    QString serviceName = settings.value("ServiceName").toString();
 
-    return new Protocol(name, features, fallbackProtocol);
+    return new Protocol(name, features, fallbackProtocol, backgroundImage, icon, serviceName);
 }

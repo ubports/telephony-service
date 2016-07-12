@@ -40,12 +40,11 @@
 template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStringList &key2);
 
 class AccountEntry;
-class QGSettings;
 
 class TelepathyHelper : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
+    Q_PROPERTY(bool ready READ ready NOTIFY setupReady)
     Q_PROPERTY(QStringList accountIds READ accountIds NOTIFY accountIdsChanged)
     Q_PROPERTY(QQmlListProperty<AccountEntry> accounts READ qmlAccounts NOTIFY accountsChanged)
     Q_PROPERTY(QQmlListProperty<AccountEntry> phoneAccounts READ qmlPhoneAccounts NOTIFY phoneAccountsChanged)
@@ -55,6 +54,7 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(bool flightMode READ flightMode WRITE setFlightMode NOTIFY flightModeChanged)
     Q_PROPERTY(bool mmsGroupChat READ mmsGroupChat WRITE setMmsGroupChat NOTIFY mmsGroupChatChanged)
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
+    Q_PROPERTY(QVariantMap simNames READ simNames NOTIFY simNamesChanged)
     Q_ENUMS(AccountType)
 public:
     enum AccountType {
@@ -78,16 +78,18 @@ public:
     AccountEntry *defaultCallAccount() const;
 
     bool mmsGroupChat();
+    QVariantMap simNames() const;
     void setMmsGroupChat(bool value);
     bool flightMode();
     void setFlightMode(bool value);
-    bool connected() const;
+    bool ready() const;
     QStringList accountIds();
     AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
     Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
     Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
     bool emergencyCallsAvailable() const;
     Q_INVOKABLE void unlockSimCards() const;
+    bool multiplePhoneAccounts() const;
 
     bool registerClient(Tp::AbstractClient *client, QString name);
     bool unregisterClient(Tp::AbstractClient *client);
@@ -106,8 +108,6 @@ public:
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
     void channelObserverUnregistered();
-    void accountReady();
-    void connectedChanged();
     void accountIdsChanged();
     void accountsChanged();
     void accountAdded(AccountEntry *account);
@@ -119,12 +119,14 @@ Q_SIGNALS:
     void flightModeChanged();
     void emergencyCallsAvailableChanged();
     void mmsGroupChatChanged();
+    void simNamesChanged();
 
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);
     Q_INVOKABLE void unregisterChannelObserver();
 
 protected:
+    explicit TelepathyHelper(QObject *parent = 0);
     void setupAccountEntry(AccountEntry *entry);
 
 private Q_SLOTS:
@@ -132,11 +134,9 @@ private Q_SLOTS:
     void onAccountReady();
     void onNewAccount(const Tp::AccountPtr &account);
     void onAccountRemoved();
-    void updateConnectedStatus();
-    void onSettingsChanged(const QString&);
+    void onPhoneSettingsChanged(const QString&);
 
 private:
-    explicit TelepathyHelper(QObject *parent = 0);
     Tp::AccountManagerPtr mAccountManager;
     Tp::Features mAccountManagerFeatures;
     Tp::Features mAccountFeatures;
@@ -144,14 +144,15 @@ private:
     Tp::Features mConnectionFeatures;
     Tp::ClientRegistrarPtr mClientRegistrar;
     QList<AccountEntry*> mAccounts;
+    int mPendingAccountReady;
     AccountEntry *mDefaultCallAccount;
     AccountEntry *mDefaultMessagingAccount;
     ChannelObserver *mChannelObserver;
-    bool mFirstTime;
-    bool mConnected;
+    bool mReady;
+    Tp::AbstractClientPtr mChannelObserverPtr;
     bool mMmsGroupChat;
+    QVariantMap mSimNames;
     mutable QDBusInterface *mHandlerInterface;
-    QGSettings *mPhoneSettings;
     mutable QDBusInterface *mApproverInterface;
     QDBusInterface mFlightModeInterface;
 };

@@ -28,23 +28,32 @@
 #include <TelepathyQt/ReceivedMessage>
 #include "dbustypes.h"
 
+struct PendingMessage {
+    QString accountId;
+    QStringList recipients;
+    QString message;
+    AttachmentList attachments;
+    QVariantMap properties;
+};
+Q_DECLARE_METATYPE(PendingMessage)
+
 class TextHandler : public QObject
 {
     Q_OBJECT
 public:
     static TextHandler *instance();
     void startChat(const QStringList &recipients, const QString &accountId);
+    void startChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties);
     void startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts);
 
 public Q_SLOTS:
-    void sendMessage(const QStringList &recipients, const QString &message, const QString &accountId);
-    void sendSilentMessage(const QStringList &recipients, const QString &message, const QString &accountId);
-    void sendMMS(const QStringList &recipients, const AttachmentList &attachments, const QString &accountId);
+    QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
     void acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId);
     void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
+    void onTextChannelInvalidated();
     void onContactsAvailable(Tp::PendingOperation *op);
     void onMessageSent(Tp::PendingOperation *op);
     void onConnectedChanged();
@@ -54,14 +63,11 @@ protected:
 
 private:
     explicit TextHandler(QObject *parent = 0);
-    Tp::MessagePartList buildMMS(const AttachmentList &attachments);
+    Tp::MessagePartList buildMessage(const PendingMessage &pendingMessage);
 
     QList<Tp::TextChannelPtr> mChannels;
-    QMap<QString, Tp::ContactPtr> mContacts;
-    // keys: accountId, participants values: pending messages
-    QMap<QString, QMap<QStringList, QStringList> > mPendingMessages;
-    QMap<QString, QMap<QStringList, QStringList> > mPendingSilentMessages;
-    QMap<QString, QMap<QStringList, QList<AttachmentList>> > mPendingMMSs;
+    QMap<QString, QMap<QString, Tp::ContactPtr> > mContacts;
+    QList<PendingMessage> mPendingMessages;
 };
 
 #endif // TEXTHANDLER_H

@@ -105,11 +105,10 @@ void MessagingMenu::addFlashMessage(const QString &senderId, const QString &acco
  
 }
 
-void MessagingMenu::addMessage(const QString &senderId, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text)
+void MessagingMenu::addMessage(const QString &senderId, const QString &contactAlias, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text)
 {
     // try to get a contact for that phone number
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
-    QString contactAlias = senderId;
 
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
     if (!account) {
@@ -123,15 +122,24 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
     QContactFetchRequest *request = new QContactFetchRequest(this);
     request->setFilter(QContactPhoneNumber::match(senderId));
 
+    QVariantMap details;
+    details["senderId"] = senderId;
+    details["accountId"] = accountId;
+    details["participantIds"] = participantIds;
+ 
+    mMessages[messageId] = details;
+
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged,
-                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this]() {
+                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this](QContactAbstractRequest::State newState) {
 
         GFile *file = NULL;
         GIcon *icon = NULL;
 
         // only process the results after the finished state is reached
-        if (request->state() != QContactAbstractRequest::FinishedState) {
+        // also, if the ack happens before contacts service return the request we have to
+        // simply skip this
+        if (newState != QContactAbstractRequest::FinishedState || !mMessages.contains(messageId)) {
             return;
         }
 
@@ -156,6 +164,8 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
             avatar = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/contact-group.svg");
         }
 
+        AccountEntry::addAccountLabel(accountId, displayLabel);
+
         if (avatar.isEmpty()) {
             avatar = iconPath;
         }
@@ -178,13 +188,6 @@ void MessagingMenu::addMessage(const QString &senderId, const QStringList &parti
                                           );
         g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::messageActivateCallback), this);
 
-        // save the phone number to use in the actions
-        QVariantMap details;
-        details["senderId"] = senderId;
-        details["accountId"] = accountId;
-        details["participantIds"] = participantIds;
- 
-        mMessages[messageId] = details;
         messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
 
         if (file) {
@@ -270,7 +273,7 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
 
     Q_FOREACH(Call callMessage, mCalls) {
         // FIXME: we need a better strategy to group calls from different accounts
-        if (account->compareIds(callMessage.targetId, targetId)) {
+        if (account->compareIds(callMessage.targetId, targetId) && callMessage.accountId == accountId) {
             call = callMessage;
             found = true;
             mCalls.removeOne(callMessage);
@@ -294,6 +297,8 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
 
     QString text;
     text = QString::fromUtf8(C::ngettext("%1 missed call", "%1 missed calls", call.count)).arg(call.count);
+
+    AccountEntry::addAccountLabel(accountId, text);
 
     if (targetId.startsWith(OFONO_PRIVATE_NUMBER)) {
         call.contactAlias = C::gettext("Private number");
@@ -365,7 +370,7 @@ void MessagingMenu::removeCall(const QString &targetId, const QString &accountId
 
     Q_FOREACH(Call callMessage, mCalls) {
         // FIXME: we need a better strategy to group calls from different accounts
-        if (account->compareIds(callMessage.targetId, targetId)) {
+        if (account->compareIds(callMessage.targetId, targetId) && callMessage.accountId == accountId) {
             call = callMessage;
             found = true;
             mCalls.removeOne(callMessage);
@@ -396,9 +401,7 @@ void MessagingMenu::showVoicemailEntry(AccountEntry *account)
     GIcon *icon = g_themed_icon_new("indicator-call");
 
     QString accountLabel(C::gettext("Voicemail"));
-    if (TelepathyHelper::instance()->activeAccounts().size() > 1) {
-        accountLabel += " - " + account->displayName();
-    }
+    AccountEntry::addAccountLabel(account->accountId(), accountLabel);
 
     MessagingMenuMessage *message = messaging_menu_message_new(account->accountId().toUtf8().data(),
                                                                icon,
@@ -505,6 +508,7 @@ void MessagingMenu::showMessage(const QString &messageId)
 {
     QVariantMap message = mMessages[messageId];
     QString senderId = message["senderId"].toString();
+    QString accountId = message["accountId"].toString();
     QStringList participantIds = message["participantIds"].toStringList();
     QStringList recipients;
     if (!senderId.isEmpty()) {
@@ -512,8 +516,14 @@ void MessagingMenu::showMessage(const QString &messageId)
     }
     recipients << participantIds;
     recipients.removeDuplicates();
+
+    QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (account && account->type() == AccountEntry::GenericAccount) {
+        url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
+    }
  
-    ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+    ApplicationUtils::openUrl(url);
 }
 
 void MessagingMenu::callBack(const QString &messageId)

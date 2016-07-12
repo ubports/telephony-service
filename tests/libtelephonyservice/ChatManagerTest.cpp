@@ -34,8 +34,11 @@ private Q_SLOTS:
     void cleanup();
     void testSendMessage_data();
     void testSendMessage();
+    void testSendMessageWithAttachments_data();
+    void testSendMessageWithAttachments();
     void testMessageReceived();
     void testAcknowledgeMessages();
+    void testChatEntry();
 
 private:
     Tp::AccountPtr mGenericTpAccount;
@@ -48,8 +51,11 @@ void ChatManagerTest::initTestCase()
 {
     initialize();
     // set to false so group chat messages are not sent as MMS
-    mPhoneSettings.set("mmsGroupChatEnabled", false);
+    TelepathyHelper::instance()->setMmsGroupChat(false);
     TelepathyHelper::instance()->registerChannelObserver();
+
+    // just give telepathy some time to register the observer
+    QTest::qWait(1000);
 }
 
 void ChatManagerTest::init()
@@ -95,14 +101,14 @@ void ChatManagerTest::testSendMessage()
     qSort(recipients);
 
     MockController *controller = accountId.startsWith("mock/mock") ? mGenericMockController : mPhoneMockController;
-    QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
     QSignalSpy messageSentSpy(ChatManager::instance(), SIGNAL(messageSent(QStringList,QString)));
 
-    ChatManager::instance()->sendMessage(recipients, message, accountId);
+    ChatManager::instance()->sendMessage(accountId, recipients, message);
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
     QString messageText = controllerMessageSentSpy.first()[0].toString();
-    QVariantMap messageProperties = controllerMessageSentSpy.first()[1].toMap();
+    QVariantMap messageProperties = controllerMessageSentSpy.first()[2].toMap();
     QStringList messageRecipients = messageProperties["Recipients"].toStringList();
     qSort(messageRecipients);
     QCOMPARE(messageText, message);
@@ -169,6 +175,69 @@ void ChatManagerTest::testAcknowledgeMessages()
     qSort(receivedIds);
     qSort(messageIds);
     QCOMPARE(receivedIds, messageIds);
+}
+
+void ChatManagerTest::testChatEntry()
+{
+    QStringList recipients;
+    recipients << "user@domain.com" << "user2@domain.com";
+    QSignalSpy chatEntryCreatedSpy(ChatManager::instance(), SIGNAL(chatEntryCreated(QString, QStringList,ChatEntry *)));
+    ChatEntry *entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", recipients, true);
+    QVERIFY(entry == NULL);
+    QTRY_COMPARE(chatEntryCreatedSpy.count(), 1);
+
+    entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", recipients, false);
+    QVERIFY(entry != NULL);
+    QList<QVariant> arguments = chatEntryCreatedSpy.takeFirst();
+    QCOMPARE(QString("mock/mock/account0"), arguments.at(0).toString());
+    QCOMPARE(recipients.toSet(), arguments.at(1).toStringList().toSet());
+    QCOMPARE(entry, arguments.at(2).value<ChatEntry*>());
+}
+
+void ChatManagerTest::testSendMessageWithAttachments_data()
+{
+    QTest::addColumn<QStringList>("recipients");
+    QTest::addColumn<QString>("message");
+    QTest::addColumn<QString>("accountId");
+    QTest::addColumn<bool>("mmsFlag");
+
+    QTest::newRow("message via the generic account") << (QStringList() << "recipient1") << QString("Hello world") << QString("mock/mock/account0") << false;
+    QTest::newRow("message via the phone account") << (QStringList() << "1234567") << QString("Hello Phone World") << QString("mock/ofono/account0") << true;
+
+}
+
+void ChatManagerTest::testSendMessageWithAttachments()
+{
+    QFETCH(QStringList, recipients);
+    QFETCH(QString, message);
+    QFETCH(QString, accountId);
+    QFETCH(bool, mmsFlag);
+
+    // just to make it easier, sort the recipients
+    qSort(recipients);
+
+    MockController *controller = accountId.startsWith("mock/mock") ? mGenericMockController : mPhoneMockController;
+
+    QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+
+    QVariantList attachmentList;
+    QVariantList attachment;
+    attachment << "id" << "content/type" << "filepath";
+    attachmentList << QVariant::fromValue(attachment);
+    QVariant attachments = QVariant::fromValue(attachmentList);
+
+    ChatManager::instance()->sendMessage(accountId, recipients, message, attachments);
+
+    TRY_COMPARE(controllerMessageSentSpy.count(), 1);
+    QString messageText = controllerMessageSentSpy.first()[0].toString();
+    QVariantMap messageProperties = controllerMessageSentSpy.first()[2].toMap();
+    QStringList messageRecipients = messageProperties["Recipients"].toStringList();
+    qSort(messageRecipients);
+    QCOMPARE(messageText, message);
+    QCOMPARE(messageRecipients, recipients);
+
+    QCOMPARE(messageProperties.contains("x-canonical-mms"), mmsFlag);
+    QCOMPARE(messageProperties["x-canonical-mms"].toBool(), mmsFlag);
 }
 
 QTEST_MAIN(ChatManagerTest)

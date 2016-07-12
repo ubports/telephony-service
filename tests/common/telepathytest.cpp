@@ -24,7 +24,7 @@
 #include "telepathyhelper.h"
 #include "accountentry.h"
 
-TelepathyTest::TelepathyTest() : mPhoneSettings("com.ubuntu.phone")
+TelepathyTest::TelepathyTest()
 {
 
 }
@@ -95,6 +95,9 @@ Tp::AccountPtr TelepathyTest::addAccount(const QString &manager, const QString &
         }
 
         account = pa->account();
+        // on the real device this is done by the telepathy-ofono plugin
+        account->setEnabled(true);
+        account->setConnectsAutomatically(true);
         finished = true;
     });
 

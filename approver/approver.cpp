@@ -413,8 +413,9 @@ void Approver::onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const
 {
     if (mRejectActions.contains(action)) {
         QString targetId = dispatchOp->channels().first()->targetContact()->id();
-        ChatManager::instance()->sendMessage(QStringList() << targetId, mRejectActions[action],
-                                             dispatchOp->account()->uniqueIdentifier());
+        ChatManager::instance()->sendMessage(dispatchOp->account()->uniqueIdentifier(),
+                                             QStringList() << targetId,
+                                             mRejectActions[action]);
     }
 
     onRejected(dispatchOp);
@@ -437,19 +438,47 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     data->channel = channel;
     bool unknownNumber = false;
 
-    if (!telepathyContact->id().isEmpty()) {
-        if (telepathyContact->id().startsWith(OFONO_PRIVATE_NUMBER)) {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
-            unknownNumber = true;
-        } else if (telepathyContact->id().startsWith(OFONO_UNKNOWN_NUMBER)) {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
-            unknownNumber = true;
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    if (!account) {
+        qCritical() << "Call exists with no account for connection";
+        return false;
+    }
+
+    mCachedBody = QString();
+
+    if (account->type() == AccountEntry::PhoneAccount &&
+            TelepathyHelper::instance()->multiplePhoneAccounts()) {
+        mCachedBody = QString::fromUtf8(C::gettext("On [%1]")).arg(account->displayName());
+        mCachedBody += "\n";
+        if (!telepathyContact->id().isEmpty()) {
+            if (telepathyContact->id().startsWith(OFONO_PRIVATE_NUMBER)) {
+                mCachedBody += QString::fromUtf8(C::gettext("Private number"));
+                unknownNumber = true;
+            } else if (telepathyContact->id().startsWith(OFONO_UNKNOWN_NUMBER)) {
+                mCachedBody += QString::fromUtf8(C::gettext("Unknown number"));
+                unknownNumber = true;
+            } else {
+                mCachedBody += telepathyContact->id();
+            }
         } else {
-            mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(telepathyContact->id());
+            mCachedBody += C::gettext("Caller number is not available");
+            unknownNumber = true;
         }
     } else {
-        mCachedBody = C::gettext("Caller number is not available");
-        unknownNumber = true;
+        if (!telepathyContact->id().isEmpty()) {
+            if (telepathyContact->id().startsWith(OFONO_PRIVATE_NUMBER)) {
+                mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
+                unknownNumber = true;
+            } else if (telepathyContact->id().startsWith(OFONO_UNKNOWN_NUMBER)) {
+                mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
+                unknownNumber = true;
+            } else {
+                mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(telepathyContact->id());
+            }
+        } else {
+            mCachedBody = C::gettext("Caller number is not available");
+            unknownNumber = true;
+        }
     }
 
     QString displayLabel;

@@ -41,10 +41,13 @@ private Q_SLOTS:
     void testCallProperties();
     void testConferenceCall();
     void testSendMessage();
+    void testSendMessageWithAttachments();
+    void testSendMessageOwnNumber();
     void testAcknowledgeMessage();
     void testAcknowledgeAllMessages();
     void testActiveCallIndicator();
     void testNotApprovedChannels();
+    void testMultimediaFallback();
 
 private:
     void registerApprover();
@@ -53,6 +56,11 @@ private:
     Approver *mApprover;
     MockController *mMockController;
     Tp::AccountPtr mTpAccount;
+    MockController *mMultimediaMockController;
+    Tp::AccountPtr mMultimediaTpAccount;
+    MockController *mOfonoMockController;
+    Tp::AccountPtr mOfonoTpAccount;
+
 };
 
 void HandlerTest::initTestCase()
@@ -71,12 +79,20 @@ void HandlerTest::init()
 
     // and create the mock controller
     mMockController = new MockController("mock", this);
+
+    mOfonoTpAccount = addAccount("mock", "ofono", "the account");
+    mOfonoMockController = new MockController("ofono", this);
+
+    mMultimediaTpAccount = addAccount("mock", "multimedia", "the account");
+    mMultimediaMockController = new MockController("multimedia", this);
 }
 
 void HandlerTest::cleanup()
 {
     doCleanup();
     mMockController->deleteLater();
+    mMultimediaMockController->deleteLater();
+    mOfonoMockController->deleteLater();
 }
 
 void HandlerTest::testMakingCalls()
@@ -111,6 +127,7 @@ void HandlerTest::testHangUpCall()
 
     // and finally request the hangup
     QSignalSpy callEndedSpy(mMockController, SIGNAL(CallEnded(QString)));
+    TRY_VERIFY(HandlerController::instance()->hasCalls());
     HandlerController::instance()->hangUpCall(objectPath);
     TRY_COMPARE(callEndedSpy.count(), 1);
 }
@@ -135,6 +152,7 @@ void HandlerTest::testCallHold()
 
     QSignalSpy callStateSpy(mMockController, SIGNAL(CallStateChanged(QString,QString,QString)));
 
+    TRY_VERIFY(HandlerController::instance()->hasCalls());
     // set the call on hold
     HandlerController::instance()->setHold(objectPath, true);
     TRY_COMPARE(callStateSpy.count(), 1);
@@ -166,6 +184,8 @@ void HandlerTest::testCallProperties()
     mApprover->acceptCall();
 
     waitForCallActive(callerId);
+    
+    TRY_VERIFY(HandlerController::instance()->hasCalls());
 
     // wait until the call properties are changed
     TRY_VERIFY(handlerCallPropertiesSpy.count() > 0);
@@ -275,15 +295,61 @@ void HandlerTest::testSendMessage()
 {
     QString recipient("22222222");
     QString message("Hello, world!");
-    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
     // FIXME: add support for multiple accounts
-    HandlerController::instance()->sendMessage(recipient, message, mTpAccount->uniqueIdentifier());
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentSpy.count(), 1);
     QString sentMessage = messageSentSpy.first().first().toString();
     QVariantMap messageProperties = messageSentSpy.first().last().value<QVariantMap>();
     QCOMPARE(sentMessage, message);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
+}
+
+void HandlerTest::testSendMessageWithAttachments()
+{
+    QString recipient("22222222");
+    QString message("Hello, world!");
+    QSignalSpy messageSentSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+
+    QTemporaryFile outputFile("audioXXXXXX.ogg");
+    outputFile.open();
+    AttachmentStruct attachment{"id", "audio/ogg", outputFile.fileName()};
+    HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message, AttachmentList() << attachment);
+    TRY_COMPARE(messageSentSpy.count(), 1);
+    outputFile.close();
+
+    QString sentMessage = messageSentSpy.first()[0].toString();
+    QVariantMap messageProperties = messageSentSpy.first()[2].value<QVariantMap>();
+    QCOMPARE(sentMessage, message);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
+    
+    QVariantList messageAttachments = qdbus_cast<QVariantList>(messageSentSpy.first()[1]);
+    QVariantMap firstAttachment = qdbus_cast<QVariantMap>(messageAttachments.first());
+    QCOMPARE(firstAttachment["content-type"].toString(), QString("audio/ogg"));
+    QCOMPARE(firstAttachment["identifier"].toString(), QString("id"));
+}
+
+void HandlerTest::testSendMessageOwnNumber()
+{
+    QString recipient("84376666");
+    QString message("Hello, world!");
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+
+    // first send a message to our own number
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << mTpAccount->connection()->selfContact()->id(), message);
+    TRY_COMPARE(messageSentSpy.count(), 1);
+    QVariantMap messageProperties = messageSentSpy.first()[2].value<QVariantMap>();
+    QCOMPARE(messageProperties["Recipients"].toStringList().first(), mTpAccount->connection()->selfContact()->id());
+
+    messageSentSpy.clear();
+
+    // then send to another number and check if old channels are not reused
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+    TRY_COMPARE(messageSentSpy.count(), 1);
+    messageProperties = messageSentSpy.first()[2].value<QVariantMap>();
+    QCOMPARE(messageProperties["Recipients"].toStringList().first(), recipient);
 }
 
 void HandlerTest::testAcknowledgeMessage()
@@ -293,10 +359,10 @@ void HandlerTest::testAcknowledgeMessage()
     QString recipient("84376666");
     QString recipient2("+554184376666");
     QString message("Hello, world!");
-    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
     // first send a message to a certain number so the handler request one channel
-    HandlerController::instance()->sendMessage(recipient, message, mTpAccount->uniqueIdentifier());
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentSpy.count(), 1);
 
     QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
@@ -311,9 +377,10 @@ void HandlerTest::testAcknowledgeMessage()
     TRY_COMPARE(messageReceivedSpy.count(), 1);
     QString receivedMessageId = messageReceivedSpy.first()[3].toString();
 
-    // then acknoledge the message that arrived in the second channel and make sure handler
+    // then acknowledge the message that arrived in the second channel and make sure handler
     // does the right thing
     QSignalSpy messageReadSpy(mMockController, SIGNAL(MessageRead(QString)));
+    QTest::qWait(1000);
     ChatManager::instance()->acknowledgeMessage(properties["Recipients"].toStringList(), receivedMessageId, mTpAccount->uniqueIdentifier());
 
     TRY_COMPARE(messageReadSpy.count(), 1);
@@ -327,10 +394,10 @@ void HandlerTest::testAcknowledgeAllMessages()
     QString recipient2("+554198437666");
     QString message("Hello, world! %1");
     int messageCount = 10;
-    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantMap)));
+    QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
     // first send a message to a certain number so the handler request one channel
-    HandlerController::instance()->sendMessage(recipient, message, mTpAccount->uniqueIdentifier());
+    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
     TRY_COMPARE(messageSentSpy.count(), 1);
 
     QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
@@ -348,6 +415,7 @@ void HandlerTest::testAcknowledgeAllMessages()
 
     // then acknowledge the messages that arrived in the second channel and make sure handler
     // does the right thing
+    QTest::qWait(1000);
     QSignalSpy messageReadSpy(mMockController, SIGNAL(MessageRead(QString)));
     ChatManager::instance()->acknowledgeAllMessages(properties["Recipients"].toStringList(), mTpAccount->uniqueIdentifier());
 
@@ -401,6 +469,44 @@ void HandlerTest::testNotApprovedChannels()
     QCOMPARE(callStateSpy.last()[0].toString(), callerId);
     QCOMPARE(callStateSpy.last()[1].toString(), objectPath);
     QCOMPARE(callStateSpy.last()[2].toString(), QString("initialised"));
+}
+
+void HandlerTest::testMultimediaFallback()
+{
+    QString recipient("22222222");
+    QString message("Hello, world!");
+    mMultimediaMockController->SetContactPresence(recipient, Tp::ConnectionPresenceTypeAvailable, "available", "");
+    // We have to make sure the handler already has the new state
+    QTest::qWait(1000);
+
+    QSignalSpy messageSentOfonoSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+    QSignalSpy messageSentMultimediaSpy(mMultimediaMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+
+    QString accountId = HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+    QCOMPARE(accountId, mMultimediaTpAccount->uniqueIdentifier());
+    TRY_COMPARE(messageSentMultimediaSpy.count(), 1);
+    QCOMPARE(messageSentOfonoSpy.count(), 0);
+    QString sentMessage = messageSentMultimediaSpy.first().first().toString();
+    QVariantMap messageProperties = messageSentMultimediaSpy.first().last().value<QVariantMap>();
+    QCOMPARE(sentMessage, message);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
+
+    messageSentMultimediaSpy.clear();
+    messageSentOfonoSpy.clear();
+
+    mMultimediaMockController->SetContactPresence(recipient, Tp::ConnectionPresenceTypeUnknown, "offline", "");
+    // We have to make sure the handler already has the new state
+    QTest::qWait(1000);
+    HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+    TRY_COMPARE(messageSentOfonoSpy.count(), 1);
+    QCOMPARE(messageSentMultimediaSpy.count(), 0);
+
+    sentMessage = messageSentOfonoSpy.first().first().toString();
+    messageProperties = messageSentOfonoSpy.first().last().value<QVariantMap>();
+    QCOMPARE(sentMessage, message);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
+    QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
 }
 
 void HandlerTest::registerApprover()

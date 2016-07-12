@@ -24,12 +24,14 @@
 
 #include "applicationutils.h"
 #include "callchannelobserver.h"
+#include "displaynamesettings.h"
 #include "indicatordbus.h"
 #include "metrics.h"
 #include "telepathyhelper.h"
 #include "textchannelobserver.h"
 #include "voicemailindicator.h"
 #include "ussdindicator.h"
+#include "authhandler.h"
 #include <QCoreApplication>
 #include <TelepathyQt/ClientRegistrar>
 #include <TelepathyQt/AbstractClient>
@@ -70,9 +72,12 @@ int main(int argc, char **argv)
 
     // create the dbus object and connect its signals
     USSDIndicator ussdIndicator;
+    AuthHandler authHandler;
     IndicatorDBus dbus;
     QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
                      &ussdIndicator, SLOT(clear()));
+    QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
+                     &authHandler, SLOT(clear()));
 
     // register the observer
     QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, [&]() {
@@ -87,6 +92,9 @@ int main(int argc, char **argv)
                          callObserver, SLOT(onCallChannelAvailable(Tp::CallChannelPtr)));
         QObject::connect(&dbus, SIGNAL(clearNotificationsRequested()),
                          textObserver, SLOT(clearNotifications()));
+
+        // instanciate the display name settings singleton, it will work by itself
+        DisplayNameSettings::instance();
     });
 
     // instanciate the metrics helper

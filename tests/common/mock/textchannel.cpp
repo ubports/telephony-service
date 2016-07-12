@@ -73,6 +73,9 @@ MockTextChannel::MockTextChannel(MockConnection *conn, QStringList recipients, u
     mMessagesIface->setSendMessageCallback(Tp::memFun(this,&MockTextChannel::sendMessage));
     baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mMessagesIface));
 
+    mChatStateIface = Tp::BaseChannelChatStateInterface::create();
+    baseChannel->plugInterface(Tp::AbstractChannelInterfacePtr::dynamicCast(mChatStateIface));
+
     // group stuff
     mGroupIface = Tp::BaseChannelGroupInterface::create(Tp::ChannelGroupFlagCanAdd, conn->selfHandle());
     mGroupIface->setAddMembersCallback(Tp::memFun(this,&MockTextChannel::onAddMembers));
@@ -102,19 +105,40 @@ void MockTextChannel::messageAcknowledged(const QString &id)
 QString MockTextChannel::sendMessage(const Tp::MessagePartList& message, uint flags, Tp::DBusError* error)
 {
     Tp::MessagePart header = message.at(0);
-    Tp::MessagePart body = message.at(1);
 
     static int serial = 0;
 
     // FIXME: check what other data we need to emit in the signal
     QString id = QString("sentmessage%1").arg(serial++);
-    QString messageText = body["content"].variant().toString();
+    QString messageText;
     QVariantMap properties;
+    QMap<QString, QDBusVariant>::const_iterator it = header.constBegin();
+    while (it != header.constEnd()) {
+        properties[it.key()] = it.value().variant().toString();
+        it++;
+    }
     properties["SentTime"] = QDateTime::currentDateTime().toString(Qt::ISODate);
     properties["Recipients"] = mRecipients;
     properties["Id"] = id;
 
-    Q_EMIT messageSent(messageText, properties);
+    QVariantList attachments;
+    Tp::MessagePartList messageList = message;
+    messageList.pop_front();
+    Q_FOREACH(const Tp::MessagePart& messagePart, messageList) {
+        QVariantMap attachment;
+        if (messagePart.contains("content-type") && messagePart["content-type"].variant().toString().startsWith("text/")) {
+            messageText = messagePart["content"].variant().toString();
+            continue;
+        }
+        QMap<QString, QDBusVariant>::const_iterator it = messagePart.constBegin();
+        while (it != messagePart.constEnd()) {
+            attachment[it.key()] = it.value().variant().toString();
+            it++;
+        }
+        attachments << attachment;
+    }
+
+    Q_EMIT messageSent(messageText, attachments, properties);
 
     QTimer *deliveryReportTimer = new QTimer(this);
     deliveryReportTimer->setSingleShot(true);
@@ -259,4 +283,9 @@ void MockTextChannel::onRemoveMembers(const Tp::UIntList &handles, const QString
         mMembers.removeAll(handle);
     }
     mGroupIface->removeMembers(handles);
+}
+
+void MockTextChannel::changeChatState(const QString &userId, int state)
+{
+    Q_EMIT mChatStateIface->chatStateChanged(mConnection->ensureHandle(userId), state);
 }

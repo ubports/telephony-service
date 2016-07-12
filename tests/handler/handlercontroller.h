@@ -22,6 +22,8 @@
 
 #include <QObject>
 #include <QDBusInterface>
+#include <QDBusArgument>
+#include "dbustypes.h"
 
 class HandlerController : public QObject
 {
@@ -34,6 +36,7 @@ public:
 
 public Q_SLOTS:
     // call methods
+    void startChat(const QString &accountId, const QStringList &recipients);
     void startCall(const QString &number, const QString &accountId);
     void hangUpCall(const QString &objectPath);
     void setHold(const QString &objectPath, bool hold);
@@ -48,7 +51,7 @@ public Q_SLOTS:
     void splitCall(const QString &objectPath);
 
     // messaging methods
-    void sendMessage(const QString &number, const QString &message, const QString &accountId);
+    QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments = AttachmentList(), const QVariantMap &properties = QVariantMap());
     void acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId);
 
     // active call indicator

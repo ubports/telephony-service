@@ -16,11 +16,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2015-10-24 05:59+0000\n"
-"X-Generator: Launchpad (build 17812)\n"
+"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
+"X-Generator: Launchpad (build 18097)\n"
 "Language: ru\n"
 
-#: indicator/messagingmenu.cpp:296
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -28,7 +28,7 @@ msgstr[0] "%1 пропущенный вызов"
 msgstr[1] "%1 пропущенных вызова"
 msgstr[2] "%1 пропущенных вызовов"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -56,28 +56,28 @@ msgstr "<b>%1</b> получено сообщений сегодня"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> отправлено сообщений сегодня"
 
-#: approver/approver.cpp:489
+#: approver/approver.cpp:518
 msgid "Accept"
 msgstr "Принять"
 
-#: indicator/messagingmenu.cpp:233
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "Позвонить"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:464 approver/approver.cpp:479
 msgid "Caller number is not available"
 msgstr "Номер абонента не доступен"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:476
 #, qt-format
 msgid "Calling from %1"
 msgstr "Вызов от %1"
 
-#: approver/approver.cpp:442
+#: approver/approver.cpp:470
 msgid "Calling from private number"
 msgstr "Приватный вызов"
 
-#: approver/approver.cpp:445
+#: approver/approver.cpp:473
 msgid "Calling from unknown number"
 msgstr "Звонок с неизвестного номера"
 
@@ -85,27 +85,27 @@ msgstr "Звонок с неизвестного номера"
 msgid "Cancel"
 msgstr "Отмена"
 
-#: indicator/textchannelobserver.cpp:226
+#: indicator/textchannelobserver.cpp:236
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "Отключите режим \"В полёте\" и попробуйте отправить сообщение снова."
 
-#: approver/approver.cpp:511
+#: approver/approver.cpp:540
 msgid "Decline"
 msgstr "Отклонить"
 
-#: approver/approver.cpp:502
+#: approver/approver.cpp:531
 msgid "End + Answer"
 msgstr "Завершить + Ответить"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:517
 msgid "Hold + Answer"
 msgstr "Удерживать + Ответить"
 
-#: indicator/messagingmenu.cpp:238
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr "Я пропустил ваш звонок - вы можете позвонить мне сейчас?"
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "Я опоздаю на 20 минут."
 
@@ -113,7 +113,7 @@ msgstr "Я опоздаю на 20 минут."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "В данный момент я занят. Перезвоню позже."
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "В данный момент я занят. Я позвоню тебе позже."
 
@@ -121,15 +121,15 @@ msgstr "В данный момент я занят. Я позвоню тебе �
 msgid "I'm running late, on my way now."
 msgstr "Задерживаюсь, уже еду."
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "Я опаздываю. Я уже в пути."
 
-#: approver/approver.cpp:519
+#: approver/approver.cpp:548
 msgid "Message & decline"
 msgstr "Сообщение и отклонить"
 
-#: indicator/textchannelobserver.cpp:450 indicator/textchannelobserver.cpp:506
+#: indicator/textchannelobserver.cpp:545
 #, qt-format
 msgid "Message from %1"
 msgstr "Сообщение от %1"
@@ -150,7 +150,7 @@ msgstr "Нет полученных сообщений сегодня"
 msgid "No text messages sent today"
 msgstr "Нет отправленных сообщений сегодня"
 
-#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
+#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "ОК"
 
@@ -162,7 +162,7 @@ msgstr "Вызовы"
 msgid "Please call me back later."
 msgstr "Пожалуйста, перезвоните мне позже."
 
-#: indicator/textchannelobserver.cpp:628
+#: indicator/textchannelobserver.cpp:682
 msgid "Please, select a SIM card:"
 msgstr "Укажите SIM-карту:"
 
@@ -170,7 +170,7 @@ msgstr "Укажите SIM-карту:"
 msgid "Private Number"
 msgstr "Скрытый номер"
 
-#: indicator/messagingmenu.cpp:299
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "Скрытый номер"
 
@@ -178,7 +178,7 @@ msgstr "Скрытый номер"
 msgid "Reply"
 msgstr "Ответить"
 
-#: handler/displaynamesettings.cpp:34
+#: indicator/displaynamesettings.cpp:35
 #, qt-format
 msgid "SIM %1"
 msgstr "SIM %1"
@@ -187,15 +187,15 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:308
+#: indicator/textchannelobserver.cpp:318
 msgid "Save"
 msgstr "Сохранить"
 
-#: indicator/messagingmenu.cpp:175 indicator/messagingmenu.cpp:248
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr "Отправить"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Извини, я всё еще занят. Я позвоню тебе позже."
 
@@ -212,15 +212,15 @@ msgstr "Служба телефонии"
 msgid "Telephony Service Approver"
 msgstr "Telephony Service Approver"
 
-#: indicator/main.cpp:51
+#: indicator/main.cpp:53
 msgid "Telephony Service Indicator"
 msgstr "Индикатор службы телефонии"
 
-#: indicator/textchannelobserver.cpp:235
+#: indicator/textchannelobserver.cpp:245
 msgid "The message could not be sent"
 msgstr "Сообщение не может быть отправлено"
 
-#: indicator/textchannelobserver.cpp:229
+#: indicator/textchannelobserver.cpp:239
 msgid "Try again from the messaging application."
 msgstr "Попробуйте отправить сообщение снова."
 
@@ -232,23 +232,23 @@ msgstr "Неизвестный номер"
 msgid "Unknown caller"
 msgstr "Неизвестный вызов"
 
-#: indicator/textchannelobserver.cpp:436 indicator/messagingmenu.cpp:143
-#: indicator/messagingmenu.cpp:303
+#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "Неизвестный номер"
 
-#: indicator/textchannelobserver.cpp:224
+#: indicator/textchannelobserver.cpp:234
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Разблокируйте SIM-карту и попробуйте отправить сообщение снова."
 
-#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:470
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
 msgid "View message"
 msgstr "Показать сообщение"
 
-#: indicator/messagingmenu.cpp:398
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr "Голосовая почта"
 
-#: indicator/messagingmenu.cpp:390
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "Голосовые сообщения"

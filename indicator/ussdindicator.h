@@ -26,7 +26,7 @@
 #include <QVariantMap>
 #include "indicator/NotificationsInterface.h"
 #include "ussdmanager.h"
-#include "ussdmenu.h"
+#include "notificationmenu.h"
 #include "ofonoaccountentry.h"
 
 class USSDIndicator : public QObject
@@ -50,8 +50,8 @@ private Q_SLOTS:
 
 private:
     unsigned int m_notificationId;
-    USSDMenu m_menuRequest;
-    USSDMenu m_menuNotification;
+    NotificationMenu m_menuRequest;
+    NotificationMenu m_menuNotification;
     QString mPendingMessage;
     org::freedesktop::Notifications m_notifications;
     QMap<int, USSDManager*> mUSSDRequests;

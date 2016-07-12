@@ -19,6 +19,7 @@
 
 #include <QStringList>
 #include "handlercontroller.h"
+#include <QDBusMetaType>
 #include <QDBusReply>
 #include <QDebug>
 
@@ -36,6 +37,9 @@ HandlerController::HandlerController(QObject *parent) :
     QObject(parent),
     mHandlerInterface(HANDLER_SERVICE, HANDLER_OBJECT, HANDLER_INTERFACE)
 {
+    qDBusRegisterMetaType<AttachmentStruct>();
+    qDBusRegisterMetaType<AttachmentList>();
+
     connect(&mHandlerInterface,
             SIGNAL(CallPropertiesChanged(QString, QVariantMap)),
             SIGNAL(callPropertiesChanged(QString, QVariantMap)));
@@ -67,6 +71,11 @@ bool HandlerController::callIndicatorVisible()
 
     QVariantMap map = reply.value();
     return map["CallIndicatorVisible"].toBool();
+}
+
+void HandlerController::startChat(const QString &accountId, const QStringList &recipients)
+{
+    mHandlerInterface.call("StartChat", accountId, recipients);
 }
 
 void HandlerController::startCall(const QString &number, const QString &accountId)
@@ -120,9 +129,13 @@ void HandlerController::splitCall(const QString &objectPath)
     mHandlerInterface.call("SplitCall", objectPath);
 }
 
-void HandlerController::sendMessage(const QString &number, const QString &message, const QString &accountId)
+QString HandlerController::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    mHandlerInterface.call("SendMessage", QStringList() << number, message, accountId);
+    QDBusReply<QString> reply = mHandlerInterface.call("SendMessage", accountId, recipients, message, QVariant::fromValue(attachments), properties);
+    if (reply.isValid()) {
+        return reply.value();
+    }
+    return QString();
 }
 
 void HandlerController::acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId)

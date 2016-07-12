@@ -78,7 +78,8 @@ function(generate_test TESTNAME)
                                     MC_ACCOUNT_DIR=${TMPDIR}
                                     MC_MANAGER_DIR=${TMPDIR}
                                     MC_CLIENTS_DIR=${TMPDIR}
-                                    TELEPHONY_SERVICE_TEST=1)
+                                    TELEPHONY_SERVICE_TEST=1
+                                    TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_SOURCE_DIR}/tests/common/protocols)
             endif ()
 
             set(TEST_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -p -o -p -,txt -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml,xunitxml)
@@ -130,7 +131,7 @@ function(generate_telepathy_test TESTNAME)
     if (NOT DEFINED ARG_WAIT_FOR)
         set(ARG_WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceHandler)
     endif (NOT DEFINED ARG_WAIT_FOR)
-    generate_test(${TESTNAME} ${ARGN}
+    generate_test(${TESTNAME} ${ARG_UNPARSED_ARGUMENTS}
                   TASKS ${TASKS}
                   LIBRARIES ${ARG_LIBRARIES} 
                   QT5_MODULES ${ARG_QT5_MODULES} 

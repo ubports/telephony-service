@@ -34,11 +34,15 @@ public:
 
     bool connectToBus();
     void PlaceIncomingMessage(const QString &message, const QVariantMap &properties);
+    void ChangeChatState(const QStringList &participants, const QString &userId, int state);
     QString PlaceCall(const QVariantMap &properties);
     void HangupCall(const QString &callerId);
     void SetCallState(const QString &phoneNumber, const QString &state);
     void SetOnline(bool online);
     void SetPresence(const QString &status, const QString &statusMessage);
+    void SetContactPresence(const QString &id, int presenceType, const QString &status, const QString &statusMessage);
+    void SimulateAuthFailure();
+    void SimulateDisconnect();
 
     // voicemail stuff
     void SetVoicemailIndicator(bool active);
@@ -68,7 +72,7 @@ public:
 Q_SIGNALS:
     // signals that will be relayed into the bus
     void MessageRead(const QString &messageId);
-    void MessageSent(const QString &mesasge, const QVariantMap &properties);
+    void MessageSent(const QString &message, const QVariantList &attachments, const QVariantMap &properties);
     void CallReceived(const QString &callerId);
     void CallEnded(const QString &callerId);
     void CallStateChanged(const QString &callerId, const QString &objectPath, const QString &state);

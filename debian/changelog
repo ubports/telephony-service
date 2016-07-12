@@ -1,3 +1,154 @@
+telephony-service (0.1+16.10.20160601.1-0ubuntu1) yakkety; urgency=medium
+
+  * Contact name now checks for QContactDisplayLabel to display full
+    name when possible. (LP: #1585634)
+
+ -- Renato Araujo Oliveira Filho <renato.filho@canonical.com>  Wed, 01 Jun 2016 16:08:55 +0000
+
+telephony-service (0.1+16.10.20160520-0ubuntu1) yakkety; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk. added: po/sq.po
+
+  [ Renato Araujo Oliveira Filho ]
+  * Update PhonNumber components to use the new SDK 1.3
+
+ -- Renato Araujo Oliveira Filho <renato.filho@canonical.com>  Fri, 20 May 2016 14:23:59 +0000
+
+telephony-service (0.1+16.04.20160415.1-0ubuntu1) xenial; urgency=medium
+
+  * do not set SimNames if it's empty use a config file to avoid running
+    the script instead of an account service property
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Fri, 15 Apr 2016 21:21:41 +0000
+
+telephony-service (0.1+16.04.20160411-0ubuntu1) xenial; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Fix HandlerTest flaky test.
+  * Initial work moving properties from gsettings to accounts service.
+    (LP: #1418040)
+
+ -- Alfonso Sanchez-Beato <alfonso.sanchez-beato@canonical.com>  Mon, 11 Apr 2016 17:38:50 +0000
+
+telephony-service (0.1+16.04.20160331.4-0ubuntu1) xenial; urgency=medium
+
+  * Do not change power mode on incoming MMS'. This is done by unity
+    now. (LP: #1562923)
+  * Fix duplicate tasks launched during tests
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Thu, 31 Mar 2016 22:17:43 +0000
+
+telephony-service (0.1+16.04.20160321.2-0ubuntu1) xenial; urgency=medium
+
+  [ Jim Hodapp ]
+  * Make sure the sound preview uses the correct audioRole API.
+
+ -- Timo Jyrinki <timo.jyrinki@canonical.com>  Mon, 21 Mar 2016 20:11:11 +0000
+
+telephony-service (0.1+16.04.20160307-0ubuntu1) xenial; urgency=medium
+
+  * Compare target id to check if this is a channel to the self contact.
+    (LP: #1546369)
+  * Display notifications for sms's where sender phone number matches
+    the sim card phone number that received the message. (LP: #1547462)
+  * Only add notifications to messaging-menu if ack didn't happen in the
+    meantime.
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 07 Mar 2016 20:13:48 +0000
+
+telephony-service (0.1+16.04.20160122-0ubuntu1) xenial; urgency=medium
+
+  [ Arthur Mello ]
+  * Enable video support for mms
+
+  [ Gustavo Pichorim Boiko ]
+  * Enable audio support for mms.
+  * Expose extra information about the protocols we support.
+  * Make it possible to send messages to "multimedia" accounts and
+    fallback to ofono accounts when not possible.
+  * Remove protocol files that are not supposed to be shipped.
+
+  [ Tiago Salem Herrmann ]
+  * Add test for account fallback.
+  * Add tests for sending messages with attachments
+  * Make sendMessage() return the actual accountId used to send the
+    message.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 22 Jan 2016 02:58:04 +0000
+
+telephony-service (0.1+16.04.20160105-0ubuntu1) xenial; urgency=medium
+
+  [ CI Train Bot ]
+  * Resync trunk. added: po/ne.po
+
+  [ Tiago Salem Herrmann ]
+  * Update mms flag so telephony-service-indicator can correctly manage
+    attachments. (LP: #1529903)
+
+ -- Bill Filler <ci-train-bot@canonical.com>  Tue, 05 Jan 2016 17:18:22 +0000
+
+telephony-service (0.1+16.04.20151207-0ubuntu1) xenial; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+  * Resync trunk. added: po/be.po
+
+  [ Tiago Salem Herrmann ]
+  * Fill notifications with attachments info when no text is received.
+    (LP: #1517654)
+  * Improve notifications on multi-sim devices. (LP: #1487528, #1460301)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Mon, 07 Dec 2015 17:55:49 +0000
+
+telephony-service (0.1+16.04.20151202.1-0ubuntu1) xenial; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+
+  [ Tiago Salem Herrmann ]
+  * Support new audio role api. (LP: #1493851)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Wed, 02 Dec 2015 21:38:51 +0000
+
+telephony-service (0.1+16.04.20151119-0ubuntu1) xenial; urgency=medium
+
+  [ Gustavo Pichorim Boiko ]
+  * Add tests for the NotificationMenu and AuthHandler.
+  * Make sure telephony-service QML plugin does not use uninstalled
+    paths to look for protocol information.
+
+  [ Tiago Salem Herrmann ]
+  * Add initial support for the ChatState interface.
+  * Add support for sending attachments to regular IM accounts.
+  * Create new QMediaPlayer instances on every incoming call.
+  * Fix notifications and messaging menu for generic IM accounts.
+  * Implement PresenceRequest qml component.
+  * Implement simple authentication handler.
+  * Refactor TelepathyHelper initialization Refactor AccountEntry
+    initialization
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Thu, 19 Nov 2015 12:59:41 +0000
+
+telephony-service (0.1+16.04.20151103-0ubuntu1) xenial; urgency=medium
+
+  [ Tiago Salem Herrmann ]
+  * Enable cross compiling.
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Tue, 03 Nov 2015 14:26:55 +0000
+
+telephony-service (0.1+16.04.20151029.2-0ubuntu1) xenial; urgency=medium
+
+  [ CI Train Bot ]
+  * New rebuild forced.
+  * Resync trunk. added: po/hr.po
+
+  [ Tiago Salem Herrmann ]
+  * Keep reference of observer pointer so it doesn't get deleted. (LP:
+    #1484300)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Thu, 29 Oct 2015 19:15:54 +0000
+
 telephony-service (0.1+15.10.20151013-0ubuntu1) wily; urgency=medium
 
   [ Gustavo Pichorim Boiko ]

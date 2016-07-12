@@ -36,6 +36,7 @@
 #include <TelepathyQt/AvatarData>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
+#include <TelepathyQt/ReferencedHandles>
 #include <QContactAvatar>
 #include <QContactDisplayLabel>
 #include <QContactFetchRequest>
@@ -128,12 +129,21 @@ void notification_action(NotifyNotification* notification, char *action, gpointe
     if (notificationData != NULL) {
         // launch the messaging-app to show the message
         QStringList recipients;
+        QString accountId = notificationData->accountId;
         if (!notificationData->senderId.isEmpty()) {
             recipients << notificationData->senderId;
         }
         recipients << notificationData->participantIds;
         recipients.removeDuplicates();
-        ApplicationUtils::openUrl(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+ 
+        QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+        AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+        if (account && account->type() == AccountEntry::GenericAccount) {
+            url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
+        }
+  
+        ApplicationUtils::openUrl(url);
+
         notification_closed(notification, notificationData->notificationList);
     }
     g_object_unref(notification);
@@ -267,7 +277,7 @@ void TextChannelObserver::sendMessage(const QStringList &recipients, const QStri
         return;
     }
 
-    ChatManager::instance()->sendMessage(recipients, text, account->accountId());
+    ChatManager::instance()->sendMessage(account->accountId(), recipients, text);
 }
 
 void TextChannelObserver::clearNotifications()
@@ -331,6 +341,13 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
 void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds)
 {
     Tp::ContactPtr contact = message.sender();
+
+    QByteArray token(message.messageToken().toUtf8());
+    if (!mUnreadMessages.contains(token)) {
+        Ringtone::instance()->playIncomingMessageSound();
+        return;
+    }
+
     if (GreeterContacts::isGreeterMode()) { // we're in the greeter's session
         GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
         // in greeter mode we show the notification right away as the contact data might not be received
@@ -345,9 +362,9 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
         QContactFetchRequest *request = new QContactFetchRequest(this);
         request->setFilter(QContactPhoneNumber::match(contact->id()));
 
-        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, accountId, participantIds, message]() {
+        QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, accountId, participantIds, message](QContactAbstractRequest::State newState) {
             // only process the results after the finished state is reached
-            if (request->state() != QContactAbstractRequest::FinishedState) {
+            if (newState != QContactAbstractRequest::FinishedState) {
                 return;
             }
 
@@ -372,7 +389,6 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::ReceivedMessag
             Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
         }
     }
-
 }
 
 void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds, const QContact &contact)
@@ -383,7 +399,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
 
     Tp::MessagePartList messageParts = message.parts();
-    bool mms = message.header()["mms"].variant().toBool();
+    bool mms = message.header()["x-canonical-mms"].variant().toBool();
     if (mms) {
         // remove header
         messageParts.pop_front();
@@ -395,19 +411,39 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         }
     }
 
-    // WORKAROUND: powerd can't decide when to wake up the screen on incoming mms's
-    // (or other telepathy accounts) as the download of the attachments is made by 
-    // another daemon, so we wake up the screen here.
-    if (!CallManager::instance()->hasCalls() &&
-           (mms || account->type() != AccountEntry::PhoneAccount)) {
-        QDBusInterface unityIface("com.canonical.Unity.Screen",
-                                  "/com/canonical/Unity/Screen",
-                                  "com.canonical.Unity.Screen",
-                                  QDBusConnection::systemBus());
-        QList<QVariant> args;
-        args.append("on");
-        args.append(0);
-        unityIface.callWithArgumentList(QDBus::NoBlock, "setScreenPowerMode", args);
+    // if messageText is empty, search for attachments
+    if (messageText.isEmpty()) {
+        int imageCount = 0;
+        int videoCount = 0;
+        int contactCount = 0;
+        int audioCount = 0;
+        int attachmentCount = 0;
+        Q_FOREACH(const Tp::MessagePart &part, messageParts) {
+            QString contentType = part["content-type"].variant().toString();
+            if (contentType.startsWith("image/")) {
+                imageCount++;
+            } else if (contentType.startsWith("video/")) {
+                videoCount++;
+            } else if (contentType.startsWith("audio/")) {
+                audioCount++;
+            } else if (contentType.startsWith("text/vcard") ||
+                      contentType.startsWith("text/x-vcard")) {
+                contactCount++;
+            }
+        }
+        attachmentCount = imageCount + videoCount + contactCount;
+
+        if (imageCount > 0 && attachmentCount == imageCount) {
+            messageText = QString::fromUtf8(C::ngettext("Attachment: %1 image", "Attachments: %1 images", imageCount)).arg(imageCount);
+        } else if (videoCount > 0 && attachmentCount == videoCount) {
+            messageText = QString::fromUtf8(C::ngettext("Attachment: %1 video", "Attachments: %1 videos", videoCount)).arg(videoCount);
+        } else if (contactCount > 0 && attachmentCount == contactCount) {
+            messageText = QString::fromUtf8(C::ngettext("Attachment: %1 contact", "Attachments: %1 contacts", contactCount)).arg(contactCount);
+        } else if (audioCount > 0 && attachmentCount == audioCount) {
+            messageText = QString::fromUtf8(C::ngettext("Attachment: %1 audio clip", "Attachments: %1 audio clips", audioCount)).arg(audioCount);
+        } else if (attachmentCount > 0) {
+            messageText = QString::fromUtf8(C::ngettext("Attachment: %1 file", "Attachments: %1 files", attachmentCount)).arg(attachmentCount);
+        }
     }
 
     // add the message to the messaging menu (use hex format to avoid invalid characters)
@@ -420,7 +456,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         return;
     }
 
-    MessagingMenu::instance()->addMessage(telepathyContact->id(), participantIds, accountId, token.toHex(), message.received(), messageText);
+    MessagingMenu::instance()->addMessage(telepathyContact->id(), telepathyContact->alias(), participantIds, accountId, token.toHex(), message.received(), messageText);
 
     QString alias;
     QString avatar;
@@ -447,8 +483,11 @@ void TextChannelObserver::showNotificationForMessage(const Tp::ReceivedMessage &
         avatar = g_icon_to_string(icon);
         g_object_unref(icon);
     } else {
-        title = QString::fromUtf8(C::gettext("Message from %1")).arg(alias);
+        title = alias;
     }
+
+    AccountEntry::addAccountLabel(accountId, title);
+
     // show the notification
     NotifyNotification *notification = notify_notification_new(title.toStdString().c_str(),
                                                                messageText.toStdString().c_str(),
@@ -581,6 +620,14 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
     if (!account) {
         return;
     }
+
+    // we do not notify messages sent by ourselves on other devices, unless we
+    // are dealing with phone accounts: #1547462
+    if (!account->account()->connection().isNull() && 
+            message.sender()->handle().at(0) == account->account()->connection()->selfHandle() &&
+            account->type() != AccountEntry::PhoneAccount) {
+        return;
+    }
     
     // do not place notification items for scrollback messages
     if (mFlashChannels.contains(textChannel) && !message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
@@ -623,8 +670,15 @@ void TextChannelObserver::onPendingMessageRemoved(const Tp::ReceivedMessage &mes
 
 void TextChannelObserver::onReplyReceived(const QStringList &recipients, const QString &accountId, const QString &reply)
 {
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (!account) {
+        return;
+    }
+
     // FIXME - we need to find a better way to deal with dual sim in the messaging-menu
-    if (!TelepathyHelper::instance()->defaultMessagingAccount() && TelepathyHelper::instance()->activeAccounts().size() > 1) {
+    if (!TelepathyHelper::instance()->defaultMessagingAccount()
+            && TelepathyHelper::instance()->activeAccounts().size() > 1
+            && account->type() != AccountEntry::GenericAccount) {
         NotifyNotification *notification = notify_notification_new(C::gettext("Please, select a SIM card:"),
                                                                    reply.toStdString().c_str(),
                                                                    "");
@@ -657,8 +711,12 @@ void TextChannelObserver::onReplyReceived(const QStringList &recipients, const Q
         return;
     }
 
-    // FIXME: for now we dont specify any accountId
-    sendMessage(recipients, reply, "");
+    if (account->type() == AccountEntry::GenericAccount) {
+        sendMessage(recipients, reply, accountId);
+    } else {
+        // FIXME: for now we dont specify any accountId
+        sendMessage(recipients, reply, "");
+    }
 }
 
 void TextChannelObserver::onMessageRead(const QStringList &recipients, const QString &accountId, const QString &encodedMessageId)

@@ -2,6 +2,7 @@
 
 set(plugin_SRCS
     contactwatcher.cpp
+    presencerequest.cpp
     components.cpp
     )
 

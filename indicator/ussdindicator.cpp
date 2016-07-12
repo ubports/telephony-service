@@ -32,9 +32,9 @@ namespace C {
 
 USSDIndicator::USSDIndicator(QObject *parent)
 : QObject(parent),
+  m_menuRequest("ussd", true),
+  m_menuNotification("ussd", false),
   m_notificationId(-1),
-  m_menuRequest(true),
-  m_menuNotification(false),
   m_notifications("org.freedesktop.Notifications",
                   "/org/freedesktop/Notifications", QDBusConnection::sessionBus())
 {
@@ -111,7 +111,7 @@ void USSDIndicator::onStateChanged(const QString &state)
 
 void USSDIndicator::showUSSDNotification(const QString &message, bool replyRequired, USSDManager *ussdManager)
 {
-    USSDMenu *menu = replyRequired ? &m_menuRequest : &m_menuNotification;
+    NotificationMenu *menu = replyRequired ? &m_menuRequest : &m_menuNotification;
     QString actionId = "ok_id";
     QString actionLabel = C::gettext("Ok");
     if (replyRequired) {

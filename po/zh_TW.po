@@ -15,17 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2015-10-24 05:59+0000\n"
-"X-Generator: Launchpad (build 17812)\n"
+"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
+"X-Generator: Launchpad (build 18097)\n"
 "Language: \n"
 
-#: indicator/messagingmenu.cpp:296
+#: indicator/messagingmenu.cpp:299
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 通未接來電"
 
-#: indicator/messagingmenu.cpp:393
+#: indicator/messagingmenu.cpp:398
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -51,28 +51,28 @@ msgstr "今日收到 <b>%1</b> 封文字訊息"
 msgid "<b>%1</b> text messages sent today"
 msgstr "今日發出 <b>%1</b> 封文字訊息"
 
-#: approver/approver.cpp:489
+#: approver/approver.cpp:518
 msgid "Accept"
 msgstr "接聽"
 
-#: indicator/messagingmenu.cpp:233
+#: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "回撥"
 
-#: approver/approver.cpp:451
+#: approver/approver.cpp:464 approver/approver.cpp:479
 msgid "Caller number is not available"
 msgstr "無法查看來電號碼"
 
-#: approver/approver.cpp:448
+#: approver/approver.cpp:476
 #, qt-format
 msgid "Calling from %1"
 msgstr "%1 來電"
 
-#: approver/approver.cpp:442
+#: approver/approver.cpp:470
 msgid "Calling from private number"
 msgstr "私人號碼來電"
 
-#: approver/approver.cpp:445
+#: approver/approver.cpp:473
 msgid "Calling from unknown number"
 msgstr "來電號碼不明"
 
@@ -80,27 +80,27 @@ msgstr "來電號碼不明"
 msgid "Cancel"
 msgstr "取消"
 
-#: indicator/textchannelobserver.cpp:226
+#: indicator/textchannelobserver.cpp:236
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "請關閉飛安模式，並回到訊息程式中再試一次。"
 
-#: approver/approver.cpp:511
+#: approver/approver.cpp:540
 msgid "Decline"
 msgstr "拒接"
 
-#: approver/approver.cpp:502
+#: approver/approver.cpp:531
 msgid "End + Answer"
 msgstr "結束 + 接聽"
 
-#: approver/approver.cpp:488
+#: approver/approver.cpp:517
 msgid "Hold + Answer"
 msgstr "Hold + 接聽"
 
-#: indicator/messagingmenu.cpp:238
+#: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
 msgstr "剛才沒聽到電話，可以現在打給我嗎？"
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
 msgstr "二十分鐘後到。"
 
@@ -108,7 +108,7 @@ msgstr "二十分鐘後到。"
 msgid "I'm busy at the moment. I'll call later."
 msgstr "我現在很忙，稍後再撥給你。"
 
-#: indicator/messagingmenu.cpp:240
+#: indicator/messagingmenu.cpp:243
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "現在正忙，晚點打給你。"
 
@@ -116,15 +116,15 @@ msgstr "現在正忙，晚點打給你。"
 msgid "I'm running late, on my way now."
 msgstr "我快遲到了，現在正在路上。"
 
-#: indicator/messagingmenu.cpp:239
+#: indicator/messagingmenu.cpp:242
 msgid "I'm running late. I'm on my way."
 msgstr "正在來了，遲些才到。"
 
-#: approver/approver.cpp:519
+#: approver/approver.cpp:548
 msgid "Message & decline"
 msgstr "傳訊息並拒接"
 
-#: indicator/textchannelobserver.cpp:450 indicator/textchannelobserver.cpp:506
+#: indicator/textchannelobserver.cpp:545
 #, qt-format
 msgid "Message from %1"
 msgstr "來自 %1 的訊息"
@@ -145,7 +145,7 @@ msgstr "今日沒有收到文字訊息"
 msgid "No text messages sent today"
 msgstr "今日沒有發出文字訊息"
 
-#: indicator/textchannelobserver.cpp:302 indicator/ussdindicator.cpp:116
+#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "確定"
 
@@ -157,7 +157,7 @@ msgstr "來電"
 msgid "Please call me back later."
 msgstr "請待會再打給我。"
 
-#: indicator/textchannelobserver.cpp:628
+#: indicator/textchannelobserver.cpp:682
 msgid "Please, select a SIM card:"
 msgstr "請選擇一張 SIM 卡："
 
@@ -165,7 +165,7 @@ msgstr "請選擇一張 SIM 卡："
 msgid "Private Number"
 msgstr "私人號碼"
 
-#: indicator/messagingmenu.cpp:299
+#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "私人號碼"
 
@@ -173,7 +173,7 @@ msgstr "私人號碼"
 msgid "Reply"
 msgstr "回覆"
 
-#: handler/displaynamesettings.cpp:34
+#: indicator/displaynamesettings.cpp:35
 #, qt-format
 msgid "SIM %1"
 msgstr "SIM %1"
@@ -182,15 +182,15 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:308
+#: indicator/textchannelobserver.cpp:318
 msgid "Save"
 msgstr "儲存"
 
-#: indicator/messagingmenu.cpp:175 indicator/messagingmenu.cpp:248
+#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
 msgstr "傳送"
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "抱歉，我還在忙。待會打給你。"
 
@@ -207,15 +207,15 @@ msgstr "電話服務"
 msgid "Telephony Service Approver"
 msgstr "電話操作服務核可員"
 
-#: indicator/main.cpp:51
+#: indicator/main.cpp:53
 msgid "Telephony Service Indicator"
 msgstr "電話服務指示器"
 
-#: indicator/textchannelobserver.cpp:235
+#: indicator/textchannelobserver.cpp:245
 msgid "The message could not be sent"
 msgstr "訊息無法傳送"
 
-#: indicator/textchannelobserver.cpp:229
+#: indicator/textchannelobserver.cpp:239
 msgid "Try again from the messaging application."
 msgstr "請在訊息程式中再試一次。"
 
@@ -227,23 +227,23 @@ msgstr "號碼不明"
 msgid "Unknown caller"
 msgstr "來電者不明"
 
-#: indicator/textchannelobserver.cpp:436 indicator/messagingmenu.cpp:143
-#: indicator/messagingmenu.cpp:303
+#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "號碼不明"
 
-#: indicator/textchannelobserver.cpp:224
+#: indicator/textchannelobserver.cpp:234
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "請解鎖您的 SIM 卡，並回到訊息程式中再試一次。"
 
-#: indicator/textchannelobserver.cpp:250 indicator/textchannelobserver.cpp:470
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
 msgid "View message"
 msgstr "檢視訊息"
 
-#: indicator/messagingmenu.cpp:398
+#: indicator/messagingmenu.cpp:403
 msgid "Voicemail"
 msgstr "語音留言"
 
-#: indicator/messagingmenu.cpp:390
+#: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "語音留言訊息"

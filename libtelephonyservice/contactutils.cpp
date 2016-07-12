@@ -21,6 +21,7 @@
 
 #include "contactutils.h"
 #include <QContactName>
+#include <QContactDisplayLabel>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -29,7 +30,11 @@ namespace ContactUtils
 
 QContactManager *sharedManager(const QString &engine)
 {
-    static QContactManager *instance = new QContactManager(engine);
+    QString finalEngine = engine;
+    if (!qgetenv("TELEPHONY_SERVICE_TEST").isEmpty()) {
+        finalEngine = "memory";
+    }
+    static QContactManager *instance = new QContactManager(finalEngine);
     return instance;
 }
 
@@ -37,18 +42,25 @@ QContactManager *sharedManager(const QString &engine)
 // to use more than just first and last names.
 QString formatContactName(const QContact &contact)
 {
-    QContactName name = contact.detail<QContactName>();
-
-    QString formattedName = name.firstName();
-
-    // now check if we need an extra space to separate the first and last names
-    if (!formattedName.isEmpty() && !name.lastName().isEmpty()) {
-        formattedName.append(" ");
+    // try contact display label
+    QContactDisplayLabel displayLabel = contact.detail<QContactDisplayLabel>();
+    if (!displayLabel.isEmpty() && !displayLabel.label().isEmpty()) {
+        return displayLabel.label();
     }
 
-    formattedName.append(name.lastName());
+    // if empty fallback to contact name
+    QContactName name = contact.detail<QContactName>();
+    QString formattedName = name.firstName();
 
-    return formattedName;
+    if (!name.middleName().isEmpty()) {
+        formattedName += " " + name.middleName();
+    }
+
+    if (!name.lastName().isEmpty()) {
+        formattedName += " " + name.lastName();
+    }
+
+    return formattedName.trimmed();
 }
 
 }

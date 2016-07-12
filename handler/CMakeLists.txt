@@ -2,7 +2,6 @@
 set(qt_SRCS
     callagent.cpp
     callhandler.cpp
-    displaynamesettings.cpp
     farstreamchannel.cpp
     handler.cpp
     handlerdbus.cpp
@@ -19,7 +18,6 @@ include_directories(
     ${GST_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${GSETTINGS_QT_INCLUDE_DIRS}
     )
 
 add_executable(telephony-service-handler ${handler_SRCS} ${handler_HDRS})
