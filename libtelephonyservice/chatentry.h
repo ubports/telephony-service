@@ -44,6 +44,7 @@ public:
     }
 Q_SIGNALS:
     void stateChanged();
+
 private:
     QString mContactId;
     int mState;
@@ -115,6 +116,7 @@ protected:
 
 private Q_SLOTS:
     void onTextChannelAvailable(const Tp::TextChannelPtr &channel);
+    void onChannelInvalidated();
     void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
     void onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated);
     void onSendingMessageFinished();

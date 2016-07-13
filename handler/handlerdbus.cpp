@@ -123,7 +123,7 @@ void HandlerDBus::AcknowledgeMessages(const QVariantList &messages)
     TextHandler::instance()->acknowledgeMessages(messages);
 }
 
-void HandlerDBus::StartChat(const QString &accountId, const QVariantMap &properties)
+QString HandlerDBus::StartChat(const QString &accountId, const QVariantMap &properties)
 {
     return TextHandler::instance()->startChat(accountId, properties);
 }
