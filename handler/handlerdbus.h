@@ -62,13 +62,13 @@ public Q_SLOTS:
     // messages related
     QString SendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
     Q_NOREPLY void AcknowledgeMessages(const QVariantList &messages);
-    Q_NOREPLY void StartChat(const QString &accountId, const QVariantMap &properties);
+    QString StartChat(const QString &accountId, const QVariantMap &properties);
     Q_NOREPLY void AcknowledgeAllMessages(const QVariantMap &properties);
     bool DestroyTextChannel(const QString &objectPath);
     Q_NOREPLY void ChangeRoomTitle(const QString &objectPath, const QString &title);
 
     // call related
-    QString StartCall(const QString &number, const QString &accountId);
+    Q_NOREPLY void StartCall(const QString &number, const QString &accountId);
     Q_NOREPLY void HangUpCall(const QString &objectPath);
     Q_NOREPLY void SetHold(const QString &objectPath, bool hold);
     Q_NOREPLY void SetMuted(const QString &objectPath, bool muted);
