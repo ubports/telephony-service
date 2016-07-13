@@ -270,16 +270,19 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     subjectInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceSubjectInterface>();
 
     if (roomInterface) {
+        roomInterface->setProperty("channel", QVariant::fromValue(channel.data()));
         roomInterface->setMonitorProperties(true);
         connect(roomInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
                                SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
     }
     if (roomConfigInterface) {
+        roomConfigInterface->setProperty("channel", QVariant::fromValue(channel.data()));
         roomConfigInterface->setMonitorProperties(true);
         connect(roomConfigInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
                                      SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
     }
     if (subjectInterface) {
+        subjectInterface->setProperty("channel", QVariant::fromValue(channel.data()));
         subjectInterface->setMonitorProperties(true);
         connect(subjectInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
                                   SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
@@ -289,6 +292,8 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
                             this, SLOT(onChatStateChanged(const Tp::ContactPtr &,Tp::ChannelChatState)));
     connect(channel.data(), SIGNAL(groupMembersChanged(const Tp::Contacts &, const Tp::Contacts &, const Tp::Contacts &,
             const Tp::Contacts &, const Tp::Channel::GroupMemberChangeDetails &)), this, SIGNAL(participantsChanged()));
+    connect(channel.data(), SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
+            this, SLOT(onChannelInvalidated()));
 
     Q_FOREACH (Tp::ContactPtr contact, channel->groupContacts(false)) {
         // FIXME: we should not create new chat states for contacts already found in previous channels
@@ -338,5 +343,25 @@ void ChatEntry::onTextChannelAvailable(const Tp::TextChannelPtr &channel)
 {
     if (ChatManager::channelMatchProperties(channel, generateProperties())) {
         addChannel(channel);
+    }
+}
+
+void ChatEntry::onChannelInvalidated()
+{
+    qDebug() << __PRETTY_FUNCTION__;
+    Tp::TextChannelPtr channel(qobject_cast<Tp::TextChannel*>(sender()));
+    mChannels.removeAll(channel);
+
+    if (roomInterface && roomInterface->property("channel").value<Tp::TextChannel*>() == channel.data()) {
+        roomInterface->disconnect(this);
+        roomInterface = 0;
+    }
+    if (roomConfigInterface && roomConfigInterface->property("channel").value<Tp::TextChannel*>() == channel.data()) {
+        roomConfigInterface->disconnect(this);
+        roomConfigInterface = 0;
+    }
+    if (subjectInterface && subjectInterface->property("channel").value<Tp::TextChannel*>() == channel.data()) {
+        subjectInterface->disconnect(this);
+        subjectInterface = 0;
     }
 }
