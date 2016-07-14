@@ -34,6 +34,8 @@
 #include <TelepathyQt/Connection>
 #include <TelepathyQt/PendingVariantMap>
 
+#include <QDebug>
+
 Q_DECLARE_METATYPE(ContactChatStates)
 Q_DECLARE_METATYPE(Participant)
 
@@ -585,6 +587,7 @@ void ChatEntry::startChat()
 }
 
 void ChatEntry::onChannelInvalidated()
+{
     qDebug() << __PRETTY_FUNCTION__;
     Tp::TextChannelPtr channel(qobject_cast<Tp::TextChannel*>(sender()));
     mChannels.removeAll(channel);
