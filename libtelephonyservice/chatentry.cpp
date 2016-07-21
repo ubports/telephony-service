@@ -42,6 +42,7 @@ Q_DECLARE_METATYPE(Participant)
 ChatEntry::ChatEntry(QObject *parent) :
     QObject(parent),
     mChatType(ChatTypeNone),
+    mAutoRequest(true),
     roomInterface(NULL),
     roomConfigInterface(NULL),
     subjectInterface(NULL)
@@ -168,6 +169,16 @@ void ChatEntry::setRoomName(const QString &name)
     mRoomName = name;
     Q_EMIT roomNameChanged();
     // FIXME: we need to invalidate the existing channels & data and start fresh
+}
+
+bool ChatEntry::autoRequest() const
+{
+    return mAutoRequest;
+}
+
+void ChatEntry::setAutoRequest(bool autoRequest)
+{
+    mAutoRequest = autoRequest;
 }
 
 QString ChatEntry::title() const
@@ -359,9 +370,11 @@ void ChatEntry::componentComplete()
         accounts.removeAll(account);
     }
 
-    // if there is any remaining account, request to start chatting using the account
-    Q_FOREACH(AccountEntry *account, accounts) {
-        ChatManager::instance()->startChat(account->accountId(), properties);
+    if (mAutoRequest) {
+        // if there is any remaining account, request to start chatting using the account
+        Q_FOREACH(AccountEntry *account, accounts) {
+            ChatManager::instance()->startChat(account->accountId(), properties);
+        }
     }
 
     connect(ChatManager::instance(), &ChatManager::textChannelAvailable,

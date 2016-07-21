@@ -67,6 +67,7 @@ class ChatEntry : public QObject, public QQmlParserStatus
     Q_PROPERTY(QString accountId READ accountId WRITE setAccountId NOTIFY accountIdChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates READ chatStates NOTIFY chatStatesChanged)
+    Q_PROPERTY(bool autoRequest READ autoRequest WRITE setAutoRequest CONSTANT)
 
     Q_ENUMS(ChatType)
     Q_ENUMS(ChatState)
@@ -104,6 +105,8 @@ public:
     void setRoomName(const QString &name);
     QString title() const;
     void setTitle(const QString & title);
+    void setAutoRequest(bool autoRequest);
+    bool autoRequest() const;
     QQmlListProperty<ContactChatState> chatStates();
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
@@ -177,6 +180,7 @@ private:
     QString mChatId;
     QString mAccountId;
     ChatType mChatType;
+    bool mAutoRequest;
     Tp::Client::ChannelInterfaceRoomInterface *roomInterface;
     Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
     Tp::Client::ChannelInterfaceSubjectInterface *subjectInterface;
