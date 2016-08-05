@@ -24,8 +24,8 @@
 #include <QFileInfo>
 #include <QSettings>
 
-Protocol::Protocol(const QString &name, Features features, const QString &fallbackProtocol, const QString &backgroundImage, const QString &icon, const QString &serviceName, QObject *parent)
-: QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol), mBackgroundImage(backgroundImage), mIcon(icon), mServiceName(serviceName)
+Protocol::Protocol(const QString &name, Features features, const QString &fallbackProtocol, const QString &backgroundImage, const QString &icon, const QString &serviceName, const QString &serviceDisplayName, QObject *parent)
+: QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol), mBackgroundImage(backgroundImage), mIcon(icon), mServiceName(serviceName), mServiceDisplayName(serviceDisplayName)
 {
 }
 
@@ -59,6 +59,11 @@ QString Protocol::backgroundImage() const
     return mBackgroundImage;
 }
 
+QString Protocol::serviceDisplayName() const
+{
+    return mServiceDisplayName;
+}
+
 Protocol *Protocol::fromFile(const QString &fileName)
 {
     QFileInfo file(fileName);
@@ -84,6 +89,7 @@ Protocol *Protocol::fromFile(const QString &fileName)
     QString backgroundImage = settings.value("BackgroundImage").toString();
     QString icon = settings.value("Icon").toString();
     QString serviceName = settings.value("ServiceName").toString();
+    QString serviceDisplayName = settings.value("ServiceDisplayName").toString();
 
-    return new Protocol(name, features, fallbackProtocol, backgroundImage, icon, serviceName);
+    return new Protocol(name, features, fallbackProtocol, backgroundImage, icon, serviceName, serviceDisplayName);
 }
