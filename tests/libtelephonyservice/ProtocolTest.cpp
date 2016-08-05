@@ -27,8 +27,8 @@ class TestProtocol : public Protocol
 {
     Q_OBJECT
 public:
-    TestProtocol(const QString &name, Protocol::Features features, const QString &fallbackProtocol, const QString &backgroundFile, const QString &icon, const QString &serviceName = QString::null, QObject *parent = 0)
-     : Protocol(name, features, fallbackProtocol, backgroundFile, icon, serviceName, parent) { }
+    TestProtocol(const QString &name, Protocol::Features features, const QString &fallbackProtocol, const QString &backgroundFile, const QString &icon, const QString &serviceName = QString::null, const QString &serviceDisplayName = QString::null, QObject *parent = 0)
+     : Protocol(name, features, fallbackProtocol, backgroundFile, icon, serviceName, serviceDisplayName, parent) { }
 };
 
 class ProtocolTest : public QObject
@@ -48,14 +48,16 @@ void ProtocolTest::testBasicInfo()
     QString backgroundImage("/tmp/background.png");
     QString icon("/tmp/icon.png");
     QString serviceName("The service");
+    QString serviceDisplayName("The service display name");
 
-    TestProtocol protocol(name, features, fallbackProtocol, backgroundImage, icon, serviceName, this);
+    TestProtocol protocol(name, features, fallbackProtocol, backgroundImage, icon, serviceName, serviceDisplayName, this);
     QCOMPARE(protocol.name(), name);
     QCOMPARE(protocol.features(), features);
     QCOMPARE(protocol.fallbackProtocol(), fallbackProtocol);
     QCOMPARE(protocol.backgroundImage(), backgroundImage);
     QCOMPARE(protocol.icon(), icon);
     QCOMPARE(protocol.serviceName(), serviceName);
+    QCOMPARE(protocol.serviceDisplayName(), serviceDisplayName);
     QCOMPARE(protocol.parent(), this);
 }
 
@@ -74,6 +76,7 @@ void ProtocolTest::testFromFile()
     QCOMPARE(protocol->backgroundImage(), QString("/tmp/background.png"));
     QCOMPARE(protocol->icon(), QString("/tmp/icon.png"));
     QCOMPARE(protocol->serviceName(), QString("The Service"));
+    QCOMPARE(protocol->serviceDisplayName(), QString("The Service Display Name"));
 }
 
 QTEST_MAIN(ProtocolTest)
