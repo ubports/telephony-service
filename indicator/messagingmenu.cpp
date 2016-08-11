@@ -94,7 +94,7 @@ void MessagingMenu::addFlashMessage(NotificationData notificationData) {
     GFile *file = g_file_new_for_uri(iconPath.toString().toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
  
-    MessagingMenuMessage *message = messaging_menu_message_new(notificationData.eventId.toUtf8().data(),
+    MessagingMenuMessage *message = messaging_menu_message_new(notificationData.encodedEventId.toUtf8().data(),
                                                                icon,
                                                                "",
                                                                NULL,
@@ -116,13 +116,54 @@ void MessagingMenu::addFlashMessage(NotificationData notificationData) {
     */
  
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::flashMessageActivateCallback), this);
-    mMessages[notificationData.eventId] = notificationData;
+    mMessages[notificationData.encodedEventId] = notificationData;
     messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
 
     g_object_unref(file);
     g_object_unref(icon);
     g_object_unref(message);
  
+}
+
+void MessagingMenu::addNotification(NotificationData notificationData)
+{
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(notificationData.accountId);
+    if (!account) {
+        return;
+    }
+
+    mMessages[notificationData.encodedEventId] = notificationData;
+
+    GFile *file = NULL;
+    GIcon *icon = NULL;
+    file = g_file_new_for_uri(notificationData.icon.toUtf8().data());
+    icon = g_file_icon_new(file);
+
+    MessagingMenuMessage *message = messaging_menu_message_new(notificationData.encodedEventId.toUtf8().data(),
+                                                               icon,
+                                                               notificationData.notificationTitle.toUtf8().data(),
+                                                               "",
+                                                               notificationData.messageText.toUtf8().data(),
+                                                               notificationData.timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
+    messaging_menu_message_add_action(message,
+                                      "quickReply",
+                                      C::gettext("Send"), // label
+                                      G_VARIANT_TYPE("s"),
+                                      NULL // predefined values
+                                      );
+    g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::messageActivateCallback), this);
+
+    messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
+
+    if (file) {
+        g_object_unref(file);
+    }
+    if (icon) {
+        g_object_unref(icon);
+    }
+    if (message) {
+        g_object_unref(message);
+    }
 }
 
 void MessagingMenu::addMessage(NotificationData notificationData)
@@ -142,7 +183,7 @@ void MessagingMenu::addMessage(NotificationData notificationData)
     QContactFetchRequest *request = new QContactFetchRequest(this);
     request->setFilter(QContactPhoneNumber::match(notificationData.senderId));
 
-    mMessages[notificationData.eventId] = notificationData;
+    mMessages[notificationData.encodedEventId] = notificationData;
 
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged,
@@ -154,7 +195,7 @@ void MessagingMenu::addMessage(NotificationData notificationData)
         // only process the results after the finished state is reached
         // also, if the ack happens before contacts service return the request we have to
         // simply skip this
-        if (newState != QContactAbstractRequest::FinishedState || !mMessages.contains(notificationData.eventId)) {
+        if (newState != QContactAbstractRequest::FinishedState || !mMessages.contains(notificationData.encodedEventId)) {
             return;
         }
 
@@ -202,7 +243,7 @@ void MessagingMenu::addMessage(NotificationData notificationData)
             file = g_file_new_for_uri(avatar.toString().toUtf8().data());
             icon = g_file_icon_new(file);
         }
-        MessagingMenuMessage *message = messaging_menu_message_new(notificationData.eventId.toUtf8().data(),
+        MessagingMenuMessage *message = messaging_menu_message_new(notificationData.encodedEventId.toUtf8().data(),
                                                                    icon,
                                                                    displayLabel.toUtf8().data(),
                                                                    subTitle.toUtf8().data(),
@@ -495,13 +536,15 @@ void MessagingMenu::sendMessageReply(const QString &messageId, const QString &re
     NotificationData notificationData = mMessages[messageId];
     QStringList recipients;
     if (!notificationData.senderId.isEmpty()) {
-        recipients << notificationData.senderId;
+        notificationData.participantIds << notificationData.senderId;
     }
-    recipients << notificationData.participantIds;
-    recipients.removeDuplicates();
-    Q_EMIT replyReceived(recipients, notificationData.accountId, reply);
+    notificationData.participantIds.removeDuplicates();
+    notificationData.messageReply = reply;
+    notificationData.encodedEventId = messageId;
 
-    Q_EMIT messageRead(recipients, notificationData.accountId, messageId);
+    Q_EMIT replyReceived(notificationData);
+
+    Q_EMIT messageRead(notificationData);
 }
 
 void MessagingMenu::saveFlashMessage(const QString &messageId)
@@ -517,7 +560,7 @@ void MessagingMenu::saveFlashMessage(const QString &messageId)
                                                                                  true);
     History::TextEvent textEvent(notificationData.accountId,
                                  thread.threadId(), 
-                                 notificationData.eventId, 
+                                 QString(QByteArray::fromHex(notificationData.encodedEventId.toUtf8())),
                                  notificationData.senderId,
                                  notificationData.timestamp,
                                  false,
@@ -553,7 +596,11 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 {
     Call call = callFromMessageId(messageId);
     qDebug() << "TelephonyService/MessagingMenu: Replying to call" << call.targetId << "with text" << reply;
-    Q_EMIT replyReceived(QStringList() << call.targetId, call.accountId, reply);
+    NotificationData data;
+    data.participantIds << call.targetId;
+    data.accountId = call.accountId;
+    data.messageReply = reply;
+    Q_EMIT replyReceived(data);
 }
 
 void MessagingMenu::callVoicemail(const QString &messageId)
