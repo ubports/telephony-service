@@ -51,16 +51,19 @@ class TextChannelObserver;
 class NotificationData {
 public:
     NotificationData() : targetType(0), observer(NULL), notificationList(NULL) {}
-    QString senderId;
-    QStringList participantIds;
     QString accountId;
+    QString senderId;
+    QString targetId;
+    uint targetType;
+    QStringList participantIds;
     QDateTime timestamp;
     QString messageText;
-    QString eventId;
+    QString encodedEventId;
     QString alias;
-    uint targetType;
-    QString targetId;
     QString roomName;
+    QString icon;
+    QString notificationTitle;
+    QString messageReply;
     TextChannelObserver *observer;
     QMap<NotifyNotification*, NotificationData*> *notificationList;
 };
@@ -75,6 +78,7 @@ public:
     void addMessage(NotificationData notificationData);
     void addFlashMessage(NotificationData notificationData);
     void removeMessage(const QString &messageId);
+    void addNotification(NotificationData notificationData);
 
     void addCall(const QString &targetId, const QString &accountId, const QDateTime &timestamp);
     void removeCall(const QString &targetId, const QString &accountId);
@@ -88,8 +92,8 @@ public:
     void hideVoicemailEntry(AccountEntry *account);
 
 Q_SIGNALS:
-    void replyReceived(const QStringList &recipients, const QString &accountId, const QString &reply);
-    void messageRead(const QStringList &recipients, const QString &accountId, const QString &messageId);
+    void replyReceived(NotificationData notificationData);
+    void messageRead(NotificationData notificationData);
 
 private Q_SLOTS:
     void sendMessageReply(const QString &messageId, const QString &reply);
