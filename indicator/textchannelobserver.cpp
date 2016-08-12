@@ -261,7 +261,7 @@ void TextChannelObserver::sendMessage(NotificationData notificationData)
     QVariantMap properties;
     properties["participantIds"] = notificationData.participantIds;
     properties["chatType"] = notificationData.targetType;
-    if (notificationData.targetId.isEmpty()) {
+    if (!notificationData.targetId.isEmpty()) {
         properties["threadId"] = notificationData.targetId;
     }
     ChatManager::instance()->sendMessage(account->accountId(), notificationData.messageReply, QVariantMap(), properties);
