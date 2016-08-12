@@ -359,17 +359,23 @@ void HandlerTest::testSendMessageOwnNumber()
 
 void HandlerTest::testAcknowledgeMessage()
 {
-    // if we register the observer before this test, other tests fail
-    TelepathyHelper::instance()->registerChannelObserver();
     QString recipient("84376666");
     QString recipient2("+554184376666");
     QString message("Hello, world!");
+
     QSignalSpy messageSentSpy(mMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
-
     // first send a message to a certain number so the handler request one channel
-    HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
-    TRY_COMPARE(messageSentSpy.count(), 1);
+    QString objectPath = HandlerController::instance()->sendMessage(mTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
+    QDBusInterface *sendingJob = new QDBusInterface(TelepathyHelper::instance()->handlerInterface()->service(), objectPath,
+                                                    "com.canonical.TelephonyServiceHandler.MessageSendingJob");
+    QSignalSpy handlerHasChannel(sendingJob, SIGNAL(finished()));
 
+    TRY_COMPARE(messageSentSpy.count(), 1);
+    TRY_COMPARE(handlerHasChannel.count(), 1);
+
+    // if we register the observer before this test, other tests fail
+    TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceTests");
+    TRY_VERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(TP_QT_IFACE_CLIENT + ".TelephonyServiceTests"));
     QSignalSpy textChannelAvailableSpy(ChatManager::instance(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)));
 
     // now receive a message from a very similar number so CM creates another
@@ -379,8 +385,8 @@ void HandlerTest::testAcknowledgeMessage()
     properties["Recipients"] = (QStringList() << recipient2);
     mMockController->PlaceIncomingMessage(message, properties);
 
-    TRY_COMPARE(textChannelAvailableSpy.count(), 1);
-    Tp::TextChannelPtr channel = textChannelAvailableSpy.first().first().value<Tp::TextChannelPtr>();
+    TRY_COMPARE(textChannelAvailableSpy.count(), 2);
+    Tp::TextChannelPtr channel = textChannelAvailableSpy[1].first().value<Tp::TextChannelPtr>();
     QVERIFY(!channel.isNull());
     TRY_COMPARE(channel->messageQueue().count(), 1);
     QString receivedMessageId = channel->messageQueue().first().messageToken();
