@@ -28,6 +28,7 @@
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 #include "messagingmenu.h"
+#include <History/Thread>
 
 QTCONTACTS_USE_NAMESPACE
 
@@ -47,7 +48,7 @@ protected:
     void showNotificationForFlashMessage(const Tp::ReceivedMessage &message, const QString &accountId);
     void triggerNotificationForMessage(const Tp::TextChannelPtr channel, const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds = QStringList());
     void showNotificationForMessage(const Tp::TextChannelPtr channel, const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds = QStringList(), const QContact &contact = QContact());
-    void showNotificationForNewGroup(const QString &accountId, const Tp::TextChannelPtr channel);
+    void showNotificationForNewGroup(const History::Thread &thread);
 
 protected Q_SLOTS:
     void onTextChannelInvalidated();
@@ -56,6 +57,7 @@ protected Q_SLOTS:
     void onReplyReceived(NotificationData notificationData);
     void onMessageRead(NotificationData notificationData);
     void onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString);
+    void onThreadsAdded(History::Threads threads);
     void updateNotifications(const QtContacts::QContact &contact);
 
 private:
