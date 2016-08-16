@@ -149,6 +149,9 @@ TextChannelObserver::TextChannelObserver(QObject *parent) :
     connect(MessagingMenu::instance(),
             SIGNAL(messageRead(NotificationData)),
             SLOT(onMessageRead(NotificationData)));
+    connect(History::Manager::instance(),
+            SIGNAL(threadsAdded(History::Threads)),
+            SLOT(onThreadsAdded(History::Threads)));
 
     if (GreeterContacts::isGreeterMode()) {
         connect(GreeterContacts::instance(), SIGNAL(contactUpdated(QtContacts::QContact)),
@@ -275,37 +278,34 @@ void TextChannelObserver::clearNotifications()
     }
 }
 
-void TextChannelObserver::showNotificationForNewGroup(const QString &accountId, const Tp::TextChannelPtr channel)
+void TextChannelObserver::showNotificationForNewGroup(const History::Thread &thread)
 {
     // show the notification
     QString text;
     NotificationData *data = new NotificationData();
-    data->accountId = accountId;
+    data->accountId = thread.accountId();
     data->timestamp = QDateTime::currentDateTime();
-    data->targetId = channel->targetId();
-    data->targetType = channel->targetHandleType();
+    data->targetId = thread.threadId();
+    data->targetType = Tp::HandleTypeRoom;
     data->notificationTitle = QString::fromUtf8(C::gettext("New Group"));
     data->encodedEventId = QByteArray(QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss.zzz").toUtf8()).toHex();
     data->icon = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/contact-group.svg").toString();
+    QVariantMap roomProps = thread.chatRoomInfo();
 
-    Tp::Client::ChannelInterfaceRoomInterface *roomInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomInterface>();
-    Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomConfigInterface>();
-    QVariantMap roomInterfaceProps = getInterfaceProperties(roomInterface);
-    QVariantMap roomConfigInterfaceProps = getInterfaceProperties(roomConfigInterface);
-    if (roomConfigInterfaceProps.contains("Title") && !roomConfigInterfaceProps["Title"].toString().isEmpty()) {
+    if (roomProps.contains("Title") && !roomProps["Title"].toString().isEmpty()) {
         // TRANSLATORS : %1 is the group name
-        data->messageText = QString::fromUtf8(C::gettext("You joined group %1 ")).arg(roomConfigInterfaceProps["Title"].toString());
-        data->roomName = roomConfigInterfaceProps["Title"].toString();
-    } else if (roomInterfaceProps.contains("RoomName") && !roomInterfaceProps["RoomName"].toString().isEmpty()) {
+        data->messageText = QString::fromUtf8(C::gettext("You joined group %1 ")).arg(roomProps["Title"].toString());
+        data->roomName = roomProps["Title"].toString();
+    } else if (roomProps.contains("RoomName") && !roomProps["RoomName"].toString().isEmpty()) {
         // TRANSLATORS : %1 is the group name
-        data->messageText = QString::fromUtf8(C::gettext("You joined group %1")).arg(roomInterfaceProps["RoomName"].toString());
-        data->roomName = roomInterfaceProps["RoomName"].toString();
+        data->messageText = QString::fromUtf8(C::gettext("You joined group %1")).arg(roomProps["RoomName"].toString());
+        data->roomName = roomProps["RoomName"].toString();
     } else {
         data->messageText = QString::fromUtf8(C::gettext("You joined a new group"));
     }
 
-    if (roomInterfaceProps["CreationTimestamp"].toDateTime().isValid()) {
-        data->timestamp = roomInterfaceProps["CreationTimestamp"].toDateTime();
+    if (roomProps["CreationTimestamp"].toDateTime().isValid()) {
+        data->timestamp = roomProps["CreationTimestamp"].toDateTime();
     }
 
     NotificationData messagingMenuData = *data;
@@ -672,20 +672,6 @@ void TextChannelObserver::onTextChannelAvailable(Tp::TextChannelPtr textChannel)
         return;
     }
 
-    if (textChannel->targetHandleType() == Tp::HandleTypeRoom && !textChannel->isRequested()) {
-        QVariantMap properties;
-        properties["accountId"] = account->accountId();
-        properties["threadId"] = textChannel->targetId();
-        properties["chatType"] = Tp::HandleTypeRoom;
-        History::Thread thread = History::Manager::instance()->threadForProperties(account->accountId(),
-                                                                                   History::EventTypeText,
-                                                                                   properties);
-        if (thread.isNull()) {
-            // notify that we got added to a new group
-            showNotificationForNewGroup(account->accountId(), textChannel);
-        }
-    }
-
     if (textChannel->immutableProperties().contains(TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash")) && 
            textChannel->immutableProperties()[TP_QT_IFACE_CHANNEL_INTERFACE_SMS + QLatin1String(".Flash")].toBool()) {
         AccountEntry *account = TelepathyHelper::instance()->accountForConnection(textChannel->connection());
@@ -832,4 +818,15 @@ void TextChannelObserver::onMessageSent(Tp::Message, Tp::MessageSendingFlags, QS
     Metrics::instance()->increment(Metrics::SentMessages);
 }
 
-
+void TextChannelObserver::onThreadsAdded(History::Threads threads)
+{
+    Q_FOREACH(const History::Thread &thread, threads) {
+        if (thread.chatType() == History::ChatTypeRoom) {
+            QVariantMap roomInfo = thread.chatRoomInfo();
+            if (thread.count() == 0 && roomInfo.contains("Requested") && !roomInfo["Requested"].toBool()) {
+                // notify that we got added to a new group
+                showNotificationForNewGroup(thread);
+            }
+        }
+    }
+}
