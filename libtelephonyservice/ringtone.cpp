@@ -72,6 +72,17 @@ void RingtoneWorker::playIncomingMessageSound()
         return;
     }
 
+    // Re-create if in error state. A typical case is when media-hub-server has
+    // crashed and we need to start from a clean slate.
+    if (mMessageAudioPlayer && mMessageAudioPlayer->error())
+    {
+        qDebug() << "mMessageAudioPlayer in error state ("
+                 << mMessageAudioPlayer->error() << "), recreating";
+
+        mMessageAudioPlayer->deleteLater();
+        mMessageAudioPlayer = NULL;
+    }
+
     if (!mMessageAudioPlayer) {
         mMessageAudioPlayer = new QMediaPlayer(this);
         mMessageAudioPlayer->setAudioRole(QAudio::NotificationRole);
