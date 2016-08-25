@@ -43,6 +43,7 @@ ChatEntry::ChatEntry(QObject *parent) :
     QObject(parent),
     mChatType(ChatTypeNone),
     mAutoRequest(true),
+    mCanUpdateConfiguration(false),
     roomInterface(NULL),
     roomConfigInterface(NULL),
     subjectInterface(NULL)
@@ -59,6 +60,10 @@ void ChatEntry::onRoomPropertiesChanged(const QVariantMap &changed,const QString
     if (changed.contains("Title")) {
         mTitle = changed["Title"].toString();
         Q_EMIT titleChanged();
+    }
+    if (changed.contains("CanUpdateConfiguration")) {
+        mCanUpdateConfiguration = changed["CanUpdateConfiguration"].toBool();
+        Q_EMIT canUpdateConfigurationChanged();
     }
 }
 
@@ -176,6 +181,11 @@ bool ChatEntry::autoRequest() const
     return mAutoRequest;
 }
 
+bool ChatEntry::canUpdateConfiguration() const
+{
+    return mCanUpdateConfiguration;
+}
+
 void ChatEntry::setAutoRequest(bool autoRequest)
 {
     mAutoRequest = autoRequest;
@@ -193,6 +203,11 @@ void ChatEntry::setTitle(const QString &title)
     if (mChannels.isEmpty()) {
         mTitle = title;
         Q_EMIT titleChanged();
+        return;
+    }
+
+    // if the user can't update the configuration, just return from this point.
+    if (!mCanUpdateConfiguration) {
         return;
     }
 
