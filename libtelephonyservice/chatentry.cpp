@@ -33,11 +33,27 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/Connection>
 #include <TelepathyQt/PendingVariantMap>
+#include <TelepathyQt/ReferencedHandles>
 
 #include <QDebug>
 
 Q_DECLARE_METATYPE(ContactChatStates)
 Q_DECLARE_METATYPE(Participant)
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, RolesMap &roles)
+{
+    argument.beginMap();
+    while ( !argument.atEnd() ) {
+        argument.beginMapEntry();
+        uint key,value;
+        argument >> key >> value;
+        argument.endMapEntry();
+        roles[key] = value;
+    }
+
+    argument.endMap();
+    return argument;
+}
 
 ChatEntry::ChatEntry(QObject *parent) :
     QObject(parent),
@@ -50,6 +66,9 @@ ChatEntry::ChatEntry(QObject *parent) :
 {
     qRegisterMetaType<ContactChatStates>();
     qRegisterMetaType<Participant>();
+    qRegisterMetaType<RolesMap>();
+    qDBusRegisterMetaType<RolesMap>();
+
 }
 
 void ChatEntry::onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated)
@@ -448,6 +467,15 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
         participant->deleteLater();
     }
     clearParticipants();
+
+    // fetch the roles
+    QDBusInterface propsInterface(channel->busName(), channel->objectPath(), "org.freedesktop.DBus.Properties");
+    if (propsInterface.isValid()) {
+        QDBusMessage result = propsInterface.call("Get", "org.freedesktop.Telepathy.Channel.Interface.Roles", "Roles");
+        mRoles = qdbus_cast<RolesMap>(result.arguments().at(0).value<QDBusVariant>().variant().value<QDBusArgument>());
+        // FIXME: we need to watch for changes in the roles
+    }
+
     onGroupMembersChanged(channel->groupContacts(false),
                           channel->groupLocalPendingContacts(false),
                           channel->groupRemotePendingContacts(false),
@@ -541,6 +569,7 @@ void ChatEntry::clearParticipants()
     mParticipants.clear();
     mLocalPendingParticipants.clear();
     mRemotePendingParticipants.clear();
+    mRoles.clear();
 }
 
 void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account)
@@ -559,7 +588,7 @@ void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contact
     // now add the new participants
     // FIXME: check for duplicates?
     Q_FOREACH(Tp::ContactPtr contact, added) {
-        list << new Participant(contact->id(), this);
+        list << new Participant(contact->id(), mRoles[contact->handle().at(0)], this);
     }
 }
 

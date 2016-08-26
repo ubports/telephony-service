@@ -22,8 +22,8 @@
 
 #include "participant.h"
 
-Participant::Participant(const QString &identifier, QObject *parent)
-: ContactWatcher(parent)
+Participant::Participant(const QString &identifier, uint roles, QObject *parent)
+: ContactWatcher(parent), mRoles(roles)
 {
     classBegin();
     setIdentifier(identifier);
@@ -45,4 +45,9 @@ Participant::Participant(const Participant &other)
 
 Participant::~Participant()
 {
+}
+
+uint Participant::roles() const
+{
+    return mRoles;
 }

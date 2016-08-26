@@ -30,6 +30,9 @@
 class AccountEntry;
 class Participant;
 
+typedef QMap<uint,uint> RolesMap;
+Q_DECLARE_METATYPE(RolesMap)
+
 class ContactChatState : public QObject
 {
     Q_OBJECT
@@ -178,6 +181,7 @@ private:
     QList<Participant*> mLocalPendingParticipants;
     QList<Participant*> mRemotePendingParticipants;
     QMap<QString, ContactChatState*> mChatStates;
+    RolesMap mRoles;
     QString mRoomName;
     QString mTitle;
     QString mChatId;
