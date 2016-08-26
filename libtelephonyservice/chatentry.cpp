@@ -33,6 +33,7 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/Connection>
 #include <TelepathyQt/PendingVariantMap>
+#include <TelepathyQt/TextChannel>
 
 Q_DECLARE_METATYPE(ContactChatStates)
 Q_DECLARE_METATYPE(Participant)
@@ -109,9 +110,18 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
         return;
     }
 
-    updateParticipants(mParticipants, groupMembersAdded, groupMembersRemoved, account);
-    updateParticipants(mLocalPendingParticipants, groupLocalPendingMembersAdded, groupMembersRemoved, account);
-    updateParticipants(mRemotePendingParticipants, groupRemotePendingMembersAdded, groupMembersRemoved, account);
+    updateParticipants(mParticipants,
+                       groupMembersAdded,
+                       groupMembersRemoved,
+                       account);
+    updateParticipants(mLocalPendingParticipants,
+                       groupLocalPendingMembersAdded,
+                       groupMembersRemoved + groupMembersAdded, // if contacts move to the main list, remove from the pending one
+                       account);
+    updateParticipants(mRemotePendingParticipants,
+                       groupRemotePendingMembersAdded,
+                       groupMembersRemoved + groupMembersAdded, // if contacts move to the main list, remove from the pending one
+                       account);
 
     // generate the list of participant IDs again
     mParticipantIds.clear();
@@ -541,7 +551,7 @@ void ChatEntry::removeParticipants(const QStringList &participants, const QStrin
 }
 
 void ChatEntry::onChannelInvalidated()
-    qDebug() << __PRETTY_FUNCTION__;
+{
     Tp::TextChannelPtr channel(qobject_cast<Tp::TextChannel*>(sender()));
     mChannels.removeAll(channel);
 
