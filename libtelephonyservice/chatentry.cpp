@@ -33,6 +33,7 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/Connection>
 #include <TelepathyQt/PendingVariantMap>
+#include <TelepathyQt/TextChannel>
 
 #include <QDebug>
 
@@ -112,9 +113,18 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
         return;
     }
 
-    updateParticipants(mParticipants, groupMembersAdded, groupMembersRemoved, account);
-    updateParticipants(mLocalPendingParticipants, groupLocalPendingMembersAdded, groupMembersRemoved, account);
-    updateParticipants(mRemotePendingParticipants, groupRemotePendingMembersAdded, groupMembersRemoved, account);
+    updateParticipants(mParticipants,
+                       groupMembersAdded,
+                       groupMembersRemoved,
+                       account);
+    updateParticipants(mLocalPendingParticipants,
+                       groupLocalPendingMembersAdded,
+                       groupMembersRemoved + groupMembersAdded, // if contacts move to the main list, remove from the pending one
+                       account);
+    updateParticipants(mRemotePendingParticipants,
+                       groupRemotePendingMembersAdded,
+                       groupMembersRemoved + groupMembersAdded, // if contacts move to the main list, remove from the pending one
+                       account);
 
     // generate the list of participant IDs again
     mParticipantIds.clear();
