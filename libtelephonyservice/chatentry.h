@@ -68,6 +68,7 @@ class ChatEntry : public QObject, public QQmlParserStatus
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates READ chatStates NOTIFY chatStatesChanged)
     Q_PROPERTY(bool autoRequest READ autoRequest WRITE setAutoRequest CONSTANT)
+    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 
     Q_ENUMS(ChatType)
     Q_ENUMS(ChatState)
@@ -112,6 +113,7 @@ public:
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
 
     // QML parser status
+    bool isActive() const;
     void classBegin();
     void componentComplete();
 
@@ -161,6 +163,7 @@ Q_SIGNALS:
     void titleChanged();
     void inviteParticipantsFailed();
     void removeParticipantsFailed();
+    void activeChanged();
 
     void messageSent(const QString &accountId, const QString &messageId, const QVariantMap &properties);
     void messageSendingFailed(const QString &accountId, const QString &messageId, const QVariantMap &properties);
