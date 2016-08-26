@@ -504,6 +504,7 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     }
 
     mChannels << channel;
+    Q_EMIT activeChanged();
 }
 
 void ChatEntry::setChatState(ChatState state)
@@ -661,4 +662,10 @@ void ChatEntry::onChannelInvalidated()
         subjectInterface->disconnect(this);
         subjectInterface = 0;
     }
+    Q_EMIT activeChanged();
+}
+
+bool ChatEntry::isActive() const
+{
+    return mChannels.size() > 0;
 }
