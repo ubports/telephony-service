@@ -495,6 +495,9 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
             const Tp::Contacts &, const Tp::Channel::GroupMemberChangeDetails &)),
             this, SLOT(onGroupMembersChanged(Tp::Contacts,Tp::Contacts,Tp::Contacts,Tp::Contacts,
                                              Tp::Channel::GroupMemberChangeDetails)));
+    connect(channel.data(), SIGNAL(groupFlagsChanged(Tp::ChannelGroupFlags,Tp::ChannelGroupFlags,
+            Tp::ChannelGroupFlags)),
+            this, SIGNAL(groupFlagsChanged()));
     connect(channel.data(), SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
             this, SLOT(onChannelInvalidated()));
 
@@ -515,6 +518,7 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
 
     mChannels << channel;
     Q_EMIT activeChanged();
+    Q_EMIT groupFlagsChanged();
 }
 
 void ChatEntry::setChatState(ChatState state)
@@ -673,9 +677,19 @@ void ChatEntry::onChannelInvalidated()
         subjectInterface = 0;
     }
     Q_EMIT activeChanged();
+    Q_EMIT groupFlagsChanged();
 }
 
 bool ChatEntry::isActive() const
 {
     return mChannels.size() > 0;
+}
+
+uint ChatEntry::groupFlags() const
+{
+    if (mChannels.isEmpty()) {
+        return 0;
+    }
+
+    return mChannels[0]->groupFlags();
 }
