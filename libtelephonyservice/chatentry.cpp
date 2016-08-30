@@ -651,6 +651,20 @@ void ChatEntry::removeParticipants(const QStringList &participants, const QStrin
     }
 }
 
+bool ChatEntry::leaveChat(const QString &message)
+{
+    if (chatType() != ChatEntry::ChatTypeRoom || mChannels.size() != 1) {
+        return false;
+    }
+    Tp::TextChannelPtr channel = mChannels.first();
+    if (!channel->connection()) {
+        return false;
+    }
+    QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
+    QDBusReply<bool> reply = handlerIface->call("LeaveChat", channel->objectPath(), message);
+    return reply.isValid();
+}
+
 void ChatEntry::startChat()
 {
     QString objPath = ChatManager::instance()->startChat(accountId(), generateProperties());
@@ -710,21 +724,4 @@ uint ChatEntry::selfContactRoles() const
         }
     }
     return 0;
-}
-
-void ChatEntry::leaveChat()
-{
-    if (mChannels.isEmpty()) {
-        return;
-    }
-
-    Tp::PendingOperation *op = mChannels[0]->requestLeave();
-    connect(op, &Tp::PendingOperation::finished, [=](){
-        if (!op->isError()) {
-            Q_EMIT leaveChatSuccess();
-        } else {
-            Q_EMIT leaveChatFailed();
-
-        }
-    });
 }

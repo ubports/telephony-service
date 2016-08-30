@@ -155,7 +155,7 @@ public Q_SLOTS:
     void removeParticipants(const QStringList &participantIds, const QString &message = QString());
 
     void startChat();
-    void leaveChat();
+    bool leaveChat(const QString &message = QString());
 
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
@@ -202,9 +202,6 @@ Q_SIGNALS:
 
     void chatReady();
     void startChatFailed();
-
-    void leaveChatSuccess();
-    void leaveChatFailed();
 
 private:
     QList<Tp::TextChannelPtr> mChannels;

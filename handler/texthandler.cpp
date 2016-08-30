@@ -264,3 +264,13 @@ void TextHandler::removeParticipants(const QString &objectPath, const QStringLis
     });
 }
 
+bool TextHandler::leaveChat(const QString &objectPath, const QString &message)
+{
+    Tp::TextChannelPtr channel = existingChannelFromObjectPath(objectPath);
+    if (channel->targetHandleType() != Tp::HandleTypeRoom || !channel || !channel->connection()) {
+        return false;
+    }
+    channel->requestLeave(message);
+    return true;
+}
+
