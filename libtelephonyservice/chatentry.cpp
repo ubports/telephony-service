@@ -519,6 +519,7 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     mChannels << channel;
     Q_EMIT activeChanged();
     Q_EMIT groupFlagsChanged();
+    Q_EMIT selfContactRolesChanged();
 }
 
 void ChatEntry::setChatState(ChatState state)
@@ -678,6 +679,7 @@ void ChatEntry::onChannelInvalidated()
     }
     Q_EMIT activeChanged();
     Q_EMIT groupFlagsChanged();
+    Q_EMIT selfContactRolesChanged();
 }
 
 bool ChatEntry::isActive() const
@@ -692,4 +694,37 @@ uint ChatEntry::groupFlags() const
     }
 
     return mChannels[0]->groupFlags();
+}
+
+uint ChatEntry::selfContactRoles() const
+{
+    if (mChannels.isEmpty()) {
+        return 0;
+    }
+
+    Tp::ContactPtr selfContact = mChannels[0]->groupSelfContact();
+    if (selfContact) {
+        uint handle = selfContact->handle().at(0);
+        if (mRoles.contains(handle)) {
+            return mRoles[handle];
+        }
+    }
+    return 0;
+}
+
+void ChatEntry::leaveChat()
+{
+    if (mChannels.isEmpty()) {
+        return;
+    }
+
+    Tp::PendingOperation *op = mChannels[0]->requestLeave();
+    connect(op, &Tp::PendingOperation::finished, [=](){
+        if (!op->isError()) {
+            Q_EMIT leaveChatSuccess();
+        } else {
+            Q_EMIT leaveChatFailed();
+
+        }
+    });
 }

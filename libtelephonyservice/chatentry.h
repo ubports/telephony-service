@@ -74,6 +74,7 @@ class ChatEntry : public QObject, public QQmlParserStatus
     Q_PROPERTY(bool canUpdateConfiguration READ canUpdateConfiguration NOTIFY canUpdateConfigurationChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
     Q_PROPERTY(uint groupFlags READ groupFlags NOTIFY groupFlagsChanged);
+    Q_PROPERTY(uint selfContactRoles READ selfContactRoles NOTIFY selfContactRolesChanged);
 
     Q_ENUMS(ChatType)
     Q_ENUMS(ChatState)
@@ -137,6 +138,7 @@ public:
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
     uint groupFlags() const;
+    uint selfContactRoles() const;
 
     // QML parser status
     bool isActive() const;
@@ -153,6 +155,7 @@ public Q_SLOTS:
     void removeParticipants(const QStringList &participantIds, const QString &message = QString());
 
     void startChat();
+    void leaveChat();
 
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
@@ -192,12 +195,16 @@ Q_SIGNALS:
     void removeParticipantsFailed();
     void activeChanged();
     void groupFlagsChanged();
+    void selfContactRolesChanged();
 
     void messageSent(const QString &accountId, const QString &messageId, const QVariantMap &properties);
     void messageSendingFailed(const QString &accountId, const QString &messageId, const QVariantMap &properties);
 
     void chatReady();
     void startChatFailed();
+
+    void leaveChatSuccess();
+    void leaveChatFailed();
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
