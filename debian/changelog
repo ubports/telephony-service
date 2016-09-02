@@ -1,3 +1,14 @@
+telephony-service (0.1+16.10.20160902.1-0ubuntu1) yakkety; urgency=medium
+
+  [ Alfonso Sanchez-Beato ]
+  * Make sure we play notification sounds if media-hub re-starts (LP:
+    #1544477)
+
+  [ Gustavo Pichorim Boiko ]
+  * Disable tests temporarily
+
+ -- Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>  Fri, 02 Sep 2016 18:36:19 +0000
+
 telephony-service (0.1+16.10.20160601.1-0ubuntu1) yakkety; urgency=medium
 
   * Contact name now checks for QContactDisplayLabel to display full
