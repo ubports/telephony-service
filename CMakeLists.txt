@@ -45,6 +45,8 @@ find_package(LibPhoneNumber REQUIRED)
 
 include(qt5)
 
+option(SKIP_QML_TESTS "Skip QML tests" OFF)
+
 if(NOT CMAKE_CROSSCOMPILING)
     find_program(QMAKE_EXECUTABLE qmake)
     if(QMAKE_EXECUTABLE STREQUAL "QMAKE_EXECUTABLE-NOTFOUND")

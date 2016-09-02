@@ -31,6 +31,7 @@ Build-Depends: cmake,
                qtpim5-dev (>= 5),
                libusermetricsinput1-dev,
                telepathy-mission-control-5,
+               upstart,
                xvfb,
 Standards-Version: 3.9.4
 Homepage: https://launchpad.net/telephony-service
