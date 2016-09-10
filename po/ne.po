@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2016-09-10 07:01+0000\n"
+"X-Generator: Launchpad (build 18186)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -146,7 +146,7 @@ msgstr ""
 msgid "No text messages sent today"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:312
 msgid "Ok"
 msgstr "ठिक छ"
 
@@ -228,8 +228,8 @@ msgstr ""
 msgid "Unknown caller"
 msgstr "अज्ञात कलर"
 
-#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr "अज्ञात नम्बर"
 

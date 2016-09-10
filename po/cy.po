@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : n==2 ? 1 : (n != 8 && n != 11) ? "
 "2 : 3;\n"
-"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2016-09-10 07:01+0000\n"
+"X-Generator: Launchpad (build 18186)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -151,7 +151,7 @@ msgstr "Heb dderbyn neges destun heddiw."
 msgid "No text messages sent today"
 msgstr "Heb anfon neges destun heddiw."
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:312
 msgid "Ok"
 msgstr "Iawn"
 
@@ -233,8 +233,8 @@ msgstr "Rhif Anhysbys"
 msgid "Unknown caller"
 msgstr "Galwr anhysbys"
 
-#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr "Rhif anhysbys"
 
