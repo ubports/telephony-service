@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2016-09-10 07:01+0000\n"
+"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
 "X-Generator: Launchpad (build 18186)\n"
 "Language: gd\n"
 
@@ -154,7 +154,7 @@ msgstr "Cha d' fhuaireadh teachdaireachd an-diugh"
 msgid "No text messages sent today"
 msgstr "Cha do chuireadh teachdaireachd an-diugh"
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:312
+#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "Ceart ma-thà"
 
