@@ -31,6 +31,7 @@ Build-Depends: cmake,
                qtpim5-dev (>= 5),
                libusermetricsinput1-dev,
                telepathy-mission-control-5,
+               upstart,
                xvfb,
 Standards-Version: 3.9.4
 Homepage: https://launchpad.net/telephony-service
@@ -50,13 +51,13 @@ Depends: accountsservice-ubuntu-touch-schemas,
          history-service,
          libnotify4,
          telepathy-mission-control-5,
-         telepathy-ofono,
          ubuntu-sounds,
          tone-generator,
          libusermetricsinput1,
          dconf-cli,
          ${misc:Depends},
          ${shlibs:Depends},
+Suggests: telepathy-ofono
 Description: Telephony service components for Ubuntu - backend
  Telephony service components for Ubuntu.
  .
@@ -69,10 +70,10 @@ Multi-Arch: same
 Pre-Depends: dpkg (>= 1.15.6~)
 Depends: gsettings-ubuntu-schemas,
          qtcontact5-galera,
-         telepathy-ofono,
          telephony-service (>= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
+Suggests: telepathy-ofono
 Description: Telephony service components for Ubuntu - QML plugin
  Telephony service components for Ubuntu.
  .

@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
+"X-Generator: Launchpad (build 18186)\n"
 "Language: gd\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -238,8 +238,8 @@ msgstr "Àireamh nach aithne dhuinn"
 msgid "Unknown caller"
 msgstr "Chan eil fhios cò tha fònadh"
 
-#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr "Àireamh nach aithne dhuinn"
 
