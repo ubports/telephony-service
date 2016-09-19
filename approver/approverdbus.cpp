@@ -40,14 +40,9 @@ ApproverDBus::~ApproverDBus()
 bool
 ApproverDBus::connectToBus()
 {
-    bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
-    if (!ok) {
-        return false;
-    }
     new TelephonyServiceApproverAdaptor(this);
     QDBusConnection::sessionBus().registerObject(DBUS_OBJECT_PATH, this);
-
-    return true;
+    return QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
 }
 
 void ApproverDBus::HangUpAndAcceptCall()
