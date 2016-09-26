@@ -4,9 +4,9 @@
  * Authors:
  *  Roberto Mier Escandon <roberto.escandon@canonical.com>
  *
- * This file is part of history-service.
+ * This file is part of telephony-service.
  *
- * history-service is free software; you can redistribute it and/or modify
+ * telephony-service is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; version 3.
  *
