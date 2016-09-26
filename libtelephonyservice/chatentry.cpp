@@ -199,6 +199,7 @@ void ChatEntry::onRolesChanged(const HandleRolesMap &added, const HandleRolesMap
     }
 
     mSelfContactRoles = rolesMap[selfContact->handle().at(0)];
+    Q_EMIT selfContactRolesChanged();
 }
 
 void ChatEntry::onChatStartingFinished()
@@ -565,7 +566,6 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     mChannels << channel;
     Q_EMIT activeChanged();
     Q_EMIT groupFlagsChanged();
-    Q_EMIT selfContactRolesChanged();
 }
 
 void ChatEntry::setChatState(ChatState state)
