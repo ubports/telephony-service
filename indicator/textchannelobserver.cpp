@@ -42,6 +42,7 @@
 #include <QContactFetchRequest>
 #include <QContactFilter>
 #include <QContactPhoneNumber>
+#include <QDBusInterface>
 #include <QImage>
 #include <History/TextEvent>
 #include <History/Manager>
@@ -158,6 +159,7 @@ void notification_closed(NotifyNotification *notification, QMap<NotifyNotificati
 }
 
 TextChannelObserver::TextChannelObserver(QObject *parent) :
+    mPowerdIface("com.canonical.powerd", "/com/canonical/powerd", "com.canonical.powerd", QDBusConnection::systemBus()),
     QObject(parent)
 {
     connect(MessagingMenu::instance(),
@@ -644,12 +646,20 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
         QTimer *timer = new QTimer(this);
         timer->setInterval(1500);
         timer->setSingleShot(true);
+        QString wakeToken;
+        QDBusReply<QString> reply = mPowerdIface.call("requestSysState", "telephony-service-indicator", 1);
+        if (reply.isValid()) {
+            wakeToken = reply.value();
+        }
         QByteArray token(message.messageToken().toUtf8());
         mUnreadMessages.append(token);
         QObject::connect(timer, &QTimer::timeout, [=]() {
             triggerNotificationForMessage(message, account->accountId(), participantIds);
             Metrics::instance()->increment(Metrics::ReceivedMessages);
             timer->deleteLater();
+            if (!wakeToken.isEmpty()) {
+                mPowerdIface.call("clearSysState", wakeToken);
+            }
         });
         timer->start();
     }
