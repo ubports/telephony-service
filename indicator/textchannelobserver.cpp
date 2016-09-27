@@ -647,7 +647,7 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
         timer->setInterval(1500);
         timer->setSingleShot(true);
         QString wakeToken;
-        QDBusReply<QString> reply = mPowerdIface.call("requestWakeup", "telephony-service-indicator", (qulonglong)3000);
+        QDBusReply<QString> reply = mPowerdIface.call("requestSysState", "telephony-service-indicator", 1);
         if (reply.isValid()) {
             wakeToken = reply.value();
         }
@@ -658,7 +658,7 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
             Metrics::instance()->increment(Metrics::ReceivedMessages);
             timer->deleteLater();
             if (!wakeToken.isEmpty()) {
-                mPowerdIface.call("clearWakeup", wakeToken);
+                mPowerdIface.call("clearSysState", wakeToken);
             }
         });
         timer->start();
