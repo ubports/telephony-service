@@ -168,7 +168,10 @@ void ChatEntry::onRolesChanged(const HandleRolesMap &added, const HandleRolesMap
     Q_UNUSED(added);
     Q_UNUSED(removed);
 
-    RolesMap rolesMap = rolesInterface->getRoles();
+    RolesMap rolesMap;
+    if (rolesInterface) {
+        rolesMap = rolesInterface->getRoles();
+    }
 
     Q_FOREACH(Participant* participant, mParticipants) {
         if (rolesMap.contains(participant->handle())) {
@@ -647,7 +650,10 @@ void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contact
         }
     }
 
-    RolesMap rolesMap = rolesInterface->getRoles();
+    RolesMap rolesMap;
+    if (rolesInterface) {
+        rolesMap = rolesInterface->getRoles();
+    }
     // now add the new participants
     // FIXME: check for duplicates?
     Q_FOREACH(Tp::ContactPtr contact, added) {
