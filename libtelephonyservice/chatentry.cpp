@@ -169,7 +169,7 @@ void ChatEntry::onRolesChanged(const HandleRolesMap &added, const HandleRolesMap
     Q_UNUSED(removed);
 
     RolesMap rolesMap;
-    Tp::TextChannel* channel;
+    Tp::TextChannel* channel = 0;
     if (rolesInterface) {
         rolesMap = rolesInterface->getRoles();
         channel = qvariant_cast<Tp::TextChannel*>(rolesInterface->property("channel"));
