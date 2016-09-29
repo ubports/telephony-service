@@ -169,8 +169,10 @@ void ChatEntry::onRolesChanged(const HandleRolesMap &added, const HandleRolesMap
     Q_UNUSED(removed);
 
     RolesMap rolesMap;
+    Tp::TextChannel* channel;
     if (rolesInterface) {
         rolesMap = rolesInterface->getRoles();
+        channel = qvariant_cast<Tp::TextChannel*>(rolesInterface->property("channel"));
     }
 
     Q_FOREACH(Participant* participant, mParticipants) {
@@ -191,7 +193,6 @@ void ChatEntry::onRolesChanged(const HandleRolesMap &added, const HandleRolesMap
         }
     }
 
-    Tp::TextChannel* channel = qvariant_cast<Tp::TextChannel*>(rolesInterface->property("channel"));
     if (!channel) {
         return;
     }
