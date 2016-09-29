@@ -105,7 +105,6 @@ void MessageSendingJob::startJob()
     setStatus(Running);
 
     // check if the message should be sent via multimedia account
-    // we just use fallback to 1-1 chats
     if (account->type() == AccountEntry::PhoneAccount) {
         Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
             // TODO: we have to find the multimedia account that matches the same phone number,
@@ -116,41 +115,10 @@ void MessageSendingJob::startJob()
             // FIXME: the fallback implementation needs to be changed to use protocol info and create a map of
             // accounts. Also, it needs to check connection capabilities to determine if we can send message
             // to offline contacts.
-            bool shouldFallback = true;
-            // if the account is offline, dont fallback to this account
-            if (!newAccount->connected()) {
-                continue;
-            }
-            QList<Tp::TextChannelPtr> channels = mTextHandler->existingChannels(newAccount->accountId(), mMessage.properties);
-            // check if we have a channel for this contact already and get the contact pointer from there,
-            // this way we avoid doing the while(op->isFinished()) all the time
-            if (!channels.isEmpty()) {
-                // FIXME: we need to re-evaluate the rules to fallback
-                // if the contact is known, force fallback to this account
-                Q_FOREACH(const Tp::ContactPtr &contact, channels.first()->groupContacts(false)) {
-                    Tp::Presence presence = contact->presence();
-                    shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
-                                      presence.type() == Tp::ConnectionPresenceTypeOffline);
-                    if (!shouldFallback) {
-                        break;
-                    }
-                }
-            } else {
-                QStringList participantIds = mMessage.properties["participantIds"].toStringList();
-                Tp::PendingContacts *op = newAccount->account()->connection()->contactManager()->contactsForIdentifiers(participantIds);
-                while (!op->isFinished()) {
-                    qApp->processEvents();
-                }
-                Q_FOREACH(const Tp::ContactPtr &contact, op->contacts()) {
-                    Tp::Presence presence = contact->presence();
-                    shouldFallback = (presence.type() == Tp::ConnectionPresenceTypeAvailable ||
-                                      presence.type() == Tp::ConnectionPresenceTypeOffline);
-                    if (!shouldFallback) {
-                        break;
-                    }
-                }
-            }
-            if (shouldFallback) {
+            // Also, this map of accounts needs to match the original account with the fallback one via some ID.
+            //
+            // For now just assume that if a multimedia account is connected, we can use it to send messages.
+            if (newAccount->connected()) {
                 account = newAccount;
                 break;
             }

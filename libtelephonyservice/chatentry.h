@@ -26,9 +26,13 @@
 #include <QObject>
 #include <QQmlParserStatus>
 #include <TelepathyQt/TextChannel>
+#include "rolesinterface.h"
 
 class AccountEntry;
 class Participant;
+
+typedef QMap<uint,uint> RolesMap;
+Q_DECLARE_METATYPE(RolesMap)
 
 class ContactChatState : public QObject
 {
@@ -68,10 +72,14 @@ class ChatEntry : public QObject, public QQmlParserStatus
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates READ chatStates NOTIFY chatStatesChanged)
     Q_PROPERTY(bool autoRequest READ autoRequest WRITE setAutoRequest CONSTANT)
+    Q_PROPERTY(bool canUpdateConfiguration READ canUpdateConfiguration NOTIFY canUpdateConfigurationChanged)
     Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
+    Q_PROPERTY(uint groupFlags READ groupFlags NOTIFY groupFlagsChanged);
+    Q_PROPERTY(uint selfContactRoles READ selfContactRoles NOTIFY selfContactRolesChanged);
 
     Q_ENUMS(ChatType)
     Q_ENUMS(ChatState)
+    Q_ENUMS(ChannelGroupFlag)
 public:
     enum ChatType {
         ChatTypeNone    = Tp::HandleTypeNone,
@@ -85,6 +93,24 @@ public:
         ChannelChatStateActive    = Tp::ChannelChatStateActive,
         ChannelChatStatePaused    = Tp::ChannelChatStatePaused,
         ChannelChatStateComposing = Tp::ChannelChatStateComposing
+    };
+
+    enum ChannelGroupFlag
+    {
+        ChannelGroupFlagCanAdd = Tp::ChannelGroupFlagCanAdd,
+        ChannelGroupFlagCanRemove = Tp::ChannelGroupFlagCanRemove,
+        ChannelGroupFlagCanRescind = Tp::ChannelGroupFlagCanRescind,
+        ChannelGroupFlagMessageAdd = Tp::ChannelGroupFlagMessageAdd,
+        ChannelGroupFlagMessageRemove = Tp::ChannelGroupFlagMessageRemove,
+        ChannelGroupFlagMessageAccept = Tp::ChannelGroupFlagMessageAccept,
+        ChannelGroupFlagMessageReject = Tp::ChannelGroupFlagMessageReject,
+        ChannelGroupFlagMessageRescind = Tp::ChannelGroupFlagMessageRescind,
+        ChannelGroupFlagChannelSpecificHandles = Tp::ChannelGroupFlagChannelSpecificHandles,
+        ChannelGroupFlagOnlyOneGroup = Tp::ChannelGroupFlagOnlyOneGroup,
+        ChannelGroupFlagHandleOwnersNotAvailable = Tp::ChannelGroupFlagHandleOwnersNotAvailable,
+        ChannelGroupFlagProperties = Tp::ChannelGroupFlagProperties,
+        ChannelGroupFlagMembersChangedDetailed = Tp::ChannelGroupFlagMembersChangedDetailed,
+        ChannelGroupFlagMessageDepart = Tp::ChannelGroupFlagMessageDepart
     };
 
     explicit ChatEntry(QObject *parent = 0);
@@ -108,9 +134,12 @@ public:
     void setTitle(const QString & title);
     void setAutoRequest(bool autoRequest);
     bool autoRequest() const;
+    bool canUpdateConfiguration() const;
     QQmlListProperty<ContactChatState> chatStates();
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
+    uint groupFlags() const;
+    uint selfContactRoles() const;
 
     // QML parser status
     bool isActive() const;
@@ -127,6 +156,7 @@ public Q_SLOTS:
     void removeParticipants(const QStringList &participantIds, const QString &message = QString());
 
     void startChat();
+    bool leaveChat(const QString &message = QString());
 
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
@@ -149,6 +179,7 @@ private Q_SLOTS:
                                const Tp::Contacts &groupMembersRemoved,
                                const Tp::Channel::GroupMemberChangeDetails &details);
     void onChatStartingFinished();
+    void onRolesChanged(const HandleRolesMap &added, const HandleRolesMap &removed);
 
 Q_SIGNALS:
     void chatTypeChanged();
@@ -161,9 +192,12 @@ Q_SIGNALS:
     void remotePendingParticipantsChanged();
     void roomNameChanged();
     void titleChanged();
+    void canUpdateConfigurationChanged();
     void inviteParticipantsFailed();
     void removeParticipantsFailed();
     void activeChanged();
+    void groupFlagsChanged();
+    void selfContactRolesChanged();
 
     void messageSent(const QString &accountId, const QString &messageId, const QVariantMap &properties);
     void messageSendingFailed(const QString &accountId, const QString &messageId, const QVariantMap &properties);
@@ -184,9 +218,12 @@ private:
     QString mAccountId;
     ChatType mChatType;
     bool mAutoRequest;
+    bool mCanUpdateConfiguration;
+    uint mSelfContactRoles;
     Tp::Client::ChannelInterfaceRoomInterface *roomInterface;
     Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
     Tp::Client::ChannelInterfaceSubjectInterface *subjectInterface;
+    ChannelInterfaceRolesInterface *rolesInterface;
 };
 
 #endif // CHATENTRY_H

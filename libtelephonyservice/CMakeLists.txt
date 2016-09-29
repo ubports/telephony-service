@@ -19,6 +19,7 @@ set(library_SRCS
     protocol.cpp
     protocolmanager.cpp
     ringtone.cpp
+    rolesinterface.cpp
     telepathyhelper.cpp
     tonegenerator.cpp
     ussdmanager.cpp

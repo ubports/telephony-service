@@ -46,6 +46,7 @@ public Q_SLOTS:
     void changeRoomTitle(const QString &objectPath, const QString &title);
     void inviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
     void removeParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
+    bool leaveChat(const QString &objectPath, const QString &message);
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);

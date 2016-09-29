@@ -111,6 +111,11 @@ void HandlerDBus::RemoveParticipants(const QString &objectPath, const QStringLis
     TextHandler::instance()->removeParticipants(objectPath, participants, message);
 }
 
+bool HandlerDBus::LeaveChat(const QString &objectPath, const QString &message)
+{
+    TextHandler::instance()->leaveChat(objectPath, message);
+}
+
 bool HandlerDBus::DestroyTextChannel(const QString &objectPath)
 {
     return TextHandler::instance()->destroyTextChannel(objectPath);
