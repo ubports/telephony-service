@@ -73,9 +73,9 @@ public:
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
-    QList<AccountEntry*> accounts() const;
-    QList<AccountEntry*> phoneAccounts() const;
-    QList<AccountEntry*> activeAccounts(bool includeMultimedia=false) const;
+    static QList<AccountEntry*> accounts();
+    static QList<AccountEntry*> phoneAccounts();
+    static QList<AccountEntry*> activeAccounts();
     QQmlListProperty<AccountEntry> qmlAccounts();
     QQmlListProperty<AccountEntry> qmlPhoneAccounts();
     QQmlListProperty<AccountEntry> qmlActiveAccounts();
@@ -107,13 +107,9 @@ public:
     static Tp::ChannelClassSpec audioConferenceSpec();
 
     // QQmlListProperty helpers
-    static int accountsCount(QQmlListProperty<AccountEntry> *p);
-    static AccountEntry *accountAt(QQmlListProperty<AccountEntry> *p, int index);
-    static int activeAccountsCount(QQmlListProperty<AccountEntry> *p);
-    static AccountEntry *activeAccountAt(QQmlListProperty<AccountEntry> *p, int index);
-    static int phoneAccountsCount(QQmlListProperty<AccountEntry> *p);
-    static AccountEntry *phoneAccountAt(QQmlListProperty<AccountEntry> *p, int index);
- 
+    static int accountsCountWrapper(QQmlListProperty<AccountEntry> *p);
+    static AccountEntry *accountAtWrapper(QQmlListProperty<AccountEntry> *p, int index);
+
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
     void channelObserverUnregistered();

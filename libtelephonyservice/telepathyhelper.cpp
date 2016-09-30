@@ -41,6 +41,10 @@ template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStr
     return key1.size() > key2.size();  // sort by operator> !
 }
 
+typedef struct {
+    QList<AccountEntry*> (*accountFunction)();
+} QmlAccountData;
+
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mPendingAccountReady(0),
@@ -144,17 +148,17 @@ void TelepathyHelper::setFlightMode(bool value)
     mFlightModeInterface.asyncCall("FlightMode", value);
 }
 
-QList<AccountEntry*> TelepathyHelper::accounts() const
+QList<AccountEntry*> TelepathyHelper::accounts()
 {
-    return mAccounts;
+    return instance()->mAccounts;
 }
 
-QList<AccountEntry*> TelepathyHelper::activeAccounts(bool includeMultimedia) const
+QList<AccountEntry*> TelepathyHelper::activeAccounts()
 {
     QList<AccountEntry*> activeAccountList;
-    Q_FOREACH(AccountEntry *account, mAccounts) {
+    Q_FOREACH(AccountEntry *account, instance()->mAccounts) {
         if (account->active()) {
-            if (account->type() == AccountEntry::MultimediaAccount && !includeMultimedia) {
+            if (account->type() == AccountEntry::MultimediaAccount) {
                 continue;
             }
             activeAccountList << account;
@@ -174,10 +178,10 @@ bool TelepathyHelper::multiplePhoneAccounts() const
     return (count > 1);
 }
 
-QList<AccountEntry*> TelepathyHelper::phoneAccounts() const
+QList<AccountEntry*> TelepathyHelper::phoneAccounts()
 {
     QList<AccountEntry*> accountList;
-    Q_FOREACH(AccountEntry *account, mAccounts) {
+    Q_FOREACH(AccountEntry *account, instance()->mAccounts) {
         if (account->type() == AccountEntry::PhoneAccount) {
             accountList << account;
         }
@@ -187,17 +191,20 @@ QList<AccountEntry*> TelepathyHelper::phoneAccounts() const
 
 QQmlListProperty<AccountEntry> TelepathyHelper::qmlPhoneAccounts()
 {
-    return QQmlListProperty<AccountEntry>(this, 0, phoneAccountsCount, phoneAccountAt);
+    static QmlAccountData accountData{&TelepathyHelper::phoneAccounts};
+    return QQmlListProperty<AccountEntry>(this, &accountData, accountsCountWrapper, accountAtWrapper);
 }
 
 QQmlListProperty<AccountEntry> TelepathyHelper::qmlAccounts()
 {
-    return QQmlListProperty<AccountEntry>(this, 0, accountsCount, accountAt);
+    static QmlAccountData accountData{&TelepathyHelper::accounts};
+    return QQmlListProperty<AccountEntry>(this, &accountData, accountsCountWrapper, accountAtWrapper);
 }
 
 QQmlListProperty<AccountEntry> TelepathyHelper::qmlActiveAccounts()
 {
-    return QQmlListProperty<AccountEntry>(this, 0, activeAccountsCount, activeAccountAt);
+    static QmlAccountData accountData{&TelepathyHelper::activeAccounts};
+    return QQmlListProperty<AccountEntry>(this, &accountData, accountsCountWrapper, accountAtWrapper);
 }
 
 ChannelObserver *TelepathyHelper::channelObserver() const
@@ -363,38 +370,18 @@ Tp::ChannelClassSpec TelepathyHelper::audioConferenceSpec()
     return spec;
 }
 
-int TelepathyHelper::phoneAccountsCount(QQmlListProperty<AccountEntry> *p)
+int TelepathyHelper::accountsCountWrapper(QQmlListProperty<AccountEntry> *p)
 {
-    Q_UNUSED(p)
-    return TelepathyHelper::instance()->phoneAccounts().count();
+    QmlAccountData *data = static_cast<QmlAccountData*>(p->data);
+    qDebug() << __PRETTY_FUNCTION__ << data->accountFunction;
+    return (*data->accountFunction)().count();
 }
 
-int TelepathyHelper::accountsCount(QQmlListProperty<AccountEntry> *p)
+AccountEntry *TelepathyHelper::accountAtWrapper(QQmlListProperty<AccountEntry> *p, int index)
 {
-    Q_UNUSED(p)
-    return TelepathyHelper::instance()->accounts().count();
-}
-
-AccountEntry *TelepathyHelper::phoneAccountAt(QQmlListProperty<AccountEntry> *p, int index)
-{
-    Q_UNUSED(p)
-    return TelepathyHelper::instance()->phoneAccounts()[index];
-}
-
-AccountEntry *TelepathyHelper::accountAt(QQmlListProperty<AccountEntry> *p, int index)
-{
-    Q_UNUSED(p)
-    return TelepathyHelper::instance()->accounts()[index];
-}
-
-int TelepathyHelper::activeAccountsCount(QQmlListProperty<AccountEntry> *p)
-{
-    return TelepathyHelper::instance()->activeAccounts().count();
-}
-
-AccountEntry *TelepathyHelper::activeAccountAt(QQmlListProperty<AccountEntry> *p, int index)
-{
-    return TelepathyHelper::instance()->activeAccounts()[index];
+    QmlAccountData *data = static_cast<QmlAccountData*>(p->data);
+    qDebug() << __PRETTY_FUNCTION__ << data->accountFunction;
+    return (*data->accountFunction)()[index];
 }
 
 void TelepathyHelper::onAccountRemoved()

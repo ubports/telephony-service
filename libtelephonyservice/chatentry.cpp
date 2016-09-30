@@ -449,8 +449,8 @@ void ChatEntry::componentComplete()
     }
 
     // now filter out the Phone accounts from the accounts list
-    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->activeAccounts(true)) {
-        if (account->type() != AccountEntry::PhoneAccount) {
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        if (account->active() && account->type() != AccountEntry::PhoneAccount) {
             accounts << account;
         }
     }
