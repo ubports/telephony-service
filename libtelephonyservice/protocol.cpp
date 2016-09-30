@@ -24,8 +24,20 @@
 #include <QFileInfo>
 #include <QSettings>
 
-Protocol::Protocol(const QString &name, Features features, const QString &fallbackProtocol, const QString &backgroundImage, const QString &icon, const QString &serviceName, const QString &serviceDisplayName, QObject *parent)
-: QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol), mBackgroundImage(backgroundImage), mIcon(icon), mServiceName(serviceName), mServiceDisplayName(serviceDisplayName)
+Protocol::Protocol(const QString &name, Features features,
+                   const QString &fallbackProtocol,
+                   MatchRule fallbackMatchRule,
+                   const QString &fallbackSourceProperty,
+                   const QString &fallbackDestinationProperty,
+                   bool showOnSelector,
+                   const QString &backgroundImage,
+                   const QString &icon,
+                   const QString &serviceName,
+                   const QString &serviceDisplayName,
+                   QObject *parent)
+: QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol), mFallbackMatchRule(fallbackMatchRule),
+  mFallbackSourceProperty(fallbackSourceProperty), mFallbackDestinationProperty(fallbackDestinationProperty), mShowOnSelector(showOnSelector),
+  mBackgroundImage(backgroundImage), mIcon(icon), mServiceName(serviceName), mServiceDisplayName(serviceDisplayName)
 {
 }
 
@@ -52,6 +64,26 @@ Protocol::Features Protocol::features() const
 QString Protocol::fallbackProtocol() const
 {
     return mFallbackProtocol;
+}
+
+Protocol::MatchRule Protocol::fallbackMatchRule() const
+{
+    return mFallbackMatchRule;
+}
+
+QString Protocol::fallbackSourceProperty() const
+{
+    return mFallbackSourceProperty;
+}
+
+QString Protocol::fallbackDestinationProperty() const
+{
+    return mFallbackDestinationProperty;
+}
+
+bool Protocol::showOnSelector() const
+{
+    return mShowOnSelector;
 }
 
 QString Protocol::backgroundImage() const
@@ -86,10 +118,21 @@ Protocol *Protocol::fromFile(const QString &fileName)
         }
     }
     QString fallbackProtocol = settings.value("FallbackProtocol").toString();
+    QString matchRuleString = settings.value("FallbackMatchRule").toString();
+    MatchRule matchRule = MatchAny;
+    if (matchRuleString == "match_any") {
+        matchRule = MatchAny;
+    } else if (matchRuleString == "match_properties") {
+        matchRule = MatchProperties;
+    }
+    QString fallbackSourceProperty = settings.value("FallbackSourceProperty").toString();
+    QString fallbackDestinationProperty = settings.value("FallbackDestinationProperty").toString();
+    bool showOnSelector = settings.value("ShowOnSelector").toBool();
     QString backgroundImage = settings.value("BackgroundImage").toString();
     QString icon = settings.value("Icon").toString();
     QString serviceName = settings.value("ServiceName").toString();
     QString serviceDisplayName = settings.value("ServiceDisplayName").toString();
 
-    return new Protocol(name, features, fallbackProtocol, backgroundImage, icon, serviceName, serviceDisplayName);
+    return new Protocol(name, features, fallbackProtocol, matchRule, fallbackSourceProperty, fallbackDestinationProperty,
+                        showOnSelector, backgroundImage, icon, serviceName, serviceDisplayName);
 }

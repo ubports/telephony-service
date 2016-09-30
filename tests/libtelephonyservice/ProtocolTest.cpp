@@ -27,8 +27,20 @@ class TestProtocol : public Protocol
 {
     Q_OBJECT
 public:
-    TestProtocol(const QString &name, Protocol::Features features, const QString &fallbackProtocol, const QString &backgroundFile, const QString &icon, const QString &serviceName = QString::null, const QString &serviceDisplayName = QString::null, QObject *parent = 0)
-     : Protocol(name, features, fallbackProtocol, backgroundFile, icon, serviceName, serviceDisplayName, parent) { }
+    TestProtocol(const QString &name,
+                 Protocol::Features features,
+                 const QString &fallbackProtocol,
+                 Protocol::MatchRule fallbackMatchRule,
+                 const QString &fallbackSourceProperty,
+                 const QString &fallbackDestinationProperty,
+                 bool showOnSelector,
+                 const QString &backgroundFile,
+                 const QString &icon,
+                 const QString &serviceName = QString::null,
+                 const QString &serviceDisplayName = QString::null,
+                 QObject *parent = 0)
+     : Protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
+                showOnSelector, backgroundFile, icon, serviceName, serviceDisplayName, parent) { }
 };
 
 class ProtocolTest : public QObject
@@ -45,15 +57,24 @@ void ProtocolTest::testBasicInfo()
     QString name("foobar");
     Protocol::Features features(Protocol::TextChats);
     QString fallbackProtocol("theFallback");
+    Protocol::MatchRule fallbackMatchRule(Protocol::MatchProperties);
+    QString fallbackSourceProperty("sourceProperty");
+    QString fallbackDestinationProperty("destinationProperty");
+    bool showOnSelector(false);
     QString backgroundImage("/tmp/background.png");
     QString icon("/tmp/icon.png");
     QString serviceName("The service");
     QString serviceDisplayName("The service display name");
 
-    TestProtocol protocol(name, features, fallbackProtocol, backgroundImage, icon, serviceName, serviceDisplayName, this);
+    TestProtocol protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
+                          showOnSelector, backgroundImage, icon, serviceName, serviceDisplayName, this);
     QCOMPARE(protocol.name(), name);
     QCOMPARE(protocol.features(), features);
     QCOMPARE(protocol.fallbackProtocol(), fallbackProtocol);
+    QCOMPARE(protocol.fallbackMatchRule(), fallbackMatchRule);
+    QCOMPARE(protocol.fallbackSourceProperty(), fallbackSourceProperty);
+    QCOMPARE(protocol.fallbackDestinationProperty(), fallbackDestinationProperty);
+    QCOMPARE(protocol.showOnSelector(), showOnSelector);
     QCOMPARE(protocol.backgroundImage(), backgroundImage);
     QCOMPARE(protocol.icon(), icon);
     QCOMPARE(protocol.serviceName(), serviceName);
@@ -73,6 +94,10 @@ void ProtocolTest::testFromFile()
     QCOMPARE(protocol->name(), QString("foo"));
     QCOMPARE(protocol->features(), Protocol::Features(Protocol::TextChats | Protocol::VoiceCalls));
     QCOMPARE(protocol->fallbackProtocol(), QString("bar"));
+    QCOMPARE(protocol->fallbackMatchRule(), Protocol::MatchProperties);
+    QCOMPARE(protocol->fallbackSourceProperty(), QString("theSourceProperty"));
+    QCOMPARE(protocol->fallbackDestinationProperty(), QString("theDestinationProperty"));
+    QCOMPARE(protocol->showOnSelector(), false);
     QCOMPARE(protocol->backgroundImage(), QString("/tmp/background.png"));
     QCOMPARE(protocol->icon(), QString("/tmp/icon.png"));
     QCOMPARE(protocol->serviceName(), QString("The Service"));
