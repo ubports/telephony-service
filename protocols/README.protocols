@@ -1,0 +1,21 @@
+The protocol description file instructs telephony-service how to properly load
+the accounts, display and fallback or replace accounts by others.
+
+It is also a way to filter accounts that are not meant to be handle by the telephony-service stack.
+
+The file format is based on freedesktop's desktop file specification, but restricted to a few keys.
+All keys should be under the [Protocol] group, and here are the supported keys:
+
+- Name: the name of the protocol as exposed in the Telepathy framework
+- Features: describes what features this protocol supports. Acceptable values are: text, voice
+- FallbackProtocol: lists a protocol that should be used in case the given protocol is disconnected or not available
+- FallbackMatchRule: describes the rule to be used when matching accounts. Acceptable values are: match_any, match_properties
+- FallbackSourceProperty: in case the match rule is match_properties, this key describes the property to be used on this protocol
+                          to decide which account to fallback to.
+- FallbackDestinationProperty: in case the match rule is match_properties, this key describes the property to be used on the
+                               fallback protocol to decide which account to use as a fallback.
+- ShowOnSelector: informs whether this account should be used on selectors (as the ones seen in dialer-app and messaging-app) (0 or 1)
+- BackgroundImage: a path to an image to be displayed in backgrounds where needed
+- Icon: a path to an icon to be used where needed
+- ServiceName: TODO: add description
+- ServiceDisplayName: TODO: add description
