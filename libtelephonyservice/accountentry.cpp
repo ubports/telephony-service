@@ -22,6 +22,7 @@
 #include <TelepathyQt/PendingOperation>
 #include <QTimer>
 #include "accountentry.h"
+#include "phoneutils.h"
 #include "protocolmanager.h"
 #include "telepathyhelper.h"
 

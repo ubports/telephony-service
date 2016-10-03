@@ -204,6 +204,62 @@ bool TelepathyHelper::multiplePhoneAccounts() const
     return (count > 1);
 }
 
+/**
+ * If the @param originalAccount is listed as being the fallback of any other protocol,
+ * this function will return the account that should be used instead.
+ * @param originalAccount The original account that might be replaced
+ * @return A list containing the replacement accounts or the original account if none are suitable.
+ */
+QList<AccountEntry*> TelepathyHelper::checkAccountOverload(AccountEntry *originalAccount)
+{
+    QList<AccountEntry*> accounts;
+    QString protocol = originalAccount->protocolInfo()->name();
+    for (auto account : mAccounts) {
+        // FIXME: check for matching properties if needed
+        if (account->protocolInfo()->fallbackProtocol() == protocol) {
+            accounts << account;
+        }
+    }
+
+    // if no accounts were found, just append the original account
+    if (accounts.isEmpty()) {
+        accounts << originalAccount;
+    }
+
+    return accounts;
+}
+
+/**
+ * If the @param originalAccount is listed as having a fallback protocol, when the @param originalAccount
+ * cannot be used by any reason (not connected, or not having a particular feature enabled), the fallback
+ * account should be used. This function will try to find a suitable fallback account.
+ * @return A list containing the fallback accounts or the original account if none are suitable.
+ */
+QList<AccountEntry*> TelepathyHelper::checkAccountFallback(AccountEntry *originalAccount)
+{
+    QList<AccountEntry*> accounts;
+    QString fallbackProtocol = originalAccount->protocolInfo()->fallbackProtocol();
+    // FIXME: check for the match rules too
+
+    // if the account doesn't have a fallback protocol specified, just return itself in the list
+    if (fallbackProtocol.isEmpty()) {
+        accounts << originalAccount;
+        return accounts;
+    }
+
+    for (auto account : mAccounts) {
+        if (account->protocolInfo()->name() == fallbackProtocol) {
+            accounts << account;
+        }
+    }
+
+    if (accounts.isEmpty()) {
+        accounts << originalAccount;
+    }
+
+    return accounts;
+}
+
 QList<AccountEntry*> TelepathyHelper::phoneAccounts() const
 {
     QList<AccountEntry*> accountList;

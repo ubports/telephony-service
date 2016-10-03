@@ -76,6 +76,8 @@ public:
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
+
+    /********************************* Account stuff *********************************/
     QList<AccountEntry*> accounts() const;
     QList<AccountEntry*> phoneAccounts() const;
     QList<AccountEntry*> activeAccounts() const;
@@ -88,6 +90,17 @@ public:
     QDBusInterface *approverInterface() const;
     AccountEntry *defaultMessagingAccount() const;
     AccountEntry *defaultCallAccount() const;
+    AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
+    Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
+    Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
+    Q_INVOKABLE QList<AccountEntry*> accountsForType(int type);
+    bool multiplePhoneAccounts() const;
+
+    /** @brief Check if this account should be replaced by any overloaded protocol. */
+    QList<AccountEntry*> checkAccountOverload(AccountEntry *originalAccount);
+
+    /** @brief Check if this account has a fallback to be used when the original account is not suitable. */
+    QList<AccountEntry*> checkAccountFallback(AccountEntry *originalAccount);
 
     bool mmsGroupChat();
     QVariantMap simNames() const;
@@ -96,13 +109,8 @@ public:
     void setFlightMode(bool value);
     bool ready() const;
     QStringList accountIds();
-    AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
-    Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
-    Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
-    Q_INVOKABLE QList<AccountEntry*> accountsForType(int type);
     bool emergencyCallsAvailable() const;
     Q_INVOKABLE void unlockSimCards() const;
-    bool multiplePhoneAccounts() const;
 
     bool registerClient(Tp::AbstractClient *client, QString name);
     bool unregisterClient(Tp::AbstractClient *client);
