@@ -47,6 +47,7 @@ public:
     static int displayedAccountsCount(QQmlListProperty<AccountEntry> *p);
     static AccountEntry *displayedAccountsAt(QQmlListProperty<AccountEntry> *p, int index);
 
+    QList<AccountEntry*> accounts();
     QList<AccountEntry*> activeAccounts();
     QList<AccountEntry*> displayedAccounts();
 

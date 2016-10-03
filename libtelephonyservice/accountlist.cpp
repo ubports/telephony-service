@@ -82,6 +82,11 @@ AccountEntry *AccountList::displayedAccountsAt(QQmlListProperty<AccountEntry> *p
     return accountList->displayedAccounts()[index];
 }
 
+QList<AccountEntry*> AccountList::accounts()
+{
+    return mAccounts;
+}
+
 QList<AccountEntry*> AccountList::activeAccounts()
 {
     QList<AccountEntry*> accounts;
@@ -93,7 +98,7 @@ QList<AccountEntry*> AccountList::activeAccounts()
     return accounts;
 }
 
-QList<AccountEntry *> AccountList::displayedAccounts()
+QList<AccountEntry*> AccountList::displayedAccounts()
 {
     QList<AccountEntry*> accounts;
     for (auto account : mAccounts) {
@@ -110,6 +115,7 @@ void AccountList::filterAccounts()
     for (auto account : mAccounts) {
         account->disconnect(this);
     }
+
     mAccounts.clear();
     for (auto account : TelepathyHelper::instance()->accounts()) {
         // if the account doesn't have any of the required features, skip it
@@ -121,6 +127,9 @@ void AccountList::filterAccounts()
         if (!mProtocol.isNull() && account->protocolInfo()->name() != mProtocol) {
             continue;
         }
+
+        connect(account, &AccountEntry::activeChanged,
+                this, &AccountList::activeAccountsChanged);
         mAccounts << account;
     }
 
