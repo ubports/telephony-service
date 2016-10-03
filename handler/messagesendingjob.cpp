@@ -104,24 +104,13 @@ void MessageSendingJob::startJob()
 
     setStatus(Running);
 
-    // check if the message should be sent via multimedia account
-    if (account->type() == AccountEntry::PhoneAccount) {
-        Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
-            // TODO: we have to find the multimedia account that matches the same phone number,
-            // but for now we just pick any multimedia connected account
-            if (newAccount->type() != AccountEntry::MultimediaAccount) {
-                continue;
-            }
-            // FIXME: the fallback implementation needs to be changed to use protocol info and create a map of
-            // accounts. Also, it needs to check connection capabilities to determine if we can send message
-            // to offline contacts.
-            // Also, this map of accounts needs to match the original account with the fallback one via some ID.
-            //
-            // For now just assume that if a multimedia account is connected, we can use it to send messages.
-            if (newAccount->connected()) {
-                account = newAccount;
-                break;
-            }
+    // check if the message should be sent via an overloaded account
+    QList<AccountEntry*> overloadAccounts = TelepathyHelper::instance()->checkAccountOverload(account);
+    for (auto newAccount : overloadAccounts) {
+        // FIXME: check if we need to validate anything other than being connected
+        if (newAccount->connected()) {
+            account = newAccount;
+            break;
         }
     }
 
@@ -216,7 +205,6 @@ bool MessageSendingJob::canSendMultiPartMessages()
     // TODO check in telepathy if multipart is supported
     // currently we just return false to be on the safe side
     case AccountEntry::GenericAccount:
-    case AccountEntry::MultimediaAccount:
     default:
         return false;
     }

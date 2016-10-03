@@ -164,9 +164,6 @@ QList<AccountEntry*> TelepathyHelper::activeAccounts() const
     QList<AccountEntry*> activeAccountList;
     Q_FOREACH(AccountEntry *account, mAccounts) {
         if (account->active()) {
-            if (account->type() == AccountEntry::MultimediaAccount) {
-                continue;
-            }
             activeAccountList << account;
         }
     }

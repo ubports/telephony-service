@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -52,7 +52,6 @@ class AccountEntry : public QObject
 public:
     enum AccountType {
         PhoneAccount,
-        MultimediaAccount,
         GenericAccount
     };
 

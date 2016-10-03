@@ -13,7 +13,6 @@ set(library_SRCS
     contactutils.cpp
     contactwatcher.cpp
     greetercontacts.cpp
-    multimediaaccountentry.cpp
     ofonoaccountentry.cpp
     participant.cpp
     phoneutils.cpp

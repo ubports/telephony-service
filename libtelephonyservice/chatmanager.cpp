@@ -255,19 +255,18 @@ bool ChatManager::channelMatchProperties(const Tp::TextChannelPtr &channel, cons
     int participantCount = 0;
     // iterate over participants
     Q_FOREACH (const Tp::ContactPtr &contact, contacts) {
-        if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
-            Q_FOREACH(const QString &participant, participants) {
-                if (PhoneUtils::comparePhoneNumbers(participant, contact->id()) > PhoneUtils::NO_MATCH) {
-                    participantCount++;
-                    break;
-                }
-            }
-            continue;
-        }
+        // try the easiest first
         if (participants.contains(contact->id())) {
             participantCount++;
-        } else {
-            break;
+            continue;
+        }
+
+        // if no exact match, try to use the account's compare function
+        Q_FOREACH(const QString &participant, participants) {
+            if (account->compareIds(participant, contact->id())) {
+                participantCount++;
+                break;
+            }
         }
     }
     return (participantCount == participants.count());
