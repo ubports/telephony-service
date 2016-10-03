@@ -155,7 +155,17 @@ QStringList AccountEntry::addressableVCardFields() const
 
 bool AccountEntry::compareIds(const QString &first, const QString &second) const
 {
-    return first == second;
+    // try the basic first
+    if (first == second) {
+        return true;
+    }
+
+    // if the account has "tel" in the addressable fields, also try phone compare
+    if (addressableVCardFields().contains("tel")) {
+        return PhoneUtils::comparePhoneNumbers(first, second) > PhoneUtils::NO_MATCH;
+    }
+
+    return false;
 }
 
 Protocol *AccountEntry::protocolInfo() const
