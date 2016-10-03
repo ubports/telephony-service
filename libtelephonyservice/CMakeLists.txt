@@ -1,6 +1,7 @@
 set(library_SRCS
     accountentry.cpp
     accountentryfactory.cpp
+    accountlist.cpp
     audiooutput.cpp
     applicationutils.cpp
     callentry.cpp

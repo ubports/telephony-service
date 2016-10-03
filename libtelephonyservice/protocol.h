@@ -65,7 +65,8 @@ class Protocol : public QObject
 public:
     enum Feature {
         TextChats = 0x1,
-        VoiceCalls = 0x2
+        VoiceCalls = 0x2,
+        AllFeatures = (TextChats | VoiceCalls)
     };
     Q_DECLARE_FLAGS(Features, Feature)
 

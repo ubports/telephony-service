@@ -32,6 +32,7 @@
 #include <TelepathyQt/Types>
 #include "channelobserver.h"
 #include "accountentry.h"
+#include "protocol.h"
 
 #define CANONICAL_TELEPHONY_VOICEMAIL_IFACE "com.canonical.Telephony.Voicemail"
 #define CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE "com.canonical.Telephony.AudioOutputs"
@@ -40,16 +41,17 @@
 
 template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStringList &key2);
 
-class AccountEntry;
+class AccountList;
 
 class TelepathyHelper : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool ready READ ready NOTIFY setupReady)
     Q_PROPERTY(QStringList accountIds READ accountIds NOTIFY accountIdsChanged)
-    Q_PROPERTY(QQmlListProperty<AccountEntry> accounts READ qmlAccounts NOTIFY accountsChanged)
-    Q_PROPERTY(QQmlListProperty<AccountEntry> phoneAccounts READ qmlPhoneAccounts NOTIFY phoneAccountsChanged)
-    Q_PROPERTY(QQmlListProperty<AccountEntry> activeAccounts READ qmlActiveAccounts NOTIFY activeAccountsChanged)
+    Q_PROPERTY(AccountList *accounts READ qmlAccounts CONSTANT)
+    Q_PROPERTY(AccountList *voiceAccounts READ qmlVoiceAccounts CONSTANT)
+    Q_PROPERTY(AccountList *textAccounts READ qmlTextAccounts CONSTANT)
+    Q_PROPERTY(AccountList *phoneAccounts READ qmlPhoneAccounts CONSTANT)
     Q_PROPERTY(AccountEntry *defaultMessagingAccount READ defaultMessagingAccount NOTIFY defaultMessagingAccountChanged)
     Q_PROPERTY(AccountEntry *defaultCallAccount READ defaultCallAccount NOTIFY defaultCallAccountChanged)
     Q_PROPERTY(bool flightMode READ flightMode WRITE setFlightMode NOTIFY flightModeChanged)
@@ -60,9 +62,10 @@ class TelepathyHelper : public QObject
     Q_ENUMS(ChatType)
 public:
     enum AccountType {
-        Call,
-        Messaging
+        Messaging = Protocol::TextChats,
+        Voice = Protocol::VoiceCalls,
     };
+    Q_DECLARE_FLAGS(AccountTypes, AccountType)
 
     enum ChatType {
         ChatTypeNone = Tp::HandleTypeNone,
@@ -73,12 +76,13 @@ public:
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
-    static QList<AccountEntry*> accounts();
-    static QList<AccountEntry*> phoneAccounts();
-    static QList<AccountEntry*> activeAccounts();
-    QQmlListProperty<AccountEntry> qmlAccounts();
-    QQmlListProperty<AccountEntry> qmlPhoneAccounts();
-    QQmlListProperty<AccountEntry> qmlActiveAccounts();
+    QList<AccountEntry*> accounts() const;
+    QList<AccountEntry*> phoneAccounts() const;
+    QList<AccountEntry*> activeAccounts() const;
+    AccountList *qmlAccounts() const;
+    AccountList *qmlVoiceAccounts() const;
+    AccountList *qmlTextAccounts() const;
+    AccountList *qmlPhoneAccounts() const;
     ChannelObserver *channelObserver() const;
     QDBusInterface *handlerInterface() const;
     QDBusInterface *approverInterface() const;
@@ -105,10 +109,6 @@ public:
 
     // pre-populated channel class specs for conferences
     static Tp::ChannelClassSpec audioConferenceSpec();
-
-    // QQmlListProperty helpers
-    static int accountsCountWrapper(QQmlListProperty<AccountEntry> *p);
-    static AccountEntry *accountAtWrapper(QQmlListProperty<AccountEntry> *p, int index);
 
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
@@ -150,6 +150,10 @@ private:
     Tp::ClientRegistrarPtr mClientRegistrar;
     QList<AccountEntry*> mAccounts;
     int mPendingAccountReady;
+    AccountList *mQmlAccounts;
+    AccountList *mQmlVoiceAccounts;
+    AccountList *mQmlTextAccounts;
+    AccountList *mQmlPhoneAccounts;
     AccountEntry *mDefaultCallAccount;
     AccountEntry *mDefaultMessagingAccount;
     ChannelObserver *mChannelObserver;
@@ -161,5 +165,7 @@ private:
     mutable QDBusInterface *mApproverInterface;
     QDBusInterface mFlightModeInterface;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(TelepathyHelper::AccountTypes)
 
 #endif // TELEPATHYHELPER_H
