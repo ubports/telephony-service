@@ -50,6 +50,9 @@ class Protocol : public QObject
     /// @brief whether accounts from this protocol should be shown on account selectors
     Q_PROPERTY(bool showOnSelector READ showOnSelector CONSTANT)
 
+    /// @brief whether the online status of contacts for this account should be shown on UI
+    Q_PROPERTY(bool showOnlineStatus READ showOnlineStatus CONSTANT)
+
     /// @brief the file path for the image that represents this protocol
     Q_PROPERTY(QString backgroundImage READ backgroundImage CONSTANT)
 
@@ -82,6 +85,7 @@ public:
     QString fallbackSourceProperty() const;
     QString fallbackDestinationProperty() const;
     bool showOnSelector() const;
+    bool showOnlineStatus() const;
     QString backgroundImage() const;
     QString icon() const;
     QString serviceName() const;
@@ -98,6 +102,7 @@ protected:
                       const QString &fallbackSourceProperty = QString::null,
                       const QString &fallbackDestinationProperty = QString::null,
                       bool showOnSelector = true,
+                      bool showOnlineStatus = false,
                       const QString &backgroundImage = QString::null,
                       const QString &icon = QString::null,
                       const QString &serviceName = QString::null,
@@ -112,6 +117,7 @@ private:
     QString mFallbackSourceProperty;
     QString mFallbackDestinationProperty;
     bool mShowOnSelector;
+    bool mShowOnlineStatus;
     QString mBackgroundImage;
     QString mIcon;
     QString mServiceName;

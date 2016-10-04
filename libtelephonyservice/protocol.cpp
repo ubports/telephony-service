@@ -30,14 +30,16 @@ Protocol::Protocol(const QString &name, Features features,
                    const QString &fallbackSourceProperty,
                    const QString &fallbackDestinationProperty,
                    bool showOnSelector,
+                   bool showOnlineStatus,
                    const QString &backgroundImage,
                    const QString &icon,
                    const QString &serviceName,
                    const QString &serviceDisplayName,
                    QObject *parent)
 : QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol), mFallbackMatchRule(fallbackMatchRule),
-  mFallbackSourceProperty(fallbackSourceProperty), mFallbackDestinationProperty(fallbackDestinationProperty), mShowOnSelector(showOnSelector),
-  mBackgroundImage(backgroundImage), mIcon(icon), mServiceName(serviceName), mServiceDisplayName(serviceDisplayName)
+  mFallbackSourceProperty(fallbackSourceProperty), mFallbackDestinationProperty(fallbackDestinationProperty),
+  mShowOnSelector(showOnSelector), mShowOnlineStatus(showOnlineStatus), mBackgroundImage(backgroundImage), mIcon(icon),
+  mServiceName(serviceName), mServiceDisplayName(serviceDisplayName)
 {
 }
 
@@ -86,6 +88,11 @@ bool Protocol::showOnSelector() const
     return mShowOnSelector;
 }
 
+bool Protocol::showOnlineStatus() const
+{
+    return mShowOnlineStatus;
+}
+
 QString Protocol::backgroundImage() const
 {
     return mBackgroundImage;
@@ -127,12 +134,13 @@ Protocol *Protocol::fromFile(const QString &fileName)
     }
     QString fallbackSourceProperty = settings.value("FallbackSourceProperty").toString();
     QString fallbackDestinationProperty = settings.value("FallbackDestinationProperty").toString();
-    bool showOnSelector = settings.value("ShowOnSelector").toBool();
+    bool showOnSelector = settings.value("ShowOnSelector", true).toBool();
+    bool showOnlineStatus = settings.value("ShowOnlineStatus", false).toBool();
     QString backgroundImage = settings.value("BackgroundImage").toString();
     QString icon = settings.value("Icon").toString();
     QString serviceName = settings.value("ServiceName").toString();
     QString serviceDisplayName = settings.value("ServiceDisplayName").toString();
 
     return new Protocol(name, features, fallbackProtocol, matchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                        showOnSelector, backgroundImage, icon, serviceName, serviceDisplayName);
+                        showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName);
 }

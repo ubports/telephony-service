@@ -6,6 +6,7 @@ FallbackMatchRule=match_properties
 FallbackSourceProperty=theSourceProperty
 FallbackDestinationProperty=theDestinationProperty
 ShowOnSelector=0
+ShowOnlineStatus=1
 BackgroundImage=/tmp/background.png
 Icon=/tmp/icon.png
 ServiceName=The Service
