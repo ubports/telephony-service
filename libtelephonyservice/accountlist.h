@@ -57,6 +57,7 @@ Q_SIGNALS:
     void displayedAccountsChanged();
 
 protected Q_SLOTS:
+    void init();
     void filterAccounts();
 
 private:

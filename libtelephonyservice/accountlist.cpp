@@ -22,13 +22,12 @@
 #include "accountlist.h"
 #include "accountentry.h"
 #include "protocol.h"
+#include <QTimer>
 
 AccountList::AccountList(Protocol::Features features, const QString &protocol, QObject *parent)
     : QObject(parent), mFeatures(features), mProtocol(protocol)
 {
-    filterAccounts();
-    connect(TelepathyHelper::instance(), &TelepathyHelper::accountsChanged,
-            this, &AccountList::filterAccounts);
+    QTimer::singleShot(0, this, &AccountList::init);
 }
 
 QQmlListProperty<AccountEntry> AccountList::qmlAllAccounts()
@@ -107,6 +106,13 @@ QList<AccountEntry*> AccountList::displayedAccounts()
         }
     }
     return accounts;
+}
+
+void AccountList::init()
+{
+    filterAccounts();
+    connect(TelepathyHelper::instance(), &TelepathyHelper::accountsChanged,
+            this, &AccountList::filterAccounts);
 }
 
 void AccountList::filterAccounts()
