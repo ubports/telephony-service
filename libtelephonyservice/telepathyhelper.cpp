@@ -205,7 +205,7 @@ bool TelepathyHelper::multiplePhoneAccounts() const
  * If the @param originalAccount is listed as being the fallback of any other protocol,
  * this function will return the account that should be used instead.
  * @param originalAccount The original account that might be replaced
- * @return A list containing the replacement accounts or the original account if none are suitable.
+ * @return A list containing the replacement accounts or an empty list if none are suitable.
  */
 QList<AccountEntry*> TelepathyHelper::checkAccountOverload(AccountEntry *originalAccount)
 {
@@ -218,11 +218,6 @@ QList<AccountEntry*> TelepathyHelper::checkAccountOverload(AccountEntry *origina
         }
     }
 
-    // if no accounts were found, just append the original account
-    if (accounts.isEmpty()) {
-        accounts << originalAccount;
-    }
-
     return accounts;
 }
 
@@ -230,7 +225,7 @@ QList<AccountEntry*> TelepathyHelper::checkAccountOverload(AccountEntry *origina
  * If the @param originalAccount is listed as having a fallback protocol, when the @param originalAccount
  * cannot be used by any reason (not connected, or not having a particular feature enabled), the fallback
  * account should be used. This function will try to find a suitable fallback account.
- * @return A list containing the fallback accounts or the original account if none are suitable.
+ * @return A list containing the fallback accounts or an empty list if none are suitable.
  */
 QList<AccountEntry*> TelepathyHelper::checkAccountFallback(AccountEntry *originalAccount)
 {
@@ -238,9 +233,8 @@ QList<AccountEntry*> TelepathyHelper::checkAccountFallback(AccountEntry *origina
     QString fallbackProtocol = originalAccount->protocolInfo()->fallbackProtocol();
     // FIXME: check for the match rules too
 
-    // if the account doesn't have a fallback protocol specified, just return itself in the list
+    // if the account doesn't have a fallback protocol specified, just return the empty list
     if (fallbackProtocol.isEmpty()) {
-        accounts << originalAccount;
         return accounts;
     }
 
@@ -248,10 +242,6 @@ QList<AccountEntry*> TelepathyHelper::checkAccountFallback(AccountEntry *origina
         if (account->protocolInfo()->name() == fallbackProtocol) {
             accounts << account;
         }
-    }
-
-    if (accounts.isEmpty()) {
-        accounts << originalAccount;
     }
 
     return accounts;
