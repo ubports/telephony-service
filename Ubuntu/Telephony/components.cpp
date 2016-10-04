@@ -37,6 +37,7 @@
 #include "presencerequest.h"
 #include "protocolmanager.h"
 #include "accountentry.h"
+#include "accountlist.h"
 #include "audiooutput.h"
 
 #include <QQmlEngine>
@@ -80,7 +81,8 @@ void Components::registerTypes(const char *uri)
     qmlRegisterUncreatableType<AudioOutput>(uri, 0, 1, "AudioOutput", "Objects of this type are created in CallEntry and made available to QML for usage");
     qmlRegisterUncreatableType<AccountEntry>(uri, 0, 1, "AccountEntry", "Objects of this type are created in TelepathyHelper and made available to QML");
     qmlRegisterUncreatableType<USSDManager>(uri, 0, 1, "USSDManager", "Objects of this type are created in AccountEntry and made available to QML");
-    qmlRegisterUncreatableType<Protocol>(uri, 0, 1, "ProtocolManager", "Objects of this type are created in ProtocolManager and made available to QML");
+    qmlRegisterUncreatableType<Protocol>(uri, 0, 1, "Protocol", "Objects of this type are created in ProtocolManager and made available to QML");
+    qmlRegisterUncreatableType<AccountList>(uri, 0, 1, "AccountList", "Objects of this type are created in TelepathyHelper and made available to QML");
     qmlRegisterType<ChatEntry>(uri, 0, 1, "ChatEntry");
     qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");
     qmlRegisterType<Participant>(uri, 0, 1, "Participant");
