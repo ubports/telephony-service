@@ -154,6 +154,11 @@ QStringList AccountEntry::addressableVCardFields() const
     return mAccount->protocolInfo().addressableVCardFields();
 }
 
+bool AccountEntry::usePhoneNumbers() const
+{
+    return addressableVCardFields().contains("tel");
+}
+
 bool AccountEntry::compareIds(const QString &first, const QString &second) const
 {
     // try the basic first
@@ -181,6 +186,8 @@ void AccountEntry::initialize()
     }
 
     mProtocol = ProtocolManager::instance()->protocolByName(mAccount->protocolName());
+
+    connect(this, &AccountEntry::addressableVCardFieldsChanged, &AccountEntry::usePhoneNumbersChanged);
 
     // propagate the display name changes
     connect(mAccount.data(),
