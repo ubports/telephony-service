@@ -210,6 +210,11 @@ bool TelepathyHelper::multiplePhoneAccounts() const
 QList<AccountEntry*> TelepathyHelper::checkAccountOverload(AccountEntry *originalAccount)
 {
     QList<AccountEntry*> accounts;
+
+    if (!originalAccount) {
+        return accounts;
+    }
+
     QString protocol = originalAccount->protocolInfo()->name();
     for (auto account : mAccounts) {
         // FIXME: check for matching properties if needed
@@ -230,6 +235,11 @@ QList<AccountEntry*> TelepathyHelper::checkAccountOverload(AccountEntry *origina
 QList<AccountEntry*> TelepathyHelper::checkAccountFallback(AccountEntry *originalAccount)
 {
     QList<AccountEntry*> accounts;
+
+    if (!originalAccount) {
+        return accounts;
+    }
+
     QString fallbackProtocol = originalAccount->protocolInfo()->fallbackProtocol();
     // FIXME: check for the match rules too
 
