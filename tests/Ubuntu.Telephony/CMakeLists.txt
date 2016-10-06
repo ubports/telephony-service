@@ -14,10 +14,12 @@ generate_test(ContactWatcherTest USE_UI
               LIBRARIES telephonyservice-qml
               QT5_MODULES Contacts Core DBus Qml Test)
 
-generate_test(context_properties QML_TEST tst_contextProperties.qml)
-generate_test(phonenumber_field QML_TEST tst_PhoneNumberField.qml)
-generate_test(phonenumber_input QML_TEST tst_PhoneNumberInput.qml)
-generate_test(phonenumber_utils QML_TEST tst_PhoneNumberPhoneUtils.qml)
+if(NOT SKIP_QML_TESTS)
+    generate_test(context_properties QML_TEST tst_contextProperties.qml)
+    generate_test(phonenumber_field QML_TEST tst_PhoneNumberField.qml)
+    generate_test(phonenumber_input QML_TEST tst_PhoneNumberInput.qml)
+    generate_test(phonenumber_utils QML_TEST tst_PhoneNumberPhoneUtils.qml)
+endif()
 
 generate_telepathy_test(PresenceRequestTest 
                         SOURCES PresenceRequestTest.cpp 
