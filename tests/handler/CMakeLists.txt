@@ -8,4 +8,4 @@ include_directories(
     ${GSETTINGS_QT_INCLUDE_DIRS}
     )
 
-generate_telepathy_test(HandlerTest SOURCES HandlerTest.cpp handlercontroller.cpp approver.cpp)
+#generate_telepathy_test(HandlerTest SOURCES HandlerTest.cpp handlercontroller.cpp approver.cpp)
