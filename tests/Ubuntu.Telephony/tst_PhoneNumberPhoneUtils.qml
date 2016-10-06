@@ -57,8 +57,8 @@ TestCase {
                       expectedMatches: ["650 253 0000"]})    // Local number
         data.push({text: "my phnle number 7327572923, please call me",
                       expectedMatches: ["7327572923"]})      // Country number
-        data.push({text: "my international number +558187042155, please call me",
-                      expectedMatches: ["+558187042155"]})   // International number
+        data.push({text: "my international number +5581987042155, please call me",
+                      expectedMatches: ["+5581987042155"]})   // International number
         data.push({text: "this is an invalid number 55555555555, yes yes it is",
                       expectedMatches: []})                  // Invalid number
         data.push({text: "could you call me between 15h30-16h yes?",
