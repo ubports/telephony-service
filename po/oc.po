@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
+"X-Generator: Launchpad (build 18186)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -58,7 +58,7 @@ msgstr "Acceptar"
 
 #: indicator/messagingmenu.cpp:236
 msgid "Call back"
-msgstr ""
+msgstr "Rapelar"
 
 #: approver/approver.cpp:464 approver/approver.cpp:479
 msgid "Caller number is not available"
@@ -189,7 +189,7 @@ msgstr "Enregistrar"
 
 #: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
 msgid "Send"
-msgstr ""
+msgstr "Mandar"
 
 #: indicator/messagingmenu.cpp:245
 msgid "Sorry, I'm still busy. I'll call you later."
@@ -228,8 +228,8 @@ msgstr "Numèro desconegut"
 msgid "Unknown caller"
 msgstr "Sonaire desconegut"
 
-#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
+#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
 msgid "Unknown number"
 msgstr "Numèro desconegut"
 
