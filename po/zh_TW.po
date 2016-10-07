@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
-"X-Generator: Launchpad (build 18186)\n"
+"X-Launchpad-Export-Date: 2016-10-07 06:51+0000\n"
+"X-Generator: Launchpad (build 18217)\n"
 "Language: \n"
 
 #: indicator/messagingmenu.cpp:299
@@ -80,7 +80,7 @@ msgstr "來電號碼不明"
 msgid "Cancel"
 msgstr "取消"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:238
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "請關閉飛安模式，並回到訊息程式中再試一次。"
 
@@ -124,7 +124,7 @@ msgstr "正在來了，遲些才到。"
 msgid "Message & decline"
 msgstr "傳訊息並拒接"
 
-#: indicator/textchannelobserver.cpp:545
+#: indicator/textchannelobserver.cpp:547
 #, qt-format
 msgid "Message from %1"
 msgstr "來自 %1 的訊息"
@@ -145,7 +145,7 @@ msgstr "今日沒有收到文字訊息"
 msgid "No text messages sent today"
 msgstr "今日沒有發出文字訊息"
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "確定"
 
@@ -157,7 +157,7 @@ msgstr "來電"
 msgid "Please call me back later."
 msgstr "請待會再打給我。"
 
-#: indicator/textchannelobserver.cpp:682
+#: indicator/textchannelobserver.cpp:692
 msgid "Please, select a SIM card:"
 msgstr "請選擇一張 SIM 卡："
 
@@ -182,7 +182,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:320
 msgid "Save"
 msgstr "儲存"
 
@@ -211,11 +211,11 @@ msgstr "電話操作服務核可員"
 msgid "Telephony Service Indicator"
 msgstr "電話服務指示器"
 
-#: indicator/textchannelobserver.cpp:245
+#: indicator/textchannelobserver.cpp:247
 msgid "The message could not be sent"
 msgstr "訊息無法傳送"
 
-#: indicator/textchannelobserver.cpp:239
+#: indicator/textchannelobserver.cpp:241
 msgid "Try again from the messaging application."
 msgstr "請在訊息程式中再試一次。"
 
@@ -228,15 +228,15 @@ msgid "Unknown caller"
 msgstr "來電者不明"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
 msgid "Unknown number"
 msgstr "號碼不明"
 
-#: indicator/textchannelobserver.cpp:234
+#: indicator/textchannelobserver.cpp:236
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "請解鎖您的 SIM 卡，並回到訊息程式中再試一次。"
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
+#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
 msgid "View message"
 msgstr "檢視訊息"
 

@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
-"X-Generator: Launchpad (build 18186)\n"
+"X-Launchpad-Export-Date: 2016-10-07 06:51+0000\n"
+"X-Generator: Launchpad (build 18217)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -81,7 +81,7 @@ msgstr "ਅਣਪਛਾਤੇ ਨੰਬਰ ਤੋਂ ਕਾਲ ਕਰ ਰਿਹ�
 msgid "Cancel"
 msgstr "ਰੱਦ"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:238
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "ਹਵਾਈ ਮੋਡ ਬੰਦ ਕਰੋ ਅਤੇ ਮੈਸੇਜ਼ਿੰਗ ਐਪਲੀਕੇਸ਼ਨ ਤੋਂ ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ।"
 
@@ -125,7 +125,7 @@ msgstr "ਮੈਨੂੰ ਦੇਰੀ ਹੋ ਰਹੀ ਹੈ, ਮੈਂ ਰਾ�
 msgid "Message & decline"
 msgstr "ਸੁਨੇਹਾ ਅਤੇ ਇਨਕਾਰ"
 
-#: indicator/textchannelobserver.cpp:545
+#: indicator/textchannelobserver.cpp:547
 #, qt-format
 msgid "Message from %1"
 msgstr "%1 ਤੋਂ ਸੁਨੇਹਾ"
@@ -146,7 +146,7 @@ msgstr "ਅੱਜ ਕੋਈ ਟੈਕਸਟ ਸੁਨੇਹਾ ਨਹੀਂ ਮ�
 msgid "No text messages sent today"
 msgstr "ਅੱਜ ਕੋਈ ਟੈਕਸਟ ਸੁਨੇਹਾ ਨਹੀਂ ਭੇਜਿਆ"
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "ਠੀਕ"
 
@@ -158,7 +158,7 @@ msgstr "ਫ਼ੋਨ ਕਾਲਾਂ"
 msgid "Please call me back later."
 msgstr "ਕਿਰਪਾ ਕਰਕੇ ਮੈਨੂੰ ਬਾਅਦ ਵਿੱਚ ਕਾਲ ਕਰੋ।"
 
-#: indicator/textchannelobserver.cpp:682
+#: indicator/textchannelobserver.cpp:692
 msgid "Please, select a SIM card:"
 msgstr "ਕਿਰਪਾ ਕਰਕੇ, ਸਿਮ ਕਾਰਡ ਚੁਣੋ:"
 
@@ -183,7 +183,7 @@ msgstr "ਸਿਮ %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:320
 msgid "Save"
 msgstr "ਸੰਭਾਲ੍ਹੋ"
 
@@ -212,11 +212,11 @@ msgstr "ਟੈਲੀਫ਼ੋਨੀ ਸੇਵਾ ਪ੍ਰਵਾਨਗੀ"
 msgid "Telephony Service Indicator"
 msgstr "ਟੈਲੀਫ਼ੋਨੀ ਸੇਵਾ ਸੂਚਕ"
 
-#: indicator/textchannelobserver.cpp:245
+#: indicator/textchannelobserver.cpp:247
 msgid "The message could not be sent"
 msgstr "ਸੁਨੇਹਾ ਭੇਜਿਆ ਨਹੀਂ ਜਾ ਸਕਦਾ"
 
-#: indicator/textchannelobserver.cpp:239
+#: indicator/textchannelobserver.cpp:241
 msgid "Try again from the messaging application."
 msgstr "ਮੈਸੇਜ਼ਿੰਗ ਐਪਲੀਕੇਸ਼ਨ ਤੋਂ ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ।"
 
@@ -229,15 +229,15 @@ msgid "Unknown caller"
 msgstr "ਅਣਪਛਾਤਾ ਕਾਲਰ"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
 msgid "Unknown number"
 msgstr "ਅਣਜਾਣ ਨੰਬਰ"
 
-#: indicator/textchannelobserver.cpp:234
+#: indicator/textchannelobserver.cpp:236
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "ਆਪਣੇ ਸਿਮ ਕਾਰਡ ਦਾ ਲਾੱਕ ਖੋਲ੍ਹੋ ਅਤੇ ਮੈਸੇਜ਼ਿੰਗ ਸੇਵਾ ਤੋਂ ਮੁੜ ਕੋਸ਼ਿਸ ਕਰੋ।"
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
+#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
 msgid "View message"
 msgstr "ਸੁਨੇਹਾ ਵਿਖਾਓ"
 
