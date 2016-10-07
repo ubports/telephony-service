@@ -257,6 +257,24 @@ QList<AccountEntry*> TelepathyHelper::checkAccountFallback(AccountEntry *origina
     return accounts;
 }
 
+QList<QObject*> TelepathyHelper::accountOverload(AccountEntry *originalAccount)
+{
+    QList<QObject*> accounts;
+    for (auto account : checkAccountOverload(originalAccount)) {
+        accounts << account;
+    }
+    return accounts;
+}
+
+QList<QObject*> TelepathyHelper::accountFallback(AccountEntry *originalAccount)
+{
+    QList<QObject*> accounts;
+    for (auto account : checkAccountFallback(originalAccount)) {
+        accounts << account;
+    }
+    return accounts;
+}
+
 QList<AccountEntry*> TelepathyHelper::phoneAccounts() const
 {
     QList<AccountEntry*> accountList;

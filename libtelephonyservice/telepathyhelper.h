@@ -97,10 +97,14 @@ public:
     bool multiplePhoneAccounts() const;
 
     /** @brief Check if this account should be replaced by any overloaded protocol. */
-    Q_INVOKABLE QList<AccountEntry*> checkAccountOverload(AccountEntry *originalAccount);
+    QList<AccountEntry*> checkAccountOverload(AccountEntry *originalAccount);
 
     /** @brief Check if this account has a fallback to be used when the original account is not suitable. */
-    Q_INVOKABLE QList<AccountEntry*> checkAccountFallback(AccountEntry *originalAccount);
+    QList<AccountEntry*> checkAccountFallback(AccountEntry *originalAccount);
+
+    /* Convenience functions to be used by qml */
+    Q_INVOKABLE QList<QObject*> accountOverload(AccountEntry *originalAccount);
+    Q_INVOKABLE QList<QObject*> accountFallback(AccountEntry *originalAccount);
 
     bool mmsGroupChat();
     QVariantMap simNames() const;
