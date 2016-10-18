@@ -105,12 +105,15 @@ void MessageSendingJob::startJob()
     setStatus(Running);
 
     // check if the message should be sent via an overloaded account
-    QList<AccountEntry*> overloadAccounts = TelepathyHelper::instance()->checkAccountOverload(account);
-    for (auto newAccount : overloadAccounts) {
-        // FIXME: check if we need to validate anything other than being connected
-        if (newAccount->connected()) {
-            account = newAccount;
-            break;
+    // if the target type is a room, do not overload.
+    if (mMessage.properties["chatType"].toUInt() != Tp::HandleTypeRoom) {
+        QList<AccountEntry*> overloadAccounts = TelepathyHelper::instance()->checkAccountOverload(account);
+        for (auto newAccount : overloadAccounts) {
+            // FIXME: check if we need to validate anything other than being connected
+            if (newAccount->connected()) {
+                account = newAccount;
+                break;
+            }
         }
     }
 
