@@ -241,6 +241,7 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
     Tp::MessagePart header;
     QString smil, regions, parts;
     bool hasImage = false, hasText = false, hasVideo = false, hasAudio = false, isMMS = false;
+    int chatType = pendingMessage.properties["chatType"].toUInt();
 
     if (!mAccount) {
         // account does not exist
@@ -259,11 +260,7 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
     // check if this message should be sent as an MMS
     if (mAccount->type() == AccountEntry::PhoneAccount) {
         isMMS = (pendingMessage.attachments.size() > 0 ||
-                 (header.contains("x-canonical-mms") && header["x-canonical-mms"].variant().toBool()) ||
-                 (pendingMessage.properties["participantIds"].toStringList().size() > 1 && TelepathyHelper::instance()->mmsGroupChat()));
-        if (isMMS) {
-            header["x-canonical-mms"] = QDBusVariant(true);
-        }
+                 (pendingMessage.properties["chatType"].toUInt() == 2));
     }
 
     // this flag should not be in the message header, it's only useful for the handler
