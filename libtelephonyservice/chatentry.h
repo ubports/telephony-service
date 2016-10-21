@@ -26,6 +26,7 @@
 #include <QObject>
 #include <QQmlParserStatus>
 #include <TelepathyQt/TextChannel>
+#include "rolesinterface.h"
 
 class AccountEntry;
 class Participant;
@@ -178,6 +179,7 @@ private Q_SLOTS:
                                const Tp::Contacts &groupMembersRemoved,
                                const Tp::Channel::GroupMemberChangeDetails &details);
     void onChatStartingFinished();
+    void onRolesChanged(const HandleRolesMap &added, const HandleRolesMap &removed);
 
 Q_SIGNALS:
     void chatTypeChanged();
@@ -210,7 +212,6 @@ private:
     QList<Participant*> mLocalPendingParticipants;
     QList<Participant*> mRemotePendingParticipants;
     QMap<QString, ContactChatState*> mChatStates;
-    RolesMap mRoles;
     QString mRoomName;
     QString mTitle;
     QString mChatId;
@@ -218,9 +219,11 @@ private:
     ChatType mChatType;
     bool mAutoRequest;
     bool mCanUpdateConfiguration;
+    uint mSelfContactRoles;
     Tp::Client::ChannelInterfaceRoomInterface *roomInterface;
     Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
     Tp::Client::ChannelInterfaceSubjectInterface *subjectInterface;
+    ChannelInterfaceRolesInterface *rolesInterface;
 };
 
 #endif // CHATENTRY_H

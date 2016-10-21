@@ -61,15 +61,16 @@ ChatEntry::ChatEntry(QObject *parent) :
     mChatType(ChatTypeNone),
     mAutoRequest(true),
     mCanUpdateConfiguration(false),
+    mSelfContactRoles(0),
     roomInterface(NULL),
     roomConfigInterface(NULL),
-    subjectInterface(NULL)
+    subjectInterface(NULL),
+    rolesInterface(NULL)
 {
     qRegisterMetaType<ContactChatStates>();
     qRegisterMetaType<Participant>();
-    qRegisterMetaType<RolesMap>();
-    qDBusRegisterMetaType<RolesMap>();
-
+    qRegisterMetaType<HandleRolesMap>();
+    qDBusRegisterMetaType<HandleRolesMap>();
 }
 
 void ChatEntry::onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated)
@@ -160,6 +161,49 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
     Q_EMIT localPendingParticipantsChanged();
     Q_EMIT remotePendingParticipantsChanged();
     Q_EMIT participantIdsChanged();
+}
+
+void ChatEntry::onRolesChanged(const HandleRolesMap &added, const HandleRolesMap &removed)
+{
+    Q_UNUSED(added);
+    Q_UNUSED(removed);
+
+    RolesMap rolesMap;
+    Tp::TextChannel* channel = 0;
+    if (rolesInterface) {
+        rolesMap = rolesInterface->getRoles();
+        channel = qvariant_cast<Tp::TextChannel*>(rolesInterface->property("channel"));
+    }
+
+    Q_FOREACH(Participant* participant, mParticipants) {
+        if (rolesMap.contains(participant->handle())) {
+            participant->setRoles(rolesMap[participant->handle()]);
+        }
+    }
+
+    Q_FOREACH(Participant* participant, mLocalPendingParticipants) {
+        if (rolesMap.contains(participant->handle())) {
+            participant->setRoles(rolesMap[participant->handle()]);
+        }
+    }
+
+    Q_FOREACH(Participant* participant, mRemotePendingParticipants) {
+        if (rolesMap.contains(participant->handle())) {
+            participant->setRoles(rolesMap[participant->handle()]);
+        }
+    }
+
+    if (!channel) {
+        return;
+    }
+
+    Tp::ContactPtr selfContact = channel->groupSelfContact();
+    if (!selfContact) {
+        return;
+    }
+
+    mSelfContactRoles = rolesMap[selfContact->handle().at(0)];
+    Q_EMIT selfContactRolesChanged();
 }
 
 void ChatEntry::onChatStartingFinished()
@@ -446,6 +490,7 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     roomInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomInterface>();
     roomConfigInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomConfigInterface>();
     subjectInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceSubjectInterface>();
+    rolesInterface = channel->optionalInterface<ChannelInterfaceRolesInterface>();
 
     if (roomInterface) {
         roomInterface->setProperty("channel", QVariant::fromValue(channel.data()));
@@ -471,6 +516,14 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
         connect(subjectInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
                                   SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
     }
+    if (rolesInterface) {
+        rolesInterface->setProperty("channel", QVariant::fromValue(channel.data()));
+        rolesInterface->setMonitorProperties(true);
+        connect(rolesInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
+                                SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
+        connect(rolesInterface, SIGNAL(RolesChanged(const HandleRolesMap&, const HandleRolesMap&)),
+                                SLOT(onRolesChanged(const HandleRolesMap&, const HandleRolesMap&)));
+    }
 
     connect(channel.data(), SIGNAL(chatStateChanged(const Tp::ContactPtr &, Tp::ChannelChatState)),
                             this, SLOT(onChatStateChanged(const Tp::ContactPtr &,Tp::ChannelChatState)));
@@ -482,19 +535,13 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     }
     clearParticipants();
 
-    // fetch the roles
-    QDBusInterface propsInterface(channel->busName(), channel->objectPath(), "org.freedesktop.DBus.Properties");
-    if (propsInterface.isValid()) {
-        QDBusMessage result = propsInterface.call("Get", "org.freedesktop.Telepathy.Channel.Interface.Roles", "Roles");
-        mRoles = qdbus_cast<RolesMap>(result.arguments().at(0).value<QDBusVariant>().variant().value<QDBusArgument>());
-        // FIXME: we need to watch for changes in the roles
-    }
-
     onGroupMembersChanged(channel->groupContacts(false),
                           channel->groupLocalPendingContacts(false),
                           channel->groupRemotePendingContacts(false),
                           Tp::Contacts(),
                           Tp::Channel::GroupMemberChangeDetails());
+    onRolesChanged(HandleRolesMap(), HandleRolesMap());
+
     connect(channel.data(), SIGNAL(groupMembersChanged(const Tp::Contacts &, const Tp::Contacts &, const Tp::Contacts &,
             const Tp::Contacts &, const Tp::Channel::GroupMemberChangeDetails &)),
             this, SLOT(onGroupMembersChanged(Tp::Contacts,Tp::Contacts,Tp::Contacts,Tp::Contacts,
@@ -523,7 +570,6 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     mChannels << channel;
     Q_EMIT activeChanged();
     Q_EMIT groupFlagsChanged();
-    Q_EMIT selfContactRolesChanged();
 }
 
 void ChatEntry::setChatState(ChatState state)
@@ -589,7 +635,7 @@ void ChatEntry::clearParticipants()
     mParticipants.clear();
     mLocalPendingParticipants.clear();
     mRemotePendingParticipants.clear();
-    mRoles.clear();
+    mSelfContactRoles = 0;
 }
 
 void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account)
@@ -605,10 +651,15 @@ void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contact
         }
     }
 
+    RolesMap rolesMap;
+    if (rolesInterface) {
+        rolesMap = rolesInterface->getRoles();
+    }
     // now add the new participants
     // FIXME: check for duplicates?
     Q_FOREACH(Tp::ContactPtr contact, added) {
-        list << new Participant(contact->id(), mRoles[contact->handle().at(0)], this);
+        uint handle = contact->handle().at(0);
+        list << new Participant(contact->id(), rolesMap[handle], handle, this);
     }
 }
 
@@ -695,6 +746,10 @@ void ChatEntry::onChannelInvalidated()
         subjectInterface->disconnect(this);
         subjectInterface = 0;
     }
+    if (rolesInterface && rolesInterface->property("channel").value<Tp::TextChannel*>() == channel.data()) {
+        rolesInterface->disconnect(this);
+        rolesInterface = 0;
+    }
     Q_EMIT activeChanged();
     Q_EMIT groupFlagsChanged();
     Q_EMIT selfContactRolesChanged();
@@ -716,16 +771,5 @@ uint ChatEntry::groupFlags() const
 
 uint ChatEntry::selfContactRoles() const
 {
-    if (mChannels.isEmpty()) {
-        return 0;
-    }
-
-    Tp::ContactPtr selfContact = mChannels[0]->groupSelfContact();
-    if (selfContact) {
-        uint handle = selfContact->handle().at(0);
-        if (mRoles.contains(handle)) {
-            return mRoles[handle];
-        }
-    }
-    return 0;
+    return mSelfContactRoles;
 }
