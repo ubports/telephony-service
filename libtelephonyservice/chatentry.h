@@ -67,6 +67,8 @@ class ChatEntry : public QObject, public QQmlParserStatus
     Q_PROPERTY(QString accountId READ accountId WRITE setAccountId NOTIFY accountIdChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates READ chatStates NOTIFY chatStatesChanged)
+    Q_PROPERTY(bool autoRequest READ autoRequest WRITE setAutoRequest CONSTANT)
+    Q_PROPERTY(bool active READ isActive NOTIFY activeChanged)
 
     Q_ENUMS(ChatType)
     Q_ENUMS(ChatState)
@@ -104,11 +106,14 @@ public:
     void setRoomName(const QString &name);
     QString title() const;
     void setTitle(const QString & title);
+    void setAutoRequest(bool autoRequest);
+    bool autoRequest() const;
     QQmlListProperty<ContactChatState> chatStates();
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
 
     // QML parser status
+    bool isActive() const;
     void classBegin();
     void componentComplete();
 
@@ -121,7 +126,7 @@ public Q_SLOTS:
     void inviteParticipants(const QStringList &participantIds, const QString &message = QString());
     void removeParticipants(const QStringList &participantIds, const QString &message = QString());
 
-
+    void startChat();
 
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
@@ -143,6 +148,7 @@ private Q_SLOTS:
                                const Tp::Contacts &groupRemotePendingMembersAdded,
                                const Tp::Contacts &groupMembersRemoved,
                                const Tp::Channel::GroupMemberChangeDetails &details);
+    void onChatStartingFinished();
 
 Q_SIGNALS:
     void chatTypeChanged();
@@ -157,9 +163,13 @@ Q_SIGNALS:
     void titleChanged();
     void inviteParticipantsFailed();
     void removeParticipantsFailed();
+    void activeChanged();
 
     void messageSent(const QString &accountId, const QString &messageId, const QVariantMap &properties);
     void messageSendingFailed(const QString &accountId, const QString &messageId, const QVariantMap &properties);
+
+    void chatReady();
+    void startChatFailed();
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
@@ -173,6 +183,7 @@ private:
     QString mChatId;
     QString mAccountId;
     ChatType mChatType;
+    bool mAutoRequest;
     Tp::Client::ChannelInterfaceRoomInterface *roomInterface;
     Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
     Tp::Client::ChannelInterfaceSubjectInterface *subjectInterface;

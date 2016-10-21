@@ -59,8 +59,9 @@
  </smil>"
 
 MessageSendingJob::MessageSendingJob(TextHandler *textHandler, PendingMessage message)
-: MessageJob(new MessageSendingJobAdaptor(this), textHandler), mTextHandler(textHandler), mMessage(message), mFinished(false)
+: MessageJob(textHandler), mTextHandler(textHandler), mMessage(message), mFinished(false)
 {
+    setAdaptorAndRegister(new MessageSendingJobAdaptor(this));
 }
 
 MessageSendingJob::~MessageSendingJob()
@@ -98,6 +99,7 @@ void MessageSendingJob::startJob()
     if (!account) {
         setStatus(Failed);
         scheduleDeletion();
+        return;
     }
 
     setStatus(Running);

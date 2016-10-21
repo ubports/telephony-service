@@ -43,8 +43,10 @@ public:
         Failed
     };
 
-    explicit MessageJob(QDBusAbstractAdaptor *adaptor, QObject *parent = 0);
+    explicit MessageJob(QObject *parent = 0);
     virtual ~MessageJob();
+
+    void setAdaptorAndRegister(QDBusAbstractAdaptor *adaptor);
 
     Status status() const;
     bool isFinished() const;

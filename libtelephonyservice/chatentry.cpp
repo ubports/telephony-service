@@ -35,12 +35,15 @@
 #include <TelepathyQt/PendingVariantMap>
 #include <TelepathyQt/TextChannel>
 
+#include <QDebug>
+
 Q_DECLARE_METATYPE(ContactChatStates)
 Q_DECLARE_METATYPE(Participant)
 
 ChatEntry::ChatEntry(QObject *parent) :
     QObject(parent),
     mChatType(ChatTypeNone),
+    mAutoRequest(true),
     roomInterface(NULL),
     roomConfigInterface(NULL),
     subjectInterface(NULL)
@@ -135,6 +138,37 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
     Q_EMIT participantIdsChanged();
 }
 
+void ChatEntry::onChatStartingFinished()
+{
+    QDBusInterface *job = qobject_cast<QDBusInterface*>(sender());
+    if (!job) {
+        return;
+    }
+
+    QString accountId = job->property("accountId").toString();
+    QString channelObjectPath = job->property("channelObjectPath").toString();
+    QVariantMap properties = job->property("properties").toMap();
+    Tp::TextChannelPtr channel = ChatManager::instance()->channelForObjectPath(channelObjectPath);
+
+    if (channel.isNull()) {
+        Q_EMIT startChatFailed();
+        job->deleteLater();
+        return;
+    }
+
+    // even if sending the message fails, we can use the channel if available
+    addChannel(channel);
+
+    if (job->property("status").toInt() == MessageJob::Failed || channel.isNull()) {
+        Q_EMIT startChatFailed();
+        job->deleteLater();
+        return;
+    }
+
+    Q_EMIT chatReady();
+    job->deleteLater();
+}
+
 QString ChatEntry::roomName() const
 {
     return mRoomName;
@@ -147,6 +181,16 @@ void ChatEntry::setRoomName(const QString &name)
     // FIXME: we need to invalidate the existing channels & data and start fresh
 }
 
+bool ChatEntry::autoRequest() const
+{
+    return mAutoRequest;
+}
+
+void ChatEntry::setAutoRequest(bool autoRequest)
+{
+    mAutoRequest = autoRequest;
+}
+
 QString ChatEntry::title() const
 {
     return mTitle;
@@ -154,6 +198,14 @@ QString ChatEntry::title() const
 
 void ChatEntry::setTitle(const QString &title)
 {
+    // if no channels available, just set the variable
+    // we can use that to start a new chat with a predefined title
+    if (mChannels.isEmpty()) {
+        mTitle = title;
+        Q_EMIT titleChanged();
+        return;
+    }
+
     // FIXME: remove this debug before going into production.
     qDebug() << __PRETTY_FUNCTION__ << "Changing group title to" << title;
     QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
@@ -296,11 +348,7 @@ void ChatEntry::sendMessage(const QString &accountId, const QString &message, co
     QString objPath = ChatManager::instance()->sendMessage(accountId, message, attachments, properties);
     QDBusInterface *sendingJob = new QDBusInterface(TelepathyHelper::instance()->handlerInterface()->service(), objPath,
                                                     "com.canonical.TelephonyServiceHandler.MessageSendingJob");
-    qDebug() << sendingJob->isValid();
-    sendingJob->dumpObjectInfo();
     connect(sendingJob, SIGNAL(finished()), SLOT(onSendingMessageFinished()));
-    QDBusReply<QString> reply = sendingJob->call("Introspect");
-    qDebug() << reply.value();
 }
 
 void ChatEntry::classBegin()
@@ -332,9 +380,11 @@ void ChatEntry::componentComplete()
         accounts.removeAll(account);
     }
 
-    // if there is any remaining account, request to start chatting using the account
-    Q_FOREACH(AccountEntry *account, accounts) {
-        ChatManager::instance()->startChat(account->accountId(), properties);
+    if (mAutoRequest) {
+        // if there is any remaining account, request to start chatting using the account
+        Q_FOREACH(AccountEntry *account, accounts) {
+            ChatManager::instance()->startChat(account->accountId(), properties);
+        }
     }
 
     connect(ChatManager::instance(), &ChatManager::textChannelAvailable,
@@ -421,6 +471,7 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     }
 
     mChannels << channel;
+    Q_EMIT activeChanged();
 }
 
 void ChatEntry::setChatState(ChatState state)
@@ -463,6 +514,7 @@ QVariantMap ChatEntry::generateProperties() const
     properties["chatType"] = (int)chatType();
     properties["chatId"] = chatId();
     properties["threadId"] = chatId();
+    properties["title"] = title();
 
     if (chatType() == ChatEntry::ChatTypeRoom) {
         properties["accountId"] = accountId();
@@ -550,8 +602,17 @@ void ChatEntry::removeParticipants(const QStringList &participants, const QStrin
     }
 }
 
+void ChatEntry::startChat()
+{
+    QString objPath = ChatManager::instance()->startChat(accountId(), generateProperties());
+    QDBusInterface *job = new QDBusInterface(TelepathyHelper::instance()->handlerInterface()->service(), objPath,
+                                                    "com.canonical.TelephonyServiceHandler.ChatStartingJob");
+    connect(job, SIGNAL(finished()), SLOT(onChatStartingFinished()));
+}
+
 void ChatEntry::onChannelInvalidated()
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Tp::TextChannelPtr channel(qobject_cast<Tp::TextChannel*>(sender()));
     mChannels.removeAll(channel);
 
@@ -567,4 +628,10 @@ void ChatEntry::onChannelInvalidated()
         subjectInterface->disconnect(this);
         subjectInterface = 0;
     }
+    Q_EMIT activeChanged();
+}
+
+bool ChatEntry::isActive() const
+{
+    return mChannels.size() > 0;
 }
