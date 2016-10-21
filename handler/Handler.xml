@@ -16,44 +16,34 @@
                Request to send a message to one or multiple recipients
             ]]></dox:d>
             <arg name="accountId" type="s" direction="in"/>
-            <arg name="recipients" type="as" direction="in"/>
             <arg name="message" type="s" direction="in"/>
             <arg name="attachments" type="a(sss)" direction="in"/>
             <arg name="accountIdOut" type="s" direction="out"/>
-            <annotation name="org.qtproject.QtDBus.QtTypeName.In3" value="AttachmentList"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="AttachmentList"/>
             <arg name="properties" type="a{sv}" direction="in"/>
-            <annotation name="org.qtproject.QtDBus.QtTypeName.In4" value="QVariantMap"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In3" value="QVariantMap"/>
         </method>
         <method name="AcknowledgeMessages">
             <dox:d><![CDATA[
                 Request messages to be acknowledged (marked as read)
             ]]></dox:d>
-            <arg name="numbers" type="as" direction="in"/>
-            <arg name="messageIds" type="as" direction="in"/>
-            <arg name="accountId" type="s" direction="in"/>
+            <arg name="messages" type="av" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantList"/>
         </method>
         <method name="StartChat">
             <dox:d><![CDATA[
                 Start a chat with the given participants
             ]]></dox:d>
             <arg name="accountId" type="s" direction="in"/>
-            <arg name="participants" type="as" direction="in"/>
-        </method>
-        <method name="StartChatRoom">
-            <dox:d><![CDATA[
-                Start a chat room with the given properties
-            ]]></dox:d>
-            <arg name="accountId" type="s" direction="in"/>
-            <arg name="initialParticipants" type="as" direction="in"/>
             <arg name="properties" type="a{sv}" direction="in"/>
-            <annotation name="org.qtproject.QtDBus.QtTypeName.In2" value="QVariantMap"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
         </method>
         <method name="AcknowledgeAllMessages">
             <dox:d><![CDATA[
                 Request all messages messages from the given numbers to be acknowledged
             ]]></dox:d>
-            <arg name="numbers" type="as" direction="in"/>
-            <arg name="accountId" type="s" direction="in"/>
+            <arg name="properties" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
         </method>
         <!-- Call Related -->
         <method name="StartCall">

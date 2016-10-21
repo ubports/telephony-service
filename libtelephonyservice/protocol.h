@@ -47,6 +47,9 @@ class Protocol : public QObject
     /// @brief the title that represents this protocol
     Q_PROPERTY(QString serviceName READ serviceName CONSTANT)
 
+    /// @brief the name to display for this protocol
+    Q_PROPERTY(QString serviceDisplayName READ serviceDisplayName CONSTANT)
+
 public:
     enum Feature {
         TextChats = 0x1,
@@ -60,13 +63,14 @@ public:
     QString backgroundImage() const;
     QString icon() const;
     QString serviceName() const;
+    QString serviceDisplayName() const;
 
     static Protocol *fromFile(const QString &fileName);
 
     friend class ProtocolManager;
 
 protected:
-    explicit Protocol(const QString &name, Features features, const QString &fallbackProtocol = QString::null, const QString &backgroundImage = QString::null, const QString &icon = QString::null, const QString &serviceName = QString::null, QObject *parent = 0);
+    explicit Protocol(const QString &name, Features features, const QString &fallbackProtocol = QString::null, const QString &backgroundImage = QString::null, const QString &icon = QString::null, const QString &serviceName = QString::null, const QString &serviceDisplayName = QString::null, QObject *parent = 0);
 
 private:
     QString mName;
@@ -75,6 +79,7 @@ private:
     QString mBackgroundImage;
     QString mIcon;
     QString mServiceName;
+    QString mServiceDisplayName;
 };
 
 typedef QList<Protocol*> Protocols;

@@ -55,6 +55,9 @@ class ChatEntry : public QObject
     Q_PROPERTY(AccountEntry* account READ account CONSTANT)
     Q_PROPERTY(ChatType chatType READ chatType CONSTANT)
     Q_PROPERTY(QStringList participants READ participants NOTIFY participantsChanged)
+    Q_PROPERTY(QString roomName READ roomName NOTIFY roomNameChanged)
+    Q_PROPERTY(QString chatId READ chatId CONSTANT)
+    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates
                READ chatStates
                NOTIFY chatStatesChanged)
@@ -83,20 +86,31 @@ public:
     QQmlListProperty<ContactChatState> chatStates();
     QStringList participants();
     ChatType chatType();
+    QString chatId();
+    QString roomName();
+    QString title();
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
 
 private Q_SLOTS:
     void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
+    void onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated);
 
 Q_SIGNALS:
     void chatStatesChanged();
     void participantsChanged();
+    void roomNameChanged();
+    void titleChanged();
 
 private:
     AccountEntry *mAccount;
     Tp::TextChannelPtr mChannel;
     QMap<QString, ContactChatState*> mChatStates;
+    QString mRoomName;
+    QString mTitle;
+    Tp::Client::ChannelInterfaceRoomInterface *roomInterface;
+    Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
+    Tp::Client::ChannelInterfaceSubjectInterface *subjectInterface;
 };
 
 #endif // CHATENTRY_H

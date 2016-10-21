@@ -27,10 +27,10 @@
 #include <QObject>
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
+#include "messagingmenu.h"
+#include <History/Thread>
 
 QTCONTACTS_USE_NAMESPACE
-
-class NotificationData;
 
 class TextChannelObserver : public QObject
 {
@@ -41,21 +41,23 @@ public:
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr textChannel);
-    void sendMessage(const QStringList &recipients, const QString &text, const QString &accountId);
+    void sendMessage(NotificationData notificationData);
     void clearNotifications();
 
 protected:
     void showNotificationForFlashMessage(const Tp::ReceivedMessage &message, const QString &accountId);
-    void triggerNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds = QStringList());
-    void showNotificationForMessage(const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds = QStringList(), const QContact &contact = QContact());
+    void triggerNotificationForMessage(const Tp::TextChannelPtr channel, const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds = QStringList());
+    void showNotificationForMessage(const Tp::TextChannelPtr channel, const Tp::ReceivedMessage &message, const QString &accountId, const QStringList &participantIds = QStringList(), const QContact &contact = QContact());
+    void showNotificationForNewGroup(const History::Thread &thread);
 
 protected Q_SLOTS:
     void onTextChannelInvalidated();
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onPendingMessageRemoved(const Tp::ReceivedMessage &message);
-    void onReplyReceived(const QStringList &recipients, const QString &accountId, const QString &reply);
-    void onMessageRead(const QStringList &recipients, const QString &accountId, const QString &encodedMessageId);
+    void onReplyReceived(NotificationData notificationData);
+    void onMessageRead(NotificationData notificationData);
     void onMessageSent(Tp::Message, Tp::MessageSendingFlags, QString);
+    void onThreadsAdded(History::Threads threads);
     void updateNotifications(const QtContacts::QContact &contact);
 
 private:

@@ -39,9 +39,8 @@ class ChatManager : public QObject
 public:
     static ChatManager *instance();
 
-    Q_INVOKABLE QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
-    Q_INVOKABLE ChatEntry *chatEntryForParticipants(const QString &accountId, const QStringList &participants, bool create = false);
-    Q_INVOKABLE ChatEntry *chatEntryForChatRoom(const QString &accountId, const QVariantMap &properties, bool create);
+    Q_INVOKABLE QString sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
+    Q_INVOKABLE ChatEntry *chatEntryForProperties(const QString &accountId, const QVariantMap &properties, bool create = false);
 
     QQmlListProperty<ChatEntry> chats();
     static int chatCount(QQmlListProperty<ChatEntry> *p);
@@ -60,8 +59,8 @@ public Q_SLOTS:
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
 
-    void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId);
-    void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
+    void acknowledgeMessage(const QVariantMap &properties);
+    void acknowledgeAllMessages(const QVariantMap &properties);
 
 private Q_SLOTS:
     void onChannelObserverUnregistered();
@@ -76,7 +75,7 @@ private:
     QList<ChatEntry*> chatEntries() const;
 
     mutable QList<ChatEntry*> mChatEntries;
-    QMap<QString, QMap<QStringList,QStringList> > mMessagesToAck;
+    QVariantList mMessagesToAck;
     QList<Tp::TextChannelPtr> mPendingChannels;
     QTimer mMessagesAckTimer;
     bool mReady;

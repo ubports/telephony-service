@@ -104,7 +104,9 @@ void ChatManagerTest::testSendMessage()
     QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
     QSignalSpy messageSentSpy(ChatManager::instance(), SIGNAL(messageSent(QStringList,QString)));
 
-    ChatManager::instance()->sendMessage(accountId, recipients, message);
+    QVariantMap properties;
+    properties["participantIds"] = recipients;
+    ChatManager::instance()->sendMessage(accountId, message, QVariantMap(), properties);
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
     QString messageText = controllerMessageSentSpy.first()[0].toString();
@@ -162,8 +164,12 @@ void ChatManagerTest::testAcknowledgeMessages()
     }
 
     QSignalSpy messageReadSpy(mGenericMockController, SIGNAL(MessageRead(QString)));
+    QVariantMap ackProperties;
+    ackProperties["accountId"] = "mock/mock/account0";
+    ackProperties["participantIds"] = properties["Recipients"].toStringList();
     Q_FOREACH(const QString &messageId, messageIds) {
-        ChatManager::instance()->acknowledgeMessage(properties["Recipients"].toStringList(), messageId, "mock/mock/account0");
+        ackProperties["messageId"] = messageId;
+        ChatManager::instance()->acknowledgeMessage(ackProperties);
     }
 
     TRY_COMPARE(messageReadSpy.count(), messageIds.count());
@@ -182,11 +188,14 @@ void ChatManagerTest::testChatEntry()
     QStringList recipients;
     recipients << "user@domain.com" << "user2@domain.com";
     QSignalSpy chatEntryCreatedSpy(ChatManager::instance(), SIGNAL(chatEntryCreated(QString, QStringList,ChatEntry *)));
-    ChatEntry *entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", recipients, true);
+    QVariantMap properties;
+    properties["participantIds"] = recipients;
+
+    ChatEntry *entry = ChatManager::instance()->chatEntryForProperties("mock/mock/account0", properties, true);
     QVERIFY(entry == NULL);
     QTRY_COMPARE(chatEntryCreatedSpy.count(), 1);
 
-    entry = ChatManager::instance()->chatEntryForParticipants("mock/mock/account0", recipients, false);
+    entry = ChatManager::instance()->chatEntryForProperties("mock/mock/account0", properties, false);
     QVERIFY(entry != NULL);
     QList<QVariant> arguments = chatEntryCreatedSpy.takeFirst();
     QCOMPARE(QString("mock/mock/account0"), arguments.at(0).toString());
@@ -226,7 +235,9 @@ void ChatManagerTest::testSendMessageWithAttachments()
     attachmentList << QVariant::fromValue(attachment);
     QVariant attachments = QVariant::fromValue(attachmentList);
 
-    ChatManager::instance()->sendMessage(accountId, recipients, message, attachments);
+    QVariantMap properties;
+    properties["participantIds"] = recipients;
+    ChatManager::instance()->sendMessage(accountId, message, attachments, properties);
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
     QString messageText = controllerMessageSentSpy.first()[0].toString();
