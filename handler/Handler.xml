@@ -55,6 +55,14 @@
             <arg name="participants" type="as" direction="in"/>
             <arg name="message" type="s" direction="in"/>
         </method>
+        <method name="LeaveChat">
+            <dox:d><![CDATA[
+                Leave chat
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="message" type="s" direction="in"/>
+            <arg name="result" type="b" direction="out"/>
+        </method>
         <method name="AcknowledgeAllMessages">
             <dox:d><![CDATA[
                 Request all messages messages from the given numbers to be acknowledged

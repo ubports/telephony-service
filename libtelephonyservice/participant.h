@@ -28,11 +28,20 @@
 class Participant : public ContactWatcher
 {
     Q_OBJECT
+    Q_PROPERTY(uint roles READ roles NOTIFY rolesChanged)
 public:
-    explicit Participant(const QString &identifier, QObject *parent = 0);
+    explicit Participant(const QString &identifier, uint roles, QObject *parent = 0);
     explicit Participant(QObject *parent = 0);
     explicit Participant(const Participant &other);
     ~Participant();
+
+    uint roles() const;
+
+Q_SIGNAL
+    void rolesChanged();
+
+private:
+    uint mRoles;
 };
 
 #endif // PARTICIPANT_H

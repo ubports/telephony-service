@@ -33,12 +33,28 @@
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/Connection>
 #include <TelepathyQt/PendingVariantMap>
+#include <TelepathyQt/ReferencedHandles>
 #include <TelepathyQt/TextChannel>
 
 #include <QDebug>
 
 Q_DECLARE_METATYPE(ContactChatStates)
 Q_DECLARE_METATYPE(Participant)
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, RolesMap &roles)
+{
+    argument.beginMap();
+    while ( !argument.atEnd() ) {
+        argument.beginMapEntry();
+        uint key,value;
+        argument >> key >> value;
+        argument.endMapEntry();
+        roles[key] = value;
+    }
+
+    argument.endMap();
+    return argument;
+}
 
 ChatEntry::ChatEntry(QObject *parent) :
     QObject(parent),
@@ -51,6 +67,9 @@ ChatEntry::ChatEntry(QObject *parent) :
 {
     qRegisterMetaType<ContactChatStates>();
     qRegisterMetaType<Participant>();
+    qRegisterMetaType<RolesMap>();
+    qDBusRegisterMetaType<RolesMap>();
+
 }
 
 void ChatEntry::onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated)
@@ -381,6 +400,10 @@ void ChatEntry::componentComplete()
         setChannels(channels);
     }
 
+    if (chatType() == 0) {
+        return;
+    }
+
     // now filter out the Phone accounts from the accounts list
     Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->activeAccounts(true)) {
         if (account->type() != AccountEntry::PhoneAccount) {
@@ -458,6 +481,15 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
         participant->deleteLater();
     }
     clearParticipants();
+
+    // fetch the roles
+    QDBusInterface propsInterface(channel->busName(), channel->objectPath(), "org.freedesktop.DBus.Properties");
+    if (propsInterface.isValid()) {
+        QDBusMessage result = propsInterface.call("Get", "org.freedesktop.Telepathy.Channel.Interface.Roles", "Roles");
+        mRoles = qdbus_cast<RolesMap>(result.arguments().at(0).value<QDBusVariant>().variant().value<QDBusArgument>());
+        // FIXME: we need to watch for changes in the roles
+    }
+
     onGroupMembersChanged(channel->groupContacts(false),
                           channel->groupLocalPendingContacts(false),
                           channel->groupRemotePendingContacts(false),
@@ -467,6 +499,9 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
             const Tp::Contacts &, const Tp::Channel::GroupMemberChangeDetails &)),
             this, SLOT(onGroupMembersChanged(Tp::Contacts,Tp::Contacts,Tp::Contacts,Tp::Contacts,
                                              Tp::Channel::GroupMemberChangeDetails)));
+    connect(channel.data(), SIGNAL(groupFlagsChanged(Tp::ChannelGroupFlags,Tp::ChannelGroupFlags,
+            Tp::ChannelGroupFlags)),
+            this, SIGNAL(groupFlagsChanged()));
     connect(channel.data(), SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
             this, SLOT(onChannelInvalidated()));
 
@@ -487,6 +522,8 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
 
     mChannels << channel;
     Q_EMIT activeChanged();
+    Q_EMIT groupFlagsChanged();
+    Q_EMIT selfContactRolesChanged();
 }
 
 void ChatEntry::setChatState(ChatState state)
@@ -552,6 +589,7 @@ void ChatEntry::clearParticipants()
     mParticipants.clear();
     mLocalPendingParticipants.clear();
     mRemotePendingParticipants.clear();
+    mRoles.clear();
 }
 
 void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account)
@@ -570,7 +608,7 @@ void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contact
     // now add the new participants
     // FIXME: check for duplicates?
     Q_FOREACH(Tp::ContactPtr contact, added) {
-        list << new Participant(contact->id(), this);
+        list << new Participant(contact->id(), mRoles[contact->handle().at(0)], this);
     }
 }
 
@@ -617,6 +655,20 @@ void ChatEntry::removeParticipants(const QStringList &participants, const QStrin
     }
 }
 
+bool ChatEntry::leaveChat(const QString &message)
+{
+    if (chatType() != ChatEntry::ChatTypeRoom || mChannels.size() != 1) {
+        return false;
+    }
+    Tp::TextChannelPtr channel = mChannels.first();
+    if (!channel->connection()) {
+        return false;
+    }
+    QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
+    QDBusReply<bool> reply = handlerIface->call("LeaveChat", channel->objectPath(), message);
+    return reply.isValid();
+}
+
 void ChatEntry::startChat()
 {
     QString objPath = ChatManager::instance()->startChat(accountId(), generateProperties());
@@ -644,9 +696,36 @@ void ChatEntry::onChannelInvalidated()
         subjectInterface = 0;
     }
     Q_EMIT activeChanged();
+    Q_EMIT groupFlagsChanged();
+    Q_EMIT selfContactRolesChanged();
 }
 
 bool ChatEntry::isActive() const
 {
     return mChannels.size() > 0;
+}
+
+uint ChatEntry::groupFlags() const
+{
+    if (mChannels.isEmpty()) {
+        return 0;
+    }
+
+    return mChannels[0]->groupFlags();
+}
+
+uint ChatEntry::selfContactRoles() const
+{
+    if (mChannels.isEmpty()) {
+        return 0;
+    }
+
+    Tp::ContactPtr selfContact = mChannels[0]->groupSelfContact();
+    if (selfContact) {
+        uint handle = selfContact->handle().at(0);
+        if (mRoles.contains(handle)) {
+            return mRoles[handle];
+        }
+    }
+    return 0;
 }

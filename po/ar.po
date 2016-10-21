@@ -7,18 +7,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-16 15:24-0200\n"
+"POT-Creation-Date: 2016-06-27 10:54-0300\n"
 "PO-Revision-Date: 2014-07-29 19:24+0000\n"
 "Last-Translator: Ibrahim Saed <ibraheem5000@gmail.com>\n"
 "Language-Team: Arabic <ar@li.org>\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n % 100 >= "
 "3 && n % 100 <= 10 ? 3 : n % 100 >= 11 && n % 100 <= 99 ? 4 : 5;\n"
-"X-Launchpad-Export-Date: 2016-10-07 06:50+0000\n"
-"X-Generator: Launchpad (build 18217)\n"
-"Language: ar\n"
+"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
+"X-Generator: Launchpad (build 18186)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -62,28 +62,87 @@ msgstr "<b>%1</b> رسائل نصية تم تلقيها اليوم"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> رسائل نصية تم إرسالها اليوم"
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:520
 msgid "Accept"
 msgstr "أجب"
+
+#: indicator/textchannelobserver.cpp:448
+#, qt-format
+msgid "Attachment: %1 audio clip"
+msgid_plural "Attachments: %1 audio clips"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: indicator/textchannelobserver.cpp:446
+#, qt-format
+msgid "Attachment: %1 contact"
+msgid_plural "Attachments: %1 contacts"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: indicator/textchannelobserver.cpp:450
+#, qt-format
+msgid "Attachment: %1 file"
+msgid_plural "Attachments: %1 files"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: indicator/textchannelobserver.cpp:442
+#, qt-format
+msgid "Attachment: %1 image"
+msgid_plural "Attachments: %1 images"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: indicator/textchannelobserver.cpp:444
+#, qt-format
+msgid "Attachment: %1 video"
+msgid_plural "Attachments: %1 videos"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
+
+#: indicator/authhandler.cpp:72
+msgid "Authentication failed. Do you want to review your credentials?"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "معاودة الاتصال"
 
-#: approver/approver.cpp:464 approver/approver.cpp:479
+#: approver/approver.cpp:466 approver/approver.cpp:481
 msgid "Caller number is not available"
 msgstr "رقم المتصل غير متاح حاليا"
 
-#: approver/approver.cpp:476
+#: approver/approver.cpp:478
 #, qt-format
 msgid "Calling from %1"
 msgstr "الاتصال من %1"
 
-#: approver/approver.cpp:470
+#: approver/approver.cpp:472
 msgid "Calling from private number"
 msgstr "اتصال من رقم خاص"
 
-#: approver/approver.cpp:473
+#: approver/approver.cpp:475
 msgid "Calling from unknown number"
 msgstr "اتصال من رقم مجهول"
 
@@ -91,19 +150,19 @@ msgstr "اتصال من رقم مجهول"
 msgid "Cancel"
 msgstr "ألغِ"
 
-#: indicator/textchannelobserver.cpp:238
+#: indicator/textchannelobserver.cpp:236
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "عطَل وضع الطيران ثم حاول مجددا من تطبيق الرسائل."
 
-#: approver/approver.cpp:540
+#: approver/approver.cpp:542
 msgid "Decline"
 msgstr "ارفض"
 
-#: approver/approver.cpp:531
+#: approver/approver.cpp:533
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:517
+#: approver/approver.cpp:519
 msgid "Hold + Answer"
 msgstr ""
 
@@ -131,14 +190,23 @@ msgstr ""
 msgid "I'm running late. I'm on my way."
 msgstr "قد أتأخر قليلا. أنا في طريقي إليك."
 
-#: approver/approver.cpp:548
+#: approver/approver.cpp:550
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:547
+#: indicator/textchannelobserver.cpp:550
 #, qt-format
 msgid "Message from %1"
 msgstr "رسالة من %1"
+
+#: indicator/textchannelobserver.cpp:486 indicator/messagingmenu.cpp:163
+#, qt-format
+msgid "Message to group from %1"
+msgstr ""
+
+#: indicator/authhandler.cpp:94
+msgid "No"
+msgstr ""
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
@@ -156,9 +224,14 @@ msgstr "لا رسائل نصية تم تلقيها اليوم"
 msgid "No text messages sent today"
 msgstr "لا رسائل نصية تم إرسالها اليوم"
 
-#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:314
 msgid "Ok"
 msgstr "موافق"
+
+#: approver/approver.cpp:453
+#, qt-format
+msgid "On [%1]"
+msgstr ""
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -168,7 +241,7 @@ msgstr "مكالمات هاتفية"
 msgid "Please call me back later."
 msgstr "رجاءً عاود الاتصال بي لاحقا."
 
-#: indicator/textchannelobserver.cpp:692
+#: indicator/textchannelobserver.cpp:687
 msgid "Please, select a SIM card:"
 msgstr "برجاء اختيار بطاقة SIM:"
 
@@ -176,7 +249,7 @@ msgstr "برجاء اختيار بطاقة SIM:"
 msgid "Private Number"
 msgstr "رقم خاص"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
+#: approver/approver.cpp:457 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "رقم خاص"
 
@@ -222,11 +295,11 @@ msgstr ""
 msgid "Telephony Service Indicator"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:247
+#: indicator/textchannelobserver.cpp:245
 msgid "The message could not be sent"
 msgstr "تعذر إرسال الرسالة"
 
-#: indicator/textchannelobserver.cpp:241
+#: indicator/textchannelobserver.cpp:239
 msgid "Try again from the messaging application."
 msgstr "حاول مجددا من تطبيق الرسائل"
 
@@ -238,16 +311,16 @@ msgstr "رقم مجهول"
 msgid "Unknown caller"
 msgstr "متصل مجهول"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
+#: approver/approver.cpp:460 indicator/textchannelobserver.cpp:477
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "رقم مجهول"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:234
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "قم بفتح القفل عن بطاقة SIM ثم حاول مجددا من تطبيق الرسائل."
 
-#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:514
 msgid "View message"
 msgstr "عرض الرسالة"
 
@@ -258,3 +331,7 @@ msgstr "البريد الصوتي"
 #: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "رسائل البريد الصوتي"
+
+#: indicator/authhandler.cpp:91
+msgid "Yes"
+msgstr ""

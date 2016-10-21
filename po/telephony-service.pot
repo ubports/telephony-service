@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-06-27 10:54-0300\n"
+"POT-Creation-Date: 2016-08-30 15:54-0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: indicator/messagingmenu.cpp:299
+#: indicator/messagingmenu.cpp:368
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] ""
 msgstr[1] ""
 
-#: indicator/messagingmenu.cpp:398
+#: indicator/messagingmenu.cpp:467
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -56,35 +56,35 @@ msgstr ""
 msgid "Accept"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:448
+#: indicator/textchannelobserver.cpp:496
 #, qt-format
 msgid "Attachment: %1 audio clip"
 msgid_plural "Attachments: %1 audio clips"
 msgstr[0] ""
 msgstr[1] ""
 
-#: indicator/textchannelobserver.cpp:446
+#: indicator/textchannelobserver.cpp:494
 #, qt-format
 msgid "Attachment: %1 contact"
 msgid_plural "Attachments: %1 contacts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: indicator/textchannelobserver.cpp:450
+#: indicator/textchannelobserver.cpp:498
 #, qt-format
 msgid "Attachment: %1 file"
 msgid_plural "Attachments: %1 files"
 msgstr[0] ""
 msgstr[1] ""
 
-#: indicator/textchannelobserver.cpp:442
+#: indicator/textchannelobserver.cpp:490
 #, qt-format
 msgid "Attachment: %1 image"
 msgid_plural "Attachments: %1 images"
 msgstr[0] ""
 msgstr[1] ""
 
-#: indicator/textchannelobserver.cpp:444
+#: indicator/textchannelobserver.cpp:492
 #, qt-format
 msgid "Attachment: %1 video"
 msgid_plural "Attachments: %1 videos"
@@ -95,7 +95,7 @@ msgstr[1] ""
 msgid "Authentication failed. Do you want to review your credentials?"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:236
+#: indicator/messagingmenu.cpp:305
 msgid "Call back"
 msgstr ""
 
@@ -120,7 +120,7 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:222
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 
@@ -136,11 +136,11 @@ msgstr ""
 msgid "Hold + Answer"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:310
 msgid "I missed your call - can you call me now?"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:244
+#: indicator/messagingmenu.cpp:313
 msgid "I'll be 20 minutes late."
 msgstr ""
 
@@ -148,7 +148,7 @@ msgstr ""
 msgid "I'm busy at the moment. I'll call later."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:312
 msgid "I'm busy at the moment. I'll call you later."
 msgstr ""
 
@@ -156,7 +156,7 @@ msgstr ""
 msgid "I'm running late, on my way now."
 msgstr ""
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:311
 msgid "I'm running late. I'm on my way."
 msgstr ""
 
@@ -164,14 +164,27 @@ msgstr ""
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:550
+#: indicator/textchannelobserver.cpp:632
 #, qt-format
 msgid "Message from %1"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:486 indicator/messagingmenu.cpp:163
+#. TRANSLATORS : %1 is the group name and %2 is the recipient name
+#: indicator/textchannelobserver.cpp:554 indicator/textchannelobserver.cpp:558
+#: indicator/messagingmenu.cpp:225
+#, qt-format
+msgid "Message to %1 from %2"
+msgstr ""
+
+#. TRANSLATORS : %1 is the recipient name
+#: indicator/textchannelobserver.cpp:562 indicator/textchannelobserver.cpp:566
+#: indicator/messagingmenu.cpp:228 indicator/messagingmenu.cpp:232
 #, qt-format
 msgid "Message to group from %1"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:290
+msgid "New Group"
 msgstr ""
 
 #: indicator/authhandler.cpp:94
@@ -194,7 +207,7 @@ msgstr ""
 msgid "No text messages sent today"
 msgstr ""
 
-#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:314
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:362
 msgid "Ok"
 msgstr ""
 
@@ -211,15 +224,11 @@ msgstr ""
 msgid "Please call me back later."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:687
+#: indicator/textchannelobserver.cpp:773
 msgid "Please, select a SIM card:"
 msgstr ""
 
-#: Ubuntu/Telephony/contactwatcher.cpp:131
-msgid "Private Number"
-msgstr ""
-
-#: approver/approver.cpp:457 indicator/messagingmenu.cpp:304
+#: approver/approver.cpp:457 indicator/messagingmenu.cpp:373
 msgid "Private number"
 msgstr ""
 
@@ -236,15 +245,16 @@ msgstr ""
 msgid "SMS"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:320
+#: indicator/textchannelobserver.cpp:368
 msgid "Save"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
+#: indicator/messagingmenu.cpp:150 indicator/messagingmenu.cpp:254
+#: indicator/messagingmenu.cpp:320
 msgid "Send"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:245
+#: indicator/messagingmenu.cpp:314
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr ""
 
@@ -253,7 +263,7 @@ msgstr ""
 msgid "Spent <b>%1</b> minutes in calls today"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:56 indicator/messagingmenu.cpp:60
+#: indicator/messagingmenu.cpp:82 indicator/messagingmenu.cpp:86
 msgid "Telephony Service"
 msgstr ""
 
@@ -265,43 +275,59 @@ msgstr ""
 msgid "Telephony Service Indicator"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:245
+#: indicator/textchannelobserver.cpp:231
 msgid "The message could not be sent"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:239
+#: indicator/textchannelobserver.cpp:225
 msgid "Try again from the messaging application."
-msgstr ""
-
-#: Ubuntu/Telephony/contactwatcher.cpp:133
-msgid "Unknown Number"
 msgstr ""
 
 #: approver/approver.cpp:63
 msgid "Unknown caller"
 msgstr ""
 
-#: approver/approver.cpp:460 indicator/textchannelobserver.cpp:477
-#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
+#: approver/approver.cpp:460 indicator/textchannelobserver.cpp:523
+#: indicator/messagingmenu.cpp:207 indicator/messagingmenu.cpp:377
 msgid "Unknown number"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:234
+#: indicator/textchannelobserver.cpp:220
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:514
+#: indicator/textchannelobserver.cpp:323
+msgid "View Group"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:244 indicator/textchannelobserver.cpp:596
 msgid "View message"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:403
+#: indicator/messagingmenu.cpp:472
 msgid "Voicemail"
 msgstr ""
 
-#: indicator/messagingmenu.cpp:395
+#: indicator/messagingmenu.cpp:464
 msgid "Voicemail messages"
 msgstr ""
 
 #: indicator/authhandler.cpp:91
 msgid "Yes"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:304
+msgid "You joined a new group"
+msgstr ""
+
+#. TRANSLATORS : %1 is the group name
+#: indicator/textchannelobserver.cpp:301
+#, qt-format
+msgid "You joined group %1"
+msgstr ""
+
+#. TRANSLATORS : %1 is the group name
+#: indicator/textchannelobserver.cpp:297
+#, qt-format
+msgid "You joined group %1 "
 msgstr ""
