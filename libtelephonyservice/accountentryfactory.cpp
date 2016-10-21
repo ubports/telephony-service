@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Canonical, Ltd.
+ * Copyright (C) 2015-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -22,7 +22,6 @@
 #include "accountentryfactory.h"
 #include "accountentry.h"
 #include "ofonoaccountentry.h"
-#include "multimediaaccountentry.h"
 
 AccountEntry *AccountEntryFactory::createEntry(const Tp::AccountPtr &account, QObject *parent)
 {
@@ -31,9 +30,6 @@ AccountEntry *AccountEntryFactory::createEntry(const Tp::AccountPtr &account, QO
     // FIXME: check what other accounts need extra properties/methods
     if (protocol == "ofono") {
         return new OfonoAccountEntry(account, parent);
-    }
-    if (protocol == "multimedia") {
-        return new MultimediaAccountEntry(account, parent);
     }
 
     return new AccountEntry(account, parent);

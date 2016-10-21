@@ -22,6 +22,7 @@
 
 #include "telepathyhelper.h"
 #include "accountentry.h"
+#include "accountlist.h"
 #include "ofonoaccountentry.h"
 #include "accountentryfactory.h"
 #include "chatmanager.h"
@@ -41,6 +42,10 @@ template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStr
     return key1.size() > key2.size();  // sort by operator> !
 }
 
+typedef struct {
+    QList<AccountEntry*> (*accountFunction)();
+} QmlAccountData;
+
 TelepathyHelper::TelepathyHelper(QObject *parent)
     : QObject(parent),
       mPendingAccountReady(0),
@@ -56,6 +61,11 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
                            "org.freedesktop.URfkill",
                            QDBusConnection::systemBus())
 {
+    mQmlAccounts = new AccountList(Protocol::AllFeatures, QString::null, this);
+    mQmlVoiceAccounts = new AccountList(Protocol::VoiceCalls, QString::null, this);
+    mQmlTextAccounts = new AccountList(Protocol::TextChats, QString::null, this);
+    mQmlPhoneAccounts = new AccountList(Protocol::AllFeatures, "ofono", this);
+
     qRegisterMetaType<QList<AccountEntry*> >();
     mAccountFeatures << Tp::Account::FeatureCore
                      << Tp::Account::FeatureProtocolInfo;
@@ -149,18 +159,35 @@ QList<AccountEntry*> TelepathyHelper::accounts() const
     return mAccounts;
 }
 
-QList<AccountEntry*> TelepathyHelper::activeAccounts(bool includeMultimedia) const
+QList<AccountEntry*> TelepathyHelper::activeAccounts() const
 {
     QList<AccountEntry*> activeAccountList;
     Q_FOREACH(AccountEntry *account, mAccounts) {
         if (account->active()) {
-            if (account->type() == AccountEntry::MultimediaAccount && !includeMultimedia) {
-                continue;
-            }
             activeAccountList << account;
         }
     }
     return activeAccountList;
+}
+
+AccountList *TelepathyHelper::qmlAccounts() const
+{
+    return mQmlAccounts;
+}
+
+AccountList *TelepathyHelper::qmlVoiceAccounts() const
+{
+    return mQmlVoiceAccounts;
+}
+
+AccountList *TelepathyHelper::qmlTextAccounts() const
+{
+    return mQmlTextAccounts;
+}
+
+AccountList *TelepathyHelper::qmlPhoneAccounts() const
+{
+    return mQmlPhoneAccounts;
 }
 
 bool TelepathyHelper::multiplePhoneAccounts() const
@@ -174,6 +201,80 @@ bool TelepathyHelper::multiplePhoneAccounts() const
     return (count > 1);
 }
 
+/**
+ * If the @param originalAccount is listed as being the fallback of any other protocol,
+ * this function will return the account that should be used instead.
+ * @param originalAccount The original account that might be replaced
+ * @return A list containing the replacement accounts or an empty list if none are suitable.
+ */
+QList<AccountEntry*> TelepathyHelper::checkAccountOverload(AccountEntry *originalAccount)
+{
+    QList<AccountEntry*> accounts;
+
+    if (!originalAccount) {
+        return accounts;
+    }
+
+    QString protocol = originalAccount->protocolInfo()->name();
+    for (auto account : mAccounts) {
+        // FIXME: check for matching properties if needed
+        if (account->protocolInfo()->fallbackProtocol() == protocol) {
+            accounts << account;
+        }
+    }
+
+    return accounts;
+}
+
+/**
+ * If the @param originalAccount is listed as having a fallback protocol, when the @param originalAccount
+ * cannot be used by any reason (not connected, or not having a particular feature enabled), the fallback
+ * account should be used. This function will try to find a suitable fallback account.
+ * @return A list containing the fallback accounts or an empty list if none are suitable.
+ */
+QList<AccountEntry*> TelepathyHelper::checkAccountFallback(AccountEntry *originalAccount)
+{
+    QList<AccountEntry*> accounts;
+
+    if (!originalAccount) {
+        return accounts;
+    }
+
+    QString fallbackProtocol = originalAccount->protocolInfo()->fallbackProtocol();
+    // FIXME: check for the match rules too
+
+    // if the account doesn't have a fallback protocol specified, just return the empty list
+    if (fallbackProtocol.isEmpty()) {
+        return accounts;
+    }
+
+    for (auto account : mAccounts) {
+        if (account->protocolInfo()->name() == fallbackProtocol) {
+            accounts << account;
+        }
+    }
+
+    return accounts;
+}
+
+QList<QObject*> TelepathyHelper::accountOverload(AccountEntry *originalAccount)
+{
+    QList<QObject*> accounts;
+    for (auto account : checkAccountOverload(originalAccount)) {
+        accounts << account;
+    }
+    return accounts;
+}
+
+QList<QObject*> TelepathyHelper::accountFallback(AccountEntry *originalAccount)
+{
+    QList<QObject*> accounts;
+    for (auto account : checkAccountFallback(originalAccount)) {
+        accounts << account;
+    }
+    return accounts;
+}
+
 QList<AccountEntry*> TelepathyHelper::phoneAccounts() const
 {
     QList<AccountEntry*> accountList;
@@ -183,21 +284,6 @@ QList<AccountEntry*> TelepathyHelper::phoneAccounts() const
         }
     }
     return accountList;
-}
-
-QQmlListProperty<AccountEntry> TelepathyHelper::qmlPhoneAccounts()
-{
-    return QQmlListProperty<AccountEntry>(this, 0, phoneAccountsCount, phoneAccountAt);
-}
-
-QQmlListProperty<AccountEntry> TelepathyHelper::qmlAccounts()
-{
-    return QQmlListProperty<AccountEntry>(this, 0, accountsCount, accountAt);
-}
-
-QQmlListProperty<AccountEntry> TelepathyHelper::qmlActiveAccounts()
-{
-    return QQmlListProperty<AccountEntry>(this, 0, activeAccountsCount, activeAccountAt);
 }
 
 ChannelObserver *TelepathyHelper::channelObserver() const
@@ -363,40 +449,6 @@ Tp::ChannelClassSpec TelepathyHelper::audioConferenceSpec()
     return spec;
 }
 
-int TelepathyHelper::phoneAccountsCount(QQmlListProperty<AccountEntry> *p)
-{
-    Q_UNUSED(p)
-    return TelepathyHelper::instance()->phoneAccounts().count();
-}
-
-int TelepathyHelper::accountsCount(QQmlListProperty<AccountEntry> *p)
-{
-    Q_UNUSED(p)
-    return TelepathyHelper::instance()->accounts().count();
-}
-
-AccountEntry *TelepathyHelper::phoneAccountAt(QQmlListProperty<AccountEntry> *p, int index)
-{
-    Q_UNUSED(p)
-    return TelepathyHelper::instance()->phoneAccounts()[index];
-}
-
-AccountEntry *TelepathyHelper::accountAt(QQmlListProperty<AccountEntry> *p, int index)
-{
-    Q_UNUSED(p)
-    return TelepathyHelper::instance()->accounts()[index];
-}
-
-int TelepathyHelper::activeAccountsCount(QQmlListProperty<AccountEntry> *p)
-{
-    return TelepathyHelper::instance()->activeAccounts().count();
-}
-
-AccountEntry *TelepathyHelper::activeAccountAt(QQmlListProperty<AccountEntry> *p, int index)
-{
-    return TelepathyHelper::instance()->activeAccounts()[index];
-}
-
 void TelepathyHelper::onAccountRemoved()
 {
     AccountEntry *account = qobject_cast<AccountEntry*>(sender());
@@ -514,7 +566,7 @@ void TelepathyHelper::setDefaultAccount(AccountType type, AccountEntry* account)
 
     QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
     if (!modemObjName.isEmpty()) {
-        if (type == Call) {
+        if (type == Voice) {
             GreeterContacts::instance()->setDefaultSimForCalls(modemObjName);
         } else if (type == Messaging) {
             GreeterContacts::instance()->setDefaultSimForMessages(modemObjName);

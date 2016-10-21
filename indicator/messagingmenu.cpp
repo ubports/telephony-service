@@ -267,7 +267,7 @@ void MessagingMenu::addMessage(NotificationData notificationData)
     });
 
     // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
-    if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
+    if (account->addressableVCardFields().contains("tel")) {
         request->setManager(ContactUtils::sharedManager());
         request->start();
     } else {
@@ -587,7 +587,7 @@ void MessagingMenu::callBack(const QString &messageId)
     }
     qDebug() << "TelephonyService/MessagingMenu: Calling back" << call.targetId;
     // FIXME: support accounts not based on phone numbers
-    if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
+    if (account->addressableVCardFields().contains("tel")) {
         ApplicationUtils::openUrl(QString("tel:///%1").arg(QString(QUrl::toPercentEncoding(call.targetId))));
     }
 }

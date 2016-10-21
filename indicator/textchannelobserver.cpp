@@ -79,7 +79,7 @@ void flash_notification_action(NotifyNotification* notification, char *action, g
         NotificationData *notificationData = (NotificationData*) data;
         if (notificationData != NULL) {
             AccountEntry *account = TelepathyHelper::instance()->accountForId(notificationData->accountId);
-            bool phoneNumberBased = account && (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount);
+            bool phoneNumberBased = account && account->addressableVCardFields().contains("tel");
             QStringList recipients;
             recipients << notificationData->senderId << notificationData->participantIds;
             History::Thread thread = History::Manager::instance()->threadForParticipants(notificationData->accountId,
@@ -193,7 +193,7 @@ void TextChannelObserver::sendMessage(NotificationData notificationData)
 
     // check if the account is available
     if (!account->connected()) {
-        bool phoneNumberBased = account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount;
+        bool phoneNumberBased = account->addressableVCardFields().contains("tel");
         History::Thread thread = History::Manager::instance()->threadForParticipants(account->accountId(),
                                                                                      History::EventTypeText,
                                                                                      notificationData.participantIds,
@@ -436,7 +436,7 @@ void TextChannelObserver::triggerNotificationForMessage(const Tp::TextChannelPtr
         });
 
         // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
-        if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
+        if (account->addressableVCardFields().contains("tel")) {
             request->setManager(ContactUtils::sharedManager());
             request->start();
         } else {
@@ -623,13 +623,13 @@ void TextChannelObserver::updateNotifications(const QContact &contact)
         NotificationData *data = i.value();
 
         AccountEntry *account = TelepathyHelper::instance()->accountForId(data->accountId);
-        if (!account || (account->type() != AccountEntry::PhoneAccount && account->type() != AccountEntry::MultimediaAccount)) {
+        if (!account || !account->addressableVCardFields().contains("tel")) {
             return;
         }
 
         // FIXME: add support for contact matching for non phone number based accounts
         Q_FOREACH(const QContactPhoneNumber phoneNumber, contact.details(QContactDetail::TypePhoneNumber)) {
-            if (PhoneUtils::comparePhoneNumbers(data->senderId, phoneNumber.number()) > PhoneUtils::NO_MATCH) {
+            if (account->compareIds(data->senderId, phoneNumber.number())) {
                 QString displayLabel = contact.detail<QContactDisplayLabel>().label();
                 QString title = QString::fromUtf8(C::gettext("Message from %1")).arg(displayLabel.isEmpty() ? data->alias : displayLabel);
                 QString avatar = contact.detail<QContactAvatar>().imageUrl().toEncoded();

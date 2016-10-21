@@ -449,8 +449,8 @@ void ChatEntry::componentComplete()
     }
 
     // now filter out the Phone accounts from the accounts list
-    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->activeAccounts(true)) {
-        if (account->type() != AccountEntry::PhoneAccount) {
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        if (account->active() && account->type() != AccountEntry::PhoneAccount) {
             accounts << account;
             // when account is activated, create the channel if it not exists. This can happen
             // when being in the conversation or in conversation details page while account is offline

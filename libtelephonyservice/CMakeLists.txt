@@ -1,6 +1,7 @@
 set(library_SRCS
     accountentry.cpp
     accountentryfactory.cpp
+    accountlist.cpp
     audiooutput.cpp
     applicationutils.cpp
     callentry.cpp
@@ -12,7 +13,6 @@ set(library_SRCS
     contactutils.cpp
     contactwatcher.cpp
     greetercontacts.cpp
-    multimediaaccountentry.cpp
     ofonoaccountentry.cpp
     participant.cpp
     phoneutils.cpp

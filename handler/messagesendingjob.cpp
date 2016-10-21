@@ -104,20 +104,12 @@ void MessageSendingJob::startJob()
 
     setStatus(Running);
 
-    // check if the message should be sent via multimedia account
-    if (account->type() == AccountEntry::PhoneAccount) {
-        Q_FOREACH(AccountEntry *newAccount, TelepathyHelper::instance()->accounts()) {
-            // TODO: we have to find the multimedia account that matches the same phone number,
-            // but for now we just pick any multimedia connected account
-            if (newAccount->type() != AccountEntry::MultimediaAccount) {
-                continue;
-            }
-            // FIXME: the fallback implementation needs to be changed to use protocol info and create a map of
-            // accounts. Also, it needs to check connection capabilities to determine if we can send message
-            // to offline contacts.
-            // Also, this map of accounts needs to match the original account with the fallback one via some ID.
-            //
-            // For now just assume that if a multimedia account is connected, we can use it to send messages.
+    // check if the message should be sent via an overloaded account
+    // if the target type is a room, do not overload.
+    if (mMessage.properties["chatType"].toUInt() != Tp::HandleTypeRoom) {
+        QList<AccountEntry*> overloadAccounts = TelepathyHelper::instance()->checkAccountOverload(account);
+        for (auto newAccount : overloadAccounts) {
+            // FIXME: check if we need to validate anything other than being connected
             if (newAccount->connected()) {
                 account = newAccount;
                 break;
@@ -216,7 +208,6 @@ bool MessageSendingJob::canSendMultiPartMessages()
     // TODO check in telepathy if multipart is supported
     // currently we just return false to be on the safe side
     case AccountEntry::GenericAccount:
-    case AccountEntry::MultimediaAccount:
     default:
         return false;
     }
@@ -250,6 +241,7 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
     Tp::MessagePart header;
     QString smil, regions, parts;
     bool hasImage = false, hasText = false, hasVideo = false, hasAudio = false, isMMS = false;
+    int chatType = pendingMessage.properties["chatType"].toUInt();
 
     if (!mAccount) {
         // account does not exist
@@ -268,11 +260,7 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
     // check if this message should be sent as an MMS
     if (mAccount->type() == AccountEntry::PhoneAccount) {
         isMMS = (pendingMessage.attachments.size() > 0 ||
-                 (header.contains("x-canonical-mms") && header["x-canonical-mms"].variant().toBool()) ||
-                 (pendingMessage.properties["participantIds"].toStringList().size() > 1 && TelepathyHelper::instance()->mmsGroupChat()));
-        if (isMMS) {
-            header["x-canonical-mms"] = QDBusVariant(true);
-        }
+                 (pendingMessage.properties["chatType"].toUInt() == 2));
     }
 
     // this flag should not be in the message header, it's only useful for the handler

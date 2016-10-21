@@ -38,6 +38,21 @@ class Protocol : public QObject
     /// @brief the fallback protocol to be used for operations that support it (mainly text features)
     Q_PROPERTY(QString fallbackProtocol READ fallbackProtocol CONSTANT)
 
+    /// @brief the strategy to be used when matching fallback accounts
+    Q_PROPERTY(MatchRule fallbackMatchRule READ fallbackMatchRule CONSTANT)
+
+    /// @brief the property to be used on this protocol to match the fallback account
+    Q_PROPERTY(QString fallbackSourceProperty READ fallbackSourceProperty CONSTANT)
+
+    /// @brief the property to be used on the fallback protocol to match the account
+    Q_PROPERTY(QString fallbackDestinationProperty READ fallbackDestinationProperty CONSTANT)
+
+    /// @brief whether accounts from this protocol should be shown on account selectors
+    Q_PROPERTY(bool showOnSelector READ showOnSelector CONSTANT)
+
+    /// @brief whether the online status of contacts for this account should be shown on UI
+    Q_PROPERTY(bool showOnlineStatus READ showOnlineStatus CONSTANT)
+
     /// @brief the file path for the image that represents this protocol
     Q_PROPERTY(QString backgroundImage READ backgroundImage CONSTANT)
 
@@ -53,13 +68,24 @@ class Protocol : public QObject
 public:
     enum Feature {
         TextChats = 0x1,
-        VoiceCalls = 0x2
+        VoiceCalls = 0x2,
+        AllFeatures = (TextChats | VoiceCalls)
     };
     Q_DECLARE_FLAGS(Features, Feature)
+
+    enum MatchRule {
+        MatchAny,
+        MatchProperties
+    };
 
     QString name() const;
     Features features() const;
     QString fallbackProtocol() const;
+    MatchRule fallbackMatchRule() const;
+    QString fallbackSourceProperty() const;
+    QString fallbackDestinationProperty() const;
+    bool showOnSelector() const;
+    bool showOnlineStatus() const;
     QString backgroundImage() const;
     QString icon() const;
     QString serviceName() const;
@@ -70,12 +96,28 @@ public:
     friend class ProtocolManager;
 
 protected:
-    explicit Protocol(const QString &name, Features features, const QString &fallbackProtocol = QString::null, const QString &backgroundImage = QString::null, const QString &icon = QString::null, const QString &serviceName = QString::null, const QString &serviceDisplayName = QString::null, QObject *parent = 0);
+    explicit Protocol(const QString &name, Features features,
+                      const QString &fallbackProtocol = QString::null,
+                      const MatchRule fallbackMatchRule = MatchAny,
+                      const QString &fallbackSourceProperty = QString::null,
+                      const QString &fallbackDestinationProperty = QString::null,
+                      bool showOnSelector = true,
+                      bool showOnlineStatus = false,
+                      const QString &backgroundImage = QString::null,
+                      const QString &icon = QString::null,
+                      const QString &serviceName = QString::null,
+                      const QString &serviceDisplayName = QString::null,
+                      QObject *parent = 0);
 
 private:
     QString mName;
     Features mFeatures;
     QString mFallbackProtocol;
+    MatchRule mFallbackMatchRule;
+    QString mFallbackSourceProperty;
+    QString mFallbackDestinationProperty;
+    bool mShowOnSelector;
+    bool mShowOnlineStatus;
     QString mBackgroundImage;
     QString mIcon;
     QString mServiceName;

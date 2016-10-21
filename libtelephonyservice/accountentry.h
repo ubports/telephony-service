@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -44,6 +44,7 @@ class AccountEntry : public QObject
     Q_PROPERTY(QString selfContactId READ selfContactId NOTIFY selfContactIdChanged)
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     Q_PROPERTY(QStringList addressableVCardFields READ addressableVCardFields NOTIFY addressableVCardFieldsChanged)
+    Q_PROPERTY(bool usePhoneNumbers READ usePhoneNumbers NOTIFY usePhoneNumbersChanged)
     Q_PROPERTY(Protocol* protocolInfo READ protocolInfo CONSTANT)
     Q_PROPERTY(Capabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
     Q_ENUMS(AccountType)
@@ -52,7 +53,6 @@ class AccountEntry : public QObject
 public:
     enum AccountType {
         PhoneAccount,
-        MultimediaAccount,
         GenericAccount
     };
 
@@ -77,6 +77,7 @@ public:
     Tp::AccountPtr account() const;
     virtual AccountType type() const;
     virtual QStringList addressableVCardFields() const;
+    virtual bool usePhoneNumbers() const;
     virtual bool compareIds(const QString &first, const QString &second) const;
     virtual bool active() const;
     virtual bool connected() const;
@@ -96,6 +97,7 @@ Q_SIGNALS:
     void selfContactIdChanged();
     void connectedChanged();
     void addressableVCardFieldsChanged();
+    void usePhoneNumbersChanged();
     void removed();
     void connectionStatusChanged(Tp::ConnectionStatus status);
     void capabilitiesChanged();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -22,6 +22,7 @@
 #include <TelepathyQt/PendingOperation>
 #include <QTimer>
 #include "accountentry.h"
+#include "phoneutils.h"
 #include "protocolmanager.h"
 #include "telepathyhelper.h"
 
@@ -153,9 +154,24 @@ QStringList AccountEntry::addressableVCardFields() const
     return mAccount->protocolInfo().addressableVCardFields();
 }
 
+bool AccountEntry::usePhoneNumbers() const
+{
+    return addressableVCardFields().contains("tel");
+}
+
 bool AccountEntry::compareIds(const QString &first, const QString &second) const
 {
-    return first == second;
+    // try the basic first
+    if (first == second) {
+        return true;
+    }
+
+    // if the account has "tel" in the addressable fields, also try phone compare
+    if (addressableVCardFields().contains("tel")) {
+        return PhoneUtils::comparePhoneNumbers(first, second) > PhoneUtils::NO_MATCH;
+    }
+
+    return false;
 }
 
 Protocol *AccountEntry::protocolInfo() const
@@ -170,6 +186,8 @@ void AccountEntry::initialize()
     }
 
     mProtocol = ProtocolManager::instance()->protocolByName(mAccount->protocolName());
+
+    connect(this, &AccountEntry::addressableVCardFieldsChanged, &AccountEntry::usePhoneNumbersChanged);
 
     // propagate the display name changes
     connect(mAccount.data(),
