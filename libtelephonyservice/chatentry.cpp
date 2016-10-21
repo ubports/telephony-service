@@ -300,6 +300,7 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
         ContactChatState *state = new ContactChatState(contact->id(), channel->chatState(contact));
         mChatStates[contact->id()] = state;
     }
+    Q_EMIT chatStatesChanged();
 
     // now fill the properties with the data from the channel
     if (chatType() != (ChatType)channel->targetHandleType()) {
@@ -310,6 +311,16 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     }
 
     mChannels << channel;
+}
+
+void ChatEntry::setChatState(ChatState state)
+{
+    Q_FOREACH(const Tp::TextChannelPtr channel, mChannels) {
+        if (channel->hasChatStateInterface()) {
+            channel->requestChatState((Tp::ChannelChatState)state);
+        }
+    }
+    mTypingTimer.start();
 }
 
 QVariantMap ChatEntry::generateProperties() const

@@ -107,6 +107,7 @@ public:
 public Q_SLOTS:
     // FIXME: void or return something?
     void sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
+    void setChatState(ChatState state);
 
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
