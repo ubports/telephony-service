@@ -24,6 +24,8 @@
 #include "telepathyhelper.h"
 #include "mockcontroller.h"
 
+Q_DECLARE_METATYPE(Tp::TextChannelPtr)
+
 class ChatManagerTest : public TelepathyTest
 {
     Q_OBJECT
@@ -36,9 +38,7 @@ private Q_SLOTS:
     void testSendMessage();
     void testSendMessageWithAttachments_data();
     void testSendMessageWithAttachments();
-    void testMessageReceived();
     void testAcknowledgeMessages();
-    void testChatEntry();
 
 private:
     Tp::AccountPtr mGenericTpAccount;
@@ -53,6 +53,8 @@ void ChatManagerTest::initTestCase()
     // set to false so group chat messages are not sent as MMS
     TelepathyHelper::instance()->setMmsGroupChat(false);
     TelepathyHelper::instance()->registerChannelObserver();
+
+    qRegisterMetaType<Tp::TextChannelPtr>();
 
     // just give telepathy some time to register the observer
     QTest::qWait(1000);
@@ -102,11 +104,15 @@ void ChatManagerTest::testSendMessage()
 
     MockController *controller = accountId.startsWith("mock/mock") ? mGenericMockController : mPhoneMockController;
     QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
-    QSignalSpy messageSentSpy(ChatManager::instance(), SIGNAL(messageSent(QStringList,QString)));
 
     QVariantMap properties;
     properties["participantIds"] = recipients;
-    ChatManager::instance()->sendMessage(accountId, message, QVariantMap(), properties);
+    QString jobObjectPath = ChatManager::instance()->sendMessage(accountId, message, QVariantMap(), properties);
+
+    QDBusInterface iface(TelepathyHelper::instance()->handlerInterface()->service(),
+                         jobObjectPath);
+
+    QSignalSpy finishedSpy(&iface, SIGNAL(finished()));
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
     QString messageText = controllerMessageSentSpy.first()[0].toString();
@@ -116,34 +122,13 @@ void ChatManagerTest::testSendMessage()
     QCOMPARE(messageText, message);
     QCOMPARE(messageRecipients, recipients);
 
-    TRY_COMPARE(messageSentSpy.count(), 1);
-    messageRecipients = messageSentSpy.first()[0].toStringList();
-    qSort(messageRecipients);
-    messageText = messageSentSpy.first()[1].toString();
-    QCOMPARE(messageText, message);
-    QCOMPARE(messageRecipients, recipients);
-}
-
-void ChatManagerTest::testMessageReceived()
-{
-    QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
-
-    QVariantMap properties;
-    properties["Sender"] = "12345";
-    properties["Recipients"] = (QStringList() << "12345");
-    QString message("Hi there");
-    mGenericMockController->PlaceIncomingMessage(message, properties);
-
-    TRY_COMPARE(messageReceivedSpy.count(), 1);
-    QString sender = messageReceivedSpy.first()[0].toString();
-    QString receivedMessage = messageReceivedSpy.first()[1].toString();
-    QCOMPARE(sender, properties["Sender"].toString());
-    QCOMPARE(receivedMessage, message);
+    // the rest of the properties are tested in the MessageSendingJob tests.
+    TRY_COMPARE(finishedSpy.count(), 1);
 }
 
 void ChatManagerTest::testAcknowledgeMessages()
 {
-    QSignalSpy messageReceivedSpy(ChatManager::instance(), SIGNAL(messageReceived(QString,QString,QDateTime,QString,bool)));
+    QSignalSpy textChannelAvailableSpy(ChatManager::instance(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)));
 
     QVariantMap properties;
     properties["Sender"] = "12345";
@@ -155,12 +140,14 @@ void ChatManagerTest::testAcknowledgeMessages()
         // the wait shouldn't be needed, but just in case
         QTest::qWait(50);
     }
-    TRY_COMPARE(messageReceivedSpy.count(), messages.count());
+    TRY_COMPARE(textChannelAvailableSpy.count(), 1);
+    Tp::TextChannelPtr channel = textChannelAvailableSpy.first().first().value<Tp::TextChannelPtr>();
+    QVERIFY(!channel.isNull());
 
+    TRY_COMPARE(channel->messageQueue().count(), messages.count());
     QStringList messageIds;
     for (int i = 0; i < messages.count(); ++i) {
-        QString messageId = messageReceivedSpy[i][3].toString();
-        messageIds << messageId;
+        messageIds << channel->messageQueue()[i].messageToken();
     }
 
     QSignalSpy messageReadSpy(mGenericMockController, SIGNAL(MessageRead(QString)));
@@ -181,26 +168,6 @@ void ChatManagerTest::testAcknowledgeMessages()
     qSort(receivedIds);
     qSort(messageIds);
     QCOMPARE(receivedIds, messageIds);
-}
-
-void ChatManagerTest::testChatEntry()
-{
-    QStringList recipients;
-    recipients << "user@domain.com" << "user2@domain.com";
-    QSignalSpy chatEntryCreatedSpy(ChatManager::instance(), SIGNAL(chatEntryCreated(QString, QStringList,ChatEntry *)));
-    QVariantMap properties;
-    properties["participantIds"] = recipients;
-
-    ChatEntry *entry = ChatManager::instance()->chatEntryForProperties("mock/mock/account0", properties, true);
-    QVERIFY(entry == NULL);
-    QTRY_COMPARE(chatEntryCreatedSpy.count(), 1);
-
-    entry = ChatManager::instance()->chatEntryForProperties("mock/mock/account0", properties, false);
-    QVERIFY(entry != NULL);
-    QList<QVariant> arguments = chatEntryCreatedSpy.takeFirst();
-    QCOMPARE(QString("mock/mock/account0"), arguments.at(0).toString());
-    QCOMPARE(recipients.toSet(), arguments.at(1).toStringList().toSet());
-    QCOMPARE(entry, arguments.at(2).value<ChatEntry*>());
 }
 
 void ChatManagerTest::testSendMessageWithAttachments_data()

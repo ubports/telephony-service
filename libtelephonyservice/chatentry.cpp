@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2015 Canonical, Ltd.
+ * Copyright (C) 2015-2016 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -22,6 +23,10 @@
 #include "telepathyhelper.h"
 #include "accountentry.h"
 #include "chatentry.h"
+#include "chatmanager.h"
+
+// FIXME: move this class to libtelephonyservice
+#include "handler/messagejob.h"
 
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/PendingReady>
@@ -29,51 +34,20 @@
 
 Q_DECLARE_METATYPE(ContactChatStates)
 
-ChatEntry::ChatEntry(const Tp::TextChannelPtr &channel, QObject *parent) :
+ChatEntry::ChatEntry(QObject *parent) :
     QObject(parent),
-    mChannel(channel),
+    mChatType(ChatTypeNone),
     roomInterface(NULL),
     roomConfigInterface(NULL),
     subjectInterface(NULL)
 {
     qRegisterMetaType<ContactChatStates>();
-    mAccount = TelepathyHelper::instance()->accountForConnection(mChannel->connection());
-    Q_FOREACH (Tp::ContactPtr contact, mChannel->groupContacts(false)) {
-        ContactChatState *state = new ContactChatState(contact->id(), mChannel->chatState(contact));
-        mChatStates[contact->id()] = state;
-    }
-
-    roomInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomInterface>();
-    roomConfigInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomConfigInterface>();
-    subjectInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceSubjectInterface>();
-
-    if (roomInterface) {
-        roomInterface->setMonitorProperties(true);
-        connect(roomInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
-                               SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
-    }
-    if (roomConfigInterface) {
-        roomConfigInterface->setMonitorProperties(true);
-        connect(roomConfigInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
-                                     SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
-    }
-    if (subjectInterface) {
-        subjectInterface->setMonitorProperties(true);
-        connect(subjectInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
-                                  SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
-    }
-
-    connect(channel.data(), SIGNAL(chatStateChanged(const Tp::ContactPtr &, Tp::ChannelChatState)),
-                            this, SLOT(onChatStateChanged(const Tp::ContactPtr &,Tp::ChannelChatState)));
-    connect(channel.data(), SIGNAL(groupMembersChanged(const Tp::Contacts &, const Tp::Contacts &, const Tp::Contacts &,
-            const Tp::Contacts &, const Tp::Channel::GroupMemberChangeDetails &)), this, SIGNAL(participantsChanged()));
 }
 
 void ChatEntry::onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated)
 {
     if (changed.contains("RoomName")) {
-        mRoomName = changed["RoomName"].toString();
-        Q_EMIT roomNameChanged();
+        setRoomName(changed["RoomName"].toString());
     }
     if (changed.contains("Title")) {
         mTitle = changed["Title"].toString();
@@ -81,12 +55,52 @@ void ChatEntry::onRoomPropertiesChanged(const QVariantMap &changed,const QString
     }
 }
 
-QString ChatEntry::roomName()
+void ChatEntry::onSendingMessageFinished()
+{
+    QDBusInterface *job = qobject_cast<QDBusInterface*>(sender());
+    if (!job) {
+        return;
+    }
+
+    QString accountId = job->property("accountId").toString();
+    QString messageId = job->property("messageId").toString();
+    QString channelObjectPath = job->property("channelObjectPath").toString();
+    QVariantMap properties = job->property("properties").toMap();
+    qDebug() << accountId << messageId << channelObjectPath << properties;
+    Tp::TextChannelPtr channel = ChatManager::instance()->channelForObjectPath(channelObjectPath);
+
+    if (channel.isNull()) {
+        Q_EMIT messageSendingFailed(accountId, messageId, properties);
+        job->deleteLater();
+        return;
+    }
+
+    // even if sending the message fails, we can use the channel if available
+    addChannel(channel);
+
+    if (job->property("status").toInt() == MessageJob::Failed || channel.isNull()) {
+        Q_EMIT messageSendingFailed(accountId, messageId, properties);
+        job->deleteLater();
+        return;
+    }
+
+    Q_EMIT messageSent(accountId, messageId, properties);
+    job->deleteLater();
+}
+
+QString ChatEntry::roomName() const
 {
     return mRoomName;
 }
 
-QString ChatEntry::title()
+void ChatEntry::setRoomName(const QString &name)
+{
+    mRoomName = name;
+    Q_EMIT roomNameChanged();
+    // FIXME: we need to invalidate the existing channels & data and start fresh
+}
+
+QString ChatEntry::title() const
 {
     return mTitle;
 }
@@ -101,25 +115,32 @@ ChatEntry::~ChatEntry()
         it.next();
         delete it.value();
     }
-
-    if (roomInterface) {
-        roomInterface->deleteLater();
-    }
-    if (roomConfigInterface) {
-        roomConfigInterface->deleteLater();
-    }
-    if (subjectInterface) {
-        subjectInterface->deleteLater();
-    }
 }
 
-QString ChatEntry::chatId()
+QString ChatEntry::chatId() const
 {
-    if (mChannel) {
-        return mChannel->targetId();
-    }
-    return QString();
+    return mChatId;
 }
+
+void ChatEntry::setChatId(const QString &id)
+{
+    mChatId = id;
+    Q_EMIT chatIdChanged();
+    // FIXME: we need to invalidate the existing channels & data and start fresh
+}
+
+QString ChatEntry::accountId() const
+{
+    return mAccountId;
+}
+
+void ChatEntry::setAccountId(const QString &id)
+{
+    mAccountId = id;
+    Q_EMIT accountIdChanged();
+    // FIXME: we need to invalidate the existing channels & data and start fresh
+}
+
 
 void ChatEntry::onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state)
 {
@@ -133,28 +154,28 @@ void ChatEntry::onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelCha
     Q_EMIT chatStatesChanged();
 }
 
-ChatEntry::ChatType ChatEntry::chatType()
+ChatEntry::ChatType ChatEntry::chatType() const
 {
-    return (ChatType)mChannel->targetHandleType();
+    return mChatType;
 }
 
-Tp::TextChannelPtr ChatEntry::channel()
+void ChatEntry::setChatType(ChatEntry::ChatType type)
 {
-    return mChannel;
+    mChatType = type;
+    Q_EMIT chatTypeChanged();
 }
 
-QStringList ChatEntry::participants()
+QStringList ChatEntry::participants() const
 {
-    QStringList participantList;
-    Q_FOREACH (Tp::ContactPtr contact, mChannel->groupContacts(false)) {
-        participantList << contact->id();
-    }
-    return participantList;
+    return mParticipants;
 }
 
-AccountEntry *ChatEntry::account()
+void ChatEntry::setParticipants(const QStringList &participants)
 {
-    return mAccount;
+    mParticipants = participants;
+    Q_EMIT participantsChanged();
+
+    // FIXME: we need to invalidate the existing channels & data and start fresh
 }
 
 QQmlListProperty<ContactChatState> ChatEntry::chatStates()
@@ -178,4 +199,158 @@ ContactChatState *ChatEntry::chatStatesAt(QQmlListProperty<ContactChatState> *p,
         return 0;
     }
     return entry->mChatStates.values()[index];
+}
+
+void ChatEntry::sendMessage(const QString &accountId, const QString &message, const QVariant &attachments, const QVariantMap &properties)
+{
+    QString objPath = ChatManager::instance()->sendMessage(accountId, message, attachments, properties);
+    QDBusInterface *sendingJob = new QDBusInterface(TelepathyHelper::instance()->handlerInterface()->service(), objPath,
+                                                    "com.canonical.TelephonyServiceHandler.MessageSendingJob");
+    qDebug() << sendingJob->isValid();
+    sendingJob->dumpObjectInfo();
+    connect(sendingJob, SIGNAL(finished()), SLOT(onSendingMessageFinished()));
+    QDBusReply<QString> reply = sendingJob->call("Introspect");
+    qDebug() << reply.value();
+}
+
+void ChatEntry::classBegin()
+{
+    // nothing to do here
+}
+
+void ChatEntry::componentComplete()
+{
+    QVariantMap properties = generateProperties();
+    QList<Tp::TextChannelPtr> channels = ChatManager::instance()->channelForProperties(properties);
+    QList<AccountEntry*> accounts;
+
+    if (!channels.isEmpty()) {
+        setChannels(channels);
+    }
+
+    // now filter out the Phone accounts from the accounts list
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->activeAccounts(true)) {
+        if (account->type() != AccountEntry::PhoneAccount) {
+            accounts << account;
+        }
+    }
+
+    // now check that we have channels for all !Phone accounts
+    // we need channels to be able to show typing notifications
+    Q_FOREACH(const Tp::TextChannelPtr &channel, channels) {
+        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        accounts.removeAll(account);
+    }
+
+    // if there is any remaining account, request to start chatting using the account
+    Q_FOREACH(AccountEntry *account, accounts) {
+        ChatManager::instance()->startChat(account->accountId(), properties);
+    }
+
+    connect(ChatManager::instance(), &ChatManager::textChannelAvailable,
+            this, &ChatEntry::onTextChannelAvailable);
+}
+
+void ChatEntry::setChannels(const QList<Tp::TextChannelPtr> &channels)
+{
+    Q_FOREACH(const Tp::TextChannelPtr &channel, channels) {
+        addChannel(channel);
+    }
+}
+
+void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
+{
+    qDebug() << "adding channel" << channel->objectPath();
+    if (mChannels.contains(channel)) {
+        return;
+    }
+
+    roomInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomInterface>();
+    roomConfigInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomConfigInterface>();
+    subjectInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceSubjectInterface>();
+
+    if (roomInterface) {
+        roomInterface->setProperty("channel", QVariant::fromValue(channel.data()));
+        roomInterface->setMonitorProperties(true);
+        connect(roomInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
+                               SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
+    }
+    if (roomConfigInterface) {
+        roomConfigInterface->setProperty("channel", QVariant::fromValue(channel.data()));
+        roomConfigInterface->setMonitorProperties(true);
+        connect(roomConfigInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
+                                     SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
+    }
+    if (subjectInterface) {
+        subjectInterface->setProperty("channel", QVariant::fromValue(channel.data()));
+        subjectInterface->setMonitorProperties(true);
+        connect(subjectInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
+                                  SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
+    }
+
+    connect(channel.data(), SIGNAL(chatStateChanged(const Tp::ContactPtr &, Tp::ChannelChatState)),
+                            this, SLOT(onChatStateChanged(const Tp::ContactPtr &,Tp::ChannelChatState)));
+    connect(channel.data(), SIGNAL(groupMembersChanged(const Tp::Contacts &, const Tp::Contacts &, const Tp::Contacts &,
+            const Tp::Contacts &, const Tp::Channel::GroupMemberChangeDetails &)), this, SIGNAL(participantsChanged()));
+    connect(channel.data(), SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
+            this, SLOT(onChannelInvalidated()));
+
+    Q_FOREACH (Tp::ContactPtr contact, channel->groupContacts(false)) {
+        // FIXME: we should not create new chat states for contacts already found in previous channels
+        ContactChatState *state = new ContactChatState(contact->id(), channel->chatState(contact));
+        mChatStates[contact->id()] = state;
+    }
+
+    // now fill the properties with the data from the channel
+    if (chatType() != (ChatType)channel->targetHandleType()) {
+        setChatType((ChatType)channel->targetHandleType());
+    }
+    if (chatType() == ChatTypeRoom && mChatId != channel->targetId()) {
+        setChatId(channel->targetId());
+    }
+
+    mChannels << channel;
+}
+
+QVariantMap ChatEntry::generateProperties() const
+{
+    QVariantMap properties;
+
+    properties["participantIds"] = participants();
+    properties["chatType"] = (int)chatType();
+    properties["chatId"] = chatId();
+    properties["threadId"] = chatId();
+
+    if (chatType() == ChatEntry::ChatTypeRoom) {
+        properties["accountId"] = accountId();
+    }
+
+    return properties;
+}
+
+void ChatEntry::onTextChannelAvailable(const Tp::TextChannelPtr &channel)
+{
+    if (ChatManager::channelMatchProperties(channel, generateProperties())) {
+        addChannel(channel);
+    }
+}
+
+void ChatEntry::onChannelInvalidated()
+{
+    qDebug() << __PRETTY_FUNCTION__;
+    Tp::TextChannelPtr channel(qobject_cast<Tp::TextChannel*>(sender()));
+    mChannels.removeAll(channel);
+
+    if (roomInterface && roomInterface->property("channel").value<Tp::TextChannel*>() == channel.data()) {
+        roomInterface->disconnect(this);
+        roomInterface = 0;
+    }
+    if (roomConfigInterface && roomConfigInterface->property("channel").value<Tp::TextChannel*>() == channel.data()) {
+        roomConfigInterface->disconnect(this);
+        roomConfigInterface = 0;
+    }
+    if (subjectInterface && subjectInterface->property("channel").value<Tp::TextChannel*>() == channel.data()) {
+        subjectInterface->disconnect(this);
+        subjectInterface = 0;
+    }
 }

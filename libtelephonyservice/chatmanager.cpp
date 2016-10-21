@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -20,6 +20,7 @@
  */
 
 #include "chatmanager.h"
+#include "chatentry.h"
 #include "telepathyhelper.h"
 #include "phoneutils.h"
 #include "config.h"
@@ -61,8 +62,7 @@ QVariantMap convertPropertiesForDBus(const QVariantMap &properties)
 }
 
 ChatManager::ChatManager(QObject *parent)
-: QObject(parent),
-  mReady(TelepathyHelper::instance()->ready())
+: QObject(parent)
 {
     qDBusRegisterMetaType<AttachmentList>();
     qDBusRegisterMetaType<AttachmentStruct>();
@@ -70,29 +70,13 @@ ChatManager::ChatManager(QObject *parent)
     mMessagesAckTimer.setInterval(25);
     mMessagesAckTimer.setSingleShot(true);
     connect(TelepathyHelper::instance(), SIGNAL(channelObserverUnregistered()), SLOT(onChannelObserverUnregistered()));
-    connect(TelepathyHelper::instance(), SIGNAL(setupReady()), SLOT(onTelepathyReady()));
     connect(&mMessagesAckTimer, SIGNAL(timeout()), SLOT(onAckTimerTriggered()));
     connect(TelepathyHelper::instance(), SIGNAL(setupReady()), SLOT(onConnectedChanged()));
 }
 
-void ChatManager::onTelepathyReady()
-{
-    mReady = true;
-    Q_FOREACH(const Tp::TextChannelPtr &channel, mPendingChannels) {
-        onTextChannelAvailable(channel);
-    }
-    mPendingChannels.clear();
-}
-
 void ChatManager::onChannelObserverUnregistered()
 {
-    QList<ChatEntry*> tmp = mChatEntries;
-    mChatEntries.clear();
-    Q_EMIT chatsChanged();
-    Q_FOREACH(ChatEntry *entry, tmp) {
-        // for some reason deleteLater is not working
-        delete entry;
-    }
+    mTextChannels.clear();
 }
 
 void ChatManager::onConnectedChanged()
@@ -106,6 +90,13 @@ ChatManager *ChatManager::instance()
 {
     static ChatManager *manager = new ChatManager();
     return manager;
+}
+
+void ChatManager::startChat(const QString &accountId, const QVariantMap &properties)
+{
+    QVariantMap propMap = convertPropertiesForDBus(properties);
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->asyncCall("StartChat", accountId, propMap);
 }
 
 QString ChatManager::sendMessage(const QString &accountId, const QString &message, const QVariant &attachments, const QVariantMap &properties)
@@ -164,119 +155,36 @@ QString ChatManager::sendMessage(const QString &accountId, const QString &messag
     return QString();
 }
 
-void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
+QList<Tp::TextChannelPtr> ChatManager::channelForProperties(const QVariantMap &properties)
 {
-    if (!mReady) {
-        mPendingChannels.append(channel);
-        return;
-    }
-    ChatEntry *chatEntry = new ChatEntry(channel, this);
-    mChatEntries.append(chatEntry);
+    // FIXME: remove before releasing
+    qDebug() << __PRETTY_FUNCTION__ << properties;
+    QList<Tp::TextChannelPtr> channels;
 
-    connect(channel.data(),
-            SIGNAL(messageReceived(Tp::ReceivedMessage)),
-            SLOT(onMessageReceived(Tp::ReceivedMessage)));
-    connect(channel.data(),
-            SIGNAL(messageSent(Tp::Message,Tp::MessageSendingFlags,QString)),
-            SLOT(onMessageSent(Tp::Message,Tp::MessageSendingFlags,QString)));
-    connect(channel.data(),
-            SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
-            SLOT(onChannelInvalidated()));
 
-    Q_FOREACH(const Tp::ReceivedMessage &message, channel->messageQueue()) {
-        onMessageReceived(message);
-    }
-
-    Q_EMIT chatsChanged();
-    Q_EMIT chatEntryCreated(chatEntry->account()->accountId(), chatEntry->participants(), chatEntry);
-}
-
-void ChatManager::onChannelInvalidated()
-{
-    Tp::TextChannelPtr channel(qobject_cast<Tp::TextChannel*>(sender()));
-    ChatEntry *chatEntry = chatEntryForChannel(channel);
-    if (chatEntry) {
-        mChatEntries.removeAll(chatEntry);
-        // for some reason deleteLater is not working
-        delete chatEntry;
-        Q_EMIT chatsChanged();
-    }
-}
-
-ChatEntry *ChatManager::chatEntryForChannel(const Tp::TextChannelPtr &channel)
-{
-    Q_FOREACH (ChatEntry *chatEntry, mChatEntries) {
-        if (channel == chatEntry->channel()) {
-            return chatEntry;
+    Q_FOREACH (Tp::TextChannelPtr channel, mTextChannels) {
+        if (channelMatchProperties(channel, properties)) {
+            channels << channel;
         }
     }
-    return NULL;
+
+    return channels;
 }
 
-void ChatManager::onMessageReceived(const Tp::ReceivedMessage &message)
+Tp::TextChannelPtr ChatManager::channelForObjectPath(const QString &objectPath)
 {
-    // ignore delivery reports for now
-    // FIXME: we need to handle errors on sending messages at some point
-    if (message.isDeliveryReport()) {
-        return;
+    Q_FOREACH(Tp::TextChannelPtr channel, mTextChannels) {
+        if (channel->objectPath() == objectPath) {
+            return channel;
+        }
     }
-
-    if (!message.sender()) {
-        return;
-    }
-
-    Q_EMIT messageReceived(message.sender()->id(), message.text(), message.received(), message.messageToken(), true);
+    return Tp::TextChannelPtr();
 }
 
-void ChatManager::onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message)
-{
-    Q_UNUSED(message)
-    Q_UNUSED(flags)
-
-    Tp::TextChannel *channel = qobject_cast<Tp::TextChannel*>(sender());
-    if (!channel) {
-        return;
-    }
-
-    QStringList recipients;
-    Q_FOREACH(const Tp::ContactPtr &contact, channel->groupContacts(false)) {
-        recipients << contact->id();
-    }
-
-    Q_EMIT messageSent(recipients, sentMessage.text());
-}
-
-void ChatManager::acknowledgeMessage(const QVariantMap &properties)
-{
-    mMessagesToAck << QVariant::fromValue(convertPropertiesForDBus(properties));
-    mMessagesAckTimer.start();
-}
-
-void ChatManager::acknowledgeAllMessages(const QVariantMap &properties)
-{
-    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-    phoneAppHandler->asyncCall("AcknowledgeAllMessages", convertPropertiesForDBus(properties));
-}
-
-void ChatManager::onAckTimerTriggered()
-{
-    // ack all pending messages
-    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-
-    phoneAppHandler->asyncCall("AcknowledgeMessages", mMessagesToAck);
-
-    mMessagesToAck.clear();
-}
-
-QList<ChatEntry*> ChatManager::chatEntries() const
-{
-    return mChatEntries;
-}
-
-ChatEntry *ChatManager::chatEntryForProperties(const QString &accountId, const QVariantMap &properties, bool create)
+bool ChatManager::channelMatchProperties(const Tp::TextChannelPtr &channel, const QVariantMap &properties)
 {
     QVariantMap propMap = properties;
-    int chatType = 0;
+    ChatEntry::ChatType chatType = ChatEntry::ChatTypeNone;
 
     QStringList participants;
     // participants coming from qml are variants
@@ -300,79 +208,105 @@ ChatEntry *ChatManager::chatEntryForProperties(const QString &accountId, const Q
     }
 
     if (properties.contains("chatType")) {
-        chatType = properties["chatType"].toInt();
+        chatType = (ChatEntry::ChatType)properties["chatType"].toInt();
     } else {
         if (participants.length() == 1) {
-            chatType = 1;
+            chatType = ChatEntry::ChatTypeContact;
         }
     }
 
-    if ((participants.count() == 0 && chatType == 1)  || accountId.isEmpty()) {
-        return NULL;
+    QString accountId;
+    if (propMap.contains("accountId")) {
+        accountId = propMap["accountId"].toString();
     }
 
-    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    if (participants.count() == 0 && chatType == ChatEntry::ChatTypeContact) {
+        return false;
+    }
 
+    AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
     if (!account) {
-        return NULL;
+        return false;
     }
 
-    Q_FOREACH (ChatEntry *chatEntry, mChatEntries) {
-        int participantCount = 0;
+    // only channels of the correct type should be returned
+    if ((ChatEntry::ChatType)channel->targetHandleType() != chatType) {
+        return false;
+    }
 
-        if (chatType == 2) {
-            QString roomId = propMap["threadId"].toString();
-            if (!roomId.isEmpty() && chatEntry->chatType() == 2 && roomId == chatEntry->chatId()) {
-                return chatEntry;
+    if (chatType == ChatEntry::ChatTypeRoom) {
+        QString chatId = propMap["threadId"].toString();
+        if (!chatId.isEmpty() && channel->targetId() == chatId) {
+            // if we are filtering by one specific accountId, make sure it matches
+            if (!accountId.isEmpty() && accountId != account->accountId()) {
+                return false;
             }
-            continue;
-        }
 
-        Tp::Contacts contacts = chatEntry->channel()->groupContacts(false);
-        if (participants.count() != contacts.count()) {
-            continue;
+            return true;
         }
-        // iterate over participants
-        Q_FOREACH (const Tp::ContactPtr &contact, contacts) {
-            if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
-                Q_FOREACH(const QString &participant, participants) {
-                    if (PhoneUtils::comparePhoneNumbers(participant, contact->id()) > PhoneUtils::NO_MATCH) {
-                        participantCount++;
-                        break;
-                    }
+        return false;
+    }
+
+    Tp::Contacts contacts = channel->groupContacts(false);
+    if (participants.count() != contacts.count()) {
+        return false;
+    }
+    int participantCount = 0;
+    // iterate over participants
+    Q_FOREACH (const Tp::ContactPtr &contact, contacts) {
+        if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
+            Q_FOREACH(const QString &participant, participants) {
+                if (PhoneUtils::comparePhoneNumbers(participant, contact->id()) > PhoneUtils::NO_MATCH) {
+                    participantCount++;
+                    break;
                 }
-                continue;
             }
-            if (participants.contains(contact->id())) {
-                participantCount++;
-            } else {
-                break;
-            }
+            continue;
         }
-        if (participantCount == participants.count()) {
-            return chatEntry;
+        if (participants.contains(contact->id())) {
+            participantCount++;
+        } else {
+            break;
         }
     }
-
-    if (create) {
-        QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
-        phoneAppHandler->call("StartChat", accountId, propMap);
-    }
-    return NULL;
+    return (participantCount == participants.count());
 }
 
-QQmlListProperty<ChatEntry> ChatManager::chats()
+void ChatManager::onTextChannelAvailable(Tp::TextChannelPtr channel)
 {
-    return QQmlListProperty<ChatEntry>(this, 0, chatCount, chatAt);
+    mTextChannels << channel;
+    connect(channel.data(),
+            SIGNAL(invalidated(Tp::DBusProxy*,const QString&, const QString&)),
+            SLOT(onChannelInvalidated()));
+
+    Q_EMIT textChannelAvailable(channel);
 }
 
-int ChatManager::chatCount(QQmlListProperty<ChatEntry> *p)
+void ChatManager::onChannelInvalidated()
 {
-    return ChatManager::instance()->chatEntries().count();
+    Tp::TextChannelPtr channel(qobject_cast<Tp::TextChannel*>(sender()));
+    mTextChannels.removeAll(channel);
+    Q_EMIT textChannelInvalidated(channel);
 }
 
-ChatEntry *ChatManager::chatAt(QQmlListProperty<ChatEntry> *p, int index)
+void ChatManager::acknowledgeMessage(const QVariantMap &properties)
 {
-    return ChatManager::instance()->chatEntries()[index];
+    mMessagesToAck << QVariant::fromValue(convertPropertiesForDBus(properties));
+    mMessagesAckTimer.start();
 }
 
+void ChatManager::acknowledgeAllMessages(const QVariantMap &properties)
+{
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->asyncCall("AcknowledgeAllMessages", convertPropertiesForDBus(properties));
+}
+
+void ChatManager::onAckTimerTriggered()
+{
+    // ack all pending messages
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+
+    phoneAppHandler->asyncCall("AcknowledgeMessages", mMessagesToAck);
+
+    mMessagesToAck.clear();
+}

@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2015 Canonical, Ltd.
+ * Copyright (C) 2015-2016 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -23,6 +24,7 @@
 #define CHATENTRY_H
 
 #include <QObject>
+#include <QQmlParserStatus>
 #include <TelepathyQt/TextChannel>
 
 class AccountEntry;
@@ -42,6 +44,7 @@ public:
     }
 Q_SIGNALS:
     void stateChanged();
+
 private:
     QString mContactId;
     int mState;
@@ -49,14 +52,15 @@ private:
 
 typedef QList<ContactChatState* > ContactChatStates;
 
-class ChatEntry : public QObject
+class ChatEntry : public QObject, public QQmlParserStatus
 {
     Q_OBJECT
-    Q_PROPERTY(AccountEntry* account READ account CONSTANT)
-    Q_PROPERTY(ChatType chatType READ chatType CONSTANT)
-    Q_PROPERTY(QStringList participants READ participants NOTIFY participantsChanged)
-    Q_PROPERTY(QString roomName READ roomName NOTIFY roomNameChanged)
-    Q_PROPERTY(QString chatId READ chatId CONSTANT)
+    Q_INTERFACES(QQmlParserStatus)
+    Q_PROPERTY(ChatType chatType READ chatType WRITE setChatType NOTIFY chatTypeChanged)
+    Q_PROPERTY(QStringList participants READ participants WRITE setParticipants NOTIFY participantsChanged)
+    Q_PROPERTY(QString roomName READ roomName WRITE setRoomName NOTIFY roomNameChanged)
+    Q_PROPERTY(QString chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
+    Q_PROPERTY(QString accountId READ accountId WRITE setAccountId NOTIFY accountIdChanged)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates
                READ chatStates
@@ -79,35 +83,65 @@ public:
         ChannelChatStateComposing = Tp::ChannelChatStateComposing
     };
 
-    explicit ChatEntry(const Tp::TextChannelPtr &channel, QObject *parent = 0);
+    explicit ChatEntry(QObject *parent = 0);
     ~ChatEntry();
-    Tp::TextChannelPtr channel();
-    AccountEntry *account();
     QQmlListProperty<ContactChatState> chatStates();
-    QStringList participants();
-    ChatType chatType();
-    QString chatId();
-    QString roomName();
-    QString title();
+    QStringList participants() const;
+    void setParticipants(const QStringList &participants);
+    ChatType chatType() const;
+    void setChatType(ChatType type);
+    QString chatId() const;
+    void setChatId(const QString &id);
+    QString accountId() const;
+    void setAccountId(const QString &id);
+    QString roomName() const;
+    void setRoomName(const QString &name);
+    QString title() const;
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
 
+    // QML parser status
+    void classBegin();
+    void componentComplete();
+
+public Q_SLOTS:
+    // FIXME: void or return something?
+    void sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
+
+protected:
+    void setChannels(const QList<Tp::TextChannelPtr> &channels);
+    void addChannel(const Tp::TextChannelPtr &channel);
+
+    QVariantMap generateProperties() const;
+
 private Q_SLOTS:
+    void onTextChannelAvailable(const Tp::TextChannelPtr &channel);
+    void onChannelInvalidated();
     void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
     void onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated);
+    void onSendingMessageFinished();
 
 Q_SIGNALS:
+    void chatTypeChanged();
+    void chatIdChanged();
+    void accountIdChanged();
     void chatStatesChanged();
     void participantsChanged();
     void roomNameChanged();
     void titleChanged();
 
+    void messageSent(const QString &accountId, const QString &messageId, const QVariantMap &properties);
+    void messageSendingFailed(const QString &accountId, const QString &messageId, const QVariantMap &properties);
+
 private:
-    AccountEntry *mAccount;
-    Tp::TextChannelPtr mChannel;
+    QList<Tp::TextChannelPtr> mChannels;
+    QStringList mParticipants;
     QMap<QString, ContactChatState*> mChatStates;
     QString mRoomName;
     QString mTitle;
+    QString mChatId;
+    QString mAccountId;
+    ChatType mChatType;
     Tp::Client::ChannelInterfaceRoomInterface *roomInterface;
     Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
     Tp::Client::ChannelInterfaceSubjectInterface *subjectInterface;

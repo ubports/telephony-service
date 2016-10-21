@@ -30,7 +30,7 @@
 #include "dbustypes.h"
 
 /**
- * DBus interface for the phone approver
+ * DBus interface for the phone handler
  */
 class HandlerDBus : public QObject, protected QDBusContext
 {
@@ -51,13 +51,18 @@ public:
     bool callIndicatorVisible() const;
     void setCallIndicatorVisible(bool visible);
 
+    QString registerObject(QObject *object, const QString &path);
+    void unregisterObject(const QString &path);
+
+    static HandlerDBus *instance();
+
 public Q_SLOTS:
     bool connectToBus();
 
     // messages related
     QString SendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
     Q_NOREPLY void AcknowledgeMessages(const QVariantList &messages);
-    Q_NOREPLY void StartChat(const QString &accountId, const QVariantMap &properties);
+    QString StartChat(const QString &accountId, const QVariantMap &properties);
     Q_NOREPLY void AcknowledgeAllMessages(const QVariantMap &properties);
 
     // call related
