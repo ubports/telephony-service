@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
-"X-Generator: Launchpad (build 18186)\n"
+"X-Launchpad-Export-Date: 2016-10-07 06:51+0000\n"
+"X-Generator: Launchpad (build 18217)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -79,7 +79,7 @@ msgstr "កំពុង​ហៅ​ពី​លេខ​មិន​ស្គា
 msgid "Cancel"
 msgstr "បោះបង់"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:238
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 
@@ -124,7 +124,7 @@ msgstr "ខ្ញុំ​យឺត​ហើយ។ ខ្ញុំ​នៅ​�
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:545
+#: indicator/textchannelobserver.cpp:547
 #, qt-format
 msgid "Message from %1"
 msgstr "សារ​ពី %1"
@@ -145,7 +145,7 @@ msgstr "ថ្ងៃនេះ​មិន​បាន​ទទួល​សារ
 msgid "No text messages sent today"
 msgstr "ថ្ងៃនេះ​មិន​បាន​ផ្ញើ​សារ"
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "យល់ព្រម"
 
@@ -157,7 +157,7 @@ msgstr "ការ​ហៅ​ទូរស័ព្ទ"
 msgid "Please call me back later."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:682
+#: indicator/textchannelobserver.cpp:692
 msgid "Please, select a SIM card:"
 msgstr "សូមជ្រើសស៊ី​ម​កាត ៖"
 
@@ -182,7 +182,7 @@ msgstr "ស៊ីម %1"
 msgid "SMS"
 msgstr "សារ SMS"
 
-#: indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:320
 msgid "Save"
 msgstr "រក្សា​ទុក"
 
@@ -211,11 +211,11 @@ msgstr "ក្រុមហ៊ុន​អនុម័ត​សេវាកម្
 msgid "Telephony Service Indicator"
 msgstr "សូចនាករ​សេវាកម្ម​ទូរស័ព្ទ"
 
-#: indicator/textchannelobserver.cpp:245
+#: indicator/textchannelobserver.cpp:247
 msgid "The message could not be sent"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:239
+#: indicator/textchannelobserver.cpp:241
 msgid "Try again from the messaging application."
 msgstr ""
 
@@ -228,15 +228,15 @@ msgid "Unknown caller"
 msgstr "មិន​ស្គាល់​អ្នក​ហៅ"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
 msgid "Unknown number"
 msgstr "មិន​ស្គាល់​លេខ"
 
-#: indicator/textchannelobserver.cpp:234
+#: indicator/textchannelobserver.cpp:236
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
+#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
 msgid "View message"
 msgstr "មើល​សារ"
 
