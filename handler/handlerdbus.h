@@ -56,8 +56,6 @@ public:
 
     static HandlerDBus *instance();
 
-    bool DestroyTextChannel(const QString &objectPath);
-
 public Q_SLOTS:
     bool connectToBus();
 
@@ -66,6 +64,8 @@ public Q_SLOTS:
     Q_NOREPLY void AcknowledgeMessages(const QVariantList &messages);
     QString StartChat(const QString &accountId, const QVariantMap &properties);
     Q_NOREPLY void AcknowledgeAllMessages(const QVariantMap &properties);
+    bool DestroyTextChannel(const QString &objectPath);
+    Q_NOREPLY void ChangeRoomTitle(const QString &objectPath, const QString &title);
 
     // call related
     Q_NOREPLY void StartCall(const QString &number, const QString &accountId);

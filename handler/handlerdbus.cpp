@@ -106,6 +106,11 @@ bool HandlerDBus::DestroyTextChannel(const QString &objectPath)
     return TextHandler::instance()->destroyTextChannel(objectPath);
 }
 
+void HandlerDBus::ChangeRoomTitle(const QString &objectPath, const QString &title)
+{
+    TextHandler::instance()->changeRoomTitle(objectPath, title);
+}
+
 bool HandlerDBus::connectToBus()
 {
     bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);

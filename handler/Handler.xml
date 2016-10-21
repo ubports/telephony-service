@@ -54,6 +54,13 @@
             <arg name="objectPath" type="s" direction="in"/>
             <arg name="result" type="b" direction="out"/>
         </method>
+        <method name="ChangeRoomTitle">
+            <dox:d><![CDATA[
+                Changes the title of a group.
+            ]]></dox:d>
+            <arg name="objectPath" type="s" direction="in"/>
+            <arg name="title" type="s" direction="in"/>
+        </method>
         <!-- Call Related -->
         <method name="StartCall">
             <dox:d><![CDATA[

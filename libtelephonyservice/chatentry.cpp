@@ -31,6 +31,7 @@
 #include <TelepathyQt/Contact>
 #include <TelepathyQt/PendingReady>
 #include <TelepathyQt/Connection>
+#include <TelepathyQt/PendingVariantMap>
 
 Q_DECLARE_METATYPE(ContactChatStates)
 
@@ -103,6 +104,21 @@ void ChatEntry::setRoomName(const QString &name)
 QString ChatEntry::title() const
 {
     return mTitle;
+}
+
+void ChatEntry::setTitle(const QString &title)
+{
+    // FIXME: remove this debug before going into production.
+    qDebug() << __PRETTY_FUNCTION__ << "Changing group title to" << title;
+    QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
+    Q_FOREACH(const Tp::TextChannelPtr channel, mChannels) {
+        if (!channel->hasInterface(TP_QT_IFACE_CHANNEL_INTERFACE_ROOM_CONFIG)) {
+            qWarning() << "Channel doesn't have the RoomConfig interface";
+            return;
+        }
+
+        handlerIface->asyncCall("ChangeRoomTitle", channel->objectPath(), title);
+    }
 }
 
 ChatEntry::~ChatEntry()
@@ -278,6 +294,12 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
     if (roomConfigInterface) {
         roomConfigInterface->setProperty("channel", QVariant::fromValue(channel.data()));
         roomConfigInterface->setMonitorProperties(true);
+        Tp::PendingVariantMap *pendingResult = roomConfigInterface->requestAllProperties();
+        connect(pendingResult, &Tp::PendingOperation::finished, [=](){
+            if (!pendingResult->isError()) {
+                onRoomPropertiesChanged(pendingResult->result(), QStringList());
+            }
+        });
         connect(roomConfigInterface, SIGNAL(propertiesChanged(const QVariantMap &,const QStringList &)),
                                      SLOT(onRoomPropertiesChanged(const QVariantMap &,const QStringList &)));
     }

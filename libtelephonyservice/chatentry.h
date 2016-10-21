@@ -61,7 +61,7 @@ class ChatEntry : public QObject, public QQmlParserStatus
     Q_PROPERTY(QString roomName READ roomName WRITE setRoomName NOTIFY roomNameChanged)
     Q_PROPERTY(QString chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(QString accountId READ accountId WRITE setAccountId NOTIFY accountIdChanged)
-    Q_PROPERTY(QString title READ title NOTIFY titleChanged)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates
                READ chatStates
                NOTIFY chatStatesChanged)
@@ -97,6 +97,7 @@ public:
     QString roomName() const;
     void setRoomName(const QString &name);
     QString title() const;
+    void setTitle(const QString & title);
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
 
