@@ -28,6 +28,7 @@
 #include <TelepathyQt/TextChannel>
 
 class AccountEntry;
+class Participant;
 
 class ContactChatState : public QObject
 {
@@ -57,14 +58,15 @@ class ChatEntry : public QObject, public QQmlParserStatus
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
     Q_PROPERTY(ChatType chatType READ chatType WRITE setChatType NOTIFY chatTypeChanged)
-    Q_PROPERTY(QStringList participants READ participants WRITE setParticipants NOTIFY participantsChanged)
+    Q_PROPERTY(QStringList participantIds READ participantIds WRITE setParticipantIds NOTIFY participantIdsChanged)
+    Q_PROPERTY(QQmlListProperty<Participant> participants READ participants NOTIFY participantsChanged)
+    Q_PROPERTY(QQmlListProperty<Participant> localPendingParticipants READ localPendingParticipants NOTIFY localPendingParticipantsChanged)
+    Q_PROPERTY(QQmlListProperty<Participant> remotePendingParticipants READ remotePendingParticipants NOTIFY remotePendingParticipantsChanged)
     Q_PROPERTY(QString roomName READ roomName WRITE setRoomName NOTIFY roomNameChanged)
     Q_PROPERTY(QString chatId READ chatId WRITE setChatId NOTIFY chatIdChanged)
     Q_PROPERTY(QString accountId READ accountId WRITE setAccountId NOTIFY accountIdChanged)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
-    Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates
-               READ chatStates
-               NOTIFY chatStatesChanged)
+    Q_PROPERTY(QQmlListProperty<ContactChatState> chatStates READ chatStates NOTIFY chatStatesChanged)
 
     Q_ENUMS(ChatType)
     Q_ENUMS(ChatState)
@@ -85,9 +87,13 @@ public:
 
     explicit ChatEntry(QObject *parent = 0);
     ~ChatEntry();
-    QQmlListProperty<ContactChatState> chatStates();
-    QStringList participants() const;
-    void setParticipants(const QStringList &participants);
+    QStringList participantIds() const;
+    void setParticipantIds(const QStringList &participantIds);
+    QQmlListProperty<Participant> participants();
+    QQmlListProperty<Participant> localPendingParticipants();
+    QQmlListProperty<Participant> remotePendingParticipants();
+    static int participantsCount(QQmlListProperty<Participant> *p);
+    static Participant *participantsAt(QQmlListProperty<Participant> *p, int index);
     ChatType chatType() const;
     void setChatType(ChatType type);
     QString chatId() const;
@@ -98,6 +104,7 @@ public:
     void setRoomName(const QString &name);
     QString title() const;
     void setTitle(const QString & title);
+    QQmlListProperty<ContactChatState> chatStates();
     static int chatStatesCount(QQmlListProperty<ContactChatState> *p);
     static ContactChatState *chatStatesAt(QQmlListProperty<ContactChatState> *p, int index);
 
@@ -111,6 +118,10 @@ public Q_SLOTS:
     void setChatState(ChatState state);
 
     bool destroyRoom();
+    void inviteParticipants(const QStringList &participantIds, const QString &message = QString());
+    void removeParticipants(const QStringList &participantIds, const QString &message = QString());
+
+
 
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
@@ -118,28 +129,44 @@ protected:
 
     QVariantMap generateProperties() const;
 
+    void clearParticipants();
+    void updateParticipants(QList<Participant*> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account);
+
 private Q_SLOTS:
     void onTextChannelAvailable(const Tp::TextChannelPtr &channel);
     void onChannelInvalidated();
     void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
     void onRoomPropertiesChanged(const QVariantMap &changed,const QStringList &invalidated);
     void onSendingMessageFinished();
+    void onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
+                               const Tp::Contacts &groupLocalPendingMembersAdded,
+                               const Tp::Contacts &groupRemotePendingMembersAdded,
+                               const Tp::Contacts &groupMembersRemoved,
+                               const Tp::Channel::GroupMemberChangeDetails &details);
 
 Q_SIGNALS:
     void chatTypeChanged();
     void chatIdChanged();
     void accountIdChanged();
     void chatStatesChanged();
+    void participantIdsChanged();
     void participantsChanged();
+    void localPendingParticipantsChanged();
+    void remotePendingParticipantsChanged();
     void roomNameChanged();
     void titleChanged();
+    void inviteParticipantsFailed();
+    void removeParticipantsFailed();
 
     void messageSent(const QString &accountId, const QString &messageId, const QVariantMap &properties);
     void messageSendingFailed(const QString &accountId, const QString &messageId, const QVariantMap &properties);
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
-    QStringList mParticipants;
+    QStringList mParticipantIds;
+    QList<Participant*> mParticipants;
+    QList<Participant*> mLocalPendingParticipants;
+    QList<Participant*> mRemotePendingParticipants;
     QMap<QString, ContactChatState*> mChatStates;
     QString mRoomName;
     QString mTitle;

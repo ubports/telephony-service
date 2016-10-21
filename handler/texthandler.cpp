@@ -226,3 +226,41 @@ Tp::TextChannelPtr TextHandler::existingChannelFromObjectPath(const QString &obj
     }
     return Tp::TextChannelPtr();
 }
+
+void TextHandler::inviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message)
+{
+    Tp::TextChannelPtr channel = existingChannelFromObjectPath(objectPath);
+    if (channel->targetHandleType() != Tp::HandleTypeRoom || !channel) {
+        return;
+    }
+    if (!channel->groupCanAddContacts() || !channel->connection()) {
+        return;
+    }
+    Tp::PendingContacts *contactOp = channel->connection()->contactManager()->contactsForIdentifiers(participants);
+    connect(contactOp, &Tp::PendingOperation::finished, [=] {
+        if (contactOp->isError()) {
+            return;
+        }
+        channel->groupAddContacts(contactOp->contacts(), message);
+    });
+
+}
+
+void TextHandler::removeParticipants(const QString &objectPath, const QStringList &participants, const QString &message)
+{
+    Tp::TextChannelPtr channel = existingChannelFromObjectPath(objectPath);
+    if (channel->targetHandleType() != Tp::HandleTypeRoom || !channel) {
+        return;
+    }
+    if (!channel->groupCanRemoveContacts() || !channel->connection()) {
+        return;
+    }
+    Tp::PendingContacts *contactOp = channel->connection()->contactManager()->contactsForIdentifiers(participants);
+    connect(contactOp, &Tp::PendingOperation::finished, [=] {
+        if (contactOp->isError()) {
+            return;
+        }
+        channel->groupRemoveContacts(contactOp->contacts(), message);
+    });
+}
+

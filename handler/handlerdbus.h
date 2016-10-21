@@ -66,6 +66,9 @@ public Q_SLOTS:
     Q_NOREPLY void AcknowledgeAllMessages(const QVariantMap &properties);
     bool DestroyTextChannel(const QString &objectPath);
     Q_NOREPLY void ChangeRoomTitle(const QString &objectPath, const QString &title);
+    Q_NOREPLY void InviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
+    Q_NOREPLY void RemoveParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
+ 
 
     // call related
     Q_NOREPLY void StartCall(const QString &number, const QString &accountId);

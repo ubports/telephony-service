@@ -44,6 +44,8 @@ public Q_SLOTS:
     void acknowledgeAllMessages(const QVariantMap &properties);
     bool destroyTextChannel(const QString &objectPath);
     void changeRoomTitle(const QString &objectPath, const QString &title);
+    void inviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
+    void removeParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
