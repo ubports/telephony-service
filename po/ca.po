@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
-"X-Generator: Launchpad (build 18186)\n"
+"X-Launchpad-Export-Date: 2016-10-07 06:50+0000\n"
+"X-Generator: Launchpad (build 18217)\n"
 "Language: ca\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -82,7 +82,7 @@ msgstr "S'està trucant des d'un número desconegut"
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:238
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Desactiveu el mode d'avió i torneu-ho a intentar des de l'aplicació de "
@@ -128,7 +128,7 @@ msgstr "Arribo tard. Ja estic venint."
 msgid "Message & decline"
 msgstr "Envia un missatge i declina"
 
-#: indicator/textchannelobserver.cpp:545
+#: indicator/textchannelobserver.cpp:547
 #, qt-format
 msgid "Message from %1"
 msgstr "Missatge d'en/na %1"
@@ -149,7 +149,7 @@ msgstr "Avui no heu rebut cap missatge de text"
 msgid "No text messages sent today"
 msgstr "Avui no heu enviat cap missatge de text"
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "D'acord"
 
@@ -161,7 +161,7 @@ msgstr "Trucades de telèfon"
 msgid "Please call me back later."
 msgstr "Truca'm més tard."
 
-#: indicator/textchannelobserver.cpp:682
+#: indicator/textchannelobserver.cpp:692
 msgid "Please, select a SIM card:"
 msgstr "Seleccioneu una targeta SIM:"
 
@@ -186,7 +186,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:320
 msgid "Save"
 msgstr "Desa"
 
@@ -215,11 +215,11 @@ msgstr "Aprovador del servei de telefonia"
 msgid "Telephony Service Indicator"
 msgstr "Indicador del servei de telefonia"
 
-#: indicator/textchannelobserver.cpp:245
+#: indicator/textchannelobserver.cpp:247
 msgid "The message could not be sent"
 msgstr "No s'ha pogut enviar el missatge"
 
-#: indicator/textchannelobserver.cpp:239
+#: indicator/textchannelobserver.cpp:241
 msgid "Try again from the messaging application."
 msgstr "Torneu-ho a intentar per a l'aplicació de missatgeria."
 
@@ -232,17 +232,17 @@ msgid "Unknown caller"
 msgstr "Número entrant desconegut"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
 msgid "Unknown number"
 msgstr "Número desconegut"
 
-#: indicator/textchannelobserver.cpp:234
+#: indicator/textchannelobserver.cpp:236
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Desbloqueu la targeta SIM i torneu-ho a provar des de l'aplicació de "
 "missatgeria."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
+#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
 msgid "View message"
 msgstr "Mostra el missatge"
 

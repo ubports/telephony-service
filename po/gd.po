@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
-"X-Generator: Launchpad (build 18186)\n"
+"X-Launchpad-Export-Date: 2016-10-07 06:50+0000\n"
+"X-Generator: Launchpad (build 18217)\n"
 "Language: gd\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -87,7 +87,7 @@ msgstr "Fòn o àireamh nach aithne dhuinn"
 msgid "Cancel"
 msgstr "Sguir dheth"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:238
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Cuir am modh itealain à comas is feuch ris a-rithist o aplacaid nan "
@@ -133,7 +133,7 @@ msgstr "Tha mi fadalach ach air an t-slighe."
 msgid "Message & decline"
 msgstr "Teachdaireachd ⁊ diùlt"
 
-#: indicator/textchannelobserver.cpp:545
+#: indicator/textchannelobserver.cpp:547
 #, qt-format
 msgid "Message from %1"
 msgstr "Teachdaireachd o %1"
@@ -154,7 +154,7 @@ msgstr "Cha d' fhuaireadh teachdaireachd an-diugh"
 msgid "No text messages sent today"
 msgstr "Cha do chuireadh teachdaireachd an-diugh"
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "Ceart ma-thà"
 
@@ -166,7 +166,7 @@ msgstr "Gairmean fòn"
 msgid "Please call me back later."
 msgstr "Saoil an cuir thu fòn air ais thugam an ceann greis?"
 
-#: indicator/textchannelobserver.cpp:682
+#: indicator/textchannelobserver.cpp:692
 msgid "Please, select a SIM card:"
 msgstr "Tagh cairt SIM:"
 
@@ -191,7 +191,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:320
 msgid "Save"
 msgstr "Sàbhail"
 
@@ -222,11 +222,11 @@ msgstr "Aontaichear na seirbheise fòn"
 msgid "Telephony Service Indicator"
 msgstr "Taisbeanair na seirbheise fòn"
 
-#: indicator/textchannelobserver.cpp:245
+#: indicator/textchannelobserver.cpp:247
 msgid "The message could not be sent"
 msgstr "Cha b' urrainn dhuinn an teachdaireachd a chur"
 
-#: indicator/textchannelobserver.cpp:239
+#: indicator/textchannelobserver.cpp:241
 msgid "Try again from the messaging application."
 msgstr "Feuch ris a-rithist o aplacaid nan teachdaireachdan."
 
@@ -239,17 +239,17 @@ msgid "Unknown caller"
 msgstr "Chan eil fhios cò tha fònadh"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
 msgid "Unknown number"
 msgstr "Àireamh nach aithne dhuinn"
 
-#: indicator/textchannelobserver.cpp:234
+#: indicator/textchannelobserver.cpp:236
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Thoir a' ghlas far na cairt SIM agad is feuch ris a-rithist o aplacaid nan "
 "teachdaireachdan."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
+#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
 msgid "View message"
 msgstr "Seall an teachdaireachd"
 

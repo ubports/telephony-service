@@ -16,8 +16,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
-"X-Generator: Launchpad (build 18186)\n"
+"X-Launchpad-Export-Date: 2016-10-07 06:51+0000\n"
+"X-Generator: Launchpad (build 18217)\n"
 "Language: lv\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -85,7 +85,7 @@ msgstr "Zvanīšana no nezināma numura"
 msgid "Cancel"
 msgstr "Atcelt"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:238
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Izslēdziet lidmašīnas režīmu un mēģiniet vēlreiz no īsziņu lietotnes."
@@ -130,7 +130,7 @@ msgstr "Es esmu aizkavējies. Es tūlīt būšu."
 msgid "Message & decline"
 msgstr "Sūtīt īsziņu un noraidīt"
 
-#: indicator/textchannelobserver.cpp:545
+#: indicator/textchannelobserver.cpp:547
 #, qt-format
 msgid "Message from %1"
 msgstr "Īsziņa no %1"
@@ -151,7 +151,7 @@ msgstr "Šodien nav saņemtu īsziņu"
 msgid "No text messages sent today"
 msgstr "Šodien nav sūtītu īsziņu"
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "Labi"
 
@@ -163,7 +163,7 @@ msgstr "Tālruņa zvani"
 msgid "Please call me back later."
 msgstr "Lūdzu, atzvaniet man vēlāk."
 
-#: indicator/textchannelobserver.cpp:682
+#: indicator/textchannelobserver.cpp:692
 msgid "Please, select a SIM card:"
 msgstr "Lūdzu, ievietojiet SIM karti:"
 
@@ -188,7 +188,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:320
 msgid "Save"
 msgstr "Saglabāt"
 
@@ -217,11 +217,11 @@ msgstr "Telefonijas pakalpojumu apstiprinātājs"
 msgid "Telephony Service Indicator"
 msgstr "Telefonijas pakalpojumu indikators"
 
-#: indicator/textchannelobserver.cpp:245
+#: indicator/textchannelobserver.cpp:247
 msgid "The message could not be sent"
 msgstr "Šo īsziņu nevarēja nosūtīt"
 
-#: indicator/textchannelobserver.cpp:239
+#: indicator/textchannelobserver.cpp:241
 msgid "Try again from the messaging application."
 msgstr "Mēģiniet vēlreiz no īsziņu lietotnes."
 
@@ -234,15 +234,15 @@ msgid "Unknown caller"
 msgstr "Nezināms zvanītājs"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
 msgid "Unknown number"
 msgstr "Nezināms numurs"
 
-#: indicator/textchannelobserver.cpp:234
+#: indicator/textchannelobserver.cpp:236
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Atbloķējiet savu SIM karti un mēģiniet vēlreiz no īsziņu lietotnes."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
+#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
 msgid "View message"
 msgstr "Skatīt īsziņu"
 

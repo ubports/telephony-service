@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
-"X-Generator: Launchpad (build 18186)\n"
+"X-Launchpad-Export-Date: 2016-10-07 06:51+0000\n"
+"X-Generator: Launchpad (build 18217)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -79,7 +79,7 @@ msgstr "درحال تماس از شماره‌ی نامشخص"
 msgid "Cancel"
 msgstr "لغو"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:238
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr "حالت پرواز را خاموش کرده و دوباره از برنامه ی پیام‌رسان تلاش کنید."
 
@@ -123,7 +123,7 @@ msgstr "دیر می‌رسم. تو راهم."
 msgid "Message & decline"
 msgstr "پیام دادن و رد کردن"
 
-#: indicator/textchannelobserver.cpp:545
+#: indicator/textchannelobserver.cpp:547
 #, qt-format
 msgid "Message from %1"
 msgstr "پیام از %1"
@@ -144,7 +144,7 @@ msgstr "امروز پیام متنی‌ای دریافت نشد"
 msgid "No text messages sent today"
 msgstr "امروز پیام متنی‌ای فرستاده نشد"
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "باشه"
 
@@ -156,7 +156,7 @@ msgstr "تماس‌های تلفنی"
 msgid "Please call me back later."
 msgstr "لطفاً بعداً باهام تماس بگیر."
 
-#: indicator/textchannelobserver.cpp:682
+#: indicator/textchannelobserver.cpp:692
 msgid "Please, select a SIM card:"
 msgstr "لطفاً سیم‌کارتی را برگزینید:"
 
@@ -181,7 +181,7 @@ msgstr "سیم‌کارت %1"
 msgid "SMS"
 msgstr "پیامک"
 
-#: indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:320
 msgid "Save"
 msgstr "ذخیره"
 
@@ -210,11 +210,11 @@ msgstr "تأییدکننده‌ی خدمات تلفن"
 msgid "Telephony Service Indicator"
 msgstr "نشانگر خدمات تلفن"
 
-#: indicator/textchannelobserver.cpp:245
+#: indicator/textchannelobserver.cpp:247
 msgid "The message could not be sent"
 msgstr "پیام نتوانست فرستاده شود"
 
-#: indicator/textchannelobserver.cpp:239
+#: indicator/textchannelobserver.cpp:241
 msgid "Try again from the messaging application."
 msgstr "دوباره از برنامه ی پیام‌رسان تلاش کنید."
 
@@ -227,16 +227,16 @@ msgid "Unknown caller"
 msgstr "تماس‌گیرنده‌ی ناشناس"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
 msgid "Unknown number"
 msgstr "شماره‌ی ناشناس"
 
-#: indicator/textchannelobserver.cpp:234
+#: indicator/textchannelobserver.cpp:236
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "قفل سیم‌کارتتان را باز کرده و دوباره از برنامه ی پیام‌رسان تلاش کنید."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
+#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
 msgid "View message"
 msgstr "دیدن پیام"
 

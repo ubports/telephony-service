@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
-"X-Generator: Launchpad (build 18186)\n"
+"X-Launchpad-Export-Date: 2016-10-07 06:51+0000\n"
+"X-Generator: Launchpad (build 18217)\n"
 "Language: uk\n"
 
 #: indicator/messagingmenu.cpp:299
@@ -85,7 +85,7 @@ msgstr "Дзвінок з невідомого номера"
 msgid "Cancel"
 msgstr "Скасувати"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:238
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Вимкніть режим польоту і повторіть спробу за допомогою програми для роботи з "
@@ -131,7 +131,7 @@ msgstr "Запізнююся. У дорозі."
 msgid "Message & decline"
 msgstr "Повідомити і відхилити"
 
-#: indicator/textchannelobserver.cpp:545
+#: indicator/textchannelobserver.cpp:547
 #, qt-format
 msgid "Message from %1"
 msgstr "Повідомлення від %1"
@@ -152,7 +152,7 @@ msgstr "Сьогодні текстових повідомлень не надх
 msgid "No text messages sent today"
 msgstr "Сьогодні текстових повідомлень не надсилалося"
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
 msgid "Ok"
 msgstr "Гаразд"
 
@@ -164,7 +164,7 @@ msgstr "Телефонні дзвінки"
 msgid "Please call me back later."
 msgstr "Будь ласка, передзвоніть пізніше."
 
-#: indicator/textchannelobserver.cpp:682
+#: indicator/textchannelobserver.cpp:692
 msgid "Please, select a SIM card:"
 msgstr "Будь ласка, виберіть SIM-картку:"
 
@@ -189,7 +189,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "СМС"
 
-#: indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:320
 msgid "Save"
 msgstr "Зберегти"
 
@@ -218,11 +218,11 @@ msgstr "Підтверджувач служби телефонії"
 msgid "Telephony Service Indicator"
 msgstr "Індикатор служби телефонії"
 
-#: indicator/textchannelobserver.cpp:245
+#: indicator/textchannelobserver.cpp:247
 msgid "The message could not be sent"
 msgstr "Не вдалося надіслати повідомлення"
 
-#: indicator/textchannelobserver.cpp:239
+#: indicator/textchannelobserver.cpp:241
 msgid "Try again from the messaging application."
 msgstr "Повторіть спробу за допомогою програми для роботи з повідомленнями."
 
@@ -235,17 +235,17 @@ msgid "Unknown caller"
 msgstr "Невідома особа"
 
 #: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
 msgid "Unknown number"
 msgstr "Невідомий номер"
 
-#: indicator/textchannelobserver.cpp:234
+#: indicator/textchannelobserver.cpp:236
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Розблокуйте SIM-картку і повторіть спробу за допомогою програми для роботи з "
 "повідомленнями."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
+#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
 msgid "View message"
 msgstr "Переглянути повідомлення"
 
