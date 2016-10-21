@@ -180,6 +180,7 @@ private Q_SLOTS:
                                const Tp::Channel::GroupMemberChangeDetails &details);
     void onChatStartingFinished();
     void onRolesChanged(const HandleRolesMap &added, const HandleRolesMap &removed);
+    void onAccountActiveChanged();
 
 Q_SIGNALS:
     void chatTypeChanged();

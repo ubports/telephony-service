@@ -452,6 +452,10 @@ void ChatEntry::componentComplete()
     Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->activeAccounts(true)) {
         if (account->type() != AccountEntry::PhoneAccount) {
             accounts << account;
+            // when account is activated, create the channel if it not exists. This can happen
+            // when being in the conversation or in conversation details page while account is offline
+            // and become online at that moment. Use UniqueConnection for not duplicating same signal-slot
+            connect(account, SIGNAL(activeChanged()), SLOT(onAccountActiveChanged()), Qt::UniqueConnection);
         }
     }
 
@@ -471,6 +475,27 @@ void ChatEntry::componentComplete()
 
     connect(ChatManager::instance(), &ChatManager::textChannelAvailable,
             this, &ChatEntry::onTextChannelAvailable);
+}
+
+void ChatEntry::onAccountActiveChanged()
+{
+    AccountEntry* account = qobject_cast<AccountEntry*>(sender());
+    if (account->active()) {
+        if (mAutoRequest) {
+            bool hasChannel = false;
+            Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
+                AccountEntry *current = TelepathyHelper::instance()->accountForConnection(channel->connection());
+                if (current->accountId() == account->accountId()) {
+                    hasChannel = true;
+                    break;
+                }
+            }
+
+            if (!hasChannel) {
+                ChatManager::instance()->startChat(account->accountId(), generateProperties());
+            }
+        }
+    }
 }
 
 void ChatEntry::setChannels(const QList<Tp::TextChannelPtr> &channels)
