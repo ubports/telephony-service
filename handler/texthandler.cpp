@@ -92,18 +92,6 @@ void TextHandler::onConnectedChanged()
             if (accountId != pendingMessage.accountId) {
                 continue;
             }
-            bool found = false;
-            // avoid adding twice the same list of participants
-/*            Q_FOREACH(const QStringList &recipients, recipientsList) {
-                if (recipients == pendingMessage.recipients) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                recipientsList << pendingMessage.recipients;
-            }*/
-            // TODO AVOID CALLING TWICE FOR SAME CHANNEL
             startChat(accountId, pendingMessage.properties);
         }
     }
@@ -415,7 +403,6 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
 
     QList<Tp::TextChannelPtr> channels = existingChannels(account->accountId(), properties);
     if (channels.isEmpty()) {
-        // temporary
         switch(properties["chatType"].toUInt()) {
         case Tp::HandleTypeNone:
         case Tp::HandleTypeContact:
@@ -443,9 +430,6 @@ QString TextHandler::sendMessage(const QString &accountId, const QString &messag
             break;
         }
         }
-
-        //startChat(account->accountId(), pendingMessage.properties);
-        //return account->accountId();
     }
 
     connect(channels.last()->send(buildMessage(pendingMessage)),
