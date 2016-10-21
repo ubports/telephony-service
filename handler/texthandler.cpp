@@ -97,6 +97,32 @@ void TextHandler::acknowledgeAllMessages(const QVariantMap &properties)
     }
 }
 
+bool TextHandler::destroyTextChannel(const QString &objectPath)
+{
+    Tp::TextChannelPtr channelToDestroy;
+    Q_FOREACH(Tp::TextChannelPtr channel, mChannels) {
+        if (channel->objectPath() == objectPath) {
+            channelToDestroy = channel;
+            break;
+        }
+    }
+
+    if (!channelToDestroy ||
+        !channelToDestroy->hasInterface(TP_QT_IFACE_CHANNEL_INTERFACE_DESTROYABLE)) {
+        return false;
+    }
+
+    Tp::Client::ChannelInterfaceDestroyableInterface *interface = channelToDestroy->interface<Tp::Client::ChannelInterfaceDestroyableInterface>();
+    if (!interface) {
+        return false;
+    }
+
+    // FIXME(boiko): maybe use an async API? not sure it is worth adding that
+    QDBusPendingReply<void> reply = interface->Destroy();
+    reply.waitForFinished();
+    return !reply.isError();
+}
+
 void TextHandler::onTextChannelInvalidated()
 {
     Tp::TextChannelPtr textChannel(qobject_cast<Tp::TextChannel*>(sender()));

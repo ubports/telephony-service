@@ -84,6 +84,7 @@ private:
     bool mFinished;
 
     Tp::MessagePartList buildMessage(const PendingMessage &pendingMessage);
+    bool canSendMultiPartMessages();
 
 };
 

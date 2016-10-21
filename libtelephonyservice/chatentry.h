@@ -109,6 +109,8 @@ public Q_SLOTS:
     void sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
     void setChatState(ChatState state);
 
+    bool destroyRoom();
+
 protected:
     void setChannels(const QList<Tp::TextChannelPtr> &channels);
     void addChannel(const Tp::TextChannelPtr &channel);

@@ -199,7 +199,28 @@ void MessageSendingJob::findOrCreateChannel()
 void MessageSendingJob::sendMessage()
 {
     qDebug() << __PRETTY_FUNCTION__;
-    Tp::PendingSendMessage *op = mTextChannel->send(buildMessage(mMessage));
+
+    Tp::MessagePartList messageParts = buildMessage(mMessage);
+    Tp::PendingSendMessage *op = NULL;
+    // some protocols can't sent multipart messages, so we check here
+    // and split the parts if needed
+    if (canSendMultiPartMessages()) {
+        op = mTextChannel->send(messageParts);
+    } else {
+        bool messageSent = false;
+        Tp::MessagePart header = messageParts.takeFirst();
+        Q_FOREACH(const Tp::MessagePart &part, messageParts) {
+            Tp::MessagePartList newMessage;
+            newMessage << header;
+            newMessage << part;
+            Tp::PendingSendMessage *thisOp = mTextChannel->send(newMessage);
+            if (messageSent) {
+                continue;
+            }
+            messageSent = true;
+            op = thisOp;
+        }
+    }
     connect(op, &Tp::PendingOperation::finished, [this, op]() {
         if (op->isError()) {
             setStatus(Failed);
@@ -212,6 +233,24 @@ void MessageSendingJob::sendMessage()
         setStatus(Finished);
         scheduleDeletion();
     });
+}
+ 
+bool MessageSendingJob::canSendMultiPartMessages()
+{
+    if (!mAccount) {
+        return false;
+    }
+    switch (mAccount->type()) {
+    case AccountEntry::PhoneAccount:
+        return true;
+    // TODO check in telepathy if multipart is supported
+    // currently we just return false to be on the safe side
+    case AccountEntry::GenericAccount:
+    case AccountEntry::MultimediaAccount:
+    default:
+        return false;
+    }
+    return false;
 }
 
 void MessageSendingJob::setAccountId(const QString &accountId)
@@ -242,8 +281,7 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
     QString smil, regions, parts;
     bool hasImage = false, hasText = false, hasVideo = false, hasAudio = false, isMMS = false;
 
-    AccountEntry *account = TelepathyHelper::instance()->accountForId(pendingMessage.accountId);
-    if (!account) {
+    if (!mAccount) {
         // account does not exist
         return Tp::MessagePartList();
     }
@@ -258,7 +296,7 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
     }
 
     // check if this message should be sent as an MMS
-    if (account->type() == AccountEntry::PhoneAccount) {
+    if (mAccount->type() == AccountEntry::PhoneAccount) {
         isMMS = (pendingMessage.attachments.size() > 0 ||
                  (header.contains("x-canonical-mms") && header["x-canonical-mms"].variant().toBool()) ||
                  (pendingMessage.properties["participantIds"].toStringList().size() > 1 && TelepathyHelper::instance()->mmsGroupChat()));
