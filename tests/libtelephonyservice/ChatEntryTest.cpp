@@ -93,6 +93,8 @@ void ChatEntryTest::testContactChatState()
     QFETCH(QString, accountId);
     QFETCH(QStringList, participants);
 
+    // FIXME: this test needs to be refactored to continue working. We have to explicitly create the chat entry
+    // and request a channel so that chat states are reported.
     /*
     MockController *mockController = accountId.startsWith("mock/mock") ? mGenericMockController : mMultimediaMockController;
 
