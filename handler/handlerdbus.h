@@ -65,7 +65,7 @@ public Q_SLOTS:
     QString StartChat(const QString &accountId, const QVariantMap &properties);
     Q_NOREPLY void AcknowledgeAllMessages(const QVariantMap &properties);
     bool DestroyTextChannel(const QString &objectPath);
-    Q_NOREPLY void ChangeRoomTitle(const QString &objectPath, const QString &title);
+    bool ChangeRoomTitle(const QString &objectPath, const QString &title);
     Q_NOREPLY void InviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
     Q_NOREPLY void RemoveParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
     bool LeaveChat(const QString &objectPath, const QString &message);

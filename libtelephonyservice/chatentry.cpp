@@ -293,7 +293,10 @@ void ChatEntry::setTitle(const QString &title)
             return;
         }
 
-        handlerIface->asyncCall("ChangeRoomTitle", channel->objectPath(), title);
+        QDBusReply<bool> reply = handlerIface->call("ChangeRoomTitle", channel->objectPath(), title);
+        if (!reply.isValid() || !reply.value()) {
+            Q_EMIT setTitleFailed();
+        }
     }
 }
 

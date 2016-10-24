@@ -116,26 +116,27 @@ bool TextHandler::destroyTextChannel(const QString &objectPath)
     return !reply.isError();
 }
 
-void TextHandler::changeRoomTitle(const QString &objectPath, const QString &title)
+bool TextHandler::changeRoomTitle(const QString &objectPath, const QString &title)
 {
     qDebug() << __PRETTY_FUNCTION__;
     Tp::TextChannelPtr channel = existingChannelFromObjectPath(objectPath);
     if (!channel) {
         qWarning() << "Could not find channel for object path" << objectPath;
-        return;
+        return false;
     }
 
     Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
     roomConfigInterface = channel->optionalInterface<Tp::Client::ChannelInterfaceRoomConfigInterface>();
     if (!roomConfigInterface) {
         qWarning() << "Could not find RoomConfig interface in the channel" << objectPath;
-        return;
+        return false;
     }
 
     QVariantMap properties;
     properties["Title"] = title;
-    // FIXME: we better check for the result here and maybe notify the app
-    roomConfigInterface->UpdateConfiguration(properties);
+    QDBusPendingReply<void> reply = roomConfigInterface->UpdateConfiguration(properties);
+    reply.waitForFinished();
+    return !reply.isError();
 }
 
 void TextHandler::onTextChannelInvalidated()

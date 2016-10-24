@@ -84,6 +84,7 @@
             ]]></dox:d>
             <arg name="objectPath" type="s" direction="in"/>
             <arg name="title" type="s" direction="in"/>
+			<arg name="result" type="b" direction="out"/>
         </method>
         <!-- Call Related -->
         <method name="StartCall">
