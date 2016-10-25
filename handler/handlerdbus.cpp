@@ -121,9 +121,9 @@ bool HandlerDBus::DestroyTextChannel(const QString &objectPath)
     return TextHandler::instance()->destroyTextChannel(objectPath);
 }
 
-void HandlerDBus::ChangeRoomTitle(const QString &objectPath, const QString &title)
+bool HandlerDBus::ChangeRoomTitle(const QString &objectPath, const QString &title)
 {
-    TextHandler::instance()->changeRoomTitle(objectPath, title);
+    return TextHandler::instance()->changeRoomTitle(objectPath, title);
 }
 
 bool HandlerDBus::connectToBus()

@@ -196,6 +196,7 @@ Q_SIGNALS:
     void canUpdateConfigurationChanged();
     void inviteParticipantsFailed();
     void removeParticipantsFailed();
+    void setTitleFailed();
     void activeChanged();
     void groupFlagsChanged();
     void selfContactRolesChanged();
