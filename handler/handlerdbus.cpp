@@ -81,6 +81,51 @@ void HandlerDBus::setCallIndicatorVisible(bool visible)
     Q_EMIT CallIndicatorVisibleChanged(visible);
 }
 
+QString HandlerDBus::registerObject(QObject *object, const QString &path)
+{
+    QString fullPath = QString("%1/%2").arg(DBUS_OBJECT_PATH, path);
+    if (QDBusConnection::sessionBus().registerObject(fullPath, object)) {
+        return fullPath;
+    }
+    return QString::null;
+}
+
+void HandlerDBus::unregisterObject(const QString &path)
+{
+    QDBusConnection::sessionBus().unregisterObject(path);
+}
+
+HandlerDBus *HandlerDBus::instance()
+{
+    static HandlerDBus *self = new HandlerDBus;
+    return self;
+}
+
+void HandlerDBus::InviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message)
+{
+    TextHandler::instance()->inviteParticipants(objectPath, participants, message);
+}
+
+void HandlerDBus::RemoveParticipants(const QString &objectPath, const QStringList &participants, const QString &message)
+{
+    TextHandler::instance()->removeParticipants(objectPath, participants, message);
+}
+
+bool HandlerDBus::LeaveChat(const QString &objectPath, const QString &message)
+{
+    return TextHandler::instance()->leaveChat(objectPath, message);
+}
+
+bool HandlerDBus::DestroyTextChannel(const QString &objectPath)
+{
+    return TextHandler::instance()->destroyTextChannel(objectPath);
+}
+
+bool HandlerDBus::ChangeRoomTitle(const QString &objectPath, const QString &title)
+{
+    return TextHandler::instance()->changeRoomTitle(objectPath, title);
+}
+
 bool HandlerDBus::connectToBus()
 {
     new TelephonyServiceHandlerAdaptor(this);
@@ -88,29 +133,24 @@ bool HandlerDBus::connectToBus()
     return QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
 }
 
-QString HandlerDBus::SendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
+QString HandlerDBus::SendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    return TextHandler::instance()->sendMessage(accountId, recipients, message, attachments, properties);
+    return TextHandler::instance()->sendMessage(accountId, message, attachments, properties);
 }
 
-void HandlerDBus::AcknowledgeMessages(const QStringList &numbers, const QStringList &messageIds, const QString &accountId)
+void HandlerDBus::AcknowledgeMessages(const QVariantList &messages)
 {
-    TextHandler::instance()->acknowledgeMessages(numbers, messageIds, accountId);
+    TextHandler::instance()->acknowledgeMessages(messages);
 }
 
-void HandlerDBus::StartChat(const QString &accountId, const QStringList &participants)
+QString HandlerDBus::StartChat(const QString &accountId, const QVariantMap &properties)
 {
-    TextHandler::instance()->startChat(participants, accountId);
+    return TextHandler::instance()->startChat(accountId, properties);
 }
 
-void HandlerDBus::StartChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties)
+void HandlerDBus::AcknowledgeAllMessages(const QVariantMap &properties)
 {
-    TextHandler::instance()->startChatRoom(accountId, initialParticipants, properties);
-}
-
-void HandlerDBus::AcknowledgeAllMessages(const QStringList &numbers, const QString &accountId)
-{
-    TextHandler::instance()->acknowledgeAllMessages(numbers, accountId);
+    TextHandler::instance()->acknowledgeAllMessages(properties);
 }
 
 void HandlerDBus::StartCall(const QString &number, const QString &accountId)

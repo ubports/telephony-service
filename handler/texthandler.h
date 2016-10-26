@@ -27,47 +27,38 @@
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 #include "dbustypes.h"
-
-struct PendingMessage {
-    QString accountId;
-    QStringList recipients;
-    QString message;
-    AttachmentList attachments;
-    QVariantMap properties;
-};
-Q_DECLARE_METATYPE(PendingMessage)
+#include "messagesendingjob.h"
 
 class TextHandler : public QObject
 {
     Q_OBJECT
 public:
     static TextHandler *instance();
-    void startChat(const QStringList &recipients, const QString &accountId);
-    void startChatRoom(const QString &accountId, const QStringList &initialParticipants, const QVariantMap &properties);
-    void startChat(const Tp::AccountPtr &account, const Tp::Contacts &contacts);
+    QString startChat(const QString &accountId, const QVariantMap &properties);
+
+    friend class MessageSendingJob;
 
 public Q_SLOTS:
-    QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
-    void acknowledgeMessages(const QStringList &recipients, const QStringList &messageIds, const QString &accountId);
-    void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
+    QString sendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
+    void acknowledgeMessages(const QVariantList &messages);
+    void acknowledgeAllMessages(const QVariantMap &properties);
+    bool destroyTextChannel(const QString &objectPath);
+    bool changeRoomTitle(const QString &objectPath, const QString &title);
+    void inviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
+    void removeParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
+    bool leaveChat(const QString &objectPath, const QString &message);
 
 protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onTextChannelInvalidated();
-    void onContactsAvailable(Tp::PendingOperation *op);
-    void onMessageSent(Tp::PendingOperation *op);
-    void onConnectedChanged();
 
 protected:
-    QList<Tp::TextChannelPtr> existingChannels(const QStringList &targetIds, const QString &accountId);
+    QList<Tp::TextChannelPtr> existingChannels(const QString &accountId, const QVariantMap &properties);
+    Tp::TextChannelPtr existingChannelFromObjectPath(const QString &objectPath);
 
 private:
     explicit TextHandler(QObject *parent = 0);
-    Tp::MessagePartList buildMessage(const PendingMessage &pendingMessage);
-
     QList<Tp::TextChannelPtr> mChannels;
-    QMap<QString, QMap<QString, Tp::ContactPtr> > mContacts;
-    QList<PendingMessage> mPendingMessages;
 };
 
 #endif // TEXTHANDLER_H

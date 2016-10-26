@@ -1,3 +1,10 @@
+telephony-service (0.1+16.10.20160927-0ubuntu1) yakkety; urgency=medium
+
+  * Request a wake lock so the device doesn't go to deep sleep when
+    receiving an sms. (LP: #1516696)
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Tue, 27 Sep 2016 14:32:08 +0000
+
 telephony-service (0.1+16.10.20160909.1-0ubuntu1) yakkety; urgency=medium
 
   [ Tiago Salem Herrmann ]

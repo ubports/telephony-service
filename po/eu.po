@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-16 15:24-0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-06-27 10:54-0300\n"
 "PO-Revision-Date: 2015-01-22 21:45+0000\n"
 "Last-Translator: Ibai Oihanguren Sala <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
+"Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -52,28 +53,67 @@ msgstr "<b>%1</b> testu-mezu jaso dituzu gaur"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> testu-mezu bidali dituzu gaur"
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:520
 msgid "Accept"
 msgstr "Onartu"
+
+#: indicator/textchannelobserver.cpp:448
+#, qt-format
+msgid "Attachment: %1 audio clip"
+msgid_plural "Attachments: %1 audio clips"
+msgstr[0] ""
+msgstr[1] ""
+
+#: indicator/textchannelobserver.cpp:446
+#, qt-format
+msgid "Attachment: %1 contact"
+msgid_plural "Attachments: %1 contacts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: indicator/textchannelobserver.cpp:450
+#, qt-format
+msgid "Attachment: %1 file"
+msgid_plural "Attachments: %1 files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: indicator/textchannelobserver.cpp:442
+#, qt-format
+msgid "Attachment: %1 image"
+msgid_plural "Attachments: %1 images"
+msgstr[0] ""
+msgstr[1] ""
+
+#: indicator/textchannelobserver.cpp:444
+#, qt-format
+msgid "Attachment: %1 video"
+msgid_plural "Attachments: %1 videos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: indicator/authhandler.cpp:72
+msgid "Authentication failed. Do you want to review your credentials?"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "Itzuli deia"
 
-#: approver/approver.cpp:464 approver/approver.cpp:479
+#: approver/approver.cpp:466 approver/approver.cpp:481
 msgid "Caller number is not available"
 msgstr "Deitzailearen zenbakia ez dago eskuragarri"
 
-#: approver/approver.cpp:476
+#: approver/approver.cpp:478
 #, qt-format
 msgid "Calling from %1"
 msgstr "%1 zenbakitik deika"
 
-#: approver/approver.cpp:470
+#: approver/approver.cpp:472
 msgid "Calling from private number"
 msgstr "Zenbaki pribatutik deika"
 
-#: approver/approver.cpp:473
+#: approver/approver.cpp:475
 msgid "Calling from unknown number"
 msgstr "Zenbaki ezezagunetik deika"
 
@@ -83,18 +123,17 @@ msgstr "Utzi"
 
 #: indicator/textchannelobserver.cpp:236
 msgid "Deactivate flight mode and try again from the messaging application."
-msgstr ""
-"Desaktibatu hegaldi modua eta saiatu berriz mezularitza aplikaziotik."
+msgstr "Desaktibatu hegaldi modua eta saiatu berriz mezularitza aplikaziotik."
 
-#: approver/approver.cpp:540
+#: approver/approver.cpp:542
 msgid "Decline"
 msgstr "Baztertu"
 
-#: approver/approver.cpp:531
+#: approver/approver.cpp:533
 msgid "End + Answer"
 msgstr "Amaitu + Erantzun"
 
-#: approver/approver.cpp:517
+#: approver/approver.cpp:519
 msgid "Hold + Answer"
 msgstr "Itxaron + Erantzun"
 
@@ -122,14 +161,23 @@ msgstr "Berandutu egin zait, bidean naiz."
 msgid "I'm running late. I'm on my way."
 msgstr "Berandutu egin zait. Bidean naiz."
 
-#: approver/approver.cpp:548
+#: approver/approver.cpp:550
 msgid "Message & decline"
 msgstr "Mezua bidali eta baztertu"
 
-#: indicator/textchannelobserver.cpp:545
+#: indicator/textchannelobserver.cpp:550
 #, qt-format
 msgid "Message from %1"
 msgstr "%1(r)en mezua"
+
+#: indicator/textchannelobserver.cpp:486 indicator/messagingmenu.cpp:163
+#, qt-format
+msgid "Message to group from %1"
+msgstr ""
+
+#: indicator/authhandler.cpp:94
+msgid "No"
+msgstr ""
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
@@ -147,9 +195,14 @@ msgstr "Gaur ez duzu testu-mezurik jaso"
 msgid "No text messages sent today"
 msgstr "Gaur ez duzu testu-mezurik bidali"
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:314
 msgid "Ok"
 msgstr "Ados"
+
+#: approver/approver.cpp:453
+#, qt-format
+msgid "On [%1]"
+msgstr ""
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -159,7 +212,7 @@ msgstr "Telefono-deiak"
 msgid "Please call me back later."
 msgstr "Dei nazazu berriro geroago, mesedez."
 
-#: indicator/textchannelobserver.cpp:682
+#: indicator/textchannelobserver.cpp:687
 msgid "Please, select a SIM card:"
 msgstr "Hautatu SIM txartel bat:"
 
@@ -167,7 +220,7 @@ msgstr "Hautatu SIM txartel bat:"
 msgid "Private Number"
 msgstr "Zenbaki pribatua"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
+#: approver/approver.cpp:457 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "Zenbaki pribatua"
 
@@ -184,7 +237,7 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMSa"
 
-#: indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:320
 msgid "Save"
 msgstr "Gorde"
 
@@ -229,8 +282,8 @@ msgstr "Zenbaki ezezaguna"
 msgid "Unknown caller"
 msgstr "Deitzaile ezezaguna"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:472
+#: approver/approver.cpp:460 indicator/textchannelobserver.cpp:477
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "Zenbaki ezezaguna"
 
@@ -238,7 +291,7 @@ msgstr "Zenbaki ezezaguna"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr "Desblokeatu SIM txartela eta saiatu berriz mezularitza aplikaziotik."
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:514
 msgid "View message"
 msgstr "Ikusi mezua"
 
@@ -249,3 +302,7 @@ msgstr "Ahots-posta"
 #: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "Ahots-mezuak"
+
+#: indicator/authhandler.cpp:91
+msgid "Yes"
+msgstr ""

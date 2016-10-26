@@ -99,6 +99,7 @@ Tp::ChannelClassSpecList Handler::channelFilters()
     specList << TelepathyHelper::audioConferenceSpec();
     specList << Tp::ChannelClassSpec::audioCall();
     specList << Tp::ChannelClassSpec::textChat();
+    specList << Tp::ChannelClassSpec::textChatroom();
     specList << Tp::ChannelClassSpec::unnamedTextChat();
 
     return specList;

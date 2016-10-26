@@ -47,6 +47,32 @@ namespace C {
 
 QTCONTACTS_USE_NAMESPACE
 
+void openMessage(NotificationData *notificationData)
+{
+    if (notificationData != NULL) {
+        // launch the messaging-app to show the message
+        QStringList recipients;
+        QString accountId = notificationData->accountId;
+        QStringList extraOptions;
+        if (notificationData->targetType == Tp::HandleTypeRoom) {
+            extraOptions << "chatType=" + QString::number((uint)Tp::HandleTypeRoom);
+            extraOptions << "threadId=" + QUrl::toPercentEncoding(notificationData->targetId);
+        } else {
+            if (!notificationData->senderId.isEmpty()) {
+                recipients << notificationData->senderId;
+            }
+            recipients << notificationData->participantIds;
+            recipients.removeDuplicates();
+        }
+ 
+        QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
+        url += QString("?accountId=%1&").arg(QString(QUrl::toPercentEncoding(accountId)));
+        url += extraOptions.join("&");
+  
+        ApplicationUtils::openUrl(url);
+    }
+}
+
 MessagingMenu::MessagingMenu(QObject *parent) :
     QObject(parent)
 {
@@ -62,18 +88,18 @@ MessagingMenu::MessagingMenu(QObject *parent) :
     g_object_unref(icon);
 }
 
-void MessagingMenu::addFlashMessage(const QString &senderId, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text) {
+void MessagingMenu::addFlashMessage(NotificationData notificationData) {
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
-    QString contactAlias = senderId;
+    QString contactAlias = notificationData.senderId;
     GFile *file = g_file_new_for_uri(iconPath.toString().toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
  
-    MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
+    MessagingMenuMessage *message = messaging_menu_message_new(notificationData.encodedEventId.toUtf8().data(),
                                                                icon,
                                                                "",
                                                                NULL,
-                                                               text.toUtf8().data(),
-                                                               timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
+                                                               notificationData.messageText.toUtf8().data(),
+                                                               notificationData.timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
     /* FIXME: uncomment when messaging-menu support two regular buttons
     messaging_menu_message_add_action(message,
                                       "saveFlashMessage",
@@ -90,13 +116,7 @@ void MessagingMenu::addFlashMessage(const QString &senderId, const QString &acco
     */
  
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::flashMessageActivateCallback), this);
-    QVariantMap details;
-    details["senderId"] = senderId;
-    details["accountId"] = accountId;
-    details["messageId"] = messageId;
-    details["timestamp"] = timestamp;
-    details["text"] = text;
-    mMessages[messageId] = details;
+    mMessages[notificationData.encodedEventId] = notificationData;
     messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
 
     g_object_unref(file);
@@ -105,12 +125,53 @@ void MessagingMenu::addFlashMessage(const QString &senderId, const QString &acco
  
 }
 
-void MessagingMenu::addMessage(const QString &senderId, const QString &contactAlias, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text)
+void MessagingMenu::addNotification(NotificationData notificationData)
+{
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(notificationData.accountId);
+    if (!account) {
+        return;
+    }
+
+    mMessages[notificationData.encodedEventId] = notificationData;
+
+    GFile *file = NULL;
+    GIcon *icon = NULL;
+    file = g_file_new_for_uri(notificationData.icon.toUtf8().data());
+    icon = g_file_icon_new(file);
+
+    MessagingMenuMessage *message = messaging_menu_message_new(notificationData.encodedEventId.toUtf8().data(),
+                                                               icon,
+                                                               notificationData.notificationTitle.toUtf8().data(),
+                                                               "",
+                                                               notificationData.messageText.toUtf8().data(),
+                                                               notificationData.timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
+    messaging_menu_message_add_action(message,
+                                      "quickReply",
+                                      C::gettext("Send"), // label
+                                      G_VARIANT_TYPE("s"),
+                                      NULL // predefined values
+                                      );
+    g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::messageActivateCallback), this);
+
+    messaging_menu_app_append_message(mMessagesApp, message, SOURCE_ID, true);
+
+    if (file) {
+        g_object_unref(file);
+    }
+    if (icon) {
+        g_object_unref(icon);
+    }
+    if (message) {
+        g_object_unref(message);
+    }
+}
+
+void MessagingMenu::addMessage(NotificationData notificationData)
 {
     // try to get a contact for that phone number
     QUrl iconPath = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/avatar-default@18.png");
 
-    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(notificationData.accountId);
     if (!account) {
         return;
     }
@@ -120,18 +181,13 @@ void MessagingMenu::addMessage(const QString &senderId, const QString &contactAl
 
     // try to match the contact info
     QContactFetchRequest *request = new QContactFetchRequest(this);
-    request->setFilter(QContactPhoneNumber::match(senderId));
+    request->setFilter(QContactPhoneNumber::match(notificationData.senderId));
 
-    QVariantMap details;
-    details["senderId"] = senderId;
-    details["accountId"] = accountId;
-    details["participantIds"] = participantIds;
- 
-    mMessages[messageId] = details;
+    mMessages[notificationData.encodedEventId] = notificationData;
 
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged,
-                     [request, senderId, participantIds, accountId, messageId, text, timestamp, iconPath, contactAlias, this](QContactAbstractRequest::State newState) {
+                     [request, iconPath, notificationData, this](QContactAbstractRequest::State newState) {
 
         GFile *file = NULL;
         GIcon *icon = NULL;
@@ -139,7 +195,7 @@ void MessagingMenu::addMessage(const QString &senderId, const QString &contactAl
         // only process the results after the finished state is reached
         // also, if the ack happens before contacts service return the request we have to
         // simply skip this
-        if (newState != QContactAbstractRequest::FinishedState || !mMessages.contains(messageId)) {
+        if (newState != QContactAbstractRequest::FinishedState || !mMessages.contains(notificationData.encodedEventId)) {
             return;
         }
 
@@ -147,7 +203,7 @@ void MessagingMenu::addMessage(const QString &senderId, const QString &contactAl
         QString subTitle;
         QUrl avatar;
 
-        if (senderId == OFONO_UNKNOWN_NUMBER) {
+        if (notificationData.senderId == OFONO_UNKNOWN_NUMBER) {
             displayLabel = C::gettext("Unknown number");
         } else if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
@@ -156,15 +212,28 @@ void MessagingMenu::addMessage(const QString &senderId, const QString &contactAl
         }
 
         if (displayLabel.isEmpty()) {
-            displayLabel = contactAlias;
+            displayLabel = notificationData.alias;
         }
 
-        if (participantIds.size() > 1) {
-            displayLabel = QString::fromUtf8(C::gettext("Message to group from %1")).arg(displayLabel);
+        QString title;
+        if (notificationData.targetType == Tp::HandleTypeRoom || notificationData.participantIds.size() > 1) {
             avatar = QUrl::fromLocalFile(telephonyServiceDir() + "/assets/contact-group.svg");
+
+            if (notificationData.targetType == Tp::HandleTypeRoom) {
+                if (!notificationData.roomName.isEmpty()) {
+                    // TRANSLATORS : %1 is the group name and %2 is the recipient name
+                    displayLabel = QString::fromUtf8(C::gettext("Message to %1 from %2")).arg(notificationData.roomName).arg(displayLabel);
+                } else {
+                    // TRANSLATORS : %1 is the recipient name
+                    displayLabel = QString::fromUtf8(C::gettext("Message to group from %1")).arg(displayLabel);
+                }
+            } else {
+                // TRANSLATORS : %1 is the recipient name
+                displayLabel = QString::fromUtf8(C::gettext("Message to group from %1")).arg(displayLabel);
+            }
         }
 
-        AccountEntry::addAccountLabel(accountId, displayLabel);
+        AccountEntry::addAccountLabel(notificationData.accountId, displayLabel);
 
         if (avatar.isEmpty()) {
             avatar = iconPath;
@@ -174,12 +243,12 @@ void MessagingMenu::addMessage(const QString &senderId, const QString &contactAl
             file = g_file_new_for_uri(avatar.toString().toUtf8().data());
             icon = g_file_icon_new(file);
         }
-        MessagingMenuMessage *message = messaging_menu_message_new(messageId.toUtf8().data(),
+        MessagingMenuMessage *message = messaging_menu_message_new(notificationData.encodedEventId.toUtf8().data(),
                                                                    icon,
                                                                    displayLabel.toUtf8().data(),
                                                                    subTitle.toUtf8().data(),
-                                                                   text.toUtf8().data(),
-                                                                   timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
+                                                                   notificationData.messageText.toUtf8().data(),
+                                                                   notificationData.timestamp.toMSecsSinceEpoch() * 1000); // the value is expected to be in microseconds
         messaging_menu_message_add_action(message,
                                           "quickReply",
                                           C::gettext("Send"), // label
@@ -198,7 +267,7 @@ void MessagingMenu::addMessage(const QString &senderId, const QString &contactAl
     });
 
     // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
-    if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
+    if (account->addressableVCardFields().contains("tel")) {
         request->setManager(ContactUtils::sharedManager());
         request->start();
     } else {
@@ -464,39 +533,38 @@ void MessagingMenu::callsActivateCallback(MessagingMenuMessage *message, const c
 
 void MessagingMenu::sendMessageReply(const QString &messageId, const QString &reply)
 {
-    QVariantMap message = mMessages[messageId];
-    QString senderId = message["senderId"].toString();
-    QString accountId = message["accountId"].toString();
-    QStringList participantIds = message["participantIds"].toStringList();
+    NotificationData notificationData = mMessages[messageId];
     QStringList recipients;
-    if (!senderId.isEmpty()) {
-        recipients << senderId;
+    if (!notificationData.senderId.isEmpty()) {
+        notificationData.participantIds << notificationData.senderId;
     }
-    recipients << participantIds;
-    recipients.removeDuplicates();
-    Q_EMIT replyReceived(recipients, accountId, reply);
+    notificationData.participantIds.removeDuplicates();
+    notificationData.messageReply = reply;
+    notificationData.encodedEventId = messageId;
 
-    Q_EMIT messageRead(recipients, accountId, messageId);
+    Q_EMIT replyReceived(notificationData);
+
+    Q_EMIT messageRead(notificationData);
 }
 
 void MessagingMenu::saveFlashMessage(const QString &messageId)
 {
-    QVariantMap details = mMessages[messageId];
-    AccountEntry *account = TelepathyHelper::instance()->accountForId(details["accountId"].toString());
+    NotificationData notificationData = mMessages[messageId];
+    AccountEntry *account = TelepathyHelper::instance()->accountForId(notificationData.accountId);
     bool phoneNumberBased = account && (account->type() == AccountEntry::PhoneAccount);
-    History::Thread thread = History::Manager::instance()->threadForParticipants(details["accountId"].toString(),
+    History::Thread thread = History::Manager::instance()->threadForParticipants(notificationData.accountId,
                                                                                  History::EventTypeText,
-                                                                                 QStringList() << details["senderId"].toString(),
+                                                                                 QStringList() << notificationData.senderId,
                                                                                  phoneNumberBased ? History::MatchPhoneNumber :
                                                                                                     History::MatchCaseSensitive,
                                                                                  true);
-    History::TextEvent textEvent(details["accountId"].toString(),
+    History::TextEvent textEvent(notificationData.accountId,
                                  thread.threadId(), 
-                                 details["messageId"].toString(), 
-                                 details["senderId"].toString(),
-                                 details["timestamp"].toDateTime(),
+                                 QString(QByteArray::fromHex(notificationData.encodedEventId.toUtf8())),
+                                 notificationData.senderId,
+                                 notificationData.timestamp,
                                  false,
-                                 details["text"].toString(),
+                                 notificationData.messageText,
                                  History::MessageTypeText);
     History::Events events;
     events.append(textEvent);
@@ -506,24 +574,8 @@ void MessagingMenu::saveFlashMessage(const QString &messageId)
 
 void MessagingMenu::showMessage(const QString &messageId)
 {
-    QVariantMap message = mMessages[messageId];
-    QString senderId = message["senderId"].toString();
-    QString accountId = message["accountId"].toString();
-    QStringList participantIds = message["participantIds"].toStringList();
-    QStringList recipients;
-    if (!senderId.isEmpty()) {
-        recipients << senderId;
-    }
-    recipients << participantIds;
-    recipients.removeDuplicates();
-
-    QString url(QString("message:///%1").arg(QString(QUrl::toPercentEncoding(recipients.join(";")))));
-    AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
-    if (account && account->type() == AccountEntry::GenericAccount) {
-        url += QString("?accountId=%1").arg(QString(QUrl::toPercentEncoding(accountId)));
-    }
- 
-    ApplicationUtils::openUrl(url);
+    NotificationData notificationData = mMessages[messageId];
+    openMessage(&notificationData);
 }
 
 void MessagingMenu::callBack(const QString &messageId)
@@ -535,7 +587,7 @@ void MessagingMenu::callBack(const QString &messageId)
     }
     qDebug() << "TelephonyService/MessagingMenu: Calling back" << call.targetId;
     // FIXME: support accounts not based on phone numbers
-    if (account->type() == AccountEntry::PhoneAccount || account->type() == AccountEntry::MultimediaAccount) {
+    if (account->addressableVCardFields().contains("tel")) {
         ApplicationUtils::openUrl(QString("tel:///%1").arg(QString(QUrl::toPercentEncoding(call.targetId))));
     }
 }
@@ -544,7 +596,11 @@ void MessagingMenu::replyWithMessage(const QString &messageId, const QString &re
 {
     Call call = callFromMessageId(messageId);
     qDebug() << "TelephonyService/MessagingMenu: Replying to call" << call.targetId << "with text" << reply;
-    Q_EMIT replyReceived(QStringList() << call.targetId, call.accountId, reply);
+    NotificationData data;
+    data.participantIds << call.targetId;
+    data.accountId = call.accountId;
+    data.messageReply = reply;
+    Q_EMIT replyReceived(data);
 }
 
 void MessagingMenu::callVoicemail(const QString &messageId)
