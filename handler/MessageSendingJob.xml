@@ -1,0 +1,36 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+    <dox:d><![CDATA[
+      @mainpage
+
+      An interface to the asynchronous message sending job
+    ]]></dox:d>
+    <interface name="com.canonical.TelephonyServiceHandler.MessageSendingJob" xmlns:dox="http://www.ayatana.org/dbus/dox.dtd">
+        <dox:d>
+          An interface to the phone handler helper application.
+        </dox:d>
+        <property name="accountId" type="s" access="read"/>
+        <property name="messageId" type="s" access="read"/>
+        <property name="channelObjectPath" type="s" access="read"/>
+        <property name="objectPath" type="s" access="read"/>
+        <property name="properties" type="a{sv}" access="read">
+          <annotation name="org.qtproject.QtDBus.QtTypeName" value="QVariantMap"/>
+        </property>
+        <property name="status" type="i" access="read"/>
+        <property name="isFinished" type="b" access="read"/>
+        <signal name="accountIdChanged">
+        </signal>
+        <signal name="messageIdChanged">
+        </signal>
+        <signal name="channelObjectPathChanged">
+        </signal>
+        <signal name="statusChanged">
+        </signal>
+        <signal name="isFinishedChanged">
+        </signal>
+        <signal name="finished">
+        </signal>
+        <method name="startJob">
+        </method>
+   </interface>
+</node>

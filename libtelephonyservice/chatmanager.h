@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -28,58 +28,44 @@
 #include <TelepathyQt/TextChannel>
 #include <TelepathyQt/ReceivedMessage>
 #include "dbustypes.h"
-#include "chatentry.h"
 
 class ChatManager : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QQmlListProperty<ChatEntry> chats
-                   READ chats
-                   NOTIFY chatsChanged)
 public:
     static ChatManager *instance();
 
-    Q_INVOKABLE QString sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
-    Q_INVOKABLE ChatEntry *chatEntryForParticipants(const QString &accountId, const QStringList &participants, bool create = false);
-    Q_INVOKABLE ChatEntry *chatEntryForChatRoom(const QString &accountId, const QVariantMap &properties, bool create);
+    QString startChat(const QString &accountId, const QVariantMap &properties);
+    QString sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
+    QList<Tp::TextChannelPtr> channelForProperties(const QVariantMap &properties);
+    Tp::TextChannelPtr channelForObjectPath(const QString &objectPath);
 
-    QQmlListProperty<ChatEntry> chats();
-    static int chatCount(QQmlListProperty<ChatEntry> *p);
-    static ChatEntry* chatAt(QQmlListProperty<ChatEntry> *p, int index);
+    static bool channelMatchProperties(const Tp::TextChannelPtr &channel, const QVariantMap &properties);
 
 Q_SIGNALS:
-    void messageReceived(const QString &sender, const QString &message, const QDateTime &timestamp, const QString &messageId, bool unread);
-    void messageSent(const QStringList &recipients, const QString &message);
-    void chatsChanged();
-    void chatEntryCreated(QString accountId, QStringList participants, ChatEntry *chatEntry);
+    void textChannelAvailable(Tp::TextChannelPtr);
+    void textChannelInvalidated(Tp::TextChannelPtr);
 
 public Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onChannelInvalidated();
     void onConnectedChanged();
-    void onMessageReceived(const Tp::ReceivedMessage &message);
-    void onMessageSent(const Tp::Message &sentMessage, const Tp::MessageSendingFlags flags, const QString &message);
 
-    void acknowledgeMessage(const QStringList &recipients, const QString &messageId, const QString &accountId);
-    void acknowledgeAllMessages(const QStringList &recipients, const QString &accountId);
+    void acknowledgeMessage(const QVariantMap &properties);
+    void acknowledgeAllMessages(const QVariantMap &properties);
 
 private Q_SLOTS:
     void onChannelObserverUnregistered();
-    void onTelepathyReady();
 
 protected Q_SLOTS:
     void onAckTimerTriggered();
 
 private:
     explicit ChatManager(QObject *parent = 0);
-    ChatEntry *chatEntryForChannel(const Tp::TextChannelPtr &channel);
-    QList<ChatEntry*> chatEntries() const;
 
-    mutable QList<ChatEntry*> mChatEntries;
-    QMap<QString, QMap<QStringList,QStringList> > mMessagesToAck;
-    QList<Tp::TextChannelPtr> mPendingChannels;
+    QVariantList mMessagesToAck;
+    QList<Tp::TextChannelPtr> mTextChannels;
     QTimer mMessagesAckTimer;
-    bool mReady;
 };
 
 #endif // CHATMANAGER_H
