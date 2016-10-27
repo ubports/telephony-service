@@ -128,14 +128,9 @@ bool HandlerDBus::ChangeRoomTitle(const QString &objectPath, const QString &titl
 
 bool HandlerDBus::connectToBus()
 {
-    bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
-    if (!ok) {
-        return false;
-    }
     new TelephonyServiceHandlerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(DBUS_OBJECT_PATH, this);
-
-    return true;
+    return QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
 }
 
 QString HandlerDBus::SendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
