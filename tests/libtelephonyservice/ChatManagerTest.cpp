@@ -36,8 +36,8 @@ private Q_SLOTS:
     void cleanup();
     void testSendMessage_data();
     void testSendMessage();
-    void testSendMessageWithAttachments_data();
     void testSendMessageWithAttachments();
+    void testSendMessageWithAttachmentsSplitted();
     void testAcknowledgeMessages();
 
 private:
@@ -170,35 +170,19 @@ void ChatManagerTest::testAcknowledgeMessages()
     QCOMPARE(receivedIds, messageIds);
 }
 
-void ChatManagerTest::testSendMessageWithAttachments_data()
-{
-    QTest::addColumn<QStringList>("recipients");
-    QTest::addColumn<QString>("message");
-    QTest::addColumn<QString>("accountId");
-    QTest::addColumn<bool>("mmsFlag");
-
-    QTest::newRow("message via the generic account") << (QStringList() << "recipient1") << QString("Hello world") << QString("mock/mock/account0") << false;
-    QTest::newRow("message via the phone account") << (QStringList() << "1234567") << QString("Hello Phone World") << QString("mock/ofono/account0") << true;
-
-}
-
 void ChatManagerTest::testSendMessageWithAttachments()
 {
-    QFETCH(QStringList, recipients);
-    QFETCH(QString, message);
-    QFETCH(QString, accountId);
-    QFETCH(bool, mmsFlag);
+    QStringList recipients = (QStringList() << "1234567");
+    QString message("Hello Phone Attachments World");
+    QString accountId("mock/ofono/account0");
 
-    // just to make it easier, sort the recipients
-    qSort(recipients);
-
-    MockController *controller = accountId.startsWith("mock/mock") ? mGenericMockController : mPhoneMockController;
+    MockController *controller = mPhoneMockController;
 
     QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
 
     QVariantList attachmentList;
     QVariantList attachment;
-    attachment << "id" << "content/type" << "filepath";
+    attachment << "id" << "content/type" << QString("%1/%2").arg(QString(qgetenv("TEST_DATA_DIR"))).arg("dialer-app.png");
     attachmentList << QVariant::fromValue(attachment);
     QVariant attachments = QVariant::fromValue(attachmentList);
 
@@ -207,15 +191,64 @@ void ChatManagerTest::testSendMessageWithAttachments()
     ChatManager::instance()->sendMessage(accountId, message, attachments, properties);
 
     TRY_COMPARE(controllerMessageSentSpy.count(), 1);
+
     QString messageText = controllerMessageSentSpy.first()[0].toString();
+    QVariantList messageAttachments = controllerMessageSentSpy.first()[1].toList();
     QVariantMap messageProperties = controllerMessageSentSpy.first()[2].toMap();
     QStringList messageRecipients = messageProperties["Recipients"].toStringList();
     qSort(messageRecipients);
     QCOMPARE(messageText, message);
     QCOMPARE(messageRecipients, recipients);
+    QCOMPARE(messageAttachments.count(), attachmentList.count());
+}
 
-    QCOMPARE(messageProperties.contains("x-canonical-mms"), mmsFlag);
-    QCOMPARE(messageProperties["x-canonical-mms"].toBool(), mmsFlag);
+void ChatManagerTest::testSendMessageWithAttachmentsSplitted()
+{
+    // messages sent on accounts other than phone are splitted, so make sure that happens
+    QStringList recipients = (QStringList() << "theattachmentrecipient");
+    QString message("Hello Attachments World");
+    QString accountId("mock/mock/account0");
+
+    MockController *controller = mGenericMockController;
+
+    QSignalSpy controllerMessageSentSpy(controller, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
+
+    QVariantList attachmentList;
+    QVariantList attachment;
+    attachment << "id" << "content/type" << QString("%1/%2").arg(QString(qgetenv("TEST_DATA_DIR"))).arg("dialer-app.png");
+    attachmentList << QVariant::fromValue(attachment);
+    QVariant attachments = QVariant::fromValue(attachmentList);
+
+    QVariantMap properties;
+    properties["participantIds"] = recipients;
+    ChatManager::instance()->sendMessage(accountId, message, attachments, properties);
+
+    TRY_COMPARE(controllerMessageSentSpy.count(), attachmentList.count() + 1);
+
+    QString messageText;
+    int attachmentCount = 0;
+    // as the message is splitted, we have to go through all the received messages to find the
+    // text and attachments
+    for (int i = 0; i < controllerMessageSentSpy.count(); ++i) {
+        QList<QVariant> args = controllerMessageSentSpy[i];
+        // validate the recipients on all messages
+        QVariantMap messageProperties = args[2].toMap();
+        QStringList messageRecipients = messageProperties["Recipients"].toStringList();
+        qSort(messageRecipients);
+        QCOMPARE(messageRecipients, recipients);
+        QString text = args[0].toString();
+        if (!text.isEmpty()) {
+            messageText = text;
+        } else {
+            QVariantList attachments = args[1].toList();
+            // each message should contain no more than one attachment
+            QCOMPARE(attachments.count(), 1);
+            attachmentCount += 1;
+        }
+    }
+    QCOMPARE(messageText, message);
+    QCOMPARE(attachmentCount, attachmentList.count());
+
 }
 
 QTEST_MAIN(ChatManagerTest)
