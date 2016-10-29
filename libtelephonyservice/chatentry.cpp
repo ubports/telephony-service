@@ -447,7 +447,7 @@ void ChatEntry::componentComplete()
         setChannels(channels);
     }
 
-    if (chatType() == 0) {
+    if (chatType() == ChatTypeNone) {
         return;
     }
 
@@ -470,9 +470,17 @@ void ChatEntry::componentComplete()
     }
 
     if (mAutoRequest) {
-        // if there is any remaining account, request to start chatting using the account
-        Q_FOREACH(AccountEntry *account, accounts) {
-            ChatManager::instance()->startChat(account->accountId(), properties);
+        // if the chat type is room we should only request the channel to the desired account.
+        if (chatType() == ChatTypeRoom) {
+            AccountEntry *account = TelepathyHelper::instance()->accountForId(mAccountId);
+            if (account && accounts.contains(account)) {
+                ChatManager::instance()->startChat(account->accountId(), properties);
+            }
+        } else {
+            // if there is any remaining account, request to start chatting using the account
+            Q_FOREACH(AccountEntry *account, accounts) {
+                ChatManager::instance()->startChat(account->accountId(), properties);
+            }
         }
     }
 
