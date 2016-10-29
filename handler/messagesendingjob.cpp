@@ -111,6 +111,7 @@ void MessageSendingJob::startJob()
         for (auto newAccount : overloadAccounts) {
             // FIXME: check if we need to validate anything other than being connected
             if (newAccount->connected()) {
+                qDebug() << "BLABLA doing account overload";
                 account = newAccount;
                 break;
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * This file is part of telephony-service.
  *
@@ -313,6 +313,9 @@ void HandlerTest::testSendMessage()
 
 void HandlerTest::testSendMessageWithAttachments()
 {
+    // just to avoid the account fallback, remove the multimedia account
+    QVERIFY(removeAccount(mMultimediaTpAccount));
+
     QString recipient("22222222");
     QString message("Hello, world!");
     QSignalSpy messageSentSpy(mOfonoMockController, SIGNAL(MessageSent(QString,QVariantList,QVariantMap)));
@@ -329,7 +332,7 @@ void HandlerTest::testSendMessageWithAttachments()
     QCOMPARE(sentMessage, message);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
-    
+
     QVariantList messageAttachments = qdbus_cast<QVariantList>(messageSentSpy.first()[1]);
     QVariantMap firstAttachment = qdbus_cast<QVariantMap>(messageAttachments.first());
     QCOMPARE(firstAttachment["content-type"].toString(), QString("audio/ogg"));
@@ -526,19 +529,6 @@ void HandlerTest::testMultimediaFallback()
 
     messageSentMultimediaSpy.clear();
     messageSentOfonoSpy.clear();
-
-    mMultimediaMockController->SetContactPresence(recipient, Tp::ConnectionPresenceTypeUnknown, "offline", "");
-    // We have to make sure the handler already has the new state
-    QTest::qWait(1000);
-    HandlerController::instance()->sendMessage(mOfonoTpAccount->uniqueIdentifier(), QStringList() << recipient, message);
-    TRY_COMPARE(messageSentOfonoSpy.count(), 1);
-    QCOMPARE(messageSentMultimediaSpy.count(), 0);
-
-    sentMessage = messageSentOfonoSpy.first().first().toString();
-    messageProperties = messageSentOfonoSpy.first().last().value<QVariantMap>();
-    QCOMPARE(sentMessage, message);
-    QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
-    QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
 }
 
 void HandlerTest::registerApprover()
