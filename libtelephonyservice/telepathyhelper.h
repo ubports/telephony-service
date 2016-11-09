@@ -55,7 +55,7 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(AccountEntry *defaultMessagingAccount READ defaultMessagingAccount NOTIFY defaultMessagingAccountChanged)
     Q_PROPERTY(AccountEntry *defaultCallAccount READ defaultCallAccount NOTIFY defaultCallAccountChanged)
     Q_PROPERTY(bool flightMode READ flightMode WRITE setFlightMode NOTIFY flightModeChanged)
-    Q_PROPERTY(bool mmsGroupChat READ mmsGroupChat WRITE setMmsGroupChat NOTIFY mmsGroupChatChanged)
+    Q_PROPERTY(bool mmsEnabled READ mmsEnabled WRITE setMmsEnabled NOTIFY mmsEnabledChanged)
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
     Q_PROPERTY(QVariantMap simNames READ simNames NOTIFY simNamesChanged)
     Q_ENUMS(AccountType)
@@ -106,9 +106,9 @@ public:
     Q_INVOKABLE QList<QObject*> accountOverload(AccountEntry *originalAccount);
     Q_INVOKABLE QList<QObject*> accountFallback(AccountEntry *originalAccount);
 
-    bool mmsGroupChat();
+    bool mmsEnabled();
     QVariantMap simNames() const;
-    void setMmsGroupChat(bool value);
+    void setMmsEnabled(bool value);
     bool flightMode();
     void setFlightMode(bool value);
     bool ready() const;
@@ -135,7 +135,7 @@ Q_SIGNALS:
     void defaultCallAccountChanged();
     void flightModeChanged();
     void emergencyCallsAvailableChanged();
-    void mmsGroupChatChanged();
+    void mmsEnabledChanged();
     void simNamesChanged();
 
 public Q_SLOTS:
@@ -171,7 +171,7 @@ private:
     ChannelObserver *mChannelObserver;
     bool mReady;
     Tp::AbstractClientPtr mChannelObserverPtr;
-    bool mMmsGroupChat;
+    bool mMmsEnabled;
     QVariantMap mSimNames;
     mutable QDBusInterface *mHandlerInterface;
     mutable QDBusInterface *mApproverInterface;

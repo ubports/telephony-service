@@ -50,8 +50,6 @@ private:
 void ChatManagerTest::initTestCase()
 {
     initialize();
-    // set to false so group chat messages are not sent as MMS
-    TelepathyHelper::instance()->setMmsGroupChat(false);
     TelepathyHelper::instance()->registerChannelObserver();
 
     qRegisterMetaType<Tp::TextChannelPtr>();
