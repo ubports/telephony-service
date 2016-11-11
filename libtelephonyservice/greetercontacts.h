@@ -1,8 +1,10 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * Authors:
  *  Michael Terry <michael.terry@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -55,12 +57,12 @@ public:
     bool dialpadSoundsEnabled();
     QString defaultSimForCalls();
     QString defaultSimForMessages();
-    bool mmsGroupChatEnabled();
+    bool mmsEnabled();
     QVariantMap simNames();
 
     void setDefaultSimForCalls(const QString &objPath);
     void setDefaultSimForMessages(const QString &objPath);
-    void setMmsGroupChatEnabled(bool enabled);
+    void setMmsEnabled(bool enabled);
     void setSimNames(const QVariantMap &simNames);
 
     static bool isGreeterMode();
@@ -110,7 +112,7 @@ private:
     QVariant mDialpadSoundsEnabled;
     QVariant mDefaultSimForCalls;
     QVariant mDefaultSimForMessages;
-    QVariant mMmsGroupChatEnabled;
+    QVariant mMmsEnabled;
     QVariant mSimNames;
     bool mGreeterActive;
 

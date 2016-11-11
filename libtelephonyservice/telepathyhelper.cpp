@@ -98,7 +98,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
     connect(GreeterContacts::instance(), SIGNAL(phoneSettingsChanged(QString)), this, SLOT(onPhoneSettingsChanged(QString)));
     connect(&mFlightModeInterface, SIGNAL(FlightModeChanged(bool)), this, SIGNAL(flightModeChanged()));
 
-    mMmsGroupChat = GreeterContacts::instance()->mmsGroupChatEnabled(); 
+    mMmsEnabled = GreeterContacts::instance()->mmsEnabled();
 }
 
 TelepathyHelper::~TelepathyHelper()
@@ -130,14 +130,14 @@ QStringList TelepathyHelper::accountIds()
     return ids;
 }
 
-void TelepathyHelper::setMmsGroupChat(bool enable)
+void TelepathyHelper::setMmsEnabled(bool enable)
 {
-    GreeterContacts::instance()->setMmsGroupChatEnabled(enable);
+    GreeterContacts::instance()->setMmsEnabled(enable);
 }
 
-bool TelepathyHelper::mmsGroupChat()
+bool TelepathyHelper::mmsEnabled()
 {
-    return mMmsGroupChat;
+    return mMmsEnabled;
 }
 
 bool TelepathyHelper::flightMode()
@@ -624,9 +624,9 @@ void TelepathyHelper::onPhoneSettingsChanged(const QString &key)
         }
         mDefaultCallAccount = NULL;
         Q_EMIT defaultCallAccountChanged();
-    } else if (key == "MmsGroupChatEnabled") {
-        mMmsGroupChat = GreeterContacts::instance()->mmsGroupChatEnabled(); 
-        Q_EMIT mmsGroupChatChanged();
+    } else if (key == "MmsEnabled") {
+        mMmsEnabled = GreeterContacts::instance()->mmsEnabled();
+        Q_EMIT mmsEnabledChanged();
     } else if (key == "SimNames") {
         mSimNames = GreeterContacts::instance()->simNames();
         Q_EMIT simNamesChanged();
