@@ -159,8 +159,6 @@ QString ChatManager::sendMessage(const QString &accountId, const QString &messag
 
 QList<Tp::TextChannelPtr> ChatManager::channelForProperties(const QVariantMap &properties)
 {
-    // FIXME: remove before releasing
-    qDebug() << __PRETTY_FUNCTION__ << properties;
     QList<Tp::TextChannelPtr> channels;
 
 

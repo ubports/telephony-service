@@ -260,7 +260,7 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
     // check if this message should be sent as an MMS
     if (mAccount->type() == AccountEntry::PhoneAccount) {
         isMMS = (pendingMessage.attachments.size() > 0 ||
-                 (pendingMessage.properties["chatType"].toUInt() == 2));
+                 (pendingMessage.properties["chatType"].toUInt() == Tp::HandleTypeRoom));
     }
 
     // this flag should not be in the message header, it's only useful for the handler

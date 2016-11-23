@@ -165,8 +165,8 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId
     QList<Tp::TextChannelPtr> channels;
     QStringList targetIds = properties["participantIds"].toStringList();
     int chatType = properties["chatType"].toUInt();
-    if (chatType == 0 && targetIds.size() == 1) {
-        chatType = 1;
+    if (chatType == Tp::HandleTypeNone && targetIds.size() == 1) {
+        chatType = Tp::HandleTypeContact;
     }
     QString roomId = properties["threadId"].toString();
 
@@ -182,7 +182,7 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId
             continue;
         }
 
-        if (chatType == 2) {
+        if (chatType == Tp::HandleTypeRoom) {
             if (!roomId.isEmpty() && channel->targetHandleType() == chatType && roomId == channel->targetId()) {
                 channels.append(channel);
             }

@@ -284,8 +284,6 @@ void ChatEntry::setTitle(const QString &title)
         return;
     }
 
-    // FIXME: remove this debug before going into production.
-    qDebug() << __PRETTY_FUNCTION__ << "Changing group title to" << title;
     QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
     Q_FOREACH(const Tp::TextChannelPtr channel, mChannels) {
         if (!channel->hasInterface(TP_QT_IFACE_CHANNEL_INTERFACE_ROOM_CONFIG)) {
