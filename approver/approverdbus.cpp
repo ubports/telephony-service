@@ -1,9 +1,10 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Ugo Riboni <ugo.riboni@canonical.com>
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
  *
  * This file is part of telephony-service.
  *
