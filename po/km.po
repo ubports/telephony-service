@@ -6,17 +6,18 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-16 15:24-0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-06-27 10:54-0300\n"
 "PO-Revision-Date: 2014-09-01 10:08+0000\n"
 "Last-Translator: Sophea Sok <sksophea@gmail.com>\n"
 "Language-Team: Khmer <km@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2016-06-09 06:24+0000\n"
-"X-Generator: Launchpad (build 18097)\n"
+"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
+"X-Generator: Launchpad (build 18186)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -50,28 +51,62 @@ msgstr "ថ្ងៃនេះ​បាន​ទទួល​សារ <b>%1</b>"
 msgid "<b>%1</b> text messages sent today"
 msgstr "ថ្ងៃនេះ​បាន​ផ្ញើ​សារ <b>%1</b>"
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:520
 msgid "Accept"
 msgstr "ព្រម​ទទួល"
+
+#: indicator/textchannelobserver.cpp:448
+#, qt-format
+msgid "Attachment: %1 audio clip"
+msgid_plural "Attachments: %1 audio clips"
+msgstr[0] ""
+
+#: indicator/textchannelobserver.cpp:446
+#, qt-format
+msgid "Attachment: %1 contact"
+msgid_plural "Attachments: %1 contacts"
+msgstr[0] ""
+
+#: indicator/textchannelobserver.cpp:450
+#, qt-format
+msgid "Attachment: %1 file"
+msgid_plural "Attachments: %1 files"
+msgstr[0] ""
+
+#: indicator/textchannelobserver.cpp:442
+#, qt-format
+msgid "Attachment: %1 image"
+msgid_plural "Attachments: %1 images"
+msgstr[0] ""
+
+#: indicator/textchannelobserver.cpp:444
+#, qt-format
+msgid "Attachment: %1 video"
+msgid_plural "Attachments: %1 videos"
+msgstr[0] ""
+
+#: indicator/authhandler.cpp:72
+msgid "Authentication failed. Do you want to review your credentials?"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr ""
 
-#: approver/approver.cpp:464 approver/approver.cpp:479
+#: approver/approver.cpp:466 approver/approver.cpp:481
 msgid "Caller number is not available"
 msgstr "មិន​មាន​លេខ​អ្នក​ហៅ"
 
-#: approver/approver.cpp:476
+#: approver/approver.cpp:478
 #, qt-format
 msgid "Calling from %1"
 msgstr "កំពុង​ហៅ​ពី %1"
 
-#: approver/approver.cpp:470
+#: approver/approver.cpp:472
 msgid "Calling from private number"
 msgstr "កំពុង​ហៅ​ពី​លេខ​ឯកជន"
 
-#: approver/approver.cpp:473
+#: approver/approver.cpp:475
 msgid "Calling from unknown number"
 msgstr "កំពុង​ហៅ​ពី​លេខ​មិន​ស្គាល់"
 
@@ -83,22 +118,21 @@ msgstr "បោះបង់"
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 
-#: approver/approver.cpp:540
+#: approver/approver.cpp:542
 msgid "Decline"
 msgstr "បដិសេធ"
 
-#: approver/approver.cpp:531
+#: approver/approver.cpp:533
 msgid "End + Answer"
 msgstr ""
 
-#: approver/approver.cpp:517
+#: approver/approver.cpp:519
 msgid "Hold + Answer"
 msgstr "ចុច​ជាប់ + ឆ្លើយ"
 
 #: indicator/messagingmenu.cpp:241
 msgid "I missed your call - can you call me now?"
-msgstr ""
-"ខ្ញុំមិន​បាន​ទទួលការ​ហៅ​របស់​អ្នក- តើ​អ្នក​អាច​ហៅ​មក​ខ្ញុំ​ឥឡូវ​បាន​ទេ?"
+msgstr "ខ្ញុំមិន​បាន​ទទួលការ​ហៅ​របស់​អ្នក- តើ​អ្នក​អាច​ហៅ​មក​ខ្ញុំ​ឥឡូវ​បាន​ទេ?"
 
 #: indicator/messagingmenu.cpp:244
 msgid "I'll be 20 minutes late."
@@ -120,14 +154,23 @@ msgstr ""
 msgid "I'm running late. I'm on my way."
 msgstr "ខ្ញុំ​យឺត​ហើយ។ ខ្ញុំ​នៅ​តាម​ផ្លូវ។"
 
-#: approver/approver.cpp:548
+#: approver/approver.cpp:550
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:545
+#: indicator/textchannelobserver.cpp:550
 #, qt-format
 msgid "Message from %1"
 msgstr "សារ​ពី %1"
+
+#: indicator/textchannelobserver.cpp:486 indicator/messagingmenu.cpp:163
+#, qt-format
+msgid "Message to group from %1"
+msgstr ""
+
+#: indicator/authhandler.cpp:94
+msgid "No"
+msgstr ""
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
@@ -145,9 +188,14 @@ msgstr "ថ្ងៃនេះ​មិន​បាន​ទទួល​សារ
 msgid "No text messages sent today"
 msgstr "ថ្ងៃនេះ​មិន​បាន​ផ្ញើ​សារ"
 
-#: indicator/textchannelobserver.cpp:312 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:314
 msgid "Ok"
 msgstr "យល់ព្រម"
+
+#: approver/approver.cpp:453
+#, qt-format
+msgid "On [%1]"
+msgstr ""
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -157,7 +205,7 @@ msgstr "ការ​ហៅ​ទូរស័ព្ទ"
 msgid "Please call me back later."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:682
+#: indicator/textchannelobserver.cpp:687
 msgid "Please, select a SIM card:"
 msgstr "សូមជ្រើសស៊ី​ម​កាត ៖"
 
@@ -165,7 +213,7 @@ msgstr "សូមជ្រើសស៊ី​ម​កាត ៖"
 msgid "Private Number"
 msgstr "លេខ​ឯកជន"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
+#: approver/approver.cpp:457 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "លេខ​ឯកជន"
 
@@ -182,7 +230,7 @@ msgstr "ស៊ីម %1"
 msgid "SMS"
 msgstr "សារ SMS"
 
-#: indicator/textchannelobserver.cpp:318
+#: indicator/textchannelobserver.cpp:320
 msgid "Save"
 msgstr "រក្សា​ទុក"
 
@@ -227,7 +275,7 @@ msgstr "មិន​ស្គាល់​លេខ"
 msgid "Unknown caller"
 msgstr "មិន​ស្គាល់​អ្នក​ហៅ"
 
-#: approver/approver.cpp:458 indicator/textchannelobserver.cpp:472
+#: approver/approver.cpp:460 indicator/textchannelobserver.cpp:477
 #: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "មិន​ស្គាល់​លេខ"
@@ -236,7 +284,7 @@ msgstr "មិន​ស្គាល់​លេខ"
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:509
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:514
 msgid "View message"
 msgstr "មើល​សារ"
 
@@ -247,3 +295,7 @@ msgstr ""
 #: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "សារ​ជា​សំឡេង"
+
+#: indicator/authhandler.cpp:91
+msgid "Yes"
+msgstr ""

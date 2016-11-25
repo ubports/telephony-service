@@ -79,7 +79,8 @@ function(generate_test TESTNAME)
                                     MC_MANAGER_DIR=${TMPDIR}
                                     MC_CLIENTS_DIR=${TMPDIR}
                                     TELEPHONY_SERVICE_TEST=1
-                                    TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_SOURCE_DIR}/tests/common/protocols)
+                                    TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_SOURCE_DIR}/tests/common/protocols
+                                    TEST_DATA_DIR=${CMAKE_SOURCE_DIR}/tests/common/data)
             endif ()
 
             set(TEST_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TESTNAME} ${PLATFORM} -p -o -p -,txt -p -o -p ${CMAKE_BINARY_DIR}/test_${TESTNAME}.xml,xunitxml)

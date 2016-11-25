@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2015 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -32,10 +32,12 @@
 #include "chatmanager.h"
 #include "contactwatcher.h"
 #include "greetercontacts.h"
+#include "participant.h"
 #include "phoneutils.h"
 #include "presencerequest.h"
 #include "protocolmanager.h"
 #include "accountentry.h"
+#include "accountlist.h"
 #include "audiooutput.h"
 
 #include <QQmlEngine>
@@ -75,13 +77,15 @@ void Components::registerTypes(const char *uri)
     // @uri Telephony
     qmlRegisterUncreatableType<TelepathyHelper>(uri, 0, 1, "TelepathyHelper", "This is a singleton helper class");
     qmlRegisterUncreatableType<CallEntry>(uri, 0, 1, "CallEntry", "Objects of this type are created in CallManager and made available to QML for usage");
-    qmlRegisterUncreatableType<ChatEntry>(uri, 0, 1, "ChatEntry", "Objects of this type are created in ChatManager and made available to QML for usage");
     qmlRegisterUncreatableType<ContactChatState>(uri, 0, 1, "ContactChatState", "Objects of this type are created in ChatEntry and made available to QML");
     qmlRegisterUncreatableType<AudioOutput>(uri, 0, 1, "AudioOutput", "Objects of this type are created in CallEntry and made available to QML for usage");
     qmlRegisterUncreatableType<AccountEntry>(uri, 0, 1, "AccountEntry", "Objects of this type are created in TelepathyHelper and made available to QML");
     qmlRegisterUncreatableType<USSDManager>(uri, 0, 1, "USSDManager", "Objects of this type are created in AccountEntry and made available to QML");
-    qmlRegisterUncreatableType<Protocol>(uri, 0, 1, "ProtocolManager", "Objects of this type are created in ProtocolManager and made available to QML");
+    qmlRegisterUncreatableType<Protocol>(uri, 0, 1, "Protocol", "Objects of this type are created in ProtocolManager and made available to QML");
+    qmlRegisterUncreatableType<AccountList>(uri, 0, 1, "AccountList", "Objects of this type are created in TelepathyHelper and made available to QML");
+    qmlRegisterType<ChatEntry>(uri, 0, 1, "ChatEntry");
     qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");
+    qmlRegisterType<Participant>(uri, 0, 1, "Participant");
     qmlRegisterType<PresenceRequest>(uri, 0, 1, "PresenceRequest");
     qmlRegisterType<PhoneUtils>(uri, 0, 1, "PhoneUtils");
 }

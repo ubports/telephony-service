@@ -16,4 +16,4 @@ qt5_add_dbus_adaptor(mock_SRCS MockConnection.xml mockconnectiondbus.h MockConne
 
 add_executable(telepathy-mock ${mock_SRCS})
 qt5_use_modules(telepathy-mock Core DBus)
-target_link_libraries(telepathy-mock ${TP_QT5_LIBRARIES} ${TELEPATHY_QT5_SERVICE_LIBRARIES} ${OFONO_QT_LIBRARIES} ${PULSEAUDIO_LIBRARIES})
+target_link_libraries(telepathy-mock ${TP_QT5_LIBRARIES} ${TELEPATHY_QT5_SERVICE_LIBRARIES} ${OFONO_QT_LIBRARIES} ${PULSEAUDIO_LIBRARIES} ${Qt5Network_LIBRARIES})

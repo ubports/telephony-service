@@ -41,9 +41,12 @@ find_package(Qt5Qml)
 #find_package(Qt5Quick)
 find_package(Qt5Test)
 find_package(Qt5Feedback)
+find_package(Qt5Network)
 find_package(LibPhoneNumber REQUIRED)
 
 include(qt5)
+
+option(SKIP_QML_TESTS "Skip QML tests" OFF)
 
 if(NOT CMAKE_CROSSCOMPILING)
     find_program(QMAKE_EXECUTABLE qmake)

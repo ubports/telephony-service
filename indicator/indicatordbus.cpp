@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Ugo Riboni <ugo.riboni@canonical.com>
@@ -43,14 +43,9 @@ IndicatorDBus::~IndicatorDBus()
 bool
 IndicatorDBus::connectToBus()
 {
-    bool ok = QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
-    if (!ok) {
-        return false;
-    }
     new TelephonyServiceIndicatorAdaptor(this);
     QDBusConnection::sessionBus().registerObject(DBUS_OBJECT_PATH, this);
-
-    return true;
+    return QDBusConnection::sessionBus().registerService(DBUS_SERVICE);
 }
 
 void IndicatorDBus::ClearNotifications()
