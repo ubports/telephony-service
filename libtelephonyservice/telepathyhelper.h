@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -31,6 +31,8 @@
 #include <TelepathyQt/ConnectionManager>
 #include <TelepathyQt/Types>
 #include "channelobserver.h"
+#include "accountentry.h"
+#include "protocol.h"
 
 #define CANONICAL_TELEPHONY_VOICEMAIL_IFACE "com.canonical.Telephony.Voicemail"
 #define CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE "com.canonical.Telephony.AudioOutputs"
@@ -39,57 +41,80 @@
 
 template<> bool qMapLessThanKey<QStringList>(const QStringList &key1, const QStringList &key2);
 
-class AccountEntry;
+class AccountList;
 
 class TelepathyHelper : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(bool ready READ ready NOTIFY setupReady)
     Q_PROPERTY(QStringList accountIds READ accountIds NOTIFY accountIdsChanged)
-    Q_PROPERTY(QQmlListProperty<AccountEntry> accounts READ qmlAccounts NOTIFY accountsChanged)
-    Q_PROPERTY(QQmlListProperty<AccountEntry> phoneAccounts READ qmlPhoneAccounts NOTIFY phoneAccountsChanged)
-    Q_PROPERTY(QQmlListProperty<AccountEntry> activeAccounts READ qmlActiveAccounts NOTIFY activeAccountsChanged)
+    Q_PROPERTY(AccountList *accounts READ qmlAccounts CONSTANT)
+    Q_PROPERTY(AccountList *voiceAccounts READ qmlVoiceAccounts CONSTANT)
+    Q_PROPERTY(AccountList *textAccounts READ qmlTextAccounts CONSTANT)
+    Q_PROPERTY(AccountList *phoneAccounts READ qmlPhoneAccounts CONSTANT)
     Q_PROPERTY(AccountEntry *defaultMessagingAccount READ defaultMessagingAccount NOTIFY defaultMessagingAccountChanged)
     Q_PROPERTY(AccountEntry *defaultCallAccount READ defaultCallAccount NOTIFY defaultCallAccountChanged)
     Q_PROPERTY(bool flightMode READ flightMode WRITE setFlightMode NOTIFY flightModeChanged)
-    Q_PROPERTY(bool mmsGroupChat READ mmsGroupChat WRITE setMmsGroupChat NOTIFY mmsGroupChatChanged)
+    Q_PROPERTY(bool mmsEnabled READ mmsEnabled WRITE setMmsEnabled NOTIFY mmsEnabledChanged)
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
     Q_PROPERTY(QVariantMap simNames READ simNames NOTIFY simNamesChanged)
     Q_ENUMS(AccountType)
+    Q_ENUMS(ChatType)
 public:
     enum AccountType {
-        Call,
-        Messaging
+        Messaging = Protocol::TextChats,
+        Voice = Protocol::VoiceCalls,
+    };
+    Q_DECLARE_FLAGS(AccountTypes, AccountType)
+
+    enum ChatType {
+        ChatTypeNone = Tp::HandleTypeNone,
+        ChatTypeContact = Tp::HandleTypeContact,
+        ChatTypeRoom = Tp::HandleTypeRoom
     };
 
     ~TelepathyHelper();
 
     static TelepathyHelper *instance();
+
+    /********************************* Account stuff *********************************/
     QList<AccountEntry*> accounts() const;
     QList<AccountEntry*> phoneAccounts() const;
     QList<AccountEntry*> activeAccounts() const;
-    QQmlListProperty<AccountEntry> qmlAccounts();
-    QQmlListProperty<AccountEntry> qmlPhoneAccounts();
-    QQmlListProperty<AccountEntry> qmlActiveAccounts();
+    AccountList *qmlAccounts() const;
+    AccountList *qmlVoiceAccounts() const;
+    AccountList *qmlTextAccounts() const;
+    AccountList *qmlPhoneAccounts() const;
     ChannelObserver *channelObserver() const;
     QDBusInterface *handlerInterface() const;
     QDBusInterface *approverInterface() const;
     AccountEntry *defaultMessagingAccount() const;
     AccountEntry *defaultCallAccount() const;
+    AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
+    Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
+    Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
+    Q_INVOKABLE QList<AccountEntry*> accountsForType(int type);
+    bool multiplePhoneAccounts() const;
 
-    bool mmsGroupChat();
+    /** @brief Check if this account should be replaced by any overloaded protocol. */
+    QList<AccountEntry*> checkAccountOverload(AccountEntry *originalAccount);
+
+    /** @brief Check if this account has a fallback to be used when the original account is not suitable. */
+    QList<AccountEntry*> checkAccountFallback(AccountEntry *originalAccount);
+
+    /* Convenience functions to be used by qml */
+    Q_INVOKABLE QList<QObject*> accountOverload(AccountEntry *originalAccount);
+    Q_INVOKABLE QList<QObject*> accountFallback(AccountEntry *originalAccount);
+
+    bool mmsEnabled();
     QVariantMap simNames() const;
-    void setMmsGroupChat(bool value);
+    void setMmsEnabled(bool value);
     bool flightMode();
     void setFlightMode(bool value);
     bool ready() const;
     QStringList accountIds();
-    AccountEntry *accountForConnection(const Tp::ConnectionPtr &connection) const;
-    Q_INVOKABLE AccountEntry *accountForId(const QString &accountId) const;
-    Q_INVOKABLE void setDefaultAccount(AccountType type, AccountEntry* account);
     bool emergencyCallsAvailable() const;
     Q_INVOKABLE void unlockSimCards() const;
-    bool multiplePhoneAccounts() const;
 
     bool registerClient(Tp::AbstractClient *client, QString name);
     bool unregisterClient(Tp::AbstractClient *client);
@@ -97,14 +122,6 @@ public:
     // pre-populated channel class specs for conferences
     static Tp::ChannelClassSpec audioConferenceSpec();
 
-    // QQmlListProperty helpers
-    static int accountsCount(QQmlListProperty<AccountEntry> *p);
-    static AccountEntry *accountAt(QQmlListProperty<AccountEntry> *p, int index);
-    static int activeAccountsCount(QQmlListProperty<AccountEntry> *p);
-    static AccountEntry *activeAccountAt(QQmlListProperty<AccountEntry> *p, int index);
-    static int phoneAccountsCount(QQmlListProperty<AccountEntry> *p);
-    static AccountEntry *phoneAccountAt(QQmlListProperty<AccountEntry> *p, int index);
- 
 Q_SIGNALS:
     void channelObserverCreated(ChannelObserver *observer);
     void channelObserverUnregistered();
@@ -118,7 +135,7 @@ Q_SIGNALS:
     void defaultCallAccountChanged();
     void flightModeChanged();
     void emergencyCallsAvailableChanged();
-    void mmsGroupChatChanged();
+    void mmsEnabledChanged();
     void simNamesChanged();
 
 public Q_SLOTS:
@@ -145,16 +162,22 @@ private:
     Tp::ClientRegistrarPtr mClientRegistrar;
     QList<AccountEntry*> mAccounts;
     int mPendingAccountReady;
+    AccountList *mQmlAccounts;
+    AccountList *mQmlVoiceAccounts;
+    AccountList *mQmlTextAccounts;
+    AccountList *mQmlPhoneAccounts;
     AccountEntry *mDefaultCallAccount;
     AccountEntry *mDefaultMessagingAccount;
     ChannelObserver *mChannelObserver;
     bool mReady;
     Tp::AbstractClientPtr mChannelObserverPtr;
-    bool mMmsGroupChat;
+    bool mMmsEnabled;
     QVariantMap mSimNames;
     mutable QDBusInterface *mHandlerInterface;
     mutable QDBusInterface *mApproverInterface;
     QDBusInterface mFlightModeInterface;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(TelepathyHelper::AccountTypes)
 
 #endif // TELEPATHYHELPER_H

@@ -1,8 +1,10 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * Authors:
  *  Michael Terry <michael.terry@canonical.com>
+ *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -186,13 +188,13 @@ bool GreeterContacts::dialpadSoundsEnabled()
     return mDialpadSoundsEnabled.toBool();
 }
 
-bool GreeterContacts::mmsGroupChatEnabled()
+bool GreeterContacts::mmsEnabled()
 {
     QMutexLocker locker(&mMutex);
-    if (!mMmsGroupChatEnabled.isValid()) {
-        mMmsGroupChatEnabled = getUserValue("com.ubuntu.touch.AccountsService.Phone", "MmsGroupChatEnabled");
+    if (!mMmsEnabled.isValid()) {
+        mMmsEnabled = getUserValue("com.ubuntu.touch.AccountsService.Phone", "MmsEnabled");
     }
-    return mMmsGroupChatEnabled.toBool();
+    return mMmsEnabled.toBool();
 }
 
 QString GreeterContacts::defaultSimForCalls()
@@ -254,14 +256,14 @@ void GreeterContacts::greeterPropertiesChanged(const QString &interface, const Q
     }
 }
 
-void GreeterContacts::setMmsGroupChatEnabled(bool enabled)
+void GreeterContacts::setMmsEnabled(bool enabled)
 {
     QString uid = QString::number(getuid());
     QDBusInterface iface("org.freedesktop.Accounts",
                          "/org/freedesktop/Accounts/User" + uid,
                          "org.freedesktop.DBus.Properties",
                          QDBusConnection::AS_BUSNAME());
-    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "MmsGroupChatEnabled", QVariant::fromValue(QDBusVariant(enabled)));
+    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "MmsEnabled", QVariant::fromValue(QDBusVariant(enabled)));
 }
 
 void GreeterContacts::setDefaultSimForMessages(const QString &objPath)
@@ -353,7 +355,7 @@ void GreeterContacts::accountsPropertiesChanged(const QString &interface,
                message.path() == mActiveUser) {
         checkUpdatedValue(changed, invalidated, "DefaultSimForCalls", mDefaultSimForCalls);
         checkUpdatedValue(changed, invalidated, "DefaultSimForMessages", mDefaultSimForMessages);
-        checkUpdatedValue(changed, invalidated, "MmsGroupChatEnabled", mMmsGroupChatEnabled);
+        checkUpdatedValue(changed, invalidated, "MmsEnabled", mMmsEnabled);
         checkUpdatedValue(changed, invalidated, "SimNames", mSimNames);
         Q_FOREACH(const QString &key, changed.keys()) {
             Q_EMIT phoneSettingsChanged(key);
@@ -436,7 +438,7 @@ void GreeterContacts::updateActiveUser(const QString &username)
         mIncomingCallVibrate = QVariant();
         mIncomingMessageVibrate = QVariant();
         mDialpadSoundsEnabled = QVariant();
-        mMmsGroupChatEnabled = QVariant();
+        mMmsEnabled = QVariant();
         mDefaultSimForCalls = QVariant();
         mDefaultSimForMessages = QVariant();
         mSimNames = QVariant();

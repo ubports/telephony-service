@@ -6,19 +6,19 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-16 15:24-0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-06-27 10:54-0300\n"
 "PO-Revision-Date: 2015-02-27 00:54+0000\n"
 "Last-Translator: Akerbeltz <fios@akerbeltz.org>\n"
 "Language-Team: Fòram na Gàidhlig\n"
+"Language: gd\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
-"X-Launchpad-Export-Date: 2016-10-07 06:50+0000\n"
-"X-Generator: Launchpad (build 18217)\n"
-"Language: gd\n"
+"X-Launchpad-Export-Date: 2016-09-16 07:53+0000\n"
+"X-Generator: Launchpad (build 18186)\n"
 
 #: indicator/messagingmenu.cpp:299
 #, qt-format
@@ -58,28 +58,77 @@ msgstr "Chaidh <b>%1</b> teachdaireachdan fhaighinn an-diugh"
 msgid "<b>%1</b> text messages sent today"
 msgstr "Chaidh <b>%1</b> teachdaireachdan a chur an-diugh"
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:520
 msgid "Accept"
 msgstr "Freagair"
+
+#: indicator/textchannelobserver.cpp:448
+#, qt-format
+msgid "Attachment: %1 audio clip"
+msgid_plural "Attachments: %1 audio clips"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: indicator/textchannelobserver.cpp:446
+#, qt-format
+msgid "Attachment: %1 contact"
+msgid_plural "Attachments: %1 contacts"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: indicator/textchannelobserver.cpp:450
+#, qt-format
+msgid "Attachment: %1 file"
+msgid_plural "Attachments: %1 files"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: indicator/textchannelobserver.cpp:442
+#, qt-format
+msgid "Attachment: %1 image"
+msgid_plural "Attachments: %1 images"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: indicator/textchannelobserver.cpp:444
+#, qt-format
+msgid "Attachment: %1 video"
+msgid_plural "Attachments: %1 videos"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: indicator/authhandler.cpp:72
+msgid "Authentication failed. Do you want to review your credentials?"
+msgstr ""
 
 #: indicator/messagingmenu.cpp:236
 msgid "Call back"
 msgstr "Fònaig air ais"
 
-#: approver/approver.cpp:464 approver/approver.cpp:479
+#: approver/approver.cpp:466 approver/approver.cpp:481
 msgid "Caller number is not available"
 msgstr "Chan eil fhios dè àireamh a tha aig an neach eile"
 
-#: approver/approver.cpp:476
+#: approver/approver.cpp:478
 #, qt-format
 msgid "Calling from %1"
 msgstr "Fòn o %1"
 
-#: approver/approver.cpp:470
+#: approver/approver.cpp:472
 msgid "Calling from private number"
 msgstr "Fòn o àireamh phrìobhaideach"
 
-#: approver/approver.cpp:473
+#: approver/approver.cpp:475
 msgid "Calling from unknown number"
 msgstr "Fòn o àireamh nach aithne dhuinn"
 
@@ -87,21 +136,21 @@ msgstr "Fòn o àireamh nach aithne dhuinn"
 msgid "Cancel"
 msgstr "Sguir dheth"
 
-#: indicator/textchannelobserver.cpp:238
+#: indicator/textchannelobserver.cpp:236
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Cuir am modh itealain à comas is feuch ris a-rithist o aplacaid nan "
 "teachdaireachdan."
 
-#: approver/approver.cpp:540
+#: approver/approver.cpp:542
 msgid "Decline"
 msgstr "Diùlt"
 
-#: approver/approver.cpp:531
+#: approver/approver.cpp:533
 msgid "End + Answer"
 msgstr "Crìochnaich + Freagair"
 
-#: approver/approver.cpp:517
+#: approver/approver.cpp:519
 msgid "Hold + Answer"
 msgstr "Cum ⁊ freagair"
 
@@ -129,14 +178,23 @@ msgstr "Tha mi fadalach ach air an t-slighe a-nis."
 msgid "I'm running late. I'm on my way."
 msgstr "Tha mi fadalach ach air an t-slighe."
 
-#: approver/approver.cpp:548
+#: approver/approver.cpp:550
 msgid "Message & decline"
 msgstr "Teachdaireachd ⁊ diùlt"
 
-#: indicator/textchannelobserver.cpp:547
+#: indicator/textchannelobserver.cpp:550
 #, qt-format
 msgid "Message from %1"
 msgstr "Teachdaireachd o %1"
+
+#: indicator/textchannelobserver.cpp:486 indicator/messagingmenu.cpp:163
+#, qt-format
+msgid "Message to group from %1"
+msgstr ""
+
+#: indicator/authhandler.cpp:94
+msgid "No"
+msgstr ""
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
@@ -154,9 +212,14 @@ msgstr "Cha d' fhuaireadh teachdaireachd an-diugh"
 msgid "No text messages sent today"
 msgstr "Cha do chuireadh teachdaireachd an-diugh"
 
-#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:314
 msgid "Ok"
 msgstr "Ceart ma-thà"
+
+#: approver/approver.cpp:453
+#, qt-format
+msgid "On [%1]"
+msgstr ""
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -166,7 +229,7 @@ msgstr "Gairmean fòn"
 msgid "Please call me back later."
 msgstr "Saoil an cuir thu fòn air ais thugam an ceann greis?"
 
-#: indicator/textchannelobserver.cpp:692
+#: indicator/textchannelobserver.cpp:687
 msgid "Please, select a SIM card:"
 msgstr "Tagh cairt SIM:"
 
@@ -174,7 +237,7 @@ msgstr "Tagh cairt SIM:"
 msgid "Private Number"
 msgstr "Àireamh phrìobhaideach"
 
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
+#: approver/approver.cpp:457 indicator/messagingmenu.cpp:304
 msgid "Private number"
 msgstr "Àireamh phrìobhaideach"
 
@@ -222,11 +285,11 @@ msgstr "Aontaichear na seirbheise fòn"
 msgid "Telephony Service Indicator"
 msgstr "Taisbeanair na seirbheise fòn"
 
-#: indicator/textchannelobserver.cpp:247
+#: indicator/textchannelobserver.cpp:245
 msgid "The message could not be sent"
 msgstr "Cha b' urrainn dhuinn an teachdaireachd a chur"
 
-#: indicator/textchannelobserver.cpp:241
+#: indicator/textchannelobserver.cpp:239
 msgid "Try again from the messaging application."
 msgstr "Feuch ris a-rithist o aplacaid nan teachdaireachdan."
 
@@ -238,18 +301,18 @@ msgstr "Àireamh nach aithne dhuinn"
 msgid "Unknown caller"
 msgstr "Chan eil fhios cò tha fònadh"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
+#: approver/approver.cpp:460 indicator/textchannelobserver.cpp:477
+#: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:308
 msgid "Unknown number"
 msgstr "Àireamh nach aithne dhuinn"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:234
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Thoir a' ghlas far na cairt SIM agad is feuch ris a-rithist o aplacaid nan "
 "teachdaireachdan."
 
-#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
+#: indicator/textchannelobserver.cpp:260 indicator/textchannelobserver.cpp:514
 msgid "View message"
 msgstr "Seall an teachdaireachd"
 
@@ -260,3 +323,7 @@ msgstr "Post-gutha"
 #: indicator/messagingmenu.cpp:395
 msgid "Voicemail messages"
 msgstr "Teachdaireachdan gutha"
+
+#: indicator/authhandler.cpp:91
+msgid "Yes"
+msgstr ""
