@@ -20,17 +20,44 @@
  */
 
 #include "protocolmanager.h"
+#include "telepathyhelper.h"
 #include "config.h"
+#include "dbustypes.h"
 #include <QDir>
+#include <QDBusMetaType>
+
+QDBusArgument &operator<<(QDBusArgument &argument, const ProtocolStruct &protocol)
+{
+    argument.beginStructure();
+    argument << protocol.name << protocol.features << protocol.fallbackProtocol << protocol.backgroundImage << protocol.icon << protocol.serviceName;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, ProtocolStruct &protocol)
+{
+    argument.beginStructure();
+    argument >> protocol.name >> protocol.features >> protocol.fallbackProtocol >> protocol.backgroundImage >> protocol.icon >> protocol.serviceName;
+    argument.endStructure();
+    return argument;
+}
 
 ProtocolManager::ProtocolManager(const QString &dir, QObject *parent) :
     QObject(parent), mProtocolsDir(dir)
 {
-    mFileWatcher.addPath(mProtocolsDir);
-    connect(&mFileWatcher,
-            SIGNAL(directoryChanged(QString)),
-            SLOT(loadSupportedProtocols()));
-    loadSupportedProtocols();
+    QDir d(mProtocolsDir);
+    if (d.exists()) {
+        mFileWatcher.addPath(mProtocolsDir);
+        connect(&mFileWatcher,
+                SIGNAL(directoryChanged(QString)),
+                SLOT(loadSupportedProtocols()));
+        loadSupportedProtocols();
+    } else {
+        qDBusRegisterMetaType<ProtocolList>();
+        qDBusRegisterMetaType<ProtocolStruct>();
+
+        //TODO make DBus call to get the protocols
+    }
 }
 
 ProtocolManager *ProtocolManager::instance()

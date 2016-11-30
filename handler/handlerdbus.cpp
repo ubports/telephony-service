@@ -26,6 +26,8 @@
 #include "handleradaptor.h"
 #include "texthandler.h"
 #include "telepathyhelper.h"
+#include "protocolwatcher.h"
+#include <config.h>
 
 // Qt
 #include <QtDBus/QDBusConnection>
@@ -35,6 +37,9 @@ static const char* DBUS_OBJECT_PATH = "/com/canonical/TelephonyServiceHandler";
 
 HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent), mCallIndicatorVisible(false)
 {
+    qDBusRegisterMetaType<ProtocolList>();
+    qDBusRegisterMetaType<ProtocolStruct>();
+
     connect(CallHandler::instance(),
             SIGNAL(callPropertiesChanged(QString,QVariantMap)),
             SIGNAL(CallPropertiesChanged(QString,QVariantMap)));
@@ -44,6 +49,9 @@ HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent), mCallIndicatorVisib
     connect(CallHandler::instance(),
             SIGNAL(conferenceCallRequestFinished(bool)),
             SIGNAL(ConferenceCallRequestFinished(bool)));
+    connect(ProtocolWatcher::instance(),
+            SIGNAL(protocolsChanged(ProtocolList)),
+            SIGNAL(ProtocolsChanged(ProtocolList)));
 }
 
 HandlerDBus::~HandlerDBus()
@@ -79,6 +87,11 @@ void HandlerDBus::setCallIndicatorVisible(bool visible)
 {
     mCallIndicatorVisible = visible;
     Q_EMIT CallIndicatorVisibleChanged(visible);
+}
+
+ProtocolList HandlerDBus::GetProtocols()
+{
+    return ProtocolWatcher::instance()->protocols();
 }
 
 bool HandlerDBus::connectToBus()

@@ -50,6 +50,8 @@ public:
     bool IsReady();
     bool callIndicatorVisible() const;
     void setCallIndicatorVisible(bool visible);
+    // configuration related
+    ProtocolList GetProtocols();
 
 public Q_SLOTS:
     bool connectToBus();
@@ -80,6 +82,7 @@ Q_SIGNALS:
     void CallIndicatorVisibleChanged(bool visible);
     void ConferenceCallRequestFinished(bool succeeded);
     void CallHoldingFailed(const QString &objectPath);
+    void ProtocolsChanged(const ProtocolList &protocols);
 
 private:
     bool mCallIndicatorVisible;

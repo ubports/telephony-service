@@ -21,12 +21,28 @@
  */
 
 #include "protocol.h"
+#include "dbustypes.h"
 #include <QFileInfo>
 #include <QSettings>
+
+Protocol::Protocol(const ProtocolStruct & protocol)
+    : mName(protocol.name)
+    , mFeatures(protocol.features)
+    , mFallbackProtocol(protocol.fallbackProtocol)
+    , mBackgroundImage(protocol.backgroundImage)
+    , mIcon(protocol.icon)
+    , mServiceName(protocol.serviceName)
+{
+}
 
 Protocol::Protocol(const QString &name, Features features, const QString &fallbackProtocol, const QString &backgroundImage, const QString &icon, const QString &serviceName, QObject *parent)
 : QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol), mBackgroundImage(backgroundImage), mIcon(icon), mServiceName(serviceName)
 {
+}
+
+ProtocolStruct Protocol::dbusType()
+{
+    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, mBackgroundImage, mIcon, mServiceName};
 }
 
 QString Protocol::name() const

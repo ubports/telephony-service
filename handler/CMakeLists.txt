@@ -4,6 +4,7 @@ set(qt_SRCS
     handler.cpp
     handlerdbus.cpp
     texthandler.cpp
+    protocolwatcher.cpp
     )
 
 set(handler_SRCS main.cpp ${qt_SRCS})

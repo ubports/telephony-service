@@ -23,6 +23,7 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
+#include "dbustypes.h"
 #include <QObject>
 
 /// @brief describes one protocol and the features it supports
@@ -54,6 +55,8 @@ public:
     };
     Q_DECLARE_FLAGS(Features, Feature)
 
+    Protocol(const ProtocolStruct& protocolStruct);
+
     QString name() const;
     Features features() const;
     QString fallbackProtocol() const;
@@ -62,6 +65,7 @@ public:
     QString serviceName() const;
 
     static Protocol *fromFile(const QString &fileName);
+    ProtocolStruct dbusType();
 
     friend class ProtocolManager;
 
