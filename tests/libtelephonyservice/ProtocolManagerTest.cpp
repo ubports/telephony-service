@@ -21,6 +21,8 @@
 #include <QTemporaryDir>
 #include <QDir>
 #include <QFile>
+#include <QDBusInterface>
+#include <QDBusMetaType>
 
 #include "config.h"
 #include "protocolmanager.h"
@@ -54,12 +56,15 @@ private Q_SLOTS:
     void testIsProtocolSupported_data();
     void testIsProtocolSupported();
     void testFileSystemWatch();
+    void testGetProtocolsThroughDBus();
 };
 
 void ProtocolManagerTest::initTestCase()
 {
     qRegisterMetaType<Protocols>();
     qRegisterMetaType<Protocol::Features>();
+    qDBusRegisterMetaType<ProtocolList>();
+    qDBusRegisterMetaType<ProtocolStruct>();
 }
 
 void ProtocolManagerTest::testNumberOfProtocols()
@@ -187,6 +192,23 @@ void ProtocolManagerTest::testFileSystemWatch()
     QTRY_COMPARE(protocolsChangedSpy.count(), 1);
     QCOMPARE(manager.protocols().count(), 1);
     QCOMPARE(manager.protocols()[0]->name(), QString("foobar"));
+}
+
+void ProtocolManagerTest::testGetProtocolsThroughDBus()
+{
+    Protocols protocols = ProtocolManager::instance()->protocols();
+
+    QDBusInterface interface("com.canonical.TelephonyServiceHandler",
+                             "/com/canonical/TelephonyServiceHandler",
+                             "com.canonical.TelephonyServiceHandler");
+
+    QDBusReply<ProtocolList> reply = interface.call("GetProtocols");
+    QVERIFY(reply.isValid());
+
+    ProtocolList protocolList = reply.value();
+    for (int i = 0; i < protocols.count(); ++i) {
+        QCOMPARE(protocols[i]->name(), protocolList.at(i).name);
+    }
 }
 
 QTEST_MAIN(ProtocolManagerTest)
