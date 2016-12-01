@@ -42,11 +42,16 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, ProtocolStruct &p
     return argument;
 }
 
+/**
+ * Protocol Manager acts in two senses. If protocols dir is accessible it takes info from there and exposes it thtrough DBus (handler will be accessible
+ * in this case). Otherwise, it queries for protocols through DBus, avoiding accessing disk to get that information. This last is useful in confined
+ * environments where info could only be accessible by DBus
+ */
 ProtocolManager::ProtocolManager(const QString &dir, QObject *parent) :
     QObject(parent), mProtocolsDir(dir)
 {
     QDir d(mProtocolsDir);
-    // legacy way of reading protocols directly from disk
+    // read from disk and emit signal of available protocols in case protocols directory exists (We are servers)
     if (d.exists()) {
         mFileWatcher.addPath(mProtocolsDir);
         connect(&mFileWatcher,
@@ -54,24 +59,22 @@ ProtocolManager::ProtocolManager(const QString &dir, QObject *parent) :
                 SLOT(loadSupportedProtocols()));
         loadSupportedProtocols();
     } else {
+        // register DBus types and query protocols info through DBus in case protocols directory does not exists (We are clients)
         qDBusRegisterMetaType<ProtocolList>();
         qDBusRegisterMetaType<ProtocolStruct>();
 
         //TODO make DBus call to get the protocols
-        //QDBusInterface *interface = TelepathyHelper::instance()->handlerInterface();
+        QDBusInterface *interface = TelepathyHelper::instance()->handlerInterface();
 
-        QDBusInterface interface("com.canonical.TelephonyServiceHandler",
-                                 "/com/canonical/TelephonyServiceHandler",
-                                 "com.canonical.TelephonyServiceHandler");
-//        if (!interface) {
-//            return;
-//        }
+        if (!interface) {
+            return;
+        }
 
-        connect(&interface,
+        connect(interface,
                 SIGNAL(ProtocolsChanged(ProtocolList)),
                 SLOT(onProtocolsChanged(ProtocolList)));
 
-        QDBusReply<ProtocolList> reply = interface.call("GetProtocols");
+        QDBusReply<ProtocolList> reply = interface->call("GetProtocols");
         if (!reply.isValid()) {
             return;
         }
@@ -220,4 +223,6 @@ void ProtocolManager::onProtocolsChanged(const ProtocolList &protocolList)
     Q_FOREACH (const ProtocolStruct &protocol, protocolList) {
         mProtocols << new Protocol(protocol);
     }
+
+    Q_EMIT protocolsChanged();
 }

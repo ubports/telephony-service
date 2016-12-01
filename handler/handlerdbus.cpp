@@ -26,7 +26,7 @@
 #include "handleradaptor.h"
 #include "texthandler.h"
 #include "telepathyhelper.h"
-#include "protocolwatcher.h"
+#include "protocolmanager.h"
 #include <config.h>
 
 // Qt
@@ -49,9 +49,10 @@ HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent), mCallIndicatorVisib
     connect(CallHandler::instance(),
             SIGNAL(conferenceCallRequestFinished(bool)),
             SIGNAL(ConferenceCallRequestFinished(bool)));
-    connect(ProtocolWatcher::instance(),
-            SIGNAL(protocolsChanged(ProtocolList)),
-            SIGNAL(ProtocolsChanged(ProtocolList)));
+    connect(ProtocolManager::instance(),
+            &ProtocolManager::protocolsChanged, [this]() {
+                Q_EMIT ProtocolsChanged(ProtocolManager::instance()->protocols().dbusType());
+            });
 }
 
 HandlerDBus::~HandlerDBus()
@@ -91,7 +92,7 @@ void HandlerDBus::setCallIndicatorVisible(bool visible)
 
 ProtocolList HandlerDBus::GetProtocols()
 {
-    return ProtocolWatcher::instance()->protocols();
+    return ProtocolManager::instance()->protocols().dbusType();
 }
 
 bool HandlerDBus::connectToBus()
