@@ -55,7 +55,7 @@ generate_test(ProtocolTest
               ENVIRONMENT TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_CURRENT_SOURCE_DIR}/testProtocols)
 generate_test(ProtocolManagerTest
               SOURCES ProtocolManagerTest.cpp ${LIBTELEPHONYSERVICE_DIR}/protocol.cpp ${LIBTELEPHONYSERVICE_DIR}/protocolmanager.cpp
-              QT5_MODULES Core Qml Test
+              QT5_MODULES Core Qml DBus Test
               ENVIRONMENT TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_CURRENT_SOURCE_DIR}/testProtocols)
 
 generate_telepathy_test(AccountEntryFactoryTest SOURCES AccountEntryFactoryTest.cpp)
