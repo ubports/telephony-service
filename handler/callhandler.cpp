@@ -273,6 +273,8 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 
     if (channel->callState() == Tp::CallStateActive) {
         channel->setProperty("activeTimestamp", QDateTime::currentDateTimeUtc());
+    } else if (channel->callState() == Tp::CallStatePendingInitiator) {
+        channel->accept();
     }
 
     connect(channel.data(),

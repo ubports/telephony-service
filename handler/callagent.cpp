@@ -66,7 +66,9 @@ void CallAgent::onCallChannelInvalidated()
 
 void CallAgent::onCallStateChanged(Tp::CallState state)
 {
-
+    if (state == Tp::CallStatePendingInitiator) {
+        mChannel->accept();
+    }
 }
 
 void CallAgent::onContentAdded(const Tp::CallContentPtr &content)
