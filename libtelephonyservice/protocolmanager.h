@@ -90,6 +90,7 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     void loadSupportedProtocols();
+    void onProtocolsChanged(const ProtocolList &protocolList);
 
 protected:
     explicit ProtocolManager(const QString &dir, QObject *parent = 0);

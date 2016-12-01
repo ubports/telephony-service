@@ -46,6 +46,7 @@ ProtocolManager::ProtocolManager(const QString &dir, QObject *parent) :
     QObject(parent), mProtocolsDir(dir)
 {
     QDir d(mProtocolsDir);
+    // legacy way of reading protocols directly from disk
     if (d.exists()) {
         mFileWatcher.addPath(mProtocolsDir);
         connect(&mFileWatcher,
@@ -57,6 +58,28 @@ ProtocolManager::ProtocolManager(const QString &dir, QObject *parent) :
         qDBusRegisterMetaType<ProtocolStruct>();
 
         //TODO make DBus call to get the protocols
+        //QDBusInterface *interface = TelepathyHelper::instance()->handlerInterface();
+
+        QDBusInterface interface("com.canonical.TelephonyServiceHandler",
+                                 "/com/canonical/TelephonyServiceHandler",
+                                 "com.canonical.TelephonyServiceHandler");
+//        if (!interface) {
+//            return;
+//        }
+
+        connect(&interface,
+                SIGNAL(ProtocolsChanged(ProtocolList)),
+                SLOT(onProtocolsChanged(ProtocolList)));
+
+        QDBusReply<ProtocolList> reply = interface.call("GetProtocols");
+        if (!reply.isValid()) {
+            return;
+        }
+
+        mProtocols.clear();
+        Q_FOREACH (const ProtocolStruct& protocol, reply.value()) {
+            mProtocols << new Protocol(protocol);
+        }
     }
 }
 
@@ -189,4 +212,12 @@ void ProtocolManager::loadSupportedProtocols()
     }
 
     Q_EMIT protocolsChanged();
+}
+
+void ProtocolManager::onProtocolsChanged(const ProtocolList &protocolList)
+{
+    mProtocols.clear();
+    Q_FOREACH (const ProtocolStruct &protocol, protocolList) {
+        mProtocols << new Protocol(protocol);
+    }
 }
