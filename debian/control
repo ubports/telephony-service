@@ -41,7 +41,7 @@ Vcs-Bzr: https://code.launchpad.net/~phablet-team/telephony-service/trunk
 X-Ubuntu-Use-Langpack: yes
 
 Package: telephony-service
-Architecture: any
+Architecture: amd64 arm64 armhf i386 powerpc ppc64el 
 Multi-Arch: foreign
 Pre-Depends: dpkg (>= 1.15.6~)
 Conflicts: phone-app
@@ -65,7 +65,7 @@ Description: Telephony service components for Ubuntu - backend
  features such as calling and texting.
 
 Package: qtdeclarative5-ubuntu-telephony0.1
-Architecture: any
+Architecture: amd64 arm64 armhf i386 powerpc ppc64el
 Multi-Arch: same
 Pre-Depends: dpkg (>= 1.15.6~)
 Depends: gsettings-ubuntu-schemas,
@@ -81,7 +81,7 @@ Description: Telephony service components for Ubuntu - QML plugin
  service to applications.
 
 Package: qtdeclarative5-ubuntu-telephony-phonenumber0.1
-Architecture: any
+Architecture: amd64 arm64 armhf i386 powerpc ppc64el 
 Multi-Arch: same
 Pre-Depends: dpkg (>= 1.15.6~)
 Depends: ${misc:Depends},
