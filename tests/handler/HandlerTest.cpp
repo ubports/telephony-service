@@ -26,6 +26,8 @@
 #include "accountentry.h"
 #include "accountentryfactory.h"
 #include "telepathyhelper.h"
+#include "protocolmanager.h"
+#include <config.h>
 
 class HandlerTest : public TelepathyTest
 {
@@ -36,19 +38,20 @@ private Q_SLOTS:
     void init();
     void cleanup();
     void testGetProtocols();
-//    void testMakingCalls();
-//    void testHangUpCall();
-//    void testCallHold();
-//    void testCallProperties();
-//    void testConferenceCall();
-//    void testSendMessage();
-//    void testSendMessageWithAttachments();
-//    void testSendMessageOwnNumber();
-//    void testAcknowledgeMessage();
-//    void testAcknowledgeAllMessages();
-//    void testActiveCallIndicator();
-//    void testNotApprovedChannels();
-//    void testMultimediaFallback();
+    void testGetProtocolsChangesThroughDBus();
+    void testMakingCalls();
+    void testHangUpCall();
+    void testCallHold();
+    void testCallProperties();
+    void testConferenceCall();
+    void testSendMessage();
+    void testSendMessageWithAttachments();
+    void testSendMessageOwnNumber();
+    void testAcknowledgeMessage();
+    void testAcknowledgeAllMessages();
+    void testActiveCallIndicator();
+    void testNotApprovedChannels();
+    void testMultimediaFallback();
 
 private:
     void registerApprover();
@@ -66,6 +69,9 @@ private:
 
 void HandlerTest::initTestCase()
 {
+    qDBusRegisterMetaType<ProtocolList>();
+    qDBusRegisterMetaType<ProtocolStruct>();
+
     initialize();
 
     QSignalSpy setupReadySpy(TelepathyHelper::instance(), SIGNAL(setupReady()));
@@ -96,21 +102,28 @@ void HandlerTest::cleanup()
     mOfonoMockController->deleteLater();
 }
 
-#include <config.h>
-#include <QDebug>
-#include <libtelephonyservice/protocolmanager.h>
 void HandlerTest::testGetProtocols()
 {
-    qDBusRegisterMetaType<ProtocolList>();
-    qDBusRegisterMetaType<ProtocolStruct>();
-
     Protocols protocols = ProtocolManager::instance()->protocols();
     ProtocolList protocolList = HandlerController::instance()->getProtocols();
     for (int i = 0; i < protocols.count(); ++i) {
         QCOMPARE(protocols[i]->name(), protocolList.at(i).name);
     }
 }
-/*
+
+void HandlerTest::testGetProtocolsChangesThroughDBus()
+{
+    QSignalSpy protocolsChangedSpy(HandlerController::instance(), SIGNAL(protocolsChanged(ProtocolList)));
+
+    QTemporaryFile f;
+    f.setFileTemplate(protocolsDir() + "/");
+    if (f.open()) {
+        f.close();
+    }
+
+    QTRY_COMPARE(protocolsChangedSpy.count(), 1);
+}
+
 void HandlerTest::testMakingCalls()
 {
     QString callerId("1234567");
@@ -524,7 +537,7 @@ void HandlerTest::testMultimediaFallback()
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
 }
-*/
+
 void HandlerTest::registerApprover()
 {
     // register the approver

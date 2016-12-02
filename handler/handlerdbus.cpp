@@ -28,8 +28,6 @@
 #include "telepathyhelper.h"
 #include "protocolmanager.h"
 #include <config.h>
-// TODO TRACE
-#include <QDebug>
 
 // Qt
 #include <QtDBus/QDBusConnection>

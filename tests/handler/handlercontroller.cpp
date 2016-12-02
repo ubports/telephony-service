@@ -46,6 +46,9 @@ HandlerController::HandlerController(QObject *parent) :
     connect(&mHandlerInterface,
             SIGNAL(CallIndicatorVisibleChanged(bool)),
             SIGNAL(callIndicatorVisibleChanged(bool)));
+    connect(&mHandlerInterface,
+            SIGNAL(ProtocolsChanged(ProtocolList)),
+            SIGNAL(protocolsChanged(ProtocolList)));
 }
 
 QVariantMap HandlerController::getCallProperties(const QString &objectPath)

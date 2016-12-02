@@ -56,8 +56,6 @@ private Q_SLOTS:
     void testIsProtocolSupported_data();
     void testIsProtocolSupported();
     void testFileSystemWatch();
-//    void testGetProtocolsThroughDBus();
-//    void testGetProtocolsChangesThroughDBus();
 };
 
 void ProtocolManagerTest::initTestCase()
@@ -192,50 +190,6 @@ void ProtocolManagerTest::testFileSystemWatch()
     QCOMPARE(manager.protocols().count(), 1);
     QCOMPARE(manager.protocols()[0]->name(), QString("foobar"));
 }
-/*
-void ProtocolManagerTest::testGetProtocolsThroughDBus()
-{
-    Protocols protocols = ProtocolManager::instance()->protocols();
 
-    QDBusInterface interface("com.canonical.TelephonyServiceHandler",
-                             "/com/canonical/TelephonyServiceHandler",
-                             "com.canonical.TelephonyServiceHandler");
-
-    QDBusReply<ProtocolList> reply = interface.call("GetProtocols");
-    QVERIFY(reply.isValid());
-
-    ProtocolList protocolList = reply.value();
-    for (int i = 0; i < protocols.count(); ++i) {
-        QCOMPARE(protocols[i]->name(), protocolList.at(i).name);
-    }
-}
-
-void ProtocolManagerTest::testGetProtocolsChangesThroughDBus()
-{
-    QTemporaryDir tempDir;
-    tempDir.setAutoRemove(true);
-    QVERIFY(tempDir.isValid());
-    QDir dir(tempDir.path());
-    ProtocolManagerWrapper manager(tempDir.path());
-
-    QDBusInterface interface("com.canonical.TelephonyServiceHandler",
-                             "/com/canonical/TelephonyServiceHandler",
-                             "com.canonical.TelephonyServiceHandler");
-
-    QSignalSpy protocolsChangedSpy(&interface, SIGNAL(ProtocolsChanged(ProtocolList)));
-
-
-    QFile foobar(dir.absoluteFilePath("foobar.protocol"));
-    QVERIFY(foobar.open(QFile::WriteOnly));
-
-    foobar.write("[Protocol]\nName=foobar\nFeatures=read,write\n");
-    QVERIFY(foobar.flush());
-    foobar.close();
-
-    QTRY_COMPARE(protocolsChangedSpy.count(), 1);
-    QCOMPARE(manager.protocols().count(), 1);
-    QCOMPARE(manager.protocols()[0]->name(), QString("foobar"));
-}
-*/
 QTEST_MAIN(ProtocolManagerTest)
 #include "ProtocolManagerTest.moc"
