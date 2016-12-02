@@ -35,19 +35,20 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-    void testMakingCalls();
-    void testHangUpCall();
-    void testCallHold();
-    void testCallProperties();
-    void testConferenceCall();
-    void testSendMessage();
-    void testSendMessageWithAttachments();
-    void testSendMessageOwnNumber();
-    void testAcknowledgeMessage();
-    void testAcknowledgeAllMessages();
-    void testActiveCallIndicator();
-    void testNotApprovedChannels();
-    void testMultimediaFallback();
+    void testGetProtocols();
+//    void testMakingCalls();
+//    void testHangUpCall();
+//    void testCallHold();
+//    void testCallProperties();
+//    void testConferenceCall();
+//    void testSendMessage();
+//    void testSendMessageWithAttachments();
+//    void testSendMessageOwnNumber();
+//    void testAcknowledgeMessage();
+//    void testAcknowledgeAllMessages();
+//    void testActiveCallIndicator();
+//    void testNotApprovedChannels();
+//    void testMultimediaFallback();
 
 private:
     void registerApprover();
@@ -95,6 +96,21 @@ void HandlerTest::cleanup()
     mOfonoMockController->deleteLater();
 }
 
+#include <config.h>
+#include <QDebug>
+#include <libtelephonyservice/protocolmanager.h>
+void HandlerTest::testGetProtocols()
+{
+    qDBusRegisterMetaType<ProtocolList>();
+    qDBusRegisterMetaType<ProtocolStruct>();
+
+    Protocols protocols = ProtocolManager::instance()->protocols();
+    ProtocolList protocolList = HandlerController::instance()->getProtocols();
+    for (int i = 0; i < protocols.count(); ++i) {
+        QCOMPARE(protocols[i]->name(), protocolList.at(i).name);
+    }
+}
+/*
 void HandlerTest::testMakingCalls()
 {
     QString callerId("1234567");
@@ -508,7 +524,7 @@ void HandlerTest::testMultimediaFallback()
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().count(), 1);
     QCOMPARE(messageProperties["Recipients"].value<QStringList>().first(), recipient);
 }
-
+*/
 void HandlerTest::registerApprover()
 {
     // register the approver

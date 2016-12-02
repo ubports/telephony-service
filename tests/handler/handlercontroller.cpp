@@ -152,3 +152,12 @@ void HandlerController::setCallIndicatorVisible(bool visible)
                                     "com.canonical.TelephonyServiceHandler",
                                     "CallIndicatorVisible", QVariant::fromValue(QDBusVariant(visible)));
 }
+
+ProtocolList HandlerController::getProtocols()
+{
+    QDBusReply<ProtocolList> reply = mHandlerInterface.call("GetProtocols");
+    if (reply.isValid()) {
+        return reply.value();
+    }
+    return ProtocolList();
+}

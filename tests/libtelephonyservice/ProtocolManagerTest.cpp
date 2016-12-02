@@ -64,8 +64,6 @@ void ProtocolManagerTest::initTestCase()
 {
     qRegisterMetaType<Protocols>();
     qRegisterMetaType<Protocol::Features>();
-    qDBusRegisterMetaType<ProtocolList>();
-    qDBusRegisterMetaType<ProtocolStruct>();
 }
 
 void ProtocolManagerTest::testNumberOfProtocols()

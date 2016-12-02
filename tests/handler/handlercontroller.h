@@ -57,6 +57,9 @@ public Q_SLOTS:
     // active call indicator
     void setCallIndicatorVisible(bool visible);
 
+    // protocols
+    ProtocolList getProtocols();
+
 Q_SIGNALS:
     void callPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
     void callIndicatorVisibleChanged(bool visible);
