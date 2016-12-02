@@ -56,7 +56,7 @@ generate_test(ProtocolTest
 generate_test(ProtocolManagerTest
               SOURCES ProtocolManagerTest.cpp
               QT5_MODULES Core Qml Test DBus Contacts
-              LIBRARIES telepathy-qt5 telephonyservice mockcontroller telepathytest
+              LIBRARIES telepathy-qt5 telephonyservice
               ENVIRONMENT TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_CURRENT_SOURCE_DIR}/testProtocols)
 
 
