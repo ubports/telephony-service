@@ -53,9 +53,12 @@ generate_test(PhoneUtilsTest SOURCES PhoneUtilsTest.cpp LIBRARIES telephonyservi
 generate_test(ProtocolTest
               SOURCES ProtocolTest.cpp ${LIBTELEPHONYSERVICE_DIR}/protocol.cpp
               ENVIRONMENT TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_CURRENT_SOURCE_DIR}/testProtocols)
-generate_telepathy_test(ProtocolManagerTest
+generate_test(ProtocolManagerTest
               SOURCES ProtocolManagerTest.cpp
+              QT5_MODULES Core Qml Test DBus Contacts
+              LIBRARIES telepathy-qt5 telephonyservice mockcontroller telepathytest
               ENVIRONMENT TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_CURRENT_SOURCE_DIR}/testProtocols)
+
 
 generate_telepathy_test(AccountEntryFactoryTest SOURCES AccountEntryFactoryTest.cpp)
 generate_telepathy_test(AccountEntryTest SOURCES AccountEntryTest.cpp)
