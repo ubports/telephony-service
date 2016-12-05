@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2014 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -412,10 +412,12 @@ void Approver::onRejected(Tp::ChannelDispatchOperationPtr dispatchOp)
 void Approver::onRejectMessage(Tp::ChannelDispatchOperationPtr dispatchOp, const char *action)
 {
     if (mRejectActions.contains(action)) {
-        QString targetId = dispatchOp->channels().first()->targetContact()->id();
+        QVariantMap properties;
+        properties["participantIds"] = QStringList() << dispatchOp->channels().first()->targetContact()->id();
         ChatManager::instance()->sendMessage(dispatchOp->account()->uniqueIdentifier(),
-                                             QStringList() << targetId,
-                                             mRejectActions[action]);
+                                             mRejectActions[action],
+                                             QVariantMap(), // attachments
+                                             properties);
     }
 
     onRejected(dispatchOp);

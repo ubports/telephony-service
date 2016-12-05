@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrman@canonical.com>
  *
  * This file is part of telephony-service.
  *
@@ -27,6 +28,7 @@
 #include <QDBusInterface>
 #include <messaging-menu.h>
 #include "accountentry.h"
+#include <libnotify/notify.h>
 
 class Call
 {
@@ -45,6 +47,28 @@ public:
     }
 };
 
+class TextChannelObserver;
+
+class NotificationData {
+public:
+    NotificationData() : targetType(0), observer(NULL), notificationList(NULL) {}
+    QString accountId;
+    QString senderId;
+    QString targetId;
+    uint targetType;
+    QStringList participantIds;
+    QDateTime timestamp;
+    QString messageText;
+    QString encodedEventId;
+    QString alias;
+    QString roomName;
+    QString icon;
+    QString notificationTitle;
+    QString messageReply;
+    TextChannelObserver *observer;
+    QMap<NotifyNotification*, NotificationData*> *notificationList;
+};
+
 class MessagingMenu : public QObject
 {
     Q_OBJECT
@@ -52,9 +76,10 @@ public:
     static MessagingMenu *instance();
     virtual ~MessagingMenu();
 
-    void addMessage(const QString &senderId, const QString &contactAlias, const QStringList &participantIds, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text);
-    void addFlashMessage(const QString &senderId, const QString &accountId, const QString &messageId, const QDateTime &timestamp, const QString &text);
+    void addMessage(NotificationData notificationData);
+    void addFlashMessage(NotificationData notificationData);
     void removeMessage(const QString &messageId);
+    void addNotification(NotificationData notificationData);
 
     void addCall(const QString &targetId, const QString &accountId, const QDateTime &timestamp);
     void removeCall(const QString &targetId, const QString &accountId);
@@ -68,8 +93,8 @@ public:
     void hideVoicemailEntry(AccountEntry *account);
 
 Q_SIGNALS:
-    void replyReceived(const QStringList &recipients, const QString &accountId, const QString &reply);
-    void messageRead(const QStringList &recipients, const QString &accountId, const QString &messageId);
+    void replyReceived(NotificationData notificationData);
+    void messageRead(NotificationData notificationData);
 
 private Q_SLOTS:
     void sendMessageReply(const QString &messageId, const QString &reply);
@@ -86,7 +111,7 @@ private:
 
     MessagingMenuApp *mCallsApp;
     MessagingMenuApp *mMessagesApp;
-    QMap<QString, QVariantMap> mMessages;
+    QMap<QString, NotificationData> mMessages;
     QList<Call> mCalls;
     QStringList mVoicemailIds;
     int mVoicemailCount;

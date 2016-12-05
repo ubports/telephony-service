@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -20,29 +20,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MULTIMEDIAACCOUNTENTRY_H
-#define MULTIMEDIAACCOUNTENTRY_H
+#ifndef PARTICIPANT_H
+#define PARTICIPANT_H
 
-#include "accountentry.h"
+#include "contactwatcher.h"
 
-class MultimediaAccountEntry : public AccountEntry
+class Participant : public ContactWatcher
 {
     Q_OBJECT
-    friend class AccountEntryFactory;
-
+    Q_PROPERTY(uint roles READ roles NOTIFY rolesChanged)
 public:
-    // reimplemented from AccountEntry
-    virtual AccountEntry::AccountType type() const;
-    virtual bool connected() const;
-    virtual bool compareIds(const QString &first, const QString &second) const;
-    virtual QStringList addressableVCardFields();
+    explicit Participant(const QString &identifier, uint roles, uint handle, QObject *parent = 0);
+    explicit Participant(QObject *parent = 0);
+    explicit Participant(const Participant &other);
+    ~Participant();
 
-private Q_SLOTS:
-    // reimplemented from AccountEntry
-    void onConnectionChanged(Tp::ConnectionPtr connection);
+    void setRoles(uint roles);
+    uint roles() const;
+    uint handle() const;
 
-protected:
-    explicit MultimediaAccountEntry(const Tp::AccountPtr &account, QObject *parent = 0);
+Q_SIGNAL
+    void rolesChanged();
+
+private:
+    uint mRoles;
+    uint mHandle;
 };
 
-#endif // MULTIMEDIAACCOUNTENTRY_H
+#endif // PARTICIPANT_H

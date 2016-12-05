@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-16 15:24-0200\n"
+"POT-Creation-Date: 2016-08-30 15:54-0300\n"
 "PO-Revision-Date: 2015-03-13 12:38+0000\n"
 "Last-Translator: Fohanno Thierry <thierry.fohanno@ofis-bzh.org>\n"
 "Language-Team: Breton <br@li.org>\n"
@@ -15,17 +15,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Launchpad-Export-Date: 2016-10-07 06:50+0000\n"
-"X-Generator: Launchpad (build 18217)\n"
+"X-Launchpad-Export-Date: 2016-12-03 05:15+0000\n"
+"X-Generator: Launchpad (build 18282)\n"
 
-#: indicator/messagingmenu.cpp:299
+#: indicator/messagingmenu.cpp:368
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 bellgomzadenn c'hwitet"
 msgstr[1] "%1 a bellgomzadennoù c'hwitet"
 
-#: indicator/messagingmenu.cpp:398
+#: indicator/messagingmenu.cpp:467
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -52,28 +52,67 @@ msgstr "<b>%1</b> a gemennadennoù testenn resevet hiziv"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> a gemennadennoù testenn kaset hiziv"
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:520
 msgid "Accept"
 msgstr "Asantiñ"
 
-#: indicator/messagingmenu.cpp:236
+#: indicator/textchannelobserver.cpp:496
+#, qt-format
+msgid "Attachment: %1 audio clip"
+msgid_plural "Attachments: %1 audio clips"
+msgstr[0] ""
+msgstr[1] ""
+
+#: indicator/textchannelobserver.cpp:494
+#, qt-format
+msgid "Attachment: %1 contact"
+msgid_plural "Attachments: %1 contacts"
+msgstr[0] ""
+msgstr[1] ""
+
+#: indicator/textchannelobserver.cpp:498
+#, qt-format
+msgid "Attachment: %1 file"
+msgid_plural "Attachments: %1 files"
+msgstr[0] ""
+msgstr[1] ""
+
+#: indicator/textchannelobserver.cpp:490
+#, qt-format
+msgid "Attachment: %1 image"
+msgid_plural "Attachments: %1 images"
+msgstr[0] ""
+msgstr[1] ""
+
+#: indicator/textchannelobserver.cpp:492
+#, qt-format
+msgid "Attachment: %1 video"
+msgid_plural "Attachments: %1 videos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: indicator/authhandler.cpp:72
+msgid "Authentication failed. Do you want to review your credentials?"
+msgstr ""
+
+#: indicator/messagingmenu.cpp:305
 msgid "Call back"
 msgstr "Gervel en-dro"
 
-#: approver/approver.cpp:464 approver/approver.cpp:479
+#: approver/approver.cpp:466 approver/approver.cpp:481
 msgid "Caller number is not available"
 msgstr "Ne c'haller ket gervel an niverenn"
 
-#: approver/approver.cpp:476
+#: approver/approver.cpp:478
 #, qt-format
 msgid "Calling from %1"
 msgstr "O pellgomz eus %1"
 
-#: approver/approver.cpp:470
+#: approver/approver.cpp:472
 msgid "Calling from private number"
 msgstr "O pellgomz eus un niverenn brevez"
 
-#: approver/approver.cpp:473
+#: approver/approver.cpp:475
 msgid "Calling from unknown number"
 msgstr "O pellgomz eus un niverenn dianav"
 
@@ -81,29 +120,29 @@ msgstr "O pellgomz eus un niverenn dianav"
 msgid "Cancel"
 msgstr "Nullañ"
 
-#: indicator/textchannelobserver.cpp:238
+#: indicator/textchannelobserver.cpp:222
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Diweredekait ar mod nijerez hag esaeit en-dro diwar an arload kemennadennoù."
 
-#: approver/approver.cpp:540
+#: approver/approver.cpp:542
 msgid "Decline"
 msgstr "Nac'h"
 
-#: approver/approver.cpp:531
+#: approver/approver.cpp:533
 msgid "End + Answer"
 msgstr "Echuiñ + Respont"
 
-#: approver/approver.cpp:517
+#: approver/approver.cpp:519
 msgid "Hold + Answer"
 msgstr "Lakaat da c'hortoz + Respont"
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:310
 msgid "I missed your call - can you call me now?"
 msgstr ""
 "C'hwitet em eus ho pellgomzadenn - ha gallout a rit gervel ac'hanon bremañ ?"
 
-#: indicator/messagingmenu.cpp:244
+#: indicator/messagingmenu.cpp:313
 msgid "I'll be 20 minutes late."
 msgstr "20 munut dale a vo ganin."
 
@@ -111,7 +150,7 @@ msgstr "20 munut dale a vo ganin."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Dever zo warnon evit bremañ. Pellgomz a rin deoc'h diwezhatoc'h."
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:312
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Prez zo warnon bremañ. Pellgomz a rin deoc'h diwezhatoc'h."
 
@@ -119,18 +158,40 @@ msgstr "Prez zo warnon bremañ. Pellgomz a rin deoc'h diwezhatoc'h."
 msgid "I'm running late, on my way now."
 msgstr "Diwezhat on, ha war an hent emaon."
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:311
 msgid "I'm running late. I'm on my way."
 msgstr "Dale zo ganin. War an hent emaon."
 
-#: approver/approver.cpp:548
+#: approver/approver.cpp:550
 msgid "Message & decline"
 msgstr "Kas ur gemennadenn & nac'h"
 
-#: indicator/textchannelobserver.cpp:547
+#: indicator/textchannelobserver.cpp:632
 #, qt-format
 msgid "Message from %1"
 msgstr "Kemennadenn digant %1"
+
+#. TRANSLATORS : %1 is the group name and %2 is the recipient name
+#: indicator/textchannelobserver.cpp:554 indicator/textchannelobserver.cpp:558
+#: indicator/messagingmenu.cpp:225
+#, qt-format
+msgid "Message to %1 from %2"
+msgstr ""
+
+#. TRANSLATORS : %1 is the recipient name
+#: indicator/textchannelobserver.cpp:562 indicator/textchannelobserver.cpp:566
+#: indicator/messagingmenu.cpp:228 indicator/messagingmenu.cpp:232
+#, qt-format
+msgid "Message to group from %1"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:290
+msgid "New Group"
+msgstr ""
+
+#: indicator/authhandler.cpp:94
+msgid "No"
+msgstr ""
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
@@ -148,9 +209,14 @@ msgstr "N'eus bet resevet kemennadenn destenn ebet hiziv"
 msgid "No text messages sent today"
 msgstr "N'eus bet kaset kemennadenn destenn ebet hiziv"
 
-#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:362
 msgid "Ok"
 msgstr "Mat eo"
+
+#: approver/approver.cpp:453
+#, qt-format
+msgid "On [%1]"
+msgstr ""
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -160,15 +226,11 @@ msgstr "Pellgomzadennoù"
 msgid "Please call me back later."
 msgstr "Pellgomzit din en-dro diwezhatoc'h, mar plij."
 
-#: indicator/textchannelobserver.cpp:692
+#: indicator/textchannelobserver.cpp:773
 msgid "Please, select a SIM card:"
 msgstr "Diuzit ur gartenn SIM, mar plij :"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:131
-msgid "Private Number"
-msgstr "Niverenn brevez"
-
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
+#: approver/approver.cpp:457 indicator/messagingmenu.cpp:373
 msgid "Private number"
 msgstr "Niverenn brevez"
 
@@ -185,15 +247,16 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:320
+#: indicator/textchannelobserver.cpp:368
 msgid "Save"
 msgstr "Enrollañ"
 
-#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
+#: indicator/messagingmenu.cpp:150 indicator/messagingmenu.cpp:254
+#: indicator/messagingmenu.cpp:320
 msgid "Send"
 msgstr "Kas"
 
-#: indicator/messagingmenu.cpp:245
+#: indicator/messagingmenu.cpp:314
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr ""
 "Digarezit ac'hanon, prez zo warnon bepred. Gervel a rin ac'hanoc'h "
@@ -204,7 +267,7 @@ msgstr ""
 msgid "Spent <b>%1</b> minutes in calls today"
 msgstr "Tremenet <b>%1</b> munut ouzh ar pellgomz hiziv"
 
-#: indicator/messagingmenu.cpp:56 indicator/messagingmenu.cpp:60
+#: indicator/messagingmenu.cpp:82 indicator/messagingmenu.cpp:86
 msgid "Telephony Service"
 msgstr "Servij pellgomzerezh"
 
@@ -216,40 +279,66 @@ msgstr "Aprouer servij pellgomzerezh"
 msgid "Telephony Service Indicator"
 msgstr "Merker servij pellgomzerezh"
 
-#: indicator/textchannelobserver.cpp:247
+#: indicator/textchannelobserver.cpp:231
 msgid "The message could not be sent"
 msgstr "N'eus ket bet gallet kas ar gemennadenn"
 
-#: indicator/textchannelobserver.cpp:241
+#: indicator/textchannelobserver.cpp:225
 msgid "Try again from the messaging application."
 msgstr "Esaeit en-dro diwar an arload kemennadennoù"
-
-#: Ubuntu/Telephony/contactwatcher.cpp:133
-msgid "Unknown Number"
-msgstr "Niverenn dianav"
 
 #: approver/approver.cpp:63
 msgid "Unknown caller"
 msgstr "Galver dianav"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
+#: approver/approver.cpp:460 indicator/textchannelobserver.cpp:523
+#: indicator/messagingmenu.cpp:207 indicator/messagingmenu.cpp:377
 msgid "Unknown number"
 msgstr "Niverenn dianav"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:220
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Dibrennit ho kartenn SIM hag esaeit en-dro diwar an arload kemennadennoù."
 
-#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
+#: indicator/textchannelobserver.cpp:323
+msgid "View Group"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:244 indicator/textchannelobserver.cpp:596
 msgid "View message"
 msgstr "Gwelet ar gemennadenn"
 
-#: indicator/messagingmenu.cpp:403
+#: indicator/messagingmenu.cpp:472
 msgid "Voicemail"
 msgstr "Boest komz"
 
-#: indicator/messagingmenu.cpp:395
+#: indicator/messagingmenu.cpp:464
 msgid "Voicemail messages"
 msgstr "Kemennadennoù ar voest-komz"
+
+#: indicator/authhandler.cpp:91
+msgid "Yes"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:304
+msgid "You joined a new group"
+msgstr ""
+
+#. TRANSLATORS : %1 is the group name
+#: indicator/textchannelobserver.cpp:301
+#, qt-format
+msgid "You joined group %1"
+msgstr ""
+
+#. TRANSLATORS : %1 is the group name
+#: indicator/textchannelobserver.cpp:297
+#, qt-format
+msgid "You joined group %1 "
+msgstr ""
+
+#~ msgid "Private Number"
+#~ msgstr "Niverenn brevez"
+
+#~ msgid "Unknown Number"
+#~ msgstr "Niverenn dianav"

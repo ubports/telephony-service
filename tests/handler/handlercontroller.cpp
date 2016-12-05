@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * This program is free software: you can redistribute it and/or modify it under
  * the terms of the GNU General Public License version 3, as published by
@@ -75,7 +75,11 @@ bool HandlerController::callIndicatorVisible()
 
 void HandlerController::startChat(const QString &accountId, const QStringList &recipients)
 {
-    mHandlerInterface.call("StartChat", accountId, recipients);
+    // TODO CHANGE SIGNATURE of this method
+    QVariantMap properties;
+    properties["participantIds"] = recipients;
+
+    mHandlerInterface.call("StartChat", accountId, properties);
 }
 
 void HandlerController::startCall(const QString &number, const QString &accountId)
@@ -131,16 +135,19 @@ void HandlerController::splitCall(const QString &objectPath)
 
 QString HandlerController::sendMessage(const QString &accountId, const QStringList &recipients, const QString &message, const AttachmentList &attachments, const QVariantMap &properties)
 {
-    QDBusReply<QString> reply = mHandlerInterface.call("SendMessage", accountId, recipients, message, QVariant::fromValue(attachments), properties);
+    // TODO CHANGE SIGNATURE of this method
+    QVariantMap props = properties;
+    props["participantIds"] = recipients;
+    QDBusReply<QString> reply = mHandlerInterface.call("SendMessage", accountId, message, QVariant::fromValue(attachments), props);
     if (reply.isValid()) {
         return reply.value();
     }
     return QString();
 }
 
-void HandlerController::acknowledgeMessages(const QString &number, const QStringList &messageIds, const QString &accountId)
+void HandlerController::acknowledgeMessages(const QVariantMap &properties)
 {
-    mHandlerInterface.call("AcknowledgeMessages", number, messageIds, accountId);
+    mHandlerInterface.call("AcknowledgeMessages", QVariantList() << QVariant::fromValue(properties));
 }
 
 void HandlerController::setCallIndicatorVisible(bool visible)
