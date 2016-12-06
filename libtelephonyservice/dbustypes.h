@@ -37,9 +37,15 @@ struct ProtocolStruct {
     QString name;
     uint features;
     QString fallbackProtocol;
+    uint fallbackMatchRule;
+    QString fallbackSourceProperty;
+    QString fallbackDestinationProperty;
+    bool showOnSelector;
+    bool showOnlineStatus;
     QString backgroundImage;
     QString icon;
     QString serviceName;
+    QString serviceDisplayName;
 };
 
 typedef QList<AttachmentStruct> AttachmentList;

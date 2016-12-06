@@ -1,8 +1,9 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
+ *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
  *
  * This file is part of history-service.
  *
@@ -79,16 +80,14 @@ MockConnectionDBus::~MockConnectionDBus()
 
 bool MockConnectionDBus::connectToBus()
 {
-    bool ok = QDBusConnection::sessionBus().registerService("com.canonical.MockConnection");
-    if (!ok) {
-        return false;
-    }
-
     if (!mAdaptor) {
         mAdaptor = new MockConnectionAdaptor(this);
     }
 
-    return QDBusConnection::sessionBus().registerObject(mObjectPath, this);
+    if (!QDBusConnection::sessionBus().registerObject(mObjectPath, this)) {
+        return false;
+    }
+    return QDBusConnection::sessionBus().registerService("com.canonical.MockConnection");
 }
 
 void MockConnectionDBus::PlaceIncomingMessage(const QString &message, const QVariantMap &properties)

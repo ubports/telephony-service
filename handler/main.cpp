@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * Authors:
  *    Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -54,10 +54,8 @@ int main(int argc, char **argv)
     QObject::connect(handler, SIGNAL(textChannelAvailable(Tp::TextChannelPtr)),
                      TextHandler::instance(), SLOT(onTextChannelAvailable(Tp::TextChannelPtr)));
 
-    HandlerDBus dbus;
-
     QObject::connect(TelepathyHelper::instance(), SIGNAL(setupReady()),
-                     &dbus, SLOT(connectToBus()));
+                     HandlerDBus::instance(), SLOT(connectToBus()));
 
     return app.exec();
 }

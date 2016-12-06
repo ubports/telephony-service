@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Canonical, Ltd.
+ * Copyright (C) 2015-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -29,20 +29,50 @@ Protocol::Protocol(const ProtocolStruct & protocol)
     : mName(protocol.name)
     , mFeatures(protocol.features)
     , mFallbackProtocol(protocol.fallbackProtocol)
+    , mFallbackMatchRule((MatchRule)protocol.fallbackMatchRule)
+    , mFallbackSourceProperty(protocol.fallbackSourceProperty)
+    , mFallbackDestinationProperty(protocol.fallbackDestinationProperty)
+    , mShowOnSelector(protocol.showOnSelector)
+    , mShowOnlineStatus(protocol.showOnlineStatus)
     , mBackgroundImage(protocol.backgroundImage)
     , mIcon(protocol.icon)
     , mServiceName(protocol.serviceName)
+    , mServiceDisplayName(protocol.serviceDisplayName)
 {
 }
 
-Protocol::Protocol(const QString &name, Features features, const QString &fallbackProtocol, const QString &backgroundImage, const QString &icon, const QString &serviceName, QObject *parent)
-: QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol), mBackgroundImage(backgroundImage), mIcon(icon), mServiceName(serviceName)
+Protocol::Protocol(const QString &name,
+                   Features features,
+                   const QString &fallbackProtocol,
+                   MatchRule fallbackMatchRule,
+                   const QString &fallbackSourceProperty,
+                   const QString &fallbackDestinationProperty,
+                   bool showOnSelector,
+                   bool showOnlineStatus,
+                   const QString &backgroundImage,
+                   const QString &icon,
+                   const QString &serviceName,
+                   const QString &serviceDisplayName,
+                   QObject *parent)
+ : QObject(parent)
+ , mName(name)
+ , mFeatures(features)
+ , mFallbackProtocol(fallbackProtocol)
+ , mFallbackMatchRule(fallbackMatchRule)
+ , mFallbackSourceProperty(fallbackSourceProperty)
+ , mFallbackDestinationProperty(fallbackDestinationProperty)
+ , mShowOnSelector(showOnSelector)
+ , mShowOnlineStatus(showOnlineStatus)
+ , mBackgroundImage(backgroundImage)
+ , mIcon(icon)
+ , mServiceName(serviceName)
+ , mServiceDisplayName(serviceDisplayName)
 {
 }
 
 ProtocolStruct Protocol::dbusType()
 {
-    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, mBackgroundImage, mIcon, mServiceName};
+    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName};
 }
 
 QString Protocol::name() const
@@ -70,9 +100,39 @@ QString Protocol::fallbackProtocol() const
     return mFallbackProtocol;
 }
 
+Protocol::MatchRule Protocol::fallbackMatchRule() const
+{
+    return mFallbackMatchRule;
+}
+
+QString Protocol::fallbackSourceProperty() const
+{
+    return mFallbackSourceProperty;
+}
+
+QString Protocol::fallbackDestinationProperty() const
+{
+    return mFallbackDestinationProperty;
+}
+
+bool Protocol::showOnSelector() const
+{
+    return mShowOnSelector;
+}
+
+bool Protocol::showOnlineStatus() const
+{
+    return mShowOnlineStatus;
+}
+
 QString Protocol::backgroundImage() const
 {
     return mBackgroundImage;
+}
+
+QString Protocol::serviceDisplayName() const
+{
+    return mServiceDisplayName;
 }
 
 Protocol *Protocol::fromFile(const QString &fileName)
@@ -97,9 +157,22 @@ Protocol *Protocol::fromFile(const QString &fileName)
         }
     }
     QString fallbackProtocol = settings.value("FallbackProtocol").toString();
+    QString matchRuleString = settings.value("FallbackMatchRule").toString();
+    MatchRule matchRule = MatchAny;
+    if (matchRuleString == "match_any") {
+        matchRule = MatchAny;
+    } else if (matchRuleString == "match_properties") {
+        matchRule = MatchProperties;
+    }
+    QString fallbackSourceProperty = settings.value("FallbackSourceProperty").toString();
+    QString fallbackDestinationProperty = settings.value("FallbackDestinationProperty").toString();
+    bool showOnSelector = settings.value("ShowOnSelector", true).toBool();
+    bool showOnlineStatus = settings.value("ShowOnlineStatus", false).toBool();
     QString backgroundImage = settings.value("BackgroundImage").toString();
     QString icon = settings.value("Icon").toString();
     QString serviceName = settings.value("ServiceName").toString();
+    QString serviceDisplayName = settings.value("ServiceDisplayName").toString();
 
-    return new Protocol(name, features, fallbackProtocol, backgroundImage, icon, serviceName);
+    return new Protocol(name, features, fallbackProtocol, matchRule, fallbackSourceProperty, fallbackDestinationProperty,
+                        showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName);
 }

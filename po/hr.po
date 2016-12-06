@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2015-01-16 15:24-0200\n"
+"POT-Creation-Date: 2016-08-30 15:54-0300\n"
 "PO-Revision-Date: 2015-10-16 10:35+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Croatian <hr@li.org>\n"
@@ -16,10 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2016-10-07 06:51+0000\n"
-"X-Generator: Launchpad (build 18217)\n"
+"X-Launchpad-Export-Date: 2016-12-03 05:16+0000\n"
+"X-Generator: Launchpad (build 18282)\n"
 
-#: indicator/messagingmenu.cpp:299
+#: indicator/messagingmenu.cpp:368
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
@@ -27,7 +27,7 @@ msgstr[0] "%1 propušteni poziv"
 msgstr[1] "%1 propuštena poziva"
 msgstr[2] "%1 propuštenih poziva"
 
-#: indicator/messagingmenu.cpp:398
+#: indicator/messagingmenu.cpp:467
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -55,28 +55,72 @@ msgstr "<b>%1</b> danas primljene poruke"
 msgid "<b>%1</b> text messages sent today"
 msgstr "<b>%1</b> danas poslane poruke"
 
-#: approver/approver.cpp:518
+#: approver/approver.cpp:520
 msgid "Accept"
 msgstr "Prihvati"
 
-#: indicator/messagingmenu.cpp:236
+#: indicator/textchannelobserver.cpp:496
+#, qt-format
+msgid "Attachment: %1 audio clip"
+msgid_plural "Attachments: %1 audio clips"
+msgstr[0] "Privitak: %1 zvučni zapis"
+msgstr[1] "Privitci: %1 zvučna zapisa"
+msgstr[2] "Privitci: %1 zvučnih zapisa"
+
+#: indicator/textchannelobserver.cpp:494
+#, qt-format
+msgid "Attachment: %1 contact"
+msgid_plural "Attachments: %1 contacts"
+msgstr[0] "Privitak: %1 kontakt"
+msgstr[1] "Privitci: %1 kontakta"
+msgstr[2] "Privitci: %1 kontakta"
+
+#: indicator/textchannelobserver.cpp:498
+#, qt-format
+msgid "Attachment: %1 file"
+msgid_plural "Attachments: %1 files"
+msgstr[0] "Privitak: %1 datoteka"
+msgstr[1] "Privitci: %1 datoteke"
+msgstr[2] "Privitci: %1 datoteka"
+
+#: indicator/textchannelobserver.cpp:490
+#, qt-format
+msgid "Attachment: %1 image"
+msgid_plural "Attachments: %1 images"
+msgstr[0] "Privitak: %1 slika"
+msgstr[1] "Privitci: %1 slike"
+msgstr[2] "Privitci: %1 slika"
+
+#: indicator/textchannelobserver.cpp:492
+#, qt-format
+msgid "Attachment: %1 video"
+msgid_plural "Attachments: %1 videos"
+msgstr[0] "Privitak: %1 video snimka"
+msgstr[1] "Privitci: %1 video snimke"
+msgstr[2] "Privitci: %1 video snimaka"
+
+#: indicator/authhandler.cpp:72
+msgid "Authentication failed. Do you want to review your credentials?"
+msgstr "Ovjera je neuspjela. Želite li pregledati svoje vjerodajnice?"
+
+#: indicator/messagingmenu.cpp:305
 msgid "Call back"
 msgstr "Uzvrati poziv"
 
-#: approver/approver.cpp:464 approver/approver.cpp:479
+#: approver/approver.cpp:466 approver/approver.cpp:481
 msgid "Caller number is not available"
 msgstr "Broj pozivatelja nije dostupan"
 
-#: approver/approver.cpp:476
+#: approver/approver.cpp:478
 #, qt-format
 msgid "Calling from %1"
 msgstr "Poziv od %1"
 
-#: approver/approver.cpp:470
+#: approver/approver.cpp:472
 msgid "Calling from private number"
 msgstr "Poziv od privatnog broja"
 
-#: approver/approver.cpp:473
+#: approver/approver.cpp:475
 msgid "Calling from unknown number"
 msgstr "Poziv od nepoznatnog broja"
 
@@ -84,29 +128,29 @@ msgstr "Poziv od nepoznatnog broja"
 msgid "Cancel"
 msgstr "Odustani"
 
-#: indicator/textchannelobserver.cpp:238
+#: indicator/textchannelobserver.cpp:222
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
 "Isključite način rada u zrakoplovu i pokušajte ponovno iz aplikacije za "
 "poruke."
 
-#: approver/approver.cpp:540
+#: approver/approver.cpp:542
 msgid "Decline"
 msgstr "Odbaci"
 
-#: approver/approver.cpp:531
+#: approver/approver.cpp:533
 msgid "End + Answer"
 msgstr "Završi + Poziv"
 
-#: approver/approver.cpp:517
+#: approver/approver.cpp:519
 msgid "Hold + Answer"
 msgstr "Zadrži + Poziv"
 
-#: indicator/messagingmenu.cpp:241
+#: indicator/messagingmenu.cpp:310
 msgid "I missed your call - can you call me now?"
 msgstr "Propustio sam vaš poziv, želite li me sada nazvati?"
 
-#: indicator/messagingmenu.cpp:244
+#: indicator/messagingmenu.cpp:313
 msgid "I'll be 20 minutes late."
 msgstr "Kasnit ću 20 minuta."
 
@@ -114,7 +158,7 @@ msgstr "Kasnit ću 20 minuta."
 msgid "I'm busy at the moment. I'll call later."
 msgstr "Trenutno sam zaposlen. Nazvat ću vas kasnije."
 
-#: indicator/messagingmenu.cpp:243
+#: indicator/messagingmenu.cpp:312
 msgid "I'm busy at the moment. I'll call you later."
 msgstr "Trenutno sam zauzet. Nazvat ću vas kasnije."
 
@@ -122,18 +166,40 @@ msgstr "Trenutno sam zauzet. Nazvat ću vas kasnije."
 msgid "I'm running late, on my way now."
 msgstr "Kasnim, na putu sam."
 
-#: indicator/messagingmenu.cpp:242
+#: indicator/messagingmenu.cpp:311
 msgid "I'm running late. I'm on my way."
 msgstr "Kasnim, na putu sam."
 
-#: approver/approver.cpp:548
+#: approver/approver.cpp:550
 msgid "Message & decline"
 msgstr "Poruke i otkazivanje"
 
-#: indicator/textchannelobserver.cpp:547
+#: indicator/textchannelobserver.cpp:632
 #, qt-format
 msgid "Message from %1"
 msgstr "Poruka od %1"
+
+#. TRANSLATORS : %1 is the group name and %2 is the recipient name
+#: indicator/textchannelobserver.cpp:554 indicator/textchannelobserver.cpp:558
+#: indicator/messagingmenu.cpp:225
+#, qt-format
+msgid "Message to %1 from %2"
+msgstr ""
+
+#. TRANSLATORS : %1 is the recipient name
+#: indicator/textchannelobserver.cpp:562 indicator/textchannelobserver.cpp:566
+#: indicator/messagingmenu.cpp:228 indicator/messagingmenu.cpp:232
+#, qt-format
+msgid "Message to group from %1"
+msgstr "Grupna poruka od %1"
+
+#: indicator/textchannelobserver.cpp:290
+msgid "New Group"
+msgstr ""
+
+#: indicator/authhandler.cpp:94
+msgid "No"
+msgstr "Ne"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
@@ -151,9 +217,14 @@ msgstr "Danas nema primljenih poruka"
 msgid "No text messages sent today"
 msgstr "Danas nema poslanih poruka"
 
-#: indicator/textchannelobserver.cpp:314 indicator/ussdindicator.cpp:116
+#: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:362
 msgid "Ok"
 msgstr "U redu"
+
+#: approver/approver.cpp:453
+#, qt-format
+msgid "On [%1]"
+msgstr "Na [%1]"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -163,15 +234,11 @@ msgstr "Telefonski pozivi"
 msgid "Please call me back later."
 msgstr "Nazovite me natrag kasnije."
 
-#: indicator/textchannelobserver.cpp:692
+#: indicator/textchannelobserver.cpp:773
 msgid "Please, select a SIM card:"
 msgstr "Odaberite SIM karticu:"
 
-#: Ubuntu/Telephony/contactwatcher.cpp:131
-msgid "Private Number"
-msgstr "Privatni broj"
-
-#: approver/approver.cpp:455 indicator/messagingmenu.cpp:304
+#: approver/approver.cpp:457 indicator/messagingmenu.cpp:373
 msgid "Private number"
 msgstr "Privatan broj"
 
@@ -188,15 +255,16 @@ msgstr "SIM %1"
 msgid "SMS"
 msgstr "SMS"
 
-#: indicator/textchannelobserver.cpp:320
+#: indicator/textchannelobserver.cpp:368
 msgid "Save"
 msgstr "Spremi"
 
-#: indicator/messagingmenu.cpp:185 indicator/messagingmenu.cpp:251
+#: indicator/messagingmenu.cpp:150 indicator/messagingmenu.cpp:254
+#: indicator/messagingmenu.cpp:320
 msgid "Send"
 msgstr "Pošalji"
 
-#: indicator/messagingmenu.cpp:245
+#: indicator/messagingmenu.cpp:314
 msgid "Sorry, I'm still busy. I'll call you later."
 msgstr "Isprika, Još sam zauzet. Nazvat ću vas kasnije."
 
@@ -205,7 +273,7 @@ msgstr "Isprika, Još sam zauzet. Nazvat ću vas kasnije."
 msgid "Spent <b>%1</b> minutes in calls today"
 msgstr "Potrošeno <b>%1</b> minuta na pozive danas"
 
-#: indicator/messagingmenu.cpp:56 indicator/messagingmenu.cpp:60
+#: indicator/messagingmenu.cpp:82 indicator/messagingmenu.cpp:86
 msgid "Telephony Service"
 msgstr "Usluga telefoniranja"
 
@@ -217,40 +285,66 @@ msgstr "Pružatelj telefonskih usluga"
 msgid "Telephony Service Indicator"
 msgstr "Pokazatelj telefonskih usluga"
 
-#: indicator/textchannelobserver.cpp:247
+#: indicator/textchannelobserver.cpp:231
 msgid "The message could not be sent"
 msgstr "Tekstovna poruka ne može biti poslana"
 
-#: indicator/textchannelobserver.cpp:241
+#: indicator/textchannelobserver.cpp:225
 msgid "Try again from the messaging application."
 msgstr "Pokušajte kasnije iz aplikacije za poruke"
-
-#: Ubuntu/Telephony/contactwatcher.cpp:133
-msgid "Unknown Number"
-msgstr "Nepoznat broj"
 
 #: approver/approver.cpp:63
 msgid "Unknown caller"
 msgstr "Nepoznat pozivatelj"
 
-#: approver/approver.cpp:458 indicator/messagingmenu.cpp:151
-#: indicator/messagingmenu.cpp:308 indicator/textchannelobserver.cpp:474
+#: approver/approver.cpp:460 indicator/textchannelobserver.cpp:523
+#: indicator/messagingmenu.cpp:207 indicator/messagingmenu.cpp:377
 msgid "Unknown number"
 msgstr "Nepoznat broj"
 
-#: indicator/textchannelobserver.cpp:236
+#: indicator/textchannelobserver.cpp:220
 msgid "Unlock your sim card and try again from the messaging application."
 msgstr ""
 "Otključajte svoju SIM karticu i pokušajte ponovno iz aplikacije za poruke."
 
-#: indicator/textchannelobserver.cpp:262 indicator/textchannelobserver.cpp:511
+#: indicator/textchannelobserver.cpp:323
+msgid "View Group"
+msgstr ""
+
+#: indicator/textchannelobserver.cpp:244 indicator/textchannelobserver.cpp:596
 msgid "View message"
 msgstr "Pogledaj poruku"
 
-#: indicator/messagingmenu.cpp:403
+#: indicator/messagingmenu.cpp:472
 msgid "Voicemail"
 msgstr "Govorna pošta"
 
-#: indicator/messagingmenu.cpp:395
+#: indicator/messagingmenu.cpp:464
 msgid "Voicemail messages"
 msgstr "Poruke govorne pošte"
+
+#: indicator/authhandler.cpp:91
+msgid "Yes"
+msgstr "Da"
+
+#: indicator/textchannelobserver.cpp:304
+msgid "You joined a new group"
+msgstr ""
+
+#. TRANSLATORS : %1 is the group name
+#: indicator/textchannelobserver.cpp:301
+#, qt-format
+msgid "You joined group %1"
+msgstr ""
+
+#. TRANSLATORS : %1 is the group name
+#: indicator/textchannelobserver.cpp:297
+#, qt-format
+msgid "You joined group %1 "
+msgstr ""
+
+#~ msgid "Private Number"
+#~ msgstr "Privatni broj"
+
+#~ msgid "Unknown Number"
+#~ msgstr "Nepoznat broj"

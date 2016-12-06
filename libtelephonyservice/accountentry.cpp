@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2013-2016 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -22,6 +22,7 @@
 #include <TelepathyQt/PendingOperation>
 #include <QTimer>
 #include "accountentry.h"
+#include "phoneutils.h"
 #include "protocolmanager.h"
 #include "telepathyhelper.h"
 
@@ -106,6 +107,38 @@ bool AccountEntry::connected() const
            mAccount->connection()->status() == Tp::ConnectionStatusConnected;
 }
 
+AccountEntry::Capabilities AccountEntry::capabilities() const
+{
+    AccountEntry::Capabilities capabilities = CapabilityNone;
+
+    if (!connected()) {
+        return capabilities;
+    }
+
+    Tp::ConnectionCapabilities tpCapabilities = mAccount->capabilities();
+
+    if (tpCapabilities.textChatrooms()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityTextChatrooms;
+    }
+    if (tpCapabilities.conferenceTextChats()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityConferenceTextChats;
+    }
+    if (tpCapabilities.conferenceTextChatsWithInvitees()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityConferenceTextChatsWithInvitees;
+    }
+    if (tpCapabilities.conferenceTextChatrooms()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityConferenceTextChatrooms;
+    }
+    if (tpCapabilities.conferenceTextChatroomsWithInvitees()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityConferenceTextChatroomsWithInvitees;
+    }
+    if (tpCapabilities.contactSearches()) {
+        capabilities |= (AccountEntry::Capabilities)AccountEntry::CapabilityContactSearches;
+    }
+
+    return capabilities;
+}
+
 Tp::AccountPtr AccountEntry::account() const
 {
     return mAccount;
@@ -121,9 +154,24 @@ QStringList AccountEntry::addressableVCardFields() const
     return mAccount->protocolInfo().addressableVCardFields();
 }
 
+bool AccountEntry::usePhoneNumbers() const
+{
+    return addressableVCardFields().contains("tel");
+}
+
 bool AccountEntry::compareIds(const QString &first, const QString &second) const
 {
-    return first == second;
+    // try the basic first
+    if (first == second) {
+        return true;
+    }
+
+    // if the account has "tel" in the addressable fields, also try phone compare
+    if (addressableVCardFields().contains("tel")) {
+        return PhoneUtils::comparePhoneNumbers(first, second) > PhoneUtils::NO_MATCH;
+    }
+
+    return false;
 }
 
 Protocol *AccountEntry::protocolInfo() const
@@ -138,6 +186,8 @@ void AccountEntry::initialize()
     }
 
     mProtocol = ProtocolManager::instance()->protocolByName(mAccount->protocolName());
+
+    connect(this, &AccountEntry::addressableVCardFieldsChanged, &AccountEntry::usePhoneNumbersChanged);
 
     // propagate the display name changes
     connect(mAccount.data(),
@@ -219,6 +269,7 @@ void AccountEntry::onConnectionChanged(Tp::ConnectionPtr connection)
 
     Q_EMIT connectedChanged();
     Q_EMIT selfContactIdChanged();
+    Q_EMIT capabilitiesChanged();
 }
 
 void AccountEntry::addAccountLabel(const QString &accountId, QString &text)
