@@ -33,7 +33,6 @@ target_link_libraries(telephony-service-handler
     ${TP_QT5_FS_LIBRARIES}
     ${TPFS_LIBRARIES}
     ${FS_LIBRARIES}
-    ${GSETTINGS_QT_LDFLAGS}
     telephonyservice
     )
 
