@@ -281,11 +281,15 @@ bool CallEntry::dialing() const
 
 bool CallEntry::incoming() const
 {
-    if (!mAccount) {
-        return false;
+    bool isIncoming = !mChannel->isRequested();
+
+    if (mAccount &&
+        !mChannel->initiatorContact().isNull() &&
+        mChannel->initiatorContact() != mAccount->account()->connection()->selfContact()) {
+        isIncoming = true;
     }
 
-    return mChannel->initiatorContact() != mAccount->account()->connection()->selfContact();
+    return isIncoming;
 }
 
 bool CallEntry::ringing() const

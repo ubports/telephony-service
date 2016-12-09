@@ -26,6 +26,7 @@
 #include "accountentry.h"
 #include "tonegenerator.h"
 #include "greetercontacts.h"
+#include "phoneutils.h"
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 #include <TelepathyQt/PendingChannelRequest>
@@ -94,6 +95,7 @@ CallHandler::CallHandler(QObject *parent)
 
 void CallHandler::startCall(const QString &targetId, const QString &accountId)
 {
+    QString finalId = targetId;
     // Request the contact to start audio call
     AccountEntry *accountEntry = TelepathyHelper::instance()->accountForId(accountId);
     if (!accountEntry) {
@@ -105,7 +107,21 @@ void CallHandler::startCall(const QString &targetId, const QString &accountId)
         return;
     }
 
-    connect(connection->contactManager()->contactsForIdentifiers(QStringList() << targetId),
+    // FIXME: this is a workaround, there might be a better way of handling this.
+    // One idea is to implement the Addressing interface on the SIP connection manager such that
+    // we can request a handle based on the vCard field "tel"
+    if (accountEntry->protocolInfo()->name() == "sip") {
+        // in case this is a SIP call, replace the numbers by a SIP URI
+        QString domain = accountEntry->account()->parameters()["account"].toString();
+        if (domain.contains("@")) {
+            domain = domain.split("@")[1];
+
+            finalId = QString("sip:%1@%2").arg(PhoneUtils::normalizePhoneNumber(targetId)).arg(domain);
+        }
+    }
+
+    qDebug() << "BLABLA calling final ID is " << finalId;
+    connect(connection->contactManager()->contactsForIdentifiers(QStringList() << finalId),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
 }
