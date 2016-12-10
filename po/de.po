@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-30 15:54-0300\n"
-"PO-Revision-Date: 2016-08-21 11:48+0000\n"
-"Last-Translator: N. Gineer <n.gineer@gmx.at>\n"
+"PO-Revision-Date: 2016-12-09 17:22+0000\n"
+"Last-Translator: Torsten Franz <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2016-12-03 05:16+0000\n"
-"X-Generator: Launchpad (build 18282)\n"
+"X-Launchpad-Export-Date: 2016-12-10 05:28+0000\n"
+"X-Generator: Launchpad (build 18292)\n"
 "Language: de\n"
 
 #: indicator/messagingmenu.cpp:368
@@ -178,7 +178,7 @@ msgstr "Nachricht von %1"
 #: indicator/messagingmenu.cpp:225
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "Nachricht in %1 von %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/textchannelobserver.cpp:562 indicator/textchannelobserver.cpp:566
@@ -189,7 +189,7 @@ msgstr "Nachricht an Gruppe von %1"
 
 #: indicator/textchannelobserver.cpp:290
 msgid "New Group"
-msgstr ""
+msgstr "Neue Gruppe"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
@@ -304,7 +304,7 @@ msgstr ""
 
 #: indicator/textchannelobserver.cpp:323
 msgid "View Group"
-msgstr ""
+msgstr "Gruppe ansehen"
 
 #: indicator/textchannelobserver.cpp:244 indicator/textchannelobserver.cpp:596
 msgid "View message"
@@ -324,19 +324,19 @@ msgstr "Ja"
 
 #: indicator/textchannelobserver.cpp:304
 msgid "You joined a new group"
-msgstr ""
+msgstr "Sie sind einer neuen Gruppe beigetreten"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:301
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "Sie sind der Gruppe %1 beigetreten"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:297
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "Sie sind der Gruppe %1 beigetreten "
 
 #~ msgid "Unknown Number"
 #~ msgstr "Unbekannte Nummer"
