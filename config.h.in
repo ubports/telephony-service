@@ -37,7 +37,9 @@ inline bool isRunningInstalled() {
 }
 
 inline QString telephonyServiceDir() {
-    if (isRunningInstalled()) {
+    if (qEnvironmentVariableIsSet("SNAP")) {
+        return QString("%1/@CMAKE_INSTALL_PREFIX@/@TELEPHONY_SERVICE_DIR@/").arg(QString(qgetenv("SNAP")));
+    } else if (isRunningInstalled()) {
         return QString("@CMAKE_INSTALL_PREFIX@/@TELEPHONY_SERVICE_DIR@/");
     } else {
         return QString("@CMAKE_SOURCE_DIR@/");
@@ -45,7 +47,7 @@ inline QString telephonyServiceDir() {
 }
 
 inline QString ubuntuPhonePluginPath() {
-    if (isRunningInstalled()) {
+    if (isRunningInstalled() || qEnvironmentVariableIsSet("SNAP")) {
         return QString::null;
     } else {
         return QString("@CMAKE_SOURCE_DIR@/");
