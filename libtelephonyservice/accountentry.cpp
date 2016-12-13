@@ -186,6 +186,9 @@ void AccountEntry::initialize()
     }
 
     mProtocol = ProtocolManager::instance()->protocolByName(mAccount->protocolName());
+    connect(ProtocolManager::instance(), &ProtocolManager::protocolsChanged, [=]() {
+        mProtocol = ProtocolManager::instance()->protocolByName(mAccount->protocolName());
+    });
 
     connect(this, &AccountEntry::addressableVCardFieldsChanged, &AccountEntry::usePhoneNumbersChanged);
 

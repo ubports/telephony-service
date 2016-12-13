@@ -50,6 +50,8 @@ public:
     bool IsReady();
     bool callIndicatorVisible() const;
     void setCallIndicatorVisible(bool visible);
+    // configuration related
+    ProtocolList GetProtocols();
 
     QString registerObject(QObject *object, const QString &path);
     void unregisterObject(const QString &path);
@@ -89,6 +91,7 @@ Q_SIGNALS:
     void CallIndicatorVisibleChanged(bool visible);
     void ConferenceCallRequestFinished(bool succeeded);
     void CallHoldingFailed(const QString &objectPath);
+    void ProtocolsChanged(const ProtocolList &protocols);
 
 private:
     bool mCallIndicatorVisible;

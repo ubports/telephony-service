@@ -23,6 +23,7 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
+#include "dbustypes.h"
 #include <QObject>
 
 /// @brief describes one protocol and the features it supports
@@ -73,6 +74,8 @@ public:
     };
     Q_DECLARE_FLAGS(Features, Feature)
 
+    Protocol(const ProtocolStruct& protocolStruct);
+
     enum MatchRule {
         MatchAny,
         MatchProperties
@@ -92,6 +95,7 @@ public:
     QString serviceDisplayName() const;
 
     static Protocol *fromFile(const QString &fileName);
+    ProtocolStruct dbusType();
 
     friend class ProtocolManager;
 
@@ -124,6 +128,17 @@ private:
     QString mServiceDisplayName;
 };
 
-typedef QList<Protocol*> Protocols;
+class Protocols : public QList<Protocol*>
+{
+public:
+    ProtocolList dbusType() {
+        // return list of DBus types
+        ProtocolList protocolList;
+        Q_FOREACH(Protocol *protocol, *this) {
+            protocolList << protocol->dbusType();
+        }
+        return protocolList;
+    }
+};
 
 #endif // PROTOCOL_H

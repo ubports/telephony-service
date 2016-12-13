@@ -19,6 +19,9 @@
 #ifndef DBUSTYPES
 #define DBUSTYPES
 
+#include <QDBusObjectPath>
+#include <QDBusArgument>
+
 struct MessageStruct {
     QDBusObjectPath path;
     QVariantMap properties;
@@ -30,16 +33,37 @@ struct AttachmentStruct {
     QString filePath;
 };
 
+struct ProtocolStruct {
+    QString name;
+    uint features;
+    QString fallbackProtocol;
+    uint fallbackMatchRule;
+    QString fallbackSourceProperty;
+    QString fallbackDestinationProperty;
+    bool showOnSelector;
+    bool showOnlineStatus;
+    QString backgroundImage;
+    QString icon;
+    QString serviceName;
+    QString serviceDisplayName;
+};
+
 typedef QList<AttachmentStruct> AttachmentList;
 Q_DECLARE_METATYPE(AttachmentStruct)
 Q_DECLARE_METATYPE(AttachmentList)
-
 
 typedef QList<MessageStruct> MessageList;
 Q_DECLARE_METATYPE(MessageStruct)
 Q_DECLARE_METATYPE(MessageList)
 
+typedef QList<ProtocolStruct> ProtocolList;
+Q_DECLARE_METATYPE(ProtocolStruct)
+Q_DECLARE_METATYPE(ProtocolList)
+
 QDBusArgument &operator<<(QDBusArgument &argument, const AttachmentStruct &attachment);
 const QDBusArgument &operator>>(const QDBusArgument &argument, AttachmentStruct &attachment);
+
+QDBusArgument &operator<<(QDBusArgument &argument, const ProtocolStruct &protocol);
+const QDBusArgument &operator>>(const QDBusArgument &argument, ProtocolStruct &protocol);
 
 #endif
