@@ -24,7 +24,7 @@
 #include <TelepathyQt/Account>
 #include <TelepathyQt/AccountManager>
 
-#define DEFAULT_TIMEOUT 60000*30
+#define DEFAULT_TIMEOUT 60000*6
 
 #define TRY_VERIFY(x) QTRY_VERIFY_WITH_TIMEOUT((x), DEFAULT_TIMEOUT)
 #define TRY_COMPARE(x, y) QTRY_COMPARE_WITH_TIMEOUT((x), (y), DEFAULT_TIMEOUT)
