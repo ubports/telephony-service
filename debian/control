@@ -94,7 +94,6 @@ Description: Telephony service components for Ubuntu - QML plugin
 
 Package: account-plugin-sip-unity8
 Architecture: all
-Multi-Arch: same
 Pre-Depends: dpkg (>= 1.15.6~)
 Depends: account-plugin-sip
 Description: Online account plugin for unity8
