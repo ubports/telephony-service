@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application id="messaging-app">
+  <description>Messaging</description>
+  <desktop-entry>messaging-app.desktop</desktop-entry>
+  <translations>messaging</translations>
+  <service-types>
+    <service-type id="IM">
+      <description>Integrate your messaging accounts</description>
+    </service-type>
+  </service-types>
+</application>

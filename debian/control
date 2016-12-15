@@ -92,3 +92,13 @@ Description: Telephony service components for Ubuntu - QML plugin
  This package contains the QML plugin providing the features from the telephony
  PhoneNumber to applications.
 
+Package: account-plugin-sip-unity8
+Architecture: all
+Multi-Arch: same
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: account-plugin-sip
+Description: Online account plugin for unity8
+ Online account plugin for unity8.
+ .
+ This package contains the online account plugin providing sip account.
+
