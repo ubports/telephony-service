@@ -20,17 +20,70 @@
  */
 
 #include "protocolmanager.h"
+#include "telepathyhelper.h"
 #include "config.h"
+#include "dbustypes.h"
 #include <QDir>
+#include <QDBusMetaType>
 
+QDBusArgument &operator<<(QDBusArgument &argument, const ProtocolStruct &protocol)
+{
+    argument.beginStructure();
+    argument << protocol.name << protocol.features << protocol.fallbackProtocol << protocol.backgroundImage << protocol.icon << protocol.serviceName;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, ProtocolStruct &protocol)
+{
+    argument.beginStructure();
+    argument >> protocol.name >> protocol.features >> protocol.fallbackProtocol >> protocol.backgroundImage >> protocol.icon >> protocol.serviceName;
+    argument.endStructure();
+    return argument;
+}
+
+/**
+ * Protocol Manager acts in two senses. If protocols dir is accessible it takes info from there and exposes it thtrough DBus (handler will be accessible
+ * in this case). Otherwise, it queries for protocols through DBus, avoiding accessing disk to get that information. This last is useful in confined
+ * environments where info could only be accessible by DBus
+ */
 ProtocolManager::ProtocolManager(const QString &dir, QObject *parent) :
     QObject(parent), mProtocolsDir(dir)
 {
-    mFileWatcher.addPath(mProtocolsDir);
-    connect(&mFileWatcher,
-            SIGNAL(directoryChanged(QString)),
-            SLOT(loadSupportedProtocols()));
-    loadSupportedProtocols();
+    QDir d(mProtocolsDir);
+    // read from disk and emit signal of available protocols in case protocols directory exists (We are servers)
+    if (d.exists()) {
+        mFileWatcher.addPath(mProtocolsDir);
+        connect(&mFileWatcher,
+                SIGNAL(directoryChanged(QString)),
+                SLOT(loadSupportedProtocols()));
+        loadSupportedProtocols();
+    } else {
+        // register DBus types and query protocols info through DBus in case protocols directory does not exists (We are clients)
+        qDBusRegisterMetaType<ProtocolList>();
+        qDBusRegisterMetaType<ProtocolStruct>();
+
+        //TODO make DBus call to get the protocols
+        QDBusInterface *interface = TelepathyHelper::instance()->handlerInterface();
+
+        if (!interface) {
+            return;
+        }
+
+        connect(interface,
+                SIGNAL(ProtocolsChanged(ProtocolList)),
+                SLOT(onProtocolsChanged(ProtocolList)));
+
+        QDBusReply<ProtocolList> reply = interface->call("GetProtocols");
+        if (!reply.isValid()) {
+            return;
+        }
+
+        mProtocols.clear();
+        Q_FOREACH (const ProtocolStruct& protocol, reply.value()) {
+            mProtocols << new Protocol(protocol);
+        }
+    }
 }
 
 ProtocolManager *ProtocolManager::instance()
@@ -159,6 +212,16 @@ void ProtocolManager::loadSupportedProtocols()
             protocol->setParent(this);
             mProtocols << protocol;
         }
+    }
+
+    Q_EMIT protocolsChanged();
+}
+
+void ProtocolManager::onProtocolsChanged(const ProtocolList &protocolList)
+{
+    mProtocols.clear();
+    Q_FOREACH (const ProtocolStruct &protocol, protocolList) {
+        mProtocols << new Protocol(protocol);
     }
 
     Q_EMIT protocolsChanged();
