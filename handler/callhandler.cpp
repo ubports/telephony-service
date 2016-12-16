@@ -186,6 +186,17 @@ void CallHandler::setActiveAudioOutput(const QString &objectPath, const QString 
 
 void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
 {
+    /*
+     * play locally (via tone generator) only if we are on a call, or if this is
+     * dialpad sounds
+     */
+    int event = toDTMFEvent(key);
+    if (GreeterContacts::instance()->dialpadSoundsEnabled() &&
+        !GreeterContacts::instance()->silentMode() && objectPath.isEmpty()
+        || !objectPath.isEmpty()) {
+        ToneGenerator::instance()->playDTMFTone(event);
+    }
+
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
     if (channel.isNull()) {
         return;
@@ -198,17 +209,6 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
     dtmfString += key;
     channel->setProperty("dtmfString", dtmfString);
     channel->setProperty("pendingDTMF", pendingDTMF);
-
-    /*
-     * play locally (via tone generator) only if we are on a call, or if this is
-     * dialpad sounds
-     */
-    int event = toDTMFEvent(key);
-    if (GreeterContacts::instance()->dialpadSoundsEnabled() &&
-        !GreeterContacts::instance()->silentMode() && objectPath.isEmpty()
-        || !objectPath.isEmpty()) {
-        ToneGenerator::instance()->playDTMFTone(event);
-    }
 
     // if there is only one pending DTMF event, start playing it
     if (pendingDTMF.length() == 1) {
@@ -371,7 +371,15 @@ void CallHandler::onCallStateChanged(Tp::CallState state)
     }
 
     switch (state) {
+    case Tp::CallStateInitialised:
+        if (channel->handlerStreamingRequired()) {
+            ToneGenerator::instance()->playDialingTone();
+        }
+        break;
     case Tp::CallStateActive:
+        if (channel->handlerStreamingRequired()) {
+            ToneGenerator::instance()->stopTone();
+        }
         channel->setProperty("activeTimestamp", QDateTime::currentDateTimeUtc());
         Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
         break;

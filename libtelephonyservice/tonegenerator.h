@@ -31,6 +31,7 @@ static const int DTMF_LOCAL_PLAYBACK_DURATION = 200; /* in milliseconds */
 static const int WAITING_PLAYBACK_DURATION = 8000; /* in milliseconds */
 static const uint WAITING_TONE = 79;
 static const uint CALL_ENDED_TONE = 257;
+static const uint DIALING_TONE = 66;
 
 class ToneGenerator : public QObject
 {
@@ -47,9 +48,10 @@ public Q_SLOTS:
     void playWaitingTone();
     void stopWaitingTone();
     void playCallEndedTone();
+    void playDialingTone();
+    void stopTone();
 
 private Q_SLOTS:
-    void stopTone();
     void stopDTMFTone();
     bool startEventTone(uint key);
 

@@ -69,6 +69,7 @@ bool ToneGenerator::startEventTone(uint key)
 
 void ToneGenerator::playDTMFTone(uint key)
 {
+    qDebug() << __PRETTY_FUNCTION__ << key;
     if (key > 11) {
         qDebug() << "Invalid DTMF tone, ignore.";
         return;
@@ -123,4 +124,9 @@ void ToneGenerator::playCallEndedTone()
 {
     startEventTone(CALL_ENDED_TONE);
     QTimer::singleShot(2000, this, SLOT(stopTone()));
+}
+
+void ToneGenerator::playDialingTone()
+{
+    startEventTone(DIALING_TONE);
 }
