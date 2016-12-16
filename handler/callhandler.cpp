@@ -163,9 +163,17 @@ void CallHandler::setMuted(const QString &objectPath, bool muted)
         return;
     }
 
-    // FIXME: replace by a proper TpQt implementation of mute
-    QDBusInterface muteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE);
-    muteInterface.call("RequestMuted", muted);
+    if (channel->handlerStreamingRequired()) {
+        CallAgent *agent = mCallAgents[channel.data()];
+        if (!agent) {
+            return;
+        }
+        agent->setMute(muted);
+    } else {
+        // FIXME: replace by a proper TpQt implementation of mute
+        QDBusInterface muteInterface(channel->busName(), channel->objectPath(), TELEPATHY_MUTE_IFACE);
+        muteInterface.call("RequestMuted", muted);
+    }
 }
 
 void CallHandler::setActiveAudioOutput(const QString &objectPath, const QString &id)
@@ -293,7 +301,7 @@ void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 
     // FIXME: save this to a list
     CallAgent *agent = new CallAgent(channel, this);
-    Q_UNUSED(agent);
+    mCallAgents[channel.data()] = agent;
 
     mCallChannels.append(channel);
     Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
@@ -344,6 +352,10 @@ void CallHandler::onCallChannelInvalidated()
     }
 
     mCallChannels.removeAll(channel);
+    if (mCallAgents.contains(channel.data())) {
+        CallAgent *agent = mCallAgents.take(channel.data());
+        agent->deleteLater();
+    }
 
     if (mCallChannels.isEmpty() && !mHangupRequested) {
         ToneGenerator::instance()->playCallEndedTone();

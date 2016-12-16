@@ -28,6 +28,7 @@
 #include <TelepathyQt/CallChannel>
 
 class TelepathyHelper;
+class CallAgent;
 
 class CallHandler : public QObject
 {
@@ -76,6 +77,7 @@ private:
 
     QMap<QString, Tp::ContactPtr> mContacts;
     QList<Tp::CallChannelPtr> mCallChannels;
+    QMap<Tp::CallChannel*,CallAgent*> mCallAgents;
     QMap<Tp::PendingOperation*,Tp::CallChannelPtr> mClosingChannels;
     bool mHangupRequested;
 };

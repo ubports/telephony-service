@@ -432,6 +432,13 @@ void CallEntry::setMute(bool value)
 {
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
     phoneAppHandler->call("SetMuted", mChannel->objectPath(), value);
+
+    // FIXME: maybe we should retrieve the property from the handler instead of relying on telepathy
+    // for that, because on channels that are not using hardware streaming we handle the mute internally
+    // with no participation of the Telepathy mute interface
+    if (mChannel->handlerStreamingRequired()) {
+        onMutedChanged(value ? 1 : 0);
+    }
 }
 
 void CallEntry::onCallStateChanged(Tp::CallState state)

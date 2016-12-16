@@ -59,6 +59,15 @@ CallAgent::~CallAgent()
     }
 }
 
+void CallAgent::setMute(bool mute)
+{
+    if (!mFarstreamChannel) {
+        return;
+    }
+
+    mFarstreamChannel->setMute(mute);
+}
+
 void CallAgent::onCallChannelInvalidated()
 {
     deleteLater();

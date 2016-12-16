@@ -68,6 +68,13 @@ FarstreamChannel::~FarstreamChannel()
     }
 }
 
+void FarstreamChannel::setMute(bool mute)
+{
+    GstElement *input_volume = gst_bin_get_by_name(GST_BIN(mPipeline), "input_volume");
+    g_object_set(input_volume, "mute", mute, NULL);
+    g_object_unref(input_volume);
+}
+
 void FarstreamChannel::initialize()
 {
     qDebug() << __PRETTY_FUNCTION__;
