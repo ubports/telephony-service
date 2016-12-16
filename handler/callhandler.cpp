@@ -30,6 +30,8 @@
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 #include <TelepathyQt/PendingChannelRequest>
+#include <TelepathyQt/PendingVariant>
+#include <memory>
 
 #define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
 #define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
@@ -120,7 +122,6 @@ void CallHandler::startCall(const QString &targetId, const QString &accountId)
         }
     }
 
-    qDebug() << "BLABLA calling final ID is " << finalId;
     connect(connection->contactManager()->contactsForIdentifiers(QStringList() << finalId),
             SIGNAL(finished(Tp::PendingOperation*)),
             SLOT(onContactsAvailable(Tp::PendingOperation*)));
@@ -177,28 +178,6 @@ void CallHandler::setActiveAudioOutput(const QString &objectPath, const QString 
 
 void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
 {
-    bool ok;
-    Tp::DTMFEvent event = (Tp::DTMFEvent)key.toInt(&ok);
-    if (!ok) {
-         if (!key.compare("*")) {
-             event = Tp::DTMFEventAsterisk;
-         } else if (!key.compare("#")) {
-             event = Tp::DTMFEventHash;
-         } else {
-             qWarning() << "Tone not recognized. DTMF failed";
-             return;
-         }
-    }
-    /*
-     * play locally (via tone generator) only if we are on a call, or if this is 
-     * dialpad sounds
-     */
-    if (GreeterContacts::instance()->dialpadSoundsEnabled() && 
-        !GreeterContacts::instance()->silentMode() && objectPath.isEmpty()
-        || !objectPath.isEmpty()) {
-        ToneGenerator::instance()->playDTMFTone((uint)event);
-    }
-
     Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
     if (channel.isNull()) {
         return;
@@ -206,14 +185,26 @@ void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
 
     // save the dtmfString to send to clients that request it
     QString dtmfString = channel->property("dtmfString").toString();
+    QString pendingDTMF = channel->property("pendingDTMF").toString();
+    pendingDTMF += key;
     dtmfString += key;
     channel->setProperty("dtmfString", dtmfString);
+    channel->setProperty("pendingDTMF", pendingDTMF);
 
-    Q_FOREACH(const Tp::CallContentPtr &content, channel->contents()) {
-        if (content->supportsDTMF()) {
-            /* send DTMF to network (via telepathy and oFono) */
-            content->startDTMFTone(event);
-        }
+    /*
+     * play locally (via tone generator) only if we are on a call, or if this is
+     * dialpad sounds
+     */
+    int event = toDTMFEvent(key);
+    if (GreeterContacts::instance()->dialpadSoundsEnabled() &&
+        !GreeterContacts::instance()->silentMode() && objectPath.isEmpty()
+        || !objectPath.isEmpty()) {
+        ToneGenerator::instance()->playDTMFTone(event);
+    }
+
+    // if there is only one pending DTMF event, start playing it
+    if (pendingDTMF.length() == 1) {
+        playNextDTMFTone(channel);
     }
 
     Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
@@ -408,4 +399,96 @@ Tp::CallChannelPtr CallHandler::callFromObjectPath(const QString &objectPath)
     }
 
     return channel;
+}
+
+void CallHandler::playNextDTMFTone(Tp::CallChannelPtr channel)
+{
+    // the channel might have been closed already
+    if (!channel) {
+        return;
+    }
+
+    QString pendingDTMF = channel->property("pendingDTMF").toString();
+    QString key = "";
+    if (!pendingDTMF.isEmpty()) {
+        key = pendingDTMF[0];
+    }
+
+    int event = toDTMFEvent(key);
+
+    Q_FOREACH(const Tp::CallContentPtr &content, channel->contents()) {
+        if (content->supportsDTMF()) {
+
+            /* stop any previous DTMF tone before sending the new one*/
+            connect(content->stopDTMFTone(), &Tp::PendingOperation::finished, [=](Tp::PendingOperation *op){
+                // in case stopDTMFTone, it might mean the service automatically stops the tone,
+                // so try playing the next one
+                if (op->isError()) {
+                    /* send DTMF to network (via telepathy) */
+                    if (event >= 0) {
+                        content->startDTMFTone((Tp::DTMFEvent)event);
+                    }
+                    triggerNextDTMFTone(channel);
+                    return;
+                }
+
+                Tp::Client::CallContentInterfaceDTMFInterface *dtmfInterface = content->interface<Tp::Client::CallContentInterfaceDTMFInterface>();
+                Tp::PendingVariant *pv = dtmfInterface->requestPropertyCurrentlySendingTones();
+                connect(pv, &Tp::PendingOperation::finished, [=](){
+                    bool sendingTones = pv->result().toBool();
+                    // if we already stopped sending tones, we can send the next one
+                    if (!sendingTones) {
+                        /* send DTMF to network (via telepathy) */
+                        if (event >= 0) {
+                            content->startDTMFTone((Tp::DTMFEvent)event);
+                        }
+                        triggerNextDTMFTone(channel);
+                        return;
+                    }
+
+                    // in case the previous tone is not finished, we need to wait for it
+                    auto conn = std::make_shared<QMetaObject::Connection>();
+                    *conn = connect(dtmfInterface, &Tp::Client::CallContentInterfaceDTMFInterface::StoppedTones, [=](){
+                        QObject::disconnect(*conn);
+
+                        /* send DTMF to network (via telepathy) */
+                        if (event >= 0) {
+                            content->startDTMFTone((Tp::DTMFEvent)event);
+                        }
+                        triggerNextDTMFTone(channel);
+                    });
+                });
+
+            });
+        }
+    }
+}
+
+void CallHandler::triggerNextDTMFTone(Tp::CallChannelPtr channel)
+{
+    QTimer::singleShot(250, [=](){
+        QString pendingDTMF = channel->property("pendingDTMF").toString();
+        if (pendingDTMF.isEmpty()) {
+            return;
+        }
+        pendingDTMF.remove(0, 1);
+        channel->setProperty("pendingDTMF", pendingDTMF);
+        playNextDTMFTone(channel);
+    });
+}
+
+int CallHandler::toDTMFEvent(const QString &key)
+{
+    bool ok;
+    int ev = key.toInt(&ok);
+    if (!ok) {
+         if (key == "*") {
+             ev = Tp::DTMFEventAsterisk;
+         } else if (key == "#") {
+             ev = Tp::DTMFEventHash;
+         } else {
+             ev = -1;
+         }
+    }
+    return ev;
 }

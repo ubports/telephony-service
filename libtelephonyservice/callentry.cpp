@@ -436,6 +436,7 @@ void CallEntry::setMute(bool value)
 
 void CallEntry::onCallStateChanged(Tp::CallState state)
 {
+    qDebug() << __PRETTY_FUNCTION__ << state;
     // fetch the channel properties from the handler
     updateChannelProperties();
 

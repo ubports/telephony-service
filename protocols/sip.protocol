@@ -1,0 +1,7 @@
+[Protocol]
+Name=sip
+Features=voice
+FallbackProtocol=
+BackgroundImage=/usr/share/telephony-service/assets/message_watermark.png
+ShowOnSelector=1
+ServiceDisplayName=SIP
