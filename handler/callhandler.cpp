@@ -75,8 +75,7 @@ bool CallHandler::hasCalls() const
     bool hasActiveCalls = false;
 
     Q_FOREACH(const Tp::CallChannelPtr channel, mCallChannels) {
-        AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(channel->connection());
-        bool incoming = channel->initiatorContact() != accountEntry->account()->connection()->selfContact();
+        bool incoming = isIncoming(channel);
         bool dialing = !incoming && (channel->callState() == Tp::CallStateInitialised);
         bool active = channel->callState() == Tp::CallStateActive;
 
@@ -371,8 +370,15 @@ void CallHandler::onCallStateChanged(Tp::CallState state)
     }
 
     switch (state) {
+    case Tp::CallStatePendingInitiator:
+    case Tp::CallStateInitialising:
+        if (!isIncoming(channel) && channel->handlerStreamingRequired()) {
+            ToneGenerator::instance()->playDialingTone();
+        }
+        break;
     case Tp::CallStateInitialised:
-        if (channel->handlerStreamingRequired()) {
+        if (!isIncoming(channel) && channel->handlerStreamingRequired()) {
+            ToneGenerator::instance()->stopTone();
             ToneGenerator::instance()->playRingingTone();
         }
         break;
@@ -511,4 +517,10 @@ int CallHandler::toDTMFEvent(const QString &key)
          }
     }
     return ev;
+}
+
+bool CallHandler::isIncoming(const Tp::CallChannelPtr &channel) const
+{
+    AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(channel->connection());
+    return channel->initiatorContact() != accountEntry->account()->connection()->selfContact();
 }

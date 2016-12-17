@@ -65,6 +65,7 @@ protected:
     void playNextDTMFTone(Tp::CallChannelPtr channel);
     void triggerNextDTMFTone(Tp::CallChannelPtr channel);
     static int toDTMFEvent(const QString &key);
+    bool isIncoming(const Tp::CallChannelPtr &channel) const;
 
 protected Q_SLOTS:
     void onContactsAvailable(Tp::PendingOperation *op);
