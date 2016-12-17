@@ -126,7 +126,7 @@ void ToneGenerator::playCallEndedTone()
     QTimer::singleShot(2000, this, SLOT(stopTone()));
 }
 
-void ToneGenerator::playDialingTone()
+void ToneGenerator::playRingingTone()
 {
-    startEventTone(DIALING_TONE);
+    startEventTone(RINGING_TONE);
 }

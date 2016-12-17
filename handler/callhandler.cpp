@@ -373,7 +373,7 @@ void CallHandler::onCallStateChanged(Tp::CallState state)
     switch (state) {
     case Tp::CallStateInitialised:
         if (channel->handlerStreamingRequired()) {
-            ToneGenerator::instance()->playDialingTone();
+            ToneGenerator::instance()->playRingingTone();
         }
         break;
     case Tp::CallStateActive:
