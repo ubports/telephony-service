@@ -13,18 +13,11 @@ Item {
     property string icon
     property var params
     property var advancedParams
+    property bool hasCrendentials: true
 
     signal finished
-
-    anchors {
-        left: parent.left
-        right: parent.right
-        verticalCenter: parent.verticalCenter
-    }
-
     height: fields.childrenRect.height +
-            units.gu(10) +
-            (Qt.inputMethod.visible ? Qt.inputMethod.keyboardRectangle.height : 0)
+            units.gu(10)
 
     function getAccountService() {
         var service = serviceModel.get(0, "accountServiceHandle")
@@ -37,8 +30,15 @@ Item {
                                                     {"objectHandle": service})
     }
 
-    function saveServiceSettings(serviceIM) {
+    function extendedSettings(inputFields)
+    {
+        return {}
+        //Helper class to be extended by derived class
+    }
+
+    function saveServiceSettings(serviceIM, creds) {
         var settingsIM = serviceIM.settings
+        var inputFields = {}
 
         settingsIM[root.keyPrefix + 'manager'] = root.manager
         settingsIM[root.keyPrefix + 'protocol'] = root.protocol
@@ -48,32 +48,41 @@ Item {
             var fieldData = root.params[i]
             var field = paramsRepeater.itemAt(i)
 
+            inputFields[fieldData.name] = field.value
+
             if (fieldData.store) {
                 settingsIM[root.keyPrefix + 'param-' + fieldData.name] = field.value
-                console.debug("Store:\n"+ root.keyPrefix + 'param-' + fieldData.name + "=" + field.value)
             }
-
         }
 
-        /*
-        settingsIM[root.keyPrefix + 'param-account'] = sipId.text
-        telepathy/param-discover-binding: false (<class 'str'>)
-        telepathy/param-proxy-host: proxy.com.br (<class 'str'>)
-        telepathy/param-port: 5061 (<class 'str'>)
-        telepathy/param-stun-server: stun.com.br (<class 'str'>)
-        telepathy/param-stun-port: 3479 (<class 'str'>)
-        telepathy/param-transport: tls (<class 'str'>)
-        telepathy/param-auth-user: 1111 (<class 'str'>)
-        telepathy/param-keepalive-interval: 1 (<class 'str'>)
-        telepathy/param-keepalive-mechanism: register (<class 'str'>)
-        */
+        var xSettings = extendedSettings(inputFields)
+        for (var key in xSettings) {
+            settingsIM[root.keyPrefix + key] = xSettings[key]
+        }
+
         serviceIM.updateSettings(settingsIM)
         //serviceIM.credentials = creds
         //serviceIM.updateServiceEnabled(true)
     }
 
+    function continueAccountSave(creds)  {
+        var imService = root.getAccountService()
+        if (!imService) {
+            console.warn("Fail to retrieve account service")
+            return
+        }
+
+        root.saveServiceSettings(imService, creds)
+        if (creds)
+            globalAccountService.credentials = creds
+        globalAccountService.updateServiceEnabled(true)
+
+        account.synced.connect(root.finished)
+        account.sync()
+    }
+
     function credentialsStored() {
-        if (creds.credentialsId == 0) {
+        if (creds.credentialsId === 0) {
             console.warn("Credentials not stored correct")
             return
         }
@@ -84,12 +93,7 @@ Item {
             return
         }
 
-        root.saveServiceSettings(imService)
-        globalAccountService.credentials = creds
-        globalAccountService.updateServiceEnabled(true)
-
-        account.synced.connect(root.finished)
-        account.sync()
+        continueAccountSave(creds)
     }
 
     function parseCrendentials() {
@@ -109,7 +113,23 @@ Item {
         return credentials
     }
 
+    function cancel() {
+        account.removed.connect(root.finished)
+        account.remove(Account.RemoveCredentials)
+    }
 
+    function confirm() {
+        var info = root.parseCrendentials()
+        // save account
+        account.updateDisplayName(info.userName)
+        if (root.hasCrendentials) {
+            creds.userName = info.userName
+            creds.secret = info.password
+            creds.sync()
+        } else {
+            continueAccountSave(null)
+        }
+    }
 
     Column {
         id: fields
@@ -120,6 +140,7 @@ Item {
             left: parent.left
             right: parent.right
         }
+        height: childrenRect.height
         spacing: units.gu(2)
 
         Icon {
@@ -131,39 +152,13 @@ Item {
             id: paramsRepeater
 
             width: parent.width
-            //height: childrenRect.height
-
             model: root.params
             DynamicField {
                 model: modelData
-                anchors.horizontalCenter: fields.horizontalCenter
-            }
-        }
-
-        Row {
-            anchors.horizontalCenter: parent.horizontalCenter
-            spacing: units.gu(2)
-
-            Button {
-                id: btnContinue
-
-                text: i18n.tr("Continue")
-                onClicked: {
-                    var info = root.parseCrendentials()
-                    // save account
-                    account.updateDisplayName(info.userName)
-                    creds.userName = info.userName
-                    creds.secret = info.password
-                    creds.sync()
-                }
-            }
-
-            Button {
-                id: btnCancel
-                text: i18n.tr("Cancel")
-                onClicked: {
-                    account.removed.connect(root.finished)
-                    account.remove(Account.RemoveCredentials)
+                anchors{
+                    left: parent.left
+                    right: parent.right
+                    margins: units.gu(4)
                 }
             }
         }

@@ -67,13 +67,38 @@ Loader {
 
     Component{
         id: passwordField
-        TextField {
-            id: field
 
+        Item {
             property alias label: field.placeholderText
             readonly property alias value: field.text
 
-            echoMode: TextInput.Password
+            height: field.height
+            TextField {
+                id: field
+
+                echoMode: showPasswordCheck.checked ? TextInput.Normal : TextInput.Password
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                }
+            }
+            CheckBox {
+                id: showPasswordCheck
+                anchors {
+                    left: field.left
+                    top: field.bottom
+                    topMargin: units.gu(1)
+                }
+            }
+            Label {
+                text: i18n.tr("Show Password")
+                anchors {
+                    top: showPasswordCheck.top
+                    left: showPasswordCheck.right
+                    leftMargin: units.gu(1)
+                    right: field.right
+                }
+            }
         }
     }
 
@@ -86,8 +111,6 @@ Loader {
             console.warn("Model does not contain 'inputType'")
             return null
         }
-
-        console.debug("Create field for:" + model.inputType)
 
         switch (model.inputType) {
         case 'string':

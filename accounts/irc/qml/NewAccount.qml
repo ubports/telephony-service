@@ -13,7 +13,7 @@ NewAccountInterface {
     protocol: 'irc'
     icon: 'irc'
     hasCrendentials: false
-    params: [{'name': 'server', 'inputType': 'string', 'label': 'Network', 'store': true},
+    params: [{'name': 'server', 'inputType': 'string', 'label': 'Network. (Eg: chat.freenode.net)', 'store': true},
              {'name': 'account', 'inputType': 'string', 'label': 'Nickname', 'store': true},
              {'name': 'password', 'inputType': 'password', 'label': 'Password', 'store': false}
             ]
