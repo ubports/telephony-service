@@ -20,6 +20,7 @@ Item {
         }
         contentWidth: parent.width
         contentHeight: editPageLoader.item.height + keyboardSize
+        clip: true
 
         Loader {
             id: editPageLoader

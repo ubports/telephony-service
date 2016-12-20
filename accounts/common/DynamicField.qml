@@ -27,7 +27,9 @@ Loader {
 
         Item {
             property alias label: fieldLabel.text
-            readonly property string value: fieldValue.checked ? "True" : "False"
+            readonly property string value: fieldValue.checked ? "true" : "false"
+
+            height: fieldValue.height
 
             Label {
                 id: fieldLabel
@@ -49,20 +51,17 @@ Loader {
     }
 
     Component {
-        id: numericField
+       id: numericField
 
-        Component {
-           id: stringField
+       TextField {
+           id: field
 
-           TextField {
-               id: field
+           property alias label: field.placeholderText
+           readonly property alias value: field.text
 
-               property alias label: field.placeholderText
-               readonly property alias value: field.text
-
-               inputMethodHints: Qt.ImhDigitsOnly
-           }
-        }
+           inputMethodHints: Qt.ImhDigitsOnly
+           validator: IntValidator {}
+       }
     }
 
     Component{
@@ -72,7 +71,7 @@ Loader {
             property alias label: field.placeholderText
             readonly property alias value: field.text
 
-            height: field.height
+            height: field.height + showPasswordCheck.height
             TextField {
                 id: field
 

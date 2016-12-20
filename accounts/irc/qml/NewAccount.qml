@@ -13,11 +13,16 @@ NewAccountInterface {
     protocol: 'irc'
     icon: 'irc'
     hasCrendentials: false
-    params: [{'name': 'server', 'inputType': 'string', 'label': 'Network. (Eg: chat.freenode.net)', 'store': true},
-             {'name': 'account', 'inputType': 'string', 'label': 'Nickname', 'store': true},
-             {'name': 'password', 'inputType': 'password', 'label': 'Password', 'store': false}
-            ]
-    advancedParams: []
+    params: [
+        {'name': 'server', 'inputType': 'string', 'label': i18n.tr('Network. (Eg: chat.freenode.net)'), 'store': true},
+        {'name': 'account', 'inputType': 'string', 'label': i18n.tr('Nickname'), 'store': true},
+        {'name': 'password', 'inputType': 'password', 'label': i18n.tr('Password'), 'store': false}
+    ]
+    advancedParams: [
+        {'name': 'username', 'inputType': 'string', 'label': i18n.tr('Username'), 'store': true},
+        {'name': 'fullname', 'inputType': 'string', 'label': i18n.tr('Real name'), 'store': true},
+        {'name': 'quit-message', 'inputType': 'string', 'label': i18n.tr('Quit message'), 'store': true},
+    ]
 
     function extendedSettings(inputFields)
     {

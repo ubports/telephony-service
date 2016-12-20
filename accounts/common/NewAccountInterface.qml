@@ -44,6 +44,7 @@ Item {
         settingsIM[root.keyPrefix + 'protocol'] = root.protocol
         settingsIM[root.keyPrefix + 'Icon'] = root.icon
 
+        // basic fields
         for (var i=0; i < paramsRepeater.count; i++) {
             var fieldData = root.params[i]
             var field = paramsRepeater.itemAt(i)
@@ -54,6 +55,19 @@ Item {
                 settingsIM[root.keyPrefix + 'param-' + fieldData.name] = field.value
             }
         }
+
+        // advanced fields
+        for (var i=0; i < advancedParamsRepeater.count; i++) {
+            var xFieldData = root.advancedParams[i]
+            var xField = advancedParamsRepeater.itemAt(i)
+
+            inputFields[xFieldData.name] = xField.value
+
+            if (xFieldData.store) {
+                settingsIM[root.keyPrefix + 'param-' + xFieldData.name] = xField.value
+            }
+        }
+
 
         var xSettings = extendedSettings(inputFields)
         for (var key in xSettings) {
@@ -153,6 +167,45 @@ Item {
 
             width: parent.width
             model: root.params
+            DynamicField {
+                model: modelData
+                anchors{
+                    left: parent.left
+                    right: parent.right
+                    margins: units.gu(4)
+                }
+            }
+        }
+
+        Item {
+            id: div
+
+            anchors{
+                left: parent.left
+                right: parent.right
+            }
+            height: units.gu(3)
+            visible: root.advancedParams.length > 0
+        }
+
+        Label {
+            id: advancedParamsTitle
+
+            anchors{
+                left: parent.left
+                right: parent.right
+                margins: units.gu(4)
+            }
+            visible: root.advancedParams.length > 0
+            text: i18n.tr("Advanced Options")
+            textSize: Label.Medium
+        }
+
+        Repeater {
+            id: advancedParamsRepeater
+
+            width: parent.width
+            model: root.advancedParams
             DynamicField {
                 model: modelData
                 anchors{
