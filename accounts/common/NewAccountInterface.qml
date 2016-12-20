@@ -48,23 +48,32 @@ Item {
         for (var i=0; i < paramsRepeater.count; i++) {
             var fieldData = root.params[i]
             var field = paramsRepeater.itemAt(i)
+            var fieldParamName = root.keyPrefix + 'param-' + fieldData.name
 
-            inputFields[fieldData.name] = field.value
-
-            if (fieldData.store) {
-                settingsIM[root.keyPrefix + 'param-' + fieldData.name] = field.value
+            if (field.isEmpty) {
+                delete settingsIM[fieldParamName]
+            } else {
+                inputFields[fieldData.name] = field.value
+                if (fieldData.store) {
+                    settingsIM[fieldParamName] = field.value
+                }
             }
         }
 
         // advanced fields
-        for (var i=0; i < advancedParamsRepeater.count; i++) {
+        for (var i=0; i < advancedParamsRepeater.count; i++) {            
             var xFieldData = root.advancedParams[i]
             var xField = advancedParamsRepeater.itemAt(i)
+            var xFieldParamName = root.keyPrefix + 'param-' + xFieldData.name
 
-            inputFields[xFieldData.name] = xField.value
+            if (xField.isEmpty) {
+                delete settingsIM[xFieldParamName]
+            } else {
+                inputFields[xFieldData.name] = xField.value
 
-            if (xFieldData.store) {
-                settingsIM[root.keyPrefix + 'param-' + xFieldData.name] = xField.value
+                if (xFieldData.store) {
+                    settingsIM[xFieldParamName] = xField.value
+                }
             }
         }
 

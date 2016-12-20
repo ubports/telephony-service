@@ -6,10 +6,7 @@ Loader {
 
     property var model
     readonly property string value: status === Loader.Ready ? item.value : ""
-
-    onModelChanged: {
-        console.debug(root + ":" + model)
-    }
+    readonly property bool isEmpty: status === Loader.Ready ? item.isEmpty : true
 
     Component {
         id: stringField
@@ -18,7 +15,12 @@ Loader {
             id: field
 
             property alias label: field.placeholderText
+            property string defaultValue
+
             readonly property alias value: field.text
+            readonly property bool isEmpty: value === "" || (defaultValue && value === model.defaultValue)
+
+            text: defaultValue ? defaultValue : ""
         }
     }
 
@@ -27,12 +29,16 @@ Loader {
 
         Item {
             property alias label: fieldLabel.text
+            property string defaultValue
+
             readonly property string value: fieldValue.checked ? "true" : "false"
+            readonly property bool isEmpty: (defaultValue && value === model.defaultValue)
 
             height: fieldValue.height
 
             Label {
                 id: fieldLabel
+
                 anchors {
                     left: parent.left
                     right: fieldValue.left
@@ -41,12 +47,13 @@ Loader {
             }
             Switch {
                 id: fieldValue
+
                 anchors {
                     right: parent.right
                     verticalCenter: parent.verticalCenter
                 }
+                checked: (defaultValue && (defaultValue === 'true'))
             }
-
         }
     }
 
@@ -57,7 +64,10 @@ Loader {
            id: field
 
            property alias label: field.placeholderText
-           readonly property alias value: field.text
+           property string defaultValue
+
+           readonly property alias value: field.text          
+           readonly property bool isEmpty: value === "" || (defaultValue && (value === defaultValue))
 
            inputMethodHints: Qt.ImhDigitsOnly
            validator: IntValidator {}
@@ -70,6 +80,7 @@ Loader {
         Item {
             property alias label: field.placeholderText
             readonly property alias value: field.text
+            readonly property bool isEmpty: value === ""
 
             height: field.height + showPasswordCheck.height
             TextField {
@@ -127,6 +138,13 @@ Loader {
         target: root.item
         property: "label"
         value: model.label
+        when: status == Loader.Ready
+    }
+
+    Binding {
+        target: root.item
+        property: "defaultValue"
+        value: model.hasOwnProperty('defaultValue') ? model.defaultValue : undefined
         when: status == Loader.Ready
     }
 }
