@@ -61,7 +61,7 @@ Item {
         }
 
         // advanced fields
-        for (var i=0; i < advancedParamsRepeater.count; i++) {            
+        for (var i=0; i < advancedParamsRepeater.count; i++) {
             var xFieldData = root.advancedParams[i]
             var xField = advancedParamsRepeater.itemAt(i)
             var xFieldParamName = root.keyPrefix + 'param-' + xFieldData.name

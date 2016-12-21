@@ -66,7 +66,7 @@ Loader {
            property alias label: field.placeholderText
            property string defaultValue
 
-           readonly property alias value: field.text          
+           readonly property alias value: field.text
            readonly property bool isEmpty: value === "" || (defaultValue && (value === defaultValue))
 
            inputMethodHints: Qt.ImhDigitsOnly
