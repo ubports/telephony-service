@@ -34,6 +34,8 @@ public:
     explicit CallAgent(const Tp::CallChannelPtr &channel, QObject *parent = 0);
     ~CallAgent();
 
+    void setMute(bool mute);
+
 protected Q_SLOTS:
     void onCallChannelInvalidated();
     void onCallStateChanged(Tp::CallState state);

@@ -68,6 +68,13 @@ FarstreamChannel::~FarstreamChannel()
     }
 }
 
+void FarstreamChannel::setMute(bool mute)
+{
+    GstElement *input_volume = gst_bin_get_by_name(GST_BIN(mPipeline), "input_volume");
+    g_object_set(input_volume, "mute", mute, NULL);
+    g_object_unref(input_volume);
+}
+
 void FarstreamChannel::initialize()
 {
     qDebug() << __PRETTY_FUNCTION__;
@@ -264,6 +271,11 @@ bool FarstreamChannel::onStartSending(TfContent *content, FarstreamChannel *self
 
     g_object_unref(sinkPad);
     g_object_unref(sourcePad);
+
+    qDebug() << "BLABLA generating dot file";
+    GST_DEBUG_BIN_TO_DOT_FILE (GST_BIN (self->mPipeline),
+         GST_DEBUG_GRAPH_SHOW_ALL, "telephony-service-gst");
+    qDebug() << "BLABLA done!";
     return true;
 }
 

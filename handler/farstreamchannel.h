@@ -36,6 +36,8 @@ public:
     explicit FarstreamChannel(TfChannel *channel, QObject *parent = 0);
     ~FarstreamChannel();
 
+    void setMute(bool mute);
+
 protected:
     void initialize();
     GstElement *initializeAudioSource(TfContent *content);
