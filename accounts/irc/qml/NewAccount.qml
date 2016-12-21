@@ -28,12 +28,12 @@ NewAccountInterface {
     {
         var settings = {}
         settings['Service'] = inputFields['server']
-        settings['NickName'] = inputFields['account']
+        settings['Nickname'] = inputFields['account']
         settings['NormalizedName'] = encodeURI(inputFields['account'])
         //FIXME: maybe move the following params to advancedParams
         settings['param-charset'] = 'UTF-8'
         settings['param-port'] = '6697'
-        settings['use-ssl'] = 'true'
+        settings['param-use-ssl'] = 'true'
         return settings
     }
 
