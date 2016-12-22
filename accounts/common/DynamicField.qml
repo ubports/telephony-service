@@ -138,13 +138,13 @@ Loader {
         target: root.item
         property: "label"
         value: model.label
-        when: status == Loader.Ready
+        when: root.status == Loader.Ready
     }
 
     Binding {
         target: root.item
         property: "defaultValue"
-        value: model.hasOwnProperty('defaultValue') ? model.defaultValue : undefined
-        when: status == Loader.Ready
+        value: model.defaultValue
+        when: model.hasOwnProperty('defaultValue') && root.status == Loader.Ready
     }
 }

@@ -33,7 +33,7 @@ NewAccountInterface {
         settings['Service'] = inputFields['server']
         settings['Nickname'] = inputFields['account']
         settings['param-charset'] = 'UTF-8'
-        if !settings['param-port'] || (settings['param-port'] == "")
+        if (settings['param-port'] == "")
             settings['param-port'] = "6667"
         return settings
     }
