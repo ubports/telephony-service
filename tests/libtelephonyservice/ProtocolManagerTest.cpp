@@ -21,6 +21,8 @@
 #include <QTemporaryDir>
 #include <QDir>
 #include <QFile>
+#include <QDBusInterface>
+#include <QDBusMetaType>
 
 #include "config.h"
 #include "protocolmanager.h"

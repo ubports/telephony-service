@@ -46,6 +46,9 @@ HandlerController::HandlerController(QObject *parent) :
     connect(&mHandlerInterface,
             SIGNAL(CallIndicatorVisibleChanged(bool)),
             SIGNAL(callIndicatorVisibleChanged(bool)));
+    connect(&mHandlerInterface,
+            SIGNAL(ProtocolsChanged(ProtocolList)),
+            SIGNAL(protocolsChanged(ProtocolList)));
 }
 
 QVariantMap HandlerController::getCallProperties(const QString &objectPath)
@@ -158,4 +161,13 @@ void HandlerController::setCallIndicatorVisible(bool visible)
     handlerPropertiesInterface.call("Set",
                                     "com.canonical.TelephonyServiceHandler",
                                     "CallIndicatorVisible", QVariant::fromValue(QDBusVariant(visible)));
+}
+
+ProtocolList HandlerController::getProtocols()
+{
+    QDBusReply<ProtocolList> reply = mHandlerInterface.call("GetProtocols");
+    if (reply.isValid()) {
+        return reply.value();
+    }
+    return ProtocolList();
 }
