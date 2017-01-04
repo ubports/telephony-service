@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2016-12-03 05:16+0000\n"
-"X-Generator: Launchpad (build 18282)\n"
+"X-Launchpad-Export-Date: 2017-01-04 06:02+0000\n"
+"X-Generator: Launchpad (build 18298)\n"
 
 #: indicator/messagingmenu.cpp:368
 #, qt-format
@@ -174,7 +174,7 @@ msgstr "Mensaxe de %1"
 #: indicator/messagingmenu.cpp:225
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "Mensaxe a %1 de %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/textchannelobserver.cpp:562 indicator/textchannelobserver.cpp:566
@@ -185,7 +185,7 @@ msgstr "Mensaxe ao grupo de %1"
 
 #: indicator/textchannelobserver.cpp:290
 msgid "New Group"
-msgstr ""
+msgstr "Novo grupo"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
@@ -298,7 +298,7 @@ msgstr "Desbloquee a SIM e volva probar dede o aplicativo de mensaxería."
 
 #: indicator/textchannelobserver.cpp:323
 msgid "View Group"
-msgstr ""
+msgstr "Ver o grupo"
 
 #: indicator/textchannelobserver.cpp:244 indicator/textchannelobserver.cpp:596
 msgid "View message"
@@ -318,19 +318,19 @@ msgstr "Si"
 
 #: indicator/textchannelobserver.cpp:304
 msgid "You joined a new group"
-msgstr ""
+msgstr "Uniuse a un novo grupo"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:301
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "Uniuse ao grupo %1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:297
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "Uniuse ao grupo %1 "
 
 #~ msgid "Private Number"
 #~ msgstr "Número privado"
