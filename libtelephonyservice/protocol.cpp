@@ -21,10 +21,28 @@
  */
 
 #include "protocol.h"
+#include "dbustypes.h"
 #include <QFileInfo>
 #include <QSettings>
 
-Protocol::Protocol(const QString &name, Features features,
+Protocol::Protocol(const ProtocolStruct & protocol)
+    : mName(protocol.name)
+    , mFeatures(protocol.features)
+    , mFallbackProtocol(protocol.fallbackProtocol)
+    , mFallbackMatchRule((MatchRule)protocol.fallbackMatchRule)
+    , mFallbackSourceProperty(protocol.fallbackSourceProperty)
+    , mFallbackDestinationProperty(protocol.fallbackDestinationProperty)
+    , mShowOnSelector(protocol.showOnSelector)
+    , mShowOnlineStatus(protocol.showOnlineStatus)
+    , mBackgroundImage(protocol.backgroundImage)
+    , mIcon(protocol.icon)
+    , mServiceName(protocol.serviceName)
+    , mServiceDisplayName(protocol.serviceDisplayName)
+{
+}
+
+Protocol::Protocol(const QString &name,
+                   Features features,
                    const QString &fallbackProtocol,
                    MatchRule fallbackMatchRule,
                    const QString &fallbackSourceProperty,
@@ -36,11 +54,25 @@ Protocol::Protocol(const QString &name, Features features,
                    const QString &serviceName,
                    const QString &serviceDisplayName,
                    QObject *parent)
-: QObject(parent), mName(name), mFeatures(features), mFallbackProtocol(fallbackProtocol), mFallbackMatchRule(fallbackMatchRule),
-  mFallbackSourceProperty(fallbackSourceProperty), mFallbackDestinationProperty(fallbackDestinationProperty),
-  mShowOnSelector(showOnSelector), mShowOnlineStatus(showOnlineStatus), mBackgroundImage(backgroundImage), mIcon(icon),
-  mServiceName(serviceName), mServiceDisplayName(serviceDisplayName)
+ : QObject(parent)
+ , mName(name)
+ , mFeatures(features)
+ , mFallbackProtocol(fallbackProtocol)
+ , mFallbackMatchRule(fallbackMatchRule)
+ , mFallbackSourceProperty(fallbackSourceProperty)
+ , mFallbackDestinationProperty(fallbackDestinationProperty)
+ , mShowOnSelector(showOnSelector)
+ , mShowOnlineStatus(showOnlineStatus)
+ , mBackgroundImage(backgroundImage)
+ , mIcon(icon)
+ , mServiceName(serviceName)
+ , mServiceDisplayName(serviceDisplayName)
 {
+}
+
+ProtocolStruct Protocol::dbusType()
+{
+    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName};
 }
 
 QString Protocol::name() const
