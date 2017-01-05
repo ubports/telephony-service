@@ -35,10 +35,8 @@ add_custom_target(uninstall "${CMAKE_COMMAND}"
 
 find_package(Qt5Contacts)
 find_package(Qt5DBus)
-#find_package(Qt5Gui)
 find_package(Qt5Multimedia)
 find_package(Qt5Qml)
-#find_package(Qt5Quick)
 find_package(Qt5Test)
 find_package(Qt5Feedback)
 find_package(Qt5Network)
@@ -48,7 +46,7 @@ include(qt5)
 
 option(SKIP_QML_TESTS "Skip QML tests" OFF)
 
-if(NOT CMAKE_CROSSCOMPILING)
+if(CMAKE_CROSSCOMPILING)
     find_program(QMAKE_EXECUTABLE qmake)
     if(QMAKE_EXECUTABLE STREQUAL "QMAKE_EXECUTABLE-NOTFOUND")
         message(FATAL_ERROR "qmake not found")
@@ -71,10 +69,14 @@ endif()
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
+pkg_check_modules(TP_QT5_FS REQUIRED TelepathyQt5Farstream)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
 pkg_check_modules(MESSAGING_MENU REQUIRED messaging-menu)
 pkg_check_modules(UserMetrics REQUIRED libusermetricsinput-1)
 pkg_check_modules(HISTORY REQUIRED history-service)
+pkg_check_modules(TPFS REQUIRED telepathy-farstream)
+pkg_check_modules(GST REQUIRED gstreamer-1.0)
+pkg_check_modules(FS REQUIRED farstream-0.2)
 
 add_definitions(-DQT_NO_KEYWORDS)
 
@@ -110,6 +112,7 @@ add_subdirectory(icons)
 add_subdirectory(po)
 add_subdirectory(tests)
 add_subdirectory(protocols)
+add_subdirectory(accounts)
 
 include(EnableCoverageReport)
 #####################################################################

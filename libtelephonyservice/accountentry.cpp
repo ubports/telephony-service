@@ -28,6 +28,10 @@
 
 Q_DECLARE_METATYPE(Tp::ConnectionPtr);
 
+namespace C {
+#include <libintl.h>
+}
+
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
     QObject(parent), mAccount(account), mReady(false), mProtocol(0)
 {
@@ -51,10 +55,19 @@ QString AccountEntry::accountId() const
 
 bool AccountEntry::active() const
 {
-    return (!mAccount.isNull() &&
-            !mAccount->connection().isNull() &&
-            !mAccount->connection()->selfContact().isNull() &&
-             mAccount->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline);
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->status() != Tp::ConnectionStatusConnected) {
+        return false;
+    }
+
+    // we have to check if the account supports simple presence. In case it does, we use the self contact presence to determine
+    // if this account is active.
+    if (mAccount->connection()->hasInterface(TP_QT_IFACE_CONNECTION_INTERFACE_SIMPLE_PRESENCE)) {
+        return (!mAccount->connection()->selfContact().isNull() &&
+                mAccount->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline);
+    }
+
+    // if it doesn't support simple presence, we  consider it online by having a connection in connected state
+    return true;
 }
 
 QString AccountEntry::displayName() const

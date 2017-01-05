@@ -46,6 +46,7 @@ struct ProtocolStruct {
     QString icon;
     QString serviceName;
     QString serviceDisplayName;
+    bool joinExistingChannels;
 };
 
 typedef QList<AttachmentStruct> AttachmentList;

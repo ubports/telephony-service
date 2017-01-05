@@ -39,9 +39,10 @@ public:
                  const QString &icon,
                  const QString &serviceName = QString::null,
                  const QString &serviceDisplayName = QString::null,
+                 bool joinExistingChannels = false,
                  QObject *parent = 0)
      : Protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                showOnSelector, showOnlineStatus, backgroundFile, icon, serviceName, serviceDisplayName, parent) { }
+                showOnSelector, showOnlineStatus, backgroundFile, icon, serviceName, serviceDisplayName, joinExistingChannels, parent) { }
 };
 
 class ProtocolTest : public QObject
@@ -67,9 +68,10 @@ void ProtocolTest::testBasicInfo()
     QString icon("/tmp/icon.png");
     QString serviceName("The service");
     QString serviceDisplayName("The service display name");
+    bool joinExistingChannels = true;
 
     TestProtocol protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                          showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, this);
+                          showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, this);
     QCOMPARE(protocol.name(), name);
     QCOMPARE(protocol.features(), features);
     QCOMPARE(protocol.fallbackProtocol(), fallbackProtocol);
@@ -82,6 +84,7 @@ void ProtocolTest::testBasicInfo()
     QCOMPARE(protocol.icon(), icon);
     QCOMPARE(protocol.serviceName(), serviceName);
     QCOMPARE(protocol.serviceDisplayName(), serviceDisplayName);
+    QCOMPARE(protocol.joinExistingChannels(), joinExistingChannels);
     QCOMPARE(protocol.parent(), this);
 }
 
@@ -106,6 +109,7 @@ void ProtocolTest::testFromFile()
     QCOMPARE(protocol->icon(), QString("/tmp/icon.png"));
     QCOMPARE(protocol->serviceName(), QString("The Service"));
     QCOMPARE(protocol->serviceDisplayName(), QString("The Service Display Name"));
+    QCOMPARE(protocol->joinExistingChannels(), true);
 }
 
 QTEST_MAIN(ProtocolTest)

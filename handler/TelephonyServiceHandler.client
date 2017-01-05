@@ -6,3 +6,12 @@ org.freedesktop.Telepathy.Channel.ChannelType s=org.freedesktop.Telepathy.Channe
 
 [org.freedesktop.Telepathy.Client.Handler.HandlerChannelFilter 3]
 org.freedesktop.Telepathy.Channel.ChannelType s=org.freedesktop.Telepathy.Channel.Type.Call1
+
+[org.freedesktop.Telepathy.Client.Handler.HandlerChannelFilter 1]
+org.freedesktop.Telepathy.Channel.ChannelType s=org.freedesktop.Telepathy.Channel.Type.Call1
+org.freedesktop.Telepathy.Channel.Type.Call1.InitialAudio b=true
+
+[org.freedesktop.Telepathy.Client.Handler.Capabilities]
+org.freedesktop.Telepathy.Channel.Type.Call1/audio=true
+org.freedesktop.Telepathy.Channel.Type.Call1/ice=true
+org.freedesktop.Telepathy.Channel.Type.Call1/gtalk-p2p=true
