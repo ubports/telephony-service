@@ -15,8 +15,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2016-12-03 05:16+0000\n"
-"X-Generator: Launchpad (build 18282)\n"
+"X-Launchpad-Export-Date: 2017-01-04 06:02+0000\n"
+"X-Generator: Launchpad (build 18298)\n"
 "Language: fi\n"
 
 #: indicator/messagingmenu.cpp:368
@@ -178,7 +178,7 @@ msgstr "Viesti (%1)"
 #: indicator/messagingmenu.cpp:225
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "Viesti ryhmälle %1 lähettäjältä %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/textchannelobserver.cpp:562 indicator/textchannelobserver.cpp:566
@@ -189,7 +189,7 @@ msgstr "Viesti ryhmälle lähettäjältä %1"
 
 #: indicator/textchannelobserver.cpp:290
 msgid "New Group"
-msgstr ""
+msgstr "Uusi ryhmä"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
@@ -304,7 +304,7 @@ msgstr ""
 
 #: indicator/textchannelobserver.cpp:323
 msgid "View Group"
-msgstr ""
+msgstr "Näytä ryhmä"
 
 #: indicator/textchannelobserver.cpp:244 indicator/textchannelobserver.cpp:596
 msgid "View message"
@@ -324,19 +324,19 @@ msgstr "Kyllä"
 
 #: indicator/textchannelobserver.cpp:304
 msgid "You joined a new group"
-msgstr ""
+msgstr "Liityit uuteen ryhmään"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:301
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "Liityit ryhmään %1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:297
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "Liityit ryhmään %1 "
 
 #~ msgid "Unknown Number"
 #~ msgstr "Tuntematon numero"
