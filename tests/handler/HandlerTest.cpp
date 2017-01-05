@@ -27,6 +27,8 @@
 #include "accountentry.h"
 #include "accountentryfactory.h"
 #include "telepathyhelper.h"
+#include "protocolmanager.h"
+#include <config.h>
 
 Q_DECLARE_METATYPE(Tp::TextChannelPtr)
 
@@ -38,6 +40,8 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
+    void testGetProtocols();
+    void testGetProtocolsChangesThroughDBus();
     void testMakingCalls();
     void testHangUpCall();
     void testCallHold();
@@ -68,6 +72,9 @@ private:
 
 void HandlerTest::initTestCase()
 {
+    qDBusRegisterMetaType<ProtocolList>();
+    qDBusRegisterMetaType<ProtocolStruct>();
+
     initialize();
 
     QSignalSpy setupReadySpy(TelepathyHelper::instance(), SIGNAL(setupReady()));
@@ -98,6 +105,28 @@ void HandlerTest::cleanup()
     mMockController->deleteLater();
     mMultimediaMockController->deleteLater();
     mOfonoMockController->deleteLater();
+}
+
+void HandlerTest::testGetProtocols()
+{
+    Protocols protocols = ProtocolManager::instance()->protocols();
+    ProtocolList protocolList = HandlerController::instance()->getProtocols();
+    for (int i = 0; i < protocols.count(); ++i) {
+        QCOMPARE(protocols[i]->name(), protocolList.at(i).name);
+    }
+}
+
+void HandlerTest::testGetProtocolsChangesThroughDBus()
+{
+    QSignalSpy protocolsChangedSpy(HandlerController::instance(), SIGNAL(protocolsChanged(ProtocolList)));
+
+    QTemporaryFile f;
+    f.setFileTemplate(protocolsDir() + "/");
+    if (f.open()) {
+        f.close();
+    }
+
+    QTRY_COMPARE(protocolsChangedSpy.count(), 1);
 }
 
 void HandlerTest::testMakingCalls()
