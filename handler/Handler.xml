@@ -173,6 +173,13 @@
             <arg name="properties" type="a{sv}" direction="out"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
         </method>
+        <method name="GetProtocols">
+            <dox:d><![CDATA[
+                Get the list of current available protocols
+            ]]></dox:d>
+            <arg name="result" type="a(susussbbssssb)" direction="out"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ProtocolList"/>
+        </method>
         <signal name="CallPropertiesChanged">
             <dox:d><![CDATA[
                 The properties of a given call changed.
@@ -201,6 +208,14 @@
                 The call indicator visibility has changed
             ]]></dox:d>
             <arg name="visible" type="b"/>
+        </signal>
+        <signal name="ProtocolsChanged">
+            <dox:d><![CDATA[
+                The protocols files in protocols dir have changed
+            ]]></dox:d>
+            <arg name="protocols" type="a(susussbbssssb)"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ProtocolList"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="ProtocolList"/>
         </signal>
     </interface>
 </node>

@@ -23,6 +23,7 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
+#include "dbustypes.h"
 #include <QObject>
 
 /// @brief describes one protocol and the features it supports
@@ -65,6 +66,9 @@ class Protocol : public QObject
     /// @brief the name to display for this protocol
     Q_PROPERTY(QString serviceDisplayName READ serviceDisplayName CONSTANT)
 
+    /// @brief whether this protocol allows joining existing channels
+    Q_PROPERTY(bool joinExistingChannels READ joinExistingChannels CONSTANT)
+
 public:
     enum Feature {
         TextChats = 0x1,
@@ -72,6 +76,8 @@ public:
         AllFeatures = (TextChats | VoiceCalls)
     };
     Q_DECLARE_FLAGS(Features, Feature)
+
+    Protocol(const ProtocolStruct& protocolStruct);
 
     enum MatchRule {
         MatchAny,
@@ -90,8 +96,10 @@ public:
     QString icon() const;
     QString serviceName() const;
     QString serviceDisplayName() const;
+    bool joinExistingChannels() const;
 
     static Protocol *fromFile(const QString &fileName);
+    ProtocolStruct dbusType();
 
     friend class ProtocolManager;
 
@@ -107,6 +115,7 @@ protected:
                       const QString &icon = QString::null,
                       const QString &serviceName = QString::null,
                       const QString &serviceDisplayName = QString::null,
+                      bool joinExistingChannels = false,
                       QObject *parent = 0);
 
 private:
@@ -122,8 +131,20 @@ private:
     QString mIcon;
     QString mServiceName;
     QString mServiceDisplayName;
+    bool mJoinExistingChannels;
 };
 
-typedef QList<Protocol*> Protocols;
+class Protocols : public QList<Protocol*>
+{
+public:
+    ProtocolList dbusType() {
+        // return list of DBus types
+        ProtocolList protocolList;
+        Q_FOREACH(Protocol *protocol, *this) {
+            protocolList << protocol->dbusType();
+        }
+        return protocolList;
+    }
+};
 
 #endif // PROTOCOL_H

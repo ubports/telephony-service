@@ -11,3 +11,4 @@ BackgroundImage=/tmp/background.png
 Icon=/tmp/icon.png
 ServiceName=The Service
 ServiceDisplayName=The Service Display Name
+JoinExistingChannels=1

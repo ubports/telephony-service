@@ -722,6 +722,12 @@ void TextChannelObserver::processMessageReceived(const Tp::ReceivedMessage &mess
             account->type() != AccountEntry::PhoneAccount) {
         return;
     }
+
+    if (textChannel->targetHandleType() == Tp::HandleTypeRoom) {
+        if (!message.text().contains(account->selfContactId())) {
+            return; 
+        }
+    }
     
     // do not place notification items for scrollback messages
     if (mFlashChannels.contains(textChannel) && !message.isScrollback() && !message.isDeliveryReport() && !message.isRescued()) {
