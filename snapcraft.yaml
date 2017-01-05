@@ -1,5 +1,5 @@
 name: telephony-service
-version: 0.1
+version: 0.1+17.04.20161213.1-0ubuntu1
 summary: Telephony service components for Ubuntu - backend
 description: 
   Telephony service components for Ubuntu.

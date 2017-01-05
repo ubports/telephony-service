@@ -1,3 +1,18 @@
+telephony-service (0.1+17.04.20161213.1-0ubuntu1) zesty; urgency=medium
+
+  [ Renato Araujo Oliveira Filho, Roberto Mier Escandon ]
+  * prefixes snap env var value to paths in case service is into a snap
+    package (LP: #1629009)
+
+  [ Tiago Salem Herrmann ]
+  * Increase dbus-test-runner timeout to 6 minutes.
+
+  [ Roberto Mier Escandon, Tiago Salem Herrmann ]
+  * Requesting protocols from qml plugin using DBus in case protocols
+    dir folder does not exits.
+
+ -- Tiago Salem Herrmann <tiago.herrmann@canonical.com>  Tue, 13 Dec 2016 12:47:02 +0000
+
 telephony-service (0.1+17.04.20161129-0ubuntu1) zesty; urgency=medium
 
   * Group chat support.
