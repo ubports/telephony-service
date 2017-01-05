@@ -69,6 +69,9 @@ class Protocol : public QObject
     /// @brief whether this protocol allows joining existing channels
     Q_PROPERTY(bool joinExistingChannels READ joinExistingChannels CONSTANT)
 
+    /// @brief whether this protocol should send the message directly when return is pressed
+    Q_PROPERTY(bool returnToSend READ returnToSend CONSTANT)
+
 public:
     enum Feature {
         TextChats = 0x1,
@@ -97,6 +100,7 @@ public:
     QString serviceName() const;
     QString serviceDisplayName() const;
     bool joinExistingChannels() const;
+    bool returnToSend() const;
 
     static Protocol *fromFile(const QString &fileName);
     ProtocolStruct dbusType();
@@ -116,6 +120,7 @@ protected:
                       const QString &serviceName = QString::null,
                       const QString &serviceDisplayName = QString::null,
                       bool joinExistingChannels = false,
+                      bool returnToSend = false,
                       QObject *parent = 0);
 
 private:
@@ -132,6 +137,7 @@ private:
     QString mServiceName;
     QString mServiceDisplayName;
     bool mJoinExistingChannels;
+    bool mReturnToSend;
 };
 
 class Protocols : public QList<Protocol*>
