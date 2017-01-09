@@ -72,6 +72,9 @@ class Protocol : public QObject
     /// @brief whether this protocol should send the message directly when return is pressed
     Q_PROPERTY(bool returnToSend READ returnToSend CONSTANT)
 
+    /// @brief whether this protocol should send the message directly when return is pressed
+    Q_PROPERTY(bool enableAttachments READ enableAttachments CONSTANT)
+
 public:
     enum Feature {
         TextChats = 0x1,
@@ -101,6 +104,7 @@ public:
     QString serviceDisplayName() const;
     bool joinExistingChannels() const;
     bool returnToSend() const;
+    bool enableAttachments() const;
 
     static Protocol *fromFile(const QString &fileName);
     ProtocolStruct dbusType();
@@ -121,6 +125,7 @@ protected:
                       const QString &serviceDisplayName = QString::null,
                       bool joinExistingChannels = false,
                       bool returnToSend = false,
+                      bool enableAttachments = true,
                       QObject *parent = 0);
 
 private:
@@ -138,6 +143,7 @@ private:
     QString mServiceDisplayName;
     bool mJoinExistingChannels;
     bool mReturnToSend;
+    bool mEnableAttachments;
 };
 
 class Protocols : public QList<Protocol*>

@@ -41,9 +41,10 @@ public:
                  const QString &serviceDisplayName = QString::null,
                  bool joinExistingChannels = false,
                  bool returnToSend = false,
+                 bool enableAttachments = true,
                  QObject *parent = 0)
      : Protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                showOnSelector, showOnlineStatus, backgroundFile, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, parent) { }
+                showOnSelector, showOnlineStatus, backgroundFile, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, parent) { }
 };
 
 class ProtocolTest : public QObject
@@ -71,9 +72,10 @@ void ProtocolTest::testBasicInfo()
     QString serviceDisplayName("The service display name");
     bool joinExistingChannels = true;
     bool returnToSend = true;
+    bool enableAttachments = false;
 
     TestProtocol protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                          showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, this);
+                          showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, this);
     QCOMPARE(protocol.name(), name);
     QCOMPARE(protocol.features(), features);
     QCOMPARE(protocol.fallbackProtocol(), fallbackProtocol);
@@ -88,6 +90,7 @@ void ProtocolTest::testBasicInfo()
     QCOMPARE(protocol.serviceDisplayName(), serviceDisplayName);
     QCOMPARE(protocol.joinExistingChannels(), joinExistingChannels);
     QCOMPARE(protocol.returnToSend(), returnToSend);
+    QCOMPARE(protocol.enableAttachments(), enableAttachments);
     QCOMPARE(protocol.parent(), this);
 }
 
@@ -114,6 +117,7 @@ void ProtocolTest::testFromFile()
     QCOMPARE(protocol->serviceDisplayName(), QString("The Service Display Name"));
     QCOMPARE(protocol->joinExistingChannels(), true);
     QCOMPARE(protocol->returnToSend(), false);
+    QCOMPARE(protocol->enableAttachments(), false);
 }
 
 QTEST_MAIN(ProtocolTest)

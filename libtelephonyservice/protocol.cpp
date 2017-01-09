@@ -40,6 +40,7 @@ Protocol::Protocol(const ProtocolStruct & protocol)
     , mServiceDisplayName(protocol.serviceDisplayName)
     , mJoinExistingChannels(protocol.joinExistingChannels)
     , mReturnToSend(protocol.returnToSend)
+    , mEnableAttachments(protocol.enableAttachments)
 {
 }
 
@@ -57,6 +58,7 @@ Protocol::Protocol(const QString &name,
                    const QString &serviceDisplayName,
                    bool joinExistingChannels,
                    bool returnToSend,
+                   bool enableAttachments,
                    QObject *parent)
  : QObject(parent)
  , mName(name)
@@ -73,12 +75,13 @@ Protocol::Protocol(const QString &name,
  , mServiceDisplayName(serviceDisplayName)
  , mJoinExistingChannels(joinExistingChannels)
  , mReturnToSend(returnToSend)
+ , mEnableAttachments(enableAttachments)
 {
 }
 
 ProtocolStruct Protocol::dbusType()
 {
-    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend};
+    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend, mEnableAttachments};
 }
 
 QString Protocol::name() const
@@ -151,6 +154,11 @@ bool Protocol::returnToSend() const
     return mReturnToSend;
 }
 
+bool Protocol::enableAttachments() const
+{
+    return mEnableAttachments;
+}
+
 Protocol *Protocol::fromFile(const QString &fileName)
 {
     QFileInfo file(fileName);
@@ -190,7 +198,8 @@ Protocol *Protocol::fromFile(const QString &fileName)
     QString serviceDisplayName = settings.value("ServiceDisplayName").toString();
     bool joinExistingChannels = settings.value("JoinExistingChannels").toBool();
     bool returnToSend = settings.value("ReturnToSend").toBool();
+    bool enableAttachments = settings.value("EnableAttachments").toBool();
 
     return new Protocol(name, features, fallbackProtocol, matchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                        showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend);
+                        showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments);
 }
