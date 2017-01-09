@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="telephony-irc-im">
+  <type>IM</type>
+  <name>IRC</name>
+  <icon>irc</icon>
+  <provider>telephony-irc</provider>
+</service>
