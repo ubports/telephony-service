@@ -41,6 +41,7 @@ Protocol::Protocol(const ProtocolStruct & protocol)
     , mJoinExistingChannels(protocol.joinExistingChannels)
     , mReturnToSend(protocol.returnToSend)
     , mEnableAttachments(protocol.enableAttachments)
+    , mEnableRejoin(protocol.enableRejoin)
 {
 }
 
@@ -59,6 +60,7 @@ Protocol::Protocol(const QString &name,
                    bool joinExistingChannels,
                    bool returnToSend,
                    bool enableAttachments,
+                   bool enableRejoin,
                    QObject *parent)
  : QObject(parent)
  , mName(name)
@@ -76,12 +78,13 @@ Protocol::Protocol(const QString &name,
  , mJoinExistingChannels(joinExistingChannels)
  , mReturnToSend(returnToSend)
  , mEnableAttachments(enableAttachments)
+ , mEnableRejoin(enableRejoin)
 {
 }
 
 ProtocolStruct Protocol::dbusType()
 {
-    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend, mEnableAttachments};
+    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend, mEnableAttachments, mEnableRejoin};
 }
 
 QString Protocol::name() const
@@ -159,6 +162,11 @@ bool Protocol::enableAttachments() const
     return mEnableAttachments;
 }
 
+bool Protocol::enableRejoin() const
+{
+    return mEnableRejoin;
+}
+
 Protocol *Protocol::fromFile(const QString &fileName)
 {
     QFileInfo file(fileName);
@@ -199,7 +207,8 @@ Protocol *Protocol::fromFile(const QString &fileName)
     bool joinExistingChannels = settings.value("JoinExistingChannels").toBool();
     bool returnToSend = settings.value("ReturnToSend").toBool();
     bool enableAttachments = settings.value("EnableAttachments").toBool();
+    bool enableRejoin = settings.value("EnableRejoin").toBool();
 
     return new Protocol(name, features, fallbackProtocol, matchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                        showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments);
+                        showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin);
 }

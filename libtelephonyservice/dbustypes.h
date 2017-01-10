@@ -49,6 +49,7 @@ struct ProtocolStruct {
     bool joinExistingChannels;
     bool returnToSend;
     bool enableAttachments;
+    bool enableRejoin;
 };
 
 typedef QList<AttachmentStruct> AttachmentList;
