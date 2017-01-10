@@ -7,3 +7,4 @@ ShowOnSelector=1
 JoinExistingChannels=0
 ReturnToSend=0
 EnableAttachments=1
+EnableRejoin=0

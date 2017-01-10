@@ -14,3 +14,4 @@ ServiceDisplayName=The Service Display Name
 JoinExistingChannels=1
 ReturnToSend=0
 EnableAttachments=0
+EnableRejoin=1

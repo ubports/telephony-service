@@ -72,8 +72,11 @@ class Protocol : public QObject
     /// @brief whether this protocol should send the message directly when return is pressed
     Q_PROPERTY(bool returnToSend READ returnToSend CONSTANT)
 
-    /// @brief whether this protocol should send the message directly when return is pressed
+    /// @brief whether this protocol supports attachments
     Q_PROPERTY(bool enableAttachments READ enableAttachments CONSTANT)
+
+    /// @brief whether this protocol supports rejoin channels manually
+    Q_PROPERTY(bool enableRejoin READ enableRejoin CONSTANT)
 
 public:
     enum Feature {
@@ -105,6 +108,7 @@ public:
     bool joinExistingChannels() const;
     bool returnToSend() const;
     bool enableAttachments() const;
+    bool enableRejoin() const;
 
     static Protocol *fromFile(const QString &fileName);
     ProtocolStruct dbusType();
@@ -126,6 +130,7 @@ protected:
                       bool joinExistingChannels = false,
                       bool returnToSend = false,
                       bool enableAttachments = true,
+                      bool enableRejoin = false,
                       QObject *parent = 0);
 
 private:
@@ -144,6 +149,7 @@ private:
     bool mJoinExistingChannels;
     bool mReturnToSend;
     bool mEnableAttachments;
+    bool mEnableRejoin;
 };
 
 class Protocols : public QList<Protocol*>
