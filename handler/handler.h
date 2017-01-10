@@ -45,6 +45,7 @@ public:
                         const QDateTime &userActionTime,
                         const Tp::AbstractClientHandler::HandlerInfo &handlerInfo);
     Tp::ChannelClassSpecList channelFilters();
+    Tp::AbstractClientHandler::Capabilities capabilities();
 
 Q_SIGNALS:
     void textChannelAvailable(Tp::TextChannelPtr textChannel);
