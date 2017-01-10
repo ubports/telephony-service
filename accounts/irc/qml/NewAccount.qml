@@ -15,7 +15,7 @@ NewAccountInterface {
     hasCrendentials: false
     params: [
         {'name': 'server', 'inputType': 'string', 'label': i18n.tr('Network. (Eg: chat.freenode.net)'), 'store': true},
-        {'name': 'nickname', 'inputType': 'string', 'label': i18n.tr('Nickname'), 'store': true},
+        {'name': 'account', 'inputType': 'string', 'label': i18n.tr('Nickname'), 'store': true},
     ]
     advancedParams: [
         {'name': 'port', 'inputType': 'numeric', 'label': i18n.tr('Port'), 'store': true},
@@ -29,8 +29,7 @@ NewAccountInterface {
     function extendedSettings(inputFields)
     {
         var settings = {}
-        settings['Service'] = inputFields['server']
-        settings['Nickname'] = inputFields['nickname']
+        settings['param-nickname'] = inputFields['account']
         if (settings['param-port'] == "")
             settings['param-port'] = "6667"
         return settings
