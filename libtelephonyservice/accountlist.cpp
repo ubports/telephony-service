@@ -125,7 +125,7 @@ void AccountList::filterAccounts()
     mAccounts.clear();
     for (auto account : TelepathyHelper::instance()->accounts()) {
         // if the account doesn't have any of the required features, skip it
-        if (!account->protocolInfo()->features() & mFeatures) {
+        if (!(account->protocolInfo()->features() & mFeatures)) {
             continue;
         }
 
