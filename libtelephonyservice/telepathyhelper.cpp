@@ -607,6 +607,17 @@ void TelepathyHelper::onPhoneSettingsChanged(const QString &key)
         mDefaultMessagingAccount = NULL;
         Q_EMIT defaultMessagingAccountChanged();
     } else if (key == "DefaultSimForCalls") {
+        // if there is a VOIP account configured, use that by default
+        // FIXME: revisit the topic and maybe discuss with designers what is best here?
+        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->qmlVoiceAccounts()->activeAccounts()) {
+            if (account->type() != AccountEntry::PhoneAccount) {
+                mDefaultCallAccount = account;
+                Q_EMIT defaultCallAccountChanged();
+                return;
+            }
+        }
+
+        // if no VOIP account, get the default modem setting
         QString defaultSim = GreeterContacts::instance()->defaultSimForCalls();
         if (defaultSim == "ask") {
             mDefaultCallAccount = NULL;
