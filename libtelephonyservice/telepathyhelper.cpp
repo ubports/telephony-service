@@ -96,6 +96,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
     connect(GreeterContacts::instance(), SIGNAL(phoneSettingsChanged(QString)), this, SLOT(onPhoneSettingsChanged(QString)));
+    connect(GreeterContacts::instance(), SIGNAL(soundSettingsChanged(QString)), this, SLOT(onPhoneSettingsChanged(QString)));
     connect(&mFlightModeInterface, SIGNAL(FlightModeChanged(bool)), this, SIGNAL(flightModeChanged()));
 
     mMmsEnabled = GreeterContacts::instance()->mmsEnabled();
@@ -586,6 +587,16 @@ bool TelepathyHelper::emergencyCallsAvailable() const
     return false;
 }
 
+bool TelepathyHelper::dialpadSoundsEnabled() const
+{
+    return GreeterContacts::instance()->dialpadSoundsEnabled();
+}
+
+void TelepathyHelper::setDialpadSoundsEnabled(bool enabled)
+{
+    GreeterContacts::instance()->setDialpadSoundsEnabled(enabled);
+}
+
 void TelepathyHelper::onPhoneSettingsChanged(const QString &key)
 {
     if (key == "DefaultSimForMessages") {
@@ -641,6 +652,8 @@ void TelepathyHelper::onPhoneSettingsChanged(const QString &key)
     } else if (key == "SimNames") {
         mSimNames = GreeterContacts::instance()->simNames();
         Q_EMIT simNamesChanged();
+    } else if (key == "DialpadSoundsEnabled") {
+        Q_EMIT dialpadSoundsEnabledChanged();
     }
 }
 
