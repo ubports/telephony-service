@@ -7,6 +7,7 @@ Item {
 
     readonly property string keyPrefix: "telepathy/"
     readonly property var accountObjectHandle: account ? account.objectHandle : undefined
+    readonly property alias isValid: paramsRepeater.fieldHasValues
 
     property string manager
     property string protocol
@@ -14,6 +15,7 @@ Item {
     property var params
     property var advancedParams
     property bool hasCrendentials: true
+
 
     signal finished
     height: fields.childrenRect.height +
@@ -174,6 +176,21 @@ Item {
         Repeater {
             id: paramsRepeater
 
+            property bool fieldHasValues: false
+
+            function checkFieldHasValues()
+            {
+                var hasValues = true
+                for (var i in paramsRepeater.count) {
+                    var child = paramsRepeater.itemAt(i)
+                    if (child && child.isEmpty) {
+                        hasValues = false
+                        break
+                    }
+                }
+                fieldHasValues = hasValues
+            }
+
             width: parent.width
             model: root.params
             DynamicField {
@@ -183,6 +200,7 @@ Item {
                     right: parent.right
                     margins: units.gu(4)
                 }
+                onChanged: checkFieldHasValues()
             }
         }
 

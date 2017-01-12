@@ -58,6 +58,7 @@ Item {
             margins: units.gu(2)
             bottomMargin: units.gu(1)
         }
+        enabled: editPageLoader.item && editPageLoader.item.isValid
         onClicked: {
             if (editPageLoader.item)
                 editPageLoader.item.confirm()
