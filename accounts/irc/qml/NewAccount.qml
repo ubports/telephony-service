@@ -34,4 +34,9 @@ NewAccountInterface {
             settings['param-port'] = "6667"
         return settings
     }
+
+    function formatDisplayName(inputFields)
+    {
+        return inputFields['nickname'] + "@" + inputFields['server']
+    }
 }

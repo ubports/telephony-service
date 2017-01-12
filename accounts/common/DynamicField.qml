@@ -8,8 +8,6 @@ Loader {
     readonly property string value: status === Loader.Ready ? item.value : ""
     readonly property bool isEmpty: status === Loader.Ready ? item.isEmpty : true
 
-    signal changed()
-
     Component {
         id: stringField
 
@@ -23,7 +21,6 @@ Loader {
             readonly property bool isEmpty: value === "" || (defaultValue && value === model.defaultValue)
 
             text: defaultValue ? defaultValue : ""
-            onTextChanged: root.changed()
         }
     }
 
@@ -56,7 +53,6 @@ Loader {
                     verticalCenter: parent.verticalCenter
                 }
                 checked: (defaultValue && (defaultValue === 'true'))
-                onCheckedChanged: root.changed()
             }
         }
     }
@@ -75,7 +71,6 @@ Loader {
 
            inputMethodHints: Qt.ImhDigitsOnly
            validator: IntValidator {}
-           onTextChanged: root.changed()
        }
     }
 

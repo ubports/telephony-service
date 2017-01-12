@@ -32,10 +32,18 @@ Item {
                                                     {"objectHandle": service})
     }
 
+    // virual
     function extendedSettings(inputFields)
     {
         return {}
         //Helper class to be extended by derived class
+    }
+
+    // virtual
+    function formatDisplayName(inputFields)
+    {
+        return inputFields['account']
+        // Helper function that allow the derived class to format a different display name
     }
 
     function saveServiceSettings(serviceIM, creds) {
@@ -84,6 +92,8 @@ Item {
         for (var key in xSettings) {
             settingsIM[root.keyPrefix + key] = xSettings[key]
         }
+
+        account.updateDisplayName(formatDisplayName(inputFields))
 
         serviceIM.updateSettings(settingsIM)
         //serviceIM.credentials = creds
@@ -178,17 +188,18 @@ Item {
 
             property bool fieldHasValues: false
 
-            function checkFieldHasValues()
+            function checkFieldsHasValues()
             {
-                var hasValues = true
-                for (var i in paramsRepeater.count) {
+                var hasEmptyField = false
+                for (var i = 0; i < paramsRepeater.count; i++) {
+
                     var child = paramsRepeater.itemAt(i)
                     if (child && child.isEmpty) {
-                        hasValues = false
+                        hasEmptyField = true
                         break
                     }
                 }
-                fieldHasValues = hasValues
+                fieldHasValues = !hasEmptyField
             }
 
             width: parent.width
@@ -200,7 +211,7 @@ Item {
                     right: parent.right
                     margins: units.gu(4)
                 }
-                onChanged: checkFieldHasValues()
+                onValueChanged: paramsRepeater.checkFieldsHasValues()
             }
         }
 
