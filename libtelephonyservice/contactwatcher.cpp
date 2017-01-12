@@ -223,6 +223,12 @@ void ContactWatcher::setIdentifier(const QString &identifier)
         Q_EMIT interactiveChanged();
     }
 
+    // FIXME: this is a hack, we need to find a better way of matching contacts for accounts
+    // that don't have addressable fields
+    if (mIdentifier.startsWith("sip:")) {
+        mIdentifier.remove("sip:").remove(QRegularExpression("@.*$"));
+    }
+
     if (mIdentifier.isEmpty() || isPrivate || isUnknown) {
         updateAlias();
         setContactId(QString::null);
