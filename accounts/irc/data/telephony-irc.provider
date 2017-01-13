@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<provider id="irc">
+<provider id="telephony-irc">
   <name>IRC</name>
   <icon>irc</icon>
 
