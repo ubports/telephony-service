@@ -4,4 +4,18 @@
   <name>SIP</name>
   <icon>sip</icon>
   <provider>telephony-sip</provider>
+
+  <!-- default settings (account settings have precedence over these) -->
+  <template>
+    <group name="telepathy">
+      <setting name="manager">sofiasip</setting>
+      <setting name="protocol">sip</setting>
+      <setting type="b" name="ConnectAutomatically">true</setting>
+    </group>
+    <group name="auth">
+      <setting name="method">password</setting>
+      <setting name="mechanism">password</setting>
+    </group>
+  </template>
+
 </service>
