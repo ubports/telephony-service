@@ -91,6 +91,7 @@ Loader {
                     left: parent.left
                     right: parent.right
                 }
+                onTextChanged: root.changed()
             }
             CheckBox {
                 id: showPasswordCheck

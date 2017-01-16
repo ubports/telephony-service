@@ -1,1 +1,3 @@
-usr/share/accounts/qml-plugins/sip/*
+usr/share/accounts/qml-plugins/telephony-sip/*
+usr/share/accounts/providers/telephony-sip.provider
+usr/share/accounts/services/telephony-sip-im.service

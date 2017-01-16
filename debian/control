@@ -95,7 +95,7 @@ Description: Telephony service components for Ubuntu - QML plugin
 Package: account-plugin-sip-unity8
 Architecture: all
 Pre-Depends: dpkg (>= 1.15.6~)
-Depends: account-plugin-sip
+Depends: mcp-account-manager-uoa-common
 Description: Online account plugin for unity8
  Online account plugin for unity8.
  .
@@ -104,7 +104,7 @@ Description: Online account plugin for unity8
 Package: account-plugin-irc-unity8
 Architecture: all
 Pre-Depends: dpkg (>= 1.15.6~)
-Depends: account-plugin-irc
+Depends: mcp-account-manager-uoa-common
 Description: Online account plugin for unity8
  Online account plugin for unity8.
  .

@@ -29,10 +29,14 @@ NewAccountInterface {
     function extendedSettings(inputFields)
     {
         var settings = {}
-        settings['Service'] = inputFields['server']
-        settings['Nickname'] = inputFields['nickname']
+        settings['param-account'] = inputFields['nickname'] + "@" + inputFields['server']
         if (settings['param-port'] == "")
             settings['param-port'] = "6667"
         return settings
+    }
+
+    function formatDisplayName(inputFields)
+    {
+        return inputFields['nickname'] + "@" + inputFields['server']
     }
 }
