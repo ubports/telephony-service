@@ -43,9 +43,10 @@ public:
                  bool returnToSend = false,
                  bool enableAttachments = true,
                  bool enableRejoin = false,
+                 bool enableTabCompletion = false,
                  QObject *parent = 0)
      : Protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                showOnSelector, showOnlineStatus, backgroundFile, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin, parent) { }
+                showOnSelector, showOnlineStatus, backgroundFile, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin, enableTabCompletion, parent) { }
 };
 
 class ProtocolTest : public QObject
@@ -75,9 +76,10 @@ void ProtocolTest::testBasicInfo()
     bool returnToSend = true;
     bool enableAttachments = false;
     bool enableRejoin = true;
+    bool enableTabCompletion = false;
 
     TestProtocol protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                          showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin, this);
+                          showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin, enableTabCompletion, this);
     QCOMPARE(protocol.name(), name);
     QCOMPARE(protocol.features(), features);
     QCOMPARE(protocol.fallbackProtocol(), fallbackProtocol);
@@ -94,6 +96,7 @@ void ProtocolTest::testBasicInfo()
     QCOMPARE(protocol.returnToSend(), returnToSend);
     QCOMPARE(protocol.enableAttachments(), enableAttachments);
     QCOMPARE(protocol.enableRejoin(), enableRejoin);
+    QCOMPARE(protocol.enableTabCompletion(), enableTabCompletion);
     QCOMPARE(protocol.parent(), this);
 }
 
@@ -122,6 +125,7 @@ void ProtocolTest::testFromFile()
     QCOMPARE(protocol->returnToSend(), false);
     QCOMPARE(protocol->enableAttachments(), false);
     QCOMPARE(protocol->enableRejoin(), true);
+    QCOMPARE(protocol->enableTabCompletion(), true);
 }
 
 QTEST_MAIN(ProtocolTest)

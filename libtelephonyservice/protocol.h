@@ -78,6 +78,9 @@ class Protocol : public QObject
     /// @brief whether this protocol supports rejoin channels manually
     Q_PROPERTY(bool enableRejoin READ enableRejoin CONSTANT)
 
+    /// @brief whether this protocol supports tab completion
+    Q_PROPERTY(bool enableTabCompletion READ enableTabCompletion CONSTANT)
+
 public:
     enum Feature {
         TextChats = 0x1,
@@ -109,6 +112,7 @@ public:
     bool returnToSend() const;
     bool enableAttachments() const;
     bool enableRejoin() const;
+    bool enableTabCompletion() const;
 
     static Protocol *fromFile(const QString &fileName);
     ProtocolStruct dbusType();
@@ -131,6 +135,7 @@ protected:
                       bool returnToSend = false,
                       bool enableAttachments = true,
                       bool enableRejoin = false,
+                      bool enableTabCompletion = false,
                       QObject *parent = 0);
 
 private:
@@ -150,6 +155,7 @@ private:
     bool mReturnToSend;
     bool mEnableAttachments;
     bool mEnableRejoin;
+    bool mEnableTabCompletion;
 };
 
 class Protocols : public QList<Protocol*>

@@ -177,7 +177,7 @@
             <dox:d><![CDATA[
                 Get the list of current available protocols
             ]]></dox:d>
-            <arg name="result" type="a(susussbbssssbbbb)" direction="out"/>
+            <arg name="result" type="a(susussbbssssbbbbb)" direction="out"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ProtocolList"/>
         </method>
         <signal name="CallPropertiesChanged">
@@ -213,7 +213,7 @@
             <dox:d><![CDATA[
                 The protocols files in protocols dir have changed
             ]]></dox:d>
-            <arg name="protocols" type="a(susussbbssssbbbb)"/>
+            <arg name="protocols" type="a(susussbbssssbbbbb)"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ProtocolList"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="ProtocolList"/>
         </signal>
