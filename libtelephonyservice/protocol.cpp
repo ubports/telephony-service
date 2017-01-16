@@ -42,6 +42,7 @@ Protocol::Protocol(const ProtocolStruct & protocol)
     , mReturnToSend(protocol.returnToSend)
     , mEnableAttachments(protocol.enableAttachments)
     , mEnableRejoin(protocol.enableRejoin)
+    , mEnableTabCompletion(protocol.enableTabCompletion)
 {
 }
 
@@ -61,6 +62,7 @@ Protocol::Protocol(const QString &name,
                    bool returnToSend,
                    bool enableAttachments,
                    bool enableRejoin,
+                   bool enableTabCompletion,
                    QObject *parent)
  : QObject(parent)
  , mName(name)
@@ -79,12 +81,13 @@ Protocol::Protocol(const QString &name,
  , mReturnToSend(returnToSend)
  , mEnableAttachments(enableAttachments)
  , mEnableRejoin(enableRejoin)
+ , mEnableTabCompletion(enableTabCompletion)
 {
 }
 
 ProtocolStruct Protocol::dbusType()
 {
-    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend, mEnableAttachments, mEnableRejoin};
+    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend, mEnableAttachments, mEnableRejoin, mEnableTabCompletion};
 }
 
 QString Protocol::name() const
@@ -167,6 +170,11 @@ bool Protocol::enableRejoin() const
     return mEnableRejoin;
 }
 
+bool Protocol::enableTabCompletion() const
+{
+    return mEnableTabCompletion;
+}
+
 Protocol *Protocol::fromFile(const QString &fileName)
 {
     QFileInfo file(fileName);
@@ -208,7 +216,23 @@ Protocol *Protocol::fromFile(const QString &fileName)
     bool returnToSend = settings.value("ReturnToSend").toBool();
     bool enableAttachments = settings.value("EnableAttachments").toBool();
     bool enableRejoin = settings.value("EnableRejoin").toBool();
+    bool enableTabCompletion = settings.value("EnableTabCompletion").toBool();
 
-    return new Protocol(name, features, fallbackProtocol, matchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                        showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin);
+    return new Protocol(name,
+                        features,
+                        fallbackProtocol,
+                        matchRule,
+                        fallbackSourceProperty,
+                        fallbackDestinationProperty,
+                        showOnSelector,
+                        showOnlineStatus,
+                        backgroundImage,
+                        icon,
+                        serviceName,
+                        serviceDisplayName,
+                        joinExistingChannels,
+                        returnToSend,
+                        enableAttachments,
+                        enableRejoin,
+                        enableTabCompletion);
 }

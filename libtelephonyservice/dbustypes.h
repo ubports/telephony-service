@@ -50,6 +50,7 @@ struct ProtocolStruct {
     bool returnToSend;
     bool enableAttachments;
     bool enableRejoin;
+    bool enableTabCompletion;
 };
 
 typedef QList<AttachmentStruct> AttachmentList;

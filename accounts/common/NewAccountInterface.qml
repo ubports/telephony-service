@@ -7,6 +7,7 @@ Item {
 
     readonly property string keyPrefix: "telepathy/"
     readonly property var accountObjectHandle: account ? account.objectHandle : undefined
+    readonly property alias isValid: paramsRepeater.fieldHasValues
 
     property string manager
     property string protocol
@@ -14,6 +15,7 @@ Item {
     property var params
     property var advancedParams
     property bool hasCrendentials: true
+
 
     signal finished
     height: fields.childrenRect.height +
@@ -30,10 +32,18 @@ Item {
                                                     {"objectHandle": service})
     }
 
+    // virual
     function extendedSettings(inputFields)
     {
         return {}
         //Helper class to be extended by derived class
+    }
+
+    // virtual
+    function formatDisplayName(inputFields)
+    {
+        return inputFields['account']
+        // Helper function that allow the derived class to format a different display name
     }
 
     function saveServiceSettings(serviceIM, creds) {
@@ -82,6 +92,8 @@ Item {
         for (var key in xSettings) {
             settingsIM[root.keyPrefix + key] = xSettings[key]
         }
+
+        account.updateDisplayName(formatDisplayName(inputFields))
 
         serviceIM.updateSettings(settingsIM)
         //serviceIM.credentials = creds
@@ -174,6 +186,22 @@ Item {
         Repeater {
             id: paramsRepeater
 
+            property bool fieldHasValues: false
+
+            function checkFieldsHasValues()
+            {
+                var hasEmptyField = false
+                for (var i = 0; i < paramsRepeater.count; i++) {
+
+                    var child = paramsRepeater.itemAt(i)
+                    if (child && child.isEmpty) {
+                        hasEmptyField = true
+                        break
+                    }
+                }
+                fieldHasValues = !hasEmptyField
+            }
+
             width: parent.width
             model: root.params
             DynamicField {
@@ -183,6 +211,7 @@ Item {
                     right: parent.right
                     margins: units.gu(4)
                 }
+                onValueChanged: paramsRepeater.checkFieldsHasValues()
             }
         }
 

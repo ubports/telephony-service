@@ -8,3 +8,4 @@ JoinExistingChannels=0
 ReturnToSend=0
 EnableAttachments=1
 EnableRejoin=0
+EnableTabCompletion=0
