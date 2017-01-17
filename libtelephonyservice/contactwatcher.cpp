@@ -216,8 +216,6 @@ void ContactWatcher::setIdentifier(const QString &identifier)
     const bool isInteractive = !identifier.isEmpty() && !isPrivate && !isUnknown;
 
     mIdentifier = identifier;
-    Q_EMIT identifierChanged();
-
     if (isInteractive != mInteractive) {
         mInteractive = isInteractive;
         Q_EMIT interactiveChanged();
@@ -228,6 +226,8 @@ void ContactWatcher::setIdentifier(const QString &identifier)
     if (mIdentifier.startsWith("sip:")) {
         mIdentifier.remove("sip:").remove(QRegularExpression("@.*$"));
     }
+    Q_EMIT identifierChanged();
+
 
     if (mIdentifier.isEmpty() || isPrivate || isUnknown) {
         updateAlias();
