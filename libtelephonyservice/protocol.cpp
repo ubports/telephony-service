@@ -43,6 +43,7 @@ Protocol::Protocol(const ProtocolStruct & protocol)
     , mEnableAttachments(protocol.enableAttachments)
     , mEnableRejoin(protocol.enableRejoin)
     , mEnableTabCompletion(protocol.enableTabCompletion)
+    , mLeaveRoomsOnClose(protocol.leaveRoomsOnClose)
 {
 }
 
@@ -63,6 +64,7 @@ Protocol::Protocol(const QString &name,
                    bool enableAttachments,
                    bool enableRejoin,
                    bool enableTabCompletion,
+                   bool leaveRoomsOnClose,
                    QObject *parent)
  : QObject(parent)
  , mName(name)
@@ -82,12 +84,13 @@ Protocol::Protocol(const QString &name,
  , mEnableAttachments(enableAttachments)
  , mEnableRejoin(enableRejoin)
  , mEnableTabCompletion(enableTabCompletion)
+ , mLeaveRoomsOnClose(leaveRoomsOnClose)
 {
 }
 
 ProtocolStruct Protocol::dbusType()
 {
-    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend, mEnableAttachments, mEnableRejoin, mEnableTabCompletion};
+    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend, mEnableAttachments, mEnableRejoin, mEnableTabCompletion, mLeaveRoomsOnClose};
 }
 
 QString Protocol::name() const
@@ -175,6 +178,11 @@ bool Protocol::enableTabCompletion() const
     return mEnableTabCompletion;
 }
 
+bool Protocol::leaveRoomsOnClose() const
+{
+    return mLeaveRoomsOnClose;
+}
+
 Protocol *Protocol::fromFile(const QString &fileName)
 {
     QFileInfo file(fileName);
@@ -217,6 +225,7 @@ Protocol *Protocol::fromFile(const QString &fileName)
     bool enableAttachments = settings.value("EnableAttachments").toBool();
     bool enableRejoin = settings.value("EnableRejoin").toBool();
     bool enableTabCompletion = settings.value("EnableTabCompletion").toBool();
+    bool leaveRoomsOnClose = settings.value("LeaveRoomsOnClose").toBool();
 
     return new Protocol(name,
                         features,
@@ -234,5 +243,6 @@ Protocol *Protocol::fromFile(const QString &fileName)
                         returnToSend,
                         enableAttachments,
                         enableRejoin,
-                        enableTabCompletion);
+                        enableTabCompletion,
+                        leaveRoomsOnClose);
 }

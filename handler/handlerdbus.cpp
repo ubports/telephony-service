@@ -125,6 +125,11 @@ void HandlerDBus::RemoveParticipants(const QString &objectPath, const QStringLis
     TextHandler::instance()->removeParticipants(objectPath, participants, message);
 }
 
+void HandlerDBus::LeaveRooms(const QString &accountId, const QString &message)
+{
+    return TextHandler::instance()->leaveRooms(accountId, message);
+}
+
 bool HandlerDBus::LeaveChat(const QString &objectPath, const QString &message)
 {
     return TextHandler::instance()->leaveChat(objectPath, message);
