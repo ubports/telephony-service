@@ -187,6 +187,38 @@
             <arg name="accountId" type="s" direction="in"/>
             <arg name="message" type="s" direction="in"/>
         </method>
+        <method name="GetAllAccountsProperties">
+            <dox:d><![CDATA[
+                Get the properties of all available accounts
+            ]]></dox:d>
+            <arg name="result" type="a{sa{sv}}" direction="out"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="AllAccountsProperties"/>
+        </method>
+        <method name="GetAccountProperties">
+            <dox:d><![CDATA[
+                Get the properties of the given accountId
+            ]]></dox:d>
+            <arg name="accoundId" type="s" direction="in"/>
+            <arg name="result" type="a{sv}" direction="out"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+        </method>
+        <method name="SetAccountProperties">
+            <dox:d><![CDATA[
+                Set the properties of the given accountId
+            ]]></dox:d>
+            <arg name="accoundId" type="s" direction="in"/>
+            <arg name="properties" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+        </method>
+        <signal name="AccountPropertiesChanged">
+            <dox:d><![CDATA[
+                The properties of a given account changed.
+            ]]></dox:d>
+            <arg name="accountId" type="s"/>
+            <arg name="properties" type="a{sv}"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+        </signal>
         <signal name="CallPropertiesChanged">
             <dox:d><![CDATA[
                 The properties of a given call changed.

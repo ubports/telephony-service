@@ -1,5 +1,6 @@
 
 set(qt_SRCS
+    accountproperties.cpp
     callagent.cpp
     callhandler.cpp
     chatstartingjob.cpp

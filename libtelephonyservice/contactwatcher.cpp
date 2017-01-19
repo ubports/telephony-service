@@ -216,12 +216,18 @@ void ContactWatcher::setIdentifier(const QString &identifier)
     const bool isInteractive = !identifier.isEmpty() && !isPrivate && !isUnknown;
 
     mIdentifier = identifier;
-    Q_EMIT identifierChanged();
-
     if (isInteractive != mInteractive) {
         mInteractive = isInteractive;
         Q_EMIT interactiveChanged();
     }
+
+    // FIXME: this is a hack, we need to find a better way of matching contacts for accounts
+    // that don't have addressable fields
+    if (mIdentifier.startsWith("sip:")) {
+        mIdentifier.remove("sip:").remove(QRegularExpression("@.*$"));
+    }
+    Q_EMIT identifierChanged();
+
 
     if (mIdentifier.isEmpty() || isPrivate || isUnknown) {
         updateAlias();
