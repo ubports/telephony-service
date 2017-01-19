@@ -57,6 +57,7 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(bool flightMode READ flightMode WRITE setFlightMode NOTIFY flightModeChanged)
     Q_PROPERTY(bool mmsEnabled READ mmsEnabled WRITE setMmsEnabled NOTIFY mmsEnabledChanged)
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
+    Q_PROPERTY(bool dialpadSoundsEnabled READ dialpadSoundsEnabled WRITE setDialpadSoundsEnabled NOTIFY dialpadSoundsEnabledChanged)
     Q_PROPERTY(QVariantMap simNames READ simNames NOTIFY simNamesChanged)
     Q_ENUMS(AccountType)
     Q_ENUMS(ChatType)
@@ -114,6 +115,8 @@ public:
     bool ready() const;
     QStringList accountIds();
     bool emergencyCallsAvailable() const;
+    bool dialpadSoundsEnabled() const;
+    void setDialpadSoundsEnabled(bool enabled);
     Q_INVOKABLE void unlockSimCards() const;
 
     bool registerClient(Tp::AbstractClient *client, QString name);
@@ -137,6 +140,7 @@ Q_SIGNALS:
     void emergencyCallsAvailableChanged();
     void mmsEnabledChanged();
     void simNamesChanged();
+    void dialpadSoundsEnabledChanged();
 
 public Q_SLOTS:
     Q_INVOKABLE void registerChannelObserver(const QString &observerName = QString::null);
