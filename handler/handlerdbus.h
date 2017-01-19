@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2016 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Ugo Riboni <ugo.riboni@canonical.com>
@@ -29,6 +29,8 @@
 #include "chatmanager.h"
 #include "dbustypes.h"
 
+typedef QMap<QString,QVariantMap> AllAccountsProperties;
+
 /**
  * DBus interface for the phone handler
  */
@@ -52,6 +54,9 @@ public:
     void setCallIndicatorVisible(bool visible);
     // configuration related
     ProtocolList GetProtocols();
+    AllAccountsProperties GetAllAccountsProperties();
+    QVariantMap GetAccountProperties(const QString &accountId);
+    void SetAccountProperties(const QString &accountId, const QVariantMap &properties);
 
     QString registerObject(QObject *object, const QString &path);
     void unregisterObject(const QString &path);
@@ -86,9 +91,12 @@ public Q_SLOTS:
     Q_NOREPLY void MergeCall(const QString &conferenceObjectPath, const QString &callObjectPath);
     Q_NOREPLY void SplitCall(const QString &objectPath);
 
+
+
 Q_SIGNALS:
     void onMessageSent(const QString &number, const QString &message);
     void CallPropertiesChanged(const QString &objectPath, const QVariantMap &properties);
+    void AccountPropertiesChanged(const QString &accountId, const QVariantMap &properties);
     void CallIndicatorVisibleChanged(bool visible);
     void ConferenceCallRequestFinished(bool succeeded);
     void CallHoldingFailed(const QString &objectPath);
