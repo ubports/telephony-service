@@ -21,7 +21,7 @@ QMap<QString, QVariantMap> AccountProperties::allProperties()
 QVariantMap AccountProperties::accountProperties(const QString &accountId)
 {
     QVariantMap props;
-    mSettings->beginGroup(accountId);
+    mSettings->beginGroup(formatAccountId(accountId));
     for (auto key : mSettings->allKeys()) {
         props[key] = mSettings->value(key);
     }
@@ -31,10 +31,16 @@ QVariantMap AccountProperties::accountProperties(const QString &accountId)
 
 void AccountProperties::setAccountProperties(const QString &accountId, const QVariantMap &properties)
 {
-    mSettings->beginGroup(accountId);
+    mSettings->beginGroup(formatAccountId(accountId));
     for (auto key : properties.keys()) {
         mSettings->setValue(key, properties[key]);
     }
+    mSettings->endGroup();
+}
+
+QString AccountProperties::formatAccountId(const QString &accountId)
+{
+    return QUrl::toPercentEncoding(accountId);
 }
 
 AccountProperties::AccountProperties(QObject *parent)

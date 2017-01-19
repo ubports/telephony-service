@@ -245,22 +245,16 @@ void AccountEntry::initialize()
     QMetaObject::invokeMethod(this, "onConnectionChanged", Qt::QueuedConnection, Q_ARG(Tp::ConnectionPtr, mAccount->connection()));
     QMetaObject::invokeMethod(this, "accountReady", Qt::QueuedConnection);
 
-    // asynchronously fetch the properties for this account
-    QDBusPendingCall pendingCall = TelepathyHelper::instance()->handlerInterface()->asyncCall("GetAccountProperties", mAccount->uniqueIdentifier());
-    QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(pendingCall, this);
-    connect(watcher, &QDBusPendingCallWatcher::finished, [this, &pendingCall]() {
-        if (pendingCall.isError()) {
-            return;
-        }
+    // FIXME: change it to be asynchronous
+    if (QCoreApplication::applicationName() != "telephony-service-handler") {
+        QDBusReply<QVariantMap> reply = TelepathyHelper::instance()->handlerInterface()->call("GetAccountProperties", mAccount->uniqueIdentifier());
 
-        QDBusReply<QVariantMap> reply = pendingCall.reply();
         if (!reply.isValid()) {
             return;
         }
         mAccountProperties = reply;
         Q_EMIT accountPropertiesChanged();
-    });
-
+    }
     mReady = true;
 }
 
