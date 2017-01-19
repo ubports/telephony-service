@@ -81,6 +81,9 @@ class Protocol : public QObject
     /// @brief whether this protocol supports tab completion
     Q_PROPERTY(bool enableTabCompletion READ enableTabCompletion CONSTANT)
 
+    /// @brief whether the app needs to request leave all room channels when the app closes
+    Q_PROPERTY(bool leaveRoomsOnClose READ leaveRoomsOnClose CONSTANT)
+
 public:
     enum Feature {
         TextChats = 0x1,
@@ -113,6 +116,7 @@ public:
     bool enableAttachments() const;
     bool enableRejoin() const;
     bool enableTabCompletion() const;
+    bool leaveRoomsOnClose() const;
 
     static Protocol *fromFile(const QString &fileName);
     ProtocolStruct dbusType();
@@ -136,6 +140,7 @@ protected:
                       bool enableAttachments = true,
                       bool enableRejoin = false,
                       bool enableTabCompletion = false,
+                      bool leaveRoomsOnClose = false,
                       QObject *parent = 0);
 
 private:
@@ -156,6 +161,7 @@ private:
     bool mEnableAttachments;
     bool mEnableRejoin;
     bool mEnableTabCompletion;
+    bool mLeaveRoomsOnClose;
 };
 
 class Protocols : public QList<Protocol*>
