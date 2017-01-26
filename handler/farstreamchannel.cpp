@@ -272,10 +272,6 @@ bool FarstreamChannel::onStartSending(TfContent *content, FarstreamChannel *self
     g_object_unref(sinkPad);
     g_object_unref(sourcePad);
 
-    qDebug() << "BLABLA generating dot file";
-    GST_DEBUG_BIN_TO_DOT_FILE (GST_BIN (self->mPipeline),
-         GST_DEBUG_GRAPH_SHOW_ALL, "telephony-service-gst");
-    qDebug() << "BLABLA done!";
     return true;
 }
 

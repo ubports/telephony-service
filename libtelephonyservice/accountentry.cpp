@@ -152,6 +152,18 @@ AccountEntry::Capabilities AccountEntry::capabilities() const
     return capabilities;
 }
 
+QVariantMap AccountEntry::accountProperties() const
+{
+    return mAccountProperties;
+}
+
+void AccountEntry::setAccountProperties(const QVariantMap &properties)
+{
+    TelepathyHelper::instance()->handlerInterface()->asyncCall("SetAccountProperties", mAccount->uniqueIdentifier(), properties);
+    mAccountProperties = properties;
+    Q_EMIT accountPropertiesChanged();
+}
+
 Tp::AccountPtr AccountEntry::account() const
 {
     return mAccount;
@@ -232,6 +244,17 @@ void AccountEntry::initialize()
     // we have to postpone this call to give telepathyhelper time to connect the signals
     QMetaObject::invokeMethod(this, "onConnectionChanged", Qt::QueuedConnection, Q_ARG(Tp::ConnectionPtr, mAccount->connection()));
     QMetaObject::invokeMethod(this, "accountReady", Qt::QueuedConnection);
+
+    // FIXME: change it to be asynchronous
+    if (QCoreApplication::applicationName() != "telephony-service-handler") {
+        QDBusReply<QVariantMap> reply = TelepathyHelper::instance()->handlerInterface()->call("GetAccountProperties", mAccount->uniqueIdentifier());
+
+        if (!reply.isValid()) {
+            return;
+        }
+        mAccountProperties = reply;
+        Q_EMIT accountPropertiesChanged();
+    }
     mReady = true;
 }
 

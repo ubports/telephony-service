@@ -146,7 +146,6 @@ void Handler::onTextChannelReady(Tp::PendingOperation *op)
 
 void Handler::onCallChannelReady(Tp::PendingOperation *op)
 {
-    qDebug() << "BLABLA" << __PRETTY_FUNCTION__;
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady*>(op);
 
     if (!pr) {
@@ -170,15 +169,12 @@ void Handler::onCallChannelReady(Tp::PendingOperation *op)
     // through any approver. For phone calls, this would mean calls getting auto-accepted which is not desirable
     // so we return an error here
     bool incoming = !callChannel->isRequested();
-    qDebug() << "BLABLA Is requested:" << !incoming;
     AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(callChannel->connection());
-    qDebug() << "BLABLA accountEntry:" << accountEntry;
     if (accountEntry &&
         !callChannel->initiatorContact().isNull() &&
         callChannel->initiatorContact() != accountEntry->account()->connection()->selfContact()) {
         incoming = true;
     }
-    qDebug() << "BLABLA incoming:" << incoming;
     if (incoming && callChannel->callState() != Tp::CallStateAccepted && callChannel->callState() != Tp::CallStateActive) {
         qWarning() << "Available channel was not approved by telephony-service-approver, ignoring it.";
         if (context) {

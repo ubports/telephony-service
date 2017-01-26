@@ -304,6 +304,16 @@ void GreeterContacts::setSimNames(const QVariantMap &simNames)
     iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "SimNames", QVariant::fromValue(QDBusVariant(QVariant::fromValue(newSimNames))));
 }
 
+void GreeterContacts::setDialpadSoundsEnabled(bool enabled)
+{
+    QString uid = QString::number(getuid());
+    QDBusInterface iface("org.freedesktop.Accounts",
+                         "/org/freedesktop/Accounts/User" + uid,
+                         "org.freedesktop.DBus.Properties",
+                         QDBusConnection::AS_BUSNAME());
+    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Sound", "DialpadSoundsEnabled", QVariant::fromValue(QDBusVariant(enabled)));
+}
+
 QVariant GreeterContacts::getUserValue(const QString &interface, const QString &propName)
 {
     QDBusInterface iface("org.freedesktop.Accounts",
@@ -351,6 +361,12 @@ void GreeterContacts::accountsPropertiesChanged(const QString &interface,
         checkUpdatedValue(changed, invalidated, "IncomingMessageVibrate", mIncomingMessageVibrate);
         checkUpdatedValue(changed, invalidated, "IncomingCallVibrate", mIncomingCallVibrate);
         checkUpdatedValue(changed, invalidated, "DialpadSoundsEnabled", mDialpadSoundsEnabled);
+        Q_FOREACH(const QString &key, changed.keys()) {
+            Q_EMIT soundSettingsChanged(key);
+        }
+        Q_FOREACH(const QString &key, invalidated) {
+            Q_EMIT soundSettingsChanged(key);
+        }
     } else if (interface == "com.ubuntu.touch.AccountsService.Phone" &&
                message.path() == mActiveUser) {
         checkUpdatedValue(changed, invalidated, "DefaultSimForCalls", mDefaultSimForCalls);

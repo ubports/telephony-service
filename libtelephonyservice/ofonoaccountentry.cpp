@@ -46,6 +46,11 @@ USSDManager *OfonoAccountEntry::ussdManager() const
     return mUssdManager;
 }
 
+QString OfonoAccountEntry::modemName()
+{
+    return mAccount->parameters().value("modem-objpath").toString();
+}
+
 QStringList OfonoAccountEntry::emergencyNumbers() const
 {
     return mEmergencyNumbers;

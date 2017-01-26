@@ -356,6 +356,7 @@ void CallHandler::onCallChannelInvalidated()
         agent->deleteLater();
     }
 
+    ToneGenerator::instance()->stopTone();
     if (mCallChannels.isEmpty() && !mHangupRequested) {
         ToneGenerator::instance()->playCallEndedTone();
     }
@@ -388,6 +389,9 @@ void CallHandler::onCallStateChanged(Tp::CallState state)
         }
         channel->setProperty("activeTimestamp", QDateTime::currentDateTimeUtc());
         Q_EMIT callPropertiesChanged(channel->objectPath(), getCallProperties(channel->objectPath()));
+        break;
+    case Tp::CallStateEnded:
+        ToneGenerator::instance()->stopTone();
         break;
     }
 }
