@@ -316,7 +316,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 
     mChannels.remove(pr);
 
-    QString id = ContactWatcher::normalizeIdentifier(contact->id());
+    QString id = ContactWatcher::normalizeIdentifier(contact->id(), true);
 
     // and now set up the contact matching for either greeter mode or regular mode
     if (GreeterContacts::isGreeterMode()) {
@@ -353,14 +353,10 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
             showSnapDecision(dispatchOp, channel, contact);
         });
 
-        // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
-        if (account->type() == AccountEntry::PhoneAccount) {
-            request->setManager(ContactUtils::sharedManager());
-            request->start();
-        } else {
-            // just emit the signal to pretend we did a contact search
-            Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
-        }
+        // FIXME: For accounts not based on phone numbers, check what to do
+        request->setManager(ContactUtils::sharedManager());
+        request->start();
+
     }
 }
 
@@ -442,7 +438,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     data->dispatchOp = dispatchOperation;
     data->channel = channel;
     bool unknownNumber = false;
-    QString id = ContactWatcher::normalizeIdentifier(telepathyContact->id());
+    QString id = ContactWatcher::normalizeIdentifier(telepathyContact->id(), true);
 
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
     if (!account) {
