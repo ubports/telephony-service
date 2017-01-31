@@ -356,7 +356,6 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
         // FIXME: For accounts not based on phone numbers, check what to do
         request->setManager(ContactUtils::sharedManager());
         request->start();
-
     }
 }
 
