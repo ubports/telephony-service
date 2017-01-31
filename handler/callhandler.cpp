@@ -397,6 +397,7 @@ void CallHandler::onCallStateChanged(Tp::CallState state)
         break;
     case Tp::CallStateEnded:
         ToneGenerator::instance()->stopTone();
+        channel->requestClose();
         break;
     }
 }
