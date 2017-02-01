@@ -28,18 +28,15 @@ set(library_SRCS
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
     ${NOTIFY_INCLUDE_DIRS}
+    ${URL_DISPATCHER_INCLUDE_DIRS}
     ${LibPhoneNumber_INCLUDE_DIRS}
     )
-
-if (USE_UBUNTU_PLATFORM_API)
-    set(UBUNTU_APP_LIB "-lubuntu_application_api")
-endif (USE_UBUNTU_PLATFORM_API)
 
 add_library(telephonyservice STATIC ${library_SRCS} ${library_HDRS})
 set_target_properties(telephonyservice PROPERTIES COMPILE_DEFINITIONS AS_BUSNAME=systemBus)
 target_link_libraries(telephonyservice
                       ${TP_QT5_LIBRARIES}
-                      ${UBUNTU_APP_LIB}
+                      ${URL_DISPATCHER_LIBRARIES}
                       ${NOTIFY_LIBRARIES}
                       ${LibPhoneNumber_LIBRARIES})
 
