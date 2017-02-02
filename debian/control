@@ -15,7 +15,7 @@ Build-Depends: cmake,
                libnotify-dev,
                libphonenumber-dev,
                libtelepathy-qt5-dev,
-               libubuntu-application-api-dev [armhf],
+               libubuntu-application-api-dev [i386 amd64 arm64 armhf],
                libprotobuf-dev,
                pkg-config,
                python:any,
@@ -91,4 +91,22 @@ Description: Telephony service components for Ubuntu - QML plugin
  .
  This package contains the QML plugin providing the features from the telephony
  PhoneNumber to applications.
+
+Package: account-plugin-sip-unity8
+Architecture: all
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: mcp-account-manager-uoa-common
+Description: Online account plugin for unity8
+ Online account plugin for unity8.
+ .
+ This package contains the online account plugin providing sip account.
+
+Package: account-plugin-irc-unity8
+Architecture: all
+Pre-Depends: dpkg (>= 1.15.6~)
+Depends: mcp-account-manager-uoa-common
+Description: Online account plugin for unity8
+ Online account plugin for unity8.
+ .
+ This package contains the online account plugin providing irc account.
 

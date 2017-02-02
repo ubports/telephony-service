@@ -15,13 +15,6 @@ set(CMAKE_AUTOMOC ON)
 # just to make debug easier, print the system processor
 message(STATUS "System processor: ${CMAKE_SYSTEM_PROCESSOR}")
 
-# Check if should build using ubuntu platform api
-check_include_file_cxx("ubuntu/application/init.h" USE_UBUNTU_PLATFORM_API)
-
-if (USE_UBUNTU_PLATFORM_API)
-    add_definitions(-DUSE_UBUNTU_PLATFORM_API)
-endif (USE_UBUNTU_PLATFORM_API)
-
 set(TELEPHONY_SERVICE_DIR ${CMAKE_INSTALL_DATADIR}/telephony-service)
 
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
@@ -35,10 +28,8 @@ add_custom_target(uninstall "${CMAKE_COMMAND}"
 
 find_package(Qt5Contacts)
 find_package(Qt5DBus)
-#find_package(Qt5Gui)
 find_package(Qt5Multimedia)
 find_package(Qt5Qml)
-#find_package(Qt5Quick)
 find_package(Qt5Test)
 find_package(Qt5Feedback)
 find_package(Qt5Network)
@@ -48,7 +39,7 @@ include(qt5)
 
 option(SKIP_QML_TESTS "Skip QML tests" OFF)
 
-if(NOT CMAKE_CROSSCOMPILING)
+if(CMAKE_CROSSCOMPILING)
     find_program(QMAKE_EXECUTABLE qmake)
     if(QMAKE_EXECUTABLE STREQUAL "QMAKE_EXECUTABLE-NOTFOUND")
         message(FATAL_ERROR "qmake not found")
@@ -71,12 +62,24 @@ endif()
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(TP_QT5 REQUIRED TelepathyQt5)
+pkg_check_modules(TP_QT5_FS REQUIRED TelepathyQt5Farstream)
 pkg_check_modules(NOTIFY REQUIRED libnotify)
 pkg_check_modules(MESSAGING_MENU REQUIRED messaging-menu)
 pkg_check_modules(UserMetrics REQUIRED libusermetricsinput-1)
 pkg_check_modules(HISTORY REQUIRED history-service)
+pkg_check_modules(TPFS REQUIRED telepathy-farstream)
+pkg_check_modules(GST REQUIRED gstreamer-1.0)
+pkg_check_modules(FS REQUIRED farstream-0.2)
+pkg_check_modules(UBUNTU_PLATFORM_API ubuntu-platform-api)
 
 add_definitions(-DQT_NO_KEYWORDS)
+
+# Check if should build using ubuntu platform api
+if(UBUNTU_PLATFORM_API_FOUND)
+    message(STATUS "Using ubuntu platform API")
+    add_definitions(-DUSE_UBUNTU_PLATFORM_API)
+endif(UBUNTU_PLATFORM_API_FOUND)
+
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -110,6 +113,7 @@ add_subdirectory(icons)
 add_subdirectory(po)
 add_subdirectory(tests)
 add_subdirectory(protocols)
+add_subdirectory(accounts)
 
 include(EnableCoverageReport)
 #####################################################################

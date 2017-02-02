@@ -309,3 +309,9 @@ void ChatManager::onAckTimerTriggered()
 
     mMessagesToAck.clear();
 }
+
+void ChatManager::leaveRooms(const QString &accountId, const QString &message)
+{
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->asyncCall("LeaveRooms", accountId, message);
+}

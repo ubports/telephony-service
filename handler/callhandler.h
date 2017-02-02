@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2014 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -28,6 +28,7 @@
 #include <TelepathyQt/CallChannel>
 
 class TelepathyHelper;
+class CallAgent;
 
 class CallHandler : public QObject
 {
@@ -61,6 +62,11 @@ protected:
     Tp::CallChannelPtr existingCall(const QString &targetId);
     Tp::CallChannelPtr callFromObjectPath(const QString &objectPath);
 
+    void playNextDTMFTone(Tp::CallChannelPtr channel);
+    void triggerNextDTMFTone(Tp::CallChannelPtr channel);
+    static int toDTMFEvent(const QString &key);
+    bool isIncoming(const Tp::CallChannelPtr &channel) const;
+
 protected Q_SLOTS:
     void onContactsAvailable(Tp::PendingOperation *op);
     void onCallHangupFinished(Tp::PendingOperation *op);
@@ -72,6 +78,7 @@ private:
 
     QMap<QString, Tp::ContactPtr> mContacts;
     QList<Tp::CallChannelPtr> mCallChannels;
+    QMap<Tp::CallChannel*,CallAgent*> mCallAgents;
     QMap<Tp::PendingOperation*,Tp::CallChannelPtr> mClosingChannels;
     bool mHangupRequested;
 };
