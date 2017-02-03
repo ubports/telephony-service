@@ -114,13 +114,6 @@
             <arg name="objectPath" type="s" direction="in"/>
             <arg name="muted" type="b" direction="in"/>
         </method>
-        <method name="SetActiveAudioOutput">
-            <dox:d><![CDATA[
-                Change the current active audio output
-            ]]></dox:d>
-            <arg name="objectPath" type="s" direction="in"/>
-            <arg name="id" type="s" direction="in"/>
-        </method>
         <method name="SendDTMF">
             <dox:d><![CDATA[
                 Send a DTMF to the given channel
@@ -255,6 +248,29 @@
             <arg name="protocols" type="a(susussbbssssbbbbbb)"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ProtocolList"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="ProtocolList"/>
+        </signal>
+        <annotation name="org.freedesktop.DBus.Property.EmitsChangedSignal" value="true"/>
+        <property name="ActiveAudioOutput" type="s" access="readwrite"/>
+        <signal name="ActiveAudioOutputChanged">
+            <dox:d><![CDATA[
+                The active audio output has changed
+            ]]></dox:d>
+            <arg name="id" type="s"/>
+        </signal>
+        <method name="AudioOutputs">
+            <dox:d><![CDATA[
+            ]]></dox:d>
+            <arg name="outputs" type="a(sss)" direction="out"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="AudioOutputDBusList"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="AudioOutputDBusList"/>
+        </method>
+        <signal name="AudioOutputsChanged">
+            <dox:d><![CDATA[
+                The available audio outputs have changed
+            ]]></dox:d>
+            <arg name="outputs" type="a(sss)"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="AudioOutputDBusList"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="AudioOutputDBusList"/>
         </signal>
     </interface>
 </node>

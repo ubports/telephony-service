@@ -23,6 +23,7 @@
 #define AUDIOOUTPUT_H
 
 #include <QObject>
+#include <QDBusArgument>
 
 struct AudioOutputDBus {
     QString id;
@@ -52,5 +53,8 @@ private:
     QString mName;
     QString mType;
 };
+
+QDBusArgument &operator<<(QDBusArgument &argument, const AudioOutputDBus &output);
+const QDBusArgument &operator>>(const QDBusArgument &argument, AudioOutputDBus &output);
 
 #endif // AUDIOOUTPUT_H

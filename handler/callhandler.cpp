@@ -175,14 +175,6 @@ void CallHandler::setMuted(const QString &objectPath, bool muted)
     }
 }
 
-void CallHandler::setActiveAudioOutput(const QString &objectPath, const QString &id)
-{
-    Tp::CallChannelPtr channel = callFromObjectPath(objectPath);
-
-    QDBusInterface audioOutputsInterface(channel->busName(), channel->objectPath(), CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE);
-    audioOutputsInterface.call("SetActiveAudioOutput", id);
-}
-
 void CallHandler::sendDTMF(const QString &objectPath, const QString &key)
 {
     /*
@@ -280,9 +272,6 @@ void CallHandler::splitCall(const QString &objectPath)
 void CallHandler::onCallChannelAvailable(Tp::CallChannelPtr channel)
 {
     QDBusInterface callChannelIface(channel->busName(), channel->objectPath(), DBUS_PROPERTIES_IFACE);
-    QDBusMessage reply = callChannelIface.call("GetAll", CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE);
-    QVariantList args = reply.arguments();
-    QMap<QString, QVariant> map = qdbus_cast<QMap<QString, QVariant> >(args[0]);
     channel->setProperty("timestamp", QDateTime::currentDateTimeUtc());
 
     if (channel->callState() == Tp::CallStateActive) {

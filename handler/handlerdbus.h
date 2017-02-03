@@ -28,6 +28,7 @@
 #include <QtDBus/QDBusContext>
 #include "chatmanager.h"
 #include "dbustypes.h"
+#include "audiooutput.h"
 
 typedef QMap<QString,QVariantMap> AllAccountsProperties;
 
@@ -41,6 +42,11 @@ class HandlerDBus : public QObject, protected QDBusContext
                READ callIndicatorVisible
                WRITE setCallIndicatorVisible
                NOTIFY CallIndicatorVisibleChanged)
+
+    Q_PROPERTY(QString ActiveAudioOutput
+               READ activeAudioOutput
+               WRITE setActiveAudioOutput
+               NOTIFY ActiveAudioOutputChanged)
 
 public:
     HandlerDBus(QObject* parent=0);
@@ -62,6 +68,8 @@ public:
     void unregisterObject(const QString &path);
 
     static HandlerDBus *instance();
+    QString activeAudioOutput() const;
+    void setActiveAudioOutput(const QString &id);
 
 public Q_SLOTS:
     bool connectToBus();
@@ -83,13 +91,13 @@ public Q_SLOTS:
     Q_NOREPLY void HangUpCall(const QString &objectPath);
     Q_NOREPLY void SetHold(const QString &objectPath, bool hold);
     Q_NOREPLY void SetMuted(const QString &objectPath, bool muted);
-    Q_NOREPLY void SetActiveAudioOutput(const QString &objectPath, const QString &id);
     Q_NOREPLY void SendDTMF(const QString &objectPath, const QString &key);
 
     // conference call related
     Q_NOREPLY void CreateConferenceCall(const QStringList &objectPaths);
     Q_NOREPLY void MergeCall(const QString &conferenceObjectPath, const QString &callObjectPath);
     Q_NOREPLY void SplitCall(const QString &objectPath);
+    AudioOutputDBusList AudioOutputs() const;
 
 
 
@@ -101,6 +109,8 @@ Q_SIGNALS:
     void ConferenceCallRequestFinished(bool succeeded);
     void CallHoldingFailed(const QString &objectPath);
     void ProtocolsChanged(const ProtocolList &protocols);
+    void ActiveAudioOutputChanged(const QString &id);
+    void AudioOutputsChanged(const AudioOutputDBusList &audioOutputs);
 
 private:
     bool mCallIndicatorVisible;

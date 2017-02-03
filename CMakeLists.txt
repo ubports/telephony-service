@@ -71,6 +71,8 @@ pkg_check_modules(TPFS REQUIRED telepathy-farstream)
 pkg_check_modules(GST REQUIRED gstreamer-1.0)
 pkg_check_modules(FS REQUIRED farstream-0.2)
 pkg_check_modules(UBUNTU_PLATFORM_API ubuntu-platform-api)
+pkg_check_modules(GSETTINGS_QT REQUIRED gsettings-qt)
+pkg_check_modules(PULSEAUDIO libpulse)
 
 add_definitions(-DQT_NO_KEYWORDS)
 
