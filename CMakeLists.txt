@@ -33,6 +33,7 @@ find_package(Qt5Qml)
 find_package(Qt5Test)
 find_package(Qt5Feedback)
 find_package(Qt5Network)
+find_package(Qt5Gui)
 find_package(LibPhoneNumber REQUIRED)
 
 include(qt5)
@@ -70,16 +71,8 @@ pkg_check_modules(HISTORY REQUIRED history-service)
 pkg_check_modules(TPFS REQUIRED telepathy-farstream)
 pkg_check_modules(GST REQUIRED gstreamer-1.0)
 pkg_check_modules(FS REQUIRED farstream-0.2)
-pkg_check_modules(UBUNTU_PLATFORM_API ubuntu-platform-api)
 
 add_definitions(-DQT_NO_KEYWORDS)
-
-# Check if should build using ubuntu platform api
-if(UBUNTU_PLATFORM_API_FOUND)
-    message(STATUS "Using ubuntu platform API")
-    add_definitions(-DUSE_UBUNTU_PLATFORM_API)
-endif(UBUNTU_PLATFORM_API_FOUND)
-
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
