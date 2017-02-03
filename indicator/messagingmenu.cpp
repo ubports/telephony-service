@@ -244,6 +244,8 @@ void MessagingMenu::addMessage(NotificationData notificationData)
             file = g_file_new_for_uri(avatar.toString().toUtf8().data());
             icon = g_file_icon_new(file);
         }
+
+        qDebug() << "notify message received:" << notificationData.encodedEventId.toUtf8();
         MessagingMenuMessage *message = messaging_menu_message_new(notificationData.encodedEventId.toUtf8().data(),
                                                                    icon,
                                                                    displayLabel.toUtf8().data(),
