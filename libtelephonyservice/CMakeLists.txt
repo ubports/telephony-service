@@ -38,6 +38,6 @@ target_link_libraries(telephonyservice
                       ${NOTIFY_LIBRARIES}
                       ${LibPhoneNumber_LIBRARIES})
 
-qt5_use_modules(telephonyservice Contacts Core DBus Feedback Multimedia Qml Quick QtGui)
+qt5_use_modules(telephonyservice Contacts Core DBus Feedback Multimedia Qml Quick Gui)
 
 enable_coverage(telephonyservice)
