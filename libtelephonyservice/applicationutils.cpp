@@ -56,9 +56,12 @@ bool ApplicationUtils::checkApplicationRunning(const QString &serviceName)
 
 bool ApplicationUtils::openUrl(const QUrl &url)
 {
-    qDebug() << "Will launch:" << url;
+    qDebug() << "Will launch:" << url << qgetenv("TELEPHONY_SERVICE_TEST").isEmpty();
     if (qgetenv("TELEPHONY_SERVICE_TEST").isEmpty()) {
-        QDesktopServices::openUrl(url);
+        qDebug() << "NO TEST REAL ENV";
+        qDebug() << "RESULT:" << QDesktopServices::openUrl(url);
+    } else {
+	qDebug() << "Running on test env";
     }
     return true;
 }
