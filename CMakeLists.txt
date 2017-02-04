@@ -33,7 +33,6 @@ find_package(Qt5Qml)
 find_package(Qt5Test)
 find_package(Qt5Feedback)
 find_package(Qt5Network)
-find_package(Qt5Gui)
 find_package(LibPhoneNumber REQUIRED)
 
 include(qt5)

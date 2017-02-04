@@ -36,9 +36,10 @@
 static void
 urlDispatchCallback (const gchar * url, gboolean success, gpointer user_data)
 {
-    qDebug() << "urlDispatchCallback" << url << success;
+    if (!success) {
+        qWarning() << "Fail to launch url:" << url;
+    }
 }
-
 
 ApplicationUtils::ApplicationUtils(QObject *parent) :
     QObject(parent)
@@ -64,16 +65,8 @@ bool ApplicationUtils::checkApplicationRunning(const QString &serviceName)
 
 bool ApplicationUtils::openUrl(const QUrl &url)
 {
-    qDebug() << "Will launch:" << url << qgetenv("TELEPHONY_SERVICE_TEST").isEmpty();
     if (qgetenv("TELEPHONY_SERVICE_TEST").isEmpty()) {
-        qDebug() << "NO TEST REAL ENV";
-
-        if (!QDesktopServices::openUrl(url)) {
-            qDebug() << "USING URL" << url.toString().toUtf8().constData();
-            url_dispatch_send(url.toString().toUtf8().constData(), urlDispatchCallback, 0);
-        }
-    } else {
-	qDebug() << "Running on test env";
+        url_dispatch_send(url.toString().toUtf8().constData(), urlDispatchCallback, 0);
     }
     return true;
 }
