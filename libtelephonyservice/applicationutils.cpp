@@ -31,6 +31,14 @@
 #include <QDesktopServices>
 #include <TelepathyQt/Constants>
 
+#include <url-dispatcher.h>
+
+static void
+urlDispatchCallback (const gchar * url, gboolean success, gpointer user_data)
+{
+    qDebug() << "urlDispatchCallback" << url << success;
+}
+
 
 ApplicationUtils::ApplicationUtils(QObject *parent) :
     QObject(parent)
@@ -59,7 +67,11 @@ bool ApplicationUtils::openUrl(const QUrl &url)
     qDebug() << "Will launch:" << url << qgetenv("TELEPHONY_SERVICE_TEST").isEmpty();
     if (qgetenv("TELEPHONY_SERVICE_TEST").isEmpty()) {
         qDebug() << "NO TEST REAL ENV";
-        qDebug() << "RESULT:" << QDesktopServices::openUrl(url);
+
+        if (!QDesktopServices::openUrl(url)) {
+            qDebug() << "USING URL" << url.toString().toUtf8().constData();
+            url_dispatch_send(url.toString().toUtf8().constData(), urlDispatchCallback, 0);
+        }
     } else {
 	qDebug() << "Running on test env";
     }

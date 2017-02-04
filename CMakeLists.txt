@@ -71,6 +71,7 @@ pkg_check_modules(HISTORY REQUIRED history-service)
 pkg_check_modules(TPFS REQUIRED telepathy-farstream)
 pkg_check_modules(GST REQUIRED gstreamer-1.0)
 pkg_check_modules(FS REQUIRED farstream-0.2)
+pkg_check_modules(URL_DISPATCHER REQUIRED url-dispatcher-1)
 
 add_definitions(-DQT_NO_KEYWORDS)
 
