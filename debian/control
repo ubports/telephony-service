@@ -96,7 +96,8 @@ Description: Telephony service components for Ubuntu - QML plugin
 Package: account-plugin-sip-unity8
 Architecture: all
 Pre-Depends: dpkg (>= 1.15.6~)
-Depends: mcp-account-manager-uoa-common
+Depends: mcp-account-manager-uoa-common,
+         telepathy-accounts-signon
 Description: Online account plugin for unity8
  Online account plugin for unity8.
  .

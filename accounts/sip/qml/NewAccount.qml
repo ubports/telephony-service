@@ -6,9 +6,10 @@ NewAccountInterface {
     manager: 'sofiasip'
     protocol: 'sip'
     icon: 'sip'
+    hasCrendentials: false
     params: [
         {'name': 'account', 'inputType': 'string', 'label': i18n.tr('Sip Id. (Eg: user@my.sip.net)'), 'store': true},
-        {'name': 'password', 'inputType': 'password', 'label': i18n.tr('Password'), 'store': false}
+        {'name': 'password', 'inputType': 'password', 'label': i18n.tr('Password'), 'store': true}
     ]
     advancedParams: [
         {'name': 'discover-stun', 'inputType': 'boolean', 'label': i18n.tr('Discover the STUN server automatically'), 'store': true, 'defaultValue' : 'false' },
