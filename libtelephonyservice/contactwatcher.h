@@ -69,6 +69,8 @@ public:
     QStringList addressableFields() const;
     void setAddressableFields(const QStringList &fields);
 
+    static QString normalizeIdentifier(const QString &identifier, bool incoming = false);
+
     void classBegin();
     void componentComplete();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2014 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -20,6 +20,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "accountproperties.h"
 #include "callagent.h"
 #include "callhandler.h"
 #include "telepathyhelper.h"
@@ -112,12 +113,16 @@ void CallHandler::startCall(const QString &targetId, const QString &accountId)
     // One idea is to implement the Addressing interface on the SIP connection manager such that
     // we can request a handle based on the vCard field "tel"
     if (accountEntry->protocolInfo()->name() == "sip") {
-        // in case this is a SIP call, replace the numbers by a SIP URI
+        // check if the phone number needs rewriting
+        QVariantMap accountProperties = AccountProperties::instance()->accountProperties(accountId);
+        finalId = applyNumberRewritingRules(finalId, accountProperties);
+
+        // replace the numbers by a SIP URI
         QString domain = accountEntry->account()->parameters()["account"].toString();
         if (domain.contains("@")) {
             domain = domain.split("@")[1];
 
-            finalId = QString("sip:%1@%2").arg(PhoneUtils::normalizePhoneNumber(targetId)).arg(domain);
+            finalId = QString("sip:%1@%2").arg(PhoneUtils::normalizePhoneNumber(finalId)).arg(domain);
         }
     }
 
@@ -392,6 +397,7 @@ void CallHandler::onCallStateChanged(Tp::CallState state)
         break;
     case Tp::CallStateEnded:
         ToneGenerator::instance()->stopTone();
+        channel->requestClose();
         break;
     }
 }
@@ -527,4 +533,31 @@ bool CallHandler::isIncoming(const Tp::CallChannelPtr &channel) const
 {
     AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(channel->connection());
     return channel->initiatorContact() != accountEntry->account()->connection()->selfContact();
+}
+
+QString CallHandler::applyNumberRewritingRules(const QString &originalNumber, const QVariantMap &properties)
+{
+    QString finalNumber = originalNumber;
+    if (properties.contains("numberRewrite") && properties["numberRewrite"].toBool()) {
+        // FIXME: do a proper phone number identification implementation
+        // for now consider anything bigger than 6 digits to be a phone number
+        if (finalNumber.length() <= 6) {
+            return finalNumber;
+        }
+
+        QString defaultCountryCode = properties["defaultCountryCode"].toString();
+        QString defaultAreaCode = properties["defaultAreaCode"].toString();
+        QString removeCharacters = properties["removeCharacters"].toString();
+        QString prefix = properties["prefix"].toString();
+
+        if (!defaultCountryCode.startsWith("+")) {
+            defaultCountryCode.prepend("+");
+        }
+
+        finalNumber = PhoneUtils::getFullNumber(finalNumber, defaultCountryCode, defaultAreaCode);
+        finalNumber.remove(removeCharacters);
+        finalNumber.prepend(prefix);
+    }
+
+    return finalNumber;
 }
