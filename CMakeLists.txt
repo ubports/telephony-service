@@ -33,7 +33,6 @@ find_package(Qt5Qml)
 find_package(Qt5Test)
 find_package(Qt5Feedback)
 find_package(Qt5Network)
-find_package(Qt5Gui)
 find_package(LibPhoneNumber REQUIRED)
 
 include(qt5)
@@ -74,6 +73,7 @@ pkg_check_modules(FS REQUIRED farstream-0.2)
 pkg_check_modules(UBUNTU_PLATFORM_API ubuntu-platform-api)
 pkg_check_modules(GSETTINGS_QT REQUIRED gsettings-qt)
 pkg_check_modules(PULSEAUDIO libpulse)
+pkg_check_modules(URL_DISPATCHER REQUIRED url-dispatcher-1)
 
 add_definitions(-DQT_NO_KEYWORDS)
 

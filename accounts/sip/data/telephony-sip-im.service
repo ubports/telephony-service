@@ -10,7 +10,8 @@
     <group name="telepathy">
       <setting name="manager">sofiasip</setting>
       <setting name="protocol">sip</setting>
-      <setting type="b" name="ConnectAutomatically">true</setting>
+      <setting name="ConnectAutomatically">true</setting>
+      <setting type="s" name="AutomaticPresence">2;available;;</setting>
     </group>
     <group name="auth">
       <setting name="method">password</setting>

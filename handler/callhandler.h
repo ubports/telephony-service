@@ -66,6 +66,8 @@ protected:
     static int toDTMFEvent(const QString &key);
     bool isIncoming(const Tp::CallChannelPtr &channel) const;
 
+    QString applyNumberRewritingRules(const QString &originalNumber, const QVariantMap &properties);
+
 protected Q_SLOTS:
     void onContactsAvailable(Tp::PendingOperation *op);
     void onCallHangupFinished(Tp::PendingOperation *op);
