@@ -165,31 +165,42 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
 
 void ChatEntry::onRolesChanged(const HandleRolesMap &added, const HandleRolesMap &removed)
 {
-    Q_UNUSED(added);
-    Q_UNUSED(removed);
-
-    RolesMap rolesMap;
     Tp::TextChannel* channel = 0;
     if (rolesInterface) {
-        rolesMap = rolesInterface->getRoles();
+        if (mRolesMap.isEmpty()) {
+            mRolesMap = rolesInterface->getRoles();
+        }
         channel = qvariant_cast<Tp::TextChannel*>(rolesInterface->property("channel"));
     }
 
+    QMapIterator<uint, uint> it(removed);
+    while (it.hasNext()) {
+        it.next();
+        mRolesMap.remove(it.key());
+    }
+
+    QMapIterator<uint, uint> it2(added);
+    while (it2.hasNext()) {
+        it2.next();
+        mRolesMap[it2.key()] = it2.value();
+    }
+
+    // TODO avoid iterating over all participants when not needed
     Q_FOREACH(Participant* participant, mParticipants) {
-        if (rolesMap.contains(participant->handle())) {
-            participant->setRoles(rolesMap[participant->handle()]);
+        if (mRolesMap.contains(participant->handle())) {
+            participant->setRoles(mRolesMap[participant->handle()]);
         }
     }
 
     Q_FOREACH(Participant* participant, mLocalPendingParticipants) {
-        if (rolesMap.contains(participant->handle())) {
-            participant->setRoles(rolesMap[participant->handle()]);
+        if (mRolesMap.contains(participant->handle())) {
+            participant->setRoles(mRolesMap[participant->handle()]);
         }
     }
 
     Q_FOREACH(Participant* participant, mRemotePendingParticipants) {
-        if (rolesMap.contains(participant->handle())) {
-            participant->setRoles(rolesMap[participant->handle()]);
+        if (mRolesMap.contains(participant->handle())) {
+            participant->setRoles(mRolesMap[participant->handle()]);
         }
     }
 
@@ -202,7 +213,7 @@ void ChatEntry::onRolesChanged(const HandleRolesMap &added, const HandleRolesMap
         return;
     }
 
-    mSelfContactRoles = rolesMap[selfContact->handle().at(0)];
+    mSelfContactRoles = mRolesMap[selfContact->handle().at(0)];
     Q_EMIT selfContactRolesChanged();
 }
 
@@ -685,15 +696,14 @@ void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contact
         }
     }
 
-    RolesMap rolesMap;
-    if (rolesInterface) {
-        rolesMap = rolesInterface->getRoles();
+    if (rolesInterface && mRolesMap.isEmpty()) {
+        mRolesMap = rolesInterface->getRoles();
     }
     // now add the new participants
     // FIXME: check for duplicates?
     Q_FOREACH(Tp::ContactPtr contact, added) {
         uint handle = contact->handle().at(0);
-        list << new Participant(contact->id(), rolesMap[handle], handle, this);
+        list << new Participant(contact->id(), mRolesMap[handle], handle, this);
     }
 }
 
