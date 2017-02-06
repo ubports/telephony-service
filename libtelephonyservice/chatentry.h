@@ -157,9 +157,9 @@ public Q_SLOTS:
 
     void startChat();
     bool leaveChat(const QString &message = QString());
+    void setChannels(const QList<Tp::TextChannelPtr> &channels);
 
 protected:
-    void setChannels(const QList<Tp::TextChannelPtr> &channels);
     void addChannel(const Tp::TextChannelPtr &channel);
 
     QVariantMap generateProperties() const;

@@ -86,7 +86,7 @@ DisplayNameSettings *DisplayNameSettings::instance()
 
 void DisplayNameSettings::onAccountsChanged()
 {
-    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->phoneAccounts()) {
         QString modemObjName = account->account()->parameters().value("modem-objpath").toString();
         if (mAccountNames.contains(modemObjName) && account->displayName() != mAccountNames[modemObjName]) {
             account->setDisplayName(mAccountNames[modemObjName]);

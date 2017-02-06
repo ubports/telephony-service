@@ -43,6 +43,7 @@ protected Q_SLOTS:
 
 private:
     QList<Tp::CallChannelPtr> mChannels;
+    QMap<Tp::CallChannel*,Tp::CallState> mCallStates;
 };
 
 #endif // CALLCHANNELOBSERVER_H

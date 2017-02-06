@@ -20,3 +20,4 @@ All keys should be under the [Protocol] group, and here are the supported keys:
 - Icon: a path to an icon to be used where needed
 - ServiceName: TODO: add description
 - ServiceDisplayName: TODO: add description
+- JoinExistingChannels: enabled if this protocol suppors joining existing chats

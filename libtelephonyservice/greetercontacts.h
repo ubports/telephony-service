@@ -64,6 +64,7 @@ public:
     void setDefaultSimForMessages(const QString &objPath);
     void setMmsEnabled(bool enabled);
     void setSimNames(const QVariantMap &simNames);
+    void setDialpadSoundsEnabled(bool enabled);
 
     static bool isGreeterMode();
 
@@ -80,6 +81,7 @@ Q_SIGNALS:
     void contactUpdated(const QtContacts::QContact &contact);
     void greeterActiveChanged();
     void phoneSettingsChanged(const QString &key);
+    void soundSettingsChanged(const QString &key);
 
 private Q_SLOTS:
     void greeterListPropertiesChanged(const QString &interface, const QVariantMap &changed, const QStringList &invalidated);

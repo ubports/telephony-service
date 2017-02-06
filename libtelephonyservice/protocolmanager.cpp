@@ -29,7 +29,7 @@
 QDBusArgument &operator<<(QDBusArgument &argument, const ProtocolStruct &protocol)
 {
     argument.beginStructure();
-    argument << protocol.name << protocol.features << protocol.fallbackProtocol << protocol.backgroundImage << protocol.icon << protocol.serviceName;
+    argument << protocol.name << protocol.features << protocol.fallbackProtocol << protocol.fallbackMatchRule << protocol.fallbackSourceProperty << protocol.fallbackDestinationProperty << protocol.showOnSelector << protocol.showOnlineStatus << protocol.backgroundImage << protocol.icon << protocol.serviceName << protocol.serviceDisplayName << protocol.joinExistingChannels << protocol.returnToSend << protocol.enableAttachments << protocol.enableRejoin << protocol.enableTabCompletion << protocol.leaveRoomsOnClose;
     argument.endStructure();
     return argument;
 }
@@ -37,7 +37,7 @@ QDBusArgument &operator<<(QDBusArgument &argument, const ProtocolStruct &protoco
 const QDBusArgument &operator>>(const QDBusArgument &argument, ProtocolStruct &protocol)
 {
     argument.beginStructure();
-    argument >> protocol.name >> protocol.features >> protocol.fallbackProtocol >> protocol.backgroundImage >> protocol.icon >> protocol.serviceName;
+    argument >> protocol.name >> protocol.features >> protocol.fallbackProtocol >> protocol.fallbackMatchRule >> protocol.fallbackSourceProperty >> protocol.fallbackDestinationProperty >> protocol.showOnSelector >> protocol.showOnlineStatus >> protocol.backgroundImage >> protocol.icon >> protocol.serviceName >> protocol.serviceDisplayName >> protocol.joinExistingChannels >> protocol.returnToSend >> protocol.enableAttachments >> protocol.enableRejoin >> protocol.enableTabCompletion >> protocol.leaveRoomsOnClose;
     argument.endStructure();
     return argument;
 }
