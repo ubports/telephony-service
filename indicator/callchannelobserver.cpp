@@ -49,6 +49,7 @@ void CallChannelObserver::onCallChannelAvailable(Tp::CallChannelPtr callChannel)
             SLOT(onHoldChanged()));
 
     mChannels.append(callChannel);
+    mCallStates[callChannel.data()] = callChannel->callState();
 }
 
 void CallChannelObserver::onCallStateChanged(Tp::CallState state)
@@ -70,6 +71,12 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
     switch (state) {
     case Tp::CallStateEnded:
         Q_EMIT callEnded(channel);
+
+        // if the missed flag is false, we still have to check if transitioning directly from Initialized to Ended
+        if (!missed && incoming) {
+            missed = mCallStates[channel.data()] == Tp::CallStateInitialised;
+        }
+
         // add the missed call to the messaging menu
         if (missed) {
             // FIXME: handle conf call
@@ -80,6 +87,7 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
             CallNotification::instance()->showNotificationForCall(QStringList() << channel->targetContact()->id(), CallNotification::CallEnded);
         }
 
+        mCallStates.remove(channel.data());
         mChannels.removeOne(channel);
 
         // update the metrics
@@ -93,6 +101,7 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
         channel->setProperty("activeTimestamp", QDateTime::currentDateTime());
         break;
     }
+    mCallStates[channel.data()] = state;
 }
 
 void CallChannelObserver::onHoldChanged()
