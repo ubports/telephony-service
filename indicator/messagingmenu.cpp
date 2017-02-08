@@ -289,6 +289,7 @@ void MessagingMenu::removeMessage(const QString &messageId)
 
 void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     GVariant *messages = NULL;
     GFile *file = g_file_new_for_uri(call.contactIcon.toString().toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
@@ -334,6 +335,7 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
 
 void MessagingMenu::addCall(const QString &targetId, const QString &accountId, const QDateTime &timestamp)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Call call;
     bool found = false;
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
@@ -417,14 +419,8 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
     });
 
 
-    // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
-    if (account->type() == AccountEntry::PhoneAccount) {
-        request->setManager(ContactUtils::sharedManager());
-        request->start();
-    } else {
-        // just emit the signal to pretend we did a contact search
-        Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
-    }
+    request->setManager(ContactUtils::sharedManager());
+    request->start();
 #endif
 }
 
