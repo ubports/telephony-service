@@ -51,11 +51,9 @@ void CallChannelObserver::onCallChannelAvailable(Tp::CallChannelPtr callChannel)
 
     mChannels.append(callChannel);
     if (callChannel->isReady(Tp::CallChannel::FeatureCallState)) {
-        qDebug() << "BLABLA call state was ready:" << callChannel->callState();
         mCallStates[callChannel.data()] = callChannel->callState();
     } else {
         connect(callChannel->becomeReady(Tp::CallChannel::FeatureCallState), &Tp::PendingReady::finished, [&](){
-            qDebug() << "BLABLA call state was not ready, but it is now:" << callChannel->callState();
             mCallStates[callChannel.data()] = callChannel->callState();
         });
     }
