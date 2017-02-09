@@ -70,8 +70,5 @@ int main(int argc, char **argv)
     QObject::connect(TelepathyHelper::instance(), SIGNAL(setupReady()),
                      HandlerDBus::instance(), SLOT(connectToBus()));
 
-    // instanciate the display name settings singleton, it will work by itself
-    DisplayNameSettings::instance();
-
     return app.exec();
 }

@@ -62,8 +62,6 @@ HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent), mCallIndicatorVisib
     connect(AudioRouteManager::instance(),
             SIGNAL(activeAudioOutputChanged(QString)),
             SIGNAL(ActiveAudioOutputChanged(QString)));
-
->>>>>>> MERGE-SOURCE
 }
 
 HandlerDBus::~HandlerDBus()

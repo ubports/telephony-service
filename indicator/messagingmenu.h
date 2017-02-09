@@ -83,7 +83,7 @@ public:
 
     void addCall(const QString &targetId, const QString &accountId, const QDateTime &timestamp);
     void removeCall(const QString &targetId, const QString &accountId);
-    void addCallToMessagingMenu(Call call, const QString &text);
+    void addCallToMessagingMenu(Call call, const QString &text, bool supportsTextReply = true);
 
     static void flashMessageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);
     static void messageActivateCallback(MessagingMenuMessage *message, const char *actionId, GVariant *param, MessagingMenu *instance);

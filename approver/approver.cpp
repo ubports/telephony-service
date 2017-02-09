@@ -32,6 +32,7 @@
 #include "ringtone.h"
 #include "callmanager.h"
 #include "callentry.h"
+#include "protocol.h"
 #include "protocolmanager.h"
 #include "tonegenerator.h"
 #include "telepathyhelper.h"
@@ -437,6 +438,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     data->dispatchOp = dispatchOperation;
     data->channel = channel;
     bool unknownNumber = false;
+
     QString id = ContactWatcher::normalizeIdentifier(telepathyContact->id(), true);
 
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
@@ -444,6 +446,8 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
         qCritical() << "Call exists with no account for connection";
         return false;
     }
+
+    bool supportsText = (account->protocolInfo()->features() & Protocol::TextChats);
 
     mCachedBody = QString();
 
@@ -543,7 +547,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
                                     data,
                                     delete_event_data);
 
-    if (!unknownNumber) {
+    if (!unknownNumber && supportsText) {
         notify_notification_add_action(notification,
                                        "action_decline_expansion",
                                        C::gettext("Message & decline"),
