@@ -301,30 +301,28 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text, bool 
                                                                call.timestamp.toMSecsSinceEpoch() * 1000);  // the value is expected to be in microseconds
 
     call.messageId = messaging_menu_message_get_id(message);
-    if (call.targetId != OFONO_PRIVATE_NUMBER && call.targetId != OFONO_UNKNOWN_NUMBER) {
+    if (supportsTextReply && call.targetId != OFONO_PRIVATE_NUMBER && call.targetId != OFONO_UNKNOWN_NUMBER) {
         messaging_menu_message_add_action(message,
                                           "callBack",
                                           C::gettext("Call back"), // label
                                           NULL, // argument type
                                           NULL // predefined values
                                           );
-        if (supportsTextReply) {
-            const char *predefinedMessages[] = {
-                    C::gettext("I missed your call - can you call me now?"),
-                    C::gettext("I'm running late. I'm on my way."),
-                    C::gettext("I'm busy at the moment. I'll call you later."),
-                    C::gettext("I'll be 20 minutes late."),
-                    C::gettext("Sorry, I'm still busy. I'll call you later."),
-                    0
-                    };
-            messages = g_variant_new_strv(predefinedMessages, -1);
-            messaging_menu_message_add_action(message,
-                                              "replyWithMessage",
-                                              C::gettext("Send"), // label
-                                              G_VARIANT_TYPE("s"),
-                                              messages // predefined values
-                                              );
-        }
+        const char *predefinedMessages[] = {
+                C::gettext("I missed your call - can you call me now?"),
+                C::gettext("I'm running late. I'm on my way."),
+                C::gettext("I'm busy at the moment. I'll call you later."),
+                C::gettext("I'll be 20 minutes late."),
+                C::gettext("Sorry, I'm still busy. I'll call you later."),
+                0
+                };
+        messages = g_variant_new_strv(predefinedMessages, -1);
+        messaging_menu_message_add_action(message,
+                                          "replyWithMessage",
+                                          C::gettext("Send"), // label
+                                          G_VARIANT_TYPE("s"),
+                                          messages // predefined values
+                                          );
     }
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
     messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
@@ -586,7 +584,9 @@ void MessagingMenu::callBack(const QString &messageId)
     }
     qDebug() << "TelephonyService/MessagingMenu: Calling back" << call.targetId;
     // FIXME: support accounts not based on phone numbers
-    if (account->addressableVCardFields().contains("tel")) {
+    // FIXME: hardcoding SIP protocol as using phone numbers, at some point it would be better to change the CM to report that
+    // another idea is to use protocol-aware fields, like sip:// for example
+    if (account->addressableVCardFields().contains("tel") || account->protocolInfo()->name() == "sip") {
         ApplicationUtils::openUrl(QString("tel:///%1").arg(QString(QUrl::toPercentEncoding(call.targetId))));
     }
 }
