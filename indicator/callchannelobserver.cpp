@@ -21,6 +21,7 @@
 
 #include "callchannelobserver.h"
 #include "callnotification.h"
+#include "contactwatcher.h"
 #include "messagingmenu.h"
 #include "metrics.h"
 #include "telepathyhelper.h"
@@ -49,7 +50,13 @@ void CallChannelObserver::onCallChannelAvailable(Tp::CallChannelPtr callChannel)
             SLOT(onHoldChanged()));
 
     mChannels.append(callChannel);
-    mCallStates[callChannel.data()] = callChannel->callState();
+    if (callChannel->isReady(Tp::CallChannel::FeatureCallState)) {
+        mCallStates[callChannel.data()] = callChannel->callState();
+    } else {
+        connect(callChannel->becomeReady(Tp::CallChannel::FeatureCallState), &Tp::PendingReady::finished, [&](){
+            mCallStates[callChannel.data()] = callChannel->callState();
+        });
+    }
 }
 
 void CallChannelObserver::onCallStateChanged(Tp::CallState state)
@@ -80,11 +87,11 @@ void CallChannelObserver::onCallStateChanged(Tp::CallState state)
         // add the missed call to the messaging menu
         if (missed) {
             // FIXME: handle conf call
-            MessagingMenu::instance()->addCall(channel->targetContact()->id(), accountEntry->accountId(), QDateTime::currentDateTime());
+            MessagingMenu::instance()->addCall(ContactWatcher::normalizeIdentifier(channel->targetContact()->id()), accountEntry->accountId(), QDateTime::currentDateTime());
         } else {
             // and show a notification
             // FIXME: handle conf call
-            CallNotification::instance()->showNotificationForCall(QStringList() << channel->targetContact()->id(), CallNotification::CallEnded);
+            CallNotification::instance()->showNotificationForCall(QStringList() << ContactWatcher::normalizeIdentifier(channel->targetContact()->id()), CallNotification::CallEnded);
         }
 
         mCallStates.remove(channel.data());
