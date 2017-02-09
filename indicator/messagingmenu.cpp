@@ -287,7 +287,7 @@ void MessagingMenu::removeMessage(const QString &messageId)
     mMessages.remove(messageId);
 }
 
-void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
+void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text, bool supportsTextReply)
 {
     qDebug() << __PRETTY_FUNCTION__;
     GVariant *messages = NULL;
@@ -308,21 +308,23 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
                                           NULL, // argument type
                                           NULL // predefined values
                                           );
-        const char *predefinedMessages[] = {
-                C::gettext("I missed your call - can you call me now?"),
-                C::gettext("I'm running late. I'm on my way."),
-                C::gettext("I'm busy at the moment. I'll call you later."),
-                C::gettext("I'll be 20 minutes late."),
-                C::gettext("Sorry, I'm still busy. I'll call you later."),
-                0
-                };
-        messages = g_variant_new_strv(predefinedMessages, -1);
-        messaging_menu_message_add_action(message,
-                                          "replyWithMessage",
-                                          C::gettext("Send"), // label
-                                          G_VARIANT_TYPE("s"),
-                                          messages // predefined values
-                                          );
+        if (supportsTextReply) {
+            const char *predefinedMessages[] = {
+                    C::gettext("I missed your call - can you call me now?"),
+                    C::gettext("I'm running late. I'm on my way."),
+                    C::gettext("I'm busy at the moment. I'll call you later."),
+                    C::gettext("I'll be 20 minutes late."),
+                    C::gettext("Sorry, I'm still busy. I'll call you later."),
+                    0
+                    };
+            messages = g_variant_new_strv(predefinedMessages, -1);
+            messaging_menu_message_add_action(message,
+                                              "replyWithMessage",
+                                              C::gettext("Send"), // label
+                                              G_VARIANT_TYPE("s"),
+                                              messages // predefined values
+                                              );
+        }
     }
     g_signal_connect(message, "activate", G_CALLBACK(&MessagingMenu::callsActivateCallback), this);
     messaging_menu_app_append_message(mCallsApp, message, SOURCE_ID, true);
@@ -394,7 +396,7 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
     // so we just disable it
 #ifndef __aarch64__
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
-    QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, call, text, this]() {
+    QObject::connect(request, &QContactAbstractRequest::stateChanged, [=]() {
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
             return;
@@ -414,7 +416,7 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
                 newCall.contactIcon = avatar;
             }
         }
-        addCallToMessagingMenu(newCall, text);
+        addCallToMessagingMenu(newCall, text, account->protocolInfo()->features() & Protocol::TextChats);
 #ifndef __aarch64__
     });
 
