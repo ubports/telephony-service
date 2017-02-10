@@ -52,6 +52,7 @@ struct ProtocolStruct {
     bool enableRejoin;
     bool enableTabCompletion;
     bool leaveRoomsOnClose;
+    bool enableChatStates;
 };
 
 typedef QList<AttachmentStruct> AttachmentList;

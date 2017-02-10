@@ -45,9 +45,10 @@ public:
                  bool enableRejoin = false,
                  bool enableTabCompletion = false,
                  bool leaveRoomsOnClose = false,
+                 bool enableChatStates = false,
                  QObject *parent = 0)
      : Protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                showOnSelector, showOnlineStatus, backgroundFile, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin, enableTabCompletion, leaveRoomsOnClose, parent) { }
+                showOnSelector, showOnlineStatus, backgroundFile, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin, enableTabCompletion, leaveRoomsOnClose, enableChatStates, parent) { }
 };
 
 class ProtocolTest : public QObject
@@ -79,9 +80,10 @@ void ProtocolTest::testBasicInfo()
     bool enableRejoin = true;
     bool enableTabCompletion = false;
     bool leaveRoomsOnClose = true;
+    bool enableChatStates = false;
 
     TestProtocol protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                          showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin, enableTabCompletion, leaveRoomsOnClose, this);
+                          showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin, enableTabCompletion, leaveRoomsOnClose, enableChatStates, this);
     QCOMPARE(protocol.name(), name);
     QCOMPARE(protocol.features(), features);
     QCOMPARE(protocol.fallbackProtocol(), fallbackProtocol);
@@ -100,6 +102,7 @@ void ProtocolTest::testBasicInfo()
     QCOMPARE(protocol.enableRejoin(), enableRejoin);
     QCOMPARE(protocol.enableTabCompletion(), enableTabCompletion);
     QCOMPARE(protocol.leaveRoomsOnClose(), leaveRoomsOnClose);
+    QCOMPARE(protocol.enableChatStates(), enableChatStates);
     QCOMPARE(protocol.parent(), this);
 }
 
@@ -130,6 +133,7 @@ void ProtocolTest::testFromFile()
     QCOMPARE(protocol->enableRejoin(), true);
     QCOMPARE(protocol->enableTabCompletion(), true);
     QCOMPARE(protocol->leaveRoomsOnClose(), true);
+    QCOMPARE(protocol->enableChatStates(), true);
 }
 
 QTEST_MAIN(ProtocolTest)
