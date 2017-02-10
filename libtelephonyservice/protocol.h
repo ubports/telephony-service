@@ -84,6 +84,9 @@ class Protocol : public QObject
     /// @brief whether the app needs to request leave all room channels when the app closes
     Q_PROPERTY(bool leaveRoomsOnClose READ leaveRoomsOnClose CONSTANT)
 
+    /// @brief whether the app support chat states as typing notifications
+    Q_PROPERTY(bool enableChatStates READ enableChatStates CONSTANT)
+
 public:
     enum Feature {
         TextChats = 0x1,
@@ -117,6 +120,7 @@ public:
     bool enableRejoin() const;
     bool enableTabCompletion() const;
     bool leaveRoomsOnClose() const;
+    bool enableChatStates() const;
 
     static Protocol *fromFile(const QString &fileName);
     ProtocolStruct dbusType();
@@ -141,6 +145,7 @@ protected:
                       bool enableRejoin = false,
                       bool enableTabCompletion = false,
                       bool leaveRoomsOnClose = false,
+                      bool enableChatStates = false,
                       QObject *parent = 0);
 
 private:
@@ -162,6 +167,7 @@ private:
     bool mEnableRejoin;
     bool mEnableTabCompletion;
     bool mLeaveRoomsOnClose;
+    bool mEnableChatStates;
 };
 
 class Protocols : public QList<Protocol*>

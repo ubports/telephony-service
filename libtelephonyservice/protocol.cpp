@@ -44,6 +44,7 @@ Protocol::Protocol(const ProtocolStruct & protocol)
     , mEnableRejoin(protocol.enableRejoin)
     , mEnableTabCompletion(protocol.enableTabCompletion)
     , mLeaveRoomsOnClose(protocol.leaveRoomsOnClose)
+    , mEnableChatStates(protocol.enableChatStates)
 {
 }
 
@@ -65,6 +66,7 @@ Protocol::Protocol(const QString &name,
                    bool enableRejoin,
                    bool enableTabCompletion,
                    bool leaveRoomsOnClose,
+                   bool enableChatStates,
                    QObject *parent)
  : QObject(parent)
  , mName(name)
@@ -85,12 +87,13 @@ Protocol::Protocol(const QString &name,
  , mEnableRejoin(enableRejoin)
  , mEnableTabCompletion(enableTabCompletion)
  , mLeaveRoomsOnClose(leaveRoomsOnClose)
+ , mEnableChatStates(enableChatStates)
 {
 }
 
 ProtocolStruct Protocol::dbusType()
 {
-    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend, mEnableAttachments, mEnableRejoin, mEnableTabCompletion, mLeaveRoomsOnClose};
+    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend, mEnableAttachments, mEnableRejoin, mEnableTabCompletion, mLeaveRoomsOnClose, mEnableChatStates};
 }
 
 QString Protocol::name() const
@@ -183,6 +186,11 @@ bool Protocol::leaveRoomsOnClose() const
     return mLeaveRoomsOnClose;
 }
 
+bool Protocol::enableChatStates() const
+{
+    return mEnableChatStates;
+}
+
 Protocol *Protocol::fromFile(const QString &fileName)
 {
     QFileInfo file(fileName);
@@ -226,6 +234,7 @@ Protocol *Protocol::fromFile(const QString &fileName)
     bool enableRejoin = settings.value("EnableRejoin").toBool();
     bool enableTabCompletion = settings.value("EnableTabCompletion").toBool();
     bool leaveRoomsOnClose = settings.value("LeaveRoomsOnClose").toBool();
+    bool enableChatStates = settings.value("EnableChatStates").toBool();
 
     return new Protocol(name,
                         features,
@@ -244,5 +253,6 @@ Protocol *Protocol::fromFile(const QString &fileName)
                         enableAttachments,
                         enableRejoin,
                         enableTabCompletion,
-                        leaveRoomsOnClose);
+                        leaveRoomsOnClose,
+                        enableChatStates);
 }
