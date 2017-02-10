@@ -170,7 +170,7 @@
             <dox:d><![CDATA[
                 Get the list of current available protocols
             ]]></dox:d>
-            <arg name="result" type="a(susussbbssssbbbbbb)" direction="out"/>
+            <arg name="result" type="a(susussbbssssbbbbbbb)" direction="out"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ProtocolList"/>
         </method>
         <method name="LeaveRooms">
@@ -245,7 +245,7 @@
             <dox:d><![CDATA[
                 The protocols files in protocols dir have changed
             ]]></dox:d>
-            <arg name="protocols" type="a(susussbbssssbbbbbb)"/>
+            <arg name="protocols" type="a(susussbbssssbbbbbbb)"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ProtocolList"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="ProtocolList"/>
         </signal>
