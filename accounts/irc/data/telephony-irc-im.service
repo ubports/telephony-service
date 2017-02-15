@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<service id="telephony-irc-im">
+  <type>IM</type>
+  <name>IRC</name>
+  <icon>irc</icon>
+  <provider>telephony-irc</provider>
+
+  <!-- default settings (account settings have precedence over these) -->
+  <template>
+    <group name="telepathy">
+      <setting name="manager">irc</setting>
+      <setting name="protocol">irc</setting>
+      <setting name="ConnectAutomatically">true</setting>
+      <setting type="s" name="AutomaticPresence">2;available;;</setting>
+    </group>
+    <group name="auth">
+      <setting name="method">password</setting>
+      <setting name="mechanism">password</setting>
+    </group>
+  </template>
+
+</service>

@@ -28,12 +28,18 @@
 #include <QDBusServiceWatcher>
 #include <QDebug>
 #include <QProcess>
+#include <QDesktopServices>
 #include <TelepathyQt/Constants>
 
-#ifdef USE_UBUNTU_PLATFORM_API
-#include <ubuntu/application/url_dispatcher/service.h>
-#include <ubuntu/application/url_dispatcher/session.h>
-#endif
+#include <url-dispatcher.h>
+
+static void
+urlDispatchCallback (const gchar * url, gboolean success, gpointer user_data)
+{
+    if (!success) {
+        qWarning() << "Fail to launch url:" << url;
+    }
+}
 
 ApplicationUtils::ApplicationUtils(QObject *parent) :
     QObject(parent)
@@ -59,16 +65,8 @@ bool ApplicationUtils::checkApplicationRunning(const QString &serviceName)
 
 bool ApplicationUtils::openUrl(const QUrl &url)
 {
-#ifdef USE_UBUNTU_PLATFORM_API
     if (qgetenv("TELEPHONY_SERVICE_TEST").isEmpty()) {
-        UAUrlDispatcherSession* session = ua_url_dispatcher_session();
-        if (!session)
-            return false;
-
-        ua_url_dispatcher_session_open(session, url.toEncoded().constData(), NULL, NULL);
-
-        free(session);
+        url_dispatch_send(url.toString().toUtf8().constData(), urlDispatchCallback, 0);
     }
-#endif
     return true;
 }

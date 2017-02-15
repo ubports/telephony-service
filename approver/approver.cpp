@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2016 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -27,10 +27,12 @@
 #include "chatmanager.h"
 #include "config.h"
 #include "contactutils.h"
+#include "contactwatcher.h"
 #include "greetercontacts.h"
 #include "ringtone.h"
 #include "callmanager.h"
 #include "callentry.h"
+#include "protocol.h"
 #include "protocolmanager.h"
 #include "tonegenerator.h"
 #include "telepathyhelper.h"
@@ -315,11 +317,13 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 
     mChannels.remove(pr);
 
+    QString id = ContactWatcher::normalizeIdentifier(contact->id(), true);
+
     // and now set up the contact matching for either greeter mode or regular mode
     if (GreeterContacts::isGreeterMode()) {
         // show the snap decision right away because contact info might never arrive
         showSnapDecision(dispatchOp, channel);
-        GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(contact->id()));
+        GreeterContacts::instance()->setContactFilter(QContactPhoneNumber::match(id));
     } else {
         AccountEntry *account = TelepathyHelper::instance()->accountForConnection(callChannel->connection());
         if (!account) {
@@ -329,7 +333,7 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
 
         // try to match the contact info
         QContactFetchRequest *request = new QContactFetchRequest(this);
-        request->setFilter(QContactPhoneNumber::match(contact->id()));
+        request->setFilter(QContactPhoneNumber::match(id));
 
         // lambda function to update the notification
         QObject::connect(request, &QContactAbstractRequest::stateChanged, [this, request, dispatchOp, channel](QContactAbstractRequest::State state) {
@@ -350,14 +354,9 @@ void Approver::onChannelReady(Tp::PendingOperation *op)
             showSnapDecision(dispatchOp, channel, contact);
         });
 
-        // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
-        if (account->type() == AccountEntry::PhoneAccount) {
-            request->setManager(ContactUtils::sharedManager());
-            request->start();
-        } else {
-            // just emit the signal to pretend we did a contact search
-            Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
-        }
+        // FIXME: For accounts not based on phone numbers, check what to do
+        request->setManager(ContactUtils::sharedManager());
+        request->start();
     }
 }
 
@@ -440,11 +439,15 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
     data->channel = channel;
     bool unknownNumber = false;
 
+    QString id = ContactWatcher::normalizeIdentifier(telepathyContact->id(), true);
+
     AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
     if (!account) {
         qCritical() << "Call exists with no account for connection";
         return false;
     }
+
+    bool supportsText = (account->protocolInfo()->features() & Protocol::TextChats);
 
     mCachedBody = QString();
 
@@ -452,30 +455,30 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
             TelepathyHelper::instance()->multiplePhoneAccounts()) {
         mCachedBody = QString::fromUtf8(C::gettext("On [%1]")).arg(account->displayName());
         mCachedBody += "\n";
-        if (!telepathyContact->id().isEmpty()) {
-            if (telepathyContact->id().startsWith(OFONO_PRIVATE_NUMBER)) {
+        if (!id.isEmpty()) {
+            if (id.startsWith(OFONO_PRIVATE_NUMBER)) {
                 mCachedBody += QString::fromUtf8(C::gettext("Private number"));
                 unknownNumber = true;
-            } else if (telepathyContact->id().startsWith(OFONO_UNKNOWN_NUMBER)) {
+            } else if (id.startsWith(OFONO_UNKNOWN_NUMBER)) {
                 mCachedBody += QString::fromUtf8(C::gettext("Unknown number"));
                 unknownNumber = true;
             } else {
-                mCachedBody += telepathyContact->id();
+                mCachedBody += id;
             }
         } else {
             mCachedBody += C::gettext("Caller number is not available");
             unknownNumber = true;
         }
     } else {
-        if (!telepathyContact->id().isEmpty()) {
-            if (telepathyContact->id().startsWith(OFONO_PRIVATE_NUMBER)) {
+        if (!id.isEmpty()) {
+            if (id.startsWith(OFONO_PRIVATE_NUMBER)) {
                 mCachedBody = QString::fromUtf8(C::gettext("Calling from private number"));
                 unknownNumber = true;
-            } else if (telepathyContact->id().startsWith(OFONO_UNKNOWN_NUMBER)) {
+            } else if (id.startsWith(OFONO_UNKNOWN_NUMBER)) {
                 mCachedBody = QString::fromUtf8(C::gettext("Calling from unknown number"));
                 unknownNumber = true;
             } else {
-                mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(telepathyContact->id());
+                mCachedBody = QString::fromUtf8(C::gettext("Calling from %1")).arg(id);
             }
         } else {
             mCachedBody = C::gettext("Caller number is not available");
@@ -544,7 +547,7 @@ bool Approver::showSnapDecision(const Tp::ChannelDispatchOperationPtr dispatchOp
                                     data,
                                     delete_event_data);
 
-    if (!unknownNumber) {
+    if (!unknownNumber && supportsText) {
         notify_notification_add_action(notification,
                                        "action_decline_expansion",
                                        C::gettext("Message & decline"),

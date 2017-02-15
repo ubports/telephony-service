@@ -29,6 +29,7 @@
 #include <TelepathyQt/CallChannel>
 #include "audiooutput.h"
 
+
 class AccountEntry;
 
 class CallEntry : public QObject
@@ -46,7 +47,7 @@ class CallEntry : public QObject
                READ isVoicemail
                WRITE setVoicemail
                NOTIFY voicemailChanged)
-    Q_PROPERTY(AccountEntry *account READ account)
+    Q_PROPERTY(AccountEntry *account READ account CONSTANT)
 
     // FIXME: replace this by a more generic identifier to support accounts not based on phone numbers
     // this property is only filled for 1-1 calls
@@ -179,7 +180,6 @@ private:
     AccountEntry *mAccount;
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
-    QDBusInterface mAudioOutputsInterface;
     QMap<QString, QVariant> mProperties;
     bool mVoicemail;
     bool mLocalMuteState;
