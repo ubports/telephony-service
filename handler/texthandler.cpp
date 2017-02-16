@@ -168,7 +168,13 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId
     if (chatType == Tp::HandleTypeNone && targetIds.size() == 1) {
         chatType = Tp::HandleTypeContact;
     }
+
     QString roomId = properties["threadId"].toString();
+
+    // try to use the threadId as participantId if empty
+    if (chatType == Tp::HandleTypeContact && targetIds.isEmpty()) {
+        targetIds << roomId;
+    }
 
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
