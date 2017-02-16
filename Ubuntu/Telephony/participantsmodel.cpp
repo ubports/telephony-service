@@ -133,7 +133,7 @@ QVariant ParticipantsModel::data(const QModelIndex &index, int role) const
 
 bool ParticipantsModel::lessThan(const QString &left, const QString &right) const
 {
-    return left.toLower() < right.toLower();
+    return left.localeAwareCompare(right) < 0;
 }
 
 int ParticipantsModel::positionForItem(const QString &item, bool cache) const
