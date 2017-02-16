@@ -141,15 +141,18 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
     updateParticipants(mParticipants,
                        groupMembersAdded,
                        groupMembersRemoved,
-                       account);
+                       account,
+                       0);
     updateParticipants(mLocalPendingParticipants,
                        groupLocalPendingMembersAdded,
                        groupMembersRemoved + groupMembersAdded, // if contacts move to the main list, remove from the pending one
-                       account);
+                       account,
+                       1);
     updateParticipants(mRemotePendingParticipants,
                        groupRemotePendingMembersAdded,
                        groupMembersRemoved + groupMembersAdded, // if contacts move to the main list, remove from the pending one
-                       account);
+                       account,
+                       2);
 
     // generate the list of participant IDs again
     mParticipantIds.clear();
@@ -267,7 +270,7 @@ bool ChatEntry::autoRequest() const
 
 QList<Participant*> ChatEntry::allParticipants() const
 {
-    return mParticipants;
+    return mParticipants + mLocalPendingParticipants + mRemotePendingParticipants;
 }
 
 bool ChatEntry::canUpdateConfiguration() const
@@ -689,7 +692,7 @@ void ChatEntry::clearParticipants()
     mSelfContactRoles = 0;
 }
 
-void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account)
+void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account, uint pending)
 {
     // first look for removed members
     Q_FOREACH(Tp::ContactPtr contact, removed) {
@@ -710,7 +713,7 @@ void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contact
     // FIXME: check for duplicates?
     Q_FOREACH(Tp::ContactPtr contact, added) {
         uint handle = contact->handle().at(0);
-        Participant* participant = new Participant(contact->id(), mRolesMap[handle], handle, QString(), 0, this);
+        Participant* participant = new Participant(contact->id(), mRolesMap[handle], handle, QString(), pending, this);
         Q_EMIT participantAdded(participant);
         list << participant;
     }
