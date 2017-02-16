@@ -115,6 +115,14 @@ void AccountList::init()
             this, &AccountList::filterAccounts);
 }
 
+void AccountList::activeAccountsChangedImpl()
+{
+    AccountEntry *account = qobject_cast<AccountEntry*>(QObject::sender());
+
+    Q_EMIT accountChanged(account, account->active());
+    Q_EMIT activeAccountsChanged();
+}
+
 void AccountList::filterAccounts()
 {
     // FIXME: we need to watch for active changed on accounts
@@ -135,7 +143,7 @@ void AccountList::filterAccounts()
         }
 
         connect(account, &AccountEntry::activeChanged,
-                this, &AccountList::activeAccountsChanged);
+                this, &AccountList::activeAccountsChangedImpl);
         mAccounts << account;
     }
 
