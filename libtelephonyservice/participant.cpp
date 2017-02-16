@@ -22,8 +22,8 @@
 
 #include "participant.h"
 
-Participant::Participant(const QString &identifier, uint roles, uint handle, QObject *parent)
-: ContactWatcher(parent), mRoles(roles), mHandle(handle)
+Participant::Participant(const QString &identifier, uint roles, uint handle, const QString &avatar, uint state, QObject *parent)
+: ContactWatcher(parent), mRoles(roles), mHandle(handle), mAvatar(avatar), mState(state)
 {
     classBegin();
     setIdentifier(identifier);
@@ -61,3 +61,14 @@ uint Participant::handle() const
 {
     return mHandle;
 }
+
+uint Participant::state() const
+{
+    return mState;
+}
+
+QString Participant::avatar() const
+{
+    return mAvatar;
+}
+

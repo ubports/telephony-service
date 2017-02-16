@@ -710,7 +710,7 @@ void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contact
     // FIXME: check for duplicates?
     Q_FOREACH(Tp::ContactPtr contact, added) {
         uint handle = contact->handle().at(0);
-        Participant* participant = new Participant(contact->id(), mRolesMap[handle], handle, this);
+        Participant* participant = new Participant(contact->id(), mRolesMap[handle], handle, QString(), 0, this);
         Q_EMIT participantAdded(participant);
         list << participant;
     }
