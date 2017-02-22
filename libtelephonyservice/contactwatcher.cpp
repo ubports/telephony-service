@@ -34,6 +34,7 @@
 #include <QContactDetailFilter>
 #include <QContactIntersectionFilter>
 #include <QContactUnionFilter>
+#include <QContactOnlineAccount>
 
 namespace C {
 #include <libintl.h>
@@ -63,6 +64,28 @@ ContactWatcher::~ContactWatcher()
     }
 }
 
+QContactIntersectionFilter ContactWatcher::filterForField(const QString &field, const QString &identifier)
+{
+    QContactIntersectionFilter intersectionFilter;
+
+    if (field == "X-IRC") {
+        QContactDetailFilter nameFilter = QContactDetailFilter();
+        nameFilter.setDetailType(QContactOnlineAccount::Type, QContactOnlineAccount::FieldProtocol);
+        nameFilter.setMatchFlags(QContactFilter::MatchExactly);
+        nameFilter.setValue(QContactOnlineAccount::ProtocolIrc);
+
+        QContactDetailFilter valueFilter = QContactDetailFilter();
+        valueFilter.setDetailType(QContactOnlineAccount::Type, QContactOnlineAccount::FieldAccountUri);
+        valueFilter.setMatchFlags(QContactFilter::MatchExactly);
+        valueFilter.setValue(identifier);
+
+        intersectionFilter.append(nameFilter);
+        intersectionFilter.append(valueFilter);
+    }
+
+    return intersectionFilter;
+}
+
 void ContactWatcher::startSearching()
 {
     if (!mCompleted || mIdentifier.isEmpty() || !mInteractive || mAddressableFields.isEmpty()) {
@@ -85,21 +108,25 @@ void ContactWatcher::startSearching()
         if (field == "tel") {
             topLevelFilter.append(QContactPhoneNumber::match(mIdentifier));
         } else {
-            // FIXME: handle more fields
-            // rely on a generic field filter
-            QContactDetailFilter nameFilter = QContactDetailFilter();
-            nameFilter.setDetailType(QContactExtendedDetail::Type, QContactExtendedDetail::FieldName);
-            nameFilter.setMatchFlags(QContactFilter::MatchExactly);
-            nameFilter.setValue(field);
-
-            QContactDetailFilter valueFilter = QContactDetailFilter();
-            valueFilter.setDetailType(QContactExtendedDetail::Type, QContactExtendedDetail::FieldData);
-            valueFilter.setMatchFlags(QContactFilter::MatchExactly);
-            valueFilter.setValue(mIdentifier);
-
             QContactIntersectionFilter intersectionFilter;
-            intersectionFilter.append(nameFilter);
-            intersectionFilter.append(valueFilter);
+            // try a special filter
+            intersectionFilter = filterForField(field, mIdentifier);
+            if (intersectionFilter.filters().isEmpty()) {
+                // FIXME: handle more fields
+                // rely on a generic field filter
+                QContactDetailFilter nameFilter = QContactDetailFilter();
+                nameFilter.setDetailType(QContactExtendedDetail::Type, QContactExtendedDetail::FieldName);
+                nameFilter.setMatchFlags(QContactFilter::MatchExactly);
+                nameFilter.setValue(field);
+
+                QContactDetailFilter valueFilter = QContactDetailFilter();
+                valueFilter.setDetailType(QContactExtendedDetail::Type, QContactExtendedDetail::FieldData);
+                valueFilter.setMatchFlags(QContactFilter::MatchExactly);
+                valueFilter.setValue(mIdentifier);
+
+                intersectionFilter.append(nameFilter);
+                intersectionFilter.append(valueFilter);
+            }
 
             topLevelFilter.append(intersectionFilter);
         }
