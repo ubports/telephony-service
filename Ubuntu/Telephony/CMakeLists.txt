@@ -2,6 +2,7 @@
 
 set(plugin_SRCS
     presencerequest.cpp
+    participantsmodel.cpp
     components.cpp
     )
 
