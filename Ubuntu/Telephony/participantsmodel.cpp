@@ -133,7 +133,20 @@ QVariant ParticipantsModel::data(const QModelIndex &index, int role) const
 
 bool ParticipantsModel::lessThan(const QString &left, const QString &right) const
 {
-    return left.toLower() < right.toLower();
+    if (left.isEmpty() || right.isEmpty()) {
+        return false;
+    }
+    if (left.at(0).isLetter() && right.at(0).isLetter()) {
+        return left.localeAwareCompare(right) < 0;
+    }
+    if (!left.at(0).isLetter() && right.at(0).isLetter()) {
+        return false;
+    }
+    if (left.at(0).isLetter() && !right.at(0).isLetter()) {
+        return true;
+    }
+
+    return false;
 }
 
 int ParticipantsModel::positionForItem(const QString &item, bool cache) const
