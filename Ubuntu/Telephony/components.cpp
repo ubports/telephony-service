@@ -39,6 +39,7 @@
 #include "accountentry.h"
 #include "accountlist.h"
 #include "audiooutput.h"
+#include "participantsmodel.h"
 
 #include <QQmlEngine>
 #include <qqml.h>
@@ -87,5 +88,6 @@ void Components::registerTypes(const char *uri)
     qmlRegisterType<ContactWatcher>(uri, 0, 1, "ContactWatcher");
     qmlRegisterType<Participant>(uri, 0, 1, "Participant");
     qmlRegisterType<PresenceRequest>(uri, 0, 1, "PresenceRequest");
+    qmlRegisterType<ParticipantsModel>(uri, 0, 1, "ParticipantsModel");
     qmlRegisterType<PhoneUtils>(uri, 0, 1, "PhoneUtils");
 }

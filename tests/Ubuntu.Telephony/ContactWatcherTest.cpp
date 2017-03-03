@@ -95,7 +95,7 @@ void ContactWatcherTest::testMatchExistingContact()
 
     // set the phone number and wait for the match to happen
     watcher.setIdentifier(identifier);
-
+    watcher.setAddressableFields(QStringList() << "tel");
 
     // contact fetching is asynchronous so use QTRY_COMPARE for the first signal spy
     // for the subsequent ones it is fine to use just QCOMPARE
@@ -128,6 +128,7 @@ void ContactWatcherTest::testMatchNewContact()
     QSignalSpy unknownSpy(&watcher, SIGNAL(isUnknownChanged()));
 
     watcher.setIdentifier(identifier);
+    watcher.setAddressableFields(QStringList() << "tel");
 
     // now create the contact and wait to see if it gets matched
     QContact contact = createContact("FirstName",
@@ -169,6 +170,7 @@ void ContactWatcherTest::testMatchContactChanged()
     ContactWatcher watcher;
     watcher.componentComplete();
     watcher.setIdentifier(identifier);
+    watcher.setAddressableFields(QStringList() << "tel");
 
     QSignalSpy contactIdSpy(&watcher, SIGNAL(contactIdChanged()));
     QSignalSpy aliasSpy(&watcher, SIGNAL(aliasChanged()));
@@ -218,6 +220,7 @@ void ContactWatcherTest::testClearAfterContactChanged()
 
     // set the phone number and wait for the match to happen
     watcher.setIdentifier(identifier);
+    watcher.setAddressableFields(QStringList() << "tel");
 
     // at this point we just need to make sure the contactId is correct, the other fields
     // are tested in a separate test
@@ -269,6 +272,7 @@ void ContactWatcherTest::testContactRemoval()
 
     // set the phone number and wait for the match to happen
     watcher.setIdentifier(identifier);
+    watcher.setAddressableFields(QStringList() << "tel");
 
     // at this point we just need to make sure the contactId is correct, the other fields
     // are tested in a separate test
@@ -318,6 +322,7 @@ void ContactWatcherTest::testClearPhoneNumber()
 
     // set the phone number and wait for the match to happen
     watcher.setIdentifier(identifier);
+    watcher.setAddressableFields(QStringList() << "tel");
 
     // at this point we just need to make sure the contactId is correct, the other fields
     // are tested in a separate test
@@ -396,6 +401,7 @@ void ContactWatcherTest::testLateSearch()
 
     // set the phone number and wait for the match to happen
     watcher.setIdentifier(identifier);
+    watcher.setAddressableFields(QStringList() << "tel");
 
     // component not complete yet
     QTRY_COMPARE(contactIdSpy.count(), 0);
@@ -430,8 +436,8 @@ void ContactWatcherTest::testAddressableFields()
     ContactWatcher watcher;
 
     // check that addressable fields contains "tel" by default
-    QCOMPARE(watcher.addressableFields().count(), 1);
-    QCOMPARE(watcher.addressableFields()[0], QString("tel"));
+    QCOMPARE(watcher.addressableFields().count(), 0);
+    QCOMPARE(watcher.addressableFields(), QStringList());
 
     QSignalSpy addressableFieldsSpy(&watcher, SIGNAL(addressableFieldsChanged()));
     QStringList addressableFields;
@@ -442,8 +448,8 @@ void ContactWatcherTest::testAddressableFields()
 
     // set the addressable fields to an empty value and make sure it falls back to "tel"
     watcher.setAddressableFields(QStringList());
-    QCOMPARE(watcher.addressableFields().count(), 1);
-    QCOMPARE(watcher.addressableFields()[0], QString("tel"));
+    QCOMPARE(watcher.addressableFields().count(), 0);
+    QCOMPARE(watcher.addressableFields(), QStringList());
 }
 
 void ContactWatcherTest::testExtendedFieldMatch()
@@ -496,6 +502,7 @@ void ContactWatcherTest::testSimilarPhoneNumbers()
 
     // try to match contact A
     watcherA.setIdentifier(contactIdentifierA);
+    watcherA.setAddressableFields(QStringList() << "tel");
 
     // mark as complete
     watcherA.componentComplete();
@@ -513,6 +520,7 @@ void ContactWatcherTest::testSimilarPhoneNumbers()
 
     // try to match contact B
     watcherB.setIdentifier(contactIdentifierB);
+    watcherB.setAddressableFields(QStringList() << "tel");
 
     // signal will be fired now
     QTRY_COMPARE(contactIdSpyB.count(), 1);

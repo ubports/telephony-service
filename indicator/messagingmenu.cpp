@@ -244,6 +244,8 @@ void MessagingMenu::addMessage(NotificationData notificationData)
             file = g_file_new_for_uri(avatar.toString().toUtf8().data());
             icon = g_file_icon_new(file);
         }
+
+        qDebug() << "notify message received:" << notificationData.encodedEventId.toUtf8();
         MessagingMenuMessage *message = messaging_menu_message_new(notificationData.encodedEventId.toUtf8().data(),
                                                                    icon,
                                                                    displayLabel.toUtf8().data(),
@@ -287,8 +289,9 @@ void MessagingMenu::removeMessage(const QString &messageId)
     mMessages.remove(messageId);
 }
 
-void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
+void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text, bool supportsTextReply)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     GVariant *messages = NULL;
     GFile *file = g_file_new_for_uri(call.contactIcon.toString().toUtf8().data());
     GIcon *icon = g_file_icon_new(file);
@@ -300,7 +303,7 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
                                                                call.timestamp.toMSecsSinceEpoch() * 1000);  // the value is expected to be in microseconds
 
     call.messageId = messaging_menu_message_get_id(message);
-    if (call.targetId != OFONO_PRIVATE_NUMBER && call.targetId != OFONO_UNKNOWN_NUMBER) {
+    if (supportsTextReply && call.targetId != OFONO_PRIVATE_NUMBER && call.targetId != OFONO_UNKNOWN_NUMBER) {
         messaging_menu_message_add_action(message,
                                           "callBack",
                                           C::gettext("Call back"), // label
@@ -334,6 +337,7 @@ void MessagingMenu::addCallToMessagingMenu(Call call, const QString &text)
 
 void MessagingMenu::addCall(const QString &targetId, const QString &accountId, const QDateTime &timestamp)
 {
+    qDebug() << __PRETTY_FUNCTION__;
     Call call;
     bool found = false;
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
@@ -392,7 +396,7 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
     // so we just disable it
 #ifndef __aarch64__
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
-    QObject::connect(request, &QContactAbstractRequest::stateChanged, [request, call, text, this]() {
+    QObject::connect(request, &QContactAbstractRequest::stateChanged, [=]() {
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
             return;
@@ -412,19 +416,13 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
                 newCall.contactIcon = avatar;
             }
         }
-        addCallToMessagingMenu(newCall, text);
+        addCallToMessagingMenu(newCall, text, account->protocolInfo()->features() & Protocol::TextChats);
 #ifndef __aarch64__
     });
 
 
-    // FIXME: For accounts not based on phone numbers, don't try to match contacts for now
-    if (account->type() == AccountEntry::PhoneAccount) {
-        request->setManager(ContactUtils::sharedManager());
-        request->start();
-    } else {
-        // just emit the signal to pretend we did a contact search
-        Q_EMIT request->stateChanged(QContactAbstractRequest::FinishedState);
-    }
+    request->setManager(ContactUtils::sharedManager());
+    request->start();
 #endif
 }
 
@@ -588,7 +586,9 @@ void MessagingMenu::callBack(const QString &messageId)
     }
     qDebug() << "TelephonyService/MessagingMenu: Calling back" << call.targetId;
     // FIXME: support accounts not based on phone numbers
-    if (account->addressableVCardFields().contains("tel")) {
+    // FIXME: hardcoding SIP protocol as using phone numbers, at some point it would be better to change the CM to report that
+    // another idea is to use protocol-aware fields, like sip:// for example
+    if (account->addressableVCardFields().contains("tel") || account->protocolInfo()->name() == "sip") {
         ApplicationUtils::openUrl(QString("tel:///%1").arg(QString(QUrl::toPercentEncoding(call.targetId))));
     }
 }

@@ -21,6 +21,23 @@
 
 #include "audiooutput.h"
 
+QDBusArgument &operator<<(QDBusArgument &argument, const AudioOutputDBus &output)
+{
+    argument.beginStructure();
+    argument << output.id << output.type << output.name;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, AudioOutputDBus &output)
+{
+    argument.beginStructure();
+    argument >> output.id >> output.type >> output.name;
+    argument.endStructure();
+    return argument;
+}
+
+
 AudioOutput::AudioOutput(const QString& id, const QString& name, const QString& type, QObject *parent) :
     QObject(parent), mId(id), mName(name), mType(type)
 {

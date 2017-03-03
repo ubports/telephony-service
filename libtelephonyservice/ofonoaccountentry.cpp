@@ -46,6 +46,11 @@ USSDManager *OfonoAccountEntry::ussdManager() const
     return mUssdManager;
 }
 
+QString OfonoAccountEntry::modemName()
+{
+    return mAccount->parameters().value("modem-objpath").toString();
+}
+
 QStringList OfonoAccountEntry::emergencyNumbers() const
 {
     return mEmergencyNumbers;
@@ -158,6 +163,7 @@ void OfonoAccountEntry::onVoicemailCountChanged(uint count)
 
 void OfonoAccountEntry::onVoicemailIndicatorChanged(bool visible)
 {
+    qDebug() << __PRETTY_FUNCTION__ << visible;
     mVoicemailIndicator = visible;
     Q_EMIT voicemailIndicatorChanged();
 }

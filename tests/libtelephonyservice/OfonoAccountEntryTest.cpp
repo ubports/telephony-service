@@ -188,8 +188,8 @@ void OfonoAccountEntryTest::testVoicemailIndicator()
     // and set back to false
     voiceMailIndicatorSpy.clear();
     mMockController->SetVoicemailIndicator(false);
-    TRY_COMPARE(voiceMailIndicatorSpy.count(), 1);
-    QVERIFY(!mAccount->voicemailIndicator());
+    TRY_VERIFY(!mAccount->voicemailIndicator());
+    QVERIFY(voiceMailIndicatorSpy.count() > 0);
 }
 
 void OfonoAccountEntryTest::testVoicemailNumber()
@@ -222,8 +222,8 @@ void OfonoAccountEntryTest::testVoicemailCount()
     // and back to zero
     voicemailCountSpy.clear();
     mMockController->SetVoicemailCount(0);
-    TRY_COMPARE(voicemailCountSpy.count(), 1);
-    QCOMPARE((int)mAccount->voicemailCount(), 0);
+    TRY_COMPARE((int)mAccount->voicemailCount(), 0);
+    QVERIFY(voicemailCountSpy.count() > 0);
 }
 
 void OfonoAccountEntryTest::testSimLocked()

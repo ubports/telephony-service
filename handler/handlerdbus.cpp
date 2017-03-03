@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2016 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Ugo Riboni <ugo.riboni@canonical.com>
@@ -21,6 +21,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "accountproperties.h"
+#include "audiooutput.h"
+#include "audioroutemanager.h"
 #include "callhandler.h"
 #include "handlerdbus.h"
 #include "handleradaptor.h"
@@ -53,6 +56,12 @@ HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent), mCallIndicatorVisib
             &ProtocolManager::protocolsChanged, [this]() {
                 Q_EMIT ProtocolsChanged(ProtocolManager::instance()->protocols().dbusType());
             });
+    connect(AudioRouteManager::instance(),
+            SIGNAL(audioOutputsChanged(AudioOutputDBusList)),
+            SIGNAL(AudioOutputsChanged(AudioOutputDBusList)));
+    connect(AudioRouteManager::instance(),
+            SIGNAL(activeAudioOutputChanged(QString)),
+            SIGNAL(ActiveAudioOutputChanged(QString)));
 }
 
 HandlerDBus::~HandlerDBus()
@@ -95,6 +104,21 @@ ProtocolList HandlerDBus::GetProtocols()
     return ProtocolManager::instance()->protocols().dbusType();
 }
 
+AllAccountsProperties HandlerDBus::GetAllAccountsProperties()
+{
+    return AccountProperties::instance()->allProperties();
+}
+
+QVariantMap HandlerDBus::GetAccountProperties(const QString &accountId)
+{
+    return AccountProperties::instance()->accountProperties(accountId);
+}
+
+void HandlerDBus::SetAccountProperties(const QString &accountId, const QVariantMap &properties)
+{
+    AccountProperties::instance()->setAccountProperties(accountId, properties);
+}
+
 QString HandlerDBus::registerObject(QObject *object, const QString &path)
 {
     QString fullPath = QString("%1/%2").arg(DBUS_OBJECT_PATH, path);
@@ -125,6 +149,11 @@ void HandlerDBus::RemoveParticipants(const QString &objectPath, const QStringLis
     TextHandler::instance()->removeParticipants(objectPath, participants, message);
 }
 
+void HandlerDBus::LeaveRooms(const QString &accountId, const QString &message)
+{
+    return TextHandler::instance()->leaveRooms(accountId, message);
+}
+
 bool HandlerDBus::LeaveChat(const QString &objectPath, const QString &message)
 {
     return TextHandler::instance()->leaveChat(objectPath, message);
@@ -138,6 +167,21 @@ bool HandlerDBus::DestroyTextChannel(const QString &objectPath)
 bool HandlerDBus::ChangeRoomTitle(const QString &objectPath, const QString &title)
 {
     return TextHandler::instance()->changeRoomTitle(objectPath, title);
+}
+
+void HandlerDBus::setActiveAudioOutput(const QString &id)
+{
+    AudioRouteManager::instance()->setActiveAudioOutput(id);
+}
+
+QString HandlerDBus::activeAudioOutput() const
+{
+    return AudioRouteManager::instance()->activeAudioOutput();
+}
+
+AudioOutputDBusList HandlerDBus::AudioOutputs() const
+{
+    return AudioRouteManager::instance()->audioOutputs();
 }
 
 bool HandlerDBus::connectToBus()
@@ -185,11 +229,6 @@ void HandlerDBus::SetHold(const QString &objectPath, bool hold)
 void HandlerDBus::SetMuted(const QString &objectPath, bool muted)
 {
     CallHandler::instance()->setMuted(objectPath, muted);
-}
-
-void HandlerDBus::SetActiveAudioOutput(const QString &objectPath, const QString &id)
-{
-    CallHandler::instance()->setActiveAudioOutput(objectPath, id);
 }
 
 void HandlerDBus::SendDTMF(const QString &objectPath, const QString &key)

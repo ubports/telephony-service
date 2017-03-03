@@ -42,8 +42,6 @@ namespace C {
 ContactWatcher::ContactWatcher(QObject *parent) :
     QObject(parent), mRequest(0), mInteractive(false), mCompleted(false)
 {
-    // addressable VCard fields defaults to "tel" only
-    mAddressableFields << "tel";
     connect(ContactUtils::sharedManager(),
             SIGNAL(contactsAdded(QList<QContactId>)),
             SLOT(onContactsAdded(QList<QContactId>)));
@@ -67,7 +65,7 @@ ContactWatcher::~ContactWatcher()
 
 void ContactWatcher::startSearching()
 {
-    if (!mCompleted || mIdentifier.isEmpty() || !mInteractive) {
+    if (!mCompleted || mIdentifier.isEmpty() || !mInteractive || mAddressableFields.isEmpty()) {
         // component is not ready yet or no identifier given,
         // or the number is not interactive and thus doesn't need contact info at all
         return;
@@ -216,12 +214,14 @@ void ContactWatcher::setIdentifier(const QString &identifier)
     const bool isInteractive = !identifier.isEmpty() && !isPrivate && !isUnknown;
 
     mIdentifier = identifier;
-    Q_EMIT identifierChanged();
-
     if (isInteractive != mInteractive) {
         mInteractive = isInteractive;
         Q_EMIT interactiveChanged();
     }
+
+    mIdentifier = normalizeIdentifier(mIdentifier);
+    Q_EMIT identifierChanged();
+
 
     if (mIdentifier.isEmpty() || isPrivate || isUnknown) {
         updateAlias();
@@ -265,13 +265,29 @@ QStringList ContactWatcher::addressableFields() const
 void ContactWatcher::setAddressableFields(const QStringList &fields)
 {
     mAddressableFields = fields;
-    // if the addressable fields is empty, fall back to matching phone numbers
-    if (mAddressableFields.isEmpty()) {
-            mAddressableFields << "tel";
-    }
     Q_EMIT addressableFieldsChanged();
 
     startSearching();
+}
+
+QString ContactWatcher::normalizeIdentifier(const QString &identifier, bool incoming)
+{
+    QString finalId = identifier;
+    // FIXME: this is a hack, we need to find a better way of matching contacts for accounts
+    // that don't have addressable fields
+    if (finalId.startsWith("sip:")) {
+        finalId.remove("sip:").remove(QRegularExpression("@.*$"));
+
+        // If the final ID's length is bigger than 6 digits, we assume it is a phone number.
+        // For incoming phone numbers, assume they come in the full format, including country code
+        // and just append the + to the beginning.
+        // FIXME: this rule might be an over-simplification of the cases. Change it to a more complete
+        // approach if the need appears.
+        if (!finalId.startsWith("+") && finalId.length() > 6 && incoming) {
+            finalId.prepend("+");
+        }
+    }
+    return finalId;
 }
 
 void ContactWatcher::classBegin()

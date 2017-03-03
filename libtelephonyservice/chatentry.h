@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <QQmlParserStatus>
+#include <QQmlListProperty>
 #include <TelepathyQt/TextChannel>
 #include "rolesinterface.h"
 
@@ -146,6 +147,8 @@ public:
     void classBegin();
     void componentComplete();
 
+    QList<Participant*> allParticipants() const;
+
 public Q_SLOTS:
     // FIXME: void or return something?
     void sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
@@ -157,15 +160,15 @@ public Q_SLOTS:
 
     void startChat();
     bool leaveChat(const QString &message = QString());
+    void setChannels(const QList<Tp::TextChannelPtr> &channels);
 
 protected:
-    void setChannels(const QList<Tp::TextChannelPtr> &channels);
     void addChannel(const Tp::TextChannelPtr &channel);
 
     QVariantMap generateProperties() const;
 
     void clearParticipants();
-    void updateParticipants(QList<Participant*> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account);
+    void updateParticipants(QList<Participant*> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account, uint pending = 0);
 
 private Q_SLOTS:
     void onTextChannelAvailable(const Tp::TextChannelPtr &channel);
@@ -207,6 +210,9 @@ Q_SIGNALS:
     void chatReady();
     void startChatFailed();
 
+    void participantAdded(Participant *participant);
+    void participantRemoved(Participant *participant);
+
 private:
     QList<Tp::TextChannelPtr> mChannels;
     QStringList mParticipantIds;
@@ -226,6 +232,7 @@ private:
     Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
     Tp::Client::ChannelInterfaceSubjectInterface *subjectInterface;
     ChannelInterfaceRolesInterface *rolesInterface;
+    RolesMap mRolesMap;
 };
 
 #endif // CHATENTRY_H

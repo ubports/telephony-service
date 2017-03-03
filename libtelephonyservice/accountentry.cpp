@@ -28,6 +28,10 @@
 
 Q_DECLARE_METATYPE(Tp::ConnectionPtr);
 
+namespace C {
+#include <libintl.h>
+}
+
 AccountEntry::AccountEntry(const Tp::AccountPtr &account, QObject *parent) :
     QObject(parent), mAccount(account), mReady(false), mProtocol(0)
 {
@@ -51,10 +55,19 @@ QString AccountEntry::accountId() const
 
 bool AccountEntry::active() const
 {
-    return (!mAccount.isNull() &&
-            !mAccount->connection().isNull() &&
-            !mAccount->connection()->selfContact().isNull() &&
-             mAccount->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline);
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->status() != Tp::ConnectionStatusConnected) {
+        return false;
+    }
+
+    // we have to check if the account supports simple presence. In case it does, we use the self contact presence to determine
+    // if this account is active.
+    if (mAccount->connection()->hasInterface(TP_QT_IFACE_CONNECTION_INTERFACE_SIMPLE_PRESENCE)) {
+        return (!mAccount->connection()->selfContact().isNull() &&
+                mAccount->connection()->selfContact()->presence().type() != Tp::ConnectionPresenceTypeOffline);
+    }
+
+    // if it doesn't support simple presence, we  consider it online by having a connection in connected state
+    return true;
 }
 
 QString AccountEntry::displayName() const
@@ -139,6 +152,18 @@ AccountEntry::Capabilities AccountEntry::capabilities() const
     return capabilities;
 }
 
+QVariantMap AccountEntry::accountProperties() const
+{
+    return mAccountProperties;
+}
+
+void AccountEntry::setAccountProperties(const QVariantMap &properties)
+{
+    TelepathyHelper::instance()->handlerInterface()->asyncCall("SetAccountProperties", mAccount->uniqueIdentifier(), properties);
+    mAccountProperties = properties;
+    Q_EMIT accountPropertiesChanged();
+}
+
 Tp::AccountPtr AccountEntry::account() const
 {
     return mAccount;
@@ -219,6 +244,17 @@ void AccountEntry::initialize()
     // we have to postpone this call to give telepathyhelper time to connect the signals
     QMetaObject::invokeMethod(this, "onConnectionChanged", Qt::QueuedConnection, Q_ARG(Tp::ConnectionPtr, mAccount->connection()));
     QMetaObject::invokeMethod(this, "accountReady", Qt::QueuedConnection);
+
+    // FIXME: change it to be asynchronous
+    if (QCoreApplication::applicationName() != "telephony-service-handler") {
+        QDBusReply<QVariantMap> reply = TelepathyHelper::instance()->handlerInterface()->call("GetAccountProperties", mAccount->uniqueIdentifier());
+
+        if (!reply.isValid()) {
+            return;
+        }
+        mAccountProperties = reply;
+        Q_EMIT accountPropertiesChanged();
+    }
     mReady = true;
 }
 

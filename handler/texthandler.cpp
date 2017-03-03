@@ -168,7 +168,13 @@ QList<Tp::TextChannelPtr> TextHandler::existingChannels(const QString &accountId
     if (chatType == Tp::HandleTypeNone && targetIds.size() == 1) {
         chatType = Tp::HandleTypeContact;
     }
+
     QString roomId = properties["threadId"].toString();
+
+    // try to use the threadId as participantId if empty
+    if (chatType == Tp::HandleTypeContact && targetIds.isEmpty()) {
+        targetIds << roomId;
+    }
 
     Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
         int count = 0;
@@ -275,3 +281,15 @@ bool TextHandler::leaveChat(const QString &objectPath, const QString &message)
     return true;
 }
 
+void TextHandler::leaveRooms(const QString &accountId, const QString &message)
+{
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
+        if (channel->targetHandleType() != Tp::HandleTypeRoom) {
+            continue;
+        }
+        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        if (account && account->accountId() == accountId) {
+            leaveChat(channel->objectPath(), message);
+        }
+    }
+}
