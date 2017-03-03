@@ -54,6 +54,9 @@ protected Q_SLOTS:
     void onTextChannelAvailable(Tp::TextChannelPtr channel);
     void onTextChannelInvalidated();
 
+    void onMessagingAppOpen();
+    void onMessagingAppClosed();
+
 protected:
     QList<Tp::TextChannelPtr> existingChannels(const QString &accountId, const QVariantMap &properties);
     Tp::TextChannelPtr existingChannelFromObjectPath(const QString &objectPath);
@@ -61,6 +64,7 @@ protected:
 private:
     explicit TextHandler(QObject *parent = 0);
     QList<Tp::TextChannelPtr> mChannels;
+    QDBusServiceWatcher mMessagingAppMonitor;
 };
 
 #endif // TEXTHANDLER_H

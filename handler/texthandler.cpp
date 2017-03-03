@@ -35,10 +35,32 @@
 
 TextHandler::TextHandler(QObject *parent)
 : QObject(parent)
+  , mMessagingAppMonitor("com.canonical.MessagingApp", QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForRegistration|QDBusServiceWatcher::WatchForUnregistration)
 {
     qDBusRegisterMetaType<AttachmentStruct>();
     qDBusRegisterMetaType<AttachmentList>();
     qRegisterMetaType<PendingMessage>();
+    connect(&mMessagingAppMonitor, SIGNAL(serviceRegistered(const QString&)), SLOT(onMessagingAppOpen()));
+    connect(&mMessagingAppMonitor, SIGNAL(serviceUnregistered(const QString&)), SLOT(onMessagingAppClosed()));
+}
+
+void TextHandler::onMessagingAppOpen()
+{
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        if (!account->active() && account->protocolInfo()->leaveRoomsOnClose()) {
+            account->reconnect();
+        }
+    }
+}
+
+void TextHandler::onMessagingAppClosed()
+{
+    Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
+        if (account->protocolInfo()->leaveRoomsOnClose()) {
+            account->requestDisconnect();
+        }
+    }
+
 }
 
 TextHandler *TextHandler::instance()

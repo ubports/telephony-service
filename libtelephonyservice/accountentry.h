@@ -94,6 +94,9 @@ public:
 
     static void addAccountLabel(const QString &accountId, QString &text);
 
+    void reconnect();
+    void requestDisconnect();
+
 Q_SIGNALS:
     void accountReady();
     void accountIdChanged();

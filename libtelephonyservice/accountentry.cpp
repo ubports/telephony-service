@@ -327,3 +327,20 @@ void AccountEntry::addAccountLabel(const QString &accountId, QString &text)
         text += QString(" - [%1]").arg(account->displayName());
     }
 }
+
+void AccountEntry::reconnect()
+{
+    if (mAccount.isNull() || (mAccount->connection() && mAccount->connection()->status() != Tp::ConnectionStatusDisconnected)) {
+        return;
+    }
+    mAccount->reconnect();
+    mAccount->setRequestedPresence(Tp::Presence::available());
+}
+
+void AccountEntry::requestDisconnect()
+{
+    if (mAccount.isNull() || mAccount->connection()->status() == Tp::ConnectionStatusDisconnected) {
+        return;
+    }
+    mAccount->setRequestedPresence(Tp::Presence::offline());
+}
