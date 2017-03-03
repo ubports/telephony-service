@@ -119,7 +119,8 @@ void AccountList::activeAccountsChangedImpl()
 {
     AccountEntry *account = qobject_cast<AccountEntry*>(QObject::sender());
 
-    Q_EMIT accountChanged(account, account->active());
+    // FIXME: for some reason active() is not returning true
+    Q_EMIT accountChanged(account, account->status() == "available");
     Q_EMIT activeAccountsChanged();
 }
 
