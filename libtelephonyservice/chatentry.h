@@ -168,7 +168,7 @@ protected:
     QVariantMap generateProperties() const;
 
     void clearParticipants();
-    void updateParticipants(QList<Participant*> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account);
+    void updateParticipants(QList<Participant*> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account, uint pending = 0);
 
 private Q_SLOTS:
     void onTextChannelAvailable(const Tp::TextChannelPtr &channel);
