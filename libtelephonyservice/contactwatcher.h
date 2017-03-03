@@ -27,6 +27,7 @@
 #include <QContactManager>
 #include <QContactAbstractRequest>
 #include <QContactFetchRequest>
+#include <QContactIntersectionFilter>
 #include <QQmlParserStatus>
 
 QTCONTACTS_USE_NAMESPACE
@@ -99,6 +100,7 @@ private:
     void startSearching();
     void clear();
     void updateAlias();
+    QContactIntersectionFilter filterForField(const QString &field, const QString &identifier);
 
     QContactFetchRequest *mRequest;
     QString mContactId;

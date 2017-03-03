@@ -48,6 +48,7 @@ class AccountEntry : public QObject
     Q_PROPERTY(Protocol* protocolInfo READ protocolInfo CONSTANT)
     Q_PROPERTY(Capabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
     Q_PROPERTY(QVariantMap accountProperties READ accountProperties WRITE setAccountProperties NOTIFY accountPropertiesChanged)
+    Q_PROPERTY(QVariantMap parameters READ parameters NOTIFY parametersChanged)
     Q_ENUMS(AccountType)
     friend class AccountEntryFactory;
 
@@ -86,6 +87,8 @@ public:
 
     QVariantMap accountProperties() const;
     void setAccountProperties(const QVariantMap &properties);
+
+    QVariantMap parameters() const;
  
     Protocol *protocolInfo() const;
 
@@ -106,6 +109,7 @@ Q_SIGNALS:
     void connectionStatusChanged(Tp::ConnectionStatus status);
     void capabilitiesChanged();
     void accountPropertiesChanged();
+    void parametersChanged();
 
 protected Q_SLOTS:
     virtual void initialize();

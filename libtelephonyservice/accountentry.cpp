@@ -164,6 +164,11 @@ void AccountEntry::setAccountProperties(const QVariantMap &properties)
     Q_EMIT accountPropertiesChanged();
 }
 
+QVariantMap AccountEntry::parameters() const
+{
+    return mAccount->parameters();
+}
+
 Tp::AccountPtr AccountEntry::account() const
 {
     return mAccount;
@@ -234,6 +239,9 @@ void AccountEntry::initialize()
     connect(mAccount.data(),
             SIGNAL(connectionStatusChanged(Tp::ConnectionStatus)),
             SIGNAL(connectionStatusChanged(Tp::ConnectionStatus)));
+
+    connect(mAccount.data(), &Tp::Account::parametersChanged,
+            this, &AccountEntry::parametersChanged);
 
     connect(this,
             SIGNAL(connectedChanged()),
