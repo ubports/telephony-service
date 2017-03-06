@@ -339,7 +339,7 @@ void AccountEntry::reconnect()
 
 void AccountEntry::requestDisconnect()
 {
-    if (mAccount.isNull() || mAccount->connection()->status() == Tp::ConnectionStatusDisconnected) {
+    if (mAccount.isNull() || !mAccount->connection() || mAccount->connection()->status() == Tp::ConnectionStatusDisconnected) {
         return;
     }
     mAccount->setRequestedPresence(Tp::Presence::offline());
