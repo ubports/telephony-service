@@ -55,7 +55,7 @@ QString AccountEntry::accountId() const
 
 bool AccountEntry::active() const
 {
-    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connection()->status() != Tp::ConnectionStatusConnected) {
+    if (mAccount.isNull() || mAccount->connection().isNull() || mAccount->connectionStatus() != Tp::ConnectionStatusConnected) {
         return false;
     }
 
@@ -117,7 +117,7 @@ void AccountEntry::setDisplayName(const QString &name)
 bool AccountEntry::connected() const
 {
     return !mAccount.isNull() && !mAccount->connection().isNull() &&
-           mAccount->connection()->status() == Tp::ConnectionStatusConnected;
+           mAccount->connectionStatus() == Tp::ConnectionStatusConnected;
 }
 
 AccountEntry::Capabilities AccountEntry::capabilities() const
@@ -322,7 +322,7 @@ void AccountEntry::onConnectionChanged(Tp::ConnectionPtr connection)
 AccountEntry::ConnectionStatus AccountEntry::connectionStatus() const
 {
     if (mAccount && mAccount->connection()) {
-        return (ConnectionStatus)mAccount->connection()->status();
+        return (ConnectionStatus)mAccount->connectionStatus();
     }
     return ConnectionStatusDisconnected;
 }
@@ -338,7 +338,7 @@ void AccountEntry::addAccountLabel(const QString &accountId, QString &text)
 
 void AccountEntry::reconnect()
 {
-    if (mAccount.isNull() || (mAccount->connection() && mAccount->connection()->status() != Tp::ConnectionStatusDisconnected)) {
+    if (mAccount.isNull() || (mAccount->connection() && mAccount->connectionStatus() != Tp::ConnectionStatusDisconnected)) {
         return;
     }
     mAccount->reconnect();
@@ -347,7 +347,7 @@ void AccountEntry::reconnect()
 
 void AccountEntry::requestDisconnect()
 {
-    if (mAccount.isNull() || !mAccount->connection() || mAccount->connection()->status() == Tp::ConnectionStatusDisconnected) {
+    if (mAccount.isNull() || !mAccount->connection() || mAccount->connectionStatus() == Tp::ConnectionStatusDisconnected) {
         return;
     }
     mAccount->setRequestedPresence(Tp::Presence::offline());
