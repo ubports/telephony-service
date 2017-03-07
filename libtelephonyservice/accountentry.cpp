@@ -319,6 +319,14 @@ void AccountEntry::onConnectionChanged(Tp::ConnectionPtr connection)
     Q_EMIT capabilitiesChanged();
 }
 
+AccountEntry::ConnectionStatus AccountEntry::connectionStatus() const
+{
+    if (mAccount && mAccount->connection()) {
+        return (ConnectionStatus)mAccount->connection()->status();
+    }
+    return ConnectionStatusDisconnected;
+}
+
 void AccountEntry::addAccountLabel(const QString &accountId, QString &text)
 {
     AccountEntry *account = TelepathyHelper::instance()->accountForId(accountId);
