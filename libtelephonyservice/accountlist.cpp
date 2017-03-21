@@ -143,7 +143,7 @@ void AccountList::filterAccounts()
         }
 
         connect(account, &AccountEntry::activeChanged,
-                this, &AccountList::activeAccountsChangedImpl);
+                this, &AccountList::onActiveAccountsChanged);
         mAccounts << account;
     }
 
