@@ -115,7 +115,7 @@ void AccountList::init()
             this, &AccountList::filterAccounts);
 }
 
-void AccountList::activeAccountsChangedImpl()
+void AccountList::onActiveAccountsChanged()
 {
     AccountEntry *account = qobject_cast<AccountEntry*>(QObject::sender());
 

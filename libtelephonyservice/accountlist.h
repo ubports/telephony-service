@@ -60,7 +60,7 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void init();
     void filterAccounts();
-    void activeAccountsChangedImpl();
+    void onActiveAccountsChanged();
 
 private:
     Protocol::Features mFeatures;
