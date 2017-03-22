@@ -55,10 +55,12 @@ Q_SIGNALS:
     void allAccountsChanged();
     void activeAccountsChanged();
     void displayedAccountsChanged();
+    void accountChanged(AccountEntry *entry, bool active);
 
 protected Q_SLOTS:
     void init();
     void filterAccounts();
+    void onActiveAccountsChanged();
 
 private:
     Protocol::Features mFeatures;
