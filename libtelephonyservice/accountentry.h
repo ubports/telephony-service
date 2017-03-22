@@ -49,7 +49,9 @@ class AccountEntry : public QObject
     Q_PROPERTY(Capabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
     Q_PROPERTY(QVariantMap accountProperties READ accountProperties WRITE setAccountProperties NOTIFY accountPropertiesChanged)
     Q_PROPERTY(QVariantMap parameters READ parameters NOTIFY parametersChanged)
+    Q_PROPERTY(ConnectionStatus connectionStatus READ connectionStatus NOTIFY connectionStatusChanged)
     Q_ENUMS(AccountType)
+    Q_ENUMS(ConnectionStatus)
     friend class AccountEntryFactory;
 
 public:
@@ -68,6 +70,12 @@ public:
         CapabilityContactSearches                     = 32
     };
     Q_DECLARE_FLAGS(Capabilities, Capability);
+
+    enum ConnectionStatus {
+        ConnectionStatusConnected                  = Tp::ConnectionStatusConnected,
+        ConnectionStatusConnecting                 = Tp::ConnectionStatusConnecting,
+        ConnectionStatusDisconnected               = Tp::ConnectionStatusDisconnected
+    };
 
     bool ready() const;
     QString accountId() const;
@@ -92,7 +100,12 @@ public:
  
     Protocol *protocolInfo() const;
 
+    ConnectionStatus connectionStatus() const;
+
     static void addAccountLabel(const QString &accountId, QString &text);
+
+    void reconnect();
+    void requestDisconnect();
 
 Q_SIGNALS:
     void accountReady();

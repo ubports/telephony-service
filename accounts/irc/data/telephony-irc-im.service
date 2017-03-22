@@ -10,8 +10,8 @@
     <group name="telepathy">
       <setting name="manager">irc</setting>
       <setting name="protocol">irc</setting>
-      <setting name="ConnectAutomatically">true</setting>
-      <setting type="s" name="AutomaticPresence">2;available;;</setting>
+      <setting name="ConnectAutomatically">false</setting>
+      <setting type="s" name="AutomaticPresence">1;offline;;</setting>
     </group>
     <group name="auth">
       <setting name="method">password</setting>
