@@ -16,3 +16,6 @@ Sharing code between the approver and the QML plugin:
   places
 - Change the ChannelObserver and the ChannelApprover code to allow using from
   both places.
+
+Handler
+- Move app monitoring to from TextHandler to ApplicationUtils
