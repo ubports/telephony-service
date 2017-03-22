@@ -141,15 +141,18 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
     updateParticipants(mParticipants,
                        groupMembersAdded,
                        groupMembersRemoved,
-                       account);
+                       account,
+                       Participant::ParticipantStateRegular);
     updateParticipants(mLocalPendingParticipants,
                        groupLocalPendingMembersAdded,
                        groupMembersRemoved + groupMembersAdded, // if contacts move to the main list, remove from the pending one
-                       account);
+                       account,
+                       Participant::ParticipantStateRemotePending);
     updateParticipants(mRemotePendingParticipants,
                        groupRemotePendingMembersAdded,
                        groupMembersRemoved + groupMembersAdded, // if contacts move to the main list, remove from the pending one
-                       account);
+                       account,
+                       Participant::ParticipantStateLocalPending);
 
     // generate the list of participant IDs again
     mParticipantIds.clear();
@@ -263,6 +266,11 @@ void ChatEntry::setRoomName(const QString &name)
 bool ChatEntry::autoRequest() const
 {
     return mAutoRequest;
+}
+
+QList<Participant*> ChatEntry::allParticipants() const
+{
+    return mParticipants + mLocalPendingParticipants + mRemotePendingParticipants;
 }
 
 bool ChatEntry::canUpdateConfiguration() const
@@ -575,9 +583,6 @@ void ChatEntry::addChannel(const Tp::TextChannelPtr &channel)
 
     // FIXME: check how to handle multiple channels in a better way,
     // for now, use the info from the last available channel
-    Q_FOREACH(Participant *participant, mParticipants) {
-        participant->deleteLater();
-    }
     clearParticipants();
 
     onGroupMembersChanged(channel->groupContacts(false),
@@ -669,26 +674,31 @@ QVariantMap ChatEntry::generateProperties() const
 void ChatEntry::clearParticipants()
 {
     Q_FOREACH(Participant *participant, mParticipants) {
+        Q_EMIT participantRemoved(participant);
         participant->deleteLater();
     }
     Q_FOREACH(Participant *participant, mLocalPendingParticipants) {
+        Q_EMIT participantRemoved(participant);
         participant->deleteLater();
     }
     Q_FOREACH(Participant *participant, mRemotePendingParticipants) {
+        Q_EMIT participantRemoved(participant);
         participant->deleteLater();
     }
     mParticipants.clear();
     mLocalPendingParticipants.clear();
     mRemotePendingParticipants.clear();
+    mRolesMap.clear();
     mSelfContactRoles = 0;
 }
 
-void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account)
+void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account, Participant::ParticipantState pending)
 {
     // first look for removed members
     Q_FOREACH(Tp::ContactPtr contact, removed) {
         Q_FOREACH(Participant *participant, list) {
             if (account->compareIds(contact->id(), participant->identifier())) {
+                Q_EMIT participantRemoved(participant);
                 participant->deleteLater();
                 list.removeOne(participant);
                 break;
@@ -703,7 +713,9 @@ void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contact
     // FIXME: check for duplicates?
     Q_FOREACH(Tp::ContactPtr contact, added) {
         uint handle = contact->handle().at(0);
-        list << new Participant(contact->id(), mRolesMap[handle], handle, this);
+        Participant* participant = new Participant(contact->id(), mRolesMap[handle], handle, QString(), pending, this);
+        Q_EMIT participantAdded(participant);
+        list << participant;
     }
 }
 
@@ -794,6 +806,7 @@ void ChatEntry::onChannelInvalidated()
         rolesInterface->disconnect(this);
         rolesInterface = 0;
     }
+    clearParticipants();
     Q_EMIT activeChanged();
     Q_EMIT groupFlagsChanged();
     Q_EMIT selfContactRolesChanged();

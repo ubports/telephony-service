@@ -25,8 +25,10 @@
 
 #include <QObject>
 #include <QQmlParserStatus>
+#include <QQmlListProperty>
 #include <TelepathyQt/TextChannel>
 #include "rolesinterface.h"
+#include "participant.h"
 
 class AccountEntry;
 class Participant;
@@ -146,6 +148,8 @@ public:
     void classBegin();
     void componentComplete();
 
+    QList<Participant*> allParticipants() const;
+
 public Q_SLOTS:
     // FIXME: void or return something?
     void sendMessage(const QString &accountId, const QString &message, const QVariant &attachments = QVariant(), const QVariantMap &properties = QVariantMap());
@@ -165,7 +169,7 @@ protected:
     QVariantMap generateProperties() const;
 
     void clearParticipants();
-    void updateParticipants(QList<Participant*> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account);
+    void updateParticipants(QList<Participant*> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account, Participant::ParticipantState = Participant::ParticipantStateRegular);
 
 private Q_SLOTS:
     void onTextChannelAvailable(const Tp::TextChannelPtr &channel);
@@ -206,6 +210,9 @@ Q_SIGNALS:
 
     void chatReady();
     void startChatFailed();
+
+    void participantAdded(Participant *participant);
+    void participantRemoved(Participant *participant);
 
 private:
     QList<Tp::TextChannelPtr> mChannels;
