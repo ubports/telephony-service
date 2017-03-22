@@ -15,13 +15,6 @@ set(CMAKE_AUTOMOC ON)
 # just to make debug easier, print the system processor
 message(STATUS "System processor: ${CMAKE_SYSTEM_PROCESSOR}")
 
-# Check if should build using ubuntu platform api
-check_include_file_cxx("ubuntu/application/init.h" USE_UBUNTU_PLATFORM_API)
-
-if (USE_UBUNTU_PLATFORM_API)
-    add_definitions(-DUSE_UBUNTU_PLATFORM_API)
-endif (USE_UBUNTU_PLATFORM_API)
-
 set(TELEPHONY_SERVICE_DIR ${CMAKE_INSTALL_DATADIR}/telephony-service)
 
 configure_file(config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h @ONLY)
@@ -77,6 +70,7 @@ pkg_check_modules(HISTORY REQUIRED history-service)
 pkg_check_modules(TPFS REQUIRED telepathy-farstream)
 pkg_check_modules(GST REQUIRED gstreamer-1.0)
 pkg_check_modules(FS REQUIRED farstream-0.2)
+pkg_check_modules(URL_DISPATCHER REQUIRED url-dispatcher-1)
 
 add_definitions(-DQT_NO_KEYWORDS)
 

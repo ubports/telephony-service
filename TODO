@@ -3,6 +3,7 @@ General items
 - Check how to import/export potfiles from the ts one
 - Add an automated test to check if features are getting correctly exported
   by AccountEntry
+- Implement unit test for launching external app from indicator.
 
 Contact integration items:
 - Fix contact search when names contain accentuated characters
