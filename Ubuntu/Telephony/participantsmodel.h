@@ -89,4 +89,4 @@ private:
     QList<Participant*> mParticipantsCache;
 };
 
-#endif // HISTORYMODEL_H
+#endif // PARTICIPANTSMODEL_H

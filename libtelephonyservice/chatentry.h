@@ -28,6 +28,7 @@
 #include <QQmlListProperty>
 #include <TelepathyQt/TextChannel>
 #include "rolesinterface.h"
+#include "participant.h"
 
 class AccountEntry;
 class Participant;
@@ -168,7 +169,7 @@ protected:
     QVariantMap generateProperties() const;
 
     void clearParticipants();
-    void updateParticipants(QList<Participant*> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account, uint pending = 0);
+    void updateParticipants(QList<Participant*> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account, Participant::ParticipantState = Participant::ParticipantStateRegular);
 
 private Q_SLOTS:
     void onTextChannelAvailable(const Tp::TextChannelPtr &channel);

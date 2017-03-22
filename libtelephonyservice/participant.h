@@ -29,7 +29,13 @@ class Participant : public ContactWatcher
 {
     Q_OBJECT
     Q_PROPERTY(uint roles READ roles NOTIFY rolesChanged)
+    Q_ENUMS(ParticipantState)
 public:
+    enum ParticipantState {
+        ParticipantStateRegular = 0,
+        ParticipantStateRemotePending = 1,
+        ParticipantStateLocalPending = 2,
+    };
     explicit Participant(const QString &identifier, uint roles, uint handle, const QString &avatar = QString(), uint state = 0, QObject *parent = 0);
     explicit Participant(QObject *parent = 0);
     explicit Participant(const Participant &other);

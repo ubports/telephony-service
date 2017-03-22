@@ -142,17 +142,17 @@ void ChatEntry::onGroupMembersChanged(const Tp::Contacts &groupMembersAdded,
                        groupMembersAdded,
                        groupMembersRemoved,
                        account,
-                       0);
+                       Participant::ParticipantStateRegular);
     updateParticipants(mLocalPendingParticipants,
                        groupLocalPendingMembersAdded,
                        groupMembersRemoved + groupMembersAdded, // if contacts move to the main list, remove from the pending one
                        account,
-                       1);
+                       Participant::ParticipantStateRemotePending);
     updateParticipants(mRemotePendingParticipants,
                        groupRemotePendingMembersAdded,
                        groupMembersRemoved + groupMembersAdded, // if contacts move to the main list, remove from the pending one
                        account,
-                       2);
+                       Participant::ParticipantStateLocalPending);
 
     // generate the list of participant IDs again
     mParticipantIds.clear();
@@ -692,7 +692,7 @@ void ChatEntry::clearParticipants()
     mSelfContactRoles = 0;
 }
 
-void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account, uint pending)
+void ChatEntry::updateParticipants(QList<Participant *> &list, const Tp::Contacts &added, const Tp::Contacts &removed, AccountEntry *account, Participant::ParticipantState pending)
 {
     // first look for removed members
     Q_FOREACH(Tp::ContactPtr contact, removed) {

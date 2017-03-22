@@ -133,6 +133,8 @@ QVariant ParticipantsModel::data(const QModelIndex &index, int role) const
 
 bool ParticipantsModel::lessThan(const QString &left, const QString &right) const
 {
+    // this method will push participant with names starting with non-letter
+    // characters to the end of the list
     if (left.isEmpty() || right.isEmpty()) {
         return false;
     }
@@ -213,10 +215,12 @@ void ParticipantsModel::setChatEntry(ChatEntry *entry)
     if (mChatEntry == entry) {
         return;
     }
+    ChatEntry *previousChatEntry = mChatEntry;
     mChatEntry = entry;
     if (!entry) {
         return;
     }
+    previousChatEntry->disconnect(this);
     connect(mChatEntry, SIGNAL(participantAdded(Participant *)), SLOT(addParticipant(Participant *)));
     connect(mChatEntry, SIGNAL(participantRemoved(Participant *)), SLOT(removeParticipant(Participant *)));
     Q_FOREACH(Participant *participant, mChatEntry->allParticipants()) {
