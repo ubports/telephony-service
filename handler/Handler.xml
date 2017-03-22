@@ -177,8 +177,15 @@
             <dox:d><![CDATA[
                 Get the list of current available protocols
             ]]></dox:d>
-            <arg name="result" type="a(susussbbssssb)" direction="out"/>
+            <arg name="result" type="a(susussbbssssbbbbbbb)" direction="out"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ProtocolList"/>
+        </method>
+        <method name="LeaveRooms">
+            <dox:d><![CDATA[
+                Close all rooms of a given account
+            ]]></dox:d>
+            <arg name="accountId" type="s" direction="in"/>
+            <arg name="message" type="s" direction="in"/>
         </method>
         <method name="GetAllAccountsProperties">
             <dox:d><![CDATA[
@@ -245,7 +252,7 @@
             <dox:d><![CDATA[
                 The protocols files in protocols dir have changed
             ]]></dox:d>
-            <arg name="protocols" type="a(susussbbssssb)"/>
+            <arg name="protocols" type="a(susussbbssssbbbbbbb)"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="ProtocolList"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="ProtocolList"/>
         </signal>

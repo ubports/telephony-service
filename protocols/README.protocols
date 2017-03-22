@@ -21,3 +21,10 @@ All keys should be under the [Protocol] group, and here are the supported keys:
 - ServiceName: TODO: add description
 - ServiceDisplayName: TODO: add description
 - JoinExistingChannels: enabled if this protocol suppors joining existing chats
+- ReturnToSend: whether the UI should send messages when return or enter are pressed
+- EnableAttachments: whether the UI should allow users to send attachments
+- EnableRejoin: whether users can manually rejoin existing chats
+- EnableTabCompletion: whether the UI should allow tab complation
+- LeaveRoomsOnClose: whether the account should be disconnected when the UI is closed
+- EnableChatStates: whether the UI should display chat states like user typing and so on
+

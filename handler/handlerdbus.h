@@ -76,6 +76,7 @@ public Q_SLOTS:
     Q_NOREPLY void InviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
     Q_NOREPLY void RemoveParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
     bool LeaveChat(const QString &objectPath, const QString &message);
+    Q_NOREPLY void LeaveRooms(const QString &accountId, const QString &message);
 
     // call related
     Q_NOREPLY void StartCall(const QString &number, const QString &accountId);

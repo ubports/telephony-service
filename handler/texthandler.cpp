@@ -275,3 +275,15 @@ bool TextHandler::leaveChat(const QString &objectPath, const QString &message)
     return true;
 }
 
+void TextHandler::leaveRooms(const QString &accountId, const QString &message)
+{
+    Q_FOREACH(const Tp::TextChannelPtr &channel, mChannels) {
+        if (channel->targetHandleType() != Tp::HandleTypeRoom) {
+            continue;
+        }
+        AccountEntry *account = TelepathyHelper::instance()->accountForConnection(channel->connection());
+        if (account && account->accountId() == accountId) {
+            leaveChat(channel->objectPath(), message);
+        }
+    }
+}

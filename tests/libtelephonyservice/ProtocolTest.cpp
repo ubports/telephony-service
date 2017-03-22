@@ -40,9 +40,15 @@ public:
                  const QString &serviceName = QString::null,
                  const QString &serviceDisplayName = QString::null,
                  bool joinExistingChannels = false,
+                 bool returnToSend = false,
+                 bool enableAttachments = true,
+                 bool enableRejoin = false,
+                 bool enableTabCompletion = false,
+                 bool leaveRoomsOnClose = false,
+                 bool enableChatStates = false,
                  QObject *parent = 0)
      : Protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                showOnSelector, showOnlineStatus, backgroundFile, icon, serviceName, serviceDisplayName, joinExistingChannels, parent) { }
+                showOnSelector, showOnlineStatus, backgroundFile, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin, enableTabCompletion, leaveRoomsOnClose, enableChatStates, parent) { }
 };
 
 class ProtocolTest : public QObject
@@ -69,9 +75,15 @@ void ProtocolTest::testBasicInfo()
     QString serviceName("The service");
     QString serviceDisplayName("The service display name");
     bool joinExistingChannels = true;
+    bool returnToSend = true;
+    bool enableAttachments = false;
+    bool enableRejoin = true;
+    bool enableTabCompletion = false;
+    bool leaveRoomsOnClose = true;
+    bool enableChatStates = false;
 
     TestProtocol protocol(name, features, fallbackProtocol, fallbackMatchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                          showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, this);
+                          showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels, returnToSend, enableAttachments, enableRejoin, enableTabCompletion, leaveRoomsOnClose, enableChatStates, this);
     QCOMPARE(protocol.name(), name);
     QCOMPARE(protocol.features(), features);
     QCOMPARE(protocol.fallbackProtocol(), fallbackProtocol);
@@ -85,6 +97,12 @@ void ProtocolTest::testBasicInfo()
     QCOMPARE(protocol.serviceName(), serviceName);
     QCOMPARE(protocol.serviceDisplayName(), serviceDisplayName);
     QCOMPARE(protocol.joinExistingChannels(), joinExistingChannels);
+    QCOMPARE(protocol.returnToSend(), returnToSend);
+    QCOMPARE(protocol.enableAttachments(), enableAttachments);
+    QCOMPARE(protocol.enableRejoin(), enableRejoin);
+    QCOMPARE(protocol.enableTabCompletion(), enableTabCompletion);
+    QCOMPARE(protocol.leaveRoomsOnClose(), leaveRoomsOnClose);
+    QCOMPARE(protocol.enableChatStates(), enableChatStates);
     QCOMPARE(protocol.parent(), this);
 }
 
@@ -110,6 +128,12 @@ void ProtocolTest::testFromFile()
     QCOMPARE(protocol->serviceName(), QString("The Service"));
     QCOMPARE(protocol->serviceDisplayName(), QString("The Service Display Name"));
     QCOMPARE(protocol->joinExistingChannels(), true);
+    QCOMPARE(protocol->returnToSend(), false);
+    QCOMPARE(protocol->enableAttachments(), false);
+    QCOMPARE(protocol->enableRejoin(), true);
+    QCOMPARE(protocol->enableTabCompletion(), true);
+    QCOMPARE(protocol->leaveRoomsOnClose(), true);
+    QCOMPARE(protocol->enableChatStates(), true);
 }
 
 QTEST_MAIN(ProtocolTest)

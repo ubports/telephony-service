@@ -69,6 +69,24 @@ class Protocol : public QObject
     /// @brief whether this protocol allows joining existing channels
     Q_PROPERTY(bool joinExistingChannels READ joinExistingChannels CONSTANT)
 
+    /// @brief whether this protocol should send the message directly when return is pressed
+    Q_PROPERTY(bool returnToSend READ returnToSend CONSTANT)
+
+    /// @brief whether this protocol supports attachments
+    Q_PROPERTY(bool enableAttachments READ enableAttachments CONSTANT)
+
+    /// @brief whether this protocol supports rejoin channels manually
+    Q_PROPERTY(bool enableRejoin READ enableRejoin CONSTANT)
+
+    /// @brief whether this protocol supports tab completion
+    Q_PROPERTY(bool enableTabCompletion READ enableTabCompletion CONSTANT)
+
+    /// @brief whether the app needs to request leave all room channels when the app closes
+    Q_PROPERTY(bool leaveRoomsOnClose READ leaveRoomsOnClose CONSTANT)
+
+    /// @brief whether the app support chat states as typing notifications
+    Q_PROPERTY(bool enableChatStates READ enableChatStates CONSTANT)
+
 public:
     enum Feature {
         TextChats = 0x1,
@@ -97,6 +115,12 @@ public:
     QString serviceName() const;
     QString serviceDisplayName() const;
     bool joinExistingChannels() const;
+    bool returnToSend() const;
+    bool enableAttachments() const;
+    bool enableRejoin() const;
+    bool enableTabCompletion() const;
+    bool leaveRoomsOnClose() const;
+    bool enableChatStates() const;
 
     static Protocol *fromFile(const QString &fileName);
     ProtocolStruct dbusType();
@@ -116,6 +140,12 @@ protected:
                       const QString &serviceName = QString::null,
                       const QString &serviceDisplayName = QString::null,
                       bool joinExistingChannels = false,
+                      bool returnToSend = false,
+                      bool enableAttachments = true,
+                      bool enableRejoin = false,
+                      bool enableTabCompletion = false,
+                      bool leaveRoomsOnClose = false,
+                      bool enableChatStates = false,
                       QObject *parent = 0);
 
 private:
@@ -132,6 +162,12 @@ private:
     QString mServiceName;
     QString mServiceDisplayName;
     bool mJoinExistingChannels;
+    bool mReturnToSend;
+    bool mEnableAttachments;
+    bool mEnableRejoin;
+    bool mEnableTabCompletion;
+    bool mLeaveRoomsOnClose;
+    bool mEnableChatStates;
 };
 
 class Protocols : public QList<Protocol*>

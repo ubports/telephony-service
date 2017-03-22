@@ -47,6 +47,12 @@ struct ProtocolStruct {
     QString serviceName;
     QString serviceDisplayName;
     bool joinExistingChannels;
+    bool returnToSend;
+    bool enableAttachments;
+    bool enableRejoin;
+    bool enableTabCompletion;
+    bool leaveRoomsOnClose;
+    bool enableChatStates;
 };
 
 typedef QList<AttachmentStruct> AttachmentList;

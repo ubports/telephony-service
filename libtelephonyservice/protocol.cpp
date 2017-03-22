@@ -39,6 +39,12 @@ Protocol::Protocol(const ProtocolStruct & protocol)
     , mServiceName(protocol.serviceName)
     , mServiceDisplayName(protocol.serviceDisplayName)
     , mJoinExistingChannels(protocol.joinExistingChannels)
+    , mReturnToSend(protocol.returnToSend)
+    , mEnableAttachments(protocol.enableAttachments)
+    , mEnableRejoin(protocol.enableRejoin)
+    , mEnableTabCompletion(protocol.enableTabCompletion)
+    , mLeaveRoomsOnClose(protocol.leaveRoomsOnClose)
+    , mEnableChatStates(protocol.enableChatStates)
 {
 }
 
@@ -55,6 +61,12 @@ Protocol::Protocol(const QString &name,
                    const QString &serviceName,
                    const QString &serviceDisplayName,
                    bool joinExistingChannels,
+                   bool returnToSend,
+                   bool enableAttachments,
+                   bool enableRejoin,
+                   bool enableTabCompletion,
+                   bool leaveRoomsOnClose,
+                   bool enableChatStates,
                    QObject *parent)
  : QObject(parent)
  , mName(name)
@@ -70,12 +82,18 @@ Protocol::Protocol(const QString &name,
  , mServiceName(serviceName)
  , mServiceDisplayName(serviceDisplayName)
  , mJoinExistingChannels(joinExistingChannels)
+ , mReturnToSend(returnToSend)
+ , mEnableAttachments(enableAttachments)
+ , mEnableRejoin(enableRejoin)
+ , mEnableTabCompletion(enableTabCompletion)
+ , mLeaveRoomsOnClose(leaveRoomsOnClose)
+ , mEnableChatStates(enableChatStates)
 {
 }
 
 ProtocolStruct Protocol::dbusType()
 {
-    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels};
+    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels, mReturnToSend, mEnableAttachments, mEnableRejoin, mEnableTabCompletion, mLeaveRoomsOnClose, mEnableChatStates};
 }
 
 QString Protocol::name() const
@@ -143,6 +161,36 @@ bool Protocol::joinExistingChannels() const
     return mJoinExistingChannels;
 }
 
+bool Protocol::returnToSend() const
+{
+    return mReturnToSend;
+}
+
+bool Protocol::enableAttachments() const
+{
+    return mEnableAttachments;
+}
+
+bool Protocol::enableRejoin() const
+{
+    return mEnableRejoin;
+}
+
+bool Protocol::enableTabCompletion() const
+{
+    return mEnableTabCompletion;
+}
+
+bool Protocol::leaveRoomsOnClose() const
+{
+    return mLeaveRoomsOnClose;
+}
+
+bool Protocol::enableChatStates() const
+{
+    return mEnableChatStates;
+}
+
 Protocol *Protocol::fromFile(const QString &fileName)
 {
     QFileInfo file(fileName);
@@ -181,7 +229,30 @@ Protocol *Protocol::fromFile(const QString &fileName)
     QString serviceName = settings.value("ServiceName").toString();
     QString serviceDisplayName = settings.value("ServiceDisplayName").toString();
     bool joinExistingChannels = settings.value("JoinExistingChannels").toBool();
+    bool returnToSend = settings.value("ReturnToSend").toBool();
+    bool enableAttachments = settings.value("EnableAttachments").toBool();
+    bool enableRejoin = settings.value("EnableRejoin").toBool();
+    bool enableTabCompletion = settings.value("EnableTabCompletion").toBool();
+    bool leaveRoomsOnClose = settings.value("LeaveRoomsOnClose").toBool();
+    bool enableChatStates = settings.value("EnableChatStates").toBool();
 
-    return new Protocol(name, features, fallbackProtocol, matchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                        showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels);
+    return new Protocol(name,
+                        features,
+                        fallbackProtocol,
+                        matchRule,
+                        fallbackSourceProperty,
+                        fallbackDestinationProperty,
+                        showOnSelector,
+                        showOnlineStatus,
+                        backgroundImage,
+                        icon,
+                        serviceName,
+                        serviceDisplayName,
+                        joinExistingChannels,
+                        returnToSend,
+                        enableAttachments,
+                        enableRejoin,
+                        enableTabCompletion,
+                        leaveRoomsOnClose,
+                        enableChatStates);
 }
