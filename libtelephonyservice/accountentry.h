@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2016 Canonical, Ltd.
+ * Copyright (C) 2013-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -47,6 +47,7 @@ class AccountEntry : public QObject
     Q_PROPERTY(bool usePhoneNumbers READ usePhoneNumbers NOTIFY usePhoneNumbersChanged)
     Q_PROPERTY(Protocol* protocolInfo READ protocolInfo CONSTANT)
     Q_PROPERTY(Capabilities capabilities READ capabilities NOTIFY capabilitiesChanged)
+    Q_PROPERTY(QVariantMap accountProperties READ accountProperties WRITE setAccountProperties NOTIFY accountPropertiesChanged)
     Q_ENUMS(AccountType)
     friend class AccountEntryFactory;
 
@@ -82,6 +83,9 @@ public:
     virtual bool active() const;
     virtual bool connected() const;
     Capabilities capabilities() const;
+
+    QVariantMap accountProperties() const;
+    void setAccountProperties(const QVariantMap &properties);
  
     Protocol *protocolInfo() const;
 
@@ -101,6 +105,7 @@ Q_SIGNALS:
     void removed();
     void connectionStatusChanged(Tp::ConnectionStatus status);
     void capabilitiesChanged();
+    void accountPropertiesChanged();
 
 protected Q_SLOTS:
     virtual void initialize();
@@ -115,6 +120,7 @@ protected:
     ConnectionInfo mConnectionInfo;
     bool mReady;
     Protocol *mProtocol;
+    QVariantMap mAccountProperties;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(AccountEntry::Capabilities);

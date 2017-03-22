@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -281,11 +281,15 @@ bool CallEntry::dialing() const
 
 bool CallEntry::incoming() const
 {
-    if (!mAccount) {
-        return false;
+    bool isIncoming = !mChannel->isRequested();
+
+    if (mAccount &&
+        !mChannel->initiatorContact().isNull() &&
+        mChannel->initiatorContact() != mAccount->account()->connection()->selfContact()) {
+        isIncoming = true;
     }
 
-    return mChannel->initiatorContact() != mAccount->account()->connection()->selfContact();
+    return isIncoming;
 }
 
 bool CallEntry::ringing() const
@@ -428,10 +432,18 @@ void CallEntry::setMute(bool value)
 {
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
     phoneAppHandler->call("SetMuted", mChannel->objectPath(), value);
+
+    // FIXME: maybe we should retrieve the property from the handler instead of relying on telepathy
+    // for that, because on channels that are not using hardware streaming we handle the mute internally
+    // with no participation of the Telepathy mute interface
+    if (mChannel->handlerStreamingRequired()) {
+        onMutedChanged(value ? 1 : 0);
+    }
 }
 
 void CallEntry::onCallStateChanged(Tp::CallState state)
 {
+    qDebug() << __PRETTY_FUNCTION__ << state;
     // fetch the channel properties from the handler
     updateChannelProperties();
 

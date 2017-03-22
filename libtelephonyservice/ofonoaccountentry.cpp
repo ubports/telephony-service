@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2013-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -44,6 +44,11 @@ OfonoAccountEntry::OfonoAccountEntry(const Tp::AccountPtr &account, QObject *par
 USSDManager *OfonoAccountEntry::ussdManager() const
 {
     return mUssdManager;
+}
+
+QString OfonoAccountEntry::modemName()
+{
+    return mAccount->parameters().value("modem-objpath").toString();
 }
 
 QStringList OfonoAccountEntry::emergencyNumbers() const
@@ -158,6 +163,7 @@ void OfonoAccountEntry::onVoicemailCountChanged(uint count)
 
 void OfonoAccountEntry::onVoicemailIndicatorChanged(bool visible)
 {
+    qDebug() << __PRETTY_FUNCTION__ << visible;
     mVoicemailIndicator = visible;
     Q_EMIT voicemailIndicatorChanged();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2015 Canonical, Ltd.
+ * Copyright (C) 2013-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -38,6 +38,7 @@ class OfonoAccountEntry : public AccountEntry
     Q_PROPERTY(QString serial READ serial NOTIFY serialChanged)
     Q_PROPERTY(QString countryCode READ countryCode NOTIFY countryCodeChanged)
     Q_PROPERTY(USSDManager* ussdManager READ ussdManager CONSTANT)
+    Q_PROPERTY(QString modemName READ modemName CONSTANT)
     friend class AccountEntryFactory;
 
 public:
@@ -51,6 +52,7 @@ public:
     bool simLocked() const;
     QString serial() const;
     USSDManager *ussdManager() const;
+    QString modemName();
 
     // reimplemented from AccountEntry
     virtual AccountEntry::AccountType type() const;

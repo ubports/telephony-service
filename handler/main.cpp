@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2016 Canonical, Ltd.
+ * Copyright (C) 2013-2017 Canonical, Ltd.
  *
  * Authors:
  *    Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -30,6 +30,7 @@
 #include <TelepathyQt/AbstractClient>
 #include <TelepathyQt/AccountManager>
 #include <TelepathyQt/Contact>
+#include <telepathy-farstream/telepathy-farstream.h>
 
 int main(int argc, char **argv)
 {
@@ -37,6 +38,7 @@ int main(int argc, char **argv)
     QCoreApplication::setApplicationName("telephony-service-handler");
 
     Tp::registerTypes();
+    gst_init(&argc, &argv);
 
     // check if there is already an instance of the handler running
     if (ApplicationUtils::checkApplicationRunning(TP_QT_IFACE_CLIENT + ".TelephonyServiceHandler")) {

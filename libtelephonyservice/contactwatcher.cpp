@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2016 Canonical, Ltd.
+ * Copyright (C) 2013-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -216,12 +216,14 @@ void ContactWatcher::setIdentifier(const QString &identifier)
     const bool isInteractive = !identifier.isEmpty() && !isPrivate && !isUnknown;
 
     mIdentifier = identifier;
-    Q_EMIT identifierChanged();
-
     if (isInteractive != mInteractive) {
         mInteractive = isInteractive;
         Q_EMIT interactiveChanged();
     }
+
+    mIdentifier = normalizeIdentifier(mIdentifier);
+    Q_EMIT identifierChanged();
+
 
     if (mIdentifier.isEmpty() || isPrivate || isUnknown) {
         updateAlias();
@@ -272,6 +274,26 @@ void ContactWatcher::setAddressableFields(const QStringList &fields)
     Q_EMIT addressableFieldsChanged();
 
     startSearching();
+}
+
+QString ContactWatcher::normalizeIdentifier(const QString &identifier, bool incoming)
+{
+    QString finalId = identifier;
+    // FIXME: this is a hack, we need to find a better way of matching contacts for accounts
+    // that don't have addressable fields
+    if (finalId.startsWith("sip:")) {
+        finalId.remove("sip:").remove(QRegularExpression("@.*$"));
+
+        // If the final ID's length is bigger than 6 digits, we assume it is a phone number.
+        // For incoming phone numbers, assume they come in the full format, including country code
+        // and just append the + to the beginning.
+        // FIXME: this rule might be an over-simplification of the cases. Change it to a more complete
+        // approach if the need appears.
+        if (!finalId.startsWith("+") && finalId.length() > 6 && incoming) {
+            finalId.prepend("+");
+        }
+    }
+    return finalId;
 }
 
 void ContactWatcher::classBegin()

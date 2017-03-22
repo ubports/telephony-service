@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -47,6 +47,9 @@ public:
     Q_INVOKABLE static bool isPhoneNumber(const QString &phoneNumber);
     Q_INVOKABLE static QString normalizePhoneNumber(const QString &phoneNumber);
     Q_INVOKABLE static bool isEmergencyNumber(const QString &phoneNumber, const QString &countryCode = QString());
+    Q_INVOKABLE static bool phoneNumberHasCountryCode(const QString &phoneNumber);
+    Q_INVOKABLE static QStringList supportedRegions();
+    Q_INVOKABLE static QString getFullNumber(const QString &number, const QString &defaultCountryCode, const QString &defaultAreaCode);
 private:
     static QString mCountryCode;
     

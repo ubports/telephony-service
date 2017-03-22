@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2013 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -45,6 +45,7 @@ public:
                         const QDateTime &userActionTime,
                         const Tp::AbstractClientHandler::HandlerInfo &handlerInfo);
     Tp::ChannelClassSpecList channelFilters();
+    Tp::AbstractClientHandler::Capabilities capabilities();
 
 Q_SIGNALS:
     void textChannelAvailable(Tp::TextChannelPtr textChannel);

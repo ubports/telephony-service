@@ -38,6 +38,7 @@ Protocol::Protocol(const ProtocolStruct & protocol)
     , mIcon(protocol.icon)
     , mServiceName(protocol.serviceName)
     , mServiceDisplayName(protocol.serviceDisplayName)
+    , mJoinExistingChannels(protocol.joinExistingChannels)
 {
 }
 
@@ -53,6 +54,7 @@ Protocol::Protocol(const QString &name,
                    const QString &icon,
                    const QString &serviceName,
                    const QString &serviceDisplayName,
+                   bool joinExistingChannels,
                    QObject *parent)
  : QObject(parent)
  , mName(name)
@@ -67,12 +69,13 @@ Protocol::Protocol(const QString &name,
  , mIcon(icon)
  , mServiceName(serviceName)
  , mServiceDisplayName(serviceDisplayName)
+ , mJoinExistingChannels(joinExistingChannels)
 {
 }
 
 ProtocolStruct Protocol::dbusType()
 {
-    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName};
+    return ProtocolStruct{mName, static_cast<uint>(mFeatures), mFallbackProtocol, static_cast<uint>(mFallbackMatchRule), mFallbackSourceProperty, mFallbackDestinationProperty, mShowOnSelector, mShowOnlineStatus, mBackgroundImage, mIcon, mServiceName, mServiceDisplayName, mJoinExistingChannels};
 }
 
 QString Protocol::name() const
@@ -135,6 +138,11 @@ QString Protocol::serviceDisplayName() const
     return mServiceDisplayName;
 }
 
+bool Protocol::joinExistingChannels() const
+{
+    return mJoinExistingChannels;
+}
+
 Protocol *Protocol::fromFile(const QString &fileName)
 {
     QFileInfo file(fileName);
@@ -172,7 +180,8 @@ Protocol *Protocol::fromFile(const QString &fileName)
     QString icon = settings.value("Icon").toString();
     QString serviceName = settings.value("ServiceName").toString();
     QString serviceDisplayName = settings.value("ServiceDisplayName").toString();
+    bool joinExistingChannels = settings.value("JoinExistingChannels").toBool();
 
     return new Protocol(name, features, fallbackProtocol, matchRule, fallbackSourceProperty, fallbackDestinationProperty,
-                        showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName);
+                        showOnSelector, showOnlineStatus, backgroundImage, icon, serviceName, serviceDisplayName, joinExistingChannels);
 }

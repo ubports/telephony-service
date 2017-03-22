@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2016 Canonical, Ltd.
+ * Copyright (C) 2013-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -68,6 +68,8 @@ public:
     // defaults to only phone number searching
     QStringList addressableFields() const;
     void setAddressableFields(const QStringList &fields);
+
+    static QString normalizeIdentifier(const QString &identifier, bool incoming = false);
 
     void classBegin();
     void componentComplete();

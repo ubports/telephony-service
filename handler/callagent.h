@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2017 Canonical, Ltd.
+ * Copyright (C) 2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -19,31 +19,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CALLCHANNELOBSERVER_H
-#define CALLCHANNELOBSERVER_H
+#ifndef CALLAGENT_H
+#define CALLAGENT_H
 
 #include <QObject>
 #include <TelepathyQt/CallChannel>
+#include <TelepathyQt/Farstream/Channel>
+#include "farstreamchannel.h"
 
-class CallChannelObserver : public QObject
+class CallAgent : public QObject
 {
     Q_OBJECT
 public:
-    explicit CallChannelObserver(QObject *parent = 0);
+    explicit CallAgent(const Tp::CallChannelPtr &channel, QObject *parent = 0);
+    ~CallAgent();
 
-public Q_SLOTS:
-    void onCallChannelAvailable(Tp::CallChannelPtr callChannel);
-
-Q_SIGNALS:
-    void callEnded(Tp::CallChannelPtr callChannel);
+    void setMute(bool mute);
 
 protected Q_SLOTS:
+    void onCallChannelInvalidated();
     void onCallStateChanged(Tp::CallState state);
-    void onHoldChanged();
+    void onContentAdded(const Tp::CallContentPtr &content);
+    void onStreamAdded(const Tp::CallStreamPtr &stream);
+
+    void onFarstreamChannelCreated(Tp::PendingOperation *op);
 
 private:
-    QList<Tp::CallChannelPtr> mChannels;
-    QMap<Tp::CallChannel*,Tp::CallState> mCallStates;
+    Tp::CallChannelPtr mChannel;
+    FarstreamChannel *mFarstreamChannel;
 };
 
-#endif // CALLCHANNELOBSERVER_H
+#endif // CALLAGENT_H

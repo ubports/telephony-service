@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -46,7 +46,7 @@ class CallEntry : public QObject
                READ isVoicemail
                WRITE setVoicemail
                NOTIFY voicemailChanged)
-    Q_PROPERTY(AccountEntry *account READ account)
+    Q_PROPERTY(AccountEntry *account READ account CONSTANT)
 
     // FIXME: replace this by a more generic identifier to support accounts not based on phone numbers
     // this property is only filled for 1-1 calls

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Canonical, Ltd.
+ * Copyright (C) 2014-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -31,6 +31,8 @@ static const int DTMF_LOCAL_PLAYBACK_DURATION = 200; /* in milliseconds */
 static const int WAITING_PLAYBACK_DURATION = 8000; /* in milliseconds */
 static const uint WAITING_TONE = 79;
 static const uint CALL_ENDED_TONE = 257;
+static const uint DIALING_TONE = 66;
+static const uint RINGING_TONE = 70;
 
 class ToneGenerator : public QObject
 {
@@ -47,9 +49,11 @@ public Q_SLOTS:
     void playWaitingTone();
     void stopWaitingTone();
     void playCallEndedTone();
+    void playDialingTone();
+    void playRingingTone();
+    void stopTone();
 
 private Q_SLOTS:
-    void stopTone();
     void stopDTMFTone();
     bool startEventTone(uint key);
 

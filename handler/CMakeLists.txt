@@ -1,7 +1,10 @@
 
 set(qt_SRCS
+    accountproperties.cpp
+    callagent.cpp
     callhandler.cpp
     chatstartingjob.cpp
+    farstreamchannel.cpp
     handler.cpp
     handlerdbus.cpp
     messagejob.cpp
@@ -16,6 +19,9 @@ qt5_add_dbus_adaptor(handler_SRCS MessageSendingJob.xml handler/messagesendingjo
 
 include_directories(
     ${TP_QT5_INCLUDE_DIRS}
+    ${TPFS_INCLUDE_DIRS}
+    ${FS_INCLUDE_DIRS}
+    ${GST_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
     )
@@ -25,6 +31,9 @@ qt5_use_modules(telephony-service-handler Contacts Core DBus Qml)
 
 target_link_libraries(telephony-service-handler
     ${TP_QT5_LIBRARIES}
+    ${TP_QT5_FS_LIBRARIES}
+    ${TPFS_LIBRARIES}
+    ${FS_LIBRARIES}
     telephonyservice
     )
 

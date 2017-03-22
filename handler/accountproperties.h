@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2017 Canonical, Ltd.
+ * Copyright (C) 2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -19,31 +19,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CALLCHANNELOBSERVER_H
-#define CALLCHANNELOBSERVER_H
+#ifndef ACCOUNTPROPERTIES_H
+#define ACCOUNTPROPERTIES_H
 
 #include <QObject>
-#include <TelepathyQt/CallChannel>
 
-class CallChannelObserver : public QObject
+class QSettings;
+
+class AccountProperties : public QObject
 {
     Q_OBJECT
 public:
-    explicit CallChannelObserver(QObject *parent = 0);
+    static AccountProperties *instance();
 
-public Q_SLOTS:
-    void onCallChannelAvailable(Tp::CallChannelPtr callChannel);
+    QMap<QString,QVariantMap> allProperties();
+    QVariantMap accountProperties(const QString &accountId);
+    void setAccountProperties(const QString &accountId, const QVariantMap &properties);
+    QString formatAccountId(const QString &accountId);
 
-Q_SIGNALS:
-    void callEnded(Tp::CallChannelPtr callChannel);
-
-protected Q_SLOTS:
-    void onCallStateChanged(Tp::CallState state);
-    void onHoldChanged();
+protected:
+    explicit AccountProperties(QObject *parent = 0);
 
 private:
-    QList<Tp::CallChannelPtr> mChannels;
-    QMap<Tp::CallChannel*,Tp::CallState> mCallStates;
+    QSettings *mSettings;
 };
 
-#endif // CALLCHANNELOBSERVER_H
+#endif // ACCOUNTPROPERTIES_H

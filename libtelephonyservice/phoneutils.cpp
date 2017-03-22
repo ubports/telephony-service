@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2015 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>
@@ -124,4 +124,46 @@ bool PhoneUtils::isEmergencyNumber(const QString &phoneNumber, const QString &co
     }
     static const i18n::phonenumbers::ShortNumberInfo short_info;
     return short_info.IsEmergencyNumber(normalizePhoneNumber(phoneNumber).toStdString(), finalCode.toStdString());
+}
+
+bool PhoneUtils::phoneNumberHasCountryCode(const QString &phoneNumber)
+{
+    return false;
+}
+
+QStringList PhoneUtils::supportedRegions()
+{
+    static i18n::phonenumbers::PhoneNumberUtil *phonenumberUtil = i18n::phonenumbers::PhoneNumberUtil::GetInstance();
+    std::set<std::string> regions;
+    phonenumberUtil->GetSupportedRegions(&regions);
+    QStringList result;
+    for (auto region : regions) {
+        result << QString::fromStdString(region);
+    }
+    return result;
+}
+
+QString PhoneUtils::getFullNumber(const QString &number, const QString &defaultCountryCode, const QString &defaultAreaCode)
+{
+    QString normalizedNumber = normalizePhoneNumber(number);
+    static i18n::phonenumbers::PhoneNumberUtil *phonenumberUtil = i18n::phonenumbers::PhoneNumberUtil::GetInstance();
+    std::string formattedNumber;
+    i18n::phonenumbers::PhoneNumber phoneNumber;
+    std:: string regionCode;
+    phonenumberUtil->GetRegionCodeForCountryCode(defaultCountryCode.toInt(), &regionCode);
+    phonenumberUtil->Parse(normalizedNumber.toStdString(), regionCode, &phoneNumber);
+
+    if (phoneNumber.country_code() == 0 && !defaultCountryCode.isEmpty()) {
+        phoneNumber.set_country_code(defaultCountryCode.toInt());
+    }
+
+    // FIXME: getting the area code from libphonenumber seems to be broken, so for now we don't deal with that
+    /*
+    int length = phonenumberUtil->GetLengthOfGeographicalAreaCode(phoneNumber);
+    if (length == 0 && !defaultAreaCode.isEmpty()) {
+        phoneNumber.set_national_number(QString("%1%2").arg(defaultAreaCode, normalizedNumber).toULongLong());
+    }
+    */
+    phonenumberUtil->Format(phoneNumber, i18n::phonenumbers::PhoneNumberUtil::INTERNATIONAL, &formattedNumber);
+    return QString::fromStdString(formattedNumber);
 }

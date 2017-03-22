@@ -66,6 +66,9 @@ class Protocol : public QObject
     /// @brief the name to display for this protocol
     Q_PROPERTY(QString serviceDisplayName READ serviceDisplayName CONSTANT)
 
+    /// @brief whether this protocol allows joining existing channels
+    Q_PROPERTY(bool joinExistingChannels READ joinExistingChannels CONSTANT)
+
 public:
     enum Feature {
         TextChats = 0x1,
@@ -93,6 +96,7 @@ public:
     QString icon() const;
     QString serviceName() const;
     QString serviceDisplayName() const;
+    bool joinExistingChannels() const;
 
     static Protocol *fromFile(const QString &fileName);
     ProtocolStruct dbusType();
@@ -111,6 +115,7 @@ protected:
                       const QString &icon = QString::null,
                       const QString &serviceName = QString::null,
                       const QString &serviceDisplayName = QString::null,
+                      bool joinExistingChannels = false,
                       QObject *parent = 0);
 
 private:
@@ -126,6 +131,7 @@ private:
     QString mIcon;
     QString mServiceName;
     QString mServiceDisplayName;
+    bool mJoinExistingChannels;
 };
 
 class Protocols : public QList<Protocol*>

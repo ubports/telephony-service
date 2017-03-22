@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2016 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -96,6 +96,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
 
     mClientRegistrar = Tp::ClientRegistrar::create(mAccountManager);
     connect(GreeterContacts::instance(), SIGNAL(phoneSettingsChanged(QString)), this, SLOT(onPhoneSettingsChanged(QString)));
+    connect(GreeterContacts::instance(), SIGNAL(soundSettingsChanged(QString)), this, SLOT(onPhoneSettingsChanged(QString)));
     connect(&mFlightModeInterface, SIGNAL(FlightModeChanged(bool)), this, SIGNAL(flightModeChanged()));
 
     mMmsEnabled = GreeterContacts::instance()->mmsEnabled();
@@ -586,6 +587,16 @@ bool TelepathyHelper::emergencyCallsAvailable() const
     return false;
 }
 
+bool TelepathyHelper::dialpadSoundsEnabled() const
+{
+    return GreeterContacts::instance()->dialpadSoundsEnabled();
+}
+
+void TelepathyHelper::setDialpadSoundsEnabled(bool enabled)
+{
+    GreeterContacts::instance()->setDialpadSoundsEnabled(enabled);
+}
+
 void TelepathyHelper::onPhoneSettingsChanged(const QString &key)
 {
     if (key == "DefaultSimForMessages") {
@@ -607,6 +618,17 @@ void TelepathyHelper::onPhoneSettingsChanged(const QString &key)
         mDefaultMessagingAccount = NULL;
         Q_EMIT defaultMessagingAccountChanged();
     } else if (key == "DefaultSimForCalls") {
+        // if there is a VOIP account configured, use that by default
+        // FIXME: revisit the topic and maybe discuss with designers what is best here?
+        Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->qmlVoiceAccounts()->activeAccounts()) {
+            if (account->type() != AccountEntry::PhoneAccount) {
+                mDefaultCallAccount = account;
+                Q_EMIT defaultCallAccountChanged();
+                return;
+            }
+        }
+
+        // if no VOIP account, get the default modem setting
         QString defaultSim = GreeterContacts::instance()->defaultSimForCalls();
         if (defaultSim == "ask") {
             mDefaultCallAccount = NULL;
@@ -630,6 +652,8 @@ void TelepathyHelper::onPhoneSettingsChanged(const QString &key)
     } else if (key == "SimNames") {
         mSimNames = GreeterContacts::instance()->simNames();
         Q_EMIT simNamesChanged();
+    } else if (key == "DialpadSoundsEnabled") {
+        Q_EMIT dialpadSoundsEnabledChanged();
     }
 }
 

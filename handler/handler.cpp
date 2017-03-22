@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012-2016 Canonical, Ltd.
+ * Copyright (C) 2012-2017 Canonical, Ltd.
  *
  * Authors:
  *  Tiago Salem Herrmann <tiago.herrmann@canonical.com>
@@ -32,7 +32,7 @@
 #include <TelepathyQt/PendingReady>
 
 Handler::Handler(QObject *parent)
-    : QObject(parent), Tp::AbstractClientHandler(channelFilters())
+    : QObject(parent), Tp::AbstractClientHandler(channelFilters(), capabilities())
 {
 }
 
@@ -102,7 +102,20 @@ Tp::ChannelClassSpecList Handler::channelFilters()
     specList << Tp::ChannelClassSpec::textChatroom();
     specList << Tp::ChannelClassSpec::unnamedTextChat();
 
+    QVariantMap props;
+    props[TP_QT_IFACE_CHANNEL_TYPE_CALL + ".InitialAudio"] = true;
+    specList << Tp::ChannelClassSpec::audioCall(props);
+
     return specList;
+}
+
+Tp::AbstractClientHandler::Capabilities Handler::capabilities()
+{
+    QStringList caps;
+    caps << TP_QT_IFACE_CHANNEL_TYPE_CALL + "/shm"
+         << TP_QT_IFACE_CHANNEL_TYPE_CALL + "/ice"
+         << TP_QT_IFACE_CHANNEL_TYPE_CALL + "/gtalk-p2p";
+    return Tp::AbstractClientHandler::Capabilities(caps);
 }
 
 void Handler::onTextChannelReady(Tp::PendingOperation *op)
@@ -155,10 +168,12 @@ void Handler::onCallChannelReady(Tp::PendingOperation *op)
     // if the call is neither Accepted nor Active, it means it got dispatched directly to the handler without passing
     // through any approver. For phone calls, this would mean calls getting auto-accepted which is not desirable
     // so we return an error here
-    bool incoming = false;
+    bool incoming = !callChannel->isRequested();
     AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(callChannel->connection());
-    if (accountEntry) {
-        incoming = callChannel->initiatorContact() != accountEntry->account()->connection()->selfContact();
+    if (accountEntry &&
+        !callChannel->initiatorContact().isNull() &&
+        callChannel->initiatorContact() != accountEntry->account()->connection()->selfContact()) {
+        incoming = true;
     }
     if (incoming && callChannel->callState() != Tp::CallStateAccepted && callChannel->callState() != Tp::CallStateActive) {
         qWarning() << "Available channel was not approved by telephony-service-approver, ignoring it.";
