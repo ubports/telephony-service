@@ -315,3 +315,13 @@ void ChatManager::leaveRooms(const QString &accountId, const QString &message)
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
     phoneAppHandler->asyncCall("LeaveRooms", accountId, message);
 }
+
+void ChatManager::leaveRoom(const QVariantMap &properties, const QString &message)
+{
+    QList<Tp::TextChannelPtr> channels = channelForProperties(properties);
+    if (channels.isEmpty()) {
+        return;
+    }
+    QDBusInterface *handlerIface = TelepathyHelper::instance()->handlerInterface();
+    handlerIface->asyncCall("LeaveChat", channels.first()->objectPath(), message);
+}
