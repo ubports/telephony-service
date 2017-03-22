@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Canonical, Ltd.
+ * Copyright (C) 2014-2017 Canonical, Ltd.
  *
  * Authors:
  *  Gustavo Pichorim Boiko <gustavo.boiko@canonical.com>

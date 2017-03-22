@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2016 Canonical, Ltd.
+ * Copyright (C) 2013-2017 Canonical, Ltd.
  *
  * Authors:
  *  Michael Terry <michael.terry@canonical.com>

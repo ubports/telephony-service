@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Canonical, Ltd.
+ * Copyright (C) 2015-2017 Canonical, Ltd.
  *
  * This file is part of telephony-service.
  *
