@@ -226,6 +226,7 @@ private:
     Tp::Client::ChannelInterfaceRoomConfigInterface *roomConfigInterface;
     Tp::Client::ChannelInterfaceSubjectInterface *subjectInterface;
     ChannelInterfaceRolesInterface *rolesInterface;
+    RolesMap mRolesMap;
 };
 
 #endif // CHATENTRY_H

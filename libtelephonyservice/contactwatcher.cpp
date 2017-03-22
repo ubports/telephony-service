@@ -42,8 +42,6 @@ namespace C {
 ContactWatcher::ContactWatcher(QObject *parent) :
     QObject(parent), mRequest(0), mInteractive(false), mCompleted(false)
 {
-    // addressable VCard fields defaults to "tel" only
-    mAddressableFields << "tel";
     connect(ContactUtils::sharedManager(),
             SIGNAL(contactsAdded(QList<QContactId>)),
             SLOT(onContactsAdded(QList<QContactId>)));
@@ -67,7 +65,7 @@ ContactWatcher::~ContactWatcher()
 
 void ContactWatcher::startSearching()
 {
-    if (!mCompleted || mIdentifier.isEmpty() || !mInteractive) {
+    if (!mCompleted || mIdentifier.isEmpty() || !mInteractive || mAddressableFields.isEmpty()) {
         // component is not ready yet or no identifier given,
         // or the number is not interactive and thus doesn't need contact info at all
         return;
@@ -267,10 +265,6 @@ QStringList ContactWatcher::addressableFields() const
 void ContactWatcher::setAddressableFields(const QStringList &fields)
 {
     mAddressableFields = fields;
-    // if the addressable fields is empty, fall back to matching phone numbers
-    if (mAddressableFields.isEmpty()) {
-            mAddressableFields << "tel";
-    }
     Q_EMIT addressableFieldsChanged();
 
     startSearching();
