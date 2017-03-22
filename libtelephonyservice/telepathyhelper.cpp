@@ -468,6 +468,9 @@ void TelepathyHelper::onAccountRemoved()
 
 void TelepathyHelper::onNewAccount(const Tp::AccountPtr &account)
 {
+    if (!ProtocolManager::instance()->protocolByName(account->protocolName())) {
+       return;
+    }
     AccountEntry *accountEntry = AccountEntryFactory::createEntry(account, this);
     setupAccountEntry(accountEntry);
     mAccounts.append(accountEntry);

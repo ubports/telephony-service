@@ -1,6 +1,8 @@
 General items
 - Formatting of phone numbers
 - Check how to import/export potfiles from the ts one
+- Add an automated test to check if features are getting correctly exported
+  by AccountEntry
 
 Contact integration items:
 - Fix contact search when names contain accentuated characters
