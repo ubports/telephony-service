@@ -22,6 +22,8 @@
  */
 
 #include "accountproperties.h"
+#include "audiooutput.h"
+#include "audioroutemanager.h"
 #include "callhandler.h"
 #include "handlerdbus.h"
 #include "handleradaptor.h"
@@ -54,6 +56,12 @@ HandlerDBus::HandlerDBus(QObject* parent) : QObject(parent), mCallIndicatorVisib
             &ProtocolManager::protocolsChanged, [this]() {
                 Q_EMIT ProtocolsChanged(ProtocolManager::instance()->protocols().dbusType());
             });
+    connect(AudioRouteManager::instance(),
+            SIGNAL(audioOutputsChanged(AudioOutputDBusList)),
+            SIGNAL(AudioOutputsChanged(AudioOutputDBusList)));
+    connect(AudioRouteManager::instance(),
+            SIGNAL(activeAudioOutputChanged(QString)),
+            SIGNAL(ActiveAudioOutputChanged(QString)));
 }
 
 HandlerDBus::~HandlerDBus()
@@ -161,6 +169,21 @@ bool HandlerDBus::ChangeRoomTitle(const QString &objectPath, const QString &titl
     return TextHandler::instance()->changeRoomTitle(objectPath, title);
 }
 
+void HandlerDBus::setActiveAudioOutput(const QString &id)
+{
+    AudioRouteManager::instance()->setActiveAudioOutput(id);
+}
+
+QString HandlerDBus::activeAudioOutput() const
+{
+    return AudioRouteManager::instance()->activeAudioOutput();
+}
+
+AudioOutputDBusList HandlerDBus::AudioOutputs() const
+{
+    return AudioRouteManager::instance()->audioOutputs();
+}
+
 bool HandlerDBus::connectToBus()
 {
     new TelephonyServiceHandlerAdaptor(this);
@@ -206,11 +229,6 @@ void HandlerDBus::SetHold(const QString &objectPath, bool hold)
 void HandlerDBus::SetMuted(const QString &objectPath, bool muted)
 {
     CallHandler::instance()->setMuted(objectPath, muted);
-}
-
-void HandlerDBus::SetActiveAudioOutput(const QString &objectPath, const QString &id)
-{
-    CallHandler::instance()->setActiveAudioOutput(objectPath, id);
 }
 
 void HandlerDBus::SendDTMF(const QString &objectPath, const QString &key)

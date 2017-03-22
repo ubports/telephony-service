@@ -1,7 +1,13 @@
+if (PULSEAUDIO_FOUND)
+    add_definitions(-DUSE_PULSEAUDIO)
+    set(USE_PULSEAUDIO ON)
+    set(QPULSEAUDIOENGINE_CPP qpulseaudioengine.cpp)
+endif (PULSEAUDIO_FOUND)
 
 set(qt_SRCS
     accountproperties.cpp
     callagent.cpp
+    audioroutemanager.cpp
     callhandler.cpp
     chatstartingjob.cpp
     farstreamchannel.cpp
@@ -9,7 +15,10 @@ set(qt_SRCS
     handlerdbus.cpp
     messagejob.cpp
     messagesendingjob.cpp
+    powerdaudiomodemediator.cpp
+    powerddbus.cpp
     texthandler.cpp
+    ${QPULSEAUDIOENGINE_CPP}
     )
 
 set(handler_SRCS main.cpp ${qt_SRCS})
@@ -24,6 +33,8 @@ include_directories(
     ${GST_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${GSETTINGS_QT_INCLUDE_DIRS}
+    ${PULSEAUDIO_INCLUDE_DIRS}
     )
 
 add_executable(telephony-service-handler ${handler_SRCS} ${handler_HDRS})
@@ -35,6 +46,7 @@ target_link_libraries(telephony-service-handler
     ${TPFS_LIBRARIES}
     ${FS_LIBRARIES}
     telephonyservice
+    ${PULSEAUDIO_LIBRARIES}
     )
 
 enable_coverage(telephony-service-handler)

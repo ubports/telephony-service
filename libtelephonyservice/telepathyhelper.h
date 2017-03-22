@@ -35,7 +35,6 @@
 #include "protocol.h"
 
 #define CANONICAL_TELEPHONY_VOICEMAIL_IFACE "com.canonical.Telephony.Voicemail"
-#define CANONICAL_TELEPHONY_AUDIOOUTPUTS_IFACE "com.canonical.Telephony.AudioOutputs"
 #define CANONICAL_TELEPHONY_USSD_IFACE "com.canonical.Telephony.USSD"
 #define CANONICAL_TELEPHONY_EMERGENCYMODE_IFACE "com.canonical.Telephony.EmergencyMode"
 

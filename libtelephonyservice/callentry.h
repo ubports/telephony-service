@@ -29,6 +29,7 @@
 #include <TelepathyQt/CallChannel>
 #include "audiooutput.h"
 
+
 class AccountEntry;
 
 class CallEntry : public QObject
@@ -179,7 +180,6 @@ private:
     AccountEntry *mAccount;
     Tp::CallChannelPtr mChannel;
     QDBusInterface mMuteInterface;
-    QDBusInterface mAudioOutputsInterface;
     QMap<QString, QVariant> mProperties;
     bool mVoicemail;
     bool mLocalMuteState;
