@@ -78,6 +78,7 @@ function(generate_test TESTNAME)
                                     MC_ACCOUNT_DIR=${TMPDIR}
                                     MC_MANAGER_DIR=${TMPDIR}
                                     MC_CLIENTS_DIR=${TMPDIR}
+                                    PA_DISABLED=1
                                     TELEPHONY_SERVICE_TEST=1
                                     TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_SOURCE_DIR}/tests/common/protocols
                                     TEST_DATA_DIR=${CMAKE_SOURCE_DIR}/tests/common/data)
