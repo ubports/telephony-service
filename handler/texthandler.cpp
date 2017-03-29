@@ -35,17 +35,23 @@
 
 TextHandler::TextHandler(QObject *parent)
 : QObject(parent)
-  , mMessagingAppMonitor("com.canonical.MessagingApp", QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForRegistration|QDBusServiceWatcher::WatchForUnregistration)
+  , mMessagingAppMonitor("com.canonical.MessagingApp", QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForRegistration|QDBusServiceWatcher::WatchForUnregistration), mMessagingAppRegistered(false)
 {
     qDBusRegisterMetaType<AttachmentStruct>();
     qDBusRegisterMetaType<AttachmentList>();
     qRegisterMetaType<PendingMessage>();
     connect(&mMessagingAppMonitor, SIGNAL(serviceRegistered(const QString&)), SLOT(onMessagingAppOpen()));
     connect(&mMessagingAppMonitor, SIGNAL(serviceUnregistered(const QString&)), SLOT(onMessagingAppClosed()));
+    connect(TelepathyHelper::instance(), &TelepathyHelper::accountAdded, [=](AccountEntry *account) {
+        if (mMessagingAppRegistered && !account->active() && account->protocolInfo()->leaveRoomsOnClose()) {
+            account->reconnect();
+        }
+    });
 }
 
 void TextHandler::onMessagingAppOpen()
 {
+    mMessagingAppRegistered = true;
     Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
         if (!account->active() && account->protocolInfo()->leaveRoomsOnClose()) {
             account->reconnect();
@@ -55,6 +61,7 @@ void TextHandler::onMessagingAppOpen()
 
 void TextHandler::onMessagingAppClosed()
 {
+    mMessagingAppRegistered = false;
     Q_FOREACH(AccountEntry *account, TelepathyHelper::instance()->accounts()) {
         if (account->protocolInfo()->leaveRoomsOnClose()) {
             account->requestDisconnect();

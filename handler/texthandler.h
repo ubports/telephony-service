@@ -65,6 +65,7 @@ private:
     explicit TextHandler(QObject *parent = 0);
     QList<Tp::TextChannelPtr> mChannels;
     QDBusServiceWatcher mMessagingAppMonitor;
+    bool mMessagingAppRegistered;
 };
 
 #endif // TEXTHANDLER_H
