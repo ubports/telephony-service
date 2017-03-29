@@ -27,7 +27,7 @@
 Q_DECLARE_METATYPE(Participant)
 
 ParticipantsModel::ParticipantsModel(QObject *parent) :
-    QAbstractListModel(parent), mWaitingForQml(false), mCanFetchMore(true)
+    QAbstractListModel(parent), mWaitingForQml(false), mCanFetchMore(true), mChatEntry(NULL)
 {
     qRegisterMetaType<Participant>();
     mRoles[AliasRole] = "alias";
@@ -220,7 +220,9 @@ void ParticipantsModel::setChatEntry(ChatEntry *entry)
     if (!entry) {
         return;
     }
-    previousChatEntry->disconnect(this);
+    if (previousChatEntry) {
+        previousChatEntry->disconnect(this);
+    }
     connect(mChatEntry, SIGNAL(participantAdded(Participant *)), SLOT(addParticipant(Participant *)));
     connect(mChatEntry, SIGNAL(participantRemoved(Participant *)), SLOT(removeParticipant(Participant *)));
     Q_FOREACH(Participant *participant, mChatEntry->allParticipants()) {
