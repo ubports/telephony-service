@@ -115,7 +115,7 @@ void FarstreamChannel::initialize()
 GstElement *FarstreamChannel::initializeAudioSource(TfContent *content)
 {
     qDebug() << __PRETTY_FUNCTION__;
-    GstElement *element = gst_parse_bin_from_description ("pulsesrc ! audio/x-raw, rate=8000 ! queue"
+    GstElement *element = gst_parse_bin_from_description ("alsasrc ! audio/x-raw, rate=8000 ! queue"
                                                           " ! audioconvert ! audioresample"
                                                           " ! volume name=input_volume ! audioconvert ",
                                                           TRUE, NULL);
