@@ -121,6 +121,7 @@ void AccountList::onActiveAccountsChanged()
 
     Q_EMIT accountChanged(account, account->active());
     Q_EMIT activeAccountsChanged();
+    Q_EMIT displayedAccountsChanged();
 }
 
 void AccountList::filterAccounts()
