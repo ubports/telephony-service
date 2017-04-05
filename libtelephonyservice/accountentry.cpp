@@ -240,6 +240,10 @@ void AccountEntry::initialize()
             SIGNAL(connectionStatusChanged(Tp::ConnectionStatus)),
             SIGNAL(connectionStatusChanged(Tp::ConnectionStatus)));
 
+    connect(mAccount.data(),
+            SIGNAL(connectionStatusChanged(Tp::ConnectionStatus)),
+            SIGNAL(connectedChanged()));
+
     connect(mAccount.data(), &Tp::Account::parametersChanged,
             this, &AccountEntry::parametersChanged);
 
