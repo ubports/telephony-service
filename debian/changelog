@@ -1,3 +1,9 @@
+telephony-service (0.2+ubports) xenial; urgency=medium
+
+  * Imported to UBports
+
+ -- UBports auto importer <infra@ubports.com>  Mon, 08 Jan 2018 00:09:58 +0100
+
 telephony-service (0.1+17.04.20161213.1-0ubuntu1) zesty; urgency=medium
 
   [ Renato Araujo Oliveira Filho, Roberto Mier Escandon ]
