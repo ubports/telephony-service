@@ -1,4 +1,4 @@
-telephony-service (0.2+ubports) xenial; urgency=medium
+telephony-service (0.2+ubports) bionic; urgency=medium
 
   * Imported to UBports
 
