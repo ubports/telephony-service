@@ -1,3 +1,9 @@
+telephony-service (0.2+ubports1) UNRELEASED; urgency=medium
+
+  * No-change rebuild to handle qtpim5 changes
+
+ -- Dalton Durst <dalton@ubports.com>  Wed, 13 Jun 2018 10:02:30 -0500
+
 telephony-service (0.2+ubports) xenial; urgency=medium
 
   * Imported to UBports
