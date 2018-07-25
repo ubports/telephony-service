@@ -1,3 +1,9 @@
+telephony-service (0.2+ubports1) xenial; urgency=medium
+
+  * No change rebuild against new QtPim.
+
+ -- Alberto Mardegan <mardy@users.sourceforge.net>  Wed, 25 Jul 2018 22:28:17 +0300
+
 telephony-service (0.2+ubports) xenial; urgency=medium
 
   * Imported to UBports
