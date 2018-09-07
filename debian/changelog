@@ -1,3 +1,9 @@
+telephony-service (0.2+0ubports2) xenial; urgency=medium
+
+  * Fix version of debian package.
+
+ -- Alberto Mardegan <mardy@users.sourceforge.net>  Fri, 07 Sep 2018 23:59:06 +0300
+
 telephony-service (0.2+ubports1) xenial; urgency=medium
 
   * No change rebuild against new QtPim.
