@@ -1,3 +1,9 @@
+telephony-service (0.3+0ubports1) xenial; urgency=medium
+
+  * Bump upstream version.
+
+ -- Alberto Mardegan <mardy@users.sourceforge.net>  Sat, 08 Sep 2018 09:41:43 +0300
+
 telephony-service (0.2+0ubports2) xenial; urgency=medium
 
   * Fix version of debian package.
