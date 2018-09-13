@@ -1,3 +1,11 @@
+telephony-service (0.4+0ubports1) xenial; urgency=medium
+
+  * debian/control:
+    Allow building the project with crossbuilder.
+  * Fix handling of the contactsChanged signal.
+
+ -- Alberto Mardegan <mardy@users.sourceforge.net>  Thu, 13 Sep 2018 23:53:21 +0300
+
 telephony-service (0.3+0ubports1) xenial; urgency=medium
 
   * Bump upstream version.
