@@ -43,15 +43,13 @@ namespace C {
 ContactWatcher::ContactWatcher(QObject *parent) :
     QObject(parent), mRequest(0), mInteractive(false), mCompleted(false)
 {
-    connect(ContactUtils::sharedManager(),
-            SIGNAL(contactsAdded(QList<QContactId>)),
-            SLOT(onContactsAdded(QList<QContactId>)));
-    connect(ContactUtils::sharedManager(),
-            SIGNAL(contactsChanged(QList<QContactId>)),
-            SLOT(onContactsChanged(QList<QContactId>)));
-    connect(ContactUtils::sharedManager(),
-            SIGNAL(contactsRemoved(QList<QContactId>)),
-            SLOT(onContactsRemoved(QList<QContactId>)));
+    QContactManager *manager = ContactUtils::sharedManager();
+    QObject::connect(manager, &QContactManager::contactsAdded,
+                     this, &ContactWatcher::onContactsAdded);
+    QObject::connect(manager, &QContactManager::contactsChanged,
+                     this, &ContactWatcher::onContactsChanged);
+    QObject::connect(manager, &QContactManager::contactsRemoved,
+                     this, &ContactWatcher::onContactsRemoved);
 
     connect(this, SIGNAL(contactIdChanged()), SIGNAL(isUnknownChanged()));
 }
@@ -328,7 +326,7 @@ void ContactWatcher::componentComplete()
     startSearching();
 }
 
-void ContactWatcher::onContactsAdded(QList<QContactId> ids)
+void ContactWatcher::onContactsAdded(const QList<QContactId> &ids)
 {
     // ignore this signal if we have a contact already
     // or if we have no phone number set
@@ -339,14 +337,14 @@ void ContactWatcher::onContactsAdded(QList<QContactId> ids)
     startSearching();
 }
 
-void ContactWatcher::onContactsChanged(QList<QContactId> ids)
+void ContactWatcher::onContactsChanged(const QList<QContactId> &ids)
 {
     // check for changes even if we have this contact already,
     // as the number might have changed, thus invalidating the current contact
     startSearching();
 }
 
-void ContactWatcher::onContactsRemoved(QList<QContactId> ids)
+void ContactWatcher::onContactsRemoved(const QList<QContactId> &ids)
 {
     Q_FOREACH(const QContactId &id, ids) {
         if (id.toString() == mContactId) {
