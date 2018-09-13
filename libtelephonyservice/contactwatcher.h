@@ -90,9 +90,9 @@ Q_SIGNALS:
     void addressableFieldsChanged();
 
 protected Q_SLOTS:
-    void onContactsAdded(QList<QContactId> ids);
-    void onContactsChanged(QList<QContactId> ids);
-    void onContactsRemoved(QList<QContactId> ids);
+    void onContactsAdded(const QList<QContactId> &ids);
+    void onContactsChanged(const QList<QContactId> &ids);
+    void onContactsRemoved(const QList<QContactId> &ids);
     void onResultsAvailable();
     void onRequestStateChanged(QContactAbstractRequest::State state);
 
