@@ -1,4 +1,36 @@
-telephony-service (0.2+ubports) bionic; urgency=medium
+telephony-service (0.4+0ubports18.04.1) bionic; urgency=medium
+
+  * No change rebuild.
+
+ -- Rodney Dawes <dobey@ubuntu.com>  Fri, 01 Feb 2019 13:55:34 -0500
+
+telephony-service (0.4+0ubports1) xenial; urgency=medium
+
+  * debian/control:
+    Allow building the project with crossbuilder.
+  * Fix handling of the contactsChanged signal.
+
+ -- Alberto Mardegan <mardy@users.sourceforge.net>  Thu, 13 Sep 2018 23:53:21 +0300
+
+telephony-service (0.3+0ubports1) xenial; urgency=medium
+
+  * Bump upstream version.
+
+ -- Alberto Mardegan <mardy@users.sourceforge.net>  Sat, 08 Sep 2018 09:41:43 +0300
+
+telephony-service (0.2+0ubports2) xenial; urgency=medium
+
+  * Fix version of debian package.
+
+ -- Alberto Mardegan <mardy@users.sourceforge.net>  Fri, 07 Sep 2018 23:59:06 +0300
+
+telephony-service (0.2+ubports1) xenial; urgency=medium
+
+  * No change rebuild against new QtPim.
+
+ -- Alberto Mardegan <mardy@users.sourceforge.net>  Wed, 25 Jul 2018 22:28:17 +0300
+
+telephony-service (0.2+ubports) xenial; urgency=medium
 
   * Imported to UBports
 

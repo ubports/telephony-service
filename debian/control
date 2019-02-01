@@ -33,7 +33,7 @@ Build-Depends: cmake,
                qtpim5-dev (>= 5),
                libusermetricsinput1-dev,
                telepathy-mission-control-5,
-               xvfb,
+               xvfb <!nocheck>,
 Standards-Version: 3.9.4
 Homepage: https://launchpad.net/telephony-service
 # If you aren't a member of ~phablet-team but need to upload packaging changes,
