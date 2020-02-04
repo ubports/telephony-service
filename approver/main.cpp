@@ -53,11 +53,6 @@ int main(int argc, char **argv)
         return 1;
     }
 
-#ifdef USE_UBUNTU_PLATFORM_API
-    // required to make qtsensors work
-    qputenv("UBUNTU_PLATFORM_API_BACKEND", "touch_mirclient");
-#endif
-
     QObject::connect(TelepathyHelper::instance(), &TelepathyHelper::setupReady, []() {
         // register the approver
         TelepathyHelper::instance()->registerChannelObserver("TelephonyServiceObserver");
