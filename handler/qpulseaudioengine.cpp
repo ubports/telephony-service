@@ -113,7 +113,6 @@ QPulseAudioEngineWorker::QPulseAudioEngineWorker(QObject *parent)
     , m_voicecallprofile("")
     , m_bt_hsp("")
     , m_bt_hsp_a2dp("")
-    , m_default_bt_card_fallback("")
 
 {
     m_mainLoop = pa_threaded_mainloop_new();
@@ -668,26 +667,14 @@ void QPulseAudioEngineWorker::plugCardCallback(const pa_card_info *info)
 {
     qDebug("Notified about card (%s) add event from PulseAudio", info->name);
 
-    /* Check if it's indeed a BT device (with at least one hsp profile) */
-    pa_card_profile_info2 *hsp = NULL, *a2dp = NULL;
-    for (int i = 0; i < info->n_profiles; i++) {
-        if (!strcmp(info->profiles2[i]->name, PULSEAUDIO_PROFILE_HSP))
-            hsp = info->profiles2[i];
-        else if (!strcmp(info->profiles2[i]->name, PULSEAUDIO_PROFILE_A2DP) && 
-                  info->profiles2[i]->available != 0) {
-            qDebug("Found a2dp");
-            a2dp = info->profiles2[i];
-        }
-        qDebug("%s", info->profiles2[i]->name);
-    }
-
-    if ((!info->active_profile || !strcmp(info->active_profile->name, "off")) && a2dp) {
-        qDebug("No profile set");
-        m_default_bt_card_fallback = info->name;
-    }
-
     /* We only care about BT (HSP) devices, and if one is not already available */
     if ((m_callstatus != CallEnded) && ((m_bt_hsp == "") || (m_bt_hsp_a2dp == ""))) {
+        /* Check if it's indeed a BT device (with at least one hsp profile) */
+        pa_card_profile_info *hsp = NULL;
+        for (int i = 0; i < info->n_profiles; i++) {
+            if (!strcmp(info->profiles[i].name, PULSEAUDIO_PROFILE_HSP))
+                hsp = &info->profiles[i];
+        }
         if (hsp)
             m_handleevent = true;
     }
@@ -696,25 +683,6 @@ void QPulseAudioEngineWorker::plugCardCallback(const pa_card_info *info)
 void QPulseAudioEngineWorker::updateCardCallback(const pa_card_info *info)
 {
     qDebug("Notified about card (%s) changes event from PulseAudio", info->name);
-
-    /* Check if it's indeed a BT device (with at least one hsp profile) */
-    pa_card_profile_info2 *hsp = NULL, *a2dp = NULL;
-    for (int i = 0; i < info->n_profiles; i++) {
-        if (!strcmp(info->profiles2[i]->name, PULSEAUDIO_PROFILE_HSP))
-            hsp = info->profiles2[i];
-        else if (!strcmp(info->profiles2[i]->name, PULSEAUDIO_PROFILE_A2DP) && 
-                  info->profiles2[i]->available != 0) {
-            qDebug("Found a2dp");
-            a2dp = info->profiles2[i];
-        }
-        qDebug("%s", info->profiles2[i]->name);
-    }
-
-    if ((!info->active_profile || !strcmp(info->active_profile->name, "off")) && a2dp) {
-        qDebug("No profile set");
-        m_default_bt_card_fallback = info->name;
-    }
-
 
     /* We only care if the card event for the voicecall capable card */
     if ((m_callstatus == CallActive) && (!strcmp(info->name, m_voicecallcard.c_str()))) {
@@ -759,15 +727,6 @@ void QPulseAudioEngineWorker::handleCardEvent(const int evt, const unsigned int 
         o = pa_context_get_card_info_by_index(m_context, idx, plug_card_cb, this);
         if (!handleOperation(o, "pa_context_get_card_info_by_index"))
             return;
-
-        if (m_default_bt_card_fallback != "") {
-            o = pa_context_set_card_profile_by_name(m_context,
-                m_default_bt_card_fallback.c_str(), PULSEAUDIO_PROFILE_A2DP, success_cb, this);
-            if (!handleOperation(o, "pa_context_set_card_profile_by_name"))
-                return;
-            m_default_bt_card_fallback = "";
-        }
-
         if (m_handleevent) {
             qDebug("Adding new BT-HSP capable device");
             /* In case A2DP is available, switch to HSP */
@@ -780,15 +739,6 @@ void QPulseAudioEngineWorker::handleCardEvent(const int evt, const unsigned int 
         o = pa_context_get_card_info_by_index(m_context, idx, update_card_cb, this);
         if (!handleOperation(o, "pa_context_get_card_info_by_index"))
             return;
-
-        if (m_default_bt_card_fallback != "") {
-            o = pa_context_set_card_profile_by_name(m_context,
-                m_default_bt_card_fallback.c_str(), PULSEAUDIO_PROFILE_A2DP, success_cb, this);
-            if (!handleOperation(o, "pa_context_set_card_profile_by_name"))
-                return;
-            m_default_bt_card_fallback = "";
-        }
-
         if (m_handleevent) {
             /* In this case it means the handset state changed */
             qDebug("Notifying card changes for the voicecall capable card");

@@ -95,7 +95,6 @@ private:
     std::string m_nametoset, m_valuetoset;
     std::string m_defaultsink, m_defaultsource;
     std::string m_bt_hsp, m_bt_hsp_a2dp;
-    std::string m_default_bt_card_fallback;
     std::string m_voicecallcard, m_voicecallhighest, m_voicecallprofile;
 
     bool handleOperation(pa_operation *operation, const char *func_name);
