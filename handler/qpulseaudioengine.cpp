@@ -240,7 +240,8 @@ void QPulseAudioEngineWorker::cardInfoCallback(const pa_card_info *info)
     for (int i = 0; i < info->n_profiles; i++) {
         if (!highest || info->profiles2[i]->priority > highest->priority)
             highest = info->profiles2[i];
-        if (!strcmp(info->profiles2[i]->name, "voicecall"))
+        if (!strcmp(info->profiles2[i]->name, "voicecall") ||
+            !strcmp(info->profiles2[i]->name, "Voice Call"))
             voice_call = info->profiles2[i];
         else if (!strcmp(info->profiles2[i]->name, PULSEAUDIO_PROFILE_HSP) &&
                  info->profiles2[i]->available != 0)
@@ -283,15 +284,18 @@ void QPulseAudioEngineWorker::sinkInfoCallback(const pa_sink_info *info)
     AudioModes modes;
 
     for (int i = 0; i < info->n_ports; i++) {
-        if (!strcmp(info->ports[i]->name, "output-earpiece"))
+        if (!strcmp(info->ports[i]->name, "output-earpiece") ||
+            !strcmp(info->ports[i]->name, "Earpiece"))
             earpiece = info->ports[i];
         else if (!strcmp(info->ports[i]->name, "output-wired_headset") &&
                 (info->ports[i]->available != PA_PORT_AVAILABLE_NO))
             wired_headset = info->ports[i];
-        else if (!strcmp(info->ports[i]->name, "output-wired_headphone") &&
+        else if ((!strcmp(info->ports[i]->name, "output-wired_headphone") ||
+                  !strcmp(info->ports[i]->name, "Headphone")) &&
                 (info->ports[i]->available != PA_PORT_AVAILABLE_NO))
             wired_headphone = info->ports[i];
-        else if (!strcmp(info->ports[i]->name, "output-speaker"))
+        else if (!strcmp(info->ports[i]->name, "output-speaker") ||
+                 !strcmp(info->ports[i]->name, "Speaker"))
             speaker = info->ports[i];
         else if (!strcmp(info->ports[i]->name, "output-bluetooth_sco"))
             bluetooth_sco = info->ports[i];
@@ -355,9 +359,11 @@ void QPulseAudioEngineWorker::sourceInfoCallback(const pa_source_info *info)
         return;  /* Not the right source */
 
     for (int i = 0; i < info->n_ports; i++) {
-        if (!strcmp(info->ports[i]->name, "input-builtin_mic"))
+        if (!strcmp(info->ports[i]->name, "input-builtin_mic") ||
+            !strcmp(info->ports[i]->name, "DigitalMic"))
             builtin_mic = info->ports[i];
-        else if (!strcmp(info->ports[i]->name, "input-wired_headset") &&
+        else if ((!strcmp(info->ports[i]->name, "input-wired_headset") ||
+                  !strcmp(info->ports[i]->name, "HeadsetMic")) &&
                 (info->ports[i]->available != PA_PORT_AVAILABLE_NO))
             wired_headset = info->ports[i];
         else if (!strcmp(info->ports[i]->name, "input-bluetooth_sco_headset"))
