@@ -31,16 +31,6 @@
 #include <QDesktopServices>
 #include <TelepathyQt/Constants>
 
-#include <url-dispatcher.h>
-
-static void
-urlDispatchCallback (const gchar * url, gboolean success, gpointer user_data)
-{
-    if (!success) {
-        qWarning() << "Fail to launch url:" << url;
-    }
-}
-
 ApplicationUtils::ApplicationUtils(QObject *parent) :
     QObject(parent)
 {
@@ -63,6 +53,19 @@ bool ApplicationUtils::checkApplicationRunning(const QString &serviceName)
     return result;
 }
 
+
+#ifdef WANT_UI_SERVICES
+
+#include <url-dispatcher.h>
+
+static void
+urlDispatchCallback (const gchar * url, gboolean success, gpointer user_data)
+{
+    if (!success) {
+        qWarning() << "Fail to launch url:" << url;
+    }
+}
+
 bool ApplicationUtils::openUrl(const QUrl &url)
 {
     if (qgetenv("TELEPHONY_SERVICE_TEST").isEmpty()) {
@@ -70,3 +73,5 @@ bool ApplicationUtils::openUrl(const QUrl &url)
     }
     return true;
 }
+
+#endif
