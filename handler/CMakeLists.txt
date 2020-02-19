@@ -33,7 +33,6 @@ include_directories(
     ${GST_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${GSETTINGS_QT_INCLUDE_DIRS}
     ${PULSEAUDIO_INCLUDE_DIRS}
     )
 
