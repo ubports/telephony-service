@@ -17,15 +17,11 @@ override_dh_install:
 	dh $@ --parallel --with translations
 
 override_dh_auto_configure:
-	# Debian defines CMAKE_INSTALL_LOCALSTATEDIR as /usr/var, which is wrong.
-	# So until Debian bug 719148 is fixed, do it ourselves.
 ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH), $(qmltestskip_architectures)))
 	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Debug \
-	                     -DSKIP_QML_TESTS="on" \
-	                     -DCMAKE_INSTALL_LOCALSTATEDIR="/var"
+	                     -DSKIP_QML_TESTS="on"
 else
-	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Debug \
-	                     -DCMAKE_INSTALL_LOCALSTATEDIR="/var"
+	dh_auto_configure -- -DCMAKE_BUILD_TYPE=Debug
 endif
 
 override_dh_auto_test:
