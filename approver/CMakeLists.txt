@@ -31,7 +31,7 @@ configure_file(org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service
 install(TARGETS telephony-service-approver RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Telepathy.Client.TelephonyServiceApprover.service DESTINATION share/dbus-1/services)
 install(FILES TelephonyServiceApprover.client DESTINATION share/telepathy/clients)
-install(FILES 50-com.canonical.TelephonyServiceApprover.pkla DESTINATION "${CMAKE_INSTALL_LOCALSTATEDIR}/lib/polkit-1/localauthority/10-vendor.d")
+install(FILES 50-com.canonical.TelephonyServiceApprover.pkla DESTINATION "${CMAKE_INSTALL_FULL_LOCALSTATEDIR}/lib/polkit-1/localauthority/10-vendor.d")
 install(FILES com.canonical.TelephonyServiceApprover.policy DESTINATION share/polkit-1/actions)
 install(FILES com.canonical.TelephonyServiceApprover.xml DESTINATION share/dbus-1/interfaces)
 
