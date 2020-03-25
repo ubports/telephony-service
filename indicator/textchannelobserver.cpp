@@ -350,7 +350,7 @@ void TextChannelObserver::showNotificationForFlashMessage(const Tp::ReceivedMess
     NotificationData *data = new NotificationData();
     data->senderId = contact->id();
     data->accountId = accountId;
-    data->timestamp = message.received();
+    data->timestamp = message.sent();
     data->messageText = message.text();
     data->encodedEventId = token.toHex();
 
@@ -536,7 +536,7 @@ void TextChannelObserver::showNotificationForMessage(const Tp::TextChannelPtr ch
     messagingMenuData.participantIds = participantIds;
     messagingMenuData.accountId = accountId;
     messagingMenuData.encodedEventId = token.toHex();
-    messagingMenuData.timestamp = message.received();
+    messagingMenuData.timestamp = message.sent();
     messagingMenuData.messageText = messageText;
     messagingMenuData.targetId = channel->targetId();
     messagingMenuData.targetType = channel->targetHandleType();
