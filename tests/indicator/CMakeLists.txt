@@ -33,6 +33,5 @@ generate_telepathy_test(AuthHandlerTest
               LIBRARIES ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest ${HISTORY_LIBRARIES} ${NOTIFY_LIBRARIES})
 generate_test(NotificationMenuTest
               SOURCES NotificationMenuTest.cpp ${CMAKE_SOURCE_DIR}/indicator/notificationmenu.cpp
-              LIBRARIES ${NOTIFY_LIBRARIES}
-              QT5_MODULES Core DBus Test
+              LIBRARIES ${NOTIFY_LIBRARIES} Qt5::Core Qt5::DBus Qt5::Test
               USE_DBUS TRUE)
