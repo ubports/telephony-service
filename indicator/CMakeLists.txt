@@ -41,7 +41,6 @@ include_directories(
 link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
 
 add_executable(telephony-service-indicator ${indicator_SRCS} ${indicator_HDRS})
-qt5_use_modules(telephony-service-indicator Contacts Core DBus Gui Multimedia Qml)
 
 target_link_libraries(telephony-service-indicator
     ${TP_QT5_LIBRARIES}
@@ -50,6 +49,12 @@ target_link_libraries(telephony-service-indicator
     ${UserMetrics_LIBRARIES}
     ${HISTORY_LIBRARIES}
     telephonyservice
+    Qt5::Contacts
+    Qt5::Core
+    Qt5::DBus
+    Qt5::Gui
+    Qt5::Multimedia
+    Qt5::Qml
     )
 
 enable_coverage(telephony-service-indicator)

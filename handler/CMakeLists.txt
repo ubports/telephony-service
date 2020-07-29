@@ -37,7 +37,6 @@ include_directories(
     )
 
 add_executable(telephony-service-handler ${handler_SRCS} ${handler_HDRS})
-qt5_use_modules(telephony-service-handler Contacts Core DBus Qml)
 
 target_link_libraries(telephony-service-handler
     ${TP_QT5_LIBRARIES}
@@ -46,6 +45,10 @@ target_link_libraries(telephony-service-handler
     ${FS_LIBRARIES}
     telephonyservice
     ${PULSEAUDIO_LIBRARIES}
+    Qt5::Contacts
+    Qt5::Core
+    Qt5::DBus
+    Qt5::Qml
     )
 
 enable_coverage(telephony-service-handler)

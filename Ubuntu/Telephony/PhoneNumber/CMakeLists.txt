@@ -20,10 +20,11 @@ include_directories(
 
 add_library(telephonyservice-phonenumber-qml SHARED ${PHONENUMBER_SRCS})
 
-qt5_use_modules(telephonyservice-phonenumber-qml Core Qml Quick)
-
 target_link_libraries(telephonyservice-phonenumber-qml
     ${LibPhoneNumber_LIBRARIES}
+    Qt5::Core
+    Qt5::Qml
+    Qt5::Quick
     )
 
 set(PHONENUMBER_PLUGIN_DIR ${QT_INSTALL_QML}/Ubuntu/Telephony/PhoneNumber)

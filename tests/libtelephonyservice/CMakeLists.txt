@@ -9,13 +9,13 @@ include_directories(
     )
 
 add_executable(GreeterContactsTestServerExe GreeterContactsTestServer.cpp)
-qt5_use_modules(GreeterContactsTestServerExe Core DBus)
+target_link_libraries(GreeterContactsTestServerExe Qt5::Core Qt5::DBus)
 
 add_executable(ToneGeneratorMock ToneGeneratorMock.cpp)
-qt5_use_modules(ToneGeneratorMock Core DBus)
+target_link_libraries(ToneGeneratorMock Qt5::Core Qt5::DBus)
 
 add_executable(IndicatorMock IndicatorMock.cpp)
-qt5_use_modules(IndicatorMock Core DBus)
+target_link_libraries(IndicatorMock Qt5::Core Qt5::DBus)
 
 generate_test(GreeterContactsTest USE_DBUS
               SOURCES GreeterContactsTest.cpp ${LIBTELEPHONYSERVICE_DIR}/greetercontacts.cpp
