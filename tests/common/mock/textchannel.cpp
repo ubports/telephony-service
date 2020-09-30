@@ -193,7 +193,8 @@ void MockTextChannel::messageReceived(const QString &message, const QVariantMap 
 
     Tp::MessagePart header;
     header["message-token"] = QDBusVariant(info["SentTime"].toString() +"-" + QString::number(mMessageCounter++));
-    header["message-received"] = QDBusVariant(QDateTime::fromString(info["SentTime"].toString(), Qt::ISODate).toTime_t());
+    header["message-received"] = QDBusVariant(QDateTime::currentDateTime().toTime_t());
+    header["message-sent"] = QDBusVariant(QDateTime::fromString(info["SentTime"].toString(), Qt::ISODate).toTime_t());
     header["message-sender"] = QDBusVariant(mTargetHandle);
     header["message-sender-id"] = QDBusVariant(mRecipients.first());
     header["message-type"] = QDBusVariant(Tp::ChannelTextMessageTypeNormal);
@@ -212,6 +213,7 @@ void MockTextChannel::mmsReceived(const QString &id, const QVariantMap &properti
     header["message-token"] = QDBusVariant(id);
     header["message-sender"] = QDBusVariant(mTargetHandle);
     header["message-received"] = QDBusVariant(QDateTime::fromString(properties["Date"].toString(), Qt::ISODate).toTime_t());
+    header["message-sent"] = QDBusVariant(QDateTime::fromString(properties["SentTime"].toString(), Qt::ISODate).toTime_t());
     header["message-type"] = QDBusVariant(Tp::DeliveryStatusDelivered);
     if (!subject.isEmpty())
     {
