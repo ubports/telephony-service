@@ -298,7 +298,8 @@ void QPulseAudioEngineWorker::sinkInfoCallback(const pa_sink_info *info)
             speaker = info->ports[i];
         else if (!strcmp(info->ports[i]->name, "output-bluetooth_sco"))
             bluetooth_sco = info->ports[i];
-        else if (!strcmp(info->ports[i]->name, "output-speaker+wired_headphone"))
+        else if (!strcmp(info->ports[i]->name, "output-speaker+wired_headphone") &&
+                (info->ports[i]->available != PA_PORT_AVAILABLE_NO))
             speaker_and_wired_headphone = info->ports[i];
     }
 
@@ -577,18 +578,18 @@ void QPulseAudioEngineWorker::setCallMode(CallStatus callstatus, AudioMode audio
     o = pa_context_get_sink_info_list(m_context, sinkinfo_cb, this);
     if (!handleOperation(o, "pa_context_get_sink_info_list"))
         return;
-    if ((m_nametoset != "") && (m_nametoset != m_defaultsink)) {
-        qDebug("Setting PulseAudio default sink to '%s'", m_nametoset.c_str());
-        o = pa_context_set_default_sink(m_context, m_nametoset.c_str(), success_cb, this);
-        if (!handleOperation(o, "pa_context_set_default_sink"))
-            return;
-    }
     if (m_valuetoset != "") {
         qDebug("Setting PulseAudio sink '%s' port '%s'",
                 m_nametoset.c_str(), m_valuetoset.c_str());
         o = pa_context_set_sink_port_by_name(m_context, m_nametoset.c_str(),
                                              m_valuetoset.c_str(), success_cb, this);
         if (!handleOperation(o, "pa_context_set_sink_port_by_name"))
+            return;
+    }
+    if ((m_nametoset != "") /*&& (m_nametoset != m_defaultsink)*/) {
+        qDebug("Setting PulseAudio default sink to '%s'", m_nametoset.c_str());
+        o = pa_context_set_default_sink(m_context, m_nametoset.c_str(), success_cb, this);
+        if (!handleOperation(o, "pa_context_set_default_sink"))
             return;
     }
 
