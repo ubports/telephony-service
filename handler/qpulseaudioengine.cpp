@@ -298,7 +298,8 @@ void QPulseAudioEngineWorker::sinkInfoCallback(const pa_sink_info *info)
             speaker = info->ports[i];
         else if (!strcmp(info->ports[i]->name, "output-bluetooth_sco"))
             bluetooth_sco = info->ports[i];
-        else if (!strcmp(info->ports[i]->name, "output-speaker+wired_headphone"))
+        else if (!strcmp(info->ports[i]->name, "output-speaker+wired_headphone") &&
+                (info->ports[i]->available != PA_PORT_AVAILABLE_NO))
             speaker_and_wired_headphone = info->ports[i];
     }
 
