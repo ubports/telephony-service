@@ -17,12 +17,18 @@ include_directories(
 link_directories(${MESSAGING_MENU_LIBRARY_DIRS})
 
 add_executable(telephony-service-approver ${approver_SRCS} ${approver_HDRS})
-qt5_use_modules(telephony-service-approver Contacts Core DBus Gui Multimedia Qml Feedback)
 
 target_link_libraries(telephony-service-approver
     ${TP_QT5_LIBRARIES}
     ${NOTIFY_LIBRARIES}
     telephonyservice
+    Qt5::Contacts
+    Qt5::Core
+    Qt5::DBus
+    Qt5::Gui
+    Qt5::Multimedia
+    Qt5::Qml
+    Qt5::Feedback
     )
 
 enable_coverage(telephony-service-approver)

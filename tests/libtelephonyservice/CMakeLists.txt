@@ -9,17 +9,17 @@ include_directories(
     )
 
 add_executable(GreeterContactsTestServerExe GreeterContactsTestServer.cpp)
-qt5_use_modules(GreeterContactsTestServerExe Core DBus)
+target_link_libraries(GreeterContactsTestServerExe Qt5::Core Qt5::DBus)
 
 add_executable(ToneGeneratorMock ToneGeneratorMock.cpp)
-qt5_use_modules(ToneGeneratorMock Core DBus)
+target_link_libraries(ToneGeneratorMock Qt5::Core Qt5::DBus)
 
 add_executable(IndicatorMock IndicatorMock.cpp)
-qt5_use_modules(IndicatorMock Core DBus)
+target_link_libraries(IndicatorMock Qt5::Core Qt5::DBus)
 
 generate_test(GreeterContactsTest USE_DBUS
               SOURCES GreeterContactsTest.cpp ${LIBTELEPHONYSERVICE_DIR}/greetercontacts.cpp
-              QT5_MODULES Contacts Core DBus Test
+              LIBRARIES Qt5::Contacts Qt5::Core Qt5::DBus Qt5::Test
               ENVIRONMENT XDG_SESSION_CLASS=greeter XDG_GREETER_DATA_DIR=${CMAKE_BINARY_DIR}/Testing/Temporary
               TASKS --task ${CMAKE_CURRENT_BINARY_DIR}/GreeterContactsTestServerExe --task-name server --ignore-return
               WAIT_FOR org.freedesktop.Accounts)
@@ -28,7 +28,7 @@ add_dependencies(GreeterContactsTest GreeterContactsTestServerExe)
 
 generate_test(GreeterContactsThreadTest USE_DBUS
               SOURCES GreeterContactsThreadTest.cpp ${LIBTELEPHONYSERVICE_DIR}/greetercontacts.cpp
-              QT5_MODULES Contacts Core DBus Test
+              LIBRARIES Qt5::Contacts Qt5::Core Qt5::DBus Qt5::Test
               ENVIRONMENT XDG_SESSION_CLASS=greeter XDG_GREETER_DATA_DIR=${CMAKE_BINARY_DIR}/Testing/Temporary
               TASKS --task ${CMAKE_CURRENT_BINARY_DIR}/GreeterContactsTestServerExe --task-name server --ignore-return
               WAIT_FOR org.freedesktop.Accounts)
@@ -37,26 +37,26 @@ add_dependencies(GreeterContactsThreadTest GreeterContactsTestServerExe)
 
 generate_test(ToneGeneratorTest USE_DBUS
               SOURCES ToneGeneratorTest.cpp ${LIBTELEPHONYSERVICE_DIR}/tonegenerator.cpp
-              QT5_MODULES Core DBus Test
+              LIBRARIES Qt5::Core Qt5::DBus Qt5::Test
               TASKS --task ${CMAKE_CURRENT_BINARY_DIR}/ToneGeneratorMock --task-name tone-gen --ignore-return
               WAIT_FOR com.Nokia.Telephony.Tones)
 add_dependencies(ToneGeneratorTest ToneGeneratorMock)
 
 generate_test(CallNotificationTest USE_DBUS
               SOURCES CallNotificationTest.cpp ${LIBTELEPHONYSERVICE_DIR}/callnotification.cpp
-              QT5_MODULES Core DBus Test
+              LIBRARIES Qt5::Core Qt5::DBus Qt5::Test
               TASKS --task ${CMAKE_CURRENT_BINARY_DIR}/IndicatorMock --task-name indicator --ignore-return
               WAIT_FOR com.canonical.TelephonyServiceIndicator)
 
-generate_test(ContactUtilsTest SOURCES ContactUtilsTest.cpp QT5_MODULES Contacts Core Test LIBRARIES telephonyservice USE_UI)
-generate_test(PhoneUtilsTest SOURCES PhoneUtilsTest.cpp LIBRARIES telephonyservice USE_UI)
+generate_test(ContactUtilsTest SOURCES ContactUtilsTest.cpp LIBRARIES Qt5::Contacts Qt5::Core Qt5::Test telephonyservice USE_UI)
+generate_test(PhoneUtilsTest SOURCES PhoneUtilsTest.cpp LIBRARIES telephonyservice Qt5::Core Qt5::Test USE_UI)
 generate_test(ProtocolTest
               SOURCES ProtocolTest.cpp ${LIBTELEPHONYSERVICE_DIR}/protocol.cpp
+              LIBRARIES Qt5::Core Qt5::Test
               ENVIRONMENT TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_CURRENT_SOURCE_DIR}/testProtocols)
 generate_test(ProtocolManagerTest
               SOURCES ProtocolManagerTest.cpp
-              QT5_MODULES Core Qml Test DBus Contacts
-              LIBRARIES telepathy-qt5 telephonyservice
+              LIBRARIES Qt5::Core Qt5::Qml Qt5::Test Qt5::DBus Qt5::Contacts telepathy-qt5 telephonyservice
               ENVIRONMENT TELEPHONY_SERVICE_PROTOCOLS_DIR=${CMAKE_CURRENT_SOURCE_DIR}/testProtocols)
 
 

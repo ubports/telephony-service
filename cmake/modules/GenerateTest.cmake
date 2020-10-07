@@ -25,7 +25,7 @@ find_program(DBUS_RUNNER dbus-test-runner)
 function(generate_test TESTNAME)
     set(options USE_DBUS USE_UI)
     set(oneValueArgs TIMEOUT WORKING_DIRECTORY QML_TEST WAIT_FOR)
-    set(multiValueArgs TASKS LIBRARIES QT5_MODULES SOURCES ENVIRONMENT)
+    set(multiValueArgs TASKS LIBRARIES SOURCES ENVIRONMENT)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     MESSAGE(STATUS "Adding test: ${TESTNAME}")
@@ -37,10 +37,6 @@ function(generate_test TESTNAME)
 
     if (NOT DEFINED ARG_TIMEOUT)
         set(ARG_TIMEOUT 360)
-    endif ()
-
-    if (NOT DEFINED ARG_QT5_MODULES)
-        set(ARG_QT5_MODULES Core Test)
     endif ()
 
     if (${ARG_USE_UI})
@@ -66,7 +62,6 @@ function(generate_test TESTNAME)
 
         # No QML test, regular binary compiled test.
         add_executable(${TESTNAME} ${ARG_SOURCES})
-        qt5_use_modules(${TESTNAME} ${ARG_QT5_MODULES})
 
         if (${ARG_USE_DBUS})
             execute_process(COMMAND mktemp -d /tmp/${TESTNAME}.XXXXX OUTPUT_VARIABLE TMPDIR)
@@ -110,7 +105,7 @@ endfunction(generate_test)
 function(generate_telepathy_test TESTNAME)
     set(options "")
     set(oneValueArgs WAIT_FOR)
-    set(multiValueArgs TASKS LIBRARIES QT5_MODULES)
+    set(multiValueArgs TASKS LIBRARIES QT5_LIBRARIES)
     cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
     set(TASKS --task gnome-keyring-daemon -p -r -p -d --task-name gnome-keyring --ignore-return
@@ -127,16 +122,15 @@ function(generate_telepathy_test TESTNAME)
         set(ARG_LIBRARIES ${TP_QT5_LIBRARIES} telephonyservice mockcontroller telepathytest)
     endif(NOT DEFINED ARG_LIBRARIES)
 
-    if (NOT DEFINED ARG_QT5_MODULES)
-        set(ARG_QT5_MODULES Core DBus Test Qml)
-    endif (NOT DEFINED ARG_QT5_MODULES)
+    if (NOT DEFINED ARG_QT5_LIBRARIES)
+        set(ARG_QT5_LIBRARIES Qt5::Core Qt5::DBus Qt5::Test Qt5::Qml)
+    endif (NOT DEFINED ARG_QT5_LIBRARIES)
     if (NOT DEFINED ARG_WAIT_FOR)
         set(ARG_WAIT_FOR org.freedesktop.Telepathy.Client.TelephonyServiceHandler)
     endif (NOT DEFINED ARG_WAIT_FOR)
     generate_test(${TESTNAME} ${ARG_UNPARSED_ARGUMENTS}
                   TASKS ${TASKS}
-                  LIBRARIES ${ARG_LIBRARIES} 
-                  QT5_MODULES ${ARG_QT5_MODULES} 
+                  LIBRARIES ${ARG_LIBRARIES} ${ARG_QT5_LIBRARIES}
                   USE_DBUS USE_UI 
                   WAIT_FOR ${ARG_WAIT_FOR})
 endfunction(generate_telepathy_test)

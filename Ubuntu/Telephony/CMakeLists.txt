@@ -13,11 +13,13 @@ include_directories(
 
 add_library(telephonyservice-qml SHARED ${plugin_SRCS} ${plugin_HDRS})
 
-qt5_use_modules(telephonyservice-qml Contacts Core Qml Quick)
-
 target_link_libraries(telephonyservice-qml
     ${TP_QT5_LIBRARIES}
     telephonyservice
+    Qt5::Contacts
+    Qt5::Core
+    Qt5::Qml
+    Qt5::Quick
     )
 
 enable_coverage(telephonyservice-qml)

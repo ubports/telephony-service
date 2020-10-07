@@ -37,8 +37,15 @@ target_link_libraries(telephonyservice
                       ${TP_QT5_LIBRARIES}
                       ${NOTIFY_LIBRARIES}
                       ${LibPhoneNumber_LIBRARIES}
-                      ${URL_DISPATCHER_LIBRARIES})
-
-qt5_use_modules(telephonyservice Contacts Core DBus Feedback Multimedia Qml Quick Gui)
+                      ${URL_DISPATCHER_LIBRARIES}
+                      Qt5::Contacts
+                      Qt5::Core
+                      Qt5::DBus
+                      Qt5::Feedback
+                      Qt5::Multimedia
+                      Qt5::Qml
+                      Qt5::Quick
+                      Qt5::Gui
+                      )
 
 enable_coverage(telephonyservice)

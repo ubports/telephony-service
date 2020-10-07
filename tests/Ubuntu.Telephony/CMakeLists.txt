@@ -11,8 +11,7 @@ include_directories(
 set(SOURCE_DIR ${CMAKE_SOURCE_DIR}/Ubuntu/Telephony)
 generate_test(ContactWatcherTest USE_UI
               SOURCES ContactWatcherTest.cpp
-              LIBRARIES telephonyservice-qml
-              QT5_MODULES Contacts Core DBus Qml Test)
+              LIBRARIES telephonyservice-qml Qt5::Contacts Qt5::Core Qt5::DBus Qt5::Qml Qt5::Test)
 
 if(NOT SKIP_QML_TESTS)
     generate_test(context_properties QML_TEST tst_contextProperties.qml)
