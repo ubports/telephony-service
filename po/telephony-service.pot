@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 09:42+0000\n"
+"POT-Creation-Date: 2020-10-29 15:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -164,21 +164,21 @@ msgstr ""
 msgid "Message & decline"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:637
+#: indicator/textchannelobserver.cpp:638
 #, qt-format
 msgid "Message from %1"
 msgstr ""
 
 #. TRANSLATORS : %1 is the group name and %2 is the recipient name
-#: indicator/messagingmenu.cpp:226 indicator/textchannelobserver.cpp:559
-#: indicator/textchannelobserver.cpp:563
+#: indicator/messagingmenu.cpp:226 indicator/textchannelobserver.cpp:560
+#: indicator/textchannelobserver.cpp:564
 #, qt-format
 msgid "Message to %1 from %2"
 msgstr ""
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/messagingmenu.cpp:229 indicator/messagingmenu.cpp:233
-#: indicator/textchannelobserver.cpp:567 indicator/textchannelobserver.cpp:571
+#: indicator/textchannelobserver.cpp:568 indicator/textchannelobserver.cpp:572
 #, qt-format
 msgid "Message to group from %1"
 msgstr ""
@@ -216,7 +216,8 @@ msgstr ""
 msgid "On [%1]"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:503
+#. TRANSLATORS : message displayed when any error occured while receiving a mms ( case when cellular-data is off, or any downloading issue). Note that mms is lost in that case
+#: indicator/textchannelobserver.cpp:504
 msgid ""
 "Oops, i sent you a MMS but could not be retrieved, you can try to ask me to "
 "send it again after checking that Cellular Data is ON"
@@ -230,7 +231,7 @@ msgstr ""
 msgid "Please call me back later."
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:792
+#: indicator/textchannelobserver.cpp:793
 msgid "Please, select a SIM card:"
 msgstr ""
 
@@ -294,7 +295,7 @@ msgid "Unknown caller"
 msgstr ""
 
 #: approver/approver.cpp:463 indicator/messagingmenu.cpp:208
-#: indicator/messagingmenu.cpp:382 indicator/textchannelobserver.cpp:528
+#: indicator/messagingmenu.cpp:382 indicator/textchannelobserver.cpp:529
 msgid "Unknown number"
 msgstr ""
 
@@ -306,7 +307,7 @@ msgstr ""
 msgid "View Group"
 msgstr ""
 
-#: indicator/textchannelobserver.cpp:247 indicator/textchannelobserver.cpp:601
+#: indicator/textchannelobserver.cpp:247 indicator/textchannelobserver.cpp:602
 msgid "View message"
 msgstr ""
 
