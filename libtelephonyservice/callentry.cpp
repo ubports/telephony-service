@@ -269,12 +269,12 @@ bool CallEntry::dialing() const
 
 bool CallEntry::incoming() const
 {
-    bool isIncoming = !mChannel->isRequested();
+    bool isIncoming;
 
-    if (mAccount &&
-        !mChannel->initiatorContact().isNull() &&
-        mChannel->initiatorContact() != mAccount->account()->connection()->selfContact()) {
-        isIncoming = true;
+    if (mAccount && !mChannel->initiatorContact().isNull()) {
+        isIncoming = mChannel->initiatorContact() != mAccount->account()->connection()->selfContact();
+    } else {
+        isIncoming = !mChannel->isRequested();
     }
 
     return isIncoming;
