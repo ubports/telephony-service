@@ -168,13 +168,14 @@ void Handler::onCallChannelReady(Tp::PendingOperation *op)
     // if the call is neither Accepted nor Active, it means it got dispatched directly to the handler without passing
     // through any approver. For phone calls, this would mean calls getting auto-accepted which is not desirable
     // so we return an error here
-    bool incoming = !callChannel->isRequested();
+    bool incoming;
     AccountEntry *accountEntry = TelepathyHelper::instance()->accountForConnection(callChannel->connection());
-    if (accountEntry &&
-        !callChannel->initiatorContact().isNull() &&
-        callChannel->initiatorContact() != accountEntry->account()->connection()->selfContact()) {
-        incoming = true;
+    if (accountEntry && !callChannel->initiatorContact().isNull()) {
+        incoming = callChannel->initiatorContact() != accountEntry->account()->connection()->selfContact();
+    } else {
+        incoming = !callChannel->isRequested();
     }
+
     if (incoming && callChannel->callState() != Tp::CallStateAccepted && callChannel->callState() != Tp::CallStateActive) {
         qWarning() << "Available channel was not approved by telephony-service-approver, ignoring it.";
         if (context) {
