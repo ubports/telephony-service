@@ -391,17 +391,12 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
     QContactFetchRequest *request = new QContactFetchRequest(this);
     request->setFilter(QContactPhoneNumber::match(targetId));
 
-    //FIXME: on arm64 the connect() statement below fails at runtime with the following output:
-    //QObject::connect: signal not found in QtContacts::QContactFetchRequest
-    // so we just disable it
-#ifndef __aarch64__
     // place the messaging-menu item only after the contact fetch request is finished, as we can´t simply update
     QObject::connect(request, &QContactAbstractRequest::stateChanged, [=]() {
         // only process the results after the finished state is reached
         if (request->state() != QContactAbstractRequest::FinishedState) {
             return;
         }
-#endif
         Call newCall = call;
         if (request->contacts().size() > 0) {
             QContact contact = request->contacts().at(0);
@@ -417,13 +412,11 @@ void MessagingMenu::addCall(const QString &targetId, const QString &accountId, c
             }
         }
         addCallToMessagingMenu(newCall, text, account->protocolInfo()->features() & Protocol::TextChats);
-#ifndef __aarch64__
     });
 
 
     request->setManager(ContactUtils::sharedManager());
     request->start();
-#endif
 }
 
 void MessagingMenu::removeCall(const QString &targetId, const QString &accountId)
