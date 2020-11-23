@@ -11,6 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2015-10-13 12:06+0000\n"
 "Last-Translator: Bartosz Kosiorek <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -18,7 +19,6 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2017-01-04 06:03+0000\n"
 "X-Generator: Launchpad (build 18298)\n"
-"Language: pl\n"
 
 #: indicator/messagingmenu.cpp:368
 #, qt-format
