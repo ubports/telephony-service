@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-30 15:54-0300\n"
-"PO-Revision-Date: 2015-04-22 07:01+0000\n"
-"Last-Translator: alexisme <alexanderc.spa@openmailbox.org>\n"
-"Language-Team: Italian <it@li.org>\n"
+"PO-Revision-Date: 2020-11-23 11:14+0000\n"
+"Last-Translator: Mike <miguel2000@livecom.it>\n"
+"Language-Team: Italian <https://translate.ubports.com/projects/ubports/"
+"telephony-service/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.3\n"
 "X-Launchpad-Export-Date: 2017-01-04 06:02+0000\n"
-"X-Generator: Launchpad (build 18298)\n"
 
 #: indicator/messagingmenu.cpp:368
 #, qt-format
@@ -175,7 +176,7 @@ msgstr "Messaggio da %1"
 #: indicator/messagingmenu.cpp:225
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "Messaggio in %1 da %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/textchannelobserver.cpp:562 indicator/textchannelobserver.cpp:566
@@ -186,7 +187,7 @@ msgstr "Messaggio al gruppo da %1"
 
 #: indicator/textchannelobserver.cpp:290
 msgid "New Group"
-msgstr ""
+msgstr "Nuovo gruppo"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
@@ -299,7 +300,7 @@ msgstr "Sbloccare la scheda SIM e riprovare dall'app dei messaggi."
 
 #: indicator/textchannelobserver.cpp:323
 msgid "View Group"
-msgstr ""
+msgstr "Vedi gruppo"
 
 #: indicator/textchannelobserver.cpp:244 indicator/textchannelobserver.cpp:596
 msgid "View message"
@@ -319,19 +320,19 @@ msgstr "Sì"
 
 #: indicator/textchannelobserver.cpp:304
 msgid "You joined a new group"
-msgstr ""
+msgstr "Ti sei unito a un gruppo"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:301
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "Ti sei unito al gruppo %1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:297
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "Ti sei unito al gruppo %1 "
 
 #~ msgid "Private Number"
 #~ msgstr "Numero privato"

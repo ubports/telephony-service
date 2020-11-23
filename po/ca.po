@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-30 15:54-0300\n"
-"PO-Revision-Date: 2015-01-27 07:40+0000\n"
-"Last-Translator: David Planella <david.planella@gmail.com>\n"
-"Language-Team: Catalan <ca@li.org>\n"
+"PO-Revision-Date: 2020-11-23 11:14+0000\n"
+"Last-Translator: Joan CiberSheep <cibersheep@gmail.com>\n"
+"Language-Team: Catalan <https://translate.ubports.com/projects/ubports/"
+"telephony-service/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.3\n"
 "X-Launchpad-Export-Date: 2017-01-04 06:02+0000\n"
-"X-Generator: Launchpad (build 18298)\n"
 
 #: indicator/messagingmenu.cpp:368
 #, qt-format
@@ -31,7 +32,7 @@ msgstr[1] "%1 trucades perdudes"
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
 msgstr[0] "%1 missatge de veu"
-msgstr[1] "%1 missatge de veu"
+msgstr[1] "%1 missatges de veu"
 
 #: indicator/metrics.cpp:48
 #, qt-format
@@ -98,7 +99,7 @@ msgstr "Ha fallat l'autenticació. Voleu revisar les credencials?"
 
 #: indicator/messagingmenu.cpp:305
 msgid "Call back"
-msgstr "Truca"
+msgstr "Torna la trucada"
 
 #: approver/approver.cpp:466 approver/approver.cpp:481
 msgid "Caller number is not available"
@@ -237,7 +238,7 @@ msgstr "Número privat"
 
 #: indicator/ussdindicator.cpp:119
 msgid "Reply"
-msgstr "Resposta"
+msgstr "Respon"
 
 #: indicator/displaynamesettings.cpp:35
 #, qt-format
@@ -259,7 +260,7 @@ msgstr "Envia"
 
 #: indicator/messagingmenu.cpp:314
 msgid "Sorry, I'm still busy. I'll call you later."
-msgstr "Tinc feina, et trucaré més tard"
+msgstr "Tinc feina, et trucaré més tard."
 
 #: indicator/metrics.cpp:50
 #, qt-format
