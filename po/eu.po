@@ -6,11 +6,12 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-30 15:54-0300\n"
 "PO-Revision-Date: 2015-01-22 21:45+0000\n"
 "Last-Translator: Ibai Oihanguren Sala <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
+"Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -122,8 +123,7 @@ msgstr "Utzi"
 
 #: indicator/textchannelobserver.cpp:222
 msgid "Deactivate flight mode and try again from the messaging application."
-msgstr ""
-"Desaktibatu hegaldi modua eta saiatu berriz mezularitza aplikaziotik."
+msgstr "Desaktibatu hegaldi modua eta saiatu berriz mezularitza aplikaziotik."
 
 #: approver/approver.cpp:542
 msgid "Decline"
