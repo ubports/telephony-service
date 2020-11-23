@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-30 15:54-0300\n"
-"PO-Revision-Date: 2016-11-22 16:55+0000\n"
-"Last-Translator: Hannie Dumoleyn <Unknown>\n"
-"Language-Team: Dutch <nl@li.org>\n"
+"PO-Revision-Date: 2020-11-23 11:14+0000\n"
+"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"Language-Team: Dutch <https://translate.ubports.com/projects/ubports/"
+"telephony-service/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.3\n"
 "X-Launchpad-Export-Date: 2017-01-04 06:02+0000\n"
-"X-Generator: Launchpad (build 18298)\n"
 
 #: indicator/messagingmenu.cpp:368
 #, qt-format
@@ -36,22 +37,22 @@ msgstr[1] "%1 voicemailberichten"
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr "<b>%1</b> keer zelf gebeld vandaag"
+msgstr "Je hebt vandaag <b>%1</b> keer gebeld"
 
 #: indicator/metrics.cpp:46
 #, qt-format
 msgid "<b>%1</b> calls received today"
-msgstr "<b>%1</b> oproepen ontvangen vandaag"
+msgstr "Je bent vandaag <b>%1</b> keer gebeld"
 
 #: indicator/metrics.cpp:44
 #, qt-format
 msgid "<b>%1</b> text messages received today"
-msgstr "<b>%1</b> sms-berichten ontvangen vandaag"
+msgstr "Je hebt vandaag <b>%1</b> sms-berichten ontvangen"
 
 #: indicator/metrics.cpp:42
 #, qt-format
 msgid "<b>%1</b> text messages sent today"
-msgstr "<b>%1</b> sms-berichten verstuurd vandaag"
+msgstr "Je hebt vandaag <b>%1</b> sms-berichten verstuurd"
 
 #: approver/approver.cpp:520
 msgid "Accept"
@@ -61,40 +62,40 @@ msgstr "Accepteren"
 #, qt-format
 msgid "Attachment: %1 audio clip"
 msgid_plural "Attachments: %1 audio clips"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bijlage: %1 audiobericht"
+msgstr[1] "Bijlagen: %1 audioberichten"
 
 #: indicator/textchannelobserver.cpp:494
 #, qt-format
 msgid "Attachment: %1 contact"
 msgid_plural "Attachments: %1 contacts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bijlage: %1 contactpersoon"
+msgstr[1] "Bijlage: %1 contactpersonen"
 
 #: indicator/textchannelobserver.cpp:498
 #, qt-format
 msgid "Attachment: %1 file"
 msgid_plural "Attachments: %1 files"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bijlage: %1 bestand"
+msgstr[1] "Bijlage: %1 bestanden"
 
 #: indicator/textchannelobserver.cpp:490
 #, qt-format
 msgid "Attachment: %1 image"
 msgid_plural "Attachments: %1 images"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bijlage: %1 afbeelding"
+msgstr[1] "Bijlage: %1 afbeeldingen"
 
 #: indicator/textchannelobserver.cpp:492
 #, qt-format
 msgid "Attachment: %1 video"
 msgid_plural "Attachments: %1 videos"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bijlage: %1 video"
+msgstr[1] "Bijlage: %1 video's"
 
 #: indicator/authhandler.cpp:72
 msgid "Authentication failed. Do you want to review your credentials?"
-msgstr ""
+msgstr "Authenticatie mislukt. Controleer je inloggegevens."
 
 #: indicator/messagingmenu.cpp:305
 msgid "Call back"
@@ -102,7 +103,7 @@ msgstr "Terugbellen"
 
 #: approver/approver.cpp:466 approver/approver.cpp:481
 msgid "Caller number is not available"
-msgstr "Nummer inkomend gesprek niet beschikbaar"
+msgstr "Nummer is niet beschikbaar"
 
 #: approver/approver.cpp:478
 #, qt-format
@@ -124,8 +125,7 @@ msgstr "Annuleren"
 #: indicator/textchannelobserver.cpp:222
 msgid "Deactivate flight mode and try again from the messaging application."
 msgstr ""
-"Deactiveer de vliegtuigstand en probeer het a.u.b. opnieuw met de "
-"berichtenapp."
+"Schakel de vliegtuigstand uit en probeer het opnieuw met de berichtenapp."
 
 #: approver/approver.cpp:542
 msgid "Decline"
@@ -133,11 +133,11 @@ msgstr "Weigeren"
 
 #: approver/approver.cpp:533
 msgid "End + Answer"
-msgstr "Beëindigden + beantwoorden"
+msgstr "Beëindigen en beantwoorden"
 
 #: approver/approver.cpp:519
 msgid "Hold + Answer"
-msgstr "In de wacht + beantwoorden"
+msgstr "In de wacht en beantwoorden"
 
 #: indicator/messagingmenu.cpp:310
 msgid "I missed your call - can you call me now?"
@@ -149,23 +149,23 @@ msgstr "Ik kom 20 minuten later."
 
 #: approver/approver.cpp:91
 msgid "I'm busy at the moment. I'll call later."
-msgstr "Ik ben momenteel bezig. Ik bel later terug."
+msgstr "Ik ben momenteel bezig - ik bel later terug."
 
 #: indicator/messagingmenu.cpp:312
 msgid "I'm busy at the moment. I'll call you later."
-msgstr "Ik ben momenteel bezig. Ik bel later terug."
+msgstr "Ik ben momenteel bezig - ik bel later terug."
 
 #: approver/approver.cpp:92
 msgid "I'm running late, on my way now."
-msgstr "Ik ben laat. Ik ben onderweg."
+msgstr "Ik ben laat, maar ik ben onderweg."
 
 #: indicator/messagingmenu.cpp:311
 msgid "I'm running late. I'm on my way."
-msgstr "Ik ben laat. Ik ben onderweg."
+msgstr "Ik ben laat, maar ik ben onderweg."
 
 #: approver/approver.cpp:550
 msgid "Message & decline"
-msgstr "Bericht & weigeren"
+msgstr "Bericht en weigeren"
 
 #: indicator/textchannelobserver.cpp:632
 #, qt-format
@@ -177,7 +177,7 @@ msgstr "Bericht van %1"
 #: indicator/messagingmenu.cpp:225
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "Bericht van %2 aan %1"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/textchannelobserver.cpp:562 indicator/textchannelobserver.cpp:566
@@ -188,36 +188,36 @@ msgstr "Groepsbericht afkomstig van %1"
 
 #: indicator/textchannelobserver.cpp:290
 msgid "New Group"
-msgstr ""
+msgstr "Nieuwe groep"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
-msgstr ""
+msgstr "Nee"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
-msgstr "Niet zelf gebeld vandaag"
+msgstr "Je hebt vandaag niet gebeld"
 
 #: indicator/metrics.cpp:47
 msgid "No calls received today"
-msgstr "Geen oproepen ontvangen vandaag"
+msgstr "Je bent vandaag niet gebeld"
 
 #: indicator/metrics.cpp:45
 msgid "No text messages received today"
-msgstr "Geen sms-berichten ontvangen vandaag"
+msgstr "Je hebt vandaag geen sms-berichten ontvangen"
 
 #: indicator/metrics.cpp:43
 msgid "No text messages sent today"
-msgstr "Geen sms-berichten verstuurd vandaag"
+msgstr "Je hebt vandaag geen sms-berichten verstuurd"
 
 #: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:362
 msgid "Ok"
-msgstr "Ok"
+msgstr "Oké"
 
 #: approver/approver.cpp:453
 #, qt-format
 msgid "On [%1]"
-msgstr ""
+msgstr "Aan [%1]"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -229,7 +229,7 @@ msgstr "Bel me a.u.b. later terug."
 
 #: indicator/textchannelobserver.cpp:773
 msgid "Please, select a SIM card:"
-msgstr "Selecteer a.u.b. een simkaart:"
+msgstr "Kies een simkaart:"
 
 #: approver/approver.cpp:457 indicator/messagingmenu.cpp:373
 msgid "Private number"
@@ -242,11 +242,11 @@ msgstr "Beantwoorden"
 #: indicator/displaynamesettings.cpp:35
 #, qt-format
 msgid "SIM %1"
-msgstr "Sim %1"
+msgstr "Simkaart %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
-msgstr "Sms"
+msgstr "SMS"
 
 #: indicator/textchannelobserver.cpp:368
 msgid "Save"
@@ -264,7 +264,7 @@ msgstr "Sorry, ik ben nog steeds bezig. Ik bel later terug."
 #: indicator/metrics.cpp:50
 #, qt-format
 msgid "Spent <b>%1</b> minutes in calls today"
-msgstr "<b>%1</b> minuten getelefoneerd vandaag"
+msgstr "Je hebt vandaag <b>%1</b> minuten getelefoneerd"
 
 #: indicator/messagingmenu.cpp:82 indicator/messagingmenu.cpp:86
 msgid "Telephony Service"
@@ -272,7 +272,7 @@ msgstr "Telefoondienst"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr "Telefoondienstgoedkeuring"
+msgstr "Telefoondienst-goedkeuring"
 
 #: indicator/main.cpp:53
 msgid "Telephony Service Indicator"
@@ -280,11 +280,11 @@ msgstr "Telefoondienstindicator"
 
 #: indicator/textchannelobserver.cpp:231
 msgid "The message could not be sent"
-msgstr "Het bericht kon niet verstuurd worden"
+msgstr "Het bericht kan niet worden verstuurd"
 
 #: indicator/textchannelobserver.cpp:225
 msgid "Try again from the messaging application."
-msgstr "Probeer het a.u.b. opnieuw met de berichtenapp."
+msgstr "Probeer het opnieuw met de berichtenapp."
 
 #: approver/approver.cpp:63
 msgid "Unknown caller"
@@ -297,16 +297,15 @@ msgstr "Onbekend nummer"
 
 #: indicator/textchannelobserver.cpp:220
 msgid "Unlock your sim card and try again from the messaging application."
-msgstr ""
-"Ontgrendel uw simkaart en probeer het a.u.b. opnieuw met de berichtenapp."
+msgstr "Ontgrendel je simkaart en probeer het opnieuw met de berichtenapp."
 
 #: indicator/textchannelobserver.cpp:323
 msgid "View Group"
-msgstr ""
+msgstr "Groep bekijken"
 
 #: indicator/textchannelobserver.cpp:244 indicator/textchannelobserver.cpp:596
 msgid "View message"
-msgstr "Bericht weergeven"
+msgstr "Bericht bekijken"
 
 #: indicator/messagingmenu.cpp:472
 msgid "Voicemail"
@@ -318,23 +317,23 @@ msgstr "Voicemailberichten"
 
 #: indicator/authhandler.cpp:91
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: indicator/textchannelobserver.cpp:304
 msgid "You joined a new group"
-msgstr ""
+msgstr "Je bent lid geworden van een groep"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:301
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "Je bent lid geworden van %1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:297
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "Je bent lid geworden van %1. "
 
 #~ msgid "Private Number"
 #~ msgstr "Privénummer"

@@ -8,21 +8,23 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-08-30 15:54-0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2020-11-23 11:14+0000\n"
+"Last-Translator: Adria <adriamartinmor@gmail.com>\n"
+"Language-Team: Sardinian <https://translate.ubports.com/projects/ubports/"
+"telephony-service/sc/>\n"
 "Language: sc\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.3\n"
 
 #: indicator/messagingmenu.cpp:368
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 mutida pèrdida"
+msgstr[1] "%1 mutidas pèrdidas"
 
 #: indicator/messagingmenu.cpp:467
 #, qt-format
