@@ -2,13 +2,13 @@ telephony-service (0.4+0ubports3) xenial; urgency=medium
 
   * mms lost or on download error: notify user
 
- -- Lionel Duboeuf <lduboeuf@ouvaton.org>  Thu, 01 ov 2020 09:00:51 +02300
+ -- Lionel Duboeuf <lduboeuf@ouvaton.org>  Thu, 05 Nov 2020 09:00:51 +0200
 
 telephony-service (0.4+0ubports2) xenial; urgency=medium
 
   * sms/mms notification: use the sent date
 
- -- Lionel Duboeuf <lduboeuf@ouvaton.org>  Thu, 01 Oct 2020 09:00:51 +02300
+ -- Lionel Duboeuf <lduboeuf@ouvaton.org>  Thu, 01 Oct 2020 09:00:51 +0200
 
 telephony-service (0.4+0ubports1) xenial; urgency=medium
 
