@@ -32,6 +32,8 @@
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 #include <QDBusArgument>
+#include <QDBusMessage>
+#include <QDBusConnection>
 
 QDBusArgument &operator<<(QDBusArgument &argument, const AttachmentStruct &attachment)
 {
@@ -296,8 +298,24 @@ void ChatManager::acknowledgeMessage(const QVariantMap &properties)
 
 void ChatManager::acknowledgeAllMessages(const QVariantMap &properties)
 {
+    qDebug() << "jezek - ChatManager::acknowledgeAllMessages";
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
     phoneAppHandler->asyncCall("AcknowledgeAllMessages", convertPropertiesForDBus(properties));
+}
+
+/**
+ * Sends an asynchronious call through DBus to redownload a message identified by properties.
+ *
+ * Properties:
+ * accountId: string - On which account the redownload will happen.
+ * messageId: string - Message identifier of message which should be redownloaded.
+ * TODO:jezek - don't use properties, use specified vars.
+ */
+void ChatManager::redownloadMessage(const QVariantMap &properties)
+{
+    qDebug() << "jezek - ChatManager::redownloadMessage";
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->asyncCall("RedownloadMessage", convertPropertiesForDBus(properties));
 }
 
 void ChatManager::onAckTimerTriggered()

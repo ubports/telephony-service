@@ -70,6 +70,13 @@
             <arg name="properties" type="a{sv}" direction="in"/>
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
         </method>
+        <method name="RedownloadMessage">
+            <dox:d><![CDATA[
+                Request message to be redownloaded
+            ]]></dox:d>
+            <arg name="properties" type="a{sv}" direction="in"/>
+            <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
+        </method>
         <method name="DestroyTextChannel">
             <dox:d><![CDATA[
                 Destroy a text channel. Only works on channels that have the
