@@ -32,6 +32,8 @@
 #include <TelepathyQt/ContactManager>
 #include <TelepathyQt/PendingContacts>
 #include <TelepathyQt/PendingChannelRequest>
+#include <QDBusMessage>
+#include <QDBusConnection>
 
 TextHandler::TextHandler(QObject *parent)
 : QObject(parent)
@@ -116,6 +118,7 @@ void TextHandler::acknowledgeMessages(const QVariantList &messages)
 
 void TextHandler::acknowledgeAllMessages(const QVariantMap &properties)
 {
+    qDebug() << "jezek - TextHandler::acknowledgeAllMessages";
     QList<Tp::TextChannelPtr> channels = existingChannels(properties["accountId"].toString(), properties);
     if (channels.isEmpty()) {
         return;
@@ -124,6 +127,17 @@ void TextHandler::acknowledgeAllMessages(const QVariantMap &properties)
     Q_FOREACH(const Tp::TextChannelPtr &channel, channels) {
         channel->acknowledge(channel->messageQueue());
     }
+}
+
+void TextHandler::redownloadMessage(const QVariantMap &properties)
+{
+    qDebug() << "jezek - TextHandler::redownloadMessage";
+    QDBusMessage request;
+    request = QDBusMessage::createMethodCall("org.ofono.mms",
+                                   properties["messageId"].toString(), "org.ofono.mms.Message",
+                                   "Redownload");
+    QDBusConnection::sessionBus().call(request);
+    qDebug() << "TODO:jezek - sent Redownload method request to " << properties["messageId"].toString();
 }
 
 bool TextHandler::destroyTextChannel(const QString &objectPath)
