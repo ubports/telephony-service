@@ -482,6 +482,8 @@ void HandlerTest::testAcknowledgeAllMessages()
     TRY_COMPARE(messageReadSpy.count(), messageCount);
 }
 
+//TODO:jezek - testRedownloadMessage, documentation, changelogs, etc...
+
 void HandlerTest::testActiveCallIndicator()
 {
     // start by making sure the property is false by default

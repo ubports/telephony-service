@@ -43,6 +43,7 @@ public Q_SLOTS:
     QString sendMessage(const QString &accountId, const QString &message, const AttachmentList &attachments, const QVariantMap &properties);
     void acknowledgeMessages(const QVariantList &messages);
     void acknowledgeAllMessages(const QVariantMap &properties);
+    void redownloadMessage(const QVariantMap &properties);
     bool destroyTextChannel(const QString &objectPath);
     bool changeRoomTitle(const QString &objectPath, const QString &title);
     void inviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message);
