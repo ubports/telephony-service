@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2015-01-12 14:46+0000\n"
-"Last-Translator: Yaron <sh.yaron@gmail.com>\n"
-"Language-Team: Hebrew <he@li.org>\n"
+"PO-Revision-Date: 2020-12-19 13:26+0000\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
+"Language-Team: Hebrew <https://translate.ubports.com/projects/ubports/"
+"telephony-service/he/>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Weblate 3.11.3\n"
 "X-Launchpad-Export-Date: 2017-01-04 06:02+0000\n"
-"X-Generator: Launchpad (build 18298)\n"
 
 #: indicator/messagingmenu.cpp:373
 #, qt-format
@@ -94,7 +95,7 @@ msgstr[1] ""
 
 #: indicator/authhandler.cpp:72
 msgid "Authentication failed. Do you want to review your credentials?"
-msgstr ""
+msgstr "האימות נכשל. לסקור את פרטי הגישה שלך?"
 
 #: indicator/messagingmenu.cpp:309
 msgid "Call back"
@@ -131,7 +132,7 @@ msgstr "דחיה"
 
 #: approver/approver.cpp:536
 msgid "End + Answer"
-msgstr ""
+msgstr "ניתוק + מענה"
 
 #: approver/approver.cpp:522
 msgid "Hold + Answer"
@@ -175,7 +176,7 @@ msgstr "הודעת מאת %1"
 #: indicator/textchannelobserver.cpp:564
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "הודעה אל %1 מאת %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/messagingmenu.cpp:229 indicator/messagingmenu.cpp:233
@@ -186,11 +187,11 @@ msgstr "הודעה לקבוצה מאת %1"
 
 #: indicator/textchannelobserver.cpp:293
 msgid "New Group"
-msgstr ""
+msgstr "קבוצה חדשה"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
-msgstr ""
+msgstr "לא"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
@@ -215,7 +216,7 @@ msgstr "אישור"
 #: approver/approver.cpp:456
 #, qt-format
 msgid "On [%1]"
-msgstr ""
+msgstr "פעיל [%1]"
 
 #. TRANSLATORS : message displayed when any error occured while receiving a mms ( case when cellular-data is off, or any downloading issue). Note that mms is lost in that case
 #: indicator/textchannelobserver.cpp:504
@@ -307,7 +308,7 @@ msgstr "ניתן לשחרר את נעילת ה־SIM שלך ולנסות שוב �
 
 #: indicator/textchannelobserver.cpp:326
 msgid "View Group"
-msgstr ""
+msgstr "הצגת קבוצה"
 
 #: indicator/textchannelobserver.cpp:247 indicator/textchannelobserver.cpp:602
 msgid "View message"
@@ -323,23 +324,23 @@ msgstr "הודעות בתא הקולי"
 
 #: indicator/authhandler.cpp:91
 msgid "Yes"
-msgstr ""
+msgstr "כן"
 
 #: indicator/textchannelobserver.cpp:307
 msgid "You joined a new group"
-msgstr ""
+msgstr "הצטרפת לקבוצה חדשה"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:304
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "הצטרפת לקבוצה %1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:300
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "הצטרפת לקבוצה %1 "
 
 #~ msgid "Unknown Number"
 #~ msgstr "מספר לא ידוע"
