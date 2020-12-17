@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2015-03-31 14:02+0000\n"
-"Last-Translator: tzem <athmakrigiannis@gmail.com>\n"
-"Language-Team: Greek <el@li.org>\n"
+"PO-Revision-Date: 2020-12-19 13:26+0000\n"
+"Last-Translator: Efstathios Iosifidis <iefstathios@gmail.com>\n"
+"Language-Team: Greek <https://translate.ubports.com/projects/ubports/"
+"telephony-service/el/>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.3\n"
 "X-Launchpad-Export-Date: 2017-01-04 06:02+0000\n"
-"X-Generator: Launchpad (build 18298)\n"
 
 #: indicator/messagingmenu.cpp:373
 #, qt-format
@@ -177,7 +178,7 @@ msgstr "Μήνυμα από %1"
 #: indicator/textchannelobserver.cpp:564
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "Μήνυμα στον %1 από τον %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/messagingmenu.cpp:229 indicator/messagingmenu.cpp:233
@@ -188,7 +189,7 @@ msgstr "Μήνυμα προς ομάδα από %1"
 
 #: indicator/textchannelobserver.cpp:293
 msgid "New Group"
-msgstr ""
+msgstr "Νέα ομάδα"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
@@ -226,6 +227,10 @@ msgid ""
 "be retrieved. Please ensure Cellular Data is ON and MMS settings are "
 "correct, then ask the sender to try again."
 msgstr ""
+"Ωχ, παρουσιάστηκε σφάλμα με το σύστημα MMS και δεν ήταν δυνατή η ανάκτηση "
+"αυτού του μηνύματος. Βεβαιωθείτε ότι τα δεδομένα κινητής τηλεφωνίας είναι "
+"ενεργοποιημένα και οι ρυθμίσεις MMS είναι σωστές και στη συνέχεια, ζητήστε "
+"από τον αποστολέα να προσπαθήσει ξανά."
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -311,7 +316,7 @@ msgstr ""
 
 #: indicator/textchannelobserver.cpp:326
 msgid "View Group"
-msgstr ""
+msgstr "Προβολή ομάδας"
 
 #: indicator/textchannelobserver.cpp:247 indicator/textchannelobserver.cpp:602
 msgid "View message"
@@ -331,19 +336,19 @@ msgstr "Ναι"
 
 #: indicator/textchannelobserver.cpp:307
 msgid "You joined a new group"
-msgstr ""
+msgstr "Συμμετέχετε σε νέα ομάδα"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:304
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "Συμμετέχετε στην ομάδα %1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:300
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "Συμμετέχετε στην ομάδα %1 "
 
 #~ msgid "Unknown Number"
 #~ msgstr "Άγνωστος Αριθμός"
