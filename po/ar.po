@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2020-12-09 20:26+0000\n"
+"PO-Revision-Date: 2020-12-19 13:26+0000\n"
 "Last-Translator: abidin <abidin24@tutanota.com>\n"
 "Language-Team: Arabic <https://translate.ubports.com/projects/ubports/"
 "telephony-service/ar/>\n"
@@ -128,7 +128,7 @@ msgstr ""
 
 #: indicator/messagingmenu.cpp:309
 msgid "Call back"
-msgstr "معاودة الاتصال"
+msgstr "عاود الاتصال"
 
 #: approver/approver.cpp:469 approver/approver.cpp:484
 msgid "Caller number is not available"
