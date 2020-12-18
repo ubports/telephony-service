@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2020-11-23 11:14+0000\n"
-"Last-Translator: Florian Leeber <flori@bin.org.in>\n"
+"PO-Revision-Date: 2020-12-19 13:26+0000\n"
+"Last-Translator: Kai Goldbeck <kaiuwe.goldbeck@mailbox.org>\n"
 "Language-Team: German <https://translate.ubports.com/projects/ubports/"
 "telephony-service/de/>\n"
 "Language: de\n"
@@ -223,11 +223,16 @@ msgstr "An [%1]"
 
 #. TRANSLATORS : message displayed when any error occured while receiving a mms ( case when cellular-data is off, or any downloading issue). Note that mms is lost in that case
 #: indicator/textchannelobserver.cpp:504
+#, fuzzy
 msgid ""
 "Oops, there has been an error with the MMS system and this message could not "
 "be retrieved. Please ensure Cellular Data is ON and MMS settings are "
 "correct, then ask the sender to try again."
 msgstr ""
+"Ups, es ist ein Fehler im MMS-System aufgetreten und diese Nachricht konnte "
+"nicht abgerufen werden. Vergewissern Sie sich, dass die Mobilfunkdaten "
+"eingeschaltet und die MMS-Einstellungen korrekt sind, und bitten Sie dann "
+"den Absender, es erneut zu versuchen."
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
