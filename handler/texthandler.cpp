@@ -34,6 +34,8 @@
 #include <TelepathyQt/PendingChannelRequest>
 #include <QDBusMessage>
 #include <QDBusConnection>
+#include <History/TextEvent>
+#include <History/Manager>
 
 TextHandler::TextHandler(QObject *parent)
 : QObject(parent)
@@ -129,15 +131,49 @@ void TextHandler::acknowledgeAllMessages(const QVariantMap &properties)
     }
 }
 
-void TextHandler::redownloadMessage(const QVariantMap &properties)
+void TextHandler::redownloadMessage(const QString &accountId, const QString &threadId, const QString &eventId)
 {
     qDebug() << "jezek - TextHandler::redownloadMessage";
+    qDebug() << "jezek - accountId: " << accountId << ", threadId: " << threadId << ", eventId: " << eventId;
+
+    History::TextEvent textEvent = History::Manager::instance()->getSingleEvent(History::EventTypeText, accountId, threadId, eventId);
+    if (textEvent.isNull()) {
+      qWarning() << "No message found under accountId: " << accountId << ", threadId: " << threadId << ", eventId: " << eventId;
+      return;
+    }
+
+    qDebug() << "jezek - History::MessageStatusUnknown: " << History::MessageStatusUnknown;
+    qDebug() << "jezek - History::MessageStatusDelivered: " << History::MessageStatusDelivered;
+    qDebug() << "jezek - History::MessageStatusTemporarilyFailed: " << History::MessageStatusTemporarilyFailed;
+    qDebug() << "jezek - History::MessageStatusPermanentlyFailed: " << History::MessageStatusPermanentlyFailed;
+    qDebug() << "jezek - History::MessageStatusAccepted: " << History::MessageStatusAccepted;
+    qDebug() << "jezek - History::MessageStatusRead: " << History::MessageStatusRead;
+    qDebug() << "jezek - History::MessageStatusDeleted: " << History::MessageStatusDeleted;
+    qDebug() << "jezek - History::MessageStatusPending: " << History::MessageStatusPending;
+    qDebug() << "jezek - History::MessageStatusDraft: " << History::MessageStatusDraft;
+    qDebug() << "jezek - message status: " << textEvent.messageStatus();
+
+    // Only re-download unknown messages.
+    //TODO:jezek Make ti only temporary failed & incoming.
+    if (textEvent.messageStatus() != History::MessageStatusUnknown) {
+      qWarning() << "Trying to re-download message with wrong status: " << textEvent.messageStatus();
+      return;
+    }
+
+    //Update status to pending
+    textEvent.setMessageStatus(History::MessageStatusPending);
+    History::Events events;
+    events.append(textEvent);
+    if (!History::Manager::instance()->writeEvents(events)) {
+      qWarning() << "Failed to save the new message status!";
+    }
+
     QDBusMessage request;
     request = QDBusMessage::createMethodCall("org.ofono.mms",
-                                   properties["messageId"].toString(), "org.ofono.mms.Message",
+                                   eventId, "org.ofono.mms.Message",
                                    "Redownload");
     QDBusConnection::sessionBus().call(request);
-    qDebug() << "TODO:jezek - sent Redownload method request to " << properties["messageId"].toString();
+    qDebug() << "jezek - Sent Redownload method request to " << eventId;
 }
 
 bool TextHandler::destroyTextChannel(const QString &objectPath)

@@ -74,8 +74,9 @@
             <dox:d><![CDATA[
                 Request message to be redownloaded
             ]]></dox:d>
-            <arg name="properties" type="a{sv}" direction="in"/>
-            <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
+            <arg name="accountId" type="s" direction="in"/>
+            <arg name="threadId" type="s" direction="in"/>
+            <arg name="eventId" type="s" direction="in"/>
         </method>
         <method name="DestroyTextChannel">
             <dox:d><![CDATA[
