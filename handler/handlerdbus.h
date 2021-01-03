@@ -79,7 +79,7 @@ public Q_SLOTS:
     Q_NOREPLY void AcknowledgeMessages(const QVariantList &messages);
     QString StartChat(const QString &accountId, const QVariantMap &properties);
     Q_NOREPLY void AcknowledgeAllMessages(const QVariantMap &properties);
-    Q_NOREPLY void RedownloadMessage(const QVariantMap &properties);
+    Q_NOREPLY void RedownloadMessage(const QString &accountId, const QString &threadId, const QString &eventId);
     bool DestroyTextChannel(const QString &objectPath);
     bool ChangeRoomTitle(const QString &objectPath, const QString &title);
     Q_NOREPLY void InviteParticipants(const QString &objectPath, const QStringList &participants, const QString &message);

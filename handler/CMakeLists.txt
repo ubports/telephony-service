@@ -34,6 +34,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/libtelephonyservice
     ${CMAKE_CURRENT_BINARY_DIR}
     ${PULSEAUDIO_INCLUDE_DIRS}
+    ${HISTORY_INCLUDE_DIRS}
     )
 
 add_executable(telephony-service-handler ${handler_SRCS} ${handler_HDRS})
@@ -43,6 +44,7 @@ target_link_libraries(telephony-service-handler
     ${TP_QT5_FS_LIBRARIES}
     ${TPFS_LIBRARIES}
     ${FS_LIBRARIES}
+    ${HISTORY_LIBRARIES}
     telephonyservice
     ${PULSEAUDIO_LIBRARIES}
     Qt5::Contacts

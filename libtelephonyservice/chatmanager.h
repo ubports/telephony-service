@@ -54,7 +54,7 @@ public Q_SLOTS:
 
     void acknowledgeMessage(const QVariantMap &properties);
     void acknowledgeAllMessages(const QVariantMap &properties);
-    void redownloadMessage(const QVariantMap &properties);
+    void redownloadMessage(const QString &accountId, const QString &threadId, const QString &eventId);
     void leaveRooms(const QString &accountId, const QString &message);
     void leaveRoom(const QVariantMap &properties, const QString &message);
 
