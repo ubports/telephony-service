@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2021-01-01 10:26+0000\n"
+"PO-Revision-Date: 2021-01-05 23:26+0000\n"
 "Last-Translator: GK <miscgk@pm.me>\n"
 "Language-Team: Tamil <https://translate.ubports.com/projects/ubports/"
 "telephony-service/ta/>\n"
@@ -122,7 +122,7 @@ msgstr "எண் இல்லாத அழைப்பு"
 
 #: indicator/ussdindicator.cpp:142
 msgid "Cancel"
-msgstr "ரத்துசெய்"
+msgstr "தவிர்க்க"
 
 #: indicator/textchannelobserver.cpp:225
 msgid "Deactivate flight mode and try again from the messaging application."
