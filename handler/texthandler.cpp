@@ -138,7 +138,7 @@ void TextHandler::redownloadMessage(const QString &accountId, const QString &thr
 
     History::TextEvent textEvent = History::Manager::instance()->getSingleEvent(History::EventTypeText, accountId, threadId, eventId);
     if (textEvent.isNull()) {
-      qWarning() << "No message found under accountId: " << accountId << ", threadId: " << threadId << ", eventId: " << eventId;
+      qWarning() << "No message for re-download found under accountId: " << accountId << ", threadId: " << threadId << ", eventId: " << eventId;
       return;
     }
 
@@ -153,9 +153,9 @@ void TextHandler::redownloadMessage(const QString &accountId, const QString &thr
     qDebug() << "jezek - History::MessageStatusDraft: " << History::MessageStatusDraft;
     qDebug() << "jezek - message status: " << textEvent.messageStatus();
 
-    // Only re-download unknown messages.
-    //TODO:jezek Make ti only temporary failed & incoming.
-    if (textEvent.messageStatus() != History::MessageStatusUnknown) {
+    //TODO:jezek Check if message is incoming (to == self).
+    // Only re-download temporarily failed messages.
+    if (textEvent.messageStatus() != History::MessageStatusTemporarilyFailed) {
       qWarning() << "Trying to re-download message with wrong status: " << textEvent.messageStatus();
       return;
     }
@@ -165,7 +165,7 @@ void TextHandler::redownloadMessage(const QString &accountId, const QString &thr
     History::Events events;
     events.append(textEvent);
     if (!History::Manager::instance()->writeEvents(events)) {
-      qWarning() << "Failed to save the new message status!";
+      qWarning() << "Failed to save the re-downloaded message pending status!";
     }
 
     QDBusMessage request;
