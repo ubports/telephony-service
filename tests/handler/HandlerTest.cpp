@@ -126,6 +126,7 @@ void HandlerTest::testGetProtocolsChangesThroughDBus()
         f.close();
     }
 
+    QVERIFY(!(f.fileName().isEmpty()));
     QTRY_COMPARE(protocolsChangedSpy.count(), 1);
 }
 
