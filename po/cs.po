@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2020-11-26 15:47+0000\n"
+"PO-Revision-Date: 2021-02-03 22:27+0000\n"
 "Last-Translator: Milan Korecký <milan.korecky@gmail.com>\n"
 "Language-Team: Czech <https://translate.ubports.com/projects/ubports/"
 "telephony-service/cs/>\n"
@@ -232,9 +232,9 @@ msgid ""
 "be retrieved. Please ensure Cellular Data is ON and MMS settings are "
 "correct, then ask the sender to try again."
 msgstr ""
-"Jejda, v systému MMS došlo k chybě a tuto zprávu nelze načíst. Zkontrolujte, "
-"zda jsou mobilní data ZAPNUTÁ a nastavení MMS jsou správná, a poté požádejte "
-"odesílatele, aby zprávu zkusil odeslat znovu."
+"Jejda, v systému MMS došlo k chybě a tuto zprávu nelze načíst.  "
+"Zkontrolujte, zda jsou mobilní data ZAPNUTÁ a nastavení MMS jsou správná, a "
+"poté požádejte odesílatele, aby to zkusil znovu."
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -254,7 +254,7 @@ msgstr "Soukromé číslo"
 
 #: indicator/ussdindicator.cpp:119
 msgid "Reply"
-msgstr "Odpověď"
+msgstr "Odpovědět"
 
 #: indicator/displaynamesettings.cpp:35
 #, qt-format
