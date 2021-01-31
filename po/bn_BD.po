@@ -8,14 +8,16 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2021-02-03 22:27+0000\n"
+"Last-Translator: imrufbd <imrufbd@gmail.com>\n"
+"Language-Team: Bengali (Bangladesh) <https://translate.ubports.com/projects/"
+"ubports/telephony-service/bn_BD/>\n"
 "Language: bn_BD\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.3\n"
 
 #: indicator/messagingmenu.cpp:373
 #, qt-format
@@ -117,7 +119,7 @@ msgstr ""
 
 #: indicator/ussdindicator.cpp:142
 msgid "Cancel"
-msgstr ""
+msgstr "বাতিল"
 
 #: indicator/textchannelobserver.cpp:225
 msgid "Deactivate flight mode and try again from the messaging application."
@@ -188,7 +190,7 @@ msgstr ""
 
 #: indicator/authhandler.cpp:94
 msgid "No"
-msgstr ""
+msgstr "না"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
@@ -208,7 +210,7 @@ msgstr ""
 
 #: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:365
 msgid "Ok"
-msgstr ""
+msgstr "ঠিক আছে"
 
 #: approver/approver.cpp:456
 #, qt-format
@@ -321,7 +323,7 @@ msgstr ""
 
 #: indicator/authhandler.cpp:91
 msgid "Yes"
-msgstr ""
+msgstr "হ্যাঁ"
 
 #: indicator/textchannelobserver.cpp:307
 msgid "You joined a new group"
