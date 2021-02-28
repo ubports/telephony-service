@@ -500,8 +500,8 @@ void TextChannelObserver::showNotificationForMessage(const Tp::TextChannelPtr ch
         } else if (attachmentCount > 0) {
             messageText = QString::fromUtf8(C::ngettext("Attachment: %1 file", "Attachments: %1 files", attachmentCount)).arg(attachmentCount);
         } else {
-            // TRANSLATORS : message displayed when any error occured while receiving a mms ( case when cellular-data is off, or any downloading issue). Note that mms is lost in that case
-            messageText = QString::fromUtf8(C::gettext("Oops, there has been an error with the MMS system and this message could not be retrieved. Please ensure Cellular Data is ON and MMS settings are correct, then ask the sender to try again."));
+            // TRANSLATORS : message displayed when any error occurred while receiving a MMS (case when cellular-data is off, or any downloading issue). Notify that there was an error, the user can find more about it in the messaging-app.
+            messageText = QString::fromUtf8(C::gettext("Oops, there has been an error with the MMS system and this message could not be retrieved."));
         }
     }
 
