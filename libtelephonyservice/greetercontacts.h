@@ -58,11 +58,13 @@ public:
     QString defaultSimForCalls();
     QString defaultSimForMessages();
     bool mmsEnabled();
+    bool mmsAutoRetrieveEnabled();
     QVariantMap simNames();
 
     void setDefaultSimForCalls(const QString &objPath);
     void setDefaultSimForMessages(const QString &objPath);
     void setMmsEnabled(bool enabled);
+    void setMmsAutoRetrieveEnabled(bool enabled);
     void setSimNames(const QVariantMap &simNames);
     void setDialpadSoundsEnabled(bool enabled);
 
@@ -115,6 +117,7 @@ private:
     QVariant mDefaultSimForCalls;
     QVariant mDefaultSimForMessages;
     QVariant mMmsEnabled;
+    Qvariant mMmsAutoRetrieveEnabled;
     QVariant mSimNames;
     bool mGreeterActive;
 
