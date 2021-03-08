@@ -197,6 +197,15 @@ bool GreeterContacts::mmsEnabled()
     return mMmsEnabled.toBool();
 }
 
+bool GreeterContacts::mmsAutoRetrieveEnabled()
+{
+    QMutexLocker locker(&mMutex);
+    if (!mMmsAutoRetrieveEnabled.isValid()) {
+        mMmsAutoRetrieveEnabled = getUserValue("com.ubuntu.touch.AccountsService.Phone", "MmsAutoRetrieveEnabled");
+    }
+    return mMmsAutoRetrieveEnabled.toBool();
+}
+
 QString GreeterContacts::defaultSimForCalls()
 {
     QMutexLocker locker(&mMutex);
@@ -264,6 +273,16 @@ void GreeterContacts::setMmsEnabled(bool enabled)
                          "org.freedesktop.DBus.Properties",
                          QDBusConnection::AS_BUSNAME());
     iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "MmsEnabled", QVariant::fromValue(QDBusVariant(enabled)));
+}
+
+void GreeterContacts::setMmsAutoRetrieveEnabled(bool enabled)
+{
+    QString uid = QString::number(getuid());
+    QDBusInterface iface("org.freedesktop.Accounts",
+                         "/org/freedesktop/Accounts/User" + uid,
+                         "org.freedesktop.DBus.Properties",
+                         QDBusConnection::AS_BUSNAME());
+    iface.asyncCall("Set", "com.ubuntu.touch.AccountsService.Phone", "MmsAutoRetrieveEnabled", QVariant::fromValue(QDBusVariant(enabled)));
 }
 
 void GreeterContacts::setDefaultSimForMessages(const QString &objPath)
@@ -372,6 +391,7 @@ void GreeterContacts::accountsPropertiesChanged(const QString &interface,
         checkUpdatedValue(changed, invalidated, "DefaultSimForCalls", mDefaultSimForCalls);
         checkUpdatedValue(changed, invalidated, "DefaultSimForMessages", mDefaultSimForMessages);
         checkUpdatedValue(changed, invalidated, "MmsEnabled", mMmsEnabled);
+        checkUpdatedValue(changed, invalidated, "MmsAutoRetrieveEnabled", mMmsAutoRetrieveEnabled);
         checkUpdatedValue(changed, invalidated, "SimNames", mSimNames);
         Q_FOREACH(const QString &key, changed.keys()) {
             Q_EMIT phoneSettingsChanged(key);
@@ -455,6 +475,7 @@ void GreeterContacts::updateActiveUser(const QString &username)
         mIncomingMessageVibrate = QVariant();
         mDialpadSoundsEnabled = QVariant();
         mMmsEnabled = QVariant();
+        mMmsAutoRetrieveEnabled = QVariant();
         mDefaultSimForCalls = QVariant();
         mDefaultSimForMessages = QVariant();
         mSimNames = QVariant();

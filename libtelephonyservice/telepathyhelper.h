@@ -55,6 +55,7 @@ class TelepathyHelper : public QObject
     Q_PROPERTY(AccountEntry *defaultCallAccount READ defaultCallAccount NOTIFY defaultCallAccountChanged)
     Q_PROPERTY(bool flightMode READ flightMode WRITE setFlightMode NOTIFY flightModeChanged)
     Q_PROPERTY(bool mmsEnabled READ mmsEnabled WRITE setMmsEnabled NOTIFY mmsEnabledChanged)
+    Q_PROPERTY(bool mmsAutoRetrieveEnabled READ mmsAutoRetrieveEnabled WRITE setMmsAutoRetrieveEnabled NOTIFY mmsAutoRetrieveEnabled)
     Q_PROPERTY(bool emergencyCallsAvailable READ emergencyCallsAvailable NOTIFY emergencyCallsAvailableChanged)
     Q_PROPERTY(bool dialpadSoundsEnabled READ dialpadSoundsEnabled WRITE setDialpadSoundsEnabled NOTIFY dialpadSoundsEnabledChanged)
     Q_PROPERTY(QVariantMap simNames READ simNames NOTIFY simNamesChanged)
@@ -107,8 +108,10 @@ public:
     Q_INVOKABLE QList<QObject*> accountFallback(AccountEntry *originalAccount);
 
     bool mmsEnabled();
+    bool mmsAutoRetrieveEnabled();
     QVariantMap simNames() const;
     void setMmsEnabled(bool value);
+    void setMmsAutoRetrieveEnabled(bool value);
     bool flightMode();
     void setFlightMode(bool value);
     bool ready() const;
@@ -138,6 +141,7 @@ Q_SIGNALS:
     void flightModeChanged();
     void emergencyCallsAvailableChanged();
     void mmsEnabledChanged();
+    void mmsAutoRetrieveEnabled();
     void simNamesChanged();
     void dialpadSoundsEnabledChanged();
 
@@ -175,6 +179,7 @@ private:
     bool mReady;
     Tp::AbstractClientPtr mChannelObserverPtr;
     bool mMmsEnabled;
+    bool mMmsAutoRetrieveEnabled;
     QVariantMap mSimNames;
     mutable QDBusInterface *mHandlerInterface;
     mutable QDBusInterface *mApproverInterface;

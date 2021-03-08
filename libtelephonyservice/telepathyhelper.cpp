@@ -100,6 +100,7 @@ TelepathyHelper::TelepathyHelper(QObject *parent)
     connect(&mFlightModeInterface, SIGNAL(FlightModeChanged(bool)), this, SIGNAL(flightModeChanged()));
 
     mMmsEnabled = GreeterContacts::instance()->mmsEnabled();
+    mMmsAutoRetrieveEnabled = GreeterContacts::instance()->mmsAutoRetrieveEnabled();
 }
 
 TelepathyHelper::~TelepathyHelper()
@@ -139,6 +140,16 @@ void TelepathyHelper::setMmsEnabled(bool enable)
 bool TelepathyHelper::mmsEnabled()
 {
     return mMmsEnabled;
+}
+
+void TelepathyHelper::setMmsAutoRetrieveEnabled(bool enable)
+{
+    GreeterContacts::instance()->setMmsAutoRetrieveEnabled(enable);
+}
+
+bool TelepathyHelper::mmsAutoRetrieveEnabled()
+{
+    return mMmsAutoRetrieveEnabled;
 }
 
 bool TelepathyHelper::flightMode()
@@ -654,6 +665,9 @@ void TelepathyHelper::onPhoneSettingsChanged(const QString &key)
     } else if (key == "MmsEnabled") {
         mMmsEnabled = GreeterContacts::instance()->mmsEnabled();
         Q_EMIT mmsEnabledChanged();
+    } else if (key == "MmsAutoRetrieveEnabled") {
+        mMmsAutoRetrieveEnabled = GreeterContacts::instance()->mmsAutoRetrieveEnabled();
+        Q_EMIT mmsAutoRetrieveChanged();
     } else if (key == "SimNames") {
         mSimNames = GreeterContacts::instance()->simNames();
         Q_EMIT simNamesChanged();
