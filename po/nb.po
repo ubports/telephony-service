@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2015-01-18 21:29+0000\n"
-"Last-Translator: Åka Sikrom <Unknown>\n"
-"Language-Team: Norwegian Bokmal <nb@li.org>\n"
+"PO-Revision-Date: 2021-03-11 21:27+0000\n"
+"Last-Translator: Jan Christian Sherdahl <jan@sherdahl.no>\n"
+"Language-Team: Norwegian Bokmål <https://translate.ubports.com/projects/"
+"ubports/telephony-service/nb/>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.3\n"
 "X-Launchpad-Export-Date: 2017-01-04 06:03+0000\n"
-"X-Generator: Launchpad (build 18298)\n"
 
 #: indicator/messagingmenu.cpp:373
 #, qt-format
@@ -175,7 +176,7 @@ msgstr "Melding fra %1"
 #: indicator/textchannelobserver.cpp:564
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "Melding til %1 fra %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/messagingmenu.cpp:229 indicator/messagingmenu.cpp:233
@@ -186,7 +187,7 @@ msgstr "Melding til gruppe fra %1"
 
 #: indicator/textchannelobserver.cpp:293
 msgid "New Group"
-msgstr ""
+msgstr "Ny gruppe"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
@@ -224,6 +225,9 @@ msgid ""
 "be retrieved. Please ensure Cellular Data is ON and MMS settings are "
 "correct, then ask the sender to try again."
 msgstr ""
+"Beklager, det har oppstått en feil med MMS-systemet, og denne meldingen "
+"kunne ikke hentes. Forsikre deg om at mobildata er PÅ og MMS-innstillinger "
+"er riktige, og be deretter avsenderen om å prøve igjen."
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -290,7 +294,7 @@ msgstr "Meldinga ble ikke sendt"
 
 #: indicator/textchannelobserver.cpp:228
 msgid "Try again from the messaging application."
-msgstr "Prøv på nytt fra meldingsprogrammet"
+msgstr "Prøv på nytt fra meldingsprogrammet."
 
 #: approver/approver.cpp:65
 msgid "Unknown caller"
@@ -303,11 +307,11 @@ msgstr "Ukjent nummer"
 
 #: indicator/textchannelobserver.cpp:223
 msgid "Unlock your sim card and try again from the messaging application."
-msgstr "Lås opp SIM-kortet og prøv på nytt fra meldingsprogrammet"
+msgstr "Lås opp SIM-kortet og prøv på nytt fra meldingsprogrammet."
 
 #: indicator/textchannelobserver.cpp:326
 msgid "View Group"
-msgstr ""
+msgstr "Vis gruppe"
 
 #: indicator/textchannelobserver.cpp:247 indicator/textchannelobserver.cpp:602
 msgid "View message"
@@ -327,19 +331,19 @@ msgstr "Ja"
 
 #: indicator/textchannelobserver.cpp:307
 msgid "You joined a new group"
-msgstr ""
+msgstr "Du tok del i en ny gruppe"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:304
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "Du tok del i gruppe %1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:300
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "Du tok del i gruppe %1 "
 
 #~ msgid "Private Number"
 #~ msgstr "Skjult nummer"

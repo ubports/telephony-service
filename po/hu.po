@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2016-12-05 13:01+0000\n"
-"Last-Translator: Richard Somlói <ricsipontaz@gmail.com>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"PO-Revision-Date: 2021-01-28 19:27+0000\n"
+"Last-Translator: Adam <padamyno@gmail.com>\n"
+"Language-Team: Hungarian <https://translate.ubports.com/projects/ubports/"
+"telephony-service/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.11.3\n"
 "X-Launchpad-Export-Date: 2017-01-04 06:02+0000\n"
-"X-Generator: Launchpad (build 18298)\n"
 
 #: indicator/messagingmenu.cpp:373
 #, qt-format
@@ -119,7 +120,7 @@ msgstr "Hívás ismeretlen számról"
 
 #: indicator/ussdindicator.cpp:142
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Mégsem"
 
 #: indicator/textchannelobserver.cpp:225
 msgid "Deactivate flight mode and try again from the messaging application."

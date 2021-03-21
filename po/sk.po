@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2016-03-14 09:55+0000\n"
-"Last-Translator: P_E_T_O <Unknown>\n"
-"Language-Team: Slovak <sk@li.org>\n"
+"PO-Revision-Date: 2020-11-30 09:55+0000\n"
+"Last-Translator: dano6 <dano.kutka@gmail.com>\n"
+"Language-Team: Slovak <https://translate.ubports.com/projects/ubports/"
+"telephony-service/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
+"X-Generator: Weblate 3.11.3\n"
 "X-Launchpad-Export-Date: 2017-01-04 06:03+0000\n"
-"X-Generator: Launchpad (build 18298)\n"
 
 #: indicator/messagingmenu.cpp:373
 #, qt-format
@@ -182,7 +183,7 @@ msgstr "Správa od %1"
 #: indicator/textchannelobserver.cpp:564
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "Správa pre %1 od %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/messagingmenu.cpp:229 indicator/messagingmenu.cpp:233
@@ -193,7 +194,7 @@ msgstr "Správa pre skupinu od %1"
 
 #: indicator/textchannelobserver.cpp:293
 msgid "New Group"
-msgstr ""
+msgstr "Nová skupina"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
@@ -231,6 +232,9 @@ msgid ""
 "be retrieved. Please ensure Cellular Data is ON and MMS settings are "
 "correct, then ask the sender to try again."
 msgstr ""
+"V systéme MMS prišlo k chybe a túto správu nemožno prečítať. Skontrolujte, "
+"či sú mobilné dáta ZAPNUTÉ a nastavenie MMS správne, a potom požiadajte "
+"odosielateľa správu odoslať znovu."
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -250,7 +254,7 @@ msgstr "Súkromné číslo"
 
 #: indicator/ussdindicator.cpp:119
 msgid "Reply"
-msgstr "Odpoveď"
+msgstr "Odpovedať"
 
 #: indicator/displaynamesettings.cpp:35
 #, qt-format
@@ -268,7 +272,7 @@ msgstr "Uložiť"
 #: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:257
 #: indicator/messagingmenu.cpp:324
 msgid "Send"
-msgstr "Poslať"
+msgstr "Odoslať"
 
 #: indicator/messagingmenu.cpp:318
 msgid "Sorry, I'm still busy. I'll call you later."
@@ -314,7 +318,7 @@ msgstr "Odomknite SIM kartu a skúste to znova z aplikácie Správy."
 
 #: indicator/textchannelobserver.cpp:326
 msgid "View Group"
-msgstr ""
+msgstr "Zobraziť skupinu"
 
 #: indicator/textchannelobserver.cpp:247 indicator/textchannelobserver.cpp:602
 msgid "View message"
@@ -334,19 +338,19 @@ msgstr "Áno"
 
 #: indicator/textchannelobserver.cpp:307
 msgid "You joined a new group"
-msgstr ""
+msgstr "Pripojili ste sa k novej skupine"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:304
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "Pripojili ste sa k skupine %1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:300
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "Pripojili ste sa k skupine %1 "
 
 #~ msgid "Private Number"
 #~ msgstr "Súkromné číslo"

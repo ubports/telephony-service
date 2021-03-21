@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2020-11-28 09:25+0000\n"
+"PO-Revision-Date: 2020-12-21 06:26+0000\n"
 "Last-Translator: M.Sugahara <equaaqua@hotmail.com>\n"
 "Language-Team: Japanese <https://translate.ubports.com/projects/ubports/"
 "telephony-service/ja/>\n"
@@ -189,7 +189,7 @@ msgstr ""
 
 #: indicator/authhandler.cpp:94
 msgid "No"
-msgstr ""
+msgstr "いいえ"
 
 #: indicator/metrics.cpp:49 indicator/metrics.cpp:51
 msgid "No calls made today"
