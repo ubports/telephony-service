@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2020-12-19 13:26+0000\n"
+"PO-Revision-Date: 2021-03-22 23:17+0000\n"
 "Last-Translator: abidin <abidin24@tutanota.com>\n"
 "Language-Team: Arabic <https://translate.ubports.com/projects/ubports/"
 "telephony-service/ar/>\n"
@@ -65,7 +65,7 @@ msgstr "<b>%1</b> رسائل نصية تم إرسالها اليوم"
 
 #: approver/approver.cpp:523
 msgid "Accept"
-msgstr "أجب"
+msgstr "أقبل"
 
 #: indicator/textchannelobserver.cpp:499
 #, qt-format
