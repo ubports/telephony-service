@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2021-01-16 20:27+0000\n"
-"Last-Translator: ierihon <idekovets@mail.ru>\n"
+"PO-Revision-Date: 2021-03-26 11:52+0000\n"
+"Last-Translator: vokaliz <vokaliz@protonmail.com>\n"
 "Language-Team: Russian <https://translate.ubports.com/projects/ubports/"
 "telephony-service/ru/>\n"
 "Language: ru\n"
@@ -65,33 +65,33 @@ msgstr "Принять"
 #, qt-format
 msgid "Attachment: %1 audio clip"
 msgid_plural "Attachments: %1 audio clips"
-msgstr[0] "Вложение: %1 аудиофайл"
-msgstr[1] "Вложение: %1 аудиофайла"
-msgstr[2] "Вложение: %1 аудиофайлов"
+msgstr[0] "Вложение: %1 аудио файл"
+msgstr[1] "Вложения: %1 аудио файлов"
+msgstr[2] "Вложения: %1 аудио файлов"
 
 #: indicator/textchannelobserver.cpp:497
 #, qt-format
 msgid "Attachment: %1 contact"
 msgid_plural "Attachments: %1 contacts"
-msgstr[0] "Вложение: %1 контакт"
-msgstr[1] "Вложение: %1 контакта"
-msgstr[2] "Вложение: %1 контактов"
+msgstr[0] "Приложение: %1 контакт"
+msgstr[1] "Приложение: %1 контактов"
+msgstr[2] "Приложение: %1 контактов"
 
 #: indicator/textchannelobserver.cpp:501
 #, qt-format
 msgid "Attachment: %1 file"
 msgid_plural "Attachments: %1 files"
-msgstr[0] "Вложение: %1 файл"
-msgstr[1] "Вложение: %1 файла"
-msgstr[2] "Вложение: %1 файлов"
+msgstr[0] "Приложение: %1 файл"
+msgstr[1] "Приложение: %1 файла"
+msgstr[2] "Приложение: %1 файлов"
 
 #: indicator/textchannelobserver.cpp:493
 #, qt-format
 msgid "Attachment: %1 image"
 msgid_plural "Attachments: %1 images"
-msgstr[0] "Вложение: %1 изображение"
-msgstr[1] "Вложение: %1 изображения"
-msgstr[2] "Вложение: %1 изображений"
+msgstr[0] "Приложение: %1 изображение"
+msgstr[1] "Приложение: %1 изображения"
+msgstr[2] "Приложение: %1 изображений"
 
 #: indicator/textchannelobserver.cpp:495
 #, qt-format
@@ -184,7 +184,7 @@ msgstr "Сообщение от %1"
 #: indicator/textchannelobserver.cpp:564
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "Сообщение в адрес %1 от %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/messagingmenu.cpp:229 indicator/messagingmenu.cpp:233
@@ -195,7 +195,7 @@ msgstr "Сообщение группе от %1"
 
 #: indicator/textchannelobserver.cpp:293
 msgid "New Group"
-msgstr ""
+msgstr "Новая группа"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
@@ -224,7 +224,7 @@ msgstr "ОК"
 #: approver/approver.cpp:456
 #, qt-format
 msgid "On [%1]"
-msgstr ""
+msgstr "На [%1]"
 
 #. TRANSLATORS : message displayed when any error occured while receiving a mms ( case when cellular-data is off, or any downloading issue). Note that mms is lost in that case
 #: indicator/textchannelobserver.cpp:504
@@ -233,6 +233,9 @@ msgid ""
 "be retrieved. Please ensure Cellular Data is ON and MMS settings are "
 "correct, then ask the sender to try again."
 msgstr ""
+"К сожалению, в системе MMS произошла ошибка, и это сообщение не может быть "
+"получено. Убедитесь, что сотовые данные включены и настройки MMS верны, а "
+"затем попросите отправителя повторить попытку."
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -261,7 +264,7 @@ msgstr "SIM %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
-msgstr "SMS"
+msgstr "СМС"
 
 #: indicator/textchannelobserver.cpp:371
 msgid "Save"
@@ -287,7 +290,7 @@ msgstr "Служба телефонии"
 
 #: approver/main.cpp:46
 msgid "Telephony Service Approver"
-msgstr "Telephony Service Approver"
+msgstr "Учредитель службы телефонии"
 
 #: indicator/main.cpp:53
 msgid "Telephony Service Indicator"
@@ -316,7 +319,7 @@ msgstr "Разблокируйте SIM-карту и попробуйте отп
 
 #: indicator/textchannelobserver.cpp:326
 msgid "View Group"
-msgstr ""
+msgstr "Посмотреть группу"
 
 #: indicator/textchannelobserver.cpp:247 indicator/textchannelobserver.cpp:602
 msgid "View message"
@@ -336,19 +339,19 @@ msgstr "Да"
 
 #: indicator/textchannelobserver.cpp:307
 msgid "You joined a new group"
-msgstr ""
+msgstr "Вы присоединились к новой группе"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:304
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "Вы присоединились к группе %1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:300
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "Вы присоединились к группе %1 "
 
 #~ msgid "Unknown Number"
 #~ msgstr "Неизвестный номер"
