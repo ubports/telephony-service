@@ -33,6 +33,8 @@
 #include <TelepathyQt/PendingChannelRequest>
 #include <TelepathyQt/PendingVariant>
 #include <memory>
+#include <thread>
+#include <chrono>
 
 #define TELEPATHY_MUTE_IFACE "org.freedesktop.Telepathy.Call1.Interface.Mute"
 #define DBUS_PROPERTIES_IFACE "org.freedesktop.DBus.Properties"
@@ -353,6 +355,7 @@ void CallHandler::onCallChannelInvalidated()
     ToneGenerator::instance()->stopTone();
     if (mCallChannels.isEmpty() && !mHangupRequested) {
         ToneGenerator::instance()->playCallEndedTone();
+		std::this_thread::sleep_for(std::chrono::milliseconds(2200));
     }
     mHangupRequested = false;
 }
