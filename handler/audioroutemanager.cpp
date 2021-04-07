@@ -43,7 +43,7 @@ static void enable_normal()
         QPulseAudioEngine::instance()->setCallMode(CallEnded, AudioModeWiredOrSpeaker);
         timer->deleteLater();
     });
-    timer->start(2000);
+    timer->start(2200);
 #endif
 }
 
