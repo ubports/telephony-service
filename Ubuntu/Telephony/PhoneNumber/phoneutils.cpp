@@ -42,6 +42,14 @@ QString PhoneUtils::defaultRegion() const
     return locale.split("_").last();
 }
 
+int PhoneUtils::getCountryCodePrefix(const QString &country) const
+{
+    if (country.isEmpty()) {
+        country = defaultRegion();
+    }
+    return i18n::phonenumbers::PhoneNumberUtil::GetInstance()->GetCountryCodeForRegion(country.toStdString());
+}
+
 QString PhoneUtils::format(const QString &phoneNumber, const QString &defaultRegion,  PhoneUtils::PhoneNumberFormat format)
 {
     std::string formattedNumber;
