@@ -47,7 +47,7 @@ public:
 
     Q_INVOKABLE QString format(const QString &phoneNumber, const QString &defaultRegion = QString(), PhoneNumberFormat format = Auto);
 
-    Q_INVOKABLE int getCountryCodePrefix(const QString &country);
+    Q_INVOKABLE int getCountryCodePrefix(const QString &regionCode) const;
 
     virtual bool event(QEvent *event);
 

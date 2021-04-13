@@ -42,12 +42,14 @@ QString PhoneUtils::defaultRegion() const
     return locale.split("_").last();
 }
 
-int PhoneUtils::getCountryCodePrefix(const QString &country) const
+/*!
+  From a locale code, e.g FR, retrieve the phone prefix: "33"
+  If regionCode is empty, fallback to US
+*/
+int PhoneUtils::getCountryCodePrefix(const QString &regionCode) const
 {
-    if (country.isEmpty()) {
-        country = defaultRegion();
-    }
-    return i18n::phonenumbers::PhoneNumberUtil::GetInstance()->GetCountryCodeForRegion(country.toStdString());
+    QString locale = regionCode.isEmpty() ? QString("US") : regionCode;
+    return i18n::phonenumbers::PhoneNumberUtil::GetInstance()->GetCountryCodeForRegion(locale.toStdString());
 }
 
 QString PhoneUtils::format(const QString &phoneNumber, const QString &defaultRegion,  PhoneUtils::PhoneNumberFormat format)
