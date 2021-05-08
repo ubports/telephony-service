@@ -120,7 +120,6 @@ void TextHandler::acknowledgeMessages(const QVariantList &messages)
 
 void TextHandler::acknowledgeAllMessages(const QVariantMap &properties)
 {
-    qDebug() << "jezek - TextHandler::acknowledgeAllMessages";
     QList<Tp::TextChannelPtr> channels = existingChannels(properties["accountId"].toString(), properties);
     if (channels.isEmpty()) {
         return;
@@ -133,8 +132,6 @@ void TextHandler::acknowledgeAllMessages(const QVariantMap &properties)
 
 void TextHandler::redownloadMessage(const QString &accountId, const QString &threadId, const QString &eventId)
 {
-    qDebug() << "jezek - TextHandler::redownloadMessage";
-    qDebug() << "jezek - accountId: " << accountId << ", threadId: " << threadId << ", eventId: " << eventId;
 
     History::TextEvent textEvent = History::Manager::instance()->getSingleEvent(History::EventTypeText, accountId, threadId, eventId);
     if (textEvent.isNull()) {
@@ -142,18 +139,7 @@ void TextHandler::redownloadMessage(const QString &accountId, const QString &thr
       return;
     }
 
-    qDebug() << "jezek - History::MessageStatusUnknown: " << History::MessageStatusUnknown;
-    qDebug() << "jezek - History::MessageStatusDelivered: " << History::MessageStatusDelivered;
-    qDebug() << "jezek - History::MessageStatusTemporarilyFailed: " << History::MessageStatusTemporarilyFailed;
-    qDebug() << "jezek - History::MessageStatusPermanentlyFailed: " << History::MessageStatusPermanentlyFailed;
-    qDebug() << "jezek - History::MessageStatusAccepted: " << History::MessageStatusAccepted;
-    qDebug() << "jezek - History::MessageStatusRead: " << History::MessageStatusRead;
-    qDebug() << "jezek - History::MessageStatusDeleted: " << History::MessageStatusDeleted;
-    qDebug() << "jezek - History::MessageStatusPending: " << History::MessageStatusPending;
-    qDebug() << "jezek - History::MessageStatusDraft: " << History::MessageStatusDraft;
-    qDebug() << "jezek - message status: " << textEvent.messageStatus();
 
-    //TODO:jezek Check if message is incoming (to == self).
     // Only re-download temporarily failed messages.
     if (textEvent.messageStatus() != History::MessageStatusTemporarilyFailed) {
       qWarning() << "Trying to re-download message with wrong status: " << textEvent.messageStatus();
@@ -173,7 +159,6 @@ void TextHandler::redownloadMessage(const QString &accountId, const QString &thr
                                    eventId, "org.ofono.mms.Message",
                                    "Redownload");
     QDBusConnection::sessionBus().call(request);
-    qDebug() << "jezek - Sent Redownload method request to " << eventId;
 }
 
 bool TextHandler::destroyTextChannel(const QString &objectPath)

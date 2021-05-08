@@ -208,13 +208,11 @@ QString HandlerDBus::StartChat(const QString &accountId, const QVariantMap &prop
 
 void HandlerDBus::AcknowledgeAllMessages(const QVariantMap &properties)
 {
-    qDebug() << "jezek - HandlerDBus::AcknowledgeAllMessages";
     TextHandler::instance()->acknowledgeAllMessages(properties);
 }
 
 void HandlerDBus::RedownloadMessage(const QString &accountId, const QString &threadId, const QString &eventId)
 {
-    qDebug() << "jezek - HandlerDBus::RedownloadMessage";
     TextHandler::instance()->redownloadMessage(accountId, threadId, eventId);
 }
 
