@@ -39,12 +39,15 @@ private Q_SLOTS:
     void testSendMessageWithAttachments();
     void testSendMessageWithAttachmentsSplitted();
     void testAcknowledgeMessages();
+    void testRedownloadMessage();
 
 private:
     Tp::AccountPtr mGenericTpAccount;
     Tp::AccountPtr mPhoneTpAccount;
+    Tp::AccountPtr mNuntiumTpAccount;
     MockController *mGenericMockController;
     MockController *mPhoneMockController;
+    MockController *mNuntiumMockController;
 };
 
 void ChatManagerTest::initTestCase()
@@ -65,10 +68,13 @@ void ChatManagerTest::init()
     QVERIFY(!mGenericTpAccount.isNull());
     mPhoneTpAccount = addAccount("mock", "ofono", "the phone account");
     QVERIFY(!mPhoneTpAccount.isNull());
+    mNuntiumTpAccount = addAccount("mock", "nuntium", "the nuntium acccount");
+    QVERIFY(!mNuntiumTpAccount.isNull());
 
     // and create the mock controller
     mGenericMockController = new MockController("mock", this);
     mPhoneMockController = new MockController("ofono", this);
+    mNuntiumMockController = new MockController("nuntium", this);
 }
 
 void ChatManagerTest::cleanup()
@@ -78,6 +84,7 @@ void ChatManagerTest::cleanup()
 
     mGenericMockController->deleteLater();
     mPhoneMockController->deleteLater();
+    mNuntiumMockController->deleteLater();
 }
 
 void ChatManagerTest::testSendMessage_data()
@@ -166,6 +173,51 @@ void ChatManagerTest::testAcknowledgeMessages()
     qSort(receivedIds);
     qSort(messageIds);
     QCOMPARE(receivedIds, messageIds);
+}
+
+void ChatManagerTest::testRedownloadMessage()
+{
+    TRY_COMPARE(1, 2);
+    //QSignalSpy textChannelAvailableSpy(ChatManager::instance(), SIGNAL(textChannelAvailable(Tp::TextChannelPtr)));
+
+    //QVariantMap properties;
+    //properties["Sender"] = "12345";
+    //properties["Recipients"] = (QStringList() << "12345");
+    //QStringList messages;
+    //messages << "Hi there" << "How are you" << "Always look on the bright side of life";
+    //TODO:jezek - Place this incomming message as temporaily failed.
+    //Q_FOREACH(const QString &message, messages) {
+    //    mGenericMockController->PlaceIncomingMessage(message, properties);
+    //    // the wait shouldn't be needed, but just in case
+    //    QTest::qWait(50);
+    //}
+    //TRY_COMPARE(textChannelAvailableSpy.count(), 1);
+    //Tp::TextChannelPtr channel = textChannelAvailableSpy.first().first().value<Tp::TextChannelPtr>();
+    //QVERIFY(!channel.isNull());
+
+    //TRY_COMPARE(channel->messageQueue().count(), messages.count());
+    //QStringList messageIds;
+    //for (int i = 0; i < messages.count(); ++i) {
+    //    messageIds << channel->messageQueue()[i].messageToken();
+    //}
+
+    ////TODO:jezek - Check for dbus signal "Redownload".
+    //QSignalSpy messageReadSpy(mGenericMockController, SIGNAL(MessageRead(QString)));
+    //Q_FOREACH(const QString &messageId, messageIds) {
+    //    //TODO:jezek 12345 is not right, use threadId.
+    //    ChatManager::instance()->redownloadMessage("mock/mock/account0", "12345", messageId );
+    //}
+
+    //TRY_COMPARE(messageReadSpy.count(), messageIds.count());
+    //QStringList receivedIds;
+    //for (int i = 0; i < messageReadSpy.count(); ++i) {
+    //    receivedIds << messageReadSpy[i][0].toString();
+    //}
+
+    //qSort(receivedIds);
+    //qSort(messageIds);
+    //QCOMPARE(receivedIds, messageIds);
+    ////TODO:jezek - Check if message has pending state.
 }
 
 void ChatManagerTest::testSendMessageWithAttachments()

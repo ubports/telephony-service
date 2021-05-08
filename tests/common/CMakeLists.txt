@@ -8,6 +8,9 @@ configure_file(dbus-session.conf.in ${CMAKE_CURRENT_BINARY_DIR}/dbus-session.con
 add_executable(NotificationsMock NotificationsMock.cpp)
 target_link_libraries(NotificationsMock Qt5::Core Qt5::DBus)
 
+add_executable(NuntiumMock NuntiumMock.cpp)
+target_link_libraries(NuntiumMock Qt5::Core Qt5::DBus)
+
 qt5_add_dbus_interface(mockcontroller_SRCS mock/MockConnection.xml MockConnectionInterface)
 add_library(mockcontroller STATIC mockcontroller.cpp mockcontroller.h ${mockcontroller_SRCS})
 target_link_libraries(mockcontroller Qt5::Core Qt5::DBus)
