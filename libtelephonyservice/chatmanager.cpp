@@ -296,7 +296,6 @@ void ChatManager::acknowledgeMessage(const QVariantMap &properties)
 
 void ChatManager::acknowledgeAllMessages(const QVariantMap &properties)
 {
-    qDebug() << "jezek - ChatManager::acknowledgeAllMessages";
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
     phoneAppHandler->asyncCall("AcknowledgeAllMessages", convertPropertiesForDBus(properties));
 }
@@ -307,7 +306,6 @@ void ChatManager::acknowledgeAllMessages(const QVariantMap &properties)
  */
 void ChatManager::redownloadMessage(const QString &accountId, const QString &threadId, const QString &eventId)
 {
-    qDebug() << "jezek - ChatManager::redownloadMessage";
     QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
     phoneAppHandler->asyncCall("RedownloadMessage", accountId, threadId, eventId);
 }
