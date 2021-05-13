@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2015-06-29 02:38+0000\n"
-"Last-Translator: Ian Li <Unknown>\n"
-"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2021-05-03 03:41+0000\n"
+"Last-Translator: Enceka <enceka@yeah.net>\n"
+"Language-Team: Chinese (Simplified) <https://translate.ubports.com/projects/"
+"ubports/telephony-service/zh_Hans/>\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 3.11.3\n"
 "X-Launchpad-Export-Date: 2017-01-04 06:03+0000\n"
-"X-Generator: Launchpad (build 18298)\n"
 
 #: indicator/messagingmenu.cpp:373
 #, qt-format
@@ -168,7 +169,7 @@ msgstr "来自 %1 的短信"
 #: indicator/textchannelobserver.cpp:564
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "从%2发送到%1的消息"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/messagingmenu.cpp:229 indicator/messagingmenu.cpp:233
@@ -179,7 +180,7 @@ msgstr "来自%1的群消息"
 
 #: indicator/textchannelobserver.cpp:293
 msgid "New Group"
-msgstr ""
+msgstr "新的群组"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
@@ -216,7 +217,7 @@ msgid ""
 "Oops, there has been an error with the MMS system and this message could not "
 "be retrieved. Please ensure Cellular Data is ON and MMS settings are "
 "correct, then ask the sender to try again."
-msgstr ""
+msgstr "糟糕，MMS系统出现错误并且无法检索到此消息。 请确保蜂窝数据已打开并且MMS设置正确，然后请发件人再试一次。"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -300,7 +301,7 @@ msgstr "请解锁你的SIM卡，然后在短信应用中重试。"
 
 #: indicator/textchannelobserver.cpp:326
 msgid "View Group"
-msgstr ""
+msgstr "查看群组"
 
 #: indicator/textchannelobserver.cpp:247 indicator/textchannelobserver.cpp:602
 msgid "View message"
@@ -320,19 +321,19 @@ msgstr "是"
 
 #: indicator/textchannelobserver.cpp:307
 msgid "You joined a new group"
-msgstr ""
+msgstr "你加入了一个新群组"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:304
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "你加入了%1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:300
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "你加入了%1 "
 
 #~ msgid "Unknown Number"
 #~ msgstr "不明号码"
