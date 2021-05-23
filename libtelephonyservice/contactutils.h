@@ -32,7 +32,7 @@ QTCONTACTS_USE_NAMESPACE
 
 namespace ContactUtils
 {
-    QContactManager *sharedManager(const QString &engine = "galera");
+    QContactManager *sharedManager(const QString &engine = "org.nemomobile.contacts.sqlite");
     QString formatContactName(const QContact &contact);
 }
 

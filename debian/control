@@ -68,7 +68,7 @@ Architecture: any
 Multi-Arch: same
 Pre-Depends: dpkg (>= 1.15.6~)
 Depends: gsettings-ubuntu-schemas,
-         qtcontact5-galera[!s390x],
+         qtcontacts-sqlite-qt5-extension,
          telephony-service (>= ${binary:Version}),
          ${misc:Depends},
          ${shlibs:Depends},
