@@ -42,6 +42,16 @@ QString PhoneUtils::defaultRegion() const
     return locale.split("_").last();
 }
 
+/*!
+  From a locale code, e.g FR, retrieve the phone prefix: "33"
+  If regionCode is empty, fallback to US
+*/
+int PhoneUtils::getCountryCodePrefix(const QString &regionCode) const
+{
+    QString locale = regionCode.isEmpty() ? QString("US") : regionCode;
+    return i18n::phonenumbers::PhoneNumberUtil::GetInstance()->GetCountryCodeForRegion(locale.toStdString());
+}
+
 QString PhoneUtils::format(const QString &phoneNumber, const QString &defaultRegion,  PhoneUtils::PhoneNumberFormat format)
 {
     std::string formattedNumber;
