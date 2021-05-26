@@ -83,5 +83,18 @@ TestCase {
         var actualMatches = PhoneNumber.PhoneUtils.matchInText(data.text, "US")
         compareMatches(actualMatches, data.expectedMatches)
     }
+
+
+    function test_getCountryPrefix() {
+        var resultFakeLocale = PhoneNumber.PhoneUtils.getCountryCodePrefix("fake");
+        compare(resultFakeLocale, 0)
+
+        var resultNoLocale = PhoneNumber.PhoneUtils.getCountryCodePrefix(null);
+        compare(resultNoLocale, 1)
+
+        var resultLocale = PhoneNumber.PhoneUtils.getCountryCodePrefix("FR");
+        compare(resultLocale, 33)
+
+    }
 }
 
