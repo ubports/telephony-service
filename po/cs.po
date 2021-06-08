@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2021-02-03 22:27+0000\n"
+"PO-Revision-Date: 2021-04-30 20:44+0000\n"
 "Last-Translator: Milan Korecký <milan.korecky@gmail.com>\n"
 "Language-Team: Czech <https://translate.ubports.com/projects/ubports/"
 "telephony-service/cs/>\n"
@@ -25,21 +25,21 @@ msgstr ""
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 zmeškaný hovor"
-msgstr[1] "%1 zmeškané hovory"
-msgstr[2] "%1 zmeškaných hovorů"
+msgstr[1] "%1 zmeškaných hovorů"
+msgstr[2] "%1 zmeškané hovory"
 
 #: indicator/messagingmenu.cpp:466
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
 msgstr[0] "%1 hlasová zpráva"
-msgstr[1] "%1 hlasové zprávy"
-msgstr[2] "%1 hlasových zpráv"
+msgstr[1] "%1 hlasových zpráv"
+msgstr[2] "%1 hlasové zprávy"
 
 #: indicator/metrics.cpp:48
 #, qt-format
 msgid "<b>%1</b> calls made today"
-msgstr "<b>%1</b> dnešních hovorů"
+msgstr "<b>%1</b> dnes realizovaných hovorů"
 
 #: indicator/metrics.cpp:46
 #, qt-format
@@ -58,7 +58,7 @@ msgstr "<b>%1</b> dnes odeslaných textových zpráv"
 
 #: approver/approver.cpp:523
 msgid "Accept"
-msgstr "Vzít"
+msgstr "Přijmout"
 
 #: indicator/textchannelobserver.cpp:499
 #, qt-format
@@ -218,7 +218,7 @@ msgstr "Dnes nebyly odeslány žádné textové zprávy"
 
 #: indicator/ussdindicator.cpp:116 indicator/textchannelobserver.cpp:365
 msgid "Ok"
-msgstr "Ok"
+msgstr "Přijmout"
 
 #: approver/approver.cpp:456
 #, qt-format
@@ -327,7 +327,7 @@ msgstr "Zobrazit zprávu"
 
 #: indicator/messagingmenu.cpp:471
 msgid "Voicemail"
-msgstr "Hlasová zpráva"
+msgstr "Hlasová schránka"
 
 #: indicator/messagingmenu.cpp:463
 msgid "Voicemail messages"

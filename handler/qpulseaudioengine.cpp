@@ -283,24 +283,45 @@ void QPulseAudioEngineWorker::sinkInfoCallback(const pa_sink_info *info)
     AudioModes modes;
 
     for (int i = 0; i < info->n_ports; i++) {
-        if (!strcmp(info->ports[i]->name, "output-earpiece") ||
-            !strcmp(info->ports[i]->name, "Earpiece"))
+        QString name = info->ports[i]->name;
+
+        // Hardcoded values for android
+        // This is kept for legacy reasons
+        // These allow to override values
+        if (name == "output-earpiece")
             earpiece = info->ports[i];
-        else if (!strcmp(info->ports[i]->name, "output-wired_headset") &&
+        else if ((name == "output-wired_headset") &&
                 (info->ports[i]->available != PA_PORT_AVAILABLE_NO))
             wired_headset = info->ports[i];
-        else if ((!strcmp(info->ports[i]->name, "output-wired_headphone") ||
-                  !strcmp(info->ports[i]->name, "Headphone")) &&
+        else if ((name == "output-wired_headphone") &&
                 (info->ports[i]->available != PA_PORT_AVAILABLE_NO))
             wired_headphone = info->ports[i];
-        else if (!strcmp(info->ports[i]->name, "output-speaker") ||
-                 !strcmp(info->ports[i]->name, "Speaker"))
+        else if (name == "output-speaker")
             speaker = info->ports[i];
-        else if (!strcmp(info->ports[i]->name, "output-bluetooth_sco"))
+        else if (name == "output-bluetooth_sco")
             bluetooth_sco = info->ports[i];
-        else if (!strcmp(info->ports[i]->name, "output-speaker+wired_headphone") &&
+        else if ((name == "output-speaker+wired_headphone") &&
                 (info->ports[i]->available != PA_PORT_AVAILABLE_NO))
             speaker_and_wired_headphone = info->ports[i];
+
+        // If not in hardcoded values, try to find match
+        // this may be wrong, but better then no sound ¯\_(ツ)_/¯
+        // Also note this will not find headphones if ports are set
+        // to UNKNOWN available state, as this can mean both plugged
+        // and unplugged state causing us to belive a headphone/headset
+        // is always connected
+        // These will not to able to override values, this allows
+        // the hardcoded values to always be perfered
+        else if (name.contains("earpiece", Qt::CaseInsensitive))
+            earpiece = info->ports[i];
+        else if (name.contains("headphone", Qt::CaseInsensitive) &&
+                (info->ports[i]->available == PA_PORT_AVAILABLE_YES))
+            wired_headphone = info->ports[i];
+        else if (name.contains("speaker", Qt::CaseInsensitive))
+            speaker = info->ports[i];
+        else
+         qWarning() << "Found no matching output port for " << name;
+
     }
 
     if (!earpiece || !speaker)
@@ -359,15 +380,36 @@ void QPulseAudioEngineWorker::sourceInfoCallback(const pa_source_info *info)
         return;  /* Not the right source */
 
     for (int i = 0; i < info->n_ports; i++) {
-        if (!strcmp(info->ports[i]->name, "input-builtin_mic") ||
-            !strcmp(info->ports[i]->name, "DigitalMic"))
+        QString name = info->ports[i]->name;
+
+        // Hardcoded values for android
+        // This is kept for legacy reasons
+        // These allow to override values
+        if (name == "input-builtin_mic")
             builtin_mic = info->ports[i];
-        else if ((!strcmp(info->ports[i]->name, "input-wired_headset") ||
-                  !strcmp(info->ports[i]->name, "HeadsetMic")) &&
+        else if ((name == "input-wired_headset") &&
                 (info->ports[i]->available != PA_PORT_AVAILABLE_NO))
             wired_headset = info->ports[i];
         else if (!strcmp(info->ports[i]->name, "input-bluetooth_sco_headset"))
             bluetooth_sco = info->ports[i];
+
+        // If not in hardcoded values, try to find match
+        // this may be wrong, but better then no sound ¯\_(ツ)_/¯
+        // Also note this will not find headphones if ports are set
+        // to UNKNOWN available state, as this can mean both plugged
+        // and unplugged state causing us to belive a headphone/headset
+        // is always connected
+        // These will not to able to override values, this allows
+        // the hardcoded values to always be perfered
+        else if (name.contains("mic", Qt::CaseInsensitive))
+            if (!builtin_mic)
+                builtin_mic = info->ports[i];
+        else if (name.contains("headset", Qt::CaseInsensitive) &&
+                (info->ports[i]->available == PA_PORT_AVAILABLE_YES))
+            if (!wired_headset)
+                wired_headset = info->ports[i];
+        else
+         qWarning() << "Found no matching input port for " << name;
     }
 
     if (!builtin_mic)
@@ -695,11 +737,13 @@ void QPulseAudioEngineWorker::updateCardCallback(const pa_card_info *info)
             /* Now only trigger the event in case wired headset/headphone is now available */
             pa_card_port_info *port_info = NULL;
             for (int i = 0; i < info->n_ports; i++) {
-                if (info->ports[i] && (info->ports[i]->available == PA_PORT_AVAILABLE_YES) && (
-                            !strcmp(info->ports[i]->name, "output-wired_headset") ||
-                            !strcmp(info->ports[i]->name, "output-wired_headphone"))) {
-                    m_handleevent = true;
-                    m_audiomodetoset = AudioModeWiredOrEarpiece;
+                if (info->ports[i] && (info->ports[i]->available == PA_PORT_AVAILABLE_YES)) {
+                    QString name = info->ports[i]->name;
+                    if ((name == "output-wired_headset") || (name == "output-wired_headphone") ||
+                        (name.contains("headphone", Qt::CaseInsensitive))) {
+                        m_handleevent = true;
+                        m_audiomodetoset = AudioModeWiredOrEarpiece;
+                    }
                 }
             }
         } else if (m_audiomode == AudioModeBluetooth) {
@@ -807,4 +851,3 @@ void QPulseAudioEngine::setMicMute(bool muted)
 }
 
 QT_END_NAMESPACE
-

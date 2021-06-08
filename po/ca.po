@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2021-02-03 22:27+0000\n"
-"Last-Translator: Joan CiberSheep <cibersheep@gmail.com>\n"
+"PO-Revision-Date: 2021-04-22 10:44+0000\n"
+"Last-Translator: Adria <adriamartinmor@gmail.com>\n"
 "Language-Team: Catalan <https://translate.ubports.com/projects/ubports/"
 "telephony-service/ca/>\n"
 "Language: ca\n"
@@ -154,7 +154,7 @@ msgstr "Ara mateix tinc feina. Trucaré més tard."
 
 #: indicator/messagingmenu.cpp:316
 msgid "I'm busy at the moment. I'll call you later."
-msgstr "Ara mateix estic enfeina. Trucaré més tard."
+msgstr "Ara mateix estic enfeinat. Trucaré més tard."
 
 #: approver/approver.cpp:94
 msgid "I'm running late, on my way now."
