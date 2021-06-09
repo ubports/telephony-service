@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2020-12-21 06:26+0000\n"
+"PO-Revision-Date: 2021-06-09 18:02+0000\n"
 "Last-Translator: M.Sugahara <equaaqua@hotmail.com>\n"
 "Language-Team: Japanese <https://translate.ubports.com/projects/ubports/"
 "telephony-service/ja/>\n"
@@ -60,36 +60,31 @@ msgstr "応答"
 #, qt-format
 msgid "Attachment: %1 audio clip"
 msgid_plural "Attachments: %1 audio clips"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "添付: %1 個の録音"
 
 #: indicator/textchannelobserver.cpp:497
 #, qt-format
 msgid "Attachment: %1 contact"
 msgid_plural "Attachments: %1 contacts"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "添付：%1件の連絡先"
 
 #: indicator/textchannelobserver.cpp:501
 #, qt-format
 msgid "Attachment: %1 file"
 msgid_plural "Attachments: %1 files"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "添付：%1個のファイル"
 
 #: indicator/textchannelobserver.cpp:493
 #, qt-format
 msgid "Attachment: %1 image"
 msgid_plural "Attachments: %1 images"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "添付：%1個の画像"
 
 #: indicator/textchannelobserver.cpp:495
 #, qt-format
 msgid "Attachment: %1 video"
 msgid_plural "Attachments: %1 videos"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "添付：%1個の動画"
 
 #: indicator/authhandler.cpp:72
 msgid "Authentication failed. Do you want to review your credentials?"
@@ -322,23 +317,23 @@ msgstr "ボイスメールメッセージ"
 
 #: indicator/authhandler.cpp:91
 msgid "Yes"
-msgstr ""
+msgstr "はい"
 
 #: indicator/textchannelobserver.cpp:307
 msgid "You joined a new group"
-msgstr ""
+msgstr "新しいグループに参加しました"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:304
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "グループ%1に参加しました"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:300
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "グループ%1に参加しました "
 
 #~ msgid "Private Number"
 #~ msgstr "内線番号"
