@@ -211,6 +211,11 @@ void HandlerDBus::AcknowledgeAllMessages(const QVariantMap &properties)
     TextHandler::instance()->acknowledgeAllMessages(properties);
 }
 
+void HandlerDBus::RedownloadMessage(const QString &accountId, const QString &threadId, const QString &eventId)
+{
+    TextHandler::instance()->redownloadMessage(accountId, threadId, eventId);
+}
+
 void HandlerDBus::StartCall(const QString &number, const QString &accountId)
 {
     CallHandler::instance()->startCall(number, accountId);
