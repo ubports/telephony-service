@@ -81,6 +81,19 @@ EXISTING_OFONO_ACCOUNTS=$(get_telepathy_ofono_accounts)
 EXISTING_OFONO_ACCOUNTS_COUNT=$(get_telepathy_ofono_accounts | wc -l)
 MODEM_COUNT=0
 
+# Do not run the legacy modem detection if newer ofono with binder interface is being used
+# Those accounts are created from there
+if [ "$(getprop ro.build.version.sdk 99)" -ge "27" ]; then
+    echo "Android SDK version 27 or greater detected. No modem detection will be made."
+    for account in $EXISTING_OFONO_ACCOUNTS; do
+        # Remove an eventual account that got here before the fix
+        if [ -z "${account##*account*}" ]; then
+           mc-tool remove $account 2>&1 > /dev/null
+        fi
+    done
+    exit 0
+fi
+
 # check if there is at least one modem
 if [ "$(getprop rild.libpath '')" != "" ]; then
     MODEM_COUNT=$(getprop ril.num_slots 1)
