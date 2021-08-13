@@ -85,6 +85,7 @@ MODEM_COUNT=0
 # Those accounts are created from there
 if [ "$(getprop ro.build.version.sdk 99)" -ge "27" ]; then
     echo "Android SDK version 27 or greater detected. No modem detection will be made."
+    exit 0
 fi
 
 # check if there is at least one modem
