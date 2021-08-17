@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2021-05-23 05:10+0000\n"
-"Last-Translator: Wannaphong Phatthiyaphaibun <wannaphong@yahoo.com>\n"
+"PO-Revision-Date: 2021-07-16 19:12+0000\n"
+"Last-Translator: PPNplus <ppnplus@protonmail.com>\n"
 "Language-Team: Thai <https://translate.ubports.com/projects/ubports/"
 "telephony-service/th/>\n"
 "Language: th\n"
@@ -24,15 +24,13 @@ msgstr ""
 #, qt-format
 msgid "%1 missed call"
 msgid_plural "%1 missed calls"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 สายที่ไม่ได้รับ"
 
 #: indicator/messagingmenu.cpp:466
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 ข้อความเสียง"
 
 #: indicator/metrics.cpp:48
 #, qt-format
@@ -56,7 +54,7 @@ msgstr ""
 
 #: approver/approver.cpp:523
 msgid "Accept"
-msgstr ""
+msgstr "รับสาย"
 
 #: indicator/textchannelobserver.cpp:499
 #, qt-format
@@ -99,7 +97,7 @@ msgstr ""
 
 #: indicator/messagingmenu.cpp:309
 msgid "Call back"
-msgstr ""
+msgstr "โทรกลับ"
 
 #: approver/approver.cpp:469 approver/approver.cpp:484
 msgid "Caller number is not available"
@@ -108,15 +106,15 @@ msgstr ""
 #: approver/approver.cpp:481
 #, qt-format
 msgid "Calling from %1"
-msgstr ""
+msgstr "กำลังโทรจาก %1"
 
 #: approver/approver.cpp:475
 msgid "Calling from private number"
-msgstr ""
+msgstr "กำลังโทรจากหมายเลขส่วนตัว"
 
 #: approver/approver.cpp:478
 msgid "Calling from unknown number"
-msgstr ""
+msgstr "กำลังโทรจากหมายเลขที่ไม่รู้จัก"
 
 #: indicator/ussdindicator.cpp:142
 msgid "Cancel"
@@ -128,7 +126,7 @@ msgstr ""
 
 #: approver/approver.cpp:545
 msgid "Decline"
-msgstr ""
+msgstr "ปฏิเสธ"
 
 #: approver/approver.cpp:536
 msgid "End + Answer"
@@ -140,19 +138,19 @@ msgstr ""
 
 #: indicator/messagingmenu.cpp:314
 msgid "I missed your call - can you call me now?"
-msgstr ""
+msgstr "ฉันไม่ได้รับสาย ช่วยโทรกลับมาเลยได้ไหม"
 
 #: indicator/messagingmenu.cpp:317
 msgid "I'll be 20 minutes late."
-msgstr ""
+msgstr "ฉันจะมาถึงช้า 20 นาที"
 
 #: approver/approver.cpp:93
 msgid "I'm busy at the moment. I'll call later."
-msgstr ""
+msgstr "ตอนนี้ฉันไม่ว่าง เดี๋ยวฉันโทรกลับ"
 
 #: indicator/messagingmenu.cpp:316
 msgid "I'm busy at the moment. I'll call you later."
-msgstr ""
+msgstr "ตอนนี้ฉันไม่ว่าง เดี๋ยวฉันโทรกลับ"
 
 #: approver/approver.cpp:94
 msgid "I'm running late, on my way now."
@@ -164,19 +162,19 @@ msgstr ""
 
 #: approver/approver.cpp:553
 msgid "Message & decline"
-msgstr ""
+msgstr "ส่งข้อความ & ปฏิเสธ"
 
 #: indicator/textchannelobserver.cpp:638
 #, qt-format
 msgid "Message from %1"
-msgstr ""
+msgstr "ข้อความจาก %1"
 
 #. TRANSLATORS : %1 is the group name and %2 is the recipient name
 #: indicator/messagingmenu.cpp:226 indicator/textchannelobserver.cpp:560
 #: indicator/textchannelobserver.cpp:564
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "ข้อความไปยัง %1 จาก %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/messagingmenu.cpp:229 indicator/messagingmenu.cpp:233

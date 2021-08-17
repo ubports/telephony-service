@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2021-02-03 22:27+0000\n"
-"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"PO-Revision-Date: 2021-06-30 19:36+0000\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://translate.ubports.com/projects/ubports/"
 "telephony-service/nl/>\n"
 "Language: nl\n"
@@ -95,7 +95,7 @@ msgstr[1] "Bijlage: %1 video's"
 
 #: indicator/authhandler.cpp:72
 msgid "Authentication failed. Do you want to review your credentials?"
-msgstr "Authenticatie mislukt. Controleer je inloggegevens."
+msgstr "De authenticatie is mislukt - controleer je inloggegevens."
 
 #: indicator/messagingmenu.cpp:309
 msgid "Call back"
