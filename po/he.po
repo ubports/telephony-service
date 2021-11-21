@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2020-12-23 10:26+0000\n"
+"PO-Revision-Date: 2021-10-04 00:37+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.ubports.com/projects/ubports/"
 "telephony-service/he/>\n"
@@ -225,8 +225,9 @@ msgid ""
 "be retrieved. Please ensure Cellular Data is ON and MMS settings are "
 "correct, then ask the sender to try again."
 msgstr ""
-"אופס, הייתה איזו תקלה עם מערכת ה־MMS וקבלת ההודעה נכשלה. נא לוודא שתקשורת "
-"הנתונים הסלולרית פעילה ושהגדרות ה־MMS נכונות ואז לבקש ממי ששלח לשלוח שוב."
+"אופס, נראה שהייתה שגיאה עם מערכת ה־MMS (הודעות מולטימדיה) ואי אפשר למשוך את "
+"ההודעה הזאת. נא לוודא שחיבור הנתונים הסלולרי פעיל ושהגדרות ה־MMS נכונות, "
+"לאחר מכן לבקש ממי ששלח לשלוח שוב."
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -255,7 +256,7 @@ msgstr "SIM %1"
 
 #: indicator/telephony-service-sms.desktop.in:3
 msgid "SMS"
-msgstr "SMS"
+msgstr "מסרון"
 
 #: indicator/textchannelobserver.cpp:371
 msgid "Save"
