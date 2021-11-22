@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2021-02-03 22:27+0000\n"
-"Last-Translator: Ivo Xavier <ivofernandes12@gmail.com>\n"
+"PO-Revision-Date: 2021-11-19 22:39+0000\n"
+"Last-Translator: Hugo Carvalho <hugokarvalho@hotmail.com>\n"
 "Language-Team: Portuguese <https://translate.ubports.com/projects/ubports/"
 "telephony-service/pt/>\n"
 "Language: pt\n"
@@ -320,7 +320,7 @@ msgstr "Ver mensagem"
 
 #: indicator/messagingmenu.cpp:471
 msgid "Voicemail"
-msgstr "Voicemail"
+msgstr "Correio de Voz"
 
 #: indicator/messagingmenu.cpp:463
 msgid "Voicemail messages"

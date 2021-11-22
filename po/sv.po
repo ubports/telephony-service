@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-11 20:39+0000\n"
-"PO-Revision-Date: 2021-06-01 23:45+0000\n"
-"Last-Translator: Marcus Fredlund <marcus.karlson@gmail.com>\n"
+"PO-Revision-Date: 2021-10-19 20:55+0000\n"
+"Last-Translator: Jakob Fridesjö <jakob.fridesjo@tuta.io>\n"
 "Language-Team: Swedish <https://translate.ubports.com/projects/ubports/"
 "telephony-service/sv/>\n"
 "Language: sv\n"
@@ -177,7 +177,7 @@ msgstr "Meddelande från %1"
 #: indicator/textchannelobserver.cpp:564
 #, qt-format
 msgid "Message to %1 from %2"
-msgstr ""
+msgstr "Meddelande till %1 från %2"
 
 #. TRANSLATORS : %1 is the recipient name
 #: indicator/messagingmenu.cpp:229 indicator/messagingmenu.cpp:233
@@ -188,7 +188,7 @@ msgstr "Meddelande till grupp från %1"
 
 #: indicator/textchannelobserver.cpp:293
 msgid "New Group"
-msgstr ""
+msgstr "Ny grupp"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
@@ -226,6 +226,9 @@ msgid ""
 "be retrieved. Please ensure Cellular Data is ON and MMS settings are "
 "correct, then ask the sender to try again."
 msgstr ""
+"Oj, det har skett ett fel i MMS-systemet och det här meddelandet kunde ej "
+"mottagas. Var vänlig säkerställ att Mobildata är påslaget och MMS-"
+"inställningar är korrekta, fråga sedan avsändare att försöka igen."
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -309,7 +312,7 @@ msgstr "Lås upp ditt simkort och prova igen från meddelandeprogrammet."
 
 #: indicator/textchannelobserver.cpp:326
 msgid "View Group"
-msgstr ""
+msgstr "Visa grupp"
 
 #: indicator/textchannelobserver.cpp:247 indicator/textchannelobserver.cpp:602
 msgid "View message"
@@ -329,19 +332,19 @@ msgstr "Ja"
 
 #: indicator/textchannelobserver.cpp:307
 msgid "You joined a new group"
-msgstr ""
+msgstr "Du anslöts till en ny grupp"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:304
 #, qt-format
 msgid "You joined group %1"
-msgstr ""
+msgstr "Du anslöts till grupp %1"
 
 #. TRANSLATORS : %1 is the group name
 #: indicator/textchannelobserver.cpp:300
 #, qt-format
 msgid "You joined group %1 "
-msgstr ""
+msgstr "Du anslöts till grupp %1 "
 
 #~ msgid "Private Number"
 #~ msgstr "Dolt nummer"
