@@ -300,6 +300,16 @@ void ChatManager::acknowledgeAllMessages(const QVariantMap &properties)
     phoneAppHandler->asyncCall("AcknowledgeAllMessages", convertPropertiesForDBus(properties));
 }
 
+/**
+ * Sends an asynchronous call through DBus to re-download a message identified by properties.
+ * Parameters accountId, threadId, eventId uniquely identify the message, which shall be redownloaded.
+ */
+void ChatManager::redownloadMessage(const QString &accountId, const QString &threadId, const QString &eventId)
+{
+    QDBusInterface *phoneAppHandler = TelepathyHelper::instance()->handlerInterface();
+    phoneAppHandler->asyncCall("RedownloadMessage", accountId, threadId, eventId);
+}
+
 void ChatManager::onAckTimerTriggered()
 {
     // ack all pending messages
