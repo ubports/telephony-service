@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-11 20:39+0000\n"
+"POT-Creation-Date: 2021-12-15 21:05+0000\n"
 "PO-Revision-Date: 2021-02-16 10:27+0000\n"
 "Last-Translator: louies0623 <louies0623@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <https://translate.ubports.com/projects/"
@@ -26,7 +26,7 @@ msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 通未接來電"
 
-#: indicator/messagingmenu.cpp:466
+#: indicator/messagingmenu.cpp:459
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -182,6 +182,13 @@ msgstr "%1 到組的消息"
 msgid "New Group"
 msgstr "新群組"
 
+#. TRANSLATORS : message displayed when any error occurred while receiving a MMS (case when cellular-data is off, or any downloading issue). Notify that there was a message, the user can find more about it in the messaging-app.
+#: indicator/textchannelobserver.cpp:504
+#, fuzzy
+#| msgid "View message"
+msgid "New MMS message"
+msgstr "檢視訊息"
+
 #: indicator/authhandler.cpp:94
 msgid "No"
 msgstr "否"
@@ -210,14 +217,6 @@ msgstr "確定"
 #, qt-format
 msgid "On [%1]"
 msgstr "已開啟 [%1]"
-
-#. TRANSLATORS : message displayed when any error occured while receiving a mms ( case when cellular-data is off, or any downloading issue). Note that mms is lost in that case
-#: indicator/textchannelobserver.cpp:504
-msgid ""
-"Oops, there has been an error with the MMS system and this message could not "
-"be retrieved. Please ensure Cellular Data is ON and MMS settings are "
-"correct, then ask the sender to try again."
-msgstr "糟糕，媒體訊息系統出現錯誤，無法搜尋到這個訊息。 請確保基地台已打開並且媒體訊息的設定是正確的，然後請寄件者重試。"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -307,11 +306,11 @@ msgstr "檢視群組"
 msgid "View message"
 msgstr "檢視訊息"
 
-#: indicator/messagingmenu.cpp:471
+#: indicator/messagingmenu.cpp:464
 msgid "Voicemail"
 msgstr "語音留言"
 
-#: indicator/messagingmenu.cpp:463
+#: indicator/messagingmenu.cpp:456
 msgid "Voicemail messages"
 msgstr "語音留言訊息"
 
@@ -334,6 +333,14 @@ msgstr "您加入了 %1 群組"
 #, qt-format
 msgid "You joined group %1 "
 msgstr "您加入了 %1 群組 "
+
+#~ msgid ""
+#~ "Oops, there has been an error with the MMS system and this message could "
+#~ "not be retrieved. Please ensure Cellular Data is ON and MMS settings are "
+#~ "correct, then ask the sender to try again."
+#~ msgstr ""
+#~ "糟糕，媒體訊息系統出現錯誤，無法搜尋到這個訊息。 請確保基地台已打開並且媒"
+#~ "體訊息的設定是正確的，然後請寄件者重試。"
 
 #~ msgid "Private Number"
 #~ msgstr "私人號碼"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-11 20:39+0000\n"
+"POT-Creation-Date: 2021-12-15 21:05+0000\n"
 "PO-Revision-Date: 2021-05-03 03:41+0000\n"
 "Last-Translator: Enceka <enceka@yeah.net>\n"
 "Language-Team: Chinese (Simplified) <https://translate.ubports.com/projects/"
@@ -26,7 +26,7 @@ msgid "%1 missed call"
 msgid_plural "%1 missed calls"
 msgstr[0] "%1 个未接来电"
 
-#: indicator/messagingmenu.cpp:466
+#: indicator/messagingmenu.cpp:459
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -182,6 +182,13 @@ msgstr "来自%1的群消息"
 msgid "New Group"
 msgstr "新的群组"
 
+#. TRANSLATORS : message displayed when any error occurred while receiving a MMS (case when cellular-data is off, or any downloading issue). Notify that there was a message, the user can find more about it in the messaging-app.
+#: indicator/textchannelobserver.cpp:504
+#, fuzzy
+#| msgid "View message"
+msgid "New MMS message"
+msgstr "检视讯息"
+
 #: indicator/authhandler.cpp:94
 msgid "No"
 msgstr "否"
@@ -210,14 +217,6 @@ msgstr "确定"
 #, qt-format
 msgid "On [%1]"
 msgstr "在 [%1]"
-
-#. TRANSLATORS : message displayed when any error occured while receiving a mms ( case when cellular-data is off, or any downloading issue). Note that mms is lost in that case
-#: indicator/textchannelobserver.cpp:504
-msgid ""
-"Oops, there has been an error with the MMS system and this message could not "
-"be retrieved. Please ensure Cellular Data is ON and MMS settings are "
-"correct, then ask the sender to try again."
-msgstr "糟糕，MMS系统出现错误并且无法检索到此消息。 请确保蜂窝数据已打开并且MMS设置正确，然后请发件人再试一次。"
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -307,11 +306,11 @@ msgstr "查看群组"
 msgid "View message"
 msgstr "检视讯息"
 
-#: indicator/messagingmenu.cpp:471
+#: indicator/messagingmenu.cpp:464
 msgid "Voicemail"
 msgstr "语音信箱"
 
-#: indicator/messagingmenu.cpp:463
+#: indicator/messagingmenu.cpp:456
 msgid "Voicemail messages"
 msgstr "语音信箱信息"
 
@@ -334,6 +333,14 @@ msgstr "你加入了%1"
 #, qt-format
 msgid "You joined group %1 "
 msgstr "你加入了%1 "
+
+#~ msgid ""
+#~ "Oops, there has been an error with the MMS system and this message could "
+#~ "not be retrieved. Please ensure Cellular Data is ON and MMS settings are "
+#~ "correct, then ask the sender to try again."
+#~ msgstr ""
+#~ "糟糕，MMS系统出现错误并且无法检索到此消息。 请确保蜂窝数据已打开并且MMS设"
+#~ "置正确，然后请发件人再试一次。"
 
 #~ msgid "Unknown Number"
 #~ msgstr "不明号码"
