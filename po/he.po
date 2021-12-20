@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-11 20:39+0000\n"
+"POT-Creation-Date: 2021-12-15 21:05+0000\n"
 "PO-Revision-Date: 2021-10-04 00:37+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://translate.ubports.com/projects/ubports/"
@@ -27,7 +27,7 @@ msgid_plural "%1 missed calls"
 msgstr[0] "שיחה %1 שלא נענתה"
 msgstr[1] "%1 שיחות שלא נענו"
 
-#: indicator/messagingmenu.cpp:466
+#: indicator/messagingmenu.cpp:459
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -189,6 +189,13 @@ msgstr "הודעה לקבוצה מאת %1"
 msgid "New Group"
 msgstr "קבוצה חדשה"
 
+#. TRANSLATORS : message displayed when any error occurred while receiving a MMS (case when cellular-data is off, or any downloading issue). Notify that there was a message, the user can find more about it in the messaging-app.
+#: indicator/textchannelobserver.cpp:504
+#, fuzzy
+#| msgid "View message"
+msgid "New MMS message"
+msgstr "צפייה בהודעה"
+
 #: indicator/authhandler.cpp:94
 msgid "No"
 msgstr "לא"
@@ -217,17 +224,6 @@ msgstr "אישור"
 #, qt-format
 msgid "On [%1]"
 msgstr "פעיל [%1]"
-
-#. TRANSLATORS : message displayed when any error occured while receiving a mms ( case when cellular-data is off, or any downloading issue). Note that mms is lost in that case
-#: indicator/textchannelobserver.cpp:504
-msgid ""
-"Oops, there has been an error with the MMS system and this message could not "
-"be retrieved. Please ensure Cellular Data is ON and MMS settings are "
-"correct, then ask the sender to try again."
-msgstr ""
-"אופס, נראה שהייתה שגיאה עם מערכת ה־MMS (הודעות מולטימדיה) ואי אפשר למשוך את "
-"ההודעה הזאת. נא לוודא שחיבור הנתונים הסלולרי פעיל ושהגדרות ה־MMS נכונות, "
-"לאחר מכן לבקש ממי ששלח לשלוח שוב."
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -317,11 +313,11 @@ msgstr "הצגת קבוצה"
 msgid "View message"
 msgstr "צפייה בהודעה"
 
-#: indicator/messagingmenu.cpp:471
+#: indicator/messagingmenu.cpp:464
 msgid "Voicemail"
 msgstr "תא קולי"
 
-#: indicator/messagingmenu.cpp:463
+#: indicator/messagingmenu.cpp:456
 msgid "Voicemail messages"
 msgstr "הודעות בתא הקולי"
 
@@ -344,6 +340,15 @@ msgstr "הצטרפת לקבוצה %1"
 #, qt-format
 msgid "You joined group %1 "
 msgstr "הצטרפת לקבוצה %1 "
+
+#~ msgid ""
+#~ "Oops, there has been an error with the MMS system and this message could "
+#~ "not be retrieved. Please ensure Cellular Data is ON and MMS settings are "
+#~ "correct, then ask the sender to try again."
+#~ msgstr ""
+#~ "אופס, נראה שהייתה שגיאה עם מערכת ה־MMS (הודעות מולטימדיה) ואי אפשר למשוך "
+#~ "את ההודעה הזאת. נא לוודא שחיבור הנתונים הסלולרי פעיל ושהגדרות ה־MMS "
+#~ "נכונות, לאחר מכן לבקש ממי ששלח לשלוח שוב."
 
 #~ msgid "Unknown Number"
 #~ msgstr "מספר לא ידוע"

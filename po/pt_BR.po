@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-11 20:39+0000\n"
+"POT-Creation-Date: 2021-12-15 21:05+0000\n"
 "PO-Revision-Date: 2015-03-28 13:48+0000\n"
 "Last-Translator: Deyvison Rocha <deyvison@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
@@ -26,7 +26,7 @@ msgid_plural "%1 missed calls"
 msgstr[0] "%1 chamada perdida"
 msgstr[1] "%1 chamadas perdidas"
 
-#: indicator/messagingmenu.cpp:466
+#: indicator/messagingmenu.cpp:459
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -189,6 +189,13 @@ msgstr ""
 msgid "New Group"
 msgstr ""
 
+#. TRANSLATORS : message displayed when any error occurred while receiving a MMS (case when cellular-data is off, or any downloading issue). Notify that there was a message, the user can find more about it in the messaging-app.
+#: indicator/textchannelobserver.cpp:504
+#, fuzzy
+#| msgid "View message"
+msgid "New MMS message"
+msgstr "Ver mensagem"
+
 #: indicator/authhandler.cpp:94
 msgid "No"
 msgstr ""
@@ -216,14 +223,6 @@ msgstr "Ok"
 #: approver/approver.cpp:456
 #, qt-format
 msgid "On [%1]"
-msgstr ""
-
-#. TRANSLATORS : message displayed when any error occured while receiving a mms ( case when cellular-data is off, or any downloading issue). Note that mms is lost in that case
-#: indicator/textchannelobserver.cpp:504
-msgid ""
-"Oops, there has been an error with the MMS system and this message could not "
-"be retrieved. Please ensure Cellular Data is ON and MMS settings are "
-"correct, then ask the sender to try again."
 msgstr ""
 
 #: indicator/telephony-service-call.desktop.in:3
@@ -316,11 +315,11 @@ msgstr ""
 msgid "View message"
 msgstr "Ver mensagem"
 
-#: indicator/messagingmenu.cpp:471
+#: indicator/messagingmenu.cpp:464
 msgid "Voicemail"
 msgstr "Correio de voz"
 
-#: indicator/messagingmenu.cpp:463
+#: indicator/messagingmenu.cpp:456
 msgid "Voicemail messages"
 msgstr "Mensagens do correio de voz"
 

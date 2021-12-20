@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-11 20:39+0000\n"
+"POT-Creation-Date: 2021-12-15 21:05+0000\n"
 "PO-Revision-Date: 2021-05-19 23:40+0000\n"
 "Last-Translator: Davidrebolomaga <davidre345@hotmail.com>\n"
 "Language-Team: Galician <https://translate.ubports.com/projects/ubports/"
@@ -27,7 +27,7 @@ msgid_plural "%1 missed calls"
 msgstr[0] "%1 chamada perdida"
 msgstr[1] "%1 chamadas perdidas"
 
-#: indicator/messagingmenu.cpp:466
+#: indicator/messagingmenu.cpp:459
 #, qt-format
 msgid "%1 voicemail message"
 msgid_plural "%1 voicemail messages"
@@ -189,6 +189,13 @@ msgstr "Mensaxe ao grupo de %1"
 msgid "New Group"
 msgstr "Novo grupo"
 
+#. TRANSLATORS : message displayed when any error occurred while receiving a MMS (case when cellular-data is off, or any downloading issue). Notify that there was a message, the user can find more about it in the messaging-app.
+#: indicator/textchannelobserver.cpp:504
+#, fuzzy
+#| msgid "View message"
+msgid "New MMS message"
+msgstr "Ver mensaxe"
+
 #: indicator/authhandler.cpp:94
 msgid "No"
 msgstr "Non"
@@ -217,17 +224,6 @@ msgstr "Aceptar"
 #, qt-format
 msgid "On [%1]"
 msgstr "En [%1]"
-
-#. TRANSLATORS : message displayed when any error occured while receiving a mms ( case when cellular-data is off, or any downloading issue). Note that mms is lost in that case
-#: indicator/textchannelobserver.cpp:504
-msgid ""
-"Oops, there has been an error with the MMS system and this message could not "
-"be retrieved. Please ensure Cellular Data is ON and MMS settings are "
-"correct, then ask the sender to try again."
-msgstr ""
-"Ocorreu un erro co sistema de MMS e esta mensaxe non pode ser obtida. Por "
-"favor, asegúrese que os datos móbiles están acendidos e a configuración "
-"correcta. Despois pida ao remitente para intentalo de novo."
 
 #: indicator/telephony-service-call.desktop.in:3
 msgid "Phone Calls"
@@ -317,11 +313,11 @@ msgstr "Ver o grupo"
 msgid "View message"
 msgstr "Ver mensaxe"
 
-#: indicator/messagingmenu.cpp:471
+#: indicator/messagingmenu.cpp:464
 msgid "Voicemail"
 msgstr "Correo de voz"
 
-#: indicator/messagingmenu.cpp:463
+#: indicator/messagingmenu.cpp:456
 msgid "Voicemail messages"
 msgstr "Correos de voz"
 
@@ -344,6 +340,15 @@ msgstr "Uniuse ao grupo %1"
 #, qt-format
 msgid "You joined group %1 "
 msgstr "Uniuse ao grupo %1 "
+
+#~ msgid ""
+#~ "Oops, there has been an error with the MMS system and this message could "
+#~ "not be retrieved. Please ensure Cellular Data is ON and MMS settings are "
+#~ "correct, then ask the sender to try again."
+#~ msgstr ""
+#~ "Ocorreu un erro co sistema de MMS e esta mensaxe non pode ser obtida. Por "
+#~ "favor, asegúrese que os datos móbiles están acendidos e a configuración "
+#~ "correcta. Despois pida ao remitente para intentalo de novo."
 
 #~ msgid "Private Number"
 #~ msgstr "Número privado"
