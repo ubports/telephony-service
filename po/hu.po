@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-15 21:05+0000\n"
-"PO-Revision-Date: 2021-01-28 19:27+0000\n"
-"Last-Translator: Adam <padamyno@gmail.com>\n"
+"PO-Revision-Date: 2022-02-05 09:32+0000\n"
+"Last-Translator: Lundrin <berenyi.vilmos@tutanota.com>\n"
 "Language-Team: Hungarian <https://translate.ubports.com/projects/ubports/"
 "telephony-service/hu/>\n"
 "Language: hu\n"
@@ -120,7 +120,7 @@ msgstr "Hívás ismeretlen számról"
 
 #: indicator/ussdindicator.cpp:142
 msgid "Cancel"
-msgstr "Mégsem"
+msgstr "Mégse"
 
 #: indicator/textchannelobserver.cpp:225
 msgid "Deactivate flight mode and try again from the messaging application."
