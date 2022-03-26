@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-15 21:05+0000\n"
-"PO-Revision-Date: 2021-10-03 05:18+0000\n"
+"PO-Revision-Date: 2022-03-24 05:37+0000\n"
 "Last-Translator: HEROBRINE7GAMER <tapermeerkat77@gmail.com>\n"
 "Language-Team: Arabic <https://translate.ubports.com/projects/ubports/"
 "telephony-service/ar/>\n"
@@ -149,7 +149,7 @@ msgstr "اتصال من رقم مجهول"
 
 #: indicator/ussdindicator.cpp:142
 msgid "Cancel"
-msgstr "ألغِ"
+msgstr "إلغاء"
 
 #: indicator/textchannelobserver.cpp:225
 msgid "Deactivate flight mode and try again from the messaging application."
