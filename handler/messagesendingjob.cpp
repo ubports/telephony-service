@@ -275,6 +275,8 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
     // convert AttachmentList struct into telepathy Message parts
     Q_FOREACH(const AttachmentStruct &attachment, pendingMessage.attachments) {
         QByteArray fileData;
+        QString contentType = attachment.contentType;
+        QString filename = attachment.id;
         QString newFilePath = QString(attachment.filePath).replace("file://", "");
         QFile attachmentFile(newFilePath);
         if (!attachmentFile.open(QIODevice::ReadOnly)) {
@@ -284,7 +286,6 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
         if (attachment.contentType.startsWith("image/")) {
             if (isMMS) {
                 hasImage = true;
-                parts += QString(SMIL_IMAGE_PART).arg(attachment.id);
                 // check if we need to reduce de image size in case it's bigger than 300k
                 // this check is only valid for MMS
                 if (attachmentFile.size() > 307200) {
@@ -293,10 +294,16 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
                         QBuffer buffer(&fileData);
                         buffer.open(QIODevice::WriteOnly);
                         scaledImage.scaled(640, 640, Qt::KeepAspectRatio, Qt::SmoothTransformation).save(&buffer, "jpg");
+                        // update metadatas
+                        QFileInfo info(newFilePath);
+                        filename = info.completeBaseName() + ".jpg";
+                        contentType = "image/jpeg";
                     }
                 } else {
                     fileData = attachmentFile.readAll();
                 }
+                parts += QString(SMIL_IMAGE_PART).arg(filename);
+
             }
         } else if (attachment.contentType.startsWith("video/")) {
             if (isMMS) {
@@ -347,8 +354,8 @@ Tp::MessagePartList MessageSendingJob::buildMessage(const PendingMessage &pendin
         }
 
         Tp::MessagePart part;
-        part["content-type"] =  QDBusVariant(attachment.contentType);
-        part["identifier"] = QDBusVariant(attachment.id);
+        part["content-type"] =  QDBusVariant(contentType);
+        part["identifier"] = QDBusVariant(filename);
         part["content"] = QDBusVariant(fileData);
         part["size"] = QDBusVariant(fileData.size());
 
