@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-15 21:05+0000\n"
-"PO-Revision-Date: 2021-01-18 18:27+0000\n"
+"PO-Revision-Date: 2022-04-23 09:39+0000\n"
 "Last-Translator: Mike <miguel2000@livecom.it>\n"
 "Language-Team: Italian <https://translate.ubports.com/projects/ubports/"
 "telephony-service/it/>\n"
@@ -191,10 +191,8 @@ msgstr "Nuovo gruppo"
 
 #. TRANSLATORS : message displayed when any error occurred while receiving a MMS (case when cellular-data is off, or any downloading issue). Notify that there was a message, the user can find more about it in the messaging-app.
 #: indicator/textchannelobserver.cpp:504
-#, fuzzy
-#| msgid "View message"
 msgid "New MMS message"
-msgstr "Vedi messaggio"
+msgstr "Nuovo MMS"
 
 #: indicator/authhandler.cpp:94
 msgid "No"
