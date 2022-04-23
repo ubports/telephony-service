@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: telephony-service\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-15 21:05+0000\n"
-"PO-Revision-Date: 2022-03-15 16:42+0000\n"
+"PO-Revision-Date: 2022-04-01 06:36+0000\n"
 "Last-Translator: ប៉ុកណូ រ៉ូយ៉ាល់ <poknoroyal@outlook.com>\n"
 "Language-Team: Central Khmer <https://translate.ubports.com/projects/ubports/"
 "telephony-service/km/>\n"
@@ -247,7 +247,7 @@ msgstr "SMS"
 
 #: indicator/textchannelobserver.cpp:371
 msgid "Save"
-msgstr "រក្សា​ទុក"
+msgstr "រក្សា​​ទុក​​"
 
 #: indicator/messagingmenu.cpp:151 indicator/messagingmenu.cpp:257
 #: indicator/messagingmenu.cpp:324
