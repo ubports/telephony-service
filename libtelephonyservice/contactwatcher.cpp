@@ -58,7 +58,7 @@ ContactWatcher::~ContactWatcher()
 {
     if (mRequest) {
         mRequest->cancel();
-        delete mRequest;
+        mRequest->deleteLater();
     }
 }
 
