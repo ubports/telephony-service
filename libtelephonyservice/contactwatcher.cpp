@@ -56,6 +56,9 @@ ContactWatcher::ContactWatcher(QObject *parent) :
 
 ContactWatcher::~ContactWatcher()
 {
+    // prevent deadlock while ContactWatcher being removed
+    // https://github.com/ubports/messaging-app/issues/338
+    ContactUtils::sharedManager()->disconnect(this);
     if (mRequest) {
         mRequest->cancel();
         mRequest->deleteLater();
